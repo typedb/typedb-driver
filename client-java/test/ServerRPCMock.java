@@ -23,15 +23,13 @@ import ai.grakn.rpc.proto.KeyspaceServiceGrpc;
 import ai.grakn.rpc.proto.KeyspaceServiceGrpc.KeyspaceServiceImplBase;
 import ai.grakn.rpc.proto.SessionProto;
 import ai.grakn.rpc.proto.SessionProto.Transaction;
+import ai.grakn.rpc.proto.SessionServiceGrpc;
 import ai.grakn.rpc.proto.SessionServiceGrpc.SessionServiceImplBase;
-import ai.grakn.test.rule.CompositeTestRule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcServerRule;
-import org.junit.rules.TestRule;
+import org.junit.rules.ExternalResource;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -40,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,67 +48,50 @@ import static org.mockito.Mockito.mock;
  * Semi-mocked gRPC server that can handle transactions.
  *
  * <p>
- *     The gRPC server itself is "real" and can be connected to using the {@link #channel()}. However, the
- *     {@link #sessionService()} and {@link #requestListener()} are both mock objects and should be used with
- *     {@link org.mockito.Mockito#verify(Object)}.
+ * The {@link #sessionService()} and {@link #requestListener()} are both mock objects and should be used with
+ * {@link org.mockito.Mockito#verify(Object)}.
  * </p>
  * <p>
- *     By default, the server will return a "done" {@link Transaction.Res} to every message. And will respond
- *     with {@link StreamObserver#onCompleted()} when receiving a {@link StreamObserver#onCompleted()} from the client.
+ * By default, the server will return a "done" {@link Transaction.Res} to every message. And will respond
+ * with {@link StreamObserver#onCompleted()} when receiving a {@link StreamObserver#onCompleted()} from the client.
  * </p>
  * <p>
- *     In order to mock additional responses, use the method {@link #setResponse(Transaction.Req, Transaction.Res...)}.
+ * In order to mock additional responses, use the method {@link #setResponse(Transaction.Req, Transaction.Res...)}.
  * </p>
  *
  * @author Felix Chapman
  */
-public final class ServerRPCMock extends CompositeTestRule {
+public final class ServerRPCMock extends ExternalResource {
 
-    private int iteratorIdCounter = 0;
-    private final ServerIteratorsMock rpcIterators = ServerIteratorsMock.create();
-    private final GrpcServerRule serverRule = new GrpcServerRule().directExecutor();
-    private final SessionServiceImplBase sessionService = mock(SessionServiceImplBase.class);
-    private final KeyspaceServiceImplBase keyspaceService = mock(KeyspaceServiceGrpc.KeyspaceServiceImplBase.class);
+    private final ServerIteratorsMock rpcIterators = new ServerIteratorsMock();
 
-    private @Nullable StreamObserver<Transaction.Res> serverResponses = null;
+    private final SessionServiceImplBase sessionService;
+    private final KeyspaceServiceImplBase keyspaceService;
+
+    @Nullable
+    private StreamObserver<Transaction.Res> serverResponses = null;
 
     @SuppressWarnings("unchecked") // safe because mock
-    private StreamObserver<Transaction.Req> reqeustListener = mock(StreamObserver.class);
+    private StreamObserver<Transaction.Req> requestListener = mock(StreamObserver.class);
 
-    private ServerRPCMock() {
-    }
-
-    public static ServerRPCMock create() {
-        return new ServerRPCMock();
-    }
-
-    public ManagedChannel channel() {
-        return serverRule.getChannel();
+    public ServerRPCMock(SessionServiceGrpc.SessionServiceImplBase sessionService, KeyspaceServiceGrpc.KeyspaceServiceImplBase keyspaceService) {
+        this.sessionService = sessionService;
+        this.keyspaceService = keyspaceService;
     }
 
     SessionServiceImplBase sessionService() {
         return sessionService;
     }
 
-    KeyspaceServiceImplBase keyspaceService() {
-        return keyspaceService;
+
+    StreamObserver<Transaction.Req> requestListener() {
+        return requestListener;
     }
 
-    public StreamObserver<Transaction.Req> requestListener() {
-        return reqeustListener;
-    }
 
-    public ServerIteratorsMock IteratorProtos() {
-        return rpcIterators;
-    }
-
-    public void setResponse(Transaction.Req request, Transaction.Res... responses) {
+    void setResponse(Transaction.Req request, Transaction.Res... responses) {
         setResponse(request, Arrays.asList(responses));
     }
-
-//    public void setResponseSequence(Transaction.Req request, Transaction.Res... responses) {
-//        setResponseHandlers(request, Collections.singletonList(TxResponseHandler.sequence(this, responses)));
-//    }
 
     public void setResponse(Transaction.Req request, Throwable throwable) {
         setResponseHandlers(request, ImmutableList.of(TxResponseHandler.onError(throwable)));
@@ -138,7 +118,7 @@ public final class ServerRPCMock extends CompositeTestRule {
             }
             next.get().handle(serverResponses);
             return null;
-        }).when(reqeustListener).onNext(request);
+        }).when(requestListener).onNext(request);
     }
 
     private interface TxResponseHandler {
@@ -150,31 +130,14 @@ public final class ServerRPCMock extends CompositeTestRule {
             return streamObserver -> streamObserver.onError(throwable);
         }
 
-//        static TxResponseHandler sequence(ServerRPCMock server, Transaction.Res... responses) {
-//            int iteratorId = server.IteratorProtos().add(Iterators.forArray(responses));
-//
-//            return streamObserver -> {
-//                List<Transaction.Res> responsesList =
-//                        ImmutableList.<Transaction.Res>builder().add(responses).add(done()).build();
-//
-//                server.setResponse(RequestBuilder.Transaction.next(iteratorId), responsesList);
-//                streamObserver.onNext(SessionProto.Transaction.Res.newBuilder().setIteratorId(iteratorId).build());
-//            };
-//        }
-
         void handle(StreamObserver<Transaction.Res> streamObserver);
     }
 
     @Override
-    protected List<TestRule> testRules() {
-        return ImmutableList.of(serverRule);
-    }
-
-    @Override
-    protected void before() throws Throwable {
+    protected void before() {
         doAnswer(args -> {
             serverResponses = args.getArgument(0);
-            return reqeustListener;
+            return requestListener;
         }).when(sessionService).transaction(any());
 
         doAnswer(args -> {
@@ -196,7 +159,7 @@ public final class ServerRPCMock extends CompositeTestRule {
             serverResponses.onNext(next.orElse(done()));
 
             return null;
-        }).when(reqeustListener).onNext(any());
+        }).when(requestListener).onNext(any());
 
         // Return a default "complete" response to every "complete" message from the client
         doAnswer(args -> {
@@ -205,10 +168,7 @@ public final class ServerRPCMock extends CompositeTestRule {
             }
             serverResponses.onCompleted();
             return null;
-        }).when(reqeustListener).onCompleted();
-
-        serverRule.getServiceRegistry().addService(sessionService);
-        serverRule.getServiceRegistry().addService(keyspaceService);
+        }).when(requestListener).onCompleted();
     }
 
     @Override
@@ -234,26 +194,8 @@ public final class ServerRPCMock extends CompositeTestRule {
      *
      * @author Felix Chapman
      */
-    public static class ServerIteratorsMock {
-        private final AtomicInteger iteratorIdCounter = new AtomicInteger();
+    public class ServerIteratorsMock {
         private final Map<Integer, Iterator<Transaction.Res>> iterators = new ConcurrentHashMap<>();
-
-        private ServerIteratorsMock() {
-        }
-
-        public static ServerIteratorsMock create() {
-            return new ServerIteratorsMock();
-        }
-
-        /**
-         * Register a new iterator and return the ID of the iterator
-         */
-        public int add(Iterator<Transaction.Res> iterator) {
-            int iteratorId = iteratorIdCounter.getAndIncrement();
-
-            iterators.put(iteratorId, iterator);
-            return iteratorId;
-        }
 
         /**
          * Return the next response from an iterator. {@link SessionProto.Transaction.Iter.Res} response will return

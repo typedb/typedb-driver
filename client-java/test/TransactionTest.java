@@ -40,7 +40,6 @@ import ai.grakn.graql.Query;
 import ai.grakn.graql.answer.ConceptMap;
 import ai.grakn.rpc.proto.AnswerProto;
 import ai.grakn.rpc.proto.ConceptProto;
-import ai.grakn.rpc.proto.KeyspaceProto;
 import ai.grakn.rpc.proto.KeyspaceServiceGrpc;
 import ai.grakn.rpc.proto.SessionProto;
 import ai.grakn.rpc.proto.SessionProto.Transaction;
@@ -48,6 +47,7 @@ import ai.grakn.rpc.proto.SessionServiceGrpc;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.testing.GrpcServerRule;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -67,7 +67,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -78,11 +78,19 @@ import static org.mockito.Mockito.when;
  */
 public class TransactionTest {
 
+    private final static SessionServiceGrpc.SessionServiceImplBase sessionService = mock(SessionServiceGrpc.SessionServiceImplBase.class);
+    private final static KeyspaceServiceGrpc.KeyspaceServiceImplBase keyspaceService = mock(KeyspaceServiceGrpc.KeyspaceServiceImplBase.class);
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    // The gRPC server itself is "real" and can be connected to using the {@link #channel()}
     @Rule
-    public final ServerRPCMock server = ServerRPCMock.create();
+    public final GrpcServerRule serverRule = new GrpcServerRule().directExecutor();
+
+
+    @Rule
+    public final ServerRPCMock server = new ServerRPCMock(sessionService, keyspaceService);
 
     private final Grakn.Session session = mock(Grakn.Session.class);
 
@@ -92,16 +100,18 @@ public class TransactionTest {
 
     @Before
     public void setUp() {
-        when(session.sessionStub()).thenReturn(SessionServiceGrpc.newStub(server.channel()));
-        when(session.keyspaceBlockingStub()).thenReturn(KeyspaceServiceGrpc.newBlockingStub(server.channel()));
+        serverRule.getServiceRegistry().addService(sessionService);
+        serverRule.getServiceRegistry().addService(keyspaceService);
+        when(session.sessionStub()).thenReturn(SessionServiceGrpc.newStub(serverRule.getChannel()));
+        when(session.keyspaceBlockingStub()).thenReturn(KeyspaceServiceGrpc.newBlockingStub(serverRule.getChannel()));
         when(session.keyspace()).thenReturn(KEYSPACE);
         when(session.transaction(any())).thenCallRealMethod();
     }
-    
+
     @Test
     public void whenCreatingAGraknRemoteTx_MakeATxCallToGrpc() {
         try (GraknTx ignored = session.transaction(GraknTxType.WRITE)) {
-            verify(server.sessionService()).transaction(any());
+            verify(server.sessionService(), atLeast(1)).transaction(any());
         }
     }
 
@@ -221,6 +231,7 @@ public class TransactionTest {
         }
     }
 
+    @SuppressWarnings("CheckReturnValue")
     @Test
     public void whenAnErrorOccurs_TheTxCloses() {
         Query<?> query = match(var("x")).get();
@@ -241,6 +252,7 @@ public class TransactionTest {
         }
     }
 
+    @SuppressWarnings("CheckReturnValue")
     @Test
     public void whenAnErrorOccurs_AllFutureActionsThrow() {
         Query<?> query = match(var("x")).get();
@@ -264,7 +276,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenPuttingEntityType_EnsureCorrectRequestIsSent(){
+    public void whenPuttingEntityType_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
         Label label = Label.of("foo");
 
@@ -283,7 +295,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenPuttingRelationshipType_EnsureCorrectRequestIsSent(){
+    public void whenPuttingRelationshipType_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
         Label label = Label.of("foo");
 
@@ -303,7 +315,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenPuttingAttributeType_EnsureCorrectRequestIsSent(){
+    public void whenPuttingAttributeType_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
         Label label = Label.of("foo");
         AttributeType.DataType<?> dataType = AttributeType.DataType.STRING;
@@ -324,7 +336,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenPuttingRole_EnsureCorrectRequestIsSent(){
+    public void whenPuttingRole_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
         Label label = Label.of("foo");
 
@@ -344,7 +356,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenPuttingRule_EnsureCorrectRequestIsSent(){
+    public void whenPuttingRule_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
         Label label = Label.of("foo");
         Pattern when = var("x").isa("person");
@@ -366,7 +378,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenGettingConceptViaID_EnsureCorrectRequestIsSent(){
+    public void whenGettingConceptViaID_EnsureCorrectRequestIsSent() {
         ConceptId id = ConceptId.of(V123);
 
         try (Grakn.Transaction tx = session.transaction(GraknTxType.READ)) {
@@ -385,7 +397,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenGettingNonExistentConceptViaID_ReturnNull(){
+    public void whenGettingNonExistentConceptViaID_ReturnNull() {
         ConceptId id = ConceptId.of(V123);
 
         try (Grakn.Transaction tx = session.transaction(GraknTxType.READ)) {
@@ -402,7 +414,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenGettingSchemaConceptViaLabel_EnsureCorrectRequestIsSent(){
+    public void whenGettingSchemaConceptViaLabel_EnsureCorrectRequestIsSent() {
         Label label = Label.of("foo");
         ConceptId id = ConceptId.of(V123);
 
@@ -423,7 +435,7 @@ public class TransactionTest {
     }
 
     @Test
-    public void whenGettingNonExistentSchemaConceptViaLabel_ReturnNull(){
+    public void whenGettingNonExistentSchemaConceptViaLabel_ReturnNull() {
         Label label = Label.of("foo");
 
         try (Grakn.Transaction tx = session.transaction(GraknTxType.READ)) {
@@ -439,8 +451,9 @@ public class TransactionTest {
         }
     }
 
-    @Test @Ignore
-    public void whenGettingAttributesViaID_EnsureCorrectRequestIsSent(){
+    @Test
+    @Ignore
+    public void whenGettingAttributesViaID_EnsureCorrectRequestIsSent() {
         String value = "Hello Oli";
 
         try (Grakn.Transaction tx = session.transaction(GraknTxType.READ)) {
@@ -451,32 +464,26 @@ public class TransactionTest {
             ConceptProto.Concept attribute2 = ConceptProto.Concept.newBuilder()
                     .setId("B").setBaseType(ConceptProto.Concept.BASE_TYPE.ATTRIBUTE).build();
 
-//            server.setResponseSequence(
-//                    RequestBuilder.Transaction.getAttributes(value),
-//                    response(attribute1),
-//                    response(attribute2)
-//            );
-
             assertThat(tx.getAttributesByValue(value), containsInAnyOrder(attribute1, attribute2));
         }
     }
 
     @Test
-    public void whenClosingTheTransaction_EnsureItIsFlaggedAsClosed(){
+    public void whenClosingTheTransaction_EnsureItIsFlaggedAsClosed() {
         assertTransactionClosedAfterAction(GraknTx::close);
     }
 
     @Test
-    public void whenCommittingTheTransaction_EnsureItIsFlaggedAsClosed(){
+    public void whenCommittingTheTransaction_EnsureItIsFlaggedAsClosed() {
         assertTransactionClosedAfterAction(GraknTx::commit);
     }
 
     @Test
-    public void whenAbortingTheTransaction_EnsureItIsFlaggedAsClosed(){
+    public void whenAbortingTheTransaction_EnsureItIsFlaggedAsClosed() {
         assertTransactionClosedAfterAction(GraknTx::abort);
     }
 
-    private void assertTransactionClosedAfterAction(Consumer<GraknTx> action){
+    private void assertTransactionClosedAfterAction(Consumer<GraknTx> action) {
         Grakn.Transaction tx = session.transaction(GraknTxType.WRITE);
         assertFalse(tx.isClosed());
         action.accept(tx);
