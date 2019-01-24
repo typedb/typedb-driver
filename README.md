@@ -1,6 +1,6 @@
 # Grakn Client for Node.js
 
-[![CircleCI](https://circleci.com/gh/graknlabs/client-nodejs/tree/master.svg?style=svg)](https://circleci.com/gh/graknlabs/client-nodejs/tree/master)
+[![CircleCI](https://circleci.com/gh/graknlabs/client-nodejs/tree/master.svg?style=shield)](https://circleci.com/gh/graknlabs/client-nodejs/tree/master)
 
 ## Dependencies
 Before installing the `grakn` node module, make sure the following dependencies are installed.
