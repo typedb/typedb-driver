@@ -18,6 +18,7 @@
 
 exports_files([
     "package.json",
+    "VERSION"
 ])
 
 load("@stackb_rules_proto//node:node_grpc_compile.bzl", "node_grpc_compile")
@@ -28,10 +29,10 @@ load("@graknlabs_bazel_distribution//npm:rules.bzl", "deploy_npm")
 node_grpc_compile(
     name = "client-nodejs-proto",
     deps = [
-        "//protocol/session:session-proto",
-        "//protocol/session:answer-proto",
-        "//protocol/session:concept-proto",
-        "//protocol/keyspace:keyspace-proto",
+        "@graknlabs_grakn//protocol/session:session-proto",
+        "@graknlabs_grakn//protocol/session:answer-proto",
+        "@graknlabs_grakn//protocol/session:concept-proto",
+        "@graknlabs_grakn//protocol/keyspace:keyspace-proto",
     ]
 )
 
@@ -46,7 +47,8 @@ babel_library(
    ]),
    data = [
        "package.json",
-       "README.md"
+       "README.md",
+       ".npmignore"
    ],
    babel = "@nodejs_dependencies//@bazel/babel/bin:babel",
    babelrc = "babel.rc.js"
@@ -67,7 +69,7 @@ deploy_npm(
     name = "deploy-npm",
     target = ":client-nodejs",
     version_file = "//:VERSION",
-    deployment_properties = "//:deployment.properties",
+    deployment_properties = "@graknlabs_grakn//:deployment.properties",
 )
 
 nodejs_jest_test(

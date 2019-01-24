@@ -1,4 +1,6 @@
-# Grakn Client Node.js
+# Grakn Client for Node.js
+
+[![CircleCI](https://circleci.com/gh/graknlabs/client-nodejs/tree/master.svg?style=svg)](https://circleci.com/gh/graknlabs/client-nodejs/tree/master)
 
 ## Dependencies
 Before installing the `grakn` node module, make sure the following dependencies are installed.
@@ -106,7 +108,7 @@ To view examples of running various Graql queries using the Grakn Client Node.js
 - [Compute](http://dev.grakn.ai/docs/query/compute-query)
 
 ## Client Architecture
-To learn about the mechanism that a Grakn Client uses to set up communication with keyspaces running on the Grakn Server, refer to [Grakn > Client API > Overview]((http://dev.grakn.ai/docs/client-api/overview).
+To learn about the mechanism that a Grakn Client uses to set up communication with keyspaces running on the Grakn Server, refer to [Grakn > Client API > Overview](http://dev.grakn.ai/docs/client-api/overview).
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using Client Node.js, refer to [Grakn > Client API > Node.js > API Reference](http://dev.grakn.ai/docs/client-api/nodejs#api-reference).
