@@ -1,13 +1,16 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
-    name = "graknlabs_grakn",
+    name = "graknlabs_grakn_core",
     remote = "https://github.com/graknlabs/grakn",
-    commit = "7d2f7dd5c831bde2edadadea2bca16ac4648b76f"
+    commit = "f0959ee2681b5c2fe850aa7b697c35b2c2d4d720"
 )
 
-load("@graknlabs_grakn//dependencies/npm:dependencies.bzl", "node_dependencies")
-node_dependencies()
+git_repository(
+    name = "build_bazel_rules_nodejs",
+    remote = "https://github.com/graknlabs/rules_nodejs.git",
+    commit = "ac3f6854365f119130186f971588514ccff503ab",
+)
 
 load("@build_bazel_rules_nodejs//:package.bzl", "rules_nodejs_dependencies")
 rules_nodejs_dependencies()
@@ -25,7 +28,7 @@ npm_install(
     ],
 )
 
-load("@graknlabs_grakn//dependencies/compilers:dependencies.bzl", "grpc_dependencies")
+load("@graknlabs_grakn_core//dependencies/compilers:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
 
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_bazel_grpc_deps = "grpc_deps")
@@ -53,19 +56,26 @@ git_repository(
 load("@com_github_google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
 google_common_workspace_rules()
 
-load("@graknlabs_grakn//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
+load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
 maven_dependencies_for_build()
 
-load("@graknlabs_grakn//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
+load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
 maven_dependencies_for_build()
+
+# Load Graql dependencies
+load("@graknlabs_grakn_core//dependencies/git:dependencies.bzl", "graknlabs_graql")
+graknlabs_graql()
 
 # Load ANTLR dependencies for Bazel
-load("@graknlabs_grakn//dependencies/compilers:dependencies.bzl", "antlr_dependencies")
+load("@graknlabs_graql//dependencies/compilers:dependencies.bzl", "antlr_dependencies")
 antlr_dependencies()
 
 # Load ANTLR dependencies for ANTLR programs
 load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
 antlr_dependencies()
+
+load("@graknlabs_graql//dependencies/maven:dependencies.bzl", graql_dependencies = "maven_dependencies")
+graql_dependencies()
 
 load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()

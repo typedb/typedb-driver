@@ -29,10 +29,10 @@ load("@graknlabs_bazel_distribution//npm:rules.bzl", "deploy_npm")
 node_grpc_compile(
     name = "client-nodejs-proto",
     deps = [
-        "@graknlabs_grakn//protocol/session:session-proto",
-        "@graknlabs_grakn//protocol/session:answer-proto",
-        "@graknlabs_grakn//protocol/session:concept-proto",
-        "@graknlabs_grakn//protocol/keyspace:keyspace-proto",
+        "@graknlabs_grakn_core//protocol/session:session-proto",
+        "@graknlabs_grakn_core//protocol/session:answer-proto",
+        "@graknlabs_grakn_core//protocol/session:concept-proto",
+        "@graknlabs_grakn_core//protocol/keyspace:keyspace-proto",
     ]
 )
 
@@ -69,7 +69,7 @@ deploy_npm(
     name = "deploy-npm",
     target = ":client-nodejs",
     version_file = "//:VERSION",
-    deployment_properties = "@graknlabs_grakn//:deployment.properties",
+    deployment_properties = "@graknlabs_grakn_core//:deployment.properties",
 )
 
 nodejs_jest_test(
