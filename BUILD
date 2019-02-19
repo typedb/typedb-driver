@@ -62,7 +62,8 @@ npm_package(
         ":bundle",
         "@nodejs_dependencies//grpc",
         "@nodejs_dependencies//google-protobuf"
-    ]
+    ],
+    visibility = ["//visibility:public"]
 )
 
 deploy_npm(
