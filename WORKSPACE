@@ -41,7 +41,7 @@ node_grpc_compile()
 git_repository(
     name="graknlabs_bazel_distribution",
     remote="https://github.com/graknlabs/bazel-distribution",
-    commit="18d774e16187bd4148fe36842b68bafa46017d6f"
+    commit="4fe70b386f57727b8d97d3a5b712ab4defef5f90"
 )
 
 
