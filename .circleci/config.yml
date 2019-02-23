@@ -60,6 +60,7 @@ jobs:
     steps:
       - checkout
       - bazel_install
+      - run: sudo apt install -y expect
       - run: bazel run //:deploy-npm -- test $TEST_REPO_USERNAME $TEST_REPO_PASSWORD $TEST_REPO_EMAIL
 
 workflows:
