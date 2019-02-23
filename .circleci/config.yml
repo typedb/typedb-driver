@@ -54,9 +54,20 @@ jobs:
       - run: nohup bazel-genfiles/dist/grakn-core-all/grakn server start
       - run: bazel-genfiles/dist/grakn-core-all/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
       - run: bazel test //:test-integration --test_output=streamed
+  test-repo-deploy:
+    machine: true
+    working_directory: ~/grakn
+    steps:
+      - checkout
+      - bazel_install
+      - run: bazel run //:deploy-npm -- test $TEST_REPO_USERNAME $TEST_REPO_PASSWORD $TEST_REPO_EMAIL
 
 workflows:
   version: 2
   grakn-client-nodejs-ci:
     jobs:
       - client-nodejs
+      - test-repo-deploy:
+          filters:
+            branches:
+              only: master
