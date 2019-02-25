@@ -1,5 +1,5 @@
 {
-  "name": "grakn",
+  "name": "grakn-client",
   "version": "0.0.0-development",
   "description": "Grakn Node.js Client",
   "main": "src/Grakn.js",
