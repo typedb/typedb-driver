@@ -84,21 +84,21 @@ describe("Transaction methods", () => {
   });
 
   async function buildParentship(localTx){
-    const relationshipType = await localTx.putRelationshipType('parentship');
-    const relationship = await relationshipType.create();
+    const relationType = await localTx.putRelationType('parentship');
+    const relation = await relationType.create();
     const parentRole = await localTx.putRole('parent');
     const childRole = await localTx.putRole('child');
-    await relationshipType.relates(childRole);
-    await relationshipType.relates(parentRole);
+    await relationType.relates(childRole);
+    await relationType.relates(parentRole);
     const personType = await localTx.putEntityType('person');
     await personType.plays(parentRole);
     await personType.plays(childRole);
     const parent = await personType.create();
     const child = await personType.create();
-    await relationship.assign(childRole, child);
-    await relationship.assign(parentRole, parent);
+    await relation.assign(childRole, child);
+    await relation.assign(parentRole, parent);
     await localTx.commit();
-    return {child: child.id, parent: parent.id, rel: relationship.id};
+    return {child: child.id, parent: parent.id, rel: relation.id};
   }
 
   test("shortest path - Answer of conceptList", async ()=>{
@@ -183,10 +183,10 @@ describe("Transaction methods", () => {
     expect(personType.isEntityType()).toBeTruthy();
   });
 
-  test("putRelationshipType", async () => {
-    const marriage = await tx.putRelationshipType("marriage");
+  test("putRelationType", async () => {
+    const marriage = await tx.putRelationType("marriage");
     expect(marriage.isSchemaConcept()).toBeTruthy();
-    expect(marriage.isRelationshipType()).toBeTruthy();
+    expect(marriage.isRelationType()).toBeTruthy();
   });
 
   test("putAttributeType", async () => {

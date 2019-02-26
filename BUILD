@@ -209,10 +209,10 @@ nodejs_jest_test(
 )
 
 nodejs_jest_test(
-    name = "relationship-test",
+    name = "relation-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
-        "tests/service/session/transaction/Relationship.test.js",
+        "tests/service/session/transaction/Relation.test.js",
     ],
     deps = [
         ":client-nodejs",
@@ -224,10 +224,10 @@ nodejs_jest_test(
 )
 
 nodejs_jest_test(
-    name = "relationshiptype-test",
+    name = "relationtype-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
-        "tests/service/session/transaction/RelationshipType.test.js",
+        "tests/service/session/transaction/RelationType.test.js",
     ],
     deps = [
         ":client-nodejs",
@@ -295,8 +295,8 @@ test_suite(
         ":attributetype-test",
         ":role-test",
         ":grakntx-test",
-        ":relationship-test",
-        ":relationshiptype-test",
+        ":relation-test",
+        ":relationtype-test",
         ":thing-test",
         ":entitytype-test",
         ":committx-test",

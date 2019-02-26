@@ -37,8 +37,8 @@ ConceptFactory.prototype.createConcept = function createConcept(grpcConcept) {
       state = buildState(conceptId, BaseType.ENTITY, this.txService);
       return Object.create(entityProto, state);
     case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION:
-      state = buildState(conceptId, BaseType.RELATIONSHIP, this.txService);
-      return Object.create(relationshipProto, state);
+      state = buildState(conceptId, BaseType.RELATION, this.txService);
+      return Object.create(relationProto, state);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE:
       state = buildState(conceptId, BaseType.ATTRIBUTE, this.txService);
       return Object.create(attributeProto, state);
@@ -46,8 +46,8 @@ ConceptFactory.prototype.createConcept = function createConcept(grpcConcept) {
       state = buildState(conceptId, BaseType.ENTITY_TYPE, this.txService);
       return Object.create(entityTypeProto, state);
     case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION_TYPE:
-      state = buildState(conceptId, BaseType.RELATIONSHIP_TYPE, this.txService);
-      return Object.create(relationshipTypeProto, state);
+      state = buildState(conceptId, BaseType.RELATION_TYPE, this.txService);
+      return Object.create(relationTypeProto, state);
     case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE_TYPE:
       state = buildState(conceptId, BaseType.ATTRIBUTE_TYPE, this.txService);
       return Object.create(attributeTypeProto, state);
@@ -80,11 +80,11 @@ const attributeTypeProto = Object.assign({},
   Methods.attributeType
 );
 
-const relationshipTypeProto = Object.assign({},
+const relationTypeProto = Object.assign({},
   Methods.concept,
   Methods.schemaConcept,
   Methods.type,
-  Methods.relationshipType
+  Methods.relationType
 );
 
 const entityTypeProto = Object.assign({},
@@ -94,10 +94,10 @@ const entityTypeProto = Object.assign({},
   Methods.entityType
 );
 
-const relationshipProto = Object.assign({},
+const relationProto = Object.assign({},
   Methods.concept,
   Methods.thing,
-  Methods.relationship
+  Methods.relation
 );
 
 const attributeProto = Object.assign({},

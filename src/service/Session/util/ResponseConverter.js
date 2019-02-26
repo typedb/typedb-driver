@@ -114,7 +114,7 @@ ResponseConverter.prototype.getRegex = function (resp) {
 }
 
 // Relation type
-ResponseConverter.prototype.addRelationship = function (resp) {
+ResponseConverter.prototype.addRelation = function (resp) {
     const grpcConcept = resp.getConceptmethodRes().getResponse().getRelationtypeCreateRes().getRelation();
     return this.conceptFactory.createConcept(grpcConcept);
 };
@@ -135,7 +135,7 @@ ResponseConverter.prototype.getDirectType = function (resp) {
     return this.conceptFactory.createConcept(grpcConcept);
 }
 
-ResponseConverter.prototype.getRelationshipsByRoles = function (resp) {
+ResponseConverter.prototype.getRelationsByRoles = function (resp) {
     const iterId = resp.getConceptmethodRes().getResponse().getThingRelationsIter().getId();
     const getterMethod = (res) => res.getConceptmethodIterRes().getThingRelationsIterRes().getRelation();
     return this.iteratorFactory.createConceptIterator(iterId, getterMethod);
@@ -214,7 +214,7 @@ ResponseConverter.prototype.getThen = function (resp) {
 }
 
 // Role
-ResponseConverter.prototype.getRelationshipTypesThatRelateRole = function (resp) {
+ResponseConverter.prototype.getRelationTypesThatRelateRole = function (resp) {
     const iterId = resp.getConceptmethodRes().getResponse().getRoleRelationsIter().getId();
     const getterMethod = (res) => res.getConceptmethodIterRes().getRoleRelationsIterRes().getRelationtype();
     return this.iteratorFactory.createConceptIterator(iterId, getterMethod);
@@ -243,7 +243,7 @@ ResponseConverter.prototype.putEntityType = function (resp) {
     return this.conceptFactory.createConcept(concept);
 }
 
-ResponseConverter.prototype.putRelationshipType = function (resp) {
+ResponseConverter.prototype.putRelationType = function (resp) {
     const concept = resp.getPutrelationtypeRes().getRelationtype();
     return this.conceptFactory.createConcept(concept);
 }

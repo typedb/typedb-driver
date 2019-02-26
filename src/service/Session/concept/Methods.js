@@ -41,30 +41,30 @@ const methods = {
         isThing: function () { return Constant.set.THINGS.has(this.baseType); },
         isAttributeType: function () { return this.baseType === BaseType.ATTRIBUTE_TYPE; },
         isEntityType: function () { return this.baseType === BaseType.ENTITY_TYPE; },
-        isRelationshipType: function () { return this.baseType === BaseType.RELATIONSHIP_TYPE; },
+        isRelationType: function () { return this.baseType === BaseType.RELATION_TYPE; },
         isRole: function () { return this.baseType === BaseType.ROLE; },
         isRule: function () { return this.baseType === BaseType.RULE; },
         isAttribute: function () { return this.baseType === BaseType.ATTRIBUTE; },
         isEntity: function () { return this.baseType === BaseType.ENTITY; },
-        isRelationship: function () { return this.baseType === BaseType.RELATIONSHIP; }
+        isRelation: function () { return this.baseType === BaseType.RELATION; }
     },
     entityType: {
         create: function () { return this.txService.addEntity(this.id); },
     },
-    relationship: {
+    relation: {
         rolePlayersMap: async function () { return this.txService.rolePlayersMap(this.id); },
         rolePlayers: async function (...roles) { return this.txService.rolePlayers(this.id, roles); },
         assign: function (role, thing) { return this.txService.setRolePlayer(this.id, role, thing); },
         unassign: function (role, thing) { return this.txService.unsetRolePlayer(this.id, role, thing); }
     },
-    relationshipType: {
-        create: function () { return this.txService.addRelationship(this.id); },
+    relationType: {
+        create: function () { return this.txService.addRelation(this.id); },
         relates: function (role) { return this.txService.setRelatedRole(this.id, role); },
         roles: function () { return this.txService.getRelatedRoles(this.id); },
         unrelate: function (role) { return this.txService.unsetRelatedRole(this.id, role); }
     },
     role: {
-        relationships: function () { return this.txService.getRelationshipTypesThatRelateRole(this.id); },
+        relations: function () { return this.txService.getRelationTypesThatRelateRole(this.id); },
         players: function () { return this.txService.getTypesThatPlayRole(this.id); },
     },
     rule: {
@@ -87,7 +87,7 @@ const methods = {
     thing: {
         isInferred: function () { return this.txService.isInferred(this.id); },
         type: function () { return this.txService.getDirectType(this.id); },
-        relationships: function (...roles) { return this.txService.getRelationshipsByRoles(this.id, roles); },
+        relations: function (...roles) { return this.txService.getRelationsByRoles(this.id, roles); },
         roles: function () { return this.txService.getRolesPlayedByThing(this.id); },
         attributes: function (...attributes) { return this.txService.getAttributesByTypes(this.id, attributes); },
         keys: function (...types) { return this.txService.getKeysByTypes(this.id, types); },

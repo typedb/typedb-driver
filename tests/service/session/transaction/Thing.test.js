@@ -53,53 +53,53 @@ describe("Thing methods", () => {
         expect(type.isType()).toBeTruthy();
     });
 
-    test("relationships", async () => {
-        const relationshipType = await tx.putRelationshipType('parenthood');
-        const relationship = await relationshipType.create();
+    test("relations", async () => {
+        const relationType = await tx.putRelationType('parenthood');
+        const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
         const personType = await tx.putEntityType('person');
         const parent = await personType.create();
-        await relationship.assign(parentRole, parent);
-        const rels = await (await parent.relationships()).collect();
+        await relation.assign(parentRole, parent);
+        const rels = await (await parent.relations()).collect();
         expect(rels.length).toBe(1);
-        expect(rels[0].id).toBe(relationship.id);
+        expect(rels[0].id).toBe(relation.id);
     });
 
-    test("relationships() filtered by role", async () => {
+    test("relations() filtered by role", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
 
-        //First relationship type
-        const relationshipType = await tx.putRelationshipType('parenthood');
-        const parenthoodRel1 = await relationshipType.create();
+        //First relation type
+        const relationType = await tx.putRelationType('parenthood');
+        const parenthoodRel1 = await relationType.create();
         const parentRole = await tx.putRole('parent');
         await parenthoodRel1.assign(parentRole, person);
 
-        const parenthoodRel2 = await relationshipType.create();
+        const parenthoodRel2 = await relationType.create();
         await parenthoodRel2.assign(parentRole, person);
 
-        const parentRelationships = await (await person.relationships(parentRole)).collect();
-        expect(parentRelationships.length).toBe(2);
+        const parentRelations = await (await person.relations(parentRole)).collect();
+        expect(parentRelations.length).toBe(2);
 
-        //Second relationship type
-        const relationshipType2 = await tx.putRelationshipType('employment');
-        const employmentRel = await relationshipType2.create();
+        //Second relation type
+        const relationType2 = await tx.putRelationType('employment');
+        const employmentRel = await relationType2.create();
         const employerRole = await tx.putRole('employer');
         await employmentRel.assign(employerRole, person);
 
 
-        const employerRelationships = await (await person.relationships(employerRole)).collect();
-        expect(employerRelationships.length).toBe(1);
-        expect(employerRelationships[0].id).toBe(employmentRel.id);
+        const employerRelations = await (await person.relations(employerRole)).collect();
+        expect(employerRelations.length).toBe(1);
+        expect(employerRelations[0].id).toBe(employmentRel.id);
     });
 
     test("roles", async () => {
-        const relationshipType = await tx.putRelationshipType('parenthood');
-        const relationship = await relationshipType.create();
+        const relationType = await tx.putRelationType('parenthood');
+        const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
         const personType = await tx.putEntityType('person');
         const parent = await personType.create();
-        await relationship.assign(parentRole, parent);
+        await relation.assign(parentRole, parent);
         const roles = await (await parent.roles()).collect();
         expect(roles.length).toBe(1);
         expect(roles[0].id).toBe(parentRole.id);

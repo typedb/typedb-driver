@@ -65,8 +65,8 @@ Transaction.prototype.putEntityType = function (label) {
     return this.txService.putEntityType(label);
 }
 
-Transaction.prototype.putRelationshipType = function (label) {
-    return this.txService.putRelationshipType(label);
+Transaction.prototype.putRelationType = function (label) {
+    return this.txService.putRelationType(label);
 }
 
 Transaction.prototype.putAttributeType = function (label, dataType) {

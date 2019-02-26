@@ -65,23 +65,23 @@ describe("Concept methods", () => {
         await expect(person.delete()).rejects.toThrowError();
     });
 
-    test("instance isEntity/isRelationship/isAttribute", async () => {
+    test("instance isEntity/isRelation/isAttribute", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
         expect(person.isEntity()).toBeTruthy();
-        expect(person.isRelationship()).toBeFalsy();
+        expect(person.isRelation()).toBeFalsy();
         expect(person.isAttribute()).toBeFalsy();
 
-        const relationshipType = await tx.putRelationshipType('marriage');
-        const marriage = await relationshipType.create();
+        const relationType = await tx.putRelationType('marriage');
+        const marriage = await relationType.create();
         expect(marriage.isEntity()).toBeFalsy();
-        expect(marriage.isRelationship()).toBeTruthy();
+        expect(marriage.isRelation()).toBeTruthy();
         expect(marriage.isAttribute()).toBeFalsy();
 
         const attributeType = await tx.putAttributeType('employed', env.dataType().BOOLEAN);
         const employed = await attributeType.create(true);
         expect(employed.isEntity()).toBeFalsy();
-        expect(employed.isRelationship()).toBeFalsy();
+        expect(employed.isRelation()).toBeFalsy();
         expect(employed.isAttribute()).toBeTruthy();
     });
 });

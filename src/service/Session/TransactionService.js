@@ -100,10 +100,10 @@ TransactionService.prototype.getThen = function (id) {
 };
 
 // Role
-TransactionService.prototype.getRelationshipTypesThatRelateRole = function (id) {
-    const txRequest = RequestBuilder.getRelationshipTypesThatRelateRole(id);
+TransactionService.prototype.getRelationTypesThatRelateRole = function (id) {
+    const txRequest = RequestBuilder.getRelationTypesThatRelateRole(id);
     return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getRelationshipTypesThatRelateRole(resp));
+        .then(resp => this.respConverter.getRelationTypesThatRelateRole(resp));
 }
 TransactionService.prototype.getTypesThatPlayRole = function (id) {
     const txRequest = RequestBuilder.getTypesThatPlayRole(id);
@@ -173,11 +173,11 @@ TransactionService.prototype.addEntity = function (id) {
         .then(resp => this.respConverter.addEntity(resp));
 };
 
-// Relationship Type
-TransactionService.prototype.addRelationship = function (id) {
-    const txRequest = RequestBuilder.addRelationship(id);
+// Relation Type
+TransactionService.prototype.addRelation = function (id) {
+    const txRequest = RequestBuilder.addRelation(id);
     return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.addRelationship(resp));
+        .then(resp => this.respConverter.addRelation(resp));
 };
 TransactionService.prototype.getRelatedRoles = function (id) {
     const txRequest = RequestBuilder.getRelatedRoles(id);
@@ -236,10 +236,10 @@ TransactionService.prototype.getDirectType = function (id) {
     return this.communicator.send(txRequest)
         .then(response => this.respConverter.getDirectType(response));
 };
-TransactionService.prototype.getRelationshipsByRoles = function (id, roles) {
-    const txRequest = RequestBuilder.getRelationshipsByRoles(id, roles);
+TransactionService.prototype.getRelationsByRoles = function (id, roles) {
+    const txRequest = RequestBuilder.getRelationsByRoles(id, roles);
     return this.communicator.send(txRequest)
-        .then(response => this.respConverter.getRelationshipsByRoles(response));
+        .then(response => this.respConverter.getRelationsByRoles(response));
 };
 TransactionService.prototype.getRolesPlayedByThing = function (id) {
     const txRequest = RequestBuilder.getRolesPlayedByThing(id);
@@ -265,7 +265,7 @@ TransactionService.prototype.unsetAttribute = function (id, attribute) {
     return this.communicator.send(txRequest);
 };
 
-// Relationship
+// Relation
 TransactionService.prototype.rolePlayersMap = function (id) {
     const txRequest = RequestBuilder.rolePlayersMap(id);
     return this.communicator.send(txRequest)
@@ -316,10 +316,10 @@ TransactionService.prototype.putEntityType = function (label) {
         .then(response => this.respConverter.putEntityType(response));
 }
 
-TransactionService.prototype.putRelationshipType = function (label) {
-    const txRequest = RequestBuilder.putRelationshipType(label);
+TransactionService.prototype.putRelationType = function (label) {
+    const txRequest = RequestBuilder.putRelationType(label);
     return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putRelationshipType(response));
+        .then(response => this.respConverter.putRelationType(response));
 }
 
 TransactionService.prototype.putRole = function (label) {

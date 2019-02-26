@@ -37,26 +37,26 @@ afterEach(() => {
     tx.close();
 });
 
-describe("Relationship type methods", () => {
+describe("Relation type methods", () => {
 
     test("create", async () => {
-        const relationshipType = await tx.putRelationshipType("parenthood");
-        const relationship = await relationshipType.create();
-        expect(relationship.isRelationship()).toBeTruthy();
+        const relationType = await tx.putRelationType("parenthood");
+        const relation = await relationType.create();
+        expect(relation.isRelation()).toBeTruthy();
     });
 
     test('Get/set/delete relates', async () => {
-        const relationshipType = await tx.putRelationshipType("parenthood");
+        const relationType = await tx.putRelationType("parenthood");
         const parentRole = await tx.putRole('parent');
         const childRole = await tx.putRole('child');
-        const relates = await (await relationshipType.roles()).collect();
+        const relates = await (await relationType.roles()).collect();
         expect(relates.length).toBe(0);
-        await relationshipType.relates(parentRole);
-        await relationshipType.relates(childRole);
-        const populateRelates = await (await relationshipType.roles()).collect();
+        await relationType.relates(parentRole);
+        await relationType.relates(childRole);
+        const populateRelates = await (await relationType.roles()).collect();
         expect(populateRelates.length).toBe(2);
-        await relationshipType.unrelate(parentRole);
-        const oneRole = await (await relationshipType.roles()).collect();
+        await relationType.unrelate(parentRole);
+        const oneRole = await (await relationType.roles()).collect();
         expect(oneRole.length).toBe(1);
         expect(oneRole[0].baseType).toBe('ROLE');
     });

@@ -3,7 +3,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "graknlabs_grakn_core",
     remote = "https://github.com/graknlabs/grakn",
-    commit = "ec41e803e3a12696cec731ad6071c26e90cea926"
+    commit = "2091602fbcca45823d2bc3d5062ce7cdb6b25b89"
 )
 
 git_repository(
@@ -79,3 +79,6 @@ graql_dependencies()
 
 load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()
+
+load("@graknlabs_grakn_core//dependencies/docker:dependencies.bzl", "docker_dependencies")
+docker_dependencies()

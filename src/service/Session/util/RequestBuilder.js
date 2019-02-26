@@ -40,8 +40,8 @@ function convertBaseType(baseType) {
     case ConceptsBaseType.ATTRIBUTE_TYPE: return messages.Concept.BASE_TYPE.ATTRIBUTE_TYPE;
     case ConceptsBaseType.ENTITY: return messages.Concept.BASE_TYPE.ENTITY;
     case ConceptsBaseType.ENTITY_TYPE: return messages.Concept.BASE_TYPE.ENTITY_TYPE;
-    case ConceptsBaseType.RELATIONSHIP: return messages.Concept.BASE_TYPE.RELATION;
-    case ConceptsBaseType.RELATIONSHIP_TYPE: return messages.Concept.BASE_TYPE.RELATION_TYPE;
+    case ConceptsBaseType.RELATION: return messages.Concept.BASE_TYPE.RELATION;
+    case ConceptsBaseType.RELATION_TYPE: return messages.Concept.BASE_TYPE.RELATION_TYPE;
     case ConceptsBaseType.ROLE: return messages.Concept.BASE_TYPE.ROLE;
     case ConceptsBaseType.RULE: return messages.Concept.BASE_TYPE.RULE;
     case ConceptsBaseType.META_TYPE: return messages.Concept.BASE_TYPE.META_TYPE;
@@ -148,7 +148,7 @@ const methods = {
   },
 
   // Role
-  getRelationshipTypesThatRelateRole: function (conceptId) {
+  getRelationTypesThatRelateRole: function (conceptId) {
     const relationsReq = new messages.Role.Relations.Req();
     const conceptMethodReq = new messages.Method.Req();
     conceptMethodReq.setRoleRelationsReq(relationsReq);
@@ -251,8 +251,8 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
 
-  // Relationship Type
-  addRelationship: function (conceptId) {
+  // Relation Type
+  addRelation: function (conceptId) {
     const createRelationReq = new messages.RelationType.Create.Req();
     const conceptMethodReq = new messages.Method.Req();
     conceptMethodReq.setRelationtypeCreateReq(createRelationReq);
@@ -336,7 +336,7 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
 
-  getRelationshipsByRoles: function (conceptId, roles) {
+  getRelationsByRoles: function (conceptId, roles) {
     const relationsReq = new messages.Thing.Relations.Req();
     const conceptMethodReq = new messages.Method.Req();
     if (roles.length) relationsReq.setRolesList(roles.map(role => toGrpcConcept(role)));
@@ -381,7 +381,7 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
 
-  // Relationship
+  // Relation
   rolePlayersMap: function (conceptId) {
     const rolePlayersMapReq = new messages.Relation.RolePlayersMap.Req();
     const conceptMethodReq = new messages.Method.Req();
@@ -448,7 +448,7 @@ const methods = {
     txRequest.setPutentitytypeReq(putMessage);
     return txRequest;
   },
-  putRelationshipType: function (label) {
+  putRelationType: function (label) {
     const txRequest = new messages.Transaction.Req();
     const putMessage = new messages.Transaction.PutRelationType.Req();
     putMessage.setLabel(label);
