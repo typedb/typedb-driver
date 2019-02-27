@@ -26,10 +26,10 @@ java_test(
     test_class = "grakn.core.client.concept.test.RemoteConceptIT",
     deps = [
         # Grakn Core dependencies
-        "//client-java",
-        "//concept:concept",
-        "//server:server", # NEEDS TO GO
-        "//test-integration/rule:grakn-test-server",
+        "//:client-java",
+        "@graknlabs_grakn_core//concept:concept",
+        "@graknlabs_grakn_core//server:server", # NEEDS TO GO
+        "@graknlabs_grakn_core//test-integration/rule:grakn-test-server",
 
         # Grakn Labs dependencies
         "@graknlabs_graql//java:graql",
@@ -39,7 +39,11 @@ java_test(
         "//dependencies/maven/artifacts/org/slf4j:slf4j-api",
     ],
     size = "large",
-    classpath_resources = ["//test-integration/resources:logback-test"]
+    classpath_resources = [
+        "@graknlabs_grakn_core//test-integration/resources:logback-test",
+        "@graknlabs_grakn_core//test-integration/resources:cassandra-embedded",
+        "@graknlabs_grakn_core//server:conf/grakn.properties"
+    ]
 )
 
 

@@ -29,14 +29,14 @@ java_test(
     test_class = "grakn.core.client.test.GraknClientTest",
     deps = [
         # Package dependencies
-        "//client-java",
+        "//:client-java",
 
         # Internal dependencies
-        "//api:api",
-        "//common:common",
-        "//concept:concept",
-        "//protocol:protocol-java",
-        "//server:server", # NEEDS TO GO
+        "@graknlabs_grakn_core//api:api",
+        "@graknlabs_grakn_core//common:common",
+        "@graknlabs_grakn_core//concept:concept",
+        "@graknlabs_grakn_core//protocol:protocol-java",
+        "@graknlabs_grakn_core//server:server", # TODO: NEEDS TO GO
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
@@ -58,13 +58,13 @@ java_test(
     test_class = "grakn.core.client.test.GraknClientIT",
     deps = [
         # Package dependencies
-        "//client-java",
+        "//:client-java",
 
         # Internal dependencies
-        "//api:api",
-        "//concept:concept",
-        "//server:server", # TODO: NEEDS TO GO
-        "//test-integration/rule:grakn-test-server",
+        "@graknlabs_grakn_core//api:api",
+        "@graknlabs_grakn_core//concept:concept",
+        "@graknlabs_grakn_core//server:server", # TODO: NEEDS TO GO
+        "@graknlabs_grakn_core//test-integration/rule:grakn-test-server",
 
         # External depencies from @graknlabs
         "@graknlabs_graql//java:graql",
@@ -75,7 +75,11 @@ java_test(
         "//dependencies/maven/artifacts/com/google/guava:guava"
     ],
     size = "large",
-    classpath_resources = ["//test-integration/resources:logback-test"]
+    classpath_resources = [
+        "@graknlabs_grakn_core//test-integration/resources:logback-test",
+        "@graknlabs_grakn_core//test-integration/resources:cassandra-embedded",
+        "@graknlabs_grakn_core//server:conf/grakn.properties"
+    ]
 )
 
 checkstyle_test(

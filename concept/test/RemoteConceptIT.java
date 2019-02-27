@@ -41,6 +41,7 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +66,10 @@ import static org.junit.Assert.assertTrue;
 public class RemoteConceptIT {
 
     @ClassRule
-    public static final GraknTestServer server = new GraknTestServer();
+    public static final GraknTestServer server = new GraknTestServer(
+            Paths.get("external/graknlabs_grakn_core/server/conf/grakn.properties"),
+            Paths.get("external/graknlabs_grakn_core/test-integration/resources/cassandra-embedded.yaml")
+    );
     private static GraknClient.Session session;
     private static int EMAIL_COUNTER = 0;
     private GraknClient.Transaction tx;

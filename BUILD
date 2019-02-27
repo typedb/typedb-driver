@@ -18,18 +18,24 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("//dependencies/maven:rules.bzl", "deploy_maven_jar")
+load("@graknlabs_grakn_core//dependencies/maven:rules.bzl", "deploy_maven_jar")
 load("//dependencies/tools/checkstyle:checkstyle.bzl", "checkstyle_test")
 
 java_library(
     name = "client-java",
-    srcs = glob(["**/*.java"], exclude = ["**/test/*.java"]),
+    srcs = glob([
+        "concept/*.java",
+        "exception/*.java",
+        "rpc/*.java",
+        "test/*.java",
+        "GraknClient.java"
+    ]),
     deps = [
         # Internal dependencies
-        "//api:api",
-        "//common:common",
-        "//concept:concept",
-        "//protocol:protocol-java",
+        "@graknlabs_grakn_core//api:api",
+        "@graknlabs_grakn_core//common:common",
+        "@graknlabs_grakn_core//concept:concept",
+        "@graknlabs_grakn_core//protocol:protocol-java",
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
@@ -62,4 +68,19 @@ deploy_maven_jar(
     name = "deploy-maven-jar",
     target = ":client-java",
     package = "client-java",
+)
+
+# When a Bazel build or test is executed with RBE, it will be executed using the following platform.
+# The platform is based on the standard rbe_ubuntu1604 from @bazel_toolchains,
+# but with an additional setting dockerNetwork = standard because our tests need network access
+platform(
+    name = "rbe-platform",
+    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604"],
+    remote_execution_properties = """
+        {PARENT_REMOTE_EXECUTION_PROPERTIES}
+        properties: {
+          name: "dockerNetwork"
+          value: "standard"
+        }
+        """,
 )

@@ -69,6 +69,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -103,7 +104,10 @@ import static org.junit.Assert.assertTrue;
 public class GraknClientIT {
 
     @ClassRule
-    public static final GraknTestServer server = new GraknTestServer();
+    public static final GraknTestServer server = new GraknTestServer(
+            Paths.get("external/graknlabs_grakn_core/server/conf/grakn.properties"),
+            Paths.get("external/graknlabs_grakn_core/test-integration/resources/cassandra-embedded.yaml")
+    );
 
     private static SessionImpl localSession;
     private static GraknClient.Session remoteSession;
