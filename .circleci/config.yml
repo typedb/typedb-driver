@@ -50,10 +50,6 @@ jobs:
       - run: python ./dependencies/tools/checkstyle/test-coverage.py
       - bazel:
           command: bazel build //...
-      - bazel:
-          command: bazel test //... --test_size_filters=small --test_output=errors
-      - bazel:
-          command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
   test:
     machine: true
@@ -63,9 +59,9 @@ jobs:
       - bazel_install
       - bazel_add_rbe_credential
       - bazel:
-          command: bazel test //client-java/... --test_size_filters=small --test_output=errors
+          command: bazel test //... --test_size_filters=small --test_output=errors
       - bazel:
-          command: bazel test //client-java/... --test_size_filters=medium,large,enormous --test_output=errors
+          command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
 workflows:
   client-java:
