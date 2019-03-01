@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.core.client.concept.test;
+package grakn.client.concept.test;
 
-import grakn.core.client.GraknClient;
+import grakn.client.GraknClient;
 import grakn.core.concept.Label;
 import grakn.core.concept.thing.Attribute;
 import grakn.core.concept.thing.Entity;
@@ -61,7 +61,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Integration Tests for testing methods of all subclasses of grakn.core.client.concept.RemoteConcept.
+ * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
  */
 public class RemoteConceptIT {
 

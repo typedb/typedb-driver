@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.core.client.concept;
+package grakn.client.concept;
 
-import grakn.core.client.GraknClient;
+import grakn.client.GraknClient;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.protocol.ConceptProto;

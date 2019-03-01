@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.core.client.rpc;
+package grakn.client.rpc;
 
-import grakn.core.client.GraknClient;
-import grakn.core.client.concept.RemoteConcept;
+import grakn.client.GraknClient;
+import grakn.client.concept.RemoteConcept;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.answer.Answer;

@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.core.client.rpc;
+package grakn.client.rpc;
 
-import grakn.core.client.exception.GraknClientException;
+import grakn.client.exception.GraknClientException;
 import grakn.core.protocol.SessionProto;
 import grakn.core.protocol.SessionProto.Transaction;
 import grakn.core.protocol.SessionServiceGrpc;

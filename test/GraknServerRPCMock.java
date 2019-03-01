@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.core.client.test;
+package grakn.client.test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;

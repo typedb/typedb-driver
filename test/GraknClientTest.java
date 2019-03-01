@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.core.client.test;
+package grakn.client.test;
 
 import grakn.core.api.Transaction;
-import grakn.core.client.GraknClient;
-import grakn.core.client.concept.RemoteConcept;
-import grakn.core.client.exception.GraknClientException;
-import grakn.core.client.rpc.RequestBuilder;
+import grakn.client.GraknClient;
+import grakn.client.concept.RemoteConcept;
+import grakn.client.exception.GraknClientException;
+import grakn.client.rpc.RequestBuilder;
 import grakn.core.common.exception.GraknException;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
