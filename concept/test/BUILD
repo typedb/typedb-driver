@@ -23,7 +23,7 @@ load("//dependencies/tools/checkstyle:checkstyle.bzl", "checkstyle_test")
 java_test(
     name = "remote-concept-it",
     srcs = ["RemoteConceptIT.java"],
-    test_class = "grakn.core.client.concept.test.RemoteConceptIT",
+    test_class = "grakn.client.concept.test.RemoteConceptIT",
     deps = [
         # Grakn Core dependencies
         "//:client-java",

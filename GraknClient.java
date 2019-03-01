@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package grakn.core.client;
+package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import grakn.core.client.concept.RemoteConcept;
-import grakn.core.client.exception.GraknClientException;
-import grakn.core.client.rpc.RequestBuilder;
-import grakn.core.client.rpc.ResponseReader;
-import grakn.core.client.rpc.Transceiver;
+import grakn.client.concept.RemoteConcept;
+import grakn.client.exception.GraknClientException;
+import grakn.client.rpc.RequestBuilder;
+import grakn.client.rpc.ResponseReader;
+import grakn.client.rpc.Transceiver;
 import grakn.core.common.exception.Validator;
 import grakn.core.common.http.SimpleURI;
 import grakn.core.common.util.CommonUtil;

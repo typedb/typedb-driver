@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.core.client.rpc;
+package grakn.client.rpc;
 
 import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.ConceptId;

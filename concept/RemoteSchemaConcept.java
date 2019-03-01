@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.core.client.concept;
+package grakn.client.concept;
 
-import grakn.core.client.GraknClient;
-import grakn.core.client.rpc.RequestBuilder;
+import grakn.client.GraknClient;
+import grakn.client.rpc.RequestBuilder;
 import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;

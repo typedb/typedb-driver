@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.core.client.exception;
+package grakn.client.exception;
 
 import grakn.core.common.exception.ErrorMessage;
 import grakn.core.common.exception.GraknException;
