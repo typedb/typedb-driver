@@ -62,9 +62,14 @@ maven_dependencies_for_build()
 load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
 maven_dependencies_for_build()
 
+
 # Load Graql dependencies
 load("@graknlabs_grakn_core//dependencies/git:dependencies.bzl", "graknlabs_graql")
 graknlabs_graql()
+
+# Load client-java dependencies
+load("@graknlabs_grakn_core//dependencies/git:dependencies.bzl", "graknlabs_client_java")
+graknlabs_client_java()
 
 # Load ANTLR dependencies for Bazel
 load("@graknlabs_graql//dependencies/compilers:dependencies.bzl", "antlr_dependencies")
