@@ -1,4 +1,4 @@
-Please replace every line in curly brackets ( { like this } ) with an appropriate description, and remove this line.
+Please replace every line in curly brackets { like this } with an appropriate description, and remove this line.
 
 ## What is the goal of this PR?
 
