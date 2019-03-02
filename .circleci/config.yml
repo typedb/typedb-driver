@@ -63,6 +63,28 @@ jobs:
       - run: sudo apt install -y expect
       - run: bazel run //:deploy-npm -- test $TEST_REPO_USERNAME $TEST_REPO_PASSWORD $TEST_REPO_EMAIL
 
+  release-approval:
+    machine: true
+    steps:
+      - checkout
+      - bazel_install
+      - run: bazel run @graknlabs_grabl//ci:release-approval
+
+  deploy-npm:
+    machine: true
+    working_directory: ~/grakn
+    steps:
+      - checkout
+      - bazel_install
+      - bazel_add_rbe_credential
+      - run: bazel run //:deploy-npm -- npmjs $NPM_REPO_USERNAME $NPM_REPO_PASSWORD $NPM_REPO_EMAIL
+
+  release-cleanup:
+    machine: true
+    steps:
+      - checkout
+      - run: git push --delete origin grakn-client-nodejs-release-branch
+
 workflows:
   version: 2
   grakn-client-nodejs-ci:
@@ -72,3 +94,28 @@ workflows:
           filters:
             branches:
               only: master
+          requires:
+            - client-nodejs
+      - release-approval:
+          filters:
+            branches:
+              only: master
+          requires:
+            - client-nodejs
+
+  # the 'grakn-client-nodejs-release' workflow is triggered by the creation of 'grakn-client-nodejs-release-branch' branch in graknlabs/client-nodejs
+  # it consists of jobs which:
+  # - publishes client-nodejs to npm
+  # - cleans up the 'grakn-client-nodejs-release-branch' branch which was created by the release-approval job
+  grakn-client-nodejs-release:
+    jobs:
+      - deploy-npm:
+          filters:
+            branches:
+              only: grakn-client-nodejs-release-branch
+      - release-cleanup:
+          requires:
+            - deploy-npm
+          filters:
+            branches:
+              only: grakn-client-nodejs-release-branch

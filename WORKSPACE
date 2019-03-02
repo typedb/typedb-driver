@@ -44,7 +44,11 @@ git_repository(
     commit="6298bcf46c0ae8b1b5c9bd5138e10be38a3a9bc3"
 )
 
-
+git_repository(
+    name = "graknlabs_grabl",
+    remote = "https://github.com/graknlabs/grabl",
+    commit="ad79f87f869d25694fe11196e16be42a80e95d14"
+)
 
 # ----- @graknlabs_grakn deps -----
 git_repository(
