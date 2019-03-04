@@ -63,8 +63,26 @@ jobs:
       - bazel:
           command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
+  dependency-update:
+    machine: true
+    steps:
+      - checkout
+      - bazel_install
+      - run:
+          name: Sync docs:development dependency to the latest Grakn Client Java version
+          command: |
+            bazel run @graknlabs_grabl//sync:dependency-update -- --dependency client-java:master \
+              --user docs:development
+
 workflows:
   client-java:
     jobs:
       - build
       - test
+      - dependency-update:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+            - test

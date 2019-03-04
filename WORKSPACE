@@ -70,3 +70,9 @@ java_grpc_compile()
 
 load("@graknlabs_grakn_core//dependencies/docker:dependencies.bzl", "docker_dependencies")
 docker_dependencies()
+
+git_repository(
+    name = "graknlabs_grabl",
+    remote = "https://github.com/graknlabs/grabl",
+    commit = "ad79f87f869d25694fe11196e16be42a80e95d14",
+)
