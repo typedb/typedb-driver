@@ -17,21 +17,46 @@
  * under the License.
  */
 
-const grpc = require("grpc");
-const services = require("../../../client-nodejs-proto/protocol/session/Session_grpc_pb");
 const TxService = require("./TransactionService");
 const RequestBuilder = require("./util/RequestBuilder");
-
 
 /**
  * This creates a new connection to the server over HTTP2,
  * the connection will contain all the Transaction streams
  */
-function SessionService(uri, keyspace, credentials) {
-    this.keyspace = keyspace;
+function SessionService(grpcClient, credentials) {
     this.credentials = credentials;
-    this.stub = new services.SessionServiceClient(uri, grpc.credentials.createInsecure());
+    this.client = grpcClient;
 }
+
+/**
+ * This sends an open Session request and retrieves the sessionId that will be needed
+ * to open a Transaction.
+ */
+SessionService.prototype.open = async function open(keyspace){
+    const openResponse = await wrapInPromise(this.client, this.client.open, RequestBuilder.openSession(keyspace));
+    this.sessionId = openResponse.getSessionid();
+}
+
+/**
+ * This method creates a new Duplex Stream (this.client.transaction()) over which gRPC will communicate when
+ * exchanging messages related to the Transaction service.
+ * It also sends an Open request before returning the TransactionService
+ * @param {Grakn.txType} txType type of transaction to be open
+ */
+SessionService.prototype.transaction = async function create(txType) {
+    const txService = new TxService(this.client.transaction());
+    await txService.openTx(this.sessionId, txType, this.credentials);
+    return txService;
+}
+
+/**
+ * Closes connection to the server
+ */
+SessionService.prototype.close = function close() {
+    return wrapInPromise(this.client, this.client.close, RequestBuilder.closeSession(this.sessionId));
+}
+
 
 function wrapInPromise(self, fn, requestMessage){
     return new Promise((resolve, reject) => {
@@ -40,30 +65,6 @@ function wrapInPromise(self, fn, requestMessage){
             resolve(response);
         });
     });
-}
-
-/**
- * This method creates a new Duplex Stream (this.stub.transaction()) over which gRPC will communicate when
- * exchanging messages related to the Transaction service.
- * It also sends an Open request before returning the TransactionService
- * @param {Grakn.txType} txType type of transaction to be open
- */
-SessionService.prototype.transaction = async function create(txType) {
-    if (this.sessionId === undefined) {
-        this.sessionId = (await wrapInPromise(this.stub, this.stub.open, RequestBuilder.openSession(this.keyspace))).getSessionid();
-    }
-
-    const txService = new TxService(this.stub.transaction());
-    await txService.openTx(this.sessionId, txType, this.credentials);
-    return txService;
-}
-
-/**
- * Closes connection to the server
- */
-SessionService.prototype.close = async function close() {
-    await wrapInPromise(this.stub, this.stub.close, RequestBuilder.closeSession(this.sessionId));
-    grpc.closeClient(this.stub);
 }
 
 module.exports = SessionService;

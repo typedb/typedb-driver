@@ -21,8 +21,8 @@ const env = require('../../../support/GraknTestEnvironment');
 let session;
 let tx;
 
-beforeAll(() => {
-  session = env.session();
+beforeAll(async () => {
+  session = await env.session();
 });
 
 afterAll(async () => {
@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  tx = await session.transaction(env.txType().WRITE);
+  tx = await session.transaction().write();
 })
 
 afterEach(() => {
@@ -102,57 +102,57 @@ describe("Transaction methods", () => {
   }
 
   test("shortest path - Answer of conceptList", async ()=>{
-    const localSession = env.sessionForKeyspace('shortestpathks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    const localSession = await env.sessionForKeyspace('shortestpathks');
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
     const answer = await(result.next());
     expect(answer.list()).toHaveLength(3);
     expect(answer.list().includes(parentshipMap.child)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.parent)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.rel)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('shortestpathks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('shortestpathks');
   });
 
   test("cluster connected components - Answer of conceptSet", async ()=>{
-    const localSession = env.sessionForKeyspace('clusterkeyspace');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    const localSession = await env.sessionForKeyspace('clusterkeyspace');
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("compute cluster in [person, parentship], using connected-component;");
     const answer = await(result.next());
     expect(answer.set().size).toBe(3);
     expect(answer.set().has(parentshipMap.child)).toBeTruthy();
     expect(answer.set().has(parentshipMap.parent)).toBeTruthy();
     expect(answer.set().has(parentshipMap.rel)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('clusterkeyspace');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('clusterkeyspace');
   });
 
   test("compute centrality - Answer of conceptSetMeasure", async ()=>{
-    const localSession = env.sessionForKeyspace('computecentralityks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    const localSession = await env.sessionForKeyspace('computecentralityks');
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("compute centrality in [person, parentship], using degree;");
     const answer = await(result.next());
     expect(answer.measurement()).toBe(1);
     expect(answer.set().has(parentshipMap.child)).toBeTruthy();
     expect(answer.set().has(parentshipMap.parent)).toBeTruthy();
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('computecentralityks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('computecentralityks');
   });
 
   test("group query - Answer of answerGroup", async ()=>{
-    const localSession = env.sessionForKeyspace('groupks');
-    let localTx = await localSession.transaction(env.txType().WRITE);
+    const localSession = await env.sessionForKeyspace('groupks');
+    let localTx = await localSession.transaction().write();
     const parentshipMap = await buildParentship(localTx);
-    localTx = await localSession.transaction(env.txType.WRITE);
+    localTx = await localSession.transaction().write();
     const result = await localTx.query("match $x isa person; $y isa person; (parent: $x, child: $y) isa parentship; get; group $x;");
     const answer = await(result.next());
     expect(answer.owner().id).toBe(parentshipMap.parent);
@@ -160,9 +160,9 @@ describe("Transaction methods", () => {
     expect(answer.answers()[0].map().get('x').id).toBe(parentshipMap.parent);
     expect(answer.answers()[0].map().get('y').id).toBe(parentshipMap.child);
 
-    localTx.close();
-    localSession.close();
-    env.graknClient.keyspaces().delete('groupks');
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('groupks');
   });
 
 

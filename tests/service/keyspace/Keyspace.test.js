@@ -31,8 +31,8 @@ afterAll(async () => {
 describe("Keyspace methods", () => {
 
     test("retrieve and delete", async () => {
-        const session = graknClient.session("retrievetest");
-        const tx = await session.transaction(env.txType().WRITE);
+        const session = await graknClient.session("retrievetest");
+        const tx = await session.transaction().write();
         tx.close();
         const keyspaces = await graknClient.keyspaces().retrieve();
         expect(keyspaces.length).toBeGreaterThan(0);

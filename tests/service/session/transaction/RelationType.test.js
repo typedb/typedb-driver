@@ -21,8 +21,8 @@ const env = require('../../../support/GraknTestEnvironment');
 let session;
 let tx;
 
-beforeAll(() => {
-    session = env.session();
+beforeAll(async () => {
+    session = await env.session();
 });
 
 afterAll(async () => {
@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    tx = await session.transaction(env.txType().WRITE);
+    tx = await session.transaction().write();
 })
 
 afterEach(() => {

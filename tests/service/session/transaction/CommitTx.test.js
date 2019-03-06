@@ -22,9 +22,9 @@ const env = require('../../../support/GraknTestEnvironment');
 let graknClient;
 let session;
 
-beforeAll(() => {
+beforeAll(async () => {
     graknClient = env.graknClient;
-    session = graknClient.session("testcommit");
+    session = await graknClient.session("testcommit");
 });
 
 afterAll(async () => {
@@ -35,38 +35,34 @@ afterAll(async () => {
 
 describe('Integration test', () => {
 
-    test('Open tx with invalid parameter throws error', async () => {
-        await expect(session.transaction('invalidTxType')).rejects.toThrowError();
-    });
-
     test("Tx open in READ mode should throw when trying to define", async () => {
-        const tx = await session.transaction(env.txType().READ);
+        const tx = await session.transaction().read();
         await expect(tx.query("define person sub entity;")).rejects.toThrowError();
         tx.close();
     });
 
     test("If tx does not commit, different Tx won't see changes", async () => {
-        const tx = await session.transaction(env.txType().WRITE);
+        const tx = await session.transaction().write();
         await tx.query("define catwoman sub entity;");
         tx.close()
-        const newTx = await session.transaction(env.txType().WRITE);
+        const newTx = await session.transaction().write();
         await expect(newTx.query("match $x sub catwoman; get;")).rejects.toThrowError(); // catwoman label does not exist in the graph
         newTx.close();
     });
 
     test("When tx commit, different tx will see changes", async () => {
-        const tx = await session.transaction(env.txType().WRITE);
+        const tx = await session.transaction().write();
         await tx.query("define superman sub entity;");
         await tx.commit();
-        const newTx = await session.transaction(env.txType().WRITE);
+        const newTx = await session.transaction().write();
         const superman = await newTx.getSchemaConcept('superman');
         expect(superman.isSchemaConcept()).toBeTruthy();
         newTx.close();
     });
 
     test("explanation and default of infer is true", async () => {
-        const localSession = graknClient.session("gene");
-        const tx = await localSession.transaction(env.txType().WRITE);
+        const localSession = await graknClient.session("gene");
+        const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;"); // TODO: put back offset 0; limit 1;
         const answer = await iterator.next();
         expect(answer.map().size).toBe(1);
@@ -77,8 +73,8 @@ describe('Integration test', () => {
     });
 
     test("explanation with join explanation", async () => {
-        const localSession = graknClient.session("gene");
-        const tx = await localSession.transaction(env.txType().WRITE);
+        const localSession = await graknClient.session("gene");
+        const tx = await localSession.transaction().write();
         const iterator = await tx.query(`match ($x, $y) isa marriage; ($y, $z) isa marriage;
                                             $x != $z; get;`);
         const answers = await iterator.collect();
@@ -91,8 +87,8 @@ describe('Integration test', () => {
     });
 
     test("no results with infer false", async () => {
-        const localSession = graknClient.session("gene");
-        const tx = await localSession.transaction(env.txType().WRITE);
+        const localSession = await graknClient.session("gene");
+        const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;", { infer: false }); // TODO: put back offset 0; limit 1;
         const answer = await iterator.next();
         expect(answer).toBeNull();

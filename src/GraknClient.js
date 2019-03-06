@@ -17,9 +17,12 @@
  * under the License.
  */
 
+const grpc = require("grpc");
 const Session = require('./Session');
 const KeyspaceService = require('./service/Keyspace/KeyspaceService');
 const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
+const sessionServices = require("../client-nodejs-proto/protocol/session/Session_grpc_pb");
+const keyspaceServices = require("../client-nodejs-proto/protocol/keyspace/Keyspace_grpc_pb");
 
 /**
  * Entry-point for Grakn client, it communicates with a running Grakn server using gRPC.
@@ -30,18 +33,32 @@ const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
  * @param {String} uri String containing host address and gRPC port of a running Grakn instance, e.g. "localhost:48555"
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Grakn(uri, credentials) {
-    const keyspaceService = new KeyspaceService(uri, credentials);
+function GraknClient(uri, credentials) {
+    // Open grpc node clients. A grpc node client is composed of stub + channel. 
+    // When creating clients to the same uri, the channel will be automatically shared.
+    const sessionClient = new sessionServices.SessionServiceClient(uri, grpc.credentials.createInsecure());
+    const keyspaceClient = new keyspaceServices.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
 
-    this.session = (keyspace) => new Session(uri, keyspace, credentials);
+    const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
 
-    this.keyspaces = ()=> ({
+    this.session = async (keyspace) => { 
+        const session = new Session(sessionClient, credentials);
+        await session.open(keyspace);
+        return session;
+    };
+
+    this.keyspaces = () => ({
         delete: (keyspace) => keyspaceService.delete(keyspace),
         retrieve: () => keyspaceService.retrieve()
     });
+
+    this.close = () => {
+        grpc.closeClient(sessionClient);
+        grpc.closeClient(keyspaceClient);
+    }
 }
 
-module.exports = Grakn
+module.exports = GraknClient
 
 /**
  * List of available dataTypes for Grakn Attributes
@@ -54,13 +71,4 @@ module.exports.dataType = {
     FLOAT: messages.AttributeType.DATA_TYPE.FLOAT,
     DOUBLE: messages.AttributeType.DATA_TYPE.DOUBLE,
     DATE: messages.AttributeType.DATA_TYPE.DATE
-};
-
-/**
- * List of available transaction types supported by Grakn
- */
-module.exports.txType = {
-    READ: messages.Transaction.Type.READ,
-    WRITE: messages.Transaction.Type.WRITE,
-    BATCH: messages.Transaction.Type.BATCH
 };
