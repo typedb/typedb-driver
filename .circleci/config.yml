@@ -17,10 +17,10 @@ commands:
     parameters:
       command:
         type: string
-      steps:
-        - run:
-            command: |
-              bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+    steps:
+      - run:
+          command: |
+            bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
 
 jobs:
   build:
