@@ -15,10 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-java_binary(
-    name = "bazel-deps",
-    main_class = "com.github.johnynek.bazel_deps.ParseProject",
-    visibility = ["//visibility:public"],
-    runtime_deps = ["@bazel_deps//jar:jar"],
-)
