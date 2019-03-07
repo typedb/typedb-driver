@@ -88,4 +88,5 @@ checkstyle_test(
         ":grakn-client-test",
         ":grakn-client-it",
     ],
+    config = "//config/checkstyle:checkstyle.xml"
 )

@@ -59,9 +59,8 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":client-java"
-    ],
+    targets = [":client-java"],
+    config = "//config/checkstyle:checkstyle.xml"
 )
 
 deploy_maven_jar(

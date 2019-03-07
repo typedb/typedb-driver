@@ -50,4 +50,5 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [":remote-concept-it"],
+    config = "//config/checkstyle:checkstyle.xml"
 )
