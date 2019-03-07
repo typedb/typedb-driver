@@ -69,7 +69,7 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - run: bazel run @graknlabs_grabl//ci:release-approval
+      - run: bazel run @graknlabs_build_tools//ci:release-approval
 
   release-npm:
     machine: true
