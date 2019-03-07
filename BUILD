@@ -60,7 +60,7 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [":client-java"],
-    config = "//config/checkstyle:checkstyle.xml"
+    license_type = "apache"
 )
 
 deploy_maven_jar(
