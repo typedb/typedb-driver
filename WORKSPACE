@@ -38,19 +38,18 @@ graknlabs_bazel_distribution()
 # Load Build Tools #
 ####################
 
-load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain", "bazel_rules_docker")
+load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
-bazel_rules_docker()
 
 load("@graknlabs_build_tools//checkstyle:dependencies.bzl", "checkstyle_dependencies")
 checkstyle_dependencies()
 
 
-#######################################
-# Load compiler dependencies for GRPC #
-#######################################
+##########################
+# Load GRPC dependencies #
+##########################
 
 load("@graknlabs_build_tools//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
@@ -68,6 +67,9 @@ java_grpc_compile()
 
 load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl", grakn_core_dependencies = "maven_dependencies")
 grakn_core_dependencies()
+
+load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_rules_docker")
+bazel_rules_docker()
 
 
 ###########################
