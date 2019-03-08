@@ -96,14 +96,14 @@ workflows:
             branches:
               only: master
           requires:
+            - build
             - test
       - release-approval:
           filters:
             branches:
               only: master
           requires:
-            - build
-            - test
+            - sync-dependencies
 
   # the 'client-nodejs-release' workflow is triggered by the creation of 'client-nodejs-release-branch' branch in graknlabs/client-nodejs
   # it consists of jobs which:
