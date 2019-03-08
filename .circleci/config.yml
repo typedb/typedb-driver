@@ -52,6 +52,28 @@ jobs:
       - run: ./dist/grakn-core-all-linux/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
       - run: bazel test //:test-integration --test_output=streamed
 
+  test-deployment:
+    machine: true
+    working_directory: ~/grakn
+    steps:
+      - checkout
+      - install-bazel
+      - run: sudo apt install -y expect
+      - run: |
+          # deploying node client to test repo
+          # TODO This is a bit less safe than manually writing the commit in the case of race conditions
+          # Then reusing this ID in later steps
+          bazel run //:deploy-npm -- test $NPM_REPO_USERNAME $NPM_REPO_PASSWORD dummy@grakn.ai
+      - run-grakn-server
+      - run: |
+          # Test deployed node client
+          # insert commit into VERSION file
+          cd tests/deployment/
+          sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" VERSION
+          npm install http://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat VERSION).tgz
+          npm install jest
+          jest nodeApplicationTest.js
+
   sync-dependencies:
     machine: true
     steps:
@@ -91,13 +113,19 @@ workflows:
     jobs:
       - build
       - test
-      - sync-dependencies:
+      - test-deployment:
           filters:
             branches:
               only: master
           requires:
             - build
             - test
+      - sync-dependencies:
+          filters:
+            branches:
+              only: master
+          requires:
+            - test-deployment
       - release-approval:
           filters:
             branches:
