@@ -18,7 +18,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_grakn_core//dependencies/maven:rules.bzl", "deploy_maven_jar")
+load("@graknlabs_grakn_core//dependencies/maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
@@ -63,10 +63,15 @@ checkstyle_test(
     license_type = "apache"
 )
 
-deploy_maven_jar(
-    name = "deploy-maven-jar",
+assemble_maven(
+    name = "assemble-maven",
     target = ":client-java",
     package = "client-java",
+)
+
+deploy_maven(
+    name = "deploy-maven",
+    target = ":assemble-maven"
 )
 
 # When a Bazel build or test is executed with RBE, it will be executed using the following platform.
