@@ -1,7 +1,4 @@
 {
   "name": "grakn-client-test-deployment",
-  "main": "nodeApplicationTest.js",
-  "dependencies": {
-    "grakn-client": "https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-1.5.0-8c3a9b15789d33bc0ab68751ca57ee461ef3c57f.tgz"
-  }
+  "main": "nodeApplicationTest.js"
 }
