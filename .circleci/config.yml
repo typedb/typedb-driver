@@ -24,10 +24,11 @@ commands:
 
   run-grakn-server:
     steps:
+      - run-bazel-rbe:
+          -  command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
       - run:
-          name: Grakn Server - Start
+          name: ./grakn server start
           command: |
-            bazel build @graknlabs_grakn_core//:assemble-linux-targz
             mkdir dist
             tar -xvzf bazel-bin/external/graknlabs_grakn_core/assemble-linux-targz.tar.gz -C ./dist/
             nohup ./dist/grakn-core-all-linux/grakn server start
@@ -59,15 +60,9 @@ jobs:
       - checkout
       - install-bazel
       - run: sudo apt install -y expect
-      - run: |
-          # deploying node client to test repo
-          # TODO This is a bit less safe than manually writing the commit in the case of race conditions
-          # Then reusing this ID in later steps
-          bazel run //:deploy-npm -- test $NPM_REPO_USERNAME $NPM_REPO_PASSWORD dummy@grakn.ai
+      - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
       - run: |
-          # Test deployed node client
-          # insert commit into VERSION file
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" VERSION
           npm install http://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat VERSION).tgz
@@ -79,9 +74,8 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - run: sudo apt install -y expect
-      - run: bazel run //:deploy-npm -- test $TEST_REPO_USERNAME $TEST_REPO_PASSWORD $TEST_REPO_EMAIL
       - run: |
+          # sync-dependencies for client-nodejs relies on //:deploy-npm having been called in a previous job (test-deployment)
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-nodejs:master \
           --targets docs:development
@@ -99,7 +93,7 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - run: bazel run //:deploy-npm -- npmjs $NPM_REPO_USERNAME $NPM_REPO_PASSWORD $NPM_REPO_EMAIL
+      - run: bazel run //:deploy-npm -- npmjs $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
 
   release-cleanup:
     machine: true
