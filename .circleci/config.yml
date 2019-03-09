@@ -64,8 +64,8 @@ jobs:
       - run-grakn-server
       - run: |
           cd tests/deployment/
-          sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" VERSION
-          npm install http://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat VERSION).tgz
+          sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
+          npm install http://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest
           jest nodeApplicationTest.js
 
