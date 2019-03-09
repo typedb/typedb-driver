@@ -25,7 +25,7 @@ commands:
   run-grakn-server:
     steps:
       - run-bazel-rbe:
-          -  command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
+          command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
       - run:
           name: ./grakn server start
           command: |
