@@ -1,4 +1,4 @@
 {
   "name": "grakn-client-test-deployment",
-  "main": "nodeApplicationTest.js"
+  "main": "nodeApplication.test.js",
 }
