@@ -30,7 +30,7 @@ commands:
           name: ./grakn server start
           command: |
             mkdir dist
-            tar -xvzf bazel-bin/external/graknlabs_grakn_core/assemble-linux-targz.tar.gz -C ./dist/
+            tar -xvzf bazel-bin/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
             nohup ./dist/grakn-core-all-linux/grakn server start
 
 jobs:
