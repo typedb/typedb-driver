@@ -45,7 +45,7 @@ jobs:
       - install-bazel
       - run-grakn-server
       - run: ./dist/grakn-core-all-linux/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
-      - run: bazel test //:test-integration --test_output=error
+      - run: bazel test //:test-integration --test_output=errors
 
   test-deployment:
     machine: true
