@@ -61,7 +61,6 @@ jobs:
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
-          npm install --save-dev @babel/preset-env
       - run: jest nodeApplication.test.js
 
   sync-dependencies:
