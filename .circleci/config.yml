@@ -18,20 +18,14 @@ commands:
       command:
         type: string
     steps:
-      - run:
-          command: |
-            bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
 
   run-grakn-server:
     steps:
       - run-bazel-rbe:
           command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
-      - run:
-          name: ./grakn server start
-          command: |
-            mkdir dist
-            tar -xvzf bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
-            nohup ./dist/grakn-core-all-linux/grakn server start
+      - run: mkdir dist && tar -xvzf bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
+      - run: nohup ./dist/grakn-core-all-linux/grakn server start
 
 jobs:
   build:
@@ -51,7 +45,7 @@ jobs:
       - install-bazel
       - run-grakn-server
       - run: ./dist/grakn-core-all-linux/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
-      - run: bazel test //:test-integration --test_output=streamed
+      - run: bazel test //:test-integration --test_output=error
 
   test-deployment:
     machine: true
@@ -68,7 +62,7 @@ jobs:
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
           npm install --save-dev @babel/preset-env
-          jest nodeApplication.test.js
+      - run: jest nodeApplication.test.js
 
   sync-dependencies:
     machine: true
