@@ -70,7 +70,7 @@ deploy_npm(
     name = "deploy-npm",
     target = ":client-nodejs",
     version_file = "//:VERSION",
-    deployment_properties = "@graknlabs_grakn_core//:deployment.properties",
+    deployment_properties = "@graknlabs_build_tools//:deployment.properties",
 )
 
 nodejs_jest_test(
