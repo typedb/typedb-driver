@@ -48,7 +48,8 @@ jobs:
       - run: bazel test //:test-integration --test_output=streamed
 
   test-deployment:
-    machine: true
+    docker:
+      - image: "circleci/node:9.6.1"
     working_directory: ~/grakn
     steps:
       - checkout

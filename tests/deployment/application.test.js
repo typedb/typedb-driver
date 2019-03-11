@@ -1,13 +1,13 @@
 const GraknClient = require("grakn-client");
 
 
-beforeEach(() => {
+beforeEach(async () => {
     client = new GraknClient("localhost:48555");
     session = await client.session("testkeyspace");
     tx = await session.transaction().write();
 })
 
-afterEach(() => {
+afterEach(async () => {
     await tx.close();
     await session.close();
     client.close();
