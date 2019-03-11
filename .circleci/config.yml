@@ -1,3 +1,21 @@
+#
+# GRAKN.AI - THE KNOWLEDGE GRAPH
+# Copyright (C) 2018 Grakn Labs Ltd
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
 version: 2.1
 commands:
   install-bazel:
@@ -100,7 +118,6 @@ jobs:
       - run: git push --delete origin client-nodejs-release-branch
 
 workflows:
-  version: 2
   client-nodejs:
     jobs:
       - build:
@@ -131,10 +148,6 @@ workflows:
           requires:
             - sync-dependencies
 
-  # the 'client-nodejs-release' workflow is triggered by the creation of 'client-nodejs-release-branch' branch in graknlabs/client-nodejs
-  # it consists of jobs which:
-  # - publishes client-nodejs to npm
-  # - cleans up the 'client-nodejs-release-branch' branch which was created by the release-approval job
   client-nodejs-release:
     jobs:
       - release-npm:
@@ -142,8 +155,8 @@ workflows:
             branches:
               only: client-nodejs-release-branch
       - release-cleanup:
-          requires:
-            - release-npm
           filters:
             branches:
               only: client-nodejs-release-branch
+          requires:
+            - release-npm
