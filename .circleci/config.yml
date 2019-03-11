@@ -56,7 +56,10 @@ jobs:
       - run: sudo apt install -y expect
       - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
+      # upgrade NPM using helper node program `n` and run tests
       - run: |
+          sudo npm cache clean -f && sudo npm install -g n
+          sudo n stable
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
