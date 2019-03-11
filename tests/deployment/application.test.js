@@ -1,5 +1,9 @@
 const GraknClient = require("grakn-client");
+jest.setTimeout(15000);
 
+let client;
+let session;
+let tx;
 
 beforeEach(async () => {
     client = new GraknClient("localhost:48555");
@@ -8,7 +12,6 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-    await tx.close();
     await session.close();
     client.close();
 });
@@ -18,19 +21,19 @@ afterEach(async () => {
 
 describe("Basic GraknClient Tests", () => {
 
-    test("define", async function() {
+    test("define", async () => {
         const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
-        tx.commit();
+        await tx.commit();
     });
 
-    test("match", async function() {
+    test("match", async () => {
         const types = await tx.query("match $x sub thing; get;");
+        await tx.close();
     });
 
-    test("insert", async function() {
+    test("insert", async () => {
         const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
         const inserted = await tx.query("insert $x isa person, has name \"john\";");
+        await tx.commit();
     });
 });
-
-

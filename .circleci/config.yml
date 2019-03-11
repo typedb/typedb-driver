@@ -75,15 +75,16 @@ jobs:
       - run: sudo apt install -y expect
       - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
-      # upgrade NPM using helper node program `n` and run tests
+      # upgrade NPM and run tests
       - run: |
-          sudo npm cache clean -f && sudo npm install -g n
-          sudo n stable
+          source /opt/circleci/.nvm/nvm.sh
+          nvm install v10.15.3
+          nvm use --delete-prefix v10.15.3
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
-      - run: jest application.test.js
+          jest --detectOpenHandles application.test.js
 
   sync-dependencies:
     machine: true
