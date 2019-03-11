@@ -3,7 +3,7 @@ commands:
   install-bazel:
     steps:
       - run:
-          name: Install bazel and RBE credential
+          name: Install Bazel and RBE credential
           command: |
             # Install bazel
             curl -OL https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel-0.20.0-installer-linux-x86_64.sh
@@ -61,7 +61,7 @@ jobs:
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
-      - run: jest nodeApplication.test.js
+      - run: jest application.test.js
 
   sync-dependencies:
     machine: true
@@ -99,8 +99,14 @@ workflows:
   version: 2
   client-nodejs:
     jobs:
-      - build
-      - test
+      - build:
+          filters:
+            branches:
+              ignore: client-nodejs-release-branch
+      - test:
+          filters:
+            branches:
+              ignore: client-nodejs-release-branch
       - test-deployment:
           filters:
             branches:
