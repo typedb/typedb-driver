@@ -36,7 +36,7 @@ commands:
       command:
         type: string
     steps:
-      - run: bazel --host_jvm_args="-Xmx2G" run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
 
   run-grakn-server:
     steps:
@@ -73,13 +73,10 @@ jobs:
       - checkout
       - install-bazel
       - run: sudo apt install -y expect
-      - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
+      - run: bazel --host_jvm_args="-Xmx2G" run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
       # upgrade NPM and run tests
       - run: |
-          source /opt/circleci/.nvm/nvm.sh
-          nvm install v10.15.3
-          nvm use --delete-prefix v10.15.3
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
           npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
