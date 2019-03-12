@@ -44,6 +44,19 @@ commands:
           command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
       - run: mkdir dist && tar -xvzf bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
       - run: nohup ./dist/grakn-core-all-linux/grakn server start
+  
+  install-node:
+    steps:
+      - run:
+        name: Install nvm and node
+        command: |
+          curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
+          export NVM_DIR="/opt/circleci/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install v10.5.0
+          nvm alias default v10.5.0
+          echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+          echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> $BASH_ENV
 
 jobs:
   build:
@@ -66,14 +79,14 @@ jobs:
       - run: bazel test //:test-integration --test_output=streamed
 
   test-deployment:
-    docker:
-      - image: "circleci/node:9.6.1"
+    machine: true
     working_directory: ~/grakn
     steps:
       - checkout
       - install-bazel
+      - install-node
       - run: sudo apt install -y expect
-      - run: bazel --host_jvm_args="-Xmx2G" run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
+      - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
       # upgrade NPM and run tests
       - run: |
