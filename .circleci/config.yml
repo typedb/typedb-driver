@@ -36,9 +36,7 @@ commands:
       command:
         type: string
     steps:
-      - run:
-          command: |
-            bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
 
 jobs:
   build:
@@ -69,8 +67,8 @@ jobs:
       - install-bazel
       - run: |
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
-          --source client-java:master \
-          --targets docs:development
+          --source client-java@$CIRCLE_SHA1 \
+          --targets docs:development examples:development
 
 workflows:
   client-java:
