@@ -93,8 +93,8 @@ jobs:
       - run: |
           # sync-dependencies for client-nodejs relies on //:deploy-npm having been called in a previous job (test-deployment)
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
-          --source client-nodejs \
-          --targets docs:development
+          --source client-nodejs@$CIRCLE_SHA1 \
+          --targets docs:development examples:development
 
   release-approval:
     machine: true

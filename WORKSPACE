@@ -35,9 +35,23 @@ graknlabs_bazel_distribution()
 # Load Bazel dependencies #
 ###########################
 
-load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_toolchain")
+load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_toolchain", "bazel_rules_python")
 bazel_common()
 bazel_toolchain()
+bazel_rules_python()
+
+load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+pip_repositories()
+
+# Python dependencies for @graknlabs_build_tools and @graknlabs_bazel_distribution
+
+pip_import(
+    name = "graknlabs_build_tools_ci_pip",
+    requirements = "@graknlabs_build_tools//ci:requirements.txt",
+)
+load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
+graknlabs_build_tools_ci_pip_install = "pip_install")
+graknlabs_build_tools_ci_pip_install()
 
 
 #############################
@@ -70,8 +84,9 @@ npm_install(
 load("@graknlabs_build_tools//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
 
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_bazel_grpc_deps = "grpc_deps")
-com_github_grpc_grpc_bazel_grpc_deps()
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
+com_github_grpc_grpc_deps = "grpc_deps")
+com_github_grpc_grpc_deps()
 
 # Load GRPC Node.js dependencies
 load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
@@ -86,8 +101,9 @@ load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl", "graknlab
 graknlabs_graql()
 graknlabs_client_java()
 
-load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl", maven_dependencies_for_build = "maven_dependencies")
-maven_dependencies_for_build()
+load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
+graknlabs_grakn_core_maven_dependencies = "maven_dependencies")
+graknlabs_grakn_core_maven_dependencies()
 
 # Load Graql dependencies for Grakn Core
 
@@ -97,8 +113,9 @@ antlr_dependencies()
 load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
 antlr_dependencies()
 
-load("@graknlabs_graql//dependencies/maven:dependencies.bzl", graql_dependencies = "maven_dependencies")
-graql_dependencies()
+load("@graknlabs_graql//dependencies/maven:dependencies.bzl",
+graknlabs_graql_maven_dependencies = "maven_dependencies")
+graknlabs_graql_maven_dependencies()
 
 # Load Client Java dependencies for Grakn Core
 
