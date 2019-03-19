@@ -18,25 +18,19 @@
 
 version: 2.1
 commands:
-  install-bazel:
+  install-bazel-linux-rbe:
     steps:
-      - run:
-          name: Install Bazel and RBE credential
-          command: |
-            # Install bazel
-            curl -OL https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel-0.20.0-installer-linux-x86_64.sh
-            chmod +x bazel-0.20.0-installer-linux-x86_64.sh
-            sudo ./bazel-0.20.0-installer-linux-x86_64.sh
-
-            # Install RBE credential
-            bazel run @graknlabs_build_tools//ci:install-bazel-rbe-credential
+      - run: curl -OL https://raw.githubusercontent.com/graknlabs/build-tools/master/ci/install-bazel-linux.sh
+      - run: bash ./install-bazel-linux.sh && rm ./install-bazel-linux.sh
+      - run: curl -OL https://raw.githubusercontent.com/graknlabs/build-tools/master/ci/install-bazel-rbe.sh
+      - run: bash ./install-bazel-rbe.sh && rm ./install-bazel-rbe.sh
 
   run-bazel-rbe:
     parameters:
       command:
         type: string
     steps:
-      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe -- << parameters.command >>
 
   run-grakn-server:
     steps:
@@ -50,8 +44,8 @@ jobs:
     machine: true
     working_directory: ~/grakn
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run-bazel-rbe:
           command: bazel build //...
 
@@ -59,8 +53,8 @@ jobs:
     machine: true
     working_directory: ~/grakn
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run-grakn-server
       - run: ./dist/grakn-core-all-linux/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
       - run: bazel test //:test-integration --test_output=streamed
@@ -69,12 +63,11 @@ jobs:
     machine: true
     working_directory: ~/grakn
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run: sudo apt install -y expect
       - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
       - run-grakn-server
-      # upgrade NPM and run tests
       - run: |
           source /opt/circleci/.nvm/nvm.sh
           nvm install v10.15.3
@@ -88,10 +81,9 @@ jobs:
   sync-dependencies:
     machine: true
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run: |
-          # sync-dependencies for client-nodejs relies on //:deploy-npm having been called in a previous job (test-deployment)
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-nodejs@$CIRCLE_SHA1 \
           --targets docs:development examples:development
@@ -99,16 +91,16 @@ jobs:
   release-approval:
     machine: true
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run: bazel run @graknlabs_build_tools//ci:release-approval
 
   release-npm:
     machine: true
     working_directory: ~/grakn
     steps:
+      - install-bazel-linux-rbe
       - checkout
-      - install-bazel
       - run: bazel run //:deploy-npm -- npmjs $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
 
   release-cleanup:
