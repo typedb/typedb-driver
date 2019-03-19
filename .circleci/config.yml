@@ -42,7 +42,7 @@ commands:
 jobs:
   build:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -51,7 +51,7 @@ jobs:
 
   test:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -61,7 +61,7 @@ jobs:
 
   test-deployment:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -80,6 +80,7 @@ jobs:
 
   sync-dependencies:
     machine: true
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -90,6 +91,7 @@ jobs:
 
   release-approval:
     machine: true
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -97,7 +99,7 @@ jobs:
 
   release-npm:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -105,6 +107,7 @@ jobs:
 
   release-cleanup:
     machine: true
+    working_directory: ~/client-nodejs
     steps:
       - checkout
       - run: git push --delete origin client-nodejs-release-branch
