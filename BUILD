@@ -17,9 +17,10 @@
 #
 
 package(default_visibility = ["//visibility:public"])
+exports_files(["VERSION"], visibility = ["//visibility:public"])
 
-load("@graknlabs_grakn_core//dependencies/maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_build_tools//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
 
 java_library(
     name = "client-java",
@@ -67,6 +68,7 @@ assemble_maven(
     name = "assemble-maven",
     target = ":client-java",
     package = "client-java",
+    version_file = "//:VERSION",
 )
 
 deploy_maven(
