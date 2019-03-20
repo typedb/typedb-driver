@@ -19,13 +19,16 @@
 
 # Script for updating Maven dependencies after the dependency list in //dependencies/maven/dependencies.yaml.
 
-#[[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
-GRAKN_CORE_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
-#pushd "$GRAKN_CORE_HOME" > /dev/null
+[[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
+CLIENT_JAVA_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
+pushd "$CLIENT_JAVA_HOME" > /dev/null
 
-bazel run //dependencies/tools:bazel-deps -- generate -r $(pwd) -s dependencies/maven/dependencies.bzl -d dependencies/maven/dependencies.yaml
+bazel run @graknlabs_build_tools//bazel:bazel-deps -- generate -r $CLIENT_JAVA_HOME -s dependencies/maven/dependencies.bzl -d dependencies/maven/dependencies.yaml
+
+bazel build //dependencies/maven:deployment-rules
+install -m 644 $(bazel info bazel-genfiles)/dependencies/maven/rules.bzl $CLIENT_JAVA_HOME/dependencies/maven/rules.bzl
 
 # Fix formatting for Bazel source code
 #bazel run //tools/formatter -- --path $(pwd)/third_party --build &>/dev/null
 
-#popd > /dev/null
+popd > /dev/null
