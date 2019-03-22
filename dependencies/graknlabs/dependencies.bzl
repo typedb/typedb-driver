@@ -19,15 +19,17 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def graknlabs_grakn_core():
+    # TODO: update to graknlabs/grakn before merging the PR
     git_repository(
         name = "graknlabs_grakn_core",
-        remote = "https://github.com/graknlabs/grakn",
-        commit = "f9687fb1d07f87e2a2119870eb0454c16daaccd7" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        remote = "https://github.com/lolski/grakn",
+        commit = "b01683702558da035c59407611c89803ef4cf9d9" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
 
 def graknlabs_build_tools():
+    # TODO: update to graknlabs/graql before merging the PR
     git_repository(
         name = "graknlabs_build_tools",
-        remote = "https://github.com/graknlabs/build-tools",
-        commit = "0c1522e04d1412259c541c0b8040dd5d794f18dc", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
+        remote = "https://github.com/lolski/build-tools",
+        commit = "9ac6b9da3d5e21ed0b169a94512cf7bf5431667d", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
     )
