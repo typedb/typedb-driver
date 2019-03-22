@@ -69,6 +69,7 @@ assemble_maven(
     target = ":client-java",
     package = "client-java",
     version_file = "//:VERSION",
+    workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json"
 )
 
 deploy_maven(
