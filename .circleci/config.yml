@@ -59,36 +59,11 @@ jobs:
     working_directory: ~/client-java
     steps:
       - checkout
-      - install-bazel
-      - run: echo client-java-test-deployment-$(cat VERSION)-$(date +%s) > VERSION
-      - run: cat VERSION
-      - run: mkdir deployment-dependencies
-      - run:
-          command: |
-            git clone https://github.com/graknlabs/graql.git deployment-dependencies/graql # TODO: switch to the appropriate commit id
-            cp ~/client-java/VERSION deployment-dependencies/graql/VERSION
-      - run:
-          command: |
-            cd deployment-dependencies/graql
-            bazel run //java:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-      - run:
-          command: |
-            git clone https://github.com/graknlabs/grakn.git deployment-dependencies/grakn # TODO: switch to the appropriate commit id
-            cp ~/client-java/VERSION deployment-dependencies/grakn/VERSION
-      - run:
-          command: |
-            cd deployment-dependencies/grakn
-            bazel run //api:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-            bazel run //protocol:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-            bazel run //common:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-            bazel run //concept:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
+      - install-bazel-linux-rbe
+      - run: echo $CIRCLE_SHA1 > VERSION
       - run: bazel run //:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-      - run:
-          name: Run test-deployment
-          command: |
-            sed -i -e "s/VERSION_MARKER/$(cat VERSION)/g" test/deployment/pom.xml
-            cd test/deployment
-            mvn test
+      - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$(cat VERSION)/g" test/deployment/pom.xml
+      - run: cd test/deployment && mvn test
 
   sync-dependencies:
     machine: true
