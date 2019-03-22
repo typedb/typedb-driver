@@ -30,8 +30,12 @@ graknlabs_build_tools()
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl", "graknlabs_graql")
 graknlabs_graql()
 
-load("@graknlabs_build_tools//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
-graknlabs_bazel_distribution()
+#load("@graknlabs_build_tools//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
+#graknlabs_bazel_distribution()
+local_repository(
+    name = "graknlabs_bazel_distribution",
+    path = "/Users/lolski/grakn.ai/bazel-distribution"
+)
 
 
 ###########################
