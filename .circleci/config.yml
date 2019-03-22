@@ -65,7 +65,14 @@ jobs:
       - run: bazel run //:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$(cat VERSION)/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
+      - run: bazel build @graknlabs_grakn_core//:assemble-linux-targz
+      - run: |
+          cd bazel-genfiles/external/graknlabs_grakn_core/
+          tar -xf grakn-core-all-linux.tar.gz
+          cd grakn-core-all-linux/
+          nohup ./grakn server start
       - run: cd test/deployment && mvn test
+      - run: bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux/grakn server stop
 
   sync-dependencies:
     machine: true
