@@ -23,13 +23,13 @@ def graknlabs_grakn_core():
     git_repository(
         name = "graknlabs_grakn_core",
         remote = "https://github.com/lolski/grakn",
-        commit = "923ce85db4fd4852253763456ce87bf0296ca0f4" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        commit = "2b4bdde3a8ecb61b5fdd2cafa97560d2c3628b34" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
 
 def graknlabs_build_tools():
-    # TODO: update to graknlabs/graql before merging the PR
+    # TODO: update to graknlabs/build-tools before merging the PR
     git_repository(
         name = "graknlabs_build_tools",
         remote = "https://github.com/lolski/build-tools",
-        commit = "b50de5fde86b8ba177f64dd401b7b7a6f8eb6cc8", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
+        commit = "bd3c9df990e7fc464cebc9091c9309401d74f8b4", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
     )
