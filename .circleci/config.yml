@@ -60,10 +60,8 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-rbe
-      - run: echo $CIRCLE_SHA1 > VERSION
-      - run: cat VERSION
-      - run: bazel run //:deploy-maven -- snapshot $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
-      - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$(cat VERSION)/g" test/deployment/pom.xml
+      - run: bazel run //:deploy-maven -- snapshot $CIRCLE_SHA1 $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
+      - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
       - run: bazel build @graknlabs_grakn_core//:assemble-linux-targz
       - run: |
