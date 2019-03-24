@@ -55,7 +55,7 @@ java_library(
         "//dependencies/maven/artifacts/io/netty:netty-all",
     ],
     resources = ["LICENSE"],
-    tags = ["maven_coordinates=grakn.client:api:{pom_version}"],
+    tags = ["maven_coordinates=io.grakn.client:api:{pom_version}"],
 )
 
 checkstyle_test(
