@@ -83,21 +83,85 @@ jobs:
           --source client-java@$CIRCLE_SHA1 \
           --targets docs:development examples:development
 
+  release-approval:
+    machine: true
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: bazel run @graknlabs_build_tools//ci:release-approval
+
+  release-github-draft:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: echo 'bazel run //java:deploy-github-zip -- ${GRABL_CREDENTIAL}' # TODO
+
+  release-maven:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: bazel run //:deploy-maven -- release $CIRCLE_SHA1 $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD # TODO: change to Maven central
+
+  release-cleanup:
+    machine: true
+    steps:
+      - checkout
+      - run: git push --delete origin graql-release-branch
+
 workflows:
   client-java:
     jobs:
-      - build
-      - test
+      - build:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - test-deployment-maven:
           filters:
             branches:
-              only: master
-          requires:
-            - build
-            - test
+              only: release-pipeline # TODO: change back to master before merging the PR
       - sync-dependencies:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: change back to master before merging the PR
           requires:
+            - build
+            - test
+      - release-approval:
+          filters:
+            branches:
+              only: release-pipeline # TODO: change back to master before merging the PR
+          requires:
+            - build
+            - test
             - test-deployment-maven
+
+  client-java-release:
+    jobs:
+      - release-github-draft:
+          filters:
+            branches:
+              only: client-java-release-branch
+      - release-artifacts-approval:
+          type: approval
+          requires:
+            - release-github-draft
+      - release-maven:
+          filters:
+            branches:
+              only: client-java-release-branch
+          requires:
+            - release-artifacts-approval
+      - release-cleanup:
+          filters:
+            branches:
+              only: client-java-release-branch
+          requires:
+            - release-maven
