@@ -1,4 +1,4 @@
-package grakn.clientz;
+package application;
 
 import grakn.client.GraknClient;
 import grakn.core.concept.answer.ConceptMap;
