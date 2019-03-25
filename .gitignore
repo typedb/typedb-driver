@@ -1,2 +1,10 @@
+# Bazel files #
 bazel-*
+
+# Idea files #
 .ijwb
+.idea
+*.iml
+
+# Maven files #
+target

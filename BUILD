@@ -22,6 +22,8 @@ exports_files(["VERSION"], visibility = ["//visibility:public"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_build_tools//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
 
+exports_files(["VERSION"])
+
 java_library(
     name = "client-java",
     srcs = glob([
@@ -74,5 +76,5 @@ assemble_maven(
 
 deploy_maven(
     name = "deploy-maven",
-    target = ":assemble-maven"
+    target = ":assemble-maven",
 )
