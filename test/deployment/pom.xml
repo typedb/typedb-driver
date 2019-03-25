@@ -16,7 +16,7 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>grakn.client</groupId>
+            <groupId>io.grakn.client</groupId>
             <artifactId>api</artifactId>
             <version>CLIENT_JAVA_VERSION_MARKER</version>
         </dependency>
