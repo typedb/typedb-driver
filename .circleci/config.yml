@@ -134,14 +134,13 @@ workflows:
           requires:
             - build
             - test
+            - test-deployment
       - release-approval:
           filters:
             branches:
               only: release-pipeline # TODO: change back to master before merging the PR
           requires:
-            - build
-            - test
-            - test-deployment-maven
+            - sync-dependencies
 
   client-java-release:
     jobs:
