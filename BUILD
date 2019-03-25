@@ -57,7 +57,7 @@ java_library(
         "//dependencies/maven/artifacts/io/netty:netty-all",
     ],
     resources = ["LICENSE"],
-    tags = ["maven_coordinates=grakn.client:api:{pom_version}"],
+    tags = ["maven_coordinates=io.grakn.client:api:{pom_version}"],
 )
 
 checkstyle_test(
@@ -77,19 +77,4 @@ assemble_maven(
 deploy_maven(
     name = "deploy-maven",
     target = ":assemble-maven",
-)
-
-# When a Bazel build or test is executed with RBE, it will be executed using the following platform.
-# The platform is based on the standard rbe_ubuntu1604 from @bazel_toolchains,
-# but with an additional setting dockerNetwork = standard because our tests need network access
-platform(
-    name = "rbe-platform",
-    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604"],
-    remote_execution_properties = """
-        {PARENT_REMOTE_EXECUTION_PROPERTIES}
-        properties: {
-          name: "dockerNetwork"
-          value: "standard"
-        }
-        """,
 )
