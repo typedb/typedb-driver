@@ -21,18 +21,13 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def graknlabs_grakn_core():
     git_repository(
         name = "graknlabs_grakn_core",
-        remote = "https://github.com/lolski/grakn",
-        commit = "9bd69fc53c7c13856f7bd578041cea145bea4ac0" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        remote = "https://github.com/graknlabs/grakn",
+        commit = "9352c2c13611a0cb85e0d717b576c05067c8cf6c" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
 
-# TODO: revert to graknlabs/build-tools and remove local_repository before merging the PR to master
 def graknlabs_build_tools():
-#    native.local_repository(
-#            name = "graknlabs_build_tools",
-#            path = "/Users/lolski/grakn.ai/build-tools"
-#        )
     git_repository(
         name = "graknlabs_build_tools",
-        remote = "https://github.com/lolski/build-tools",
-        commit = "532c8cfae971138449d1ec4f2399b061a978ef82", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
+        remote = "https://github.com/graknlabs/build-tools",
+        commit = "38d55b376a1556155d9c48f6b4f30bc8483912fa", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_build_tools
     )
