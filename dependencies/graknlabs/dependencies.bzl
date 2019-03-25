@@ -25,6 +25,13 @@ def graknlabs_grakn_core():
         commit = "9352c2c13611a0cb85e0d717b576c05067c8cf6c" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
 
+def graknlabs_benchmark():
+    git_repository(
+        name = "graknlabs_benchmark",
+        remote = "https://github.com/graknlabs/benchmark.git",
+        commit = "ceb5a2ebb71ee526d788fb4b17a104a6669d4b70" # do not sync - changes much less frequently than repository
+    )
+
 def graknlabs_build_tools():
     git_repository(
         name = "graknlabs_build_tools",
