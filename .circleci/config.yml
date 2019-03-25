@@ -86,14 +86,16 @@ jobs:
 workflows:
   client-java:
     jobs:
-# TODO: uncomment before merging to master
-#      - build
-#      - test
-      - test-deployment
-#      - sync-dependencies:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - build
-#            - test
+      - build
+      - test
+      - test-deployment:
+          filters:
+            branches:
+              only: master
+      - sync-dependencies:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+            - test
