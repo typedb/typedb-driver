@@ -127,40 +127,40 @@ workflows:
           filters:
             branches:
               only: release-pipeline # TODO: change back to master before merging the PR
+          requires:
+            - build
+            - test
       - sync-dependencies:
           filters:
             branches:
               only: release-pipeline # TODO: change back to master before merging the PR
           requires:
-            - build
-            - test
-            - test-deployment
+            - test-deployment-maven
       - release-approval:
           filters:
             branches:
               only: release-pipeline # TODO: change back to master before merging the PR
           requires:
             - sync-dependencies
-
   client-java-release:
     jobs:
-      - release-github-draft:
+      - deploy-github:
           filters:
             branches:
               only: client-java-release-branch
-      - release-artifacts-approval:
+      - deploy-approval:
           type: approval
           requires:
-            - release-github-draft
-      - release-maven:
+            - deploy-github
+      - deploy-maven:
           filters:
             branches:
               only: client-java-release-branch
           requires:
-            - release-artifacts-approval
+            - deploy-approval
       - release-cleanup:
           filters:
             branches:
               only: client-java-release-branch
           requires:
-            - release-maven
+            - deploy-maven
