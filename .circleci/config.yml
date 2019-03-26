@@ -134,7 +134,7 @@ workflows:
       - deploy-maven-test:
           filters:
             branches:
-              only: release-pipeline # TODO: revert
+              only: master
           requires:
             - build
             - test
