@@ -115,6 +115,15 @@ graknlabs_graql_maven_dependencies = "maven_dependencies")
 graknlabs_graql_maven_dependencies()
 
 
+##################################
+# Load Distribution dependencies #
+##################################
+
+# TODO: rename the macro we load here to deploy_github_dependencies
+load("@graknlabs_bazel_distribution//github:dependencies.bzl", "github_dependencies_for_deployment")
+github_dependencies_for_deployment()
+
+
 #####################################
 # Load Bazel common workspace rules #
 #####################################
