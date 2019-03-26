@@ -32,6 +32,13 @@ commands:
     steps:
       - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe -- << parameters.command >>
 
+  run-grakn-server:
+    steps:
+      - run-bazel-rbe:
+          command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
+      - run: mkdir dist && tar -xvzf bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
+      - run: nohup ./dist/grakn-core-all-linux/grakn server start
+
 jobs:
   build:
     machine: true
@@ -68,16 +75,10 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-rbe
+      - run-grakn-server
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
-      - run: bazel build @graknlabs_grakn_core//:assemble-linux-targz
-      - run: |
-          cd bazel-genfiles/external/graknlabs_grakn_core/
-          tar -xf grakn-core-all-linux.tar.gz
-          cd grakn-core-all-linux/
-          nohup ./grakn server start
       - run: cd test/deployment && mvn test
-      - run: bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux/grakn server stop
 
   sync-dependencies:
     machine: true
@@ -133,7 +134,7 @@ workflows:
       - deploy-maven-test:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert
           requires:
             - build
             - test
