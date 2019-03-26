@@ -91,13 +91,13 @@ workflows:
       - test-deployment-maven:
           filters:
             branches:
-              only: ci-fix-sync-dependency # TODO: revert
+              only: master
           requires:
             - build
             - test
       - sync-dependencies:
           filters:
             branches:
-              only: ci-fix-sync-dependency # TODO: revert
+              only: master
           requires:
             - test-deployment-maven
