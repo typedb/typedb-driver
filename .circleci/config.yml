@@ -54,7 +54,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
-  test-deployment:
+  test-deployment-maven:
     machine: true
     working_directory: ~/client-java
     steps:
