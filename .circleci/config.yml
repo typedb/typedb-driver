@@ -54,7 +54,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
-  test-deployment:
+  test-deployment-maven:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -88,14 +88,16 @@ workflows:
     jobs:
       - build
       - test
-      - test-deployment:
-          filters:
-            branches:
-              only: master
-      - sync-dependencies:
+      - test-deployment-maven:
           filters:
             branches:
               only: master
           requires:
             - build
             - test
+      - sync-dependencies:
+          filters:
+            branches:
+              only: master
+          requires:
+            - test-deployment-maven
