@@ -97,7 +97,15 @@ jobs:
       - checkout
       - run: bazel run @graknlabs_build_tools//ci:release-approval
 
-  release-npm:
+  deploy-github:
+    machine: true
+    working_directory: ~/client-nodejs
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: bazel run //:deploy-github
+
+  deploy-npm:
     machine: true
     working_directory: ~/client-nodejs
     steps:
@@ -145,7 +153,20 @@ workflows:
 
   client-nodejs-release:
     jobs:
-      - release-npm:
+      - deploy-github:
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - deploy-approval:
+          type: approval
+          requires:
+            - deploy-github
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+      - deploy-npm:
+          requires:
+            - deploy-approval
           filters:
             branches:
               only: client-nodejs-release-branch
@@ -154,4 +175,4 @@ workflows:
             branches:
               only: client-nodejs-release-branch
           requires:
-            - release-npm
+            - deploy-npm

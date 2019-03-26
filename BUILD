@@ -18,12 +18,15 @@
 
 exports_files([
     "package.json",
-    "VERSION"
+    "VERSION",
+    "deployment.properties",
+    "RELEASE_TEMPLATE.md",
 ])
 
 load("@stackb_rules_proto//node:node_grpc_compile.bzl", "node_grpc_compile")
 load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "nodejs_jest_test", "babel_library")
 load("@graknlabs_bazel_distribution//npm:rules.bzl", "deploy_npm")
+load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 
 
 node_grpc_compile(
@@ -71,6 +74,15 @@ deploy_npm(
     target = ":client-nodejs",
     version_file = "//:VERSION",
     deployment_properties = "@graknlabs_build_tools//:deployment.properties",
+)
+
+
+deploy_github(
+    name = "deploy-github",
+    targets = [],
+    release_description = "//:RELEASE_TEMPLATE.md",
+    deployment_properties = "//:deployment.properties",
+    version_file = "//:VERSION"
 )
 
 nodejs_jest_test(

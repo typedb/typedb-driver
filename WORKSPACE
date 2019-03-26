@@ -134,6 +134,10 @@ load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_rules_docker")
 bazel_rules_docker()
 
 
+# TODO: rename the macro we load here to deploy_github_dependencies
+load("@graknlabs_bazel_distribution//github:dependencies.bzl", "github_dependencies_for_deployment")
+github_dependencies_for_deployment()
+
 #####################################
 # Load Bazel common workspace rules #
 #####################################
