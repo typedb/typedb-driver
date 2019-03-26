@@ -104,7 +104,7 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run //:deploy-maven -- release $(cat VERSION) $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD # TODO: change to Maven central
+      - run: bazel run //:deploy-maven -- release $(cat VERSION) $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
 
   release-cleanup:
     machine: true
