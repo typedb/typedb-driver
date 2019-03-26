@@ -54,13 +54,20 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
 
-  test-deployment-maven:
+  deploy-maven-test:
     machine: true
     working_directory: ~/client-java
     steps:
       - checkout
       - install-bazel-linux-rbe
       - run: bazel run //:deploy-maven -- snapshot $CIRCLE_SHA1 $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD
+
+  test-deployment-maven:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - checkout
+      - install-bazel-linux-rbe
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
       - run: bazel build @graknlabs_grakn_core//:assemble-linux-targz
@@ -123,13 +130,19 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-deployment-maven:
+      - deploy-maven-test:
           filters:
             branches:
               only: master
           requires:
             - build
             - test
+      - test-deployment-maven:
+          filters:
+            branches:
+              only: master
+          requires:
+            - deploy-maven-test
       - sync-dependencies:
           filters:
             branches:
