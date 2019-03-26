@@ -88,14 +88,16 @@ workflows:
     jobs:
       - build
       - test
-      - test-deployment:
-          filters:
-            branches:
-              only: master
-      - sync-dependencies:
+      - test-deployment-maven:
           filters:
             branches:
               only: master
           requires:
             - build
             - test
+      - sync-dependencies:
+          filters:
+            branches:
+              only: master
+          requires:
+            - test-deployment-maven
