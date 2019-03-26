@@ -133,26 +133,26 @@ workflows:
       - deploy-maven-test:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert before merging to master
           requires:
             - build
             - test
       - test-deployment-maven:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert before merging to master
           requires:
             - deploy-maven-test
       - sync-dependencies:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert before merging to master
           requires:
             - test-deployment-maven
       - release-approval:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert before merging to master
           requires:
             - sync-dependencies
   client-java-release:
