@@ -11,7 +11,7 @@
         <repository>
             <id>repo.grakn.ai</id>
             <name>repo.grakn.ai</name>
-            <url>http://repo.grakn.ai/repository/test-maven/</url>
+            <url>http://repo.grakn.ai/repository/maven-snapshot/</url>
         </repository>
     </repositories>
     <dependencies>
