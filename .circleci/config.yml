@@ -59,14 +59,25 @@ jobs:
       - run: ./dist/grakn-core-all-linux/grakn console -f `pwd`/tests/support/basic-genealogy.gql -k gene
       - run: bazel test //:test-integration --test_output=streamed
 
-  test-deployment:
+  deploy-npm-snapshot:
     machine: true
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
       - run: sudo apt install -y expect
-      - run: bazel run //:deploy-npm -- test $REPO_GRAKN_USERNAME $REPO_GRAKN_PASSWORD $REPO_GRAKN_EMAIL
+      - run: |
+          export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
+          export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
+          export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
+          bazel run //:deploy-npm -- snapshot
+
+  test-deployment:
+    machine: true
+    working_directory: ~/client-nodejs
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
       - run-grakn-server
       - run: |
           source /opt/circleci/.nvm/nvm.sh
@@ -74,7 +85,7 @@ jobs:
           nvm use --delete-prefix v10.15.3
           cd tests/deployment/
           sed -i -e "s/SNAPSHOT/$CIRCLE_SHA1/g" ../../VERSION
-          npm install https://repo.grakn.ai/repository/test-npm-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
+          npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
           jest --detectOpenHandles application.test.js
 
@@ -105,13 +116,18 @@ jobs:
       - checkout
       - run: bazel run //:deploy-github
 
-  deploy-npm:
+  deploy-npm-release:
     machine: true
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run //:deploy-npm -- npmjs $REPO_NPM_USERNAME $REPO_NPM_PASSWORD $REPO_NPM_EMAIL
+      - run: sudo apt install -y expect
+      - run: |
+          export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
+          export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
+          export DEPLOY_NPM_EMAIL=$REPO_NPM_EMAIL
+          bazel run //:deploy-npm -- release
 
   release-cleanup:
     machine: true
@@ -131,13 +147,19 @@ workflows:
           filters:
             branches:
               ignore: client-nodejs-release-branch
-      - test-deployment:
+      - deploy-npm-snapshot:
           filters:
             branches:
               only: master
           requires:
             - build
             - test
+      - test-deployment:
+          filters:
+            branches:
+              only: master
+          requires:
+            - deploy-npm-snapshot
       - sync-dependencies:
           filters:
             branches:
@@ -164,7 +186,7 @@ workflows:
           filters:
             branches:
               only: client-nodejs-release-branch
-      - deploy-npm:
+      - deploy-npm-release:
           requires:
             - deploy-approval
           filters:
@@ -175,4 +197,4 @@ workflows:
             branches:
               only: client-nodejs-release-branch
           requires:
-            - deploy-npm
+            - deploy-npm-release
