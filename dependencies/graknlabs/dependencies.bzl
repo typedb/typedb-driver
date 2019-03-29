@@ -29,5 +29,5 @@ def graknlabs_grakn_core():
     git_repository(
         name = "graknlabs_grakn_core",
         remote = "https://github.com/graknlabs/grakn",
-        commit = "1db9799ba4753b29c5655049f0d7960bad3e4154" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        commit = "337cc2704cddf75c1dc5ae7010baa495121c5a50" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
