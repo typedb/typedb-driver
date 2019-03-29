@@ -79,7 +79,6 @@ deploy_npm(
 
 deploy_github(
     name = "deploy-github",
-    targets = [],
     release_description = "//:RELEASE_TEMPLATE.md",
     deployment_properties = "//:deployment.properties",
     version_file = "//:VERSION"
