@@ -1,14 +1,14 @@
 {
   "name": "grakn-client",
   "version": "0.0.0-development",
-  "description": "Grakn Node.js Client",
+  "description": "Grakn Client for Node.js",
   "main": "src/GraknClient.js",
   "author": "Grakn Labs",
   "license": "Apache-2.0",
   "homepage": "https://grakn.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/graknlabs/grakn"
+    "url": "https://github.com/graknlabs/client-nodejs"
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
