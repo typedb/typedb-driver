@@ -131,11 +131,14 @@ public class GraknClient implements AutoCloseable {
      */
     public static class Session implements grakn.core.api.Session {
 
-        private final ManagedChannel channel;
-        private final String keyspace;
-        private final SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
-        private final String sessionId;
-        private boolean isOpen;
+        protected ManagedChannel channel;
+        protected String keyspace;
+        protected SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
+        protected String sessionId;
+        protected boolean isOpen;
+
+        protected Session() {
+        }
 
         private Session(ManagedChannel channel, String keyspace) {
             if (!Validator.isValidKeyspaceName(keyspace)) {
@@ -183,7 +186,7 @@ public class GraknClient implements AutoCloseable {
             private GraknClient.Session session;
             private String sessionId;
 
-            Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
+            public Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
                 this.channel = channel;
                 this.session = session;
                 this.sessionId = sessionId;
@@ -541,7 +544,7 @@ public class GraknClient implements AutoCloseable {
 
         private KeyspaceServiceBlockingStub keyspaceBlockingStub;
 
-        private Keyspaces(ManagedChannel channel) {
+        public Keyspaces(ManagedChannel channel) {
             keyspaceBlockingStub = KeyspaceServiceGrpc.newBlockingStub(channel);
         }
 
