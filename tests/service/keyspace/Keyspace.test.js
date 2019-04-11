@@ -20,9 +20,10 @@
 const env = require('../../support/GraknTestEnvironment');
 let graknClient;
 
-beforeAll(() => {
+beforeAll(async () => {
+    await env.startGraknServer();
     graknClient = env.graknClient;
-});
+}, env.beforeAllTimeout);
 
 afterAll(async () => {
     await env.tearDown();

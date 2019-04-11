@@ -23,9 +23,10 @@ let graknClient;
 let session;
 
 beforeAll(async () => {
+    await env.startGraknServer();
     graknClient = env.graknClient;
     session = await graknClient.session("testcommit");
-});
+}, env.beforeAllTimeout);
 
 afterAll(async () => {
     await session.close();
@@ -60,7 +61,7 @@ describe('Integration test', () => {
         newTx.close();
     });
 
-    test("explanation and default of infer is true", async () => {
+    test.skip("explanation and default of infer is true", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;"); // TODO: put back offset 0; limit 1;
@@ -72,7 +73,7 @@ describe('Integration test', () => {
         await localSession.close();
     });
 
-    test("explanation with join explanation", async () => {
+    test.skip("explanation with join explanation", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query(`match ($x, $y) isa marriage; ($y, $z) isa marriage;
@@ -86,7 +87,7 @@ describe('Integration test', () => {
         await localSession.close();
     });
 
-    test("no results with infer false", async () => {
+    test.skip("no results with infer false", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;", { infer: false }); // TODO: put back offset 0; limit 1;

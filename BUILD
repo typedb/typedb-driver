@@ -84,19 +84,29 @@ deploy_github(
     version_file = "//:VERSION"
 )
 
+NODEJS_TEST_DEPENDENCIES = [
+    ":client-nodejs",
+    "@nodejs_dependencies//fs-extra",
+    "@nodejs_dependencies//google-protobuf",
+    "@nodejs_dependencies//grpc",
+    "@nodejs_dependencies//jest",
+    "@nodejs_dependencies//tmp",
+    "@nodejs_dependencies//unzipper"
+]
+
+NODEJS_TEST_DATA = [
+    "@graknlabs_grakn_core//:assemble-mac-zip",
+    "tests/support/basic-genealogy.gql"
+]
+
 nodejs_jest_test(
     name = "keyspace-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
         "tests/service/keyspace/Keyspace.test.js"
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf"
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -105,13 +115,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Concept.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -120,13 +125,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/SchemaConcept.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -135,13 +135,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Rule.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -150,13 +145,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Type.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -165,13 +155,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Attribute.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -180,13 +165,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/AttributeType.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -195,13 +175,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Role.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -210,13 +185,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/GraknTx.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA
 )
 
 nodejs_jest_test(
@@ -225,13 +195,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Relation.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -240,13 +205,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/RelationType.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -255,13 +215,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/Thing.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -270,13 +225,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/EntityType.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 nodejs_jest_test(
@@ -285,13 +235,8 @@ nodejs_jest_test(
         "tests/support/GraknTestEnvironment.js",
         "tests/service/session/transaction/CommitTx.test.js",
     ],
-    deps = [
-        ":client-nodejs",
-        "@nodejs_dependencies//jest",
-        "@nodejs_dependencies//fs-extra",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf",
-    ]
+    deps = NODEJS_TEST_DEPENDENCIES,
+    data = NODEJS_TEST_DATA,
 )
 
 test_suite(

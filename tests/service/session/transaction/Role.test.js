@@ -22,8 +22,9 @@ let session;
 let tx;
 
 beforeAll(async () => {
+    await env.startGraknServer();
     session = await env.session();
-});
+}, env.beforeAllTimeout);
 
 afterAll(async () => {
     await env.tearDown();
