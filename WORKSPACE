@@ -66,6 +66,14 @@ graknlabs_build_tools_ci_pip_install = "pip_install")
 graknlabs_build_tools_ci_pip_install()
 
 
+#####################################
+# Load Java dependencies from Maven #
+#####################################
+
+load("//dependencies/maven:dependencies.bzl", "maven_dependencies")
+maven_dependencies()
+
+
 ##########################
 # Load GRPC dependencies #
 ##########################
