@@ -26,8 +26,9 @@ def graknlabs_build_tools():
     )
 
 def graknlabs_grakn_core():
+    # TODO: move back to graknlabs
     git_repository(
         name = "graknlabs_grakn_core",
-        remote = "https://github.com/graknlabs/grakn",
-        tag = "1.5.0" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        remote = "https://github.com/lolski/grakn",
+        commit = "1f3621f95f81fd7bb6ab6d08eec12a6c80e466e6" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )

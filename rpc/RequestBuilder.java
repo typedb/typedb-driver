@@ -57,18 +57,13 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static SessionProto.Transaction.Req open(String username, String password, String sessionId, grakn.core.api.Transaction.Type txType) {
-            SessionProto.Transaction.Open.Req.Builder openRequest = SessionProto.Transaction.Open.Req.newBuilder();
-            if (username != null && password != null) {
-                openRequest = openRequest
-                        .setUsername(username)
-                        .setPassword(password);
-            }
-            openRequest = openRequest
+        public static SessionProto.Transaction.Req open(String sessionId, grakn.core.api.Transaction.Type txType) {
+            SessionProto.Transaction.Open.Req openRequest = SessionProto.Transaction.Open.Req.newBuilder()
                     .setSessionId(sessionId)
-                    .setType(SessionProto.Transaction.Type.valueOf(txType.id()));
+                    .setType(SessionProto.Transaction.Type.valueOf(txType.id()))
+                    .build();
 
-            return SessionProto.Transaction.Req.newBuilder().setOpenReq(openRequest.build()).build();
+            return SessionProto.Transaction.Req.newBuilder().setOpenReq(openRequest).build();
         }
 
         public static SessionProto.Transaction.Req commit() {

@@ -165,14 +165,23 @@ public class GraknClient implements AutoCloseable {
             this.channel = channel;
             this.sessionStub = SessionServiceGrpc.newBlockingStub(channel);
 
-            SessionProto.Session.Open.Res response = sessionStub.open(RequestBuilder.Session.open(keyspace));
+            SessionProto.Session.Open.Req.Builder open = RequestBuilder.Session.open(keyspace).newBuilderForType();
+            if (username != null) {
+                open = open.setUsername(username);
+            }
+            if (password != null) {
+                open = open.setPassword(password);
+            }
+            open = open.setKeyspace(keyspace);
+
+            SessionProto.Session.Open.Res response = sessionStub.open(open.build());
             sessionId = response.getSessionId();
             isOpen = true;
         }
 
         @Override
         public GraknClient.Transaction.Builder transaction() {
-            return new Transaction.Builder(channel, username, password, this, sessionId);
+            return new Transaction.Builder(channel, this, sessionId);
         }
 
         @Override
@@ -192,45 +201,37 @@ public class GraknClient implements AutoCloseable {
      * Remote implementation of grakn.core.api.Transaction that communicates with a Grakn server using gRPC.
      */
     public static class Transaction implements grakn.core.api.Transaction {
-        private String username;
-        private String password;
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
 
         public static class Builder implements grakn.core.api.Transaction.Builder {
-            private String username;
-            private String password;
 
             private ManagedChannel channel;
             private GraknClient.Session session;
             private String sessionId;
 
-            public Builder(ManagedChannel channel, String username, String password, GraknClient.Session session, String sessionId) {
+            public Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
                 this.channel = channel;
-                this.username = username;
-                this.password = password;
                 this.session = session;
                 this.sessionId = sessionId;
             }
             @Override
             public GraknClient.Transaction read() {
-                return new GraknClient.Transaction(channel, username, password, session, sessionId, Transaction.Type.READ);
+                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.READ);
             }
 
             @Override
             public GraknClient.Transaction write() {
-                return new GraknClient.Transaction(channel, username, password, session, sessionId, Transaction.Type.WRITE);
+                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.WRITE);
             }
         }
 
-        private Transaction(ManagedChannel channel, String username, String password, Session session, String sessionId, Type type) {
+        private Transaction(ManagedChannel channel, Session session, String sessionId, Type type) {
             this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
-            this.username = username;
-            this.password = password;
             this.session = session;
             this.type = type;
-            transceiver.send(RequestBuilder.Transaction.open(username, password, sessionId, type));
+            transceiver.send(RequestBuilder.Transaction.open(sessionId, type));
             responseOrThrow();
         }
 
