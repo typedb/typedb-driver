@@ -113,7 +113,7 @@ public class GraknClientTest {
     @Test
     public void whenCreatingAGraknRemoteTx_SendAnOpenMessageToGrpc() {
         try (GraknClient.Transaction ignored = session.transaction().write()) {
-            verify(server.requestListener()).onNext(RequestBuilder.Transaction.open("randomID", Transaction.Type.WRITE));
+            verify(server.requestListener()).onNext(RequestBuilder.Transaction.open(null, null, "randomID", Transaction.Type.WRITE));
         }
     }
 
@@ -194,7 +194,7 @@ public class GraknClientTest {
 
     @Test
     public void whenOpeningATxFails_Throw() {
-        SessionProto.Transaction.Req openRequest = RequestBuilder.Transaction.open("randomID", Transaction.Type.WRITE);
+        SessionProto.Transaction.Req openRequest = RequestBuilder.Transaction.open(null, null,"randomID", Transaction.Type.WRITE);
         GraknException expectedException = GraknServerException.create("well something went wrong");
         throwOn(openRequest, expectedException);
 
