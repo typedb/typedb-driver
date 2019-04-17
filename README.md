@@ -38,7 +38,7 @@ Further documentation: https://dev.grakn.ai/docs/client-api/java
 
 ## Building Grakn Client for Java from Source
 
-> Note: You don't need to compile Graql from source if you just want to use Graql. See the _"Importing Graql"_ section above.
+> Note: You don't need to compile Grakn Client from source if you just want to use it in your code. See the _"Importing Grakn Client for Java"_ section above.
 
 1. Make sure you have the following dependencies installed on your machine:
     - Java 8
