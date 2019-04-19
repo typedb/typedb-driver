@@ -1,9 +1,14 @@
-# Grakn Client NodeJS
+NPM package: https://www.npmjs.com/package/grakn-client
+Documentation: https://dev.grakn.ai/docs/client-api/nodejs
 
-{ Please add the release notes here }
+### Distribution
+Now officially available through https://npmjs.com
+```
+npm install grakn-client
+```
+Or you can upgrade your local installation with:
+```
+npm update grakn-client
+```
 
-To install it, run `npm install grakn-client`.
-
-To upgrade it, run `npm update grakn-client`.
-
-Refer to [docs](https://dev.grakn.ai/docs/client-api/nodejs#installation) if needed.
+{ Release notes to be written }
