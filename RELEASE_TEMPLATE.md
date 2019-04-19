@@ -2,7 +2,7 @@ Documentation: http://dev.grakn.ai/docs/client-api/java
 
 ### Distribution
 
-Now officially available through https://repo.grakn.ai
+Available through https://repo.grakn.ai
 ```xml
 <repositories>
     <repository>
