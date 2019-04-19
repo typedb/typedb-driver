@@ -87,6 +87,8 @@ public class GraknClient implements AutoCloseable {
     public static final String DEFAULT_URI = "localhost:48555";
 
     private ManagedChannel channel;
+    private String username;
+    private String password;
     private Keyspaces keyspaces;
 
     public GraknClient() {
@@ -94,9 +96,15 @@ public class GraknClient implements AutoCloseable {
     }
 
     public GraknClient(String address) {
+        this(address, null, null);
+    }
+
+    public GraknClient(String address, String username, String password) {
         SimpleURI parsedURI = new SimpleURI(address);
         channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
                 .usePlaintext(true).build();
+        this.username = username;
+        this.password = password;
         keyspaces = new Keyspaces(channel);
     }
 
@@ -116,7 +124,7 @@ public class GraknClient implements AutoCloseable {
     }
 
     public Session session(String keyspace) {
-        return new Session(channel, keyspace);
+        return new Session(channel, username, password, keyspace);
     }
 
     public Keyspaces keyspaces() {
@@ -131,21 +139,37 @@ public class GraknClient implements AutoCloseable {
      */
     public static class Session implements grakn.core.api.Session {
 
-        private final ManagedChannel channel;
-        private final String keyspace;
-        private final SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
-        private final String sessionId;
-        private boolean isOpen;
+        protected ManagedChannel channel;
+        private String username;
+        private String password;
+        protected String keyspace;
+        protected SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
+        protected String sessionId;
+        protected boolean isOpen;
 
-        private Session(ManagedChannel channel, String keyspace) {
+        protected Session() {
+        }
+
+        private Session(ManagedChannel channel, String username, String password, String keyspace) {
             if (!Validator.isValidKeyspaceName(keyspace)) {
                 throw GraknClientException.invalidKeyspaceName(keyspace);
             }
+            this.username = username;
+            this.password = password;
             this.keyspace = keyspace;
             this.channel = channel;
             this.sessionStub = SessionServiceGrpc.newBlockingStub(channel);
 
-            SessionProto.Session.Open.Res response = sessionStub.open(RequestBuilder.Session.open(keyspace));
+            SessionProto.Session.Open.Req.Builder open = RequestBuilder.Session.open(keyspace).newBuilderForType();
+            if (username != null) {
+                open = open.setUsername(username);
+            }
+            if (password != null) {
+                open = open.setPassword(password);
+            }
+            open = open.setKeyspace(keyspace);
+
+            SessionProto.Session.Open.Res response = sessionStub.open(open.build());
             sessionId = response.getSessionId();
             isOpen = true;
         }
@@ -172,7 +196,6 @@ public class GraknClient implements AutoCloseable {
      * Remote implementation of grakn.core.api.Transaction that communicates with a Grakn server using gRPC.
      */
     public static class Transaction implements grakn.core.api.Transaction {
-
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
@@ -183,7 +206,7 @@ public class GraknClient implements AutoCloseable {
             private GraknClient.Session session;
             private String sessionId;
 
-            Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
+            public Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
                 this.channel = channel;
                 this.session = session;
                 this.sessionId = sessionId;
@@ -200,9 +223,9 @@ public class GraknClient implements AutoCloseable {
         }
 
         private Transaction(ManagedChannel channel, Session session, String sessionId, Type type) {
+            this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
             this.session = session;
             this.type = type;
-            this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
             transceiver.send(RequestBuilder.Transaction.open(sessionId, type));
             responseOrThrow();
         }
@@ -541,7 +564,7 @@ public class GraknClient implements AutoCloseable {
 
         private KeyspaceServiceBlockingStub keyspaceBlockingStub;
 
-        private Keyspaces(ManagedChannel channel) {
+        public Keyspaces(ManagedChannel channel) {
             keyspaceBlockingStub = KeyspaceServiceGrpc.newBlockingStub(channel);
         }
 
