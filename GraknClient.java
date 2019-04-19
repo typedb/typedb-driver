@@ -96,12 +96,7 @@ public class GraknClient implements AutoCloseable {
     }
 
     public GraknClient(String address) {
-        SimpleURI parsedURI = new SimpleURI(address);
-        channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
-                .usePlaintext(true).build();
-        username = null;
-        password = null;
-        keyspaces = new Keyspaces(channel);
+        this(address, null, null);
     }
 
     public GraknClient(String address, String username, String password) {
