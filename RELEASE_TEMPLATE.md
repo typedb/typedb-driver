@@ -1,15 +1,22 @@
-# Client-Java
+Documentation: http://dev.grakn.ai/docs/client-api/java
 
- { Please add the release notes here }
- 
- To add it as a dependency in your Maven project, add it in `pom.xml`:
- 
- ```xml
-<dependency>
-    <groupId>io.grakn.client</groupId>
-    <artifactId>api</artifactId>
-    <version>$VERSION</version>
-</dependency>
+### Distribution
+
+Now officially available through https://repo.grakn.ai
+```xml
+<repositories>
+    <repository>
+        <id>repo.grakn.ai</id>
+        <url>https://repo.grakn.ai/repository/maven/</url>
+    </repository>
+</repositories>
+<dependencies>
+    <dependency>
+        <groupid>io.grakn.client</groupid>
+        <artifactid>api</artifactid>
+        <version>{version}</version>
+    </dependency>
+</dependencies>
 ```
 
-Refer to [docs](http://dev.grakn.ai/docs/client-api/java#dependencies) if needed.
+{ Release notes to be written }
