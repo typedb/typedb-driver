@@ -24,8 +24,7 @@ const RequestBuilder = require("./util/RequestBuilder");
  * This creates a new connection to the server over HTTP2,
  * the connection will contain all the Transaction streams
  */
-function SessionService(grpcClient, credentials) {
-    this.credentials = credentials;
+function SessionService(grpcClient) {
     this.client = grpcClient;
 }
 
@@ -33,8 +32,8 @@ function SessionService(grpcClient, credentials) {
  * This sends an open Session request and retrieves the sessionId that will be needed
  * to open a Transaction.
  */
-SessionService.prototype.open = async function open(keyspace){
-    const openResponse = await wrapInPromise(this.client, this.client.open, RequestBuilder.openSession(keyspace));
+SessionService.prototype.open = async function open(keyspace, credentials){
+    const openResponse = await wrapInPromise(this.client, this.client.open, RequestBuilder.openSession(keyspace, credentials));
     this.sessionId = openResponse.getSessionid();
 }
 
@@ -46,7 +45,7 @@ SessionService.prototype.open = async function open(keyspace){
  */
 SessionService.prototype.transaction = async function create(txType) {
     const txService = new TxService(this.client.transaction());
-    await txService.openTx(this.sessionId, txType, this.credentials);
+    await txService.openTx(this.sessionId, txType);
     return txService;
 }
 

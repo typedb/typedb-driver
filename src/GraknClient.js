@@ -42,8 +42,8 @@ function GraknClient(uri, credentials) {
     const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
 
     this.session = async (keyspace) => { 
-        const session = new Session(sessionClient, credentials);
-        await session.open(keyspace);
+        const session = new Session(sessionClient);
+        await session.open(keyspace, credentials);
         return session;
     };
 

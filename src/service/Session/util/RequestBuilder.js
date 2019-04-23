@@ -490,8 +490,12 @@ const methods = {
     txRequest.setGetattributesReq(getAttributesReq);
     return txRequest;
   },
-  openSession: function(keyspace) {
+  openSession: function(keyspace, credentials) {
     const sessionRequest = new messages.Session.Open.Req();
+    if (credentials) {
+      sessionRequest.setUsername(credentials.username);
+      sessionRequest.setPassword(credentials.password);
+    }
     sessionRequest.setKeyspace(keyspace);
     return sessionRequest;
   },
@@ -500,15 +504,11 @@ const methods = {
     sessionRequest.setSessionid(sessionId);
     return sessionRequest;
   },
-  openTx: function (sessionId, txType, credentials) {
+  openTx: function (sessionId, txType) {
     const openRequest = new messages.Transaction.Open.Req();
     const txRequest = new messages.Transaction.Req();
     openRequest.setSessionid(sessionId);
     openRequest.setType(txType);
-    if (credentials) {
-      openRequest.setUsername(credentials.username);
-      openRequest.setPassword(credentials.password);
-    }
     txRequest.setOpenReq(openRequest);
     return txRequest;
   },

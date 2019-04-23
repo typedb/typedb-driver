@@ -36,16 +36,16 @@ const txType = {
  * @param {Object} grpcClient grpc node client (session stub + channel)
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Session(grpcClient, credentials) {
-  this.sessionService = new SessionService(grpcClient, credentials);
+function Session(grpcClient) {
+  this.sessionService = new SessionService(grpcClient);
 }
 
 /**
  * Open a new Session on the server side
  * @param {String} keyspace Grakn keyspace to which this sessions should be bound to
  */
-Session.prototype.open = function(keyspace){
-  return this.sessionService.open(keyspace);
+Session.prototype.open = function(keyspace, credentials){
+  return this.sessionService.open(keyspace, credentials);
 }
 
 /**
