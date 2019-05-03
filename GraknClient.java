@@ -102,7 +102,7 @@ public class GraknClient implements AutoCloseable {
     public GraknClient(String address, String username, String password) {
         SimpleURI parsedURI = new SimpleURI(address);
         channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
-                .usePlaintext(true).build();
+                .usePlaintext().build();
         this.username = username;
         this.password = password;
         keyspaces = new Keyspaces(channel);
@@ -211,6 +211,7 @@ public class GraknClient implements AutoCloseable {
                 this.session = session;
                 this.sessionId = sessionId;
             }
+
             @Override
             public GraknClient.Transaction read() {
                 return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.READ);
@@ -319,6 +320,8 @@ public class GraknClient implements AutoCloseable {
                     // TODO: parse different GRPC errors into specific GraknClientException
                     throw GraknClientException.create(response.error().getMessage());
                 case COMPLETED:
+                    // This will occur when interrupting a running query/operation on the current transaction
+                    throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
                 default:
                     throw CommonUtil.unreachableStatement("Unexpected response " + response);
             }
@@ -576,7 +579,7 @@ public class GraknClient implements AutoCloseable {
             keyspaceBlockingStub.delete(request);
         }
 
-        public List<String> retrieve(){
+        public List<String> retrieve() {
             KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve();
             return ImmutableList.copyOf(keyspaceBlockingStub.retrieve(request).getNamesList().iterator());
         }
