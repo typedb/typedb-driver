@@ -95,7 +95,6 @@ public class Transceiver implements AutoCloseable {
             //2. Error can lead to connection closures but the transaction may stay open
             //When this occurs a "half-closed" state is thrown which we can safely ignore
         }
-        responseListener.close();
     }
 
     public boolean isClosed() {
@@ -106,7 +105,7 @@ public class Transceiver implements AutoCloseable {
      * A StreamObserver that stores all responses in a blocking queue.
          * A response can be polled with the #poll() method.
      */
-    private static class ResponseListener implements StreamObserver<Transaction.Res>, AutoCloseable {
+    private static class ResponseListener implements StreamObserver<Transaction.Res> {
 
         private final BlockingQueue<Response> queue = new LinkedBlockingDeque<>();
         private final AtomicBoolean terminated = new AtomicBoolean(false);
@@ -145,17 +144,6 @@ public class Transceiver implements AutoCloseable {
 
             // Block for a response (because we are confident there are no responses and the connection has not closed)
             return queue.take();
-        }
-
-        @Override
-        public void close() {
-            while (!terminated.get()) {
-                try {
-                    poll();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
         }
     }
 
