@@ -49,6 +49,7 @@ AnswerFactory.prototype.createConceptmap = function (answer) {
         });
     return {
         map: () => answerMap,
+        get: (v) => answerMap.get(v),
         explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
