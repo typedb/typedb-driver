@@ -30,7 +30,7 @@ import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
 import grakn.core.concept.answer.ConceptMap;
 import grakn.core.concept.type.AttributeType;
-import grakn.core.graql.exception.GraqlQueryException;
+import grakn.core.graql.exception.GraqlSemanticException;
 import grakn.core.protocol.AnswerProto;
 import grakn.core.protocol.ConceptProto;
 import grakn.core.protocol.KeyspaceServiceGrpc;
@@ -47,15 +47,14 @@ import graql.lang.statement.Variable;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.testing.GrpcServerRule;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 
 import static graql.lang.Graql.match;
 import static graql.lang.Graql.var;
@@ -225,7 +224,7 @@ public class GraknClientTest {
         GraqlGet query = match(var("x").isa("thing")).get();
 
         SessionProto.Transaction.Req execQueryRequest = RequestBuilder.Transaction.query(query);
-        GraknException expectedException = GraqlQueryException.create("well something went wrong.");
+        GraknException expectedException = GraqlSemanticException.create("well something went wrong.");
         throwOn(execQueryRequest, expectedException);
 
         try (GraknClient.Transaction tx = session.transaction().write()) {
@@ -245,7 +244,7 @@ public class GraknClientTest {
         GraqlGet query = match(var("x").isa("thing")).get();
 
         SessionProto.Transaction.Req execQueryRequest = RequestBuilder.Transaction.query(query);
-        GraknException expectedException = GraqlQueryException.create("well something went wrong.");
+        GraknException expectedException = GraqlSemanticException.create("well something went wrong.");
         throwOn(execQueryRequest, expectedException);
 
         try (GraknClient.Transaction tx = session.transaction().write()) {
@@ -486,7 +485,7 @@ public class GraknClientTest {
             exception = error(Status.INTERNAL, e);
         } else if (e instanceof PropertyNotUniqueException) {
             exception = error(Status.ALREADY_EXISTS, e);
-        } else if (e instanceof TransactionException || e instanceof GraqlQueryException) {
+        } else if (e instanceof TransactionException || e instanceof GraqlSemanticException) {
             exception = error(Status.INVALID_ARGUMENT, e);
         } else {
             exception = error(Status.UNKNOWN, e);
