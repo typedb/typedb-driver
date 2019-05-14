@@ -88,7 +88,7 @@ jobs:
           npm install jest --global
           jest --detectOpenHandles application.test.js
 
-  sync-dependencies:
+  sync-dependencies-snapshot:
     machine: true
     working_directory: ~/client-nodejs
     steps:
@@ -134,6 +134,18 @@ jobs:
           export DEPLOY_NPM_EMAIL=$REPO_NPM_EMAIL
           bazel run //:deploy-npm -- release
 
+  sync-dependencies-release:
+    machine: true
+    working_directory: ~/client-nodejs
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: |
+          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+          bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
+          --source client-nodejs@$(cat VERSION) \
+          --targets workbase:master docs:master examples:master
+
   release-cleanup:
     machine: true
     working_directory: ~/client-nodejs
@@ -165,7 +177,7 @@ workflows:
               only: master
           requires:
             - deploy-npm-snapshot
-      - sync-dependencies:
+      - sync-dependencies-snapshot:
           filters:
             branches:
               only: master
@@ -176,7 +188,7 @@ workflows:
             branches:
               only: master
           requires:
-            - sync-dependencies
+            - sync-dependencies-snapshot
 
   client-nodejs-release:
     jobs:
@@ -197,9 +209,15 @@ workflows:
           filters:
             branches:
               only: client-nodejs-release-branch
-      - release-cleanup:
+      - sync-dependencies-release:
           filters:
             branches:
               only: client-nodejs-release-branch
           requires:
             - deploy-npm-release
+      - release-cleanup:
+          filters:
+            branches:
+              only: client-nodejs-release-branch
+          requires:
+            - sync-dependencies-release
