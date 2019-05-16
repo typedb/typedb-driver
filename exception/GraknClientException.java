@@ -36,6 +36,10 @@ public class GraknClientException extends GraknException {
         return new GraknClientException(error);
     }
 
+    public static GraknClientException create(String error, Exception e) {
+        return new GraknClientException(error, e);
+    }
+
     public static GraknClientException invalidKeyspaceName(String keyspace) {
         return create(ErrorMessage.INVALID_KEYSPACE_NAME.getMessage(keyspace));
     }
