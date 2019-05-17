@@ -21,19 +21,29 @@ package grakn.client.exception;
 
 import grakn.core.common.exception.ErrorMessage;
 import grakn.core.common.exception.GraknException;
+import io.grpc.StatusRuntimeException;
+
+import javax.annotation.Nullable;
 
 public class GraknClientException extends GraknException {
+
+    private String statusCode;
 
     GraknClientException(String error) {
         super(error);
     }
 
-    protected GraknClientException(String error, Exception e) {
+    protected GraknClientException(String error, StatusRuntimeException e) {
         super(error, e);
+        this.statusCode = e.getStatus().getCode().name();
     }
 
     public static GraknClientException create(String error) {
         return new GraknClientException(error);
+    }
+
+    public static GraknClientException create(String error, StatusRuntimeException e) {
+        return new GraknClientException(error, e);
     }
 
     public static GraknClientException invalidKeyspaceName(String keyspace) {
@@ -48,4 +58,7 @@ public class GraknClientException extends GraknException {
     public String getName() {
         return this.getClass().getName();
     }
+
+    @Nullable
+    public String getStatusCode() { return this.statusCode; }
 }

@@ -318,7 +318,7 @@ public class GraknClient implements AutoCloseable {
                     return response.ok();
                 case ERROR:
                     // TODO: parse different GRPC errors into specific GraknClientException
-                    throw GraknClientException.create(response.error().getMessage());
+                    throw GraknClientException.create(response.error().getMessage(), response.error());
                 case COMPLETED:
                     // This will occur when interrupting a running query/operation on the current transaction
                     throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
