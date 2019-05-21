@@ -19,4 +19,4 @@ Available through https://repo.grakn.ai
 </dependencies>
 ```
 
-{ Release notes to be written }
+{ release notes }
