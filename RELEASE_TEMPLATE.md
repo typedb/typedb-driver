@@ -11,4 +11,4 @@ Or you can upgrade your local installation with:
 npm update grakn-client
 ```
 
-{ Release notes to be written }
+{ release notes }
