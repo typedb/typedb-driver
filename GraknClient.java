@@ -27,7 +27,6 @@ import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
 import grakn.client.rpc.Transceiver;
 import grakn.core.common.exception.Validator;
-import grakn.core.common.http.SimpleURI;
 import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
@@ -100,8 +99,7 @@ public class GraknClient implements AutoCloseable {
     }
 
     public GraknClient(String address, String username, String password) {
-        SimpleURI parsedURI = new SimpleURI(address);
-        channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
+        channel = ManagedChannelBuilder.forTarget(address)
                 .usePlaintext().build();
         this.username = username;
         this.password = password;
