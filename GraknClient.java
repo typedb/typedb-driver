@@ -65,6 +65,8 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -101,10 +103,10 @@ public class GraknClient implements AutoCloseable {
     }
 
     public GraknClient(String address, String username, String password) {
-        URL parsedURI = null;
+        URI parsedURI = null;
         try {
-            parsedURI = new URL(address);
-        } catch (MalformedURLException e) {
+            parsedURI = new URI(address);
+        } catch (URISyntaxException e) {
             throw GraknClientException.create("Malformed address [" + address + "] provided.");
         }
         channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
