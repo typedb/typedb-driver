@@ -27,7 +27,6 @@ import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
 import grakn.client.rpc.Transceiver;
 import grakn.core.common.exception.Validator;
-import grakn.core.common.http.SimpleURI;
 import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
@@ -65,6 +64,8 @@ import io.grpc.ManagedChannelBuilder;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -100,7 +101,12 @@ public class GraknClient implements AutoCloseable {
     }
 
     public GraknClient(String address, String username, String password) {
-        SimpleURI parsedURI = new SimpleURI(address);
+        URL parsedURI = null;
+        try {
+            parsedURI = new URL(address);
+        } catch (MalformedURLException e) {
+            throw GraknClientException.create("Malformed address [" + address + "] provided.");
+        }
         channel = ManagedChannelBuilder.forAddress(parsedURI.getHost(), parsedURI.getPort())
                 .usePlaintext().build();
         this.username = username;
