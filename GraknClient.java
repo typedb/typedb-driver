@@ -467,26 +467,26 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Override
-        public Stream<Numeric> stream(GraqlCompute.Statistics query, boolean infer) {
-            Iterable<Numeric> iterable = () -> rpcIterator(query, infer);
+        public Stream<Numeric> stream(GraqlCompute.Statistics query) {
+            Iterable<Numeric> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
         @Override
-        public Stream<ConceptList> stream(GraqlCompute.Path query, boolean infer) {
-            Iterable<ConceptList> iterable = () -> rpcIterator(query, infer);
+        public Stream<ConceptList> stream(GraqlCompute.Path query) {
+            Iterable<ConceptList> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
         @Override
-        public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query, boolean infer) {
-            Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, infer);
+        public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
+            Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
         @Override
-        public Stream<ConceptSet> stream(GraqlCompute.Cluster query, boolean infer) {
-            Iterable<ConceptSet> iterable = () -> rpcIterator(query, infer);
+        public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
+            Iterable<ConceptSet> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
