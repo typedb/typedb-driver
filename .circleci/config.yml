@@ -98,7 +98,7 @@ jobs:
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-nodejs@$CIRCLE_SHA1 \
-          --targets workbase:master docs:master examples:master
+          --targets grakn-kgms:master workbase:master docs:master examples:master
 
   release-approval:
     machine: true
@@ -147,7 +147,7 @@ jobs:
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-nodejs@$(cat VERSION) \
-          --targets workbase:master docs:master examples:master
+          --targets grakn-kgms:master workbase:master docs:master examples:master
 
   release-cleanup:
     machine: true
