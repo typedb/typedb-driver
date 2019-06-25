@@ -37,7 +37,6 @@ import grakn.core.concept.answer.ConceptMap;
 import grakn.core.concept.answer.ConceptSet;
 import grakn.core.concept.answer.ConceptSetMeasure;
 import grakn.core.concept.answer.Numeric;
-import grakn.core.concept.printer.Printer;
 import grakn.core.concept.thing.Attribute;
 import grakn.core.concept.thing.Entity;
 import grakn.core.concept.thing.Relation;
@@ -64,7 +63,6 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -224,18 +222,6 @@ public class GraknClientIT {
             for (ConceptMap answer : answers) {
                 assertThat(answer.vars(), contains(new Variable("x")));
                 assertNotNull(tx.getConcept(answer.get("x").id()));
-            }
-        }
-    }
-
-    @Test
-    @Ignore // TODO: complete with richer relation structures
-    public void testGetQueryForRelation() {
-        try (GraknClient.Transaction tx = remoteSession.transaction().write()) {
-            List<ConceptMap> directorships = tx.execute(Graql.match(var("x").isa("directed-by")).get());
-
-            for (ConceptMap directorship : directorships) {
-                System.out.println(Printer.stringPrinter(true).toString(directorship.get("x")));
             }
         }
     }
