@@ -23,9 +23,10 @@ workspace(name = "graknlabs_client_java")
 # Grakn Labs dependencies #
 ###########################
 
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core", "graknlabs_build_tools")
-graknlabs_grakn_core()
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_build_tools", "graknlabs_protocol", "graknlabs_grakn_core")
 graknlabs_build_tools()
+graknlabs_protocol()
+graknlabs_grakn_core()
 
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl", "graknlabs_graql")
 graknlabs_graql()

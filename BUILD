@@ -35,14 +35,12 @@ java_library(
         "GraknClient.java"
     ]),
     deps = [
-        # Internal dependencies
+        # External dependencies from @graknlabs
+        "@graknlabs_graql//java:graql",
+        "@graknlabs_protocol//:protocol-java",
         "@graknlabs_grakn_core//api:api",
         "@graknlabs_grakn_core//common:common",
         "@graknlabs_grakn_core//concept:concept",
-        "@graknlabs_grakn_core//protocol:protocol-java",
-
-        # External dependencies from @graknlabs
-        "@graknlabs_graql//java:graql",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/com/google/code/findbugs:jsr305",
