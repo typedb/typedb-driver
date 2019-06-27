@@ -36,7 +36,8 @@ java_test(
         "@graknlabs_grakn_core//common:common",
         "@graknlabs_grakn_core//concept:concept",
         "@graknlabs_grakn_core//server:server", # TODO: NEEDS TO GO
-        "@graknlabs_protocol//:protocol-java",
+        "@graknlabs_protocol//keyspace:keyspace",
+        "@graknlabs_protocol//session:session",
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
