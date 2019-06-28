@@ -125,7 +125,9 @@ public class GraknClientIT {
     public void tearDown() {
         localSession.close();
         remoteSession.close();
-        graknClient.keyspaces().delete(localSession.keyspace().name());
+        if (graknClient.keyspaces().retrieve().contains(localSession.keyspace().name())) {
+            graknClient.keyspaces().delete(localSession.keyspace().name());
+        }
         graknClient.close();
     }
 
@@ -234,11 +236,11 @@ public class GraknClientIT {
                     type("content").sub("entity").has("name").plays("contained").plays("container"),
                     type("contains").sub("relation").relates("contained").relates("container"),
                     type("transitive-location").sub("rule")
-                    .when(and(
-                            rel("contained", "x").rel("container", "y").isa("contains"),
-                            rel("contained", "y").rel("container", "z").isa("contains")
-                    ))
-                    .then(rel("contained", "x").rel("container", "z").isa("contains"))
+                            .when(and(
+                                    rel("contained", "x").rel("container", "y").isa("contains"),
+                                    rel("contained", "y").rel("container", "z").isa("contains")
+                            ))
+                            .then(rel("contained", "x").rel("container", "z").isa("contains"))
             ));
             tx.execute(Graql.insert(
                     var("x").isa("content").has("name", "x"),
@@ -276,9 +278,9 @@ public class GraknClientIT {
         List<ConceptMap> answers = answer.explanation().getAnswers();
         answers.forEach(a -> {
             TestCase.assertTrue("Disconnected answer in explanation",
-                                answers.stream()
-                                        .filter(a2 -> !a2.equals(a))
-                                        .anyMatch(a2 -> !Sets.intersection(a.vars(), a2.vars()).isEmpty())
+                    answers.stream()
+                            .filter(a2 -> !a2.equals(a))
+                            .anyMatch(a2 -> !Sets.intersection(a.vars(), a2.vars()).isEmpty())
             );
         });
     }
@@ -291,10 +293,10 @@ public class GraknClientIT {
         answers.forEach(a -> TestCase.assertTrue("Answer has inconsistent explanations", explanationConsistentWithAnswer(a)));
     }
 
-    private boolean explanationConsistentWithAnswer(ConceptMap ans){
+    private boolean explanationConsistentWithAnswer(ConceptMap ans) {
         Pattern queryPattern = ans.explanation().getPattern();
         Set<Variable> vars = new HashSet<>();
-        if (queryPattern != null){
+        if (queryPattern != null) {
             queryPattern.statements().forEach(s -> vars.addAll(s.variables()));
         }
         return vars.containsAll(ans.map().keySet());
@@ -718,7 +720,7 @@ public class GraknClientIT {
 
             // degree
             List<ConceptSetMeasure> centrality = tx.execute(Graql.compute().centrality().using(DEGREE)
-                                                                    .of("animal").in("human", "animal", "pet-ownership"));
+                    .of("animal").in("human", "animal", "pet-ownership"));
             assertEquals(1, centrality.size());
             assertEquals(idCoco, centrality.get(0).set().iterator().next());
             assertEquals(1, centrality.get(0).measurement().intValue());
@@ -734,7 +736,7 @@ public class GraknClientIT {
 
             // connected component
             List<ConceptSet> clusterList = tx.execute(Graql.compute().cluster().using(CONNECTED_COMPONENT)
-                                                              .in("human", "animal", "pet-ownership"));
+                    .in("human", "animal", "pet-ownership"));
             assertEquals(1, clusterList.size());
             assertEquals(3, clusterList.get(0).set().size());
             assertEquals(Sets.newHashSet(idCoco, idMike, idCocoAndMike), clusterList.get(0).set());
@@ -1002,14 +1004,9 @@ public class GraknClientIT {
     }
 
     @Test
-    public void whenDeletingSameKeyspaceTwice_NoErrorThrown() {
-        // open a session
-        KeyspaceImpl keyspace = localSession.keyspace();
-
-        // delete keyspace twice
-        graknClient.keyspaces().delete(keyspace.name());
-        graknClient.keyspaces().delete(keyspace.name());
-
+    public void whenDeletingNonExistingKeyspace_exceptionThrown() {
+        exception.expectMessage("It is not possible to delete keyspace [nonexistingkeyspace] as it does not exist");
+        graknClient.keyspaces().delete("nonexistingkeyspace");
     }
 
 
@@ -1105,13 +1102,13 @@ public class GraknClientIT {
     }
 
     @Test
-    public void retrievingExistingKeyspaces_onlyRemoteSessionKeyspaceIsReturned(){
+    public void retrievingExistingKeyspaces_onlyRemoteSessionKeyspaceIsReturned() {
         List<String> keyspaces = graknClient.keyspaces().retrieve();
         assertTrue(keyspaces.contains(remoteSession.keyspace().name()));
     }
 
     @Test
-    public void whenCreatingNewKeyspace_itIsVisibileInListOfExistingKeyspaces(){
+    public void whenCreatingNewKeyspace_itIsVisibileInListOfExistingKeyspaces() {
         graknClient.session("newkeyspace").transaction().write().close();
         List<String> keyspaces = graknClient.keyspaces().retrieve();
 
@@ -1119,7 +1116,7 @@ public class GraknClientIT {
     }
 
     @Test
-    public void whenDeletingKeyspace_notListedInExistingKeyspaces(){
+    public void whenDeletingKeyspace_notListedInExistingKeyspaces() {
         graknClient.session("newkeyspace").transaction().write().close();
         List<String> keyspaces = graknClient.keyspaces().retrieve();
 
