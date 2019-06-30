@@ -25,7 +25,7 @@ import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.type.Rule;
 import grakn.core.concept.type.Type;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 

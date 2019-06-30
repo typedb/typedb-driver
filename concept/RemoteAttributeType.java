@@ -26,7 +26,7 @@ import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.thing.Attribute;
 import grakn.core.concept.type.AttributeType;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.Nullable;
 

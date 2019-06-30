@@ -24,7 +24,7 @@ import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.thing.Entity;
 import grakn.core.concept.type.EntityType;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of a MetaType, a special type of Type

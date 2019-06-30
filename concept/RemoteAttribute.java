@@ -25,7 +25,7 @@ import grakn.core.concept.ConceptId;
 import grakn.core.concept.thing.Attribute;
 import grakn.core.concept.thing.Thing;
 import grakn.core.concept.type.AttributeType;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

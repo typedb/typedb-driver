@@ -26,7 +26,7 @@ import grakn.core.concept.ConceptId;
 import grakn.core.concept.thing.Relation;
 import grakn.core.concept.type.RelationType;
 import grakn.core.concept.type.Role;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
 

@@ -28,7 +28,7 @@ import grakn.core.concept.Label;
 import grakn.core.concept.LabelId;
 import grakn.core.concept.type.Rule;
 import grakn.core.concept.type.SchemaConcept;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;

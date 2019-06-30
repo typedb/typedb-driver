@@ -20,9 +20,9 @@
 package grakn.client.rpc;
 
 import grakn.client.exception.GraknClientException;
-import grakn.core.protocol.SessionProto;
-import grakn.core.protocol.SessionProto.Transaction;
-import grakn.core.protocol.SessionServiceGrpc;
+import grakn.protocol.session.SessionProto;
+import grakn.protocol.session.SessionProto.Transaction;
+import grakn.protocol.session.SessionServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 

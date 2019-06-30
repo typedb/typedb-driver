@@ -22,7 +22,7 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
-import grakn.core.protocol.ConceptProto;
+import grakn.protocol.session.ConceptProto;
 
 import java.util.function.Function;
 import java.util.stream.Stream;

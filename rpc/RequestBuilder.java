@@ -23,9 +23,9 @@ import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
 import grakn.core.concept.type.AttributeType;
-import grakn.core.protocol.ConceptProto;
-import grakn.core.protocol.KeyspaceProto;
-import grakn.core.protocol.SessionProto;
+import grakn.protocol.session.ConceptProto;
+import grakn.protocol.keyspace.KeyspaceProto;
+import grakn.protocol.session.SessionProto;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlQuery;
 
