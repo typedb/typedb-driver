@@ -29,11 +29,15 @@ public class GraknClientException extends GraknException {
 
     private String statusCode;
 
-    GraknClientException(String error) {
+    protected GraknClientException(String error) {
         super(error);
     }
 
-    protected GraknClientException(String error, StatusRuntimeException e) {
+    protected GraknClientException(String error, RuntimeException e) {
+        super(error, e);
+    }
+
+    private GraknClientException(String error, StatusRuntimeException e) {
         super(error, e);
         this.statusCode = e.getStatus().getCode().name();
     }
