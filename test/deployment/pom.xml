@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>io.grakn.client</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>grakn-client</artifactId>
             <version>CLIENT_JAVA_VERSION_MARKER</version>
         </dependency>
         <dependency>
