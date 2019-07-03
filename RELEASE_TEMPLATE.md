@@ -13,7 +13,7 @@ Available through https://repo.grakn.ai
 <dependencies>
     <dependency>
         <groupid>io.grakn.client</groupid>
-        <artifactid>api</artifactid>
+        <artifactid>grakn-client</artifactid>
         <version>{version}</version>
     </dependency>
 </dependencies>
