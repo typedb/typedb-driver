@@ -75,9 +75,9 @@ load("//dependencies/maven:dependencies.bzl", "maven_dependencies")
 maven_dependencies()
 
 
-##########################
-# Load GRPC dependencies #
-##########################
+##############################
+# Load Protocol dependencies #
+##############################
 
 load("@graknlabs_build_tools//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
@@ -142,7 +142,7 @@ load("@com_github_google_bazel_common//:workspace_defs.bzl", "google_common_work
 google_common_workspace_rules()
 
 # Generate a JSON document of commit hashes of all external workspace dependencies
-load("@graknlabs_build_tools//bazel:rules.bzl", "workspace_refs")
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
     name = "graknlabs_client_java_workspace_refs"
 )
