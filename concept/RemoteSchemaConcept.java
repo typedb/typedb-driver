@@ -20,8 +20,8 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
@@ -94,7 +94,7 @@ abstract class RemoteSchemaConcept<SomeSchemaConcept extends SchemaConcept> exte
                 Concept concept = RemoteConcept.of(response.getSchemaConcept(), tx());
                 return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
-                throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
 
     }

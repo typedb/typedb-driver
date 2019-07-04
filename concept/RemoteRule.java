@@ -20,7 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.common.util.CommonUtil;
+import grakn.client.exception.GraknClientException;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.type.Rule;
@@ -59,7 +59,7 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
             case PATTERN:
                 return Graql.parsePattern(response.getPattern());
             default:
-                throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
@@ -77,7 +77,7 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
             case PATTERN:
                 return Graql.parsePattern(response.getPattern());
             default:
-                throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 

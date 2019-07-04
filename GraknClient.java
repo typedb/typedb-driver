@@ -26,7 +26,6 @@ import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
 import grakn.client.rpc.Transceiver;
-import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
@@ -317,7 +316,7 @@ public class GraknClient implements AutoCloseable {
                     // This will occur when interrupting a running query/operation on the current transaction
                     throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
                 default:
-                    throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
         }
 
@@ -545,7 +544,7 @@ public class GraknClient implements AutoCloseable {
                     case DONE:
                         return endOfData();
                     case RES_NOT_SET:
-                        throw CommonUtil.unreachableStatement("Unexpected " + response);
+                        throw GraknClientException.unreachableStatement("Unexpected " + response);
                     default:
                         return responseReader.apply(response);
                 }

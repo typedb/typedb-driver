@@ -52,6 +52,10 @@ public class GraknClientException extends RuntimeException {
         return create("The connection to the database is closed");
     }
 
+    public static GraknClientException unreachableStatement(String message) {
+        return create("Statement expected to be unreachable: " + message);
+    }
+
     public String getName() {
         return this.getClass().getName();
     }

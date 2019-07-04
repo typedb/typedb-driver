@@ -19,7 +19,7 @@
 
 package grakn.client.rpc;
 
-import grakn.core.common.util.CommonUtil;
+import grakn.client.exception.GraknClientException;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
 import grakn.core.concept.type.AttributeType;
@@ -189,7 +189,7 @@ public class RequestBuilder {
             } else if (concept.isType()) {
                 return ConceptProto.Concept.BASE_TYPE.META_TYPE;
             } else {
-                throw CommonUtil.unreachableStatement("Unrecognised concept " + concept);
+                throw GraknClientException.unreachableStatement("Unrecognised concept " + concept);
             }
         }
 
@@ -198,7 +198,7 @@ public class RequestBuilder {
         }
 
         public static ConceptProto.ValueObject attributeValue(Object value) {
-            // TODO: this conversion method should use Serialiser class, once it's moved to grakn.core.common
+            // TODO: this conversion method should use Serialiser class, once it's moved to grakn.common
 
             ConceptProto.ValueObject.Builder builder = ConceptProto.ValueObject.newBuilder();
             if (value instanceof String) {
@@ -216,7 +216,7 @@ public class RequestBuilder {
             } else if (value instanceof LocalDateTime) {
                 builder.setDate(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
             } else {
-                throw CommonUtil.unreachableStatement("Unrecognised " + value);
+                throw GraknClientException.unreachableStatement("Unrecognised " + value);
             }
 
             return builder.build();
@@ -260,7 +260,7 @@ public class RequestBuilder {
             } else if (dataType.equals(AttributeType.DataType.DATE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DATE;
             } else {
-                throw CommonUtil.unreachableStatement("Unrecognised " + dataType);
+                throw GraknClientException.unreachableStatement("Unrecognised " + dataType);
             }
         }
     }

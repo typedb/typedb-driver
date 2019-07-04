@@ -20,8 +20,8 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.thing.Attribute;
@@ -69,7 +69,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
             case ATTRIBUTE:
                 return RemoteConcept.of(response.getAttribute(), tx()).asAttribute();
             default:
-                throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
@@ -86,7 +86,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
             case DATATYPE:
                 return (AttributeType.DataType<D>) RequestBuilder.Concept.dataType(response.getDataType());
             default:
-                throw CommonUtil.unreachableStatement("Unexpected response " + response);
+                throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 

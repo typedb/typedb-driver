@@ -39,7 +39,6 @@ java_library(
         "@graknlabs_graql//java:graql",
         "@graknlabs_protocol//grpc/java:protocol",
         "@graknlabs_grakn_core//api:api",
-        "@graknlabs_grakn_core//common:common",
         "@graknlabs_grakn_core//concept:concept",
 
         # External dependencies from Maven
