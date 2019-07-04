@@ -26,7 +26,6 @@ import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
 import grakn.client.rpc.Transceiver;
-import grakn.core.common.exception.Validator;
 import grakn.core.common.util.CommonUtil;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
@@ -44,10 +43,10 @@ import grakn.core.concept.type.RelationType;
 import grakn.core.concept.type.Role;
 import grakn.core.concept.type.Rule;
 import grakn.core.concept.type.SchemaConcept;
-import grakn.protocol.session.ConceptProto;
 import grakn.protocol.keyspace.KeyspaceProto;
 import grakn.protocol.keyspace.KeyspaceServiceGrpc;
 import grakn.protocol.keyspace.KeyspaceServiceGrpc.KeyspaceServiceBlockingStub;
+import grakn.protocol.session.ConceptProto;
 import grakn.protocol.session.SessionProto;
 import grakn.protocol.session.SessionServiceGrpc;
 import graql.lang.pattern.Pattern;
@@ -149,9 +148,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         private Session(ManagedChannel channel, String username, String password, String keyspace) {
-            if (!Validator.isValidKeyspaceName(keyspace)) {
-                throw GraknClientException.invalidKeyspaceName(keyspace);
-            }
             this.username = username;
             this.password = password;
             this.keyspace = keyspace;
@@ -570,9 +566,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         public void delete(String name) {
-            if (!Validator.isValidKeyspaceName(name)) {
-                throw GraknClientException.invalidKeyspaceName(name);
-            }
             KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name);
             keyspaceBlockingStub.delete(request);
         }
@@ -601,9 +594,6 @@ public class GraknClient implements AutoCloseable {
 
         @CheckReturnValue
         public static Keyspace of(String name) {
-            if (!grakn.core.api.Keyspace.isValidName(name)) {
-                throw GraknClientException.invalidKeyspaceName(name);
-            }
             return new Keyspace(name);
         }
 

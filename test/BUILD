@@ -34,9 +34,7 @@ java_test(
         # Internal dependencies
         "@graknlabs_protocol//grpc/java:protocol",
         "@graknlabs_grakn_core//api:api",
-        "@graknlabs_grakn_core//common:common",
         "@graknlabs_grakn_core//concept:concept",
-        "@graknlabs_grakn_core//server:server", # TODO: NEEDS TO GO
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",

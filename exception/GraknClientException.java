@@ -19,13 +19,11 @@
 
 package grakn.client.exception;
 
-import grakn.core.common.exception.ErrorMessage;
-import grakn.core.common.exception.GraknException;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
-public class GraknClientException extends GraknException {
+public class GraknClientException extends RuntimeException {
 
     private String statusCode;
 
@@ -50,15 +48,10 @@ public class GraknClientException extends GraknException {
         return new GraknClientException(error, e);
     }
 
-    public static GraknClientException invalidKeyspaceName(String keyspace) {
-        return create(ErrorMessage.INVALID_KEYSPACE_NAME.getMessage(keyspace));
-    }
-
     public static GraknClientException connectionClosed() {
-        return create(ErrorMessage.CONNECTION_CLOSED.getMessage());
+        return create("The connection to the database is closed");
     }
 
-    @Override
     public String getName() {
         return this.getClass().getName();
     }

@@ -24,22 +24,16 @@ import grakn.client.concept.RemoteConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.core.api.Transaction;
-import grakn.core.common.exception.GraknException;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
 import grakn.core.concept.answer.ConceptMap;
 import grakn.core.concept.type.AttributeType;
-import grakn.core.graql.exception.GraqlSemanticException;
+import grakn.protocol.keyspace.KeyspaceServiceGrpc;
 import grakn.protocol.session.AnswerProto;
 import grakn.protocol.session.ConceptProto;
-import grakn.protocol.keyspace.KeyspaceServiceGrpc;
 import grakn.protocol.session.SessionProto;
 import grakn.protocol.session.SessionServiceGrpc;
-import grakn.core.server.exception.GraknServerException;
-import grakn.core.server.exception.PropertyNotUniqueException;
-import grakn.core.server.exception.TemporaryWriteException;
-import grakn.core.server.exception.TransactionException;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlGet;
@@ -47,14 +41,15 @@ import graql.lang.statement.Variable;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.testing.GrpcServerRule;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static graql.lang.Graql.match;
 import static graql.lang.Graql.var;
@@ -91,7 +86,7 @@ public class GraknClientTest {
     public final GraknServerRPCMock server = new GraknServerRPCMock(sessionService, keyspaceService);
     private GraknClient.Session session;
 
-    private static StatusRuntimeException error(Status status, GraknException e) {
+    private static StatusRuntimeException error(Status status, GraknClientException e) {
         return status.withDescription(e.getName() + " - " + e.getMessage()).asRuntimeException();
     }
 
@@ -194,7 +189,7 @@ public class GraknClientTest {
     @Test
     public void whenOpeningATxFails_Throw() {
         SessionProto.Transaction.Req openRequest = RequestBuilder.Transaction.open("randomID", Transaction.Type.WRITE);
-        GraknException expectedException = GraknServerException.create("well something went wrong");
+        GraknClientException expectedException = GraknClientException.create("well something went wrong");
         throwOn(openRequest, expectedException);
 
         exception.expect(RuntimeException.class);
@@ -207,7 +202,7 @@ public class GraknClientTest {
 
     @Test
     public void whenCommittingATxFails_Throw() {
-        GraknException expectedException = GraknClientException.create("do it better next time");
+        GraknClientException expectedException = GraknClientException.create("do it better next time");
         throwOn(RequestBuilder.Transaction.commit(), expectedException);
 
         try (GraknClient.Transaction tx = session.transaction().write()) {
@@ -224,7 +219,7 @@ public class GraknClientTest {
         GraqlGet query = match(var("x").isa("thing")).get();
 
         SessionProto.Transaction.Req execQueryRequest = RequestBuilder.Transaction.query(query);
-        GraknException expectedException = GraqlSemanticException.create("well something went wrong.");
+        GraknClientException expectedException = GraknClientException.create("well something went wrong.");
         throwOn(execQueryRequest, expectedException);
 
         try (GraknClient.Transaction tx = session.transaction().write()) {
@@ -244,7 +239,7 @@ public class GraknClientTest {
         GraqlGet query = match(var("x").isa("thing")).get();
 
         SessionProto.Transaction.Req execQueryRequest = RequestBuilder.Transaction.query(query);
-        GraknException expectedException = GraqlSemanticException.create("well something went wrong.");
+        GraknClientException expectedException = GraknClientException.create("well something went wrong.");
         throwOn(execQueryRequest, expectedException);
 
         try (GraknClient.Transaction tx = session.transaction().write()) {
@@ -476,20 +471,9 @@ public class GraknClientTest {
         assertTrue(tx.isClosed());
     }
 
-    private void throwOn(SessionProto.Transaction.Req request, GraknException e) {
+    private void throwOn(SessionProto.Transaction.Req request, GraknClientException e) {
         StatusRuntimeException exception;
-
-        if (e instanceof TemporaryWriteException) {
-            exception = error(Status.RESOURCE_EXHAUSTED, e);
-        } else if (e instanceof GraknServerException) {
-            exception = error(Status.INTERNAL, e);
-        } else if (e instanceof PropertyNotUniqueException) {
-            exception = error(Status.ALREADY_EXISTS, e);
-        } else if (e instanceof TransactionException || e instanceof GraqlSemanticException) {
-            exception = error(Status.INVALID_ARGUMENT, e);
-        } else {
-            exception = error(Status.UNKNOWN, e);
-        }
+        exception = error(Status.UNKNOWN, e);
 
         server.setResponse(request, exception);
     }
