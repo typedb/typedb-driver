@@ -50,41 +50,10 @@ java_test(
     size = "small",
 )
 
-java_test(
-    name = "grakn-client-it",
-    srcs = ["GraknClientIT.java"],
-    test_class = "grakn.client.test.GraknClientIT",
-    deps = [
-        # Package dependencies
-        "//:client-java",
-
-        # Internal dependencies
-        "@graknlabs_grakn_core//api:api",
-        "@graknlabs_grakn_core//concept:concept",
-        "@graknlabs_grakn_core//server:server", # TODO: NEEDS TO GO
-        "@graknlabs_grakn_core//test-integration/rule:grakn-test-server",
-
-        # External depencies from @graknlabs
-        "@graknlabs_graql//java:graql",
-
-        # External depencncies from Maven
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api",
-        "//dependencies/maven/artifacts/com/google/guava:guava"
-    ],
-    size = "large",
-    classpath_resources = [
-        "@graknlabs_grakn_core//test-integration/resources:logback-test",
-        "@graknlabs_grakn_core//test-integration/resources:cassandra-embedded",
-        "@graknlabs_grakn_core//server:conf/grakn.properties"
-    ]
-)
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":grakn-client-test",
-        ":grakn-client-it",
     ],
     license_type = "apache"
 )

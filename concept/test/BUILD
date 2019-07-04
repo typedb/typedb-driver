@@ -28,7 +28,6 @@ java_test(
         # Grakn Core dependencies
         "//:client-java",
         "@graknlabs_grakn_core//concept:concept",
-        "@graknlabs_grakn_core//server:server", # NEEDS TO GO
         "@graknlabs_grakn_core//test-integration/rule:grakn-test-server",
 
         # Grakn Labs dependencies
@@ -36,7 +35,7 @@ java_test(
 
         # Maven External dependencies
         "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api",
+        "//dependencies/maven/artifacts/org/slf4j:slf4j-api", # TODO: Do we still need this?
     ],
     size = "large",
     classpath_resources = [
