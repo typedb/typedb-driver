@@ -18,7 +18,7 @@
  */
 
 const Methods = require("./Methods");
-const ConceptGrpcMessages = require("../../../../client-nodejs-proto/protocol/session/Concept_pb");
+const ConceptGrpcMessages = require("../../../../grpc/nodejs/protocol/session/Concept_pb");
 const BaseType = require("./BaseTypeConstants").baseType;
 
 /**

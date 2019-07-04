@@ -19,7 +19,7 @@
 
 const Transaction = require("./Transaction");
 const SessionService = require("./service/Session/SessionService");
-const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
+const messages = require("../grpc/nodejs/protocol/session/Session_pb");
 
 /**
  * List of available transaction types supported by Grakn

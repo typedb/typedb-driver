@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const messages = require("../../../client-nodejs-proto/protocol/keyspace/Keyspace_pb");
+const messages = require("../../../grpc/nodejs/protocol/keyspace/Keyspace_pb");
 
 function KeyspaceService(grpcClient, credentials) {
     this.credentials = credentials;

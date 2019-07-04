@@ -23,21 +23,10 @@ exports_files([
     "RELEASE_TEMPLATE.md",
 ])
 
-load("@stackb_rules_proto//node:node_grpc_compile.bzl", "node_grpc_compile")
 load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "nodejs_jest_test", "babel_library")
-load("@graknlabs_bazel_distribution//npm:rules.bzl", "deploy_npm")
+load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "new_deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 
-
-node_grpc_compile(
-    name = "client-nodejs-proto",
-    deps = [
-        "@graknlabs_grakn_core//protocol/session:session-proto",
-        "@graknlabs_grakn_core//protocol/session:answer-proto",
-        "@graknlabs_grakn_core//protocol/session:concept-proto",
-        "@graknlabs_grakn_core//protocol/keyspace:keyspace-proto",
-    ]
-)
 
 babel_library(
     name = 'bundle',
@@ -61,18 +50,26 @@ babel_library(
 npm_package(
     name = "client-nodejs",
     deps = [
-        ":client-nodejs-proto",
+        "@graknlabs_protocol//grpc/nodejs:protocol",
         ":bundle",
         "@nodejs_dependencies//grpc",
         "@nodejs_dependencies//google-protobuf"
     ],
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
+    vendor_external = [
+        "graknlabs_protocol"
+    ]
 )
 
-deploy_npm(
-    name = "deploy-npm",
+assemble_npm(
+    name = "assemble-npm",
     target = ":client-nodejs",
     version_file = "//:VERSION",
+)
+
+new_deploy_npm(
+    name = "deploy-npm",
+    target = ":assemble-npm",
     deployment_properties = "@graknlabs_build_tools//:deployment.properties",
 )
 

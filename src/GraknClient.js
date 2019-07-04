@@ -20,9 +20,9 @@
 const grpc = require("grpc");
 const Session = require('./Session');
 const KeyspaceService = require('./service/Keyspace/KeyspaceService');
-const messages = require("../client-nodejs-proto/protocol/session/Session_pb");
-const sessionServices = require("../client-nodejs-proto/protocol/session/Session_grpc_pb");
-const keyspaceServices = require("../client-nodejs-proto/protocol/keyspace/Keyspace_grpc_pb");
+const messages = require("../grpc/nodejs/protocol/session/Session_pb");
+const sessionServices = require("../grpc/nodejs/protocol/session/Session_grpc_pb");
+const keyspaceServices = require("../grpc/nodejs/protocol/keyspace/Keyspace_grpc_pb");
 
 /**
  * Entry-point for Grakn client, it communicates with a running Grakn server using gRPC.
