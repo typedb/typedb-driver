@@ -37,8 +37,7 @@ java_library(
     deps = [
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
-        "@graknlabs_protocol//keyspace:keyspace",
-        "@graknlabs_protocol//session:session",
+        "@graknlabs_protocol//grpc/java:protocol",
         "@graknlabs_grakn_core//api:api",
         "@graknlabs_grakn_core//common:common",
         "@graknlabs_grakn_core//concept:concept",
