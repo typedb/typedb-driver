@@ -24,7 +24,7 @@ exports_files([
 ])
 
 load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "nodejs_jest_test", "babel_library")
-load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "new_deploy_npm")
+load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 
 
@@ -67,7 +67,7 @@ assemble_npm(
     version_file = "//:VERSION",
 )
 
-new_deploy_npm(
+deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
     deployment_properties = "@graknlabs_build_tools//:deployment.properties",
