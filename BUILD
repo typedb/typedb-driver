@@ -80,6 +80,8 @@ deploy_maven(
 deploy_github(
     name = "deploy-github",
     release_description = "//:RELEASE_TEMPLATE.md",
+    title = "Grakn Client Java",
+    title_append_version = True,
     deployment_properties = "//:deployment.properties",
     version_file = "//:VERSION"
 )
