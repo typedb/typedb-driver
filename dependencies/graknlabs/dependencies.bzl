@@ -29,12 +29,12 @@ def graknlabs_grakn_core():
     git_repository(
         name = "graknlabs_grakn_core",
         remote = "https://github.com/graknlabs/grakn",
-        commit = "861ecec9f9d783006d4fabfe63f7f0851eeaaf75" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+        commit = "0697f42fd81d916e9ecc2481687e06221a3017c9" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
     )
 
 def graknlabs_protocol():
     git_repository(
         name = "graknlabs_protocol",
         remote = "https://github.com/graknlabs/protocol",
-        commit = "3469eb498a4aeca5aaeb2425eed4620dbf49d5d8" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        commit = "17d9e44af016fc6d9dbaf0dea34150bd6c390fa1" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
