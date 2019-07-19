@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Entity type methods", () => {
 
-    test("create", async () => {
+    it("create", async () => {
         const personType = await tx.putEntityType("person");
         const person = await personType.create();
         expect(person.isEntity()).toBeTruthy();

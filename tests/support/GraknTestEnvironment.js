@@ -28,24 +28,16 @@ const tmp = require('tmp');
 const unzipper = require('unzipper');
 
 
-// Test Grakn with distribution code if TEST_ENV is dist
-let GraknClient;
-let graknClient;
-if(process.env.TEST_ENV === 'dist'){
-    GraknClient = require("../../dist/GraknClient");
-    graknClient = new GraknClient(DEFAULT_URI);
-}else {
-    GraknClient = require("../../client-nodejs/src/GraknClient");
-    graknClient = new GraknClient(DEFAULT_URI);
-}
+const GraknClient = require("../../client-nodejs/src/GraknClient");
+const graknClient = new GraknClient(DEFAULT_URI);
 
-jest.setTimeout(INTEGRATION_TESTS_TIMEOUT);
-//Every test file instantiate a new GraknEnvironment - so session will be new for every test file
 let session;
 let tempRootDir;
 let graknRootDir;
 let graknExecutablePath;
 
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = INTEGRATION_TESTS_TIMEOUT;
 
 const unzipArchive = function(zipFile, extractPath) {
     return new Promise((resolve, reject) => {

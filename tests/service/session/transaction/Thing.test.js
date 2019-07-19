@@ -40,13 +40,13 @@ afterEach(() => {
 
 describe("Thing methods", () => {
 
-    test("isInferred", async () => {
+    it("isInferred", async () => {
         const personType = await tx.putEntityType('person');
         const thing = await personType.create();
         expect(await thing.isInferred()).toBeFalsy();
     });
 
-    test("type", async () => {
+    it("type", async () => {
         const personType = await tx.putEntityType('person');
         const thing = await personType.create();
         const type = await thing.type();
@@ -54,7 +54,7 @@ describe("Thing methods", () => {
         expect(type.isType()).toBeTruthy();
     });
 
-    test("relations", async () => {
+    it("relations", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -66,7 +66,7 @@ describe("Thing methods", () => {
         expect(rels[0].id).toBe(relation.id);
     });
 
-    test("relations() filtered by role", async () => {
+    it("relations() filtered by role", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
 
@@ -94,7 +94,7 @@ describe("Thing methods", () => {
         expect(employerRelations[0].id).toBe(employmentRel.id);
     });
 
-    test("roles", async () => {
+    it("roles", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -106,7 +106,7 @@ describe("Thing methods", () => {
         expect(roles[0].id).toBe(parentRole.id);
     });
 
-    test("has/unhas/get attributes", async () => {
+    it("has/unhas/get attributes", async () => {
         const personType = await tx.putEntityType('person');
         const attrType = await tx.putAttributeType('name', env.dataType().STRING);
         await personType.has(attrType);
@@ -121,7 +121,7 @@ describe("Thing methods", () => {
         expect(emptyAttrs.length).toBe(0);
     });
 
-    test("attributes(...AttributeType)", async () => {
+    it("attributes(...AttributeType)", async () => {
         const personType = await tx.putEntityType('person');
         const attrType = await tx.putAttributeType('name', env.dataType().STRING);
         const attrMarriedType = await tx.putAttributeType('married', env.dataType().BOOLEAN);
@@ -142,7 +142,7 @@ describe("Thing methods", () => {
         expect(empty.length).toBe(0);
     });
 
-    test('keys(...AttributeType)', async () => {
+    it('keys(...AttributeType)', async () => {
         const personType = await tx.putEntityType('person');
         const nameType = await tx.putAttributeType('name', env.dataType().STRING);
         const surnameType = await tx.putAttributeType('surname', env.dataType().STRING);

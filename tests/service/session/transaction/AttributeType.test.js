@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Attribute type methods", () => {
 
-    test("create", async () => {
+    it("create", async () => {
         const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         const attribute = await attributeType.create('Marco');
         expect(attribute.isAttribute()).toBeTruthy();
@@ -55,7 +55,7 @@ describe("Attribute type methods", () => {
         expect(await doubleAttribute.value()).toBe(11.58);
     });
 
-    test('dataType', async () => {
+    it('dataType', async () => {
         const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         expect(await attributeType.dataType()).toBe('String');
 
@@ -66,7 +66,7 @@ describe("Attribute type methods", () => {
         expect(await doubleAttributeType.dataType()).toBe('Double');
     });
 
-    test('attribute', async () => {
+    it('attribute', async () => {
         const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         await attributeType.create('Marco');
         const attribute = await attributeType.attribute('Marco');
@@ -75,10 +75,10 @@ describe("Attribute type methods", () => {
         expect(nullAttribute).toBeNull();
     });
 
-    test('set/get regex', async () => {
+    it('set/get regex', async () => {
         const attributeType = await tx.putAttributeType("id", env.dataType().STRING);
         const emptyRegex = await attributeType.regex();
-        expect(emptyRegex).toHaveLength(0);
+        expect(emptyRegex.length).toBe(0);
 
         await attributeType.regex("(good|bad)-dog");
         const regex = await attributeType.regex();

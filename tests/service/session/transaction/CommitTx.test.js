@@ -30,28 +30,28 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await session.close();
-    graknClient.keyspaces().delete("testcommit");
-    env.tearDown();
+    await graknClient.keyspaces().delete("testcommit");
+    await env.tearDown();
 });
 
 describe('Integration test', () => {
 
-    test("Tx open in READ mode should throw when trying to define", async () => {
+    it("Tx open in READ mode should throw when trying to define", async () => {
         const tx = await session.transaction().read();
-        await expect(tx.query("define person sub entity;")).rejects.toThrowError();
+        await expectAsync(tx.query("define person sub entity;")).toBeRejected();
         tx.close();
     });
 
-    test("If tx does not commit, different Tx won't see changes", async () => {
+    it("If tx does not commit, different Tx won't see changes", async () => {
         const tx = await session.transaction().write();
         await tx.query("define catwoman sub entity;");
         tx.close()
         const newTx = await session.transaction().write();
-        await expect(newTx.query("match $x sub catwoman; get;")).rejects.toThrowError(); // catwoman label does not exist in the graph
+        await expectAsync(newTx.query("match $x sub catwoman; get;")).toBeRejected(); // catwoman label does not exist in the graph
         newTx.close();
     });
 
-    test("When tx commit, different tx will see changes", async () => {
+    it("When tx commit, different tx will see changes", async () => {
         const tx = await session.transaction().write();
         await tx.query("define superman sub entity;");
         await tx.commit();
@@ -61,7 +61,7 @@ describe('Integration test', () => {
         newTx.close();
     });
 
-    test.skip("explanation and default of infer is true", async () => {
+    xit("explanation and default of infer is true", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;"); // TODO: put back offset 0; limit 1;
@@ -73,7 +73,7 @@ describe('Integration test', () => {
         await localSession.close();
     });
 
-    test.skip("explanation with join explanation", async () => {
+    xit("explanation with join explanation", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query(`match ($x, $y) isa marriage; ($y, $z) isa marriage;
@@ -87,7 +87,7 @@ describe('Integration test', () => {
         await localSession.close();
     });
 
-    test.skip("no results with infer false", async () => {
+    xit("no results with infer false", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
         const iterator = await tx.query("match $x isa cousins; get;", { infer: false }); // TODO: put back offset 0; limit 1;

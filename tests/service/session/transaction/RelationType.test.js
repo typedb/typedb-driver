@@ -40,13 +40,13 @@ afterEach(() => {
 
 describe("Relation type methods", () => {
 
-    test("create", async () => {
+    it("create", async () => {
         const relationType = await tx.putRelationType("parenthood");
         const relation = await relationType.create();
         expect(relation.isRelation()).toBeTruthy();
     });
 
-    test('Get/set/delete relates', async () => {
+    it('Get/set/delete relates', async () => {
         const relationType = await tx.putRelationType("parenthood");
         const parentRole = await tx.putRole('parent');
         const childRole = await tx.putRole('child');

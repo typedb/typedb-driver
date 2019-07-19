@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Concept methods", () => {
 
-    test("delete type", async () => {
+    it("delete type", async () => {
         const personType = await tx.putEntityType('person');
         const schemaConcept = await tx.getSchemaConcept('person');
         expect(schemaConcept.isSchemaConcept()).toBeTruthy();
@@ -49,7 +49,7 @@ describe("Concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    test("delete instance", async () => {
+    it("delete instance", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
         await person.delete();
@@ -57,16 +57,16 @@ describe("Concept methods", () => {
         expect(nullConcept).toBeNull();
     });
 
-    test("delete concept already deleted", async () => {
+    it("delete concept already deleted", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
         await person.delete();
         const nullConcept = await tx.getConcept(person.id);
         expect(nullConcept).toBeNull();
-        await expect(person.delete()).rejects.toThrowError();
+        await expectAsync(person.delete()).toBeRejected();
     });
 
-    test("instance isEntity/isRelation/isAttribute", async () => {
+    it("instance isEntity/isRelation/isAttribute", async () => {
         const personType = await tx.putEntityType('person');
         const person = await personType.create();
         expect(person.isEntity()).toBeTruthy();
@@ -86,7 +86,7 @@ describe("Concept methods", () => {
         expect(employed.isAttribute()).toBeTruthy();
     });
 
-    test("getConcept", async () => {
+    it("getConcept", async () => {
         await tx.query("define person sub entity;");
         const iterator = await tx.query("insert $x isa person;");
         const person = (await iterator.next()).map().get('x');
@@ -102,7 +102,7 @@ describe("Concept methods", () => {
     });
 
     // Bug regression test
-    test("Ensure no duplicates in metatypes", async () => {
+    it("Ensure no duplicates in metatypes", async () => {
         await tx.query("define person sub entity;");
         const result = await tx.query("match $x sub entity; get;");
         const concepts = (await result.collectConcepts());
@@ -111,26 +111,26 @@ describe("Concept methods", () => {
         expect(set.size).toBe(2);
     });
 
-    test("execute query with no results", async () => {
+    it("execute query with no results", async () => {
         await tx.query("define person sub entity;");
         const result = await tx.query("match $x isa person; get;")
         const emptyArray = await result.collect();
-        expect(emptyArray).toHaveLength(0);
+        expect(emptyArray.length).toBe(0);
     });
 
-    test("execute compute count on empty graph - Answer of Value", async () => {
+    it("execute compute count on empty graph - Answer of Value", async () => {
         const result = await tx.query("compute count;");
         const answer = await(result.next());
         expect(answer.number()).toBe(0);
     });
 
-    test("execute aggregate count on empty graph - Answer of Value", async () => {
+    it("execute aggregate count on empty graph - Answer of Value", async () => {
         const result = await tx.query("match $x sub thing; get; count;");
         const answer = await(result.next());
         expect(answer.number()).toBe(4);
     });
 
-    test("group query - Answer of answerGroup", async ()=>{ const localSession = await env.sessionForKeyspace('groupks');
+    it("group query - Answer of answerGroup", async ()=>{ const localSession = await env.sessionForKeyspace('groupks');
         let localTx = await localSession.transaction().write();
         const parentshipMap = await env.buildParentship(localTx);
         localTx = await localSession.transaction().write();
@@ -147,7 +147,7 @@ describe("Concept methods", () => {
     });
 
 
-    test("getSchemaConcept", async () => {
+    it("getSchemaConcept", async () => {
         await tx.query("define person sub entity;");
 
         const personType = await tx.getSchemaConcept("person");
@@ -157,30 +157,30 @@ describe("Concept methods", () => {
         expect(nonPerson).toBe(null);
     });
 
-    test("putEntityType", async () => {
+    it("putEntityType", async () => {
         const personType = await tx.putEntityType("person");
         expect(personType.isSchemaConcept()).toBeTruthy();
         expect(personType.isEntityType()).toBeTruthy();
     });
 
-    test("putRelationType", async () => {
+    it("putRelationType", async () => {
         const marriage = await tx.putRelationType("marriage");
         expect(marriage.isSchemaConcept()).toBeTruthy();
         expect(marriage.isRelationType()).toBeTruthy();
     });
 
-    test("putAttributeType", async () => {
+    it("putAttributeType", async () => {
         const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         expect(attributeType.isAttributeType()).toBeTruthy();
     });
 
-    test("putRole", async () => {
+    it("putRole", async () => {
         const role = await tx.putRole("father");
         expect(role.isRole()).toBeTruthy();
         expect(role.baseType).toBe("ROLE");
     });
 
-    test("putRule", async () => {
+    it("putRule", async () => {
         const label = "genderisedParentship";
         const when = "{ (parent: $p, child: $c) isa parentship; $p has gender 'female'; $c has gender 'male'; };";
         const then = "{ (mother: $p, son: $c) isa parentship; };";
@@ -189,7 +189,7 @@ describe("Concept methods", () => {
         expect(rule.isRule()).toBeTruthy();
     });
 
-    test("getAttributesByValue", async () => {
+    it("getAttributesByValue", async () => {
         const firstNameAttributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
         const middleNameAttributeType = await tx.putAttributeType("middlename", env.dataType().STRING);
         const a1 = await firstNameAttributeType.create('James');
@@ -203,6 +203,6 @@ describe("Concept methods", () => {
             expect(await attr.value()).toBe('James');
         });
         const bondAttributes = await (await tx.getAttributesByValue('Bond', env.dataType().STRING)).collect();
-        expect(bondAttributes).toHaveLength(0);
+        expect(bondAttributes.length).toBe(0);
     });
 });

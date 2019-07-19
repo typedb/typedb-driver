@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Relationsihp methods", () => {
 
-    test("rolePlayersMap && rolePlayers with 2 roles with 1 player each", async () => {
+    it("rolePlayersMap && rolePlayers with 2 roles with 1 player each", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -58,7 +58,7 @@ describe("Relationsihp methods", () => {
         expect(rolePlayers.length).toBe(2);
     });
 
-    test("rolePlayersMap && rolePlayers with 1 role with 2 players", async () => {
+    it("rolePlayersMap && rolePlayers with 1 role with 2 players", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -75,7 +75,7 @@ describe("Relationsihp methods", () => {
         expect(rolePlayers.length).toBe(2);
     });
 
-    test("rolePlayersMap && rolePlayers with 2 roles with the same player", async () => {
+    it("rolePlayersMap && rolePlayers with 2 roles with the same player", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -93,7 +93,7 @@ describe("Relationsihp methods", () => {
         expect(rolePlayers[0].isThing()).toBeTruthy();
     });
 
-    test("assign && unassign && rolePlayers", async () => {
+    it("assign && unassign && rolePlayers", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');
@@ -112,7 +112,7 @@ describe("Relationsihp methods", () => {
 
     });
 
-    test("rolePlayers() filtered by Role", async () => {
+    it("rolePlayers() filtered by Role", async () => {
         const relationType = await tx.putRelationType('parenthood');
         const relation = await relationType.create();
         const parentRole = await tx.putRole('parent');

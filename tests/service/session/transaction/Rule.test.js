@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Rule methods", () => {
 
-    test("get When/Then", async () => {
+    it("get When/Then", async () => {
         const label = "genderisedParentship";
         const when = "{ (parent: $p, child: $c) isa parentship; $c has gender \"male\"; $p has gender \"female\"; };";
         const then = "{ (mother: $p, son: $c) isa parentship; };";
@@ -49,7 +49,7 @@ describe("Rule methods", () => {
         expect(await rule.getThen()).toBe(then);
     });
 
-    test("get When/Then when null", async () => {
+    it("get When/Then when null", async () => {
         const rule = await tx.getSchemaConcept('rule');
         expect(await rule.getWhen()).toBeNull();
         expect(await rule.getThen()).toBeNull();

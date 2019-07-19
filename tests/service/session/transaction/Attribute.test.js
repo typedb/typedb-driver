@@ -40,13 +40,13 @@ afterEach(() => {
 
 describe("Attribute methods", () => {
 
-    test("value", async () => {
+    it("value", async () => {
         const doubleAttributeType = await tx.putAttributeType("length", env.dataType().DOUBLE);
         const doubleAttribute = await doubleAttributeType.create(11.58);
         expect(await doubleAttribute.value()).toBe(11.58);
     });
 
-    test("get value Date", async () => {
+    it("get value Date", async () => {
         const dateType = await tx.putAttributeType("birth-date", env.dataType().DATE);
         const personType = await tx.putEntityType('person');
         await personType.has(dateType);
@@ -59,7 +59,7 @@ describe("Attribute methods", () => {
         expect(value instanceof Date).toBeTruthy();
     });
 
-    test("set value Date", async () => {
+    it("set value Date", async () => {
         const dateType = await tx.putAttributeType("birth-date", env.dataType().DATE);
         const testDate = new Date('2018-08-06');
         const date = await dateType.create(testDate);
@@ -68,7 +68,7 @@ describe("Attribute methods", () => {
         expect(testDate.getTime()).toEqual(value.getTime());
     });
 
-    test("owners", async () => {
+    it("owners", async () => {
         const personType = await tx.putEntityType('person');
         const animalType = await tx.putEntityType('animal');
         const nameType = await tx.putAttributeType("name", env.dataType().STRING);

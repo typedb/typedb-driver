@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Type methods", () => {
 
-    test("isAbstract", async () => {
+    it("isAbstract", async () => {
         const dogType = await tx.putEntityType("dog");
         let isAbstract = await dogType.isAbstract();
         expect(isAbstract).toBeFalsy();
@@ -52,7 +52,7 @@ describe("Type methods", () => {
         expect(isAbstract).toBeFalsy();
     });
 
-    test("get/set/delete plays", async () => {
+    it("get/set/delete plays", async () => {
         const role = await tx.putRole('father');
         const type = await tx.putEntityType('person');
         const plays = await (await type.playing()).collect();
@@ -66,7 +66,7 @@ describe("Type methods", () => {
         expect(playsRemoved.length).toBe(0);
     });
 
-    test("get/set/delete attributes", async () => {
+    it("get/set/delete attributes", async () => {
         const type = await tx.putEntityType('person');
         const nameType = await tx.putAttributeType('name', env.dataType().STRING);
         const attrs = await (await type.attributes()).collect();
@@ -80,7 +80,7 @@ describe("Type methods", () => {
         expect(attrsRemoved.length).toBe(0);
     });
 
-    test("instances", async () => {
+    it("instances", async () => {
         const personType = await tx.putEntityType("person");
         const instances = await (await personType.instances()).collect();
         expect(instances.length).toBe(0);
@@ -89,7 +89,7 @@ describe("Type methods", () => {
         expect(instancesWithPerson.length).toBe(1);
     });
 
-    test("Get/set/delete key", async () => {
+    it("Get/set/delete key", async () => {
         const type = await tx.putEntityType('person');
         const nameType = await tx.putAttributeType('name', env.dataType().STRING);
         const keys = await (await type.keys()).collect();

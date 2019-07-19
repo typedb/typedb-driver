@@ -40,7 +40,7 @@ afterEach(() => {
 
 describe("Transaction methods", () => {
 
-  test("shortest path - Answer of conceptList", async ()=>{
+  it("shortest path - Answer of conceptList", async ()=>{
     let localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await env.buildParentship(localTx);
@@ -49,7 +49,7 @@ describe("Transaction methods", () => {
     localTx = await localSession.transaction().read();
     const result = await localTx.query(`compute path from ${parentshipMap.parent}, to ${parentshipMap.child};`);
     const answer = await(result.next());
-    expect(answer.list()).toHaveLength(3);
+    expect(answer.list().length).toBe(3);
     expect(answer.list().includes(parentshipMap.child)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.parent)).toBeTruthy();
     expect(answer.list().includes(parentshipMap.rel)).toBeTruthy();
@@ -58,7 +58,7 @@ describe("Transaction methods", () => {
     await env.graknClient.keyspaces().delete('shortestpathks');
   });
 
-  test("cluster connected components - Answer of conceptSet", async ()=>{
+  it("cluster connected components - Answer of conceptSet", async ()=>{
     let localSession = await env.sessionForKeyspace('clusterkeyspace');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await env.buildParentship(localTx);
@@ -76,7 +76,7 @@ describe("Transaction methods", () => {
     await env.graknClient.keyspaces().delete('clusterkeyspace');
   });
 
-  test("compute centrality - Answer of conceptSetMeasure", async ()=>{
+  it("compute centrality - Answer of conceptSetMeasure", async ()=>{
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
     const parentshipMap = await env.buildParentship(localTx);

@@ -18,42 +18,35 @@
 
 exports_files([
     "package.json",
+    "yarn.lock",
     "VERSION",
     "deployment.properties",
     "RELEASE_TEMPLATE.md",
 ])
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "nodejs_jest_test", "babel_library")
+load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
+load("@npm_bazel_jasmine//:index.bzl", "jasmine_node_test")
 load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 
 
-babel_library(
-    name = 'bundle',
+npm_package(
+    name = "client-nodejs",
     srcs = glob([
+       "package.json",
        "src/*.js",
        "src/service/Keyspace/KeyspaceService.js",
        "src/service/Session/*.js",
        "src/service/Session/util/*.js",
        "src/service/Session/concept/*.js",
-   ]),
-   data = [
        "package.json",
        "README.md",
        ".npmignore"
-   ],
-   babel = "@nodejs_dependencies//@bazel/babel/bin:babel",
-   babelrc = "babel.rc.js"
-)
-
-
-npm_package(
-    name = "client-nodejs",
+    ]),
     deps = [
         "@graknlabs_protocol//grpc/nodejs:protocol",
-        ":bundle",
-        "@nodejs_dependencies//grpc",
-        "@nodejs_dependencies//google-protobuf"
+        "@npm//grpc",
+        "@npm//google-protobuf"
     ],
     visibility = ["//visibility:public"],
     vendor_external = [
@@ -83,12 +76,11 @@ deploy_github(
 
 NODEJS_TEST_DEPENDENCIES = [
     ":client-nodejs",
-    "@nodejs_dependencies//fs-extra",
-    "@nodejs_dependencies//google-protobuf",
-    "@nodejs_dependencies//grpc",
-    "@nodejs_dependencies//jest",
-    "@nodejs_dependencies//tmp",
-    "@nodejs_dependencies//unzipper"
+    "@npm//fs-extra",
+    "@npm//google-protobuf",
+    "@npm//grpc",
+    "@npm//tmp",
+    "@npm//unzipper"
 ]
 
 NODEJS_TEST_DATA = [
@@ -96,7 +88,7 @@ NODEJS_TEST_DATA = [
     "tests/support/basic-genealogy.gql"
 ]
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "keyspace-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -106,7 +98,8 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+
+jasmine_node_test(
     name = "concept-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -116,7 +109,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "schemaconcept-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -126,7 +119,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "rule-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -136,7 +129,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "type-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -146,7 +139,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "attribute-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -156,7 +149,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "attributetype-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -166,7 +159,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "role-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -176,7 +169,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "grakntx-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -186,7 +179,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "relation-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -196,7 +189,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "relationtype-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -206,7 +199,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "thing-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -216,7 +209,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "entitytype-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
@@ -226,7 +219,7 @@ nodejs_jest_test(
     data = NODEJS_TEST_DATA,
 )
 
-nodejs_jest_test(
+jasmine_node_test(
     name = "committx-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",

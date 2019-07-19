@@ -41,7 +41,7 @@ afterEach(() => {
 
 describe("Schema concept methods", () => {
 
-    test("Get/set label", async () => {
+    it("Get/set label", async () => {
         await tx.query('define person sub entity;')
         const personSchemaConcept = await tx.getSchemaConcept('person');
         expect(await personSchemaConcept.label()).toBe('person');
@@ -52,7 +52,7 @@ describe("Schema concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    test("isImplicit", async () => {
+    it("isImplicit", async () => {
         await tx.query('define person sub entity;')
         const personSchemaConcept = await tx.getSchemaConcept('person');
         expect(await personSchemaConcept.isImplicit()).toBe(false);
@@ -61,7 +61,7 @@ describe("Schema concept methods", () => {
         expect(await implicitSchemaConcept.isImplicit()).toBe(true);
     });
 
-    test("Get sups and subs", async () => {
+    it("Get sups and subs", async () => {
         await tx.query('define person sub entity;')
         const personSchemaConcept = await tx.getSchemaConcept('person');
         const sups = await (await personSchemaConcept.sups()).collect();
@@ -83,7 +83,7 @@ describe("Schema concept methods", () => {
         expect(subLabels[1]).toBe('person');
     });
 
-    test("Get sup", async () => {
+    it("Get sup", async () => {
         const entitySchemaConcept = await tx.getSchemaConcept('entity');
         const metaType = await entitySchemaConcept.sup();
         expect(metaType.baseType).toBe('META_TYPE');
@@ -91,7 +91,7 @@ describe("Schema concept methods", () => {
         expect(sup).toBeNull();
     });
 
-    test("Set sup", async () => {
+    it("Set sup", async () => {
         const humanSchemaConcept = await tx.putEntityType('human');
         const maleSchemaConcept = await tx.putEntityType('male');
         const supType = await maleSchemaConcept.sup();
