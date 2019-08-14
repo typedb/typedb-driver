@@ -26,6 +26,10 @@ function KeyspaceService(grpcClient, credentials) {
 
 KeyspaceService.prototype.retrieve = function () {
     const retrieveRequest = new messages.Keyspace.Retrieve.Req();
+    if (this.credentials) {
+        retrieveRequest.setUsername(this.credentials.username);
+        retrieveRequest.setPassword(this.credentials.password);
+    }
     return new Promise((resolve, reject) => {
         this.client.retrieve(retrieveRequest, (err, resp) => {
             if (err) reject(err);
@@ -37,6 +41,10 @@ KeyspaceService.prototype.retrieve = function () {
 KeyspaceService.prototype.delete = function (keyspace) {
     const deleteRequest = new messages.Keyspace.Delete.Req();
     deleteRequest.setName(keyspace);
+    if (this.credentials) {
+        deleteRequest.setUsername(this.credentials.username);
+        deleteRequest.setPassword(this.credentials.password);
+    }
     return new Promise((resolve, reject) => {
         this.client.delete(deleteRequest, (err) => {
             if (err) reject(err);
