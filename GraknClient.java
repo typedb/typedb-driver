@@ -101,7 +101,7 @@ public class GraknClient implements AutoCloseable {
                 .usePlaintext().build();
         this.username = username;
         this.password = password;
-        keyspaces = new Keyspaces(channel);
+        keyspaces = new Keyspaces(channel, this.username, this.password);
     }
 
     public GraknClient overrideChannel(ManagedChannel channel) {
@@ -557,20 +557,24 @@ public class GraknClient implements AutoCloseable {
      */
 
     public static final class Keyspaces {
+        private String username;
+        private String password;
 
         private KeyspaceServiceBlockingStub keyspaceBlockingStub;
 
-        public Keyspaces(ManagedChannel channel) {
+        public Keyspaces(ManagedChannel channel, String username, String password) {
             keyspaceBlockingStub = KeyspaceServiceGrpc.newBlockingStub(channel);
+            this.username = username;
+            this.password = password;
         }
 
         public void delete(String name) {
-            KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name);
+            KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name, this.username, this.password);
             keyspaceBlockingStub.delete(request);
         }
 
         public List<String> retrieve() {
-            KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve();
+            KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve(this.username, this.password);
             return ImmutableList.copyOf(keyspaceBlockingStub.retrieve(request).getNamesList().iterator());
         }
     }

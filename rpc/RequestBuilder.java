@@ -270,12 +270,26 @@ public class RequestBuilder {
      */
     public static class Keyspace {
 
-        public static KeyspaceProto.Keyspace.Delete.Req delete(String name) {
-            return KeyspaceProto.Keyspace.Delete.Req.newBuilder().setName(name).build();
+        public static KeyspaceProto.Keyspace.Delete.Req delete(String name, String username, String password) {
+            KeyspaceProto.Keyspace.Delete.Req.Builder builder = KeyspaceProto.Keyspace.Delete.Req.newBuilder();
+            if (username != null) {
+                builder.setUsername(username);
+            }
+            if (password != null) {
+                builder.setPassword(password);
+            }
+            return builder.setName(name).build();
         }
 
-        public static KeyspaceProto.Keyspace.Retrieve.Req retrieve() {
-            return KeyspaceProto.Keyspace.Retrieve.Req.newBuilder().build();
+        public static KeyspaceProto.Keyspace.Retrieve.Req retrieve(String username, String password) {
+            KeyspaceProto.Keyspace.Retrieve.Req.Builder builder = KeyspaceProto.Keyspace.Retrieve.Req.newBuilder();
+            if (username != null) {
+                builder.setUsername(username);
+            }
+            if (password != null) {
+                builder.setPassword(password);
+            }
+            return builder.build();
         }
     }
 }
