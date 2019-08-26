@@ -58,6 +58,7 @@ import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -569,13 +570,21 @@ public class GraknClient implements AutoCloseable {
         }
 
         public void delete(String name) {
-            KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name, this.username, this.password);
-            keyspaceBlockingStub.delete(request);
+            try {
+                KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name, this.username, this.password);
+                keyspaceBlockingStub.delete(request);
+            } catch (StatusRuntimeException e) {
+                throw GraknClientException.create(e.getMessage(), e);
+            }
         }
 
         public List<String> retrieve() {
-            KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve(this.username, this.password);
-            return ImmutableList.copyOf(keyspaceBlockingStub.retrieve(request).getNamesList().iterator());
+            try {
+                KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve(this.username, this.password);
+                return ImmutableList.copyOf(keyspaceBlockingStub.retrieve(request).getNamesList().iterator());
+            } catch (StatusRuntimeException e) {
+                throw GraknClientException.create(e.getMessage(), e);
+            }
         }
     }
 
