@@ -70,6 +70,8 @@ deploy_npm(
 deploy_github(
     name = "deploy-github",
     release_description = "//:RELEASE_TEMPLATE.md",
+    title = "Grakn Client Node.js",
+    title_append_version = True,
     deployment_properties = "//:deployment.properties",
     version_file = "//:VERSION"
 )
