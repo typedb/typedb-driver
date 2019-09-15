@@ -95,7 +95,8 @@ java_grpc_compile()
 ################################
 
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
-"graknlabs_console", "graknlabs_benchmark")
+"graknlabs_common", "graknlabs_console", "graknlabs_benchmark")
+graknlabs_common()
 graknlabs_console()
 graknlabs_benchmark()
 
