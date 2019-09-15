@@ -94,7 +94,9 @@ java_grpc_compile()
 # Load Grakn Core dependencies #
 ################################
 
-load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl", "graknlabs_benchmark")
+load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
+"graknlabs_console", "graknlabs_benchmark")
+graknlabs_console()
 graknlabs_benchmark()
 
 load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
