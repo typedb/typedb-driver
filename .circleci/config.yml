@@ -197,7 +197,7 @@ workflows:
     jobs:
       - release-validate:
           filters:
-            branch:
+            branches:
               only: client-java-release-branch
       - deploy-github:
           filters:
