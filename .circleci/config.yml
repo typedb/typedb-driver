@@ -105,6 +105,15 @@ jobs:
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_build_tools//ci:release-approval
 
+  release-validate:
+    machine: true
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: |
+          bazel run @graknlabs_build_tools//ci:release-validate-deps -- \
+            graknlabs_grakn_core graknlabs_protocol
+
   deploy-github:
     machine: true
     working_directory: ~/client-java
@@ -186,10 +195,16 @@ workflows:
             - sync-dependencies-snapshot
   client-java-release:
     jobs:
+      - release-validate:
+          filters:
+            branch:
+              only: client-java-release-branch
       - deploy-github:
           filters:
             branches:
               only: client-java-release-branch
+          requires:
+            - release-validate
       - deploy-approval:
           type: approval
           requires:
