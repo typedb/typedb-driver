@@ -146,7 +146,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: git push --delete origin client-java-release-branch
+      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/graknlabs/client-java $CIRCLE_BRANCH
 
 workflows:
   client-java:
