@@ -114,8 +114,9 @@ public class Connection {
 
     @Given("connection has been opened")
     public void connection_has_been_opened() {
-        if (isNull(client))
+        if (isNull(client)) {
             connectToGrakn();
+        }
 
         assertNotNull(client);
         assertTrue(client.isOpen());
@@ -209,7 +210,9 @@ public class Connection {
         Stream<CompletableFuture<Void>> assertions = sessionsInParallel.values().stream()
                 .map(futureSession -> futureSession
                         .thenApplyAsync(session -> {
-                            assertEquals(isNull(session), isNull); return null; }));
+                            assertEquals(isNull(session), isNull);
+                            return null;
+                        }));
 
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
@@ -231,7 +234,9 @@ public class Connection {
         Stream<CompletableFuture<Void>> assertions = sessionsInParallel.values().stream()
                 .map(futureSession -> futureSession
                         .thenApplyAsync(session -> {
-                            assertEquals(session.isOpen(), isOpen); return null; }));
+                            assertEquals(session.isOpen(), isOpen);
+                            return null;
+                        }));
 
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
@@ -254,7 +259,9 @@ public class Connection {
         Stream<CompletableFuture<Void>> assertions = sessionsInParallel.entrySet().stream()
                 .map(entry -> entry.getValue()
                         .thenApplyAsync(session -> {
-                            assertEquals(session.keyspace().name(), entry.getKey()); return null; }));
+                            assertEquals(session.keyspace().name(), entry.getKey());
+                            return null;
+                        }));
 
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }

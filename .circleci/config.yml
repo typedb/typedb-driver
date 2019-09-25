@@ -50,16 +50,42 @@ jobs:
       - run-bazel-rbe:
           command: bazel build //...
 
-  test:
+  build-checkstyle:
+    machine: true
+    working_directory: ~/grakn
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run: bazel run @graknlabs_build_tools//checkstyle:test-coverage
+      - run-bazel-rbe:
+          command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
+
+  test-client:
     machine: true
     working_directory: ~/client-java
     steps:
       - install-bazel-linux-rbe
       - checkout
       - run-bazel-rbe:
-          command: bazel test //... --test_size_filters=small --test_output=errors
+          command: bazel test //test/client/... --test_output=errors
+
+  test-concept:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
       - run-bazel-rbe:
-          command: bazel test //... --test_size_filters=medium,large,enormous --test_output=errors
+          command: bazel test //concept/test/... --test_output=errors
+
+  test-connection:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour:test-connection-core --test_output=errors
 
   deploy-maven-snapshot:
     machine: true

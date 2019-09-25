@@ -31,3 +31,9 @@ java_library(
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
 )
+
+checkstyle_test(
+    name = "checkstyle",
+    targets = [":type-registry-config"],
+    license_type = "apache"
+)

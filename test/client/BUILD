@@ -26,7 +26,7 @@ java_test(
         "GraknClientTest.java",
         "GraknServerRPCMock.java",
     ],
-    test_class = "grakn.client.test.GraknClientTest",
+    test_class = "grakn.client.test.client.GraknClientTest",
     deps = [
         # Package dependencies
         "//:client-java",
