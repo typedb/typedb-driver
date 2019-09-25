@@ -97,8 +97,8 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
-    public boolean isClosed() {
-        return responseListener.terminated.get();
+    public boolean isOpen() {
+        return !responseListener.terminated.get();
     }
 
     /**

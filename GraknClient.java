@@ -120,6 +120,10 @@ public class GraknClient implements AutoCloseable {
         }
     }
 
+    public boolean isOpen() {
+        return !channel.isShutdown() || !channel.isTerminated();
+    }
+
     public Session session(String keyspace) {
         return new Session(channel, username, password, keyspace);
     }
@@ -137,15 +141,12 @@ public class GraknClient implements AutoCloseable {
     public static class Session implements grakn.core.api.Session {
 
         protected ManagedChannel channel;
-        private String username;
-        private String password;
+        private String username; // TODO: Do we need to save this? It's not used.
+        private String password; // TODO: Do we need to save this? It's not used.
         protected String keyspace;
         protected SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
         protected String sessionId;
         protected boolean isOpen;
-
-        protected Session() {
-        }
 
         private Session(ManagedChannel channel, String username, String password, String keyspace) {
             this.username = username;
@@ -171,6 +172,10 @@ public class GraknClient implements AutoCloseable {
         @Override
         public GraknClient.Transaction.Builder transaction() {
             return new Transaction.Builder(channel, this, sessionId);
+        }
+
+        public boolean isOpen() {
+            return isOpen;
         }
 
         @Override
@@ -217,6 +222,33 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
+        public enum Type {
+            READ(0),  //Read only transaction where mutations to the graph are prohibited
+            WRITE(1); //Write transaction where the graph can be mutated
+
+            private final int type;
+
+            Type(int type) {
+                this.type = type;
+            }
+
+            public int id() {
+                return type;
+            }
+
+            @Override
+            public String toString() {
+                return this.name();
+            }
+
+            public static Type of(int value) {
+                for (Type t : Type.values()) {
+                    if (t.type == value) return t;
+                }
+                return null;
+            }
+        }
+
         private Transaction(ManagedChannel channel, Session session, String sessionId, Type type) {
             this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
             this.session = session;
@@ -225,9 +257,9 @@ public class GraknClient implements AutoCloseable {
             responseOrThrow();
         }
 
-        @Override
-        public Type type() {
-            return type;
+        @Override // TODO: Replace return type with GraknClient.Transaction.Type once we resolve graknlabs/grakn#5289
+        public grakn.core.api.Transaction.Type type() {
+            return grakn.core.api.Transaction.Type.of(type.id());
         }
 
         @Override
@@ -290,9 +322,13 @@ public class GraknClient implements AutoCloseable {
             transceiver.close();
         }
 
-        @Override
+        @Override // TODO: Remove this method once we resolve graknlabs/grakn#5289
         public boolean isClosed() {
-            return transceiver.isClosed();
+            return !transceiver.isOpen();
+        }
+
+        public boolean isOpen() {
+            return transceiver.isOpen();
         }
 
         private SessionProto.Transaction.Res responseOrThrow() {
@@ -563,7 +599,7 @@ public class GraknClient implements AutoCloseable {
 
         private KeyspaceServiceBlockingStub keyspaceBlockingStub;
 
-        public Keyspaces(ManagedChannel channel, String username, String password) {
+        Keyspaces(ManagedChannel channel, String username, String password) {
             keyspaceBlockingStub = KeyspaceServiceGrpc.newBlockingStub(channel);
             this.username = username;
             this.password = password;
@@ -594,10 +630,11 @@ public class GraknClient implements AutoCloseable {
     public static class Keyspace implements grakn.core.api.Keyspace, Serializable {
 
         private static final long serialVersionUID = 2726154016735929123L;
+        public static final String DEFAULT = "grakn";
 
         private final String name;
 
-        public Keyspace(String name) {
+        Keyspace(String name) {
             if (name == null) {
                 throw new NullPointerException("Null name");
             }
