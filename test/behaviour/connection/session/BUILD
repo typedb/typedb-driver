@@ -20,11 +20,12 @@ package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "test",
+    name = "test-session-core",
     srcs = [
-        "DebugTest.java",
+        "SessionSteps.java",
+        "SessionTest.java"
     ],
-    test_class = "grakn.client.test.behaviour.debug.DebugTest",
+    test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
     deps = [
         # Package dependencies
         "//test/behaviour/common:connection",
@@ -32,15 +33,12 @@ java_test(
         "//test/setup:grakn-setup",
         "//test/setup:grakn-properties",
 
-        # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
-
         # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [
-        ":debug.feature",
+        "@graknlabs_behaviour//connection:session.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -48,13 +46,46 @@ java_test(
         "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
+)
+
+# To run this test, you need to provide environment variables:
+# --test_env GRAKN_KGMS_ADDRESS=***
+# --test_env GRAKN_KGMS_USERNAME=****
+# --test_env GRAKN_KGMS_PASSWORD=****
+java_test(
+    name = "test-session-kgms",
+    srcs = [
+        "SessionSteps.java",
+        "SessionTest.java"
+    ],
+    test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
+    deps = [
+        # Package dependencies
+        "//test/behaviour/common:connection",
+        "//test/behaviour/config:type-registry-config",
+        "//test/setup:grakn-setup",
+        "//test/setup:grakn-properties",
+
+        # External dependencies from Maven
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    data = [
+        "@graknlabs_behaviour//connection:session.feature",
+    ],
+    args = [ # The order of the arguments matter
+        "grakn-kgms", # Keep at index 0, will be accessible at args[1]
+    ],
+    classpath_resources = ["//test/setup:logback"],
+    size = "large",
 )
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test"
+        ":test-session-core",
+        ":test-session-kgms",
     ],
     license_type = "apache"
 )

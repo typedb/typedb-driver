@@ -38,13 +38,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class GraknSetupCore {
+    private static final String TAR = ".tar.gz";
+    private static final String ZIP = ".zip";
     private static GraknSetupCore graknRunner;
     private Path GRAKN_DISTRIBUTION_FILE;
     private Path GRAKN_TARGET_DIRECTORY;
     private String GRAKN_DISTRIBUTION_FORMAT;
-    private static final String TAR = ".tar.gz";
-    private static final String ZIP = ".zip";
-
     private ProcessExecutor executor;
     private Properties properties;
 
@@ -124,6 +123,23 @@ public class GraknSetupCore {
         } else {
             System.out.println("There is no existing Grakn Core distribution");
         }
+    }
+
+    private static Properties readProperties(Path path) throws IOException {
+        System.out.println("Reading Grakn Core database configuration properties");
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream(path.toString()));
+        } catch (FileNotFoundException e) {
+            System.out.printf("Could not load server properties from %s\n", path);
+            throw e;
+        } catch (IOException e) {
+            System.out.println("Could not load server properties from input stream provided");
+            throw e;
+        }
+
+        System.out.println("Grakn Core database configuration properties read");
+        return prop;
     }
 
     private void unzip() throws IOException, TimeoutException, InterruptedException {
@@ -211,22 +227,5 @@ public class GraknSetupCore {
 
         System.out.println("Grakn Server is running: " + isRunning);
         return isRunning;
-    }
-
-    private static Properties readProperties(Path path) throws IOException {
-        System.out.println("Reading Grakn Core database configuration properties");
-        Properties prop = new Properties();
-        try {
-            prop.load(new FileInputStream(path.toString()));
-        } catch (FileNotFoundException e) {
-            System.out.printf("Could not load server properties from %s\n", path);
-            throw e;
-        } catch (IOException e) {
-            System.out.println("Could not load server properties from input stream provided");
-            throw e;
-        }
-
-        System.out.println("Grakn Core database configuration properties read");
-        return prop;
     }
 }

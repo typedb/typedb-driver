@@ -34,9 +34,9 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "test/behaviour/debug/TestDebug.feature"
+        features = "test/behaviour/debug/debug.feature"
 )
-public class TestDebug {
+public class DebugTest {
     // ATTENTION: When you click RUN from within this class through Intellij IDE,
     // it will fail, and you can fix it by doing:
     // Go to 'Run'

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection;
+package grakn.client.test.behaviour.connection.session;
 
 import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
@@ -36,13 +36,13 @@ import java.util.concurrent.TimeoutException;
         glue = "grakn.client.test.behaviour",
         features = "external/graknlabs_behaviour/connection/session.feature"
 )
-public class TestSession {
+public class SessionTest {
     // ATTENTION: When you click RUN from within this class through Intellij IDE,
     // it will fail, and you can fix it by doing:
     // Go to 'Run'
     // Select 'Edit Configurations...'
     // Select 'Bazel test TestConnectionCore'
-    // Remove the line that says: '--test_filter=grakn.client.test.behaviour.TestConnectionCore#'
+    // Remove the line that says: '--test_filter=grakn.client.*'
     //
     // Add the following Bazel flags:
     // --cache_test_results=no

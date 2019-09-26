@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.steps;
+package grakn.client.test.behaviour.connection.keyspace;
 
-import io.cucumber.java.en.Given;
+import grakn.client.test.behaviour.common.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -31,66 +31,52 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class Keyspace {
-
-    @Given("connection has been opened")
-    public void connection_has_been_opened() {
-        Connection.has_been_opened();
-    }
-
-    @Given("connection delete all keyspaces")
-    public void connection_delete_all_keyspaces() {
-        Connection.delete_all_keyspace();
-    }
-    @Given("connection does not have any keyspace")
-    public void connection_does_not_have_any_keyspace() {
-        Connection.does_not_have_any_keyspace();
-    }
+public class KeyspaceSteps {
 
     @When("connection create one keyspace: {word}")
     public void connection_create_one_keyspace(String keyspaceName) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
-        Connection.client.session(keyspaceName);
+        ConnectionSteps.client.session(keyspaceName);
     }
 
     @When("connection create multiple keyspaces:")
     public void connection_create_multiple_keyspaces(List<String> keyspaceNames) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
         for (String name : keyspaceNames) {
-            Connection.client.session(name);
+            ConnectionSteps.client.session(name);
         }
     }
 
     @When("connection delete one keyspace: {word}")
     public void connection_delete_one_keyspace(String keyspaceName) {
-        Connection.client.keyspaces().delete(keyspaceName);
+        ConnectionSteps.client.keyspaces().delete(keyspaceName);
     }
 
     @When("connection delete multiple keyspaces:")
     public void connection_delete_multiple_keyspaces(List<String> keyspaceNames) {
         for (String keyspaceName : keyspaceNames) {
-            Connection.client.keyspaces().delete(keyspaceName);
+            ConnectionSteps.client.keyspaces().delete(keyspaceName);
         }
     }
 
     @Then("connection has one keyspace: {word}")
     public void connection_has_one_keyspace(String keyspaceName) {
-        assertEquals(Connection.client.keyspaces().retrieve(), singletonList(keyspaceName));
+        assertEquals(ConnectionSteps.client.keyspaces().retrieve(), singletonList(keyspaceName));
     }
 
     @Then("connection has multiple keyspaces:")
     public void connection_has_multiple_keyspaces(List<String> keyspaceName) {
-        assertEquals(set(Connection.client.keyspaces().retrieve()), set(keyspaceName));
+        assertEquals(set(ConnectionSteps.client.keyspaces().retrieve()), set(keyspaceName));
     }
 
     @Then("connection does not have one keyspace: {word}")
     public void connection_does_not_have_on_keyspace(String keyspaceName) {
-        assertFalse(Connection.client.keyspaces().retrieve().contains(keyspaceName));
+        assertFalse(ConnectionSteps.client.keyspaces().retrieve().contains(keyspaceName));
     }
 
     @Then("connection does not have multiple keyspaces:")
     public void connection_does_not_have_keyspaces(List<String> keyspaceNames) {
-        Set<String> keyspaces = set(Connection.client.keyspaces().retrieve());
+        Set<String> keyspaces = set(ConnectionSteps.client.keyspaces().retrieve());
         for (String keyspaceName : keyspaceNames) {
             assertFalse(keyspaces.contains(keyspaceName));
         }

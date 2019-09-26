@@ -22,18 +22,22 @@ load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 java_test(
     name = "test-keyspace-core",
     srcs = [
-        "TestKeyspace.java",
+        "KeyspaceSteps.java",
+        "KeyspaceTest.java"
     ],
-    test_class = "grakn.client.test.behaviour.connection.TestKeyspace",
+    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
+        "//common:common",
+        "//test/behaviour/common:connection",
+        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
         "//test/setup:grakn-properties",
-        "//test/behaviour/config:type-registry-config",
-        "//test/behaviour/connection/steps:connection-keyspace",
 
         # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [
@@ -54,18 +58,23 @@ java_test(
 # --test_env GRAKN_KGMS_PASSWORD=****
 java_test(
     name = "test-keyspace-kgms",
-    srcs = glob([
-        "TestKeyspace.java"
-    ]),
-    test_class = "grakn.client.test.behaviour.connection.TestKeyspace",
+    srcs = [
+        "KeyspaceSteps.java",
+        "KeyspaceTest.java"
+    ],
+    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//test/setup:grakn-setup",
+        "//common:common",
+        "//test/behaviour/common:connection",
         "//test/behaviour/config:type-registry-config",
-        "//test/behaviour/connection/steps:connection-keyspace",
+        "//test/setup:grakn-setup",
+        "//test/setup:grakn-properties",
 
         # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [
@@ -78,72 +87,11 @@ java_test(
     size = "medium",
 )
 
-java_test(
-    name = "test-session-core",
-    srcs = [
-        "TestSession.java",
-    ],
-    test_class = "grakn.client.test.behaviour.connection.TestSession",
-    deps = [
-        # Package dependencies
-        "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
-        "//test/behaviour/config:type-registry-config",
-        "//test/behaviour/connection/steps:connection-keyspace",
-
-        # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
-    ],
-    data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
-        "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
-    ],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
-    ],
-    classpath_resources = ["//test/setup:logback"],
-    size = "large",
-)
-
-# To run this test, you need to provide environment variables:
-# --test_env GRAKN_KGMS_ADDRESS=***
-# --test_env GRAKN_KGMS_USERNAME=****
-# --test_env GRAKN_KGMS_PASSWORD=****
-java_test(
-    name = "test-session-kgms",
-    srcs = glob([
-        "TestSession.java",
-    ]),
-    test_class = "grakn.client.test.behaviour.connection.TestSession",
-    deps = [
-        # Package dependencies
-        "//test/setup:grakn-setup",
-        "//test/behaviour/config:type-registry-config",
-        "//test/behaviour/connection/steps:connection-keyspace",
-
-        # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
-    ],
-    data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
-    ],
-    args = [ # The order of the arguments matter
-        "grakn-kgms", # Keep at index 0, will be accessible at args[1]
-    ],
-    classpath_resources = ["//test/setup:logback"],
-    size = "large",
-)
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":test-keyspace-core",
         ":test-keyspace-kgms",
-        ":test-session-core",
-        ":test-session-kgms",
     ],
     license_type = "apache"
 )

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.steps;
+package grakn.client.test.behaviour.connection.session;
 
-public class Session {
+public class SessionSteps {
 }

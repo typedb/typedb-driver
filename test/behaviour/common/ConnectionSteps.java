@@ -17,12 +17,13 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.steps;
+package grakn.client.test.behaviour.common;
 
 import grakn.client.GraknClient;
 import grakn.client.test.setup.GraknProperties;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -42,9 +43,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class Connection {
+public class ConnectionSteps {
 
-    static GraknClient client;
+    public static GraknClient client;
 
     private int THREAD_POOL_SIZE = 128;
     private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
@@ -89,11 +90,33 @@ public class Connection {
         } else if (graknType.equals(GraknProperties.GRAKN_KGMS)) {
             client = connectToGraknKGMS();
         } else {
-            fail("Invalid type of Grakn database: " );
+            fail("Invalid type of Grakn database: ");
         }
 
         assertNotNull(client);
         return client;
+    }
+
+    @Given("connection has been opened")
+    public void connection_has_been_opened() {
+        if (isNull(client)) {
+            connectToGrakn();
+        }
+
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+    }
+
+    @Given("connection delete all keyspaces")
+    public void connection_delete_all_keyspaces() {
+        for (String keyspace : client.keyspaces().retrieve()) {
+            client.keyspaces().delete(keyspace);
+        }
+    }
+
+    @Given("connection does not have any keyspace")
+    public void connection_does_not_have_any_keyspace() {
+        assertTrue(client.keyspaces().retrieve().isEmpty());
     }
 
     @After
@@ -110,35 +133,16 @@ public class Connection {
         }
     }
 
-    static void has_been_opened() {
-        if (isNull(client)) {
-            connectToGrakn();
-        }
-
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-    }
-
-    static void delete_all_keyspace() {
-        for (String keyspace : client.keyspaces().retrieve()) {
-            client.keyspaces().delete(keyspace);
-        }
-    }
-
-    static void does_not_have_any_keyspace() {
-        assertTrue(client.keyspaces().retrieve().isEmpty());
-    }
-
     @When("connection open {number} session(s) for keyspace: {word}")
     public void connection_open_sessions_for_keyspace(Integer number, String keyspaceName) {
-        for (int i = 0; i < number; i++ ) {
+        for (int i = 0; i < number; i++) {
             sessions.add(client.session(keyspaceName));
         }
     }
 
     @When("connection open multiple sessions for multiple keyspaces:")
     public void connection_open_multiple_sessions_for_multiple_keyspaces(List<String> keyspaceNames) {
-        for (String keyspaceName : keyspaceNames ) {
+        for (String keyspaceName : keyspaceNames) {
             sessionsMap.put(keyspaceName, client.session(keyspaceName));
         }
     }
@@ -157,9 +161,8 @@ public class Connection {
     }
 
 
-
     @Then("session is null: {boolean}")
-    public void session_is_null(Boolean isNull){
+    public void session_is_null(Boolean isNull) {
         assertEquals(isNull(session), isNull);
     }
 
