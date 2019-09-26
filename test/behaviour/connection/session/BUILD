@@ -20,7 +20,7 @@ package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "test-session-core",
+    name = "test-core",
     srcs = [
         "SessionSteps.java",
         "SessionTest.java"
@@ -53,7 +53,7 @@ java_test(
 # --test_env GRAKN_KGMS_USERNAME=****
 # --test_env GRAKN_KGMS_PASSWORD=****
 java_test(
-    name = "test-session-kgms",
+    name = "test-kgms",
     srcs = [
         "SessionSteps.java",
         "SessionTest.java"
@@ -82,8 +82,8 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test-session-core",
-        ":test-session-kgms",
+        ":test-core",
+        ":test-kgms",
     ],
     license_type = "apache"
 )

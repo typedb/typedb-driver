@@ -34,7 +34,7 @@ import static org.junit.Assert.assertFalse;
 public class KeyspaceSteps {
 
     @When("connection create one keyspace: {word}")
-    public void connection_create_one_keyspace(String keyspaceName) {§
+    public void connection_create_one_keyspace(String keyspaceName) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
         ConnectionSteps.client.session(keyspaceName);
     }
