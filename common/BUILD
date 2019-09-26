@@ -16,36 +16,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-package(default_visibility = ["//test:__subpackages__"])
+package(default_visibility = ["@graknlabs_grakn_core//__subpackages__"])
+
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_build_tools//distribution/maven:rules.bzl", "assemble_maven", "deploy_maven")
 
 java_library(
-    name = "grakn-core-runner",
-    srcs = ["GraknCoreRunner.java"],
-    deps = [
-        "//dependencies/maven/artifacts/commons-io:commons-io",
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/org/zeroturnaround:zt-exec",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api"
-    ],
-)
-
-java_library(
-    name = "grakn-properties",
-    srcs = ["GraknProperties.java"],
-)
-
-filegroup(
-    name = "logback",
-    srcs = ["logback.xml"],
-    visibility = ["//visibility:public"]
+    name = "common",
+    srcs = glob([
+        "util/*.java"
+    ]),
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":grakn-core-runner",
-        ":grakn-properties",
-    ],
-    license_type = "apache"
+    targets = [":common"],
 )

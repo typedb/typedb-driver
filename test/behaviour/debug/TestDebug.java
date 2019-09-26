@@ -17,10 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour;
+package grakn.client.test.behaviour.debug;
 
-import grakn.client.test.common.GraknCoreRunner;
-import grakn.client.test.common.GraknProperties;
+import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
@@ -31,45 +30,36 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, plugin = "pretty", features = "external/graknlabs_behaviour/connection")
-public class TestConnectionCore {
+@CucumberOptions(
+        strict = true,
+        plugin = "pretty",
+        glue = "grakn.client.test.behaviour",
+        features = "test/behaviour/debug/TestDebug.feature"
+)
+public class TestDebug {
     // ATTENTION: When you click RUN from within this class through Intellij IDE,
     // it will fail, and you can fix it by doing:
     // Go to 'Run'
     // Select 'Edit Configurations...'
-    // Select 'Bazel test SessionTest'
-    // Remove the line that says: '--test_filter=grakn.client.test.session.SessionTest#'
+    // Select 'Bazel test TestConnectionCore'
+    // Remove the line that says: '--test_filter=grakn.client.test.behaviour.debug.TestDebug#'
+    //
+    // Add the following Bazel flags:
+    // --cache_test_results=no
+    // --test_output=streamed
+    // --subcommands
+    // --sandbox_debug
+    // --spawn_strategy=standalone
+    //
     // Hit the RUN button by selecting the test from the dropdown menu on the top bar
-
-    private static GraknCoreRunner graknRunner;
 
     @BeforeClass
     public static void graknStart() throws InterruptedException, IOException, TimeoutException {
-        String[] args = System.getProperty("sun.java.command").split(" ");
-        String distributionFile = args[1];
-        GraknCoreRunner.checkAndDeleteExistingDistribution(distributionFile);
-        try {
-            graknRunner = new GraknCoreRunner(distributionFile);
-            graknRunner.start();
-            System.setProperty(GraknProperties.GRAKN_TYPE, GraknProperties.GRAKN_CORE);
-            System.setProperty(GraknProperties.GRAKN_ADDRESS, graknRunner.address());
-        } catch (Throwable e) {
-            if (graknRunner != null) {
-                graknRunner.printLogs();
-            }
-            throw e;
-        }
+        GraknSetup.bootup();
     }
 
     @AfterClass
     public static void graknStop() throws InterruptedException, TimeoutException, IOException {
-        try {
-            graknRunner.stop();
-        } catch (Exception e) {
-            if (graknRunner != null) {
-                graknRunner.printLogs();
-            }
-            throw e;
-        }
+        GraknSetup.shutdown();
     }
 }

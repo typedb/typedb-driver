@@ -17,22 +17,19 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.steps;
+package grakn.client.test.behaviour.connection.steps;
 
 import grakn.client.GraknClient;
-import grakn.client.test.common.GraknProperties;
+import grakn.client.test.setup.GraknProperties;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -41,20 +38,20 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class Connection {
 
-    private static GraknClient client;
+    static GraknClient client;
 
     private int THREAD_POOL_SIZE = 128;
     private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     private Map<String, CompletableFuture<GraknClient.Session>> sessionsInParallel = new HashMap<>();
-    private Map<String, GraknClient.Session> sessions = new HashMap<>();
+    private Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
     private GraknClient.Session session;
+    private List<GraknClient.Session> sessions = new ArrayList<>();
     private GraknClient.Transaction transaction;
 
     private static GraknClient connectToGraknCore() {
@@ -79,8 +76,8 @@ public class Connection {
         return new GraknClient(address, username, password);
     }
 
-    private static synchronized void connectToGrakn() {
-        if (!isNull(client)) return;
+    private static synchronized GraknClient connectToGrakn() {
+        if (!isNull(client)) return client;
 
         System.out.println("Connecting to Grakn ...");
 
@@ -96,14 +93,15 @@ public class Connection {
         }
 
         assertNotNull(client);
+        return client;
     }
 
     @After
-    public void close_session(Scenario scenario) throws ExecutionException, InterruptedException {
+    public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
         if (!isNull(transaction)) transaction.close();
         if (!isNull(session)) session.close();
 
-        for (GraknClient.Session session : sessions.values()) {
+        for (GraknClient.Session session : sessionsMap.values()) {
             if (!isNull(session)) session.close();
         }
 
@@ -112,8 +110,7 @@ public class Connection {
         }
     }
 
-    @Given("connection has been opened")
-    public void connection_has_been_opened() {
+    static void has_been_opened() {
         if (isNull(client)) {
             connectToGrakn();
         }
@@ -122,23 +119,27 @@ public class Connection {
         assertTrue(client.isOpen());
     }
 
-    @Given("connection has no keyspaces")
-    public void connection_has_no_keyspaces() {
+    static void delete_all_keyspace() {
         for (String keyspace : client.keyspaces().retrieve()) {
             client.keyspaces().delete(keyspace);
         }
+    }
+
+    static void does_not_have_any_keyspace() {
         assertTrue(client.keyspaces().retrieve().isEmpty());
     }
 
-    @When("connection open session for keyspace: {word}")
-    public void connection_open_session_for_keyspace(String keyspaceName) {
-        session = client.session(keyspaceName);
+    @When("connection open {number} session(s) for keyspace: {word}")
+    public void connection_open_sessions_for_keyspace(Integer number, String keyspaceName) {
+        for (int i = 0; i < number; i++ ) {
+            sessions.add(client.session(keyspaceName));
+        }
     }
 
-    @When("connection open sessions for keyspaces:")
-    public void connection_open_sessions_for_keyspaces(List<String> keyspaceNames) {
+    @When("connection open multiple sessions for multiple keyspaces:")
+    public void connection_open_multiple_sessions_for_multiple_keyspaces(List<String> keyspaceNames) {
         for (String keyspaceName : keyspaceNames ) {
-            sessions.put(keyspaceName, client.session(keyspaceName));
+            sessionsMap.put(keyspaceName, client.session(keyspaceName));
         }
     }
 
@@ -155,43 +156,7 @@ public class Connection {
         }
     }
 
-    @When("connection delete keyspace: {word}")
-    public void connection_delete_keyspace(String keyspaceName) {
-        client.keyspaces().delete(keyspaceName);
-    }
 
-    @When("connection delete keyspaces:")
-    public void connection_delete_keyspaces(List<String> keyspaceNames) {
-        for (String keyspaceName : keyspaceNames) {
-            client.keyspaces().delete(keyspaceName);
-        }
-    }
-
-    @Then("connection has keyspace: {word}")
-    public void connection_has_keyspace(String keyspaceName) {
-        assertTrue(client.keyspaces().retrieve().contains(keyspaceName));
-    }
-
-    @Then("connection has keyspaces:")
-    public void connection_has_keyspaces(List<String> keyspaceNames) {
-        Set<String> actually = new HashSet<>(client.keyspaces().retrieve());
-        Set<String> expected = new HashSet<>(keyspaceNames);
-
-        assertEquals(actually, expected);
-    }
-
-    @Then("connection does not have keyspace: {word}")
-    public void connection_does_not_have_keyspace(String keyspaceName) {
-        assertFalse(client.keyspaces().retrieve().contains(keyspaceName));
-    }
-
-    @Then("connection does not have keyspaces:")
-    public void connection_does_not_have_keyspaces(List<String> keyspaceNames) {
-        Set<String> keyspaces = new HashSet<>(client.keyspaces().retrieve());
-        for (String keyspaceName : keyspaceNames) {
-            assertFalse(keyspaces.contains(keyspaceName));
-        }
-    }
 
     @Then("session is null: {boolean}")
     public void session_is_null(Boolean isNull){
@@ -200,7 +165,7 @@ public class Connection {
 
     @Then("sessions are null: {boolean}")
     public void sessions_are_null(Boolean isNull) {
-        for (GraknClient.Session session : sessions.values()) {
+        for (GraknClient.Session session : sessionsMap.values()) {
             assertEquals(isNull(session), isNull);
         }
     }
@@ -224,7 +189,7 @@ public class Connection {
 
     @Then("sessions are open: {boolean}")
     public void sessions_are_open(Boolean isOpen) {
-        for (GraknClient.Session session : sessions.values()) {
+        for (GraknClient.Session session : sessionsMap.values()) {
             assertEquals(session.isOpen(), isOpen);
         }
     }
@@ -247,11 +212,11 @@ public class Connection {
     }
 
     @Then("sessions have correct keyspaces:")
-    public void sessions_have_correct_keyspaces(Map<String, String> keyspaceNames) {
-        for (Map.Entry<String, String> entry : keyspaceNames.entrySet()) {
-            assertEquals(sessions.get(entry.getKey()).keyspace().name(), entry.getValue());
+    public void sessions_have_correct_keyspaces(List<String> keyspaceNames) {
+        for (String keyspaceName : keyspaceNames) {
+            assertEquals(sessionsMap.get(keyspaceName).keyspace().name(), keyspaceName);
         }
-        assertEquals(sessions.size(), keyspaceNames.size());
+        assertEquals(sessionsMap.size(), keyspaceNames.size());
     }
 
     @Then("sessions in parallel have correct keyspaces")

@@ -17,32 +17,49 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour;
+package grakn.client.test.behaviour.connection;
 
+import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, plugin = "pretty", features = "external/graknlabs_behaviour/session")
-public class TestConnectionKGMS {
+@CucumberOptions(
+        strict = true,
+        plugin = "pretty",
+        glue = "grakn.client.test.behaviour",
+        features = "external/graknlabs_behaviour/connection/keyspace.feature"
+)
+public class TestKeyspace {
     // ATTENTION: When you click RUN from within this class through Intellij IDE,
     // it will fail, and you can fix it by doing:
     // Go to 'Run'
     // Select 'Edit Configurations...'
-    // Select 'Bazel test SessionTest'
-    // Remove the line that says: '--test_filter=grakn.client.test.session.SessionTest#'
+    // Select 'Bazel test TestConnectionCore'
+    // Remove the line that says: '--test_filter=grakn.client.test.behaviour.TestConnectionCore#'
+    //
+    // Add the following Bazel flags:
+    // --cache_test_results=no
+    // --test_output=streamed
+    // --subcommands
+    // --sandbox_debug
+    // --spawn_strategy=standalone
+    //
     // Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
     @BeforeClass
-    public static void setGraknKGMSProperties() {
-        String address = System.getenv("GRAKN_KGMS_ADDRESS");
-        String username = System.getenv("GRAKN_KGMS_USERNAME");
-        String password = System.getenv("GRAKN_KGMS_PASSWORD");
+    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
+        GraknSetup.bootup();
+    }
 
-        System.setProperty("grakn.client.test.behaviour.grakn", "kgms");
-        System.setProperty("grakn.client.test.behaviour.address", address);
-        System.setProperty("grakn.client.test.behaviour.grakn", password);
+    @AfterClass
+    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
+        GraknSetup.shutdown();
     }
 }

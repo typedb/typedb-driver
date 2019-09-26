@@ -60,15 +60,6 @@ jobs:
       - run-bazel-rbe:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
-  test-client:
-    machine: true
-    working_directory: ~/client-java
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
-      - run-bazel-rbe:
-          command: bazel test //test/client/... --test_output=errors
-
   test-concept:
     machine: true
     working_directory: ~/client-java
@@ -78,14 +69,23 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //concept/test/... --test_output=errors
 
-  test-connection:
+  test-keyspace:
     machine: true
     working_directory: ~/client-java
     steps:
       - install-bazel-linux-rbe
       - checkout
       - run-bazel-rbe:
-          command: bazel test //test/behaviour:test-connection-core --test_output=errors
+          command: bazel test //test/behaviour/connection:test-keyspace-core --test_output=errors
+
+  test-session:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/connection:test-session-core --test_output=errors
 
   deploy-maven-snapshot:
     machine: true
@@ -194,15 +194,15 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-client:
-          filters:
-            branches:
-              ignore: client-java-release-branch
       - test-concept:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-connection:
+      - test-keyspace:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test-session:
           filters:
             branches:
               ignore: client-java-release-branch
@@ -213,9 +213,9 @@ workflows:
           requires:
             - build
             - build-checkstyle
-            - test-client
             - test-concept
-            - test-connection
+            - test-keyspace
+            - test-session
       - test-deployment-maven:
           filters:
             branches:

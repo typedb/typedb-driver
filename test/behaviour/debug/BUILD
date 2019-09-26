@@ -16,29 +16,44 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-package(default_visibility = ["//test/behaviour:__subpackages__"])
+package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
-java_library(
-    name = "connection",
+java_test(
+    name = "test-debug",
     srcs = [
-        "Connection.java",
+        "TestDebug.java",
     ],
+    test_class = "grakn.client.test.behaviour.debug.TestDebug",
     deps = [
         # Package dependencies
-        "//:client-java",
-        "//test/common:grakn-properties",
+        "//test/setup:grakn-setup",
+        "//test/setup:grakn-properties",
+        "//test/behaviour/config:type-registry-config",
+
+        # TODO: Add your addition debugging dependencies here
+        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
+    data = [
+        ":TestDebug.feature",
+        "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
+    ],
+    args = [ # The order of the arguments matter
+        "grakn-core", # Keep at index 0, will be accessible at args[1]
+        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
+    ],
+    classpath_resources = ["//test/setup:logback"],
+    size = "medium",
 )
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":connection"],
+    targets = [
+        ":test-debug"
+    ],
     license_type = "apache"
 )

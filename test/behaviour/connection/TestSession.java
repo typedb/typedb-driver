@@ -17,8 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour;
+package grakn.client.test.behaviour.connection;
 
+import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
@@ -29,23 +30,36 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true, plugin = "pretty", features = "test/behaviour/TestDebug.feature")
-public class TestDebug {
+@CucumberOptions(
+        strict = true,
+        plugin = "pretty",
+        glue = "grakn.client.test.behaviour",
+        features = "external/graknlabs_behaviour/connection/session.feature"
+)
+public class TestSession {
     // ATTENTION: When you click RUN from within this class through Intellij IDE,
     // it will fail, and you can fix it by doing:
     // Go to 'Run'
     // Select 'Edit Configurations...'
-    // Select 'Bazel test SessionDebug'
-    // Remove the line that says: '--test_filter=grakn.client.test.session.SessionDebug#'
+    // Select 'Bazel test TestConnectionCore'
+    // Remove the line that says: '--test_filter=grakn.client.test.behaviour.TestConnectionCore#'
+    //
+    // Add the following Bazel flags:
+    // --cache_test_results=no
+    // --test_output=streamed
+    // --subcommands
+    // --sandbox_debug
+    // --spawn_strategy=standalone
+    //
     // Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
     @BeforeClass
-    public static void graknStart() throws InterruptedException, IOException, TimeoutException {
-        TestConnectionCore.graknStart();
+    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
+        GraknSetup.bootup();
     }
 
     @AfterClass
-    public static void graknStop() throws InterruptedException, TimeoutException, IOException {
-        TestConnectionCore.graknStop();
+    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
+        GraknSetup.shutdown();
     }
 }

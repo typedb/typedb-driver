@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.common;
+package grakn.client.test.setup;
 
 import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.exec.ProcessExecutor;
@@ -37,7 +37,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class GraknCoreRunner {
+public class GraknSetupCore {
+    private static GraknSetupCore graknRunner;
     private Path GRAKN_DISTRIBUTION_FILE;
     private Path GRAKN_TARGET_DIRECTORY;
     private String GRAKN_DISTRIBUTION_FORMAT;
@@ -47,7 +48,7 @@ public class GraknCoreRunner {
     private ProcessExecutor executor;
     private Properties properties;
 
-    public GraknCoreRunner(String distributionFile) throws InterruptedException, TimeoutException, IOException {
+    private GraknSetupCore(String distributionFile) throws InterruptedException, TimeoutException, IOException {
         System.out.println("Constructing a Grakn Core runner");
 
         distributionFormat(distributionFile);
@@ -69,6 +70,32 @@ public class GraknCoreRunner {
         System.out.println("Grakn Core runner constructed");
     }
 
+    public static void bootup(String distributionFile) throws InterruptedException, IOException, TimeoutException {
+        checkAndDeleteExistingDistribution(distributionFile);
+        try {
+            graknRunner = new GraknSetupCore(distributionFile);
+            graknRunner.start();
+            System.setProperty(GraknProperties.GRAKN_TYPE, GraknProperties.GRAKN_CORE);
+            System.setProperty(GraknProperties.GRAKN_ADDRESS, graknRunner.address());
+        } catch (Throwable e) {
+            if (graknRunner != null) {
+                graknRunner.printLogs();
+            }
+            throw e;
+        }
+    }
+
+    public static void shutdown() throws InterruptedException, TimeoutException, IOException {
+        try {
+            graknRunner.stop();
+        } catch (Exception e) {
+            if (graknRunner != null) {
+                graknRunner.printLogs();
+            }
+            throw e;
+        }
+    }
+
     private static String distributionFormat(String distributionFile) {
         if (distributionFile.endsWith(TAR)) {
             return TAR;
@@ -87,7 +114,7 @@ public class GraknCoreRunner {
         ));
     }
 
-    public static void checkAndDeleteExistingDistribution(String distributionFile) throws IOException {
+    private static void checkAndDeleteExistingDistribution(String distributionFile) throws IOException {
         Path target = distributionTarget(distributionFile);
         System.out.println("Checking for existing Grakn distribution at " + target.toAbsolutePath().toString());
         if (target.toFile().exists()) {
@@ -119,19 +146,19 @@ public class GraknCoreRunner {
         System.out.println("Grakn Core distribution unarchived");
     }
 
-    public String host() {
+    private String host() {
         return properties.getProperty("server.host");
     }
 
-    public String port() {
+    private String port() {
         return properties.getProperty("grpc.port");
     }
 
-    public String address() {
+    private String address() {
         return host() + ":" + port();
     }
 
-    public void start() throws InterruptedException, TimeoutException, IOException {
+    private void start() throws InterruptedException, TimeoutException, IOException {
         assertFalse("There is already an instance of Grakn running in the background",
                     isStorageRunning() || isServerRunning());
 
@@ -143,7 +170,7 @@ public class GraknCoreRunner {
         System.out.println("Grakn Core database server started");
     }
 
-    public void stop() throws InterruptedException, IOException, TimeoutException {
+    private void stop() throws InterruptedException, IOException, TimeoutException {
         System.out.println("Stopping Grakn Core database server");
 
         executor.command("./grakn", "server", "stop").execute();
@@ -152,7 +179,7 @@ public class GraknCoreRunner {
         System.out.println("Grakn Core database server stopped");
     }
 
-    public void printLogs() throws InterruptedException, TimeoutException, IOException {
+    private void printLogs() throws InterruptedException, TimeoutException, IOException {
         System.out.println("================");
         System.out.println("Grakn Core Logs:");
         System.out.println("================");

@@ -17,14 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.common;
+package grakn.client.test.behaviour.connection.steps;
 
-public class GraknProperties {
-    public static String GRAKN_TYPE = "grakn.client.test.behaviour.grakn.type";
-    public static String GRAKN_ADDRESS = "grakn.client.test.behaviour.grakn.address";
-    public static String GRAKN_USERNAME = "grakn.client.test.behaviour.grakn.username";
-    public static String GRAKN_PASSWORD = "grakn.client.test.behaviour.grakn.password";
-
-    public static String GRAKN_CORE = "grakn-core";
-    public static String GRAKN_KGMS = "grakn-kgms";
+public class Session {
 }
