@@ -18,10 +18,6 @@ build:rbe --remote_timeout=3600
 build:rbe --bes_timeout=60s
 build:rbe --tls_enabled=true
 build:rbe --auth_enabled=true
-build:rbe --spawn_strategy=remote
-build:rbe --strategy=Javac=remote
-build:rbe --strategy=Closure=remote
-build:rbe --genrule_strategy=remote
 build:rbe --define=EXECUTOR=remote
 build:rbe --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 build:rbe --experimental_strict_action_env=true
