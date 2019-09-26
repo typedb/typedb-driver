@@ -52,7 +52,7 @@ jobs:
 
   build-checkstyle:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/client-java
     steps:
       - install-bazel-linux-rbe
       - checkout
@@ -190,7 +190,19 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test:
+      - build-checkstyle:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test-client:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test-concept:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test-connection:
           filters:
             branches:
               ignore: client-java-release-branch
@@ -200,7 +212,10 @@ workflows:
               only: master
           requires:
             - build
-            - test
+            - build-checkstyle
+            - test-client
+            - test-concept
+            - test-connection
       - test-deployment-maven:
           filters:
             branches:
