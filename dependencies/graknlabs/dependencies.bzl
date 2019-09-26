@@ -40,8 +40,12 @@ def graknlabs_protocol():
     )
 
 def graknlabs_behaviour():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_behaviour",
+#        remote = "https://github.com/graknlabs/behaviour",
+#        commit = "fab80455ec525e20e2080265e26d0b4caa4b8f4b"
+#    )
+    native.local_repository(
         name = "graknlabs_behaviour",
-        remote = "https://github.com/graknlabs/behaviour",
-        commit = "fab80455ec525e20e2080265e26d0b4caa4b8f4b"
+        path = "/Users/haikalpribadi/Workspace/repos/graknlabs/behaviour"
     )

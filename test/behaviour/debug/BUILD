@@ -30,7 +30,6 @@ java_test(
         "//test/behaviour/common:connection",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
 
         # TODO: Add your addition debugging dependencies here
         # e.g. "//test/behaviour/connection/steps:connection-keyspace",

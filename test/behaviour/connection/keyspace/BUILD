@@ -32,7 +32,6 @@ java_test(
         "//test/behaviour/common:connection",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
@@ -69,7 +68,6 @@ java_test(
         "//test/behaviour/common:connection",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
