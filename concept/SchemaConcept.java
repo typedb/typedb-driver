@@ -24,6 +24,7 @@ import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Concept<SomeSchemaConcept> {
+public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Concept<SomeSchemaConcept> {
 
     SchemaConcept(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -85,7 +86,7 @@ abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Co
             case NULL:
                 return null;
             case SCHEMACONCEPT:
-                grakn.core.concept.Concept concept = Concept.of(response.getSchemaConcept(), tx());
+                Concept concept = Concept.of(response.getSchemaConcept(), tx());
                 return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
@@ -108,11 +109,6 @@ abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Co
     }
 
     @Override
-    public final LabelId labelId() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    @Override
     public final Stream<Rule> whenRules() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
@@ -122,5 +118,19 @@ abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Co
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    abstract boolean equalsCurrentBaseType(grakn.core.concept.Concept other);
+    abstract boolean equalsCurrentBaseType(Concept other);
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    SchemaConcept asSchemaConcept() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isSchemaConcept() {
+        return true;
+    }
 }

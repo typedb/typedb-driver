@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class Relation extends Thing<Relation, RelationType> {
     }
 
     @Override // TODO: Weird. Why is this not a stream, while other collections are returned as stream
-    public final Map<Role, Set<grakn.core.concept.thing.Thing>> rolePlayersMap() {
+    public final Map<Role, Set<Thing>> rolePlayersMap() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
 
@@ -54,10 +55,10 @@ public class Relation extends Thing<Relation, RelationType> {
                 iteratorId, res -> res.getConceptMethodIterRes().getRelationRolePlayersMapIterRes()
         );
 
-        Map<Role, Set<grakn.core.concept.thing.Thing>> rolePlayerMap = new HashMap<>();
+        Map<Role, Set<Thing>> rolePlayerMap = new HashMap<>();
         for (ConceptProto.Relation.RolePlayersMap.Iter.Res rolePlayer : rolePlayers) {
             Role role = Concept.of(rolePlayer.getRole(), tx()).asRole();
-            grakn.core.concept.thing.Thing player = Concept.of(rolePlayer.getPlayer(), tx()).asThing();
+            Thing player = Concept.of(rolePlayer.getPlayer(), tx()).asThing();
             if (rolePlayerMap.containsKey(role)) {
                 rolePlayerMap.get(role).add(player);
             } else {
@@ -68,44 +69,54 @@ public class Relation extends Thing<Relation, RelationType> {
         return rolePlayerMap;
     }
 
-    @Override
-    public final Stream<grakn.core.concept.thing.Thing> rolePlayers(Role... roles) {
+    public final Stream<Thing> rolePlayers(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersReq(ConceptProto.Relation.RolePlayers.Req.newBuilder()
-                                                   .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
+                        .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
         return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(grakn.core.concept.Concept::asThing);
     }
 
-    @Override
-    public final grakn.core.concept.thing.Relation assign(Role role, grakn.core.concept.thing.Thing player) {
+    public final Relation assign(Role role, Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
-                                              .setRole(RequestBuilder.Concept.concept(role))
-                                              .setPlayer(RequestBuilder.Concept.concept(player))).build();
+                        .setRole(RequestBuilder.Concept.concept(role))
+                        .setPlayer(RequestBuilder.Concept.concept(player))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
     }
 
-    @Override
-    public final void unassign(Role role, grakn.core.concept.thing.Thing player) {
+    public final void unassign(Role role, Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
-                                                .setRole(RequestBuilder.Concept.concept(role))
-                                                .setPlayer(RequestBuilder.Concept.concept(player))).build();
+                        .setRole(RequestBuilder.Concept.concept(role))
+                        .setPlayer(RequestBuilder.Concept.concept(player))).build();
 
         runMethod(method);
     }
 
-    @Override
     final RelationType asCurrentType(grakn.core.concept.Concept concept) {
         return concept.asRelationType();
     }
 
-    @Override
-    final grakn.core.concept.thing.Relation asCurrentBaseType(grakn.core.concept.Concept other) {
+    final Relation asCurrentBaseType(grakn.core.concept.Concept other) {
         return other.asRelation();
+    }
+
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    Relation asRelation() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isRelation() {
+        return true;
     }
 }

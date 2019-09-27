@@ -25,6 +25,7 @@ import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -98,12 +99,26 @@ public class Rule extends SchemaConcept<Rule> {
     }
 
     @Override
-    final grakn.core.concept.type.Rule asCurrentBaseType(Concept other) {
+    final Rule asCurrentBaseType(Concept other) {
         return other.asRule();
     }
 
     @Override
     final boolean equalsCurrentBaseType(Concept other) {
         return other.isRule();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    Rule asRule() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isRule() {
+        return true;
     }
 }

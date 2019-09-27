@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
@@ -43,7 +44,7 @@ public class RelationType extends Type<RelationType, Relation> {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
+        Concept concept = Concept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
 
         return asInstance(concept);
     }
@@ -54,11 +55,11 @@ public class RelationType extends Type<RelationType, Relation> {
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getRelationTypeRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(grakn.core.concept.Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept::asRole);
     }
 
     @Override
-    public final grakn.core.concept.type.RelationType relates(Role role) {
+    public final RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
                                                    .setRole(RequestBuilder.Concept.concept(role))).build();
@@ -68,7 +69,7 @@ public class RelationType extends Type<RelationType, Relation> {
     }
 
     @Override
-    public final grakn.core.concept.type.RelationType unrelate(Role role) {
+    public final RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
                                                     .setRole(RequestBuilder.Concept.concept(role))).build();
@@ -78,17 +79,31 @@ public class RelationType extends Type<RelationType, Relation> {
     }
 
     @Override
-    final grakn.core.concept.type.RelationType asCurrentBaseType(grakn.core.concept.Concept other) {
+    final RelationType asCurrentBaseType(Concept other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(grakn.core.concept.Concept other) {
+    final boolean equalsCurrentBaseType(Concept other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(grakn.core.concept.Concept concept) {
+    protected final Relation asInstance(Concept concept) {
         return concept.asRelation();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    RelationType asRelationType() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isRelationType() {
+        return true;
     }
 }

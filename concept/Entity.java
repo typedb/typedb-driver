@@ -21,6 +21,8 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 
+import javax.annotation.CheckReturnValue;
+
 /**
  * Client implementation of Entity
  */
@@ -40,7 +42,21 @@ public class Entity extends Thing<Entity, EntityType> {
     }
 
     @Override
-    final grakn.core.concept.thing.Entity asCurrentBaseType(Concept other) {
+    final Entity asCurrentBaseType(Concept other) {
         return other.asEntity();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    Entity asEntity() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isEntity() {
+        return true;
     }
 }

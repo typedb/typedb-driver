@@ -35,7 +35,7 @@ public class MetaType extends Type<Type, Thing> {
     }
 
     @Override
-    final grakn.core.concept.type.Type asCurrentBaseType(Concept other) {
+    final Type asCurrentBaseType(Concept other) {
         return other.asType();
     }
 

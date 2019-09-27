@@ -20,10 +20,9 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.Label;
-import grakn.core.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 import grakn.protocol.keyspace.KeyspaceProto;
 import grakn.protocol.session.SessionProto;
@@ -163,14 +162,14 @@ public class RequestBuilder {
      */
     public static class Concept {
 
-        public static ConceptProto.Concept concept(grakn.core.concept.Concept concept) {
+        public static ConceptProto.Concept concept(Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(grakn.core.concept.Concept concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -194,7 +193,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<grakn.core.concept.Concept> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept> concepts) {
             return concepts.stream().map(Concept::concept).collect(toList());
         }
 

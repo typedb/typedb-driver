@@ -22,6 +22,7 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
@@ -54,12 +55,26 @@ public class Role extends SchemaConcept<Role> {
     }
 
     @Override
-    final grakn.core.concept.type.Role asCurrentBaseType(Concept other) {
+    final Role asCurrentBaseType(Concept other) {
         return other.asRole();
     }
 
     @Override
     final boolean equalsCurrentBaseType(Concept other) {
         return other.isRole();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    Role asRole() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isRole() {
+        return true;
     }
 }

@@ -22,9 +22,11 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
@@ -42,7 +44,6 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
         return new Attribute<>(tx, id);
     }
 
-    @Override
     public final D value() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeValueReq(ConceptProto.Attribute.Value.Req.getDefaultInstance()).build();
@@ -75,8 +76,7 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
         }
     }
 
-    @Override
-    public final Stream<grakn.core.concept.thing.Thing> owners() {
+    public final Stream<Thing> owners() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
 
@@ -84,18 +84,39 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
         return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(Concept::asThing);
     }
 
-    @Override
     public final AttributeType.DataType<D> dataType() {
         return type().dataType();
     }
 
-    @Override
     final AttributeType<D> asCurrentType(Concept concept) {
         return concept.asAttributeType();
     }
 
-    @Override
-    final grakn.core.concept.thing.Attribute asCurrentBaseType(Concept other) {
+    final Attribute asCurrentBaseType(Concept other) {
         return other.asAttribute();
+    }
+
+    Thing owner() {
+        Iterator<Thing> owners = owners().iterator();
+        if (owners.hasNext()) {
+            return owners.next();
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    Attribute asAttribute() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isAttribute() {
+        return true;
     }
 }

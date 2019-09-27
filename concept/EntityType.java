@@ -22,6 +22,8 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
+
 /**
  * Client implementation of a MetaType, a special type of Type
  * TODO: This class is not defined in Concept API, and at server side implementation.
@@ -29,7 +31,7 @@ import grakn.protocol.session.ConceptProto;
  */
 public class EntityType extends Type<EntityType, Entity> {
 
-    EntityType(GraknClient.Transaction tx, ConceptId id) {
+    private EntityType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -37,27 +39,40 @@ public class EntityType extends Type<EntityType, Entity> {
         return new EntityType(tx, id);
     }
 
-    @Override
     public final Entity create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+        Concept concept = Concept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
         return asInstance(concept);
     }
 
     @Override
-    final grakn.core.concept.type.EntityType asCurrentBaseType(grakn.core.concept.Concept other) {
+    final EntityType asCurrentBaseType(Concept other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(grakn.core.concept.Concept other) {
+    final boolean equalsCurrentBaseType(Concept other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final Entity asInstance(grakn.core.concept.Concept concept) {
+    protected final Entity asInstance(Concept concept) {
         return concept.asEntity();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    EntityType asEntityType() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    boolean isEntityType() {
+        return true;
     }
 }
