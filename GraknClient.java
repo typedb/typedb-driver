@@ -24,9 +24,9 @@ import com.google.common.collect.ImmutableList;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.Concept;
-import grakn.client.concept.Label;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.EntityType;
+import grakn.client.concept.Label;
 import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
@@ -64,7 +64,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -74,12 +73,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toSet;
-
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
- * For now, only a subset of grakn.core.api.Session and grakn.core.api.Transaction features are supported.
  */
 public class GraknClient implements AutoCloseable {
 
@@ -130,8 +125,6 @@ public class GraknClient implements AutoCloseable {
     }
 
     /**
-     * Remote implementation of grakn.core.api.Session that communicates with a Grakn server using gRPC.
-     *
      * @see Transaction
      * @see GraknClient
      */

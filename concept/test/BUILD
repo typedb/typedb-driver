@@ -25,7 +25,7 @@ load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 java_test(
     name = "remote-concept-it",
     srcs = ["ConceptIT.java"],
-    test_class = "grakn.client.concept.test.RemoteConceptIT",
+    test_class = "grakn.client.concept.test.ConceptIT",
     deps = [
         # Grakn Core dependencies
         "//:client-java",
