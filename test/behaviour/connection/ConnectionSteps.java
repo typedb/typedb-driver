@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.common;
+package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
 import grakn.client.test.setup.GraknProperties;
@@ -46,11 +46,13 @@ import static org.junit.Assert.fail;
 public class ConnectionSteps {
 
     public static GraknClient client;
+    public static List<GraknClient.Session> sessionsList = new ArrayList<>();
+    public static Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
+
 
     private int THREAD_POOL_SIZE = 128;
     private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     private Map<String, CompletableFuture<GraknClient.Session>> sessionsInParallel = new HashMap<>();
-    private Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
     private GraknClient.Session session;
     private List<GraknClient.Session> sessions = new ArrayList<>();
     private GraknClient.Transaction transaction;
@@ -77,8 +79,8 @@ public class ConnectionSteps {
         return new GraknClient(address, username, password);
     }
 
-    private static synchronized GraknClient connectToGrakn() {
-        if (!isNull(client)) return client;
+    private static synchronized void connectToGrakn() {
+        if (!isNull(client)) return;
 
         System.out.println("Connecting to Grakn ...");
 
@@ -94,7 +96,6 @@ public class ConnectionSteps {
         }
 
         assertNotNull(client);
-        return client;
     }
 
     @Given("connection has been opened")
@@ -133,20 +134,25 @@ public class ConnectionSteps {
         }
     }
 
-    @When("connection open {number} session(s) for keyspace: {word}")
-    public void connection_open_sessions_for_keyspace(Integer number, String keyspaceName) {
+    @When("connection open {number} session(s) for one keyspace: {word}")
+    public void connection_open_many_sessions_for_one_keyspace(int number, String name) {
         for (int i = 0; i < number; i++) {
-            sessions.add(client.session(keyspaceName));
+            sessionsList.add(client.session(name));
         }
     }
 
-    @When("connection open multiple sessions for multiple keyspaces:")
-    public void connection_open_multiple_sessions_for_multiple_keyspaces(List<String> keyspaceNames) {
-        for (String keyspaceName : keyspaceNames) {
-            sessionsMap.put(keyspaceName, client.session(keyspaceName));
+    @When("connection open many sessions for many keyspaces:")
+    public void connection_open_many_sessions_for_many_keyspaces(Map<String, String> names) {
+        for (Map.Entry<String, String> keyspaceName : names.entrySet()) {
+            sessionsMap.put(keyspaceName.getKey(), client.session(keyspaceName.getValue()));
         }
     }
 
+    // =================================================================================================================
+    // =================================================================================================================
+    // =================================================================================================================
+    // =================================================================================================================
+    
     @When("connection open sessions in parallel for different keyspaces: {number}")
     public void connection_open_parallel_sessions_for_keyspaces(Integer number) {
         assertTrue(THREAD_POOL_SIZE >= number);
@@ -161,17 +167,7 @@ public class ConnectionSteps {
     }
 
 
-    @Then("session is null: {boolean}")
-    public void session_is_null(Boolean isNull) {
-        assertEquals(isNull(session), isNull);
-    }
 
-    @Then("sessions are null: {boolean}")
-    public void sessions_are_null(Boolean isNull) {
-        for (GraknClient.Session session : sessionsMap.values()) {
-            assertEquals(isNull(session), isNull);
-        }
-    }
 
     @Then("sessions in parallel are null: {boolean}")
     public void sessions_in_parallel_are_null(Boolean isNull) {
@@ -185,17 +181,7 @@ public class ConnectionSteps {
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 
-    @Then("session is open: {boolean}")
-    public void session_is_open(Boolean isOpen) {
-        assertEquals(session.isOpen(), isOpen);
-    }
 
-    @Then("sessions are open: {boolean}")
-    public void sessions_are_open(Boolean isOpen) {
-        for (GraknClient.Session session : sessionsMap.values()) {
-            assertEquals(session.isOpen(), isOpen);
-        }
-    }
 
     @Then("sessions in parallel are open: {boolean}")
     public void sessions_in_parallel_are_open(Boolean isOpen) {
@@ -209,10 +195,7 @@ public class ConnectionSteps {
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 
-    @Then("session has keyspace: {word}")
-    public void session_has_name(String keyspaceName) {
-        assertEquals(session.keyspace().name(), keyspaceName);
-    }
+
 
     @Then("sessions have correct keyspaces:")
     public void sessions_have_correct_keyspaces(List<String> keyspaceNames) {

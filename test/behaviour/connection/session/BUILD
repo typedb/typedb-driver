@@ -28,12 +28,15 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/common:connection",
+        "//:client-java",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [
@@ -61,12 +64,15 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/common:connection",
+        "//:client-java",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [

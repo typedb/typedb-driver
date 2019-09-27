@@ -38,7 +38,7 @@ package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "connection",
+    name = "steps",
     srcs = [
         "ConnectionSteps.java",
     ],
@@ -57,7 +57,7 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":connection",
+        ":steps",
     ],
     license_type = "apache"
 )

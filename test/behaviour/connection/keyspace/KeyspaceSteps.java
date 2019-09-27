@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.connection.keyspace;
 
-import grakn.client.test.behaviour.common.ConnectionSteps;
+import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

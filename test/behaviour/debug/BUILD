@@ -27,7 +27,7 @@ java_test(
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/common:connection",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 

@@ -29,7 +29,7 @@ java_test(
     deps = [
         # Package dependencies
         "//common:common",
-        "//test/behaviour/common:connection",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
@@ -65,7 +65,7 @@ java_test(
     deps = [
         # Package dependencies
         "//common:common",
-        "//test/behaviour/common:connection",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 

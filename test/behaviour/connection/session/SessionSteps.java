@@ -19,5 +19,56 @@
 
 package grakn.client.test.behaviour.connection.session;
 
+import grakn.client.GraknClient;
+import grakn.client.test.behaviour.connection.ConnectionSteps;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+import java.util.Collection;
+import java.util.Map;
+
+import static java.util.Objects.isNull;
+import static org.junit.Assert.assertEquals;
+
 public class SessionSteps {
+
+
+
+    @Then("session(s) is/are null: {boolean}")
+    public void sessions_are_null(Boolean isNull) {
+        Collection<GraknClient.Session> sessions =
+                ConnectionSteps.sessionsList.isEmpty() ?
+                        ConnectionSteps.sessionsMap.values() :
+                        ConnectionSteps.sessionsList;
+
+        for (GraknClient.Session session : sessions) {
+            assertEquals(isNull(session), isNull);
+        }
+    }
+
+    @Then("session(s) is/are open: {boolean}")
+    public void sessions_are_open(Boolean isOpen) {
+        Collection<GraknClient.Session> sessions =
+                ConnectionSteps.sessionsList.isEmpty() ?
+                        ConnectionSteps.sessionsMap.values() :
+                        ConnectionSteps.sessionsList;
+
+        for (GraknClient.Session session : sessions) {
+            assertEquals(session.isOpen(), isOpen);
+        }
+    }
+
+    @Then("session(s) has/have keyspace: {word}")
+    public void sessions_have_keyspace(String name) {
+        for (GraknClient.Session session : ConnectionSteps.sessionsList) {
+            assertEquals(session.keyspace().name(), name);
+        }
+    }
+
+    @Then("sessions have keyspaces:")
+    public void sessions_have_keyspaces(Map<String, String> names) {
+        for (Map.Entry<String, String> name : names.entrySet()) {
+            assertEquals(ConnectionSteps.sessionsMap.get(name.getKey()).keyspace().name(), name.getValue());
+        }
+    }
 }

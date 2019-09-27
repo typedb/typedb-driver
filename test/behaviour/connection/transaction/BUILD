@@ -28,7 +28,7 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/common:connection",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
@@ -61,7 +61,7 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/common:connection",
+        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
