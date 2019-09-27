@@ -20,29 +20,25 @@
 package grakn.client.concept.test;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Label;
 import grakn.client.concept.Attribute;
-import grakn.client.concept.Entity;
-import grakn.client.concept.Relation;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.AttributeType.DataType;
+import grakn.client.concept.Entity;
 import grakn.client.concept.EntityType;
+import grakn.client.concept.Label;
+import grakn.client.concept.Relation;
 import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
+import grakn.client.concept.Thing;
 import graql.lang.pattern.Pattern;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

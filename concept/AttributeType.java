@@ -19,7 +19,6 @@
 
 package grakn.client.concept;
 
-import com.google.common.collect.Sets;
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
@@ -28,11 +27,6 @@ import grakn.protocol.session.ConceptProto;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Client implementation of AttributeType
