@@ -52,11 +52,11 @@ public class SessionTest {
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=grakn.client.*'
     //    b) Use the following Bazel flags:
-    //       --cache_test_results=no
-    //       --test_output=streamed
-    //       --subcommands
-    //       --sandbox_debug
-    //       --spawn_strategy=standalone
+    //       --cache_test_results=no : to make sure you're not using cache
+    //       --test_output=streamed : to make sure all output is printed
+    //       --subcommands : to print the low-level commands and execution paths
+    //       --sandbox_debug : to keep the sandbox not deleted after test runs
+    //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run Grakn)
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
