@@ -65,14 +65,14 @@ public class EntityType extends Type<EntityType, Entity> {
     @Deprecated
     @CheckReturnValue
     @Override
-    EntityType asEntityType() {
+    public EntityType asEntityType() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isEntityType() {
+    public boolean isEntityType() {
         return true;
     }
 }

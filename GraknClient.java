@@ -379,12 +379,12 @@ public class GraknClient implements AutoCloseable {
             close();
         }
 
-        @Nullable
-        public <T extends grakn.core.concept.type.Type> T getType(Label label) {
-            SchemaConcept concept = getSchemaConcept(label);
-            if (concept == null || !concept.isType()) return null;
-            return (T) concept.asType();
-        }
+//        @Nullable
+//        public <T extends Type> T getType(Label label) {
+//            SchemaConcept concept = getSchemaConcept(label);
+//            if (concept == null || !concept.isType()) return null;
+//            return (T) concept.asType();
+//        }
 
         @Nullable
         public EntityType getEntityType(String label) {
@@ -449,16 +449,16 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
-            transceiver.send(RequestBuilder.Transaction.getAttributes(value));
-            int iteratorId = responseOrThrow().getGetAttributesIter().getId();
-            Iterable<Concept> iterable = () -> new RPCIterator<>(
-                    this, iteratorId, response -> Concept.of(response.getGetAttributesIterRes().getAttribute(), this)
-            );
-
-            return StreamSupport.stream(iterable.spliterator(), false).map(Concept::<V>asAttribute)
-                    .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
-        }
+//        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
+//            transceiver.send(RequestBuilder.Transaction.getAttributes(value));
+//            int iteratorId = responseOrThrow().getGetAttributesIter().getId();
+//            Iterable<Concept> iterable = () -> new RPCIterator<>(
+//                    this, iteratorId, response -> Concept.of(response.getGetAttributesIterRes().getAttribute(), this)
+//            );
+//
+//            return StreamSupport.stream(iterable.spliterator(), false).map(Concept::<V>asAttribute)
+//                    .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
+//        }
 
         public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));

@@ -20,19 +20,20 @@
 package grakn.client.concept.test;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Label;
-import grakn.core.concept.thing.Attribute;
-import grakn.core.concept.thing.Entity;
-import grakn.core.concept.thing.Relation;
-import grakn.core.concept.thing.Thing;
-import grakn.core.concept.type.AttributeType;
-import grakn.core.concept.type.AttributeType.DataType;
-import grakn.core.concept.type.EntityType;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
-import grakn.core.concept.type.Rule;
-import grakn.core.rule.GraknTestServer;
+import grakn.client.concept.Label;
+import grakn.client.concept.Attribute;
+import grakn.client.concept.Entity;
+import grakn.client.concept.Relation;
+import grakn.client.concept.Thing;
+import grakn.client.concept.Type;
+import grakn.client.concept.AttributeType;
+import grakn.client.concept.AttributeType.DataType;
+import grakn.client.concept.EntityType;
+import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
+import grakn.client.concept.Rule;
 import graql.lang.pattern.Pattern;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -65,11 +66,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class ConceptIT {
 
-    @ClassRule
-    public static final GraknTestServer server = new GraknTestServer(
-            Paths.get("external/graknlabs_grakn_core/server/conf/grakn.properties"),
-            Paths.get("external/graknlabs_grakn_core/test-integration/resources/cassandra-embedded.yaml")
-    );
+//    @ClassRule
+//    public static final GraknTestServer server = new GraknTestServer(
+//            Paths.get("external/graknlabs_grakn_core/server/conf/grakn.properties"),
+//            Paths.get("external/graknlabs_grakn_core/test-integration/resources/cassandra-embedded.yaml")
+//    );
     private static GraknClient.Session session;
     private static int EMAIL_COUNTER = 0;
     private GraknClient.Transaction tx;
@@ -139,7 +140,8 @@ public class ConceptIT {
     @BeforeClass
     public static void setUpClass() {
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-        session = new GraknClient(server.grpcUri().toString()).session(randomKeyspace);
+//        session = new GraknClient(server.grpcUri().toString()).session(randomKeyspace);
+        session = new GraknClient("localhost:48555").session("testing");
     }
 
     @AfterClass

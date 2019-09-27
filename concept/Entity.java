@@ -49,14 +49,14 @@ public class Entity extends Thing<Entity, EntityType> {
     @Deprecated
     @CheckReturnValue
     @Override
-    Entity asEntity() {
+    public Entity asEntity() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isEntity() {
+    public boolean isEntity() {
         return true;
     }
 }

@@ -19,6 +19,7 @@
 
 package grakn.client.concept;
 
+import com.google.common.collect.Sets;
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
@@ -27,6 +28,7 @@ import grakn.protocol.session.ConceptProto;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -127,14 +129,14 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     @Deprecated
     @CheckReturnValue
     @Override
-    AttributeType asAttributeType() {
+    public AttributeType asAttributeType() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isAttributeType() {
+    public boolean isAttributeType() {
         return true;
     }
 
@@ -145,7 +147,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
      *
      * @param <D> The data type.
      */
-    abstract static class DataType<D> {
+    public abstract static class DataType<D> {
         public static final AttributeType.DataType<Boolean> BOOLEAN = new AttributeType.DataType<Boolean>(Boolean.class){
             @Override
             public Set<AttributeType.DataType<?>> comparableDataTypes() { return Collections.singleton(AttributeType.DataType.BOOLEAN); }
@@ -157,10 +159,10 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<Double>(Double.class){
             @Override
             public Set<AttributeType.DataType<?>> comparableDataTypes() {
-                return set(AttributeType.DataType.DOUBLE,
+                return java.util.Collections.unmodifiableSet(Sets.newHashSet(AttributeType.DataType.DOUBLE,
                         //DataType.FLOAT,
                         //DataType.INTEGER,
-                        AttributeType.DataType.LONG);
+                        AttributeType.DataType.LONG));
             }
         };
 
@@ -175,10 +177,10 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<Long>(Long.class){
             @Override
             public Set<AttributeType.DataType<?>> comparableDataTypes() {
-                return set(AttributeType.DataType.DOUBLE,
+                return java.util.Collections.unmodifiableSet(Sets.newHashSet(AttributeType.DataType.DOUBLE,
                         //DataType.FLOAT,
                         //DataType.INTEGER,
-                        AttributeType.DataType.LONG);
+                        AttributeType.DataType.LONG));
             }
         };
         public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<String>(String.class){
@@ -186,7 +188,8 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             public Set<AttributeType.DataType<?>> comparableDataTypes() { return Collections.singleton(AttributeType.DataType.STRING); }
         };
 
-        private static final List<AttributeType.DataType<?>> values = list(BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, STRING);
+        private static final List<AttributeType.DataType<?>> values = java.util.Collections.unmodifiableList(
+                Arrays.asList(BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, STRING));
 
         private final Class<D> dataClass;
 

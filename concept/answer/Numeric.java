@@ -18,7 +18,6 @@
 
 package grakn.client.concept.answer;
 
-
 /**
  * A type of Answer object that contains a Number.
  */

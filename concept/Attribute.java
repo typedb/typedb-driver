@@ -109,14 +109,14 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
     @Deprecated
     @CheckReturnValue
     @Override
-    Attribute asAttribute() {
+    public Attribute asAttribute() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isAttribute() {
+    public boolean isAttribute() {
         return true;
     }
 }

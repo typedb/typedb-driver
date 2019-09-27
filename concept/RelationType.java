@@ -39,7 +39,6 @@ public class RelationType extends Type<RelationType, Relation> {
         return new RelationType(tx, id);
     }
 
-    @Override
     public final Relation create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
@@ -49,7 +48,6 @@ public class RelationType extends Type<RelationType, Relation> {
         return asInstance(concept);
     }
 
-    @Override
     public final Stream<Role> roles() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
@@ -58,7 +56,6 @@ public class RelationType extends Type<RelationType, Relation> {
         return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept::asRole);
     }
 
-    @Override
     public final RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
@@ -68,7 +65,6 @@ public class RelationType extends Type<RelationType, Relation> {
         return asCurrentBaseType(this);
     }
 
-    @Override
     public final RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
@@ -96,14 +92,14 @@ public class RelationType extends Type<RelationType, Relation> {
     @Deprecated
     @CheckReturnValue
     @Override
-    RelationType asRelationType() {
+    public RelationType asRelationType() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isRelationType() {
+    public boolean isRelationType() {
         return true;
     }
 }

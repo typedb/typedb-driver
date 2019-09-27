@@ -45,7 +45,6 @@ public class Relation extends Thing<Relation, RelationType> {
         return new Relation(tx, id);
     }
 
-    @Override // TODO: Weird. Why is this not a stream, while other collections are returned as stream
     public final Map<Role, Set<Thing>> rolePlayersMap() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
@@ -75,7 +74,7 @@ public class Relation extends Thing<Relation, RelationType> {
                         .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(grakn.core.concept.Concept::asThing);
+        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept::asThing);
     }
 
     public final Relation assign(Role role, Thing player) {
@@ -97,11 +96,11 @@ public class Relation extends Thing<Relation, RelationType> {
         runMethod(method);
     }
 
-    final RelationType asCurrentType(grakn.core.concept.Concept concept) {
+    final RelationType asCurrentType(Concept concept) {
         return concept.asRelationType();
     }
 
-    final Relation asCurrentBaseType(grakn.core.concept.Concept other) {
+    final Relation asCurrentBaseType(Concept other) {
         return other.asRelation();
     }
 
@@ -109,14 +108,14 @@ public class Relation extends Thing<Relation, RelationType> {
     @Deprecated
     @CheckReturnValue
     @Override
-    Relation asRelation() {
+    public Relation asRelation() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isRelation() {
+    public boolean isRelation() {
         return true;
     }
 }

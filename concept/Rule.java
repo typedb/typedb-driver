@@ -43,7 +43,6 @@ public class Rule extends SchemaConcept<Rule> {
     }
 
     @Nullable
-    @Override
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern when() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -61,7 +60,6 @@ public class Rule extends SchemaConcept<Rule> {
     }
 
     @Nullable
-    @Override
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern then() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -78,22 +76,18 @@ public class Rule extends SchemaConcept<Rule> {
         }
     }
 
-    @Override
     public final Stream<Type> whenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public Stream<Type> whenPositiveTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public Stream<Type> whenNegativeTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public final Stream<Type> thenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
@@ -111,14 +105,14 @@ public class Rule extends SchemaConcept<Rule> {
     @Deprecated
     @CheckReturnValue
     @Override
-    Rule asRule() {
+    public Rule asRule() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isRule() {
+    public boolean isRule() {
         return true;
     }
 }

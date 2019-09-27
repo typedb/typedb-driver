@@ -123,7 +123,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    SchemaConcept asSchemaConcept() {
+    public SchemaConcept asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
     }
 
@@ -133,7 +133,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    Type asType() {
+    public Type asType() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -143,7 +143,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    Thing asThing() {
+    public Thing asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -153,7 +153,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A EntityType if the Concept is an EntityType
      */
     @CheckReturnValue
-    EntityType asEntityType() {
+    public EntityType asEntityType() {
         throw GraknConceptException.invalidCasting(this, EntityType.class);
     }
 
@@ -163,7 +163,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Role if the Concept is a Role
      */
     @CheckReturnValue
-    Role asRole() {
+    public Role asRole() {
         throw GraknConceptException.invalidCasting(this, Role.class);
     }
 
@@ -173,7 +173,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A RelationType if the Concept is a RelationType
      */
     @CheckReturnValue
-    RelationType asRelationType() {
+    public RelationType asRelationType() {
         throw GraknConceptException.invalidCasting(this, RelationType.class);
     }
 
@@ -183,7 +183,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    <D> AttributeType<D> asAttributeType() {
+    public <D> AttributeType<D> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -193,7 +193,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    Rule asRule() {
+    public Rule asRule() {
         throw GraknConceptException.invalidCasting(this, Rule.class);
     }
 
@@ -203,7 +203,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return An Entity if the Concept is a Thing
      */
     @CheckReturnValue
-    Entity asEntity() {
+    public Entity asEntity() {
         throw GraknConceptException.invalidCasting(this, Entity.class);
     }
 
@@ -213,7 +213,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Relation  if the Concept is a Relation
      */
     @CheckReturnValue
-    Relation asRelation() {
+    public Relation asRelation() {
         throw GraknConceptException.invalidCasting(this, Relation.class);
     }
 
@@ -223,7 +223,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    <D> Attribute<D> asAttribute() {
+    public <D> Attribute<D> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -233,7 +233,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a SchemaConcept
      */
     @CheckReturnValue
-    boolean isSchemaConcept() {
+    public boolean isSchemaConcept() {
         return false;
     }
 
@@ -243,7 +243,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a Type
      */
     @CheckReturnValue
-    boolean isType() {
+    public boolean isType() {
         return false;
     }
 
@@ -253,7 +253,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is an Thing
      */
     @CheckReturnValue
-    boolean isThing() {
+    public boolean isThing() {
         return false;
     }
 
@@ -263,7 +263,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is an EntityType.
      */
     @CheckReturnValue
-    boolean isEntityType() {
+    public boolean isEntityType() {
         return false;
     }
 
@@ -273,7 +273,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Role
      */
     @CheckReturnValue
-    boolean isRole() {
+    public boolean isRole() {
         return false;
     }
 
@@ -283,7 +283,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a RelationType
      */
     @CheckReturnValue
-    boolean isRelationType() {
+    public boolean isRelationType() {
         return false;
     }
 
@@ -293,7 +293,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a AttributeType
      */
     @CheckReturnValue
-    boolean isAttributeType() {
+    public boolean isAttributeType() {
         return false;
     }
 
@@ -303,7 +303,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Rule
      */
     @CheckReturnValue
-    boolean isRule() {
+    public boolean isRule() {
         return false;
     }
 
@@ -313,7 +313,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Entity
      */
     @CheckReturnValue
-    boolean isEntity() {
+    public boolean isEntity() {
         return false;
     }
 
@@ -323,7 +323,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Relation
      */
     @CheckReturnValue
-    boolean isRelation() {
+    public boolean isRelation() {
         return false;
     }
 
@@ -333,7 +333,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Attribute
      */
     @CheckReturnValue
-    boolean isAttribute() {
+    public boolean isAttribute() {
         return false;
     }
 

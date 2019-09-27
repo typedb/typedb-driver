@@ -48,7 +48,6 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return asCurrentBaseType(this);
     }
 
-    @Override
     public final Label label() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptGetLabelReq(ConceptProto.SchemaConcept.GetLabel.Req.getDefaultInstance()).build();
@@ -56,7 +55,6 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return Label.of(runMethod(method).getSchemaConceptGetLabelRes().getLabel());
     }
 
-    @Override
     public final Boolean isImplicit() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptIsImplicitReq(ConceptProto.SchemaConcept.IsImplicit.Req.getDefaultInstance()).build();
@@ -64,7 +62,6 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return runMethod(method).getSchemaConceptIsImplicitRes().getImplicit();
     }
 
-    @Override
     public final SomeSchemaConcept label(Label label) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSetLabelReq(ConceptProto.SchemaConcept.SetLabel.Req.newBuilder()
@@ -75,7 +72,6 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
     }
 
     @Nullable
-    @Override
     public final SomeSchemaConcept sup() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptGetSupReq(ConceptProto.SchemaConcept.GetSup.Req.getDefaultInstance()).build();
@@ -94,12 +90,10 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
 
     }
 
-    @Override
     public final Stream<SomeSchemaConcept> sups() {
         return tx().sups(this).filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
     }
 
-    @Override
     public final Stream<SomeSchemaConcept> subs() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSubsReq(ConceptProto.SchemaConcept.Subs.Req.getDefaultInstance()).build();
@@ -108,29 +102,19 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return conceptStream(iteratorId, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept()).map(this::asCurrentBaseType);
     }
 
-    @Override
-    public final Stream<Rule> whenRules() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    @Override
-    public final Stream<Rule> thenRules() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
     abstract boolean equalsCurrentBaseType(Concept other);
 
     @Deprecated
     @CheckReturnValue
     @Override
-    SchemaConcept asSchemaConcept() {
+    public SchemaConcept asSchemaConcept() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isSchemaConcept() {
+    public boolean isSchemaConcept() {
         return true;
     }
 }

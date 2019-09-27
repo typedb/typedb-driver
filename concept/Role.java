@@ -38,7 +38,6 @@ public class Role extends SchemaConcept<Role> {
         return new Role(tx, id);
     }
 
-    @Override
     public final Stream<RelationType> relations() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();
@@ -46,7 +45,6 @@ public class Role extends SchemaConcept<Role> {
         return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept::asRelationType);
     }
 
-    @Override
     public final Stream<Type> players() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
@@ -67,14 +65,14 @@ public class Role extends SchemaConcept<Role> {
     @Deprecated
     @CheckReturnValue
     @Override
-    Role asRole() {
+    public Role asRole() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isRole() {
+    public boolean isRole() {
         return true;
     }
 }

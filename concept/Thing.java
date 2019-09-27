@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * @param <SomeThing> The exact type of this class
  * @param <SomeType>  the type of an instance of this class
  */
-abstract class Thing<SomeThing extends Thing, SomeType extends Type> extends Concept<SomeThing>  {
+public abstract class Thing<SomeThing extends Thing, SomeType extends Type> extends Concept<SomeThing>  {
 
     Thing(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -120,14 +120,14 @@ abstract class Thing<SomeThing extends Thing, SomeType extends Type> extends Con
     @Deprecated
     @CheckReturnValue
     @Override
-    Thing asThing() {
+    public Thing asThing() {
         return this;
     }
 
     @Deprecated
     @CheckReturnValue
     @Override
-    boolean isThing() {
+    public boolean isThing() {
         return true;
     }
 }
