@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.concept.RemoteConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.api.Transaction;
 import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
@@ -107,7 +106,7 @@ public class GraknClientTest {
     @Test
     public void whenCreatingAGraknRemoteTx_SendAnOpenMessageToGrpc() {
         try (GraknClient.Transaction ignored = session.transaction().write()) {
-            verify(server.requestListener()).onNext(RequestBuilder.Transaction.open("randomID", Transaction.Type.WRITE));
+            verify(server.requestListener()).onNext(RequestBuilder.Transaction.open("randomID", GraknClient.Transaction.Type.WRITE));
         }
     }
 
@@ -130,7 +129,7 @@ public class GraknClientTest {
     @Test
     public void whenCreatingAGraknRemoteTxWithSession_SetTxTypeOnTx() {
         try (GraknClient.Transaction tx = session.transaction().write()) {
-            assertEquals(Transaction.Type.WRITE, tx.type());
+            assertEquals(GraknClient.Transaction.Type.WRITE, tx.type());
         }
     }
 
@@ -188,7 +187,7 @@ public class GraknClientTest {
 
     @Test
     public void whenOpeningATxFails_Throw() {
-        SessionProto.Transaction.Req openRequest = RequestBuilder.Transaction.open("randomID", Transaction.Type.WRITE);
+        SessionProto.Transaction.Req openRequest = RequestBuilder.Transaction.open("randomID", GraknClient.Transaction.Type.WRITE);
         GraknClientException expectedException = GraknClientException.create("well something went wrong");
         throwOn(openRequest, expectedException);
 

@@ -48,6 +48,7 @@ import grakn.protocol.keyspace.KeyspaceServiceGrpc.KeyspaceServiceBlockingStub;
 import grakn.protocol.session.ConceptProto;
 import grakn.protocol.session.SessionProto;
 import grakn.protocol.session.SessionServiceGrpc;
+import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
@@ -70,6 +71,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -110,7 +112,7 @@ public class GraknClient implements AutoCloseable {
         return this;
     }
 
-    @Override
+
     public void close() {
         channel.shutdown();
         try {
@@ -134,7 +136,7 @@ public class GraknClient implements AutoCloseable {
      * @see Transaction
      * @see GraknClient
      */
-    public static class Session implements grakn.core.api.Session {
+    public static class Session {
 
         protected ManagedChannel channel;
         private String username;
@@ -168,33 +170,54 @@ public class GraknClient implements AutoCloseable {
             isOpen = true;
         }
 
-        @Override
         public GraknClient.Transaction.Builder transaction() {
             return new Transaction.Builder(channel, this, sessionId);
         }
 
-        @Override
         public void close() {
             if (!isOpen) return;
             sessionStub.close(RequestBuilder.Session.close(sessionId));
             isOpen = false;
         }
 
-        @Override // TODO: remove this method once we no longer implement grakn.core.api.Session
         public Keyspace keyspace() {
             return Keyspace.of(keyspace);
         }
     }
 
-    /**
-     * Remote implementation of grakn.core.api.Transaction that communicates with a Grakn server using gRPC.
-     */
-    public static class Transaction implements grakn.core.api.Transaction {
+    public static class Transaction implements AutoCloseable {
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
 
-        public static class Builder implements grakn.core.api.Transaction.Builder {
+        public enum Type {
+            READ(0),  //Read only transaction where mutations to the graph are prohibited
+            WRITE(1); //Write transaction where the graph can be mutated
+
+            private final int type;
+
+            Type(int type) {
+                this.type = type;
+            }
+
+            public int id() {
+                return type;
+            }
+
+            @Override
+            public String toString() {
+                return this.name();
+            }
+
+            public static Type of(int value) {
+                for (Type t : Type.values()) {
+                    if (t.id() == value) return t;
+                }
+                return null;
+            }
+        }
+
+        public static class Builder {
 
             private ManagedChannel channel;
             private GraknClient.Session session;
@@ -206,12 +229,10 @@ public class GraknClient implements AutoCloseable {
                 this.sessionId = sessionId;
             }
 
-            @Override
             public GraknClient.Transaction read() {
                 return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.READ);
             }
 
-            @Override
             public GraknClient.Transaction write() {
                 return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.WRITE);
             }
@@ -225,49 +246,79 @@ public class GraknClient implements AutoCloseable {
             responseOrThrow();
         }
 
-        @Override
         public Type type() {
             return type;
         }
 
-        @Override
         public GraknClient.Session session() {
             return session;
         }
 
-        @Override
         public Keyspace keyspace() {
             return session.keyspace();
         }
 
-        @Override
+        public List<ConceptMap> execute(GraqlDefine query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptMap> execute(GraqlUndefine query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptMap> execute(GraqlInsert query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+        public List<ConceptMap> execute(GraqlInsert query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptSet> execute(GraqlDelete query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+        public List<ConceptSet> execute(GraqlDelete query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptMap> execute(GraqlGet query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+        public List<ConceptMap> execute(GraqlGet query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
         public Stream<ConceptMap> stream(GraqlDefine query) {
             Iterable<ConceptMap> iterable = () -> this.rpcIterator(query);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
         public Stream<ConceptMap> stream(GraqlUndefine query) {
             Iterable<ConceptMap> iterable = () -> this.rpcIterator(query);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
         public Stream<ConceptMap> stream(GraqlInsert query, boolean infer) {
             Iterable<ConceptMap> iterable = () -> this.rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
+        public Stream<ConceptMap> stream(GraqlInsert query) {
+            return stream(query, true);
+        }
 
-        @Override
         public Stream<ConceptSet> stream(GraqlDelete query, boolean infer) {
             Iterable<ConceptSet> iterable = () -> this.rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
+        public Stream<ConceptSet> stream(GraqlDelete query) {
+            return stream(query, true);
+        }
 
-        @Override
         public Stream<ConceptMap> stream(GraqlGet query, boolean infer) {
             Iterable<ConceptMap> iterable = () -> this.rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
+        }
+        public Stream<ConceptMap> stream(GraqlGet query) {
+            return stream(query, true);
         }
 
         private Iterator rpcIterator(GraqlQuery query) {
@@ -285,12 +336,14 @@ public class GraknClient implements AutoCloseable {
             );
         }
 
-        @Override
+        public void abort() {
+            close();
+        }
+
         public void close() {
             transceiver.close();
         }
 
-        @Override
         public boolean isClosed() {
             return transceiver.isClosed();
         }
@@ -321,7 +374,6 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        @Override
         public void commit() {
             transceiver.send(RequestBuilder.Transaction.commit());
             responseOrThrow();
@@ -329,7 +381,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public <T extends grakn.core.concept.type.Type> T getType(Label label) {
             SchemaConcept concept = getSchemaConcept(label);
             if (concept == null || !concept.isType()) return null;
@@ -337,7 +388,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public EntityType getEntityType(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isEntityType()) return null;
@@ -345,7 +395,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public RelationType getRelationType(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRelationType()) return null;
@@ -353,7 +402,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public <V> AttributeType<V> getAttributeType(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isAttributeType()) return null;
@@ -361,7 +409,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public Role getRole(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRole()) return null;
@@ -369,7 +416,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public Rule getRule(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRule()) return null;
@@ -377,7 +423,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        @Override
         public <T extends SchemaConcept> T getSchemaConcept(Label label) {
             transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
             SessionProto.Transaction.Res response = responseOrThrow();
@@ -389,8 +434,11 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
+        public SchemaConcept getMetaConcept() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
+        }
+
         @Nullable
-        @Override
         public <T extends Concept> T getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
             SessionProto.Transaction.Res response = responseOrThrow();
@@ -402,7 +450,6 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        @Override
         public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
             transceiver.send(RequestBuilder.Transaction.getAttributes(value));
             int iteratorId = responseOrThrow().getGetAttributesIter().getId();
@@ -414,79 +461,78 @@ public class GraknClient implements AutoCloseable {
                     .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
         }
 
-        @Override
         public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
             return RemoteConcept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        @Override
+
         public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
             return RemoteConcept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
-        @Override
+
         public RelationType putRelationType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRelationType(label));
             return RemoteConcept.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
-        @Override
+
         public Role putRole(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRole(label));
             return RemoteConcept.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
         }
 
-        @Override
+
         public Rule putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
             return RemoteConcept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
 
-        @Override
+
         public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
             Iterable<Numeric> iterable = () -> rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
             Iterable<AnswerGroup<ConceptMap>> iterable = () -> rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
             Iterable<AnswerGroup<Numeric>> iterable = () -> rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<Numeric> stream(GraqlCompute.Statistics query) {
             Iterable<Numeric> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<ConceptList> stream(GraqlCompute.Path query) {
             Iterable<ConceptList> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
             Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
             Iterable<ConceptSet> iterable = () -> rpcIterator(query, false);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        @Override
+
         public Stream<SchemaConcept> sups(SchemaConcept schemaConcept) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setSchemaConceptSupsReq(ConceptProto.SchemaConcept.Sups.Req.getDefaultInstance()).build();
@@ -537,7 +583,7 @@ public class GraknClient implements AutoCloseable {
                 this.responseReader = responseReader;
             }
 
-            @Override
+
             protected final T computeNext() {
                 SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
 
@@ -591,7 +637,7 @@ public class GraknClient implements AutoCloseable {
     /**
      * An identifier for an isolated scope of a data in the database.
      */
-    public static class Keyspace implements grakn.core.api.Keyspace, Serializable {
+    public static class Keyspace implements Serializable {
 
         private static final long serialVersionUID = 2726154016735929123L;
 
@@ -614,12 +660,10 @@ public class GraknClient implements AutoCloseable {
             return name;
         }
 
-        @Override
         public final String toString() {
             return name();
         }
 
-        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -628,7 +672,6 @@ public class GraknClient implements AutoCloseable {
             return this.name.equals(that.name);
         }
 
-        @Override
         public int hashCode() {
             int h = 1;
             h *= 1000003;
