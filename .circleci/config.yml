@@ -87,15 +87,6 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
 
-  test-transaction:
-    machine: true
-    working_directory: ~/client-java
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
-      - run-bazel-rbe:
-          command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
-
   deploy-maven-snapshot:
     machine: true
     working_directory: ~/client-java
@@ -215,10 +206,6 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-transaction:
-          filters:
-            branches:
-              ignore: client-java-release-branch
       - deploy-maven-snapshot:
           filters:
             branches:
@@ -229,7 +216,6 @@ workflows:
             - test-concept
             - test-keyspace
             - test-session
-            - test-transaction
       - test-deployment-maven:
           filters:
             branches:
