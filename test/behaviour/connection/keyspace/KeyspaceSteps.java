@@ -61,12 +61,12 @@ public class KeyspaceSteps {
 
     @Then("connection has one keyspace: {word}")
     public void connection_has_one_keyspace(String keyspaceName) {
-        assertEquals(ConnectionSteps.client.keyspaces().retrieve(), singletonList(keyspaceName));
+        assertEquals(singletonList(keyspaceName), ConnectionSteps.client.keyspaces().retrieve());
     }
 
     @Then("connection has multiple keyspaces:")
     public void connection_has_multiple_keyspaces(List<String> keyspaceName) {
-        assertEquals(set(ConnectionSteps.client.keyspaces().retrieve()), set(keyspaceName));
+        assertEquals(set(keyspaceName), set(ConnectionSteps.client.keyspaces().retrieve()));
     }
 
     @Then("connection does not have one keyspace: {word}")

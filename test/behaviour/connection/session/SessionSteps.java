@@ -22,10 +22,10 @@ package grakn.client.test.behaviour.connection.session;
 import grakn.client.GraknClient;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -33,42 +33,65 @@ import static org.junit.Assert.assertEquals;
 public class SessionSteps {
 
 
-
     @Then("session(s) is/are null: {boolean}")
     public void sessions_are_null(Boolean isNull) {
-        Collection<GraknClient.Session> sessions =
-                ConnectionSteps.sessionsList.isEmpty() ?
-                        ConnectionSteps.sessionsMap.values() :
-                        ConnectionSteps.sessionsList;
-
-        for (GraknClient.Session session : sessions) {
-            assertEquals(isNull(session), isNull);
+        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+            assertEquals(isNull, isNull(session));
         }
     }
 
     @Then("session(s) is/are open: {boolean}")
     public void sessions_are_open(Boolean isOpen) {
-        Collection<GraknClient.Session> sessions =
-                ConnectionSteps.sessionsList.isEmpty() ?
-                        ConnectionSteps.sessionsMap.values() :
-                        ConnectionSteps.sessionsList;
-
-        for (GraknClient.Session session : sessions) {
-            assertEquals(session.isOpen(), isOpen);
+        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+            assertEquals(isOpen, session.isOpen());
         }
+    }
+
+    @Then("sessions in parallel are null: {boolean}")
+    public void sessions_in_parallel_are_null(Boolean isNull) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsMapParallel
+                .values().stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
+                    assertEquals(isNull, isNull(session));
+                    return null;
+                }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+    }
+
+    @Then("sessions in parallel are open: {boolean}")
+    public void sessions_in_parallel_are_open(Boolean isOpen) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsMapParallel
+                .values().stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
+                    assertEquals(isOpen, session.isOpen());
+                    return null;
+                }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 
     @Then("session(s) has/have keyspace: {word}")
     public void sessions_have_keyspace(String name) {
-        for (GraknClient.Session session : ConnectionSteps.sessionsList) {
-            assertEquals(session.keyspace().name(), name);
+        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+            assertEquals(name, session.keyspace().name());
         }
     }
 
     @Then("sessions have keyspaces:")
     public void sessions_have_keyspaces(Map<String, String> names) {
         for (Map.Entry<String, String> name : names.entrySet()) {
-            assertEquals(ConnectionSteps.sessionsMap.get(name.getKey()).keyspace().name(), name.getValue());
+            assertEquals(name.getValue(), ConnectionSteps.sessionsMap.get(name.getKey()).keyspace().name());
         }
+    }
+
+    @Then("sessions in parallel have keyspace: {word}")
+    public void sessions_in_parallel_have_keyspace(String name) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsMapParallel
+                .values().stream().map(futureSession -> futureSession
+                        .thenApplyAsync(session -> {
+                            assertEquals(name, session.keyspace().name());
+                            return null;
+                        }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 }

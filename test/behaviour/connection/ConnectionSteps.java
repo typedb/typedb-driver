@@ -45,14 +45,17 @@ import static org.junit.Assert.fail;
 
 public class ConnectionSteps {
 
-    public static GraknClient client;
-    public static List<GraknClient.Session> sessionsList = new ArrayList<>();
-    public static Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
-
-
-    private int THREAD_POOL_SIZE = 128;
+    private int THREAD_POOL_SIZE = 32;
     private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-    private Map<String, CompletableFuture<GraknClient.Session>> sessionsInParallel = new HashMap<>();
+
+    public static GraknClient client;
+    public static Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
+    public static Map<String, CompletableFuture<GraknClient.Session>> sessionsMapParallel = new HashMap<>();
+
+
+
+
+
     private GraknClient.Session session;
     private List<GraknClient.Session> sessions = new ArrayList<>();
     private GraknClient.Transaction transaction;
@@ -122,22 +125,28 @@ public class ConnectionSteps {
 
     @After
     public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
-        if (!isNull(transaction)) transaction.close();
-        if (!isNull(session)) session.close();
+        if (transaction != null) transaction.close();
+        if (session != null) session.close();
 
-        for (GraknClient.Session session : sessionsMap.values()) {
-            if (!isNull(session)) session.close();
+        if (sessionsMap != null) {
+            for (GraknClient.Session session : sessionsMap.values()) {
+                if (!isNull(session)) session.close();
+            }
+            sessionsMap = new HashMap<>();
         }
 
-        for (CompletableFuture<GraknClient.Session> future : sessionsInParallel.values()) {
-            future.get().close();
+        if (sessionsMapParallel != null) {
+            for (CompletableFuture<GraknClient.Session> future : sessionsMapParallel.values()) {
+                future.get().close();
+            }
+            sessionsMapParallel = new HashMap<>();
         }
     }
 
     @When("connection open {number} session(s) for one keyspace: {word}")
     public void connection_open_many_sessions_for_one_keyspace(int number, String name) {
         for (int i = 0; i < number; i++) {
-            sessionsList.add(client.session(name));
+            sessionsMap.put(Integer.toString(i), client.session(name));
         }
     }
 
@@ -148,54 +157,36 @@ public class ConnectionSteps {
         }
     }
 
+    @When("connection open {number} sessions in parallel for one keyspace: {word}")
+    public void connection_open_many_sessions_in_parallel_for_one_keyspace(int number, String name) {
+        assertTrue(THREAD_POOL_SIZE >= number);
+        sessionsMapParallel = new HashMap<>();
+
+        for (int i = 0; i < number; i++) {
+            sessionsMapParallel.put(
+                    Integer.toString(i),
+                    CompletableFuture.supplyAsync(() -> client.session(name), threadPool)
+            );
+        }
+    }
+
     // =================================================================================================================
     // =================================================================================================================
     // =================================================================================================================
     // =================================================================================================================
-    
+
     @When("connection open sessions in parallel for different keyspaces: {number}")
     public void connection_open_parallel_sessions_for_keyspaces(Integer number) {
         assertTrue(THREAD_POOL_SIZE >= number);
 
         for (int i = 0; i < number; i++) {
             final String keyspaceName = "keyspace_" + i;
-            sessionsInParallel.put(
+            sessionsMapParallel.put(
                     keyspaceName,
                     CompletableFuture.supplyAsync(() -> client.session(keyspaceName), threadPool)
             );
         }
     }
-
-
-
-
-    @Then("sessions in parallel are null: {boolean}")
-    public void sessions_in_parallel_are_null(Boolean isNull) {
-        Stream<CompletableFuture<Void>> assertions = sessionsInParallel.values().stream()
-                .map(futureSession -> futureSession
-                        .thenApplyAsync(session -> {
-                            assertEquals(isNull(session), isNull);
-                            return null;
-                        }));
-
-        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
-    }
-
-
-
-    @Then("sessions in parallel are open: {boolean}")
-    public void sessions_in_parallel_are_open(Boolean isOpen) {
-        Stream<CompletableFuture<Void>> assertions = sessionsInParallel.values().stream()
-                .map(futureSession -> futureSession
-                        .thenApplyAsync(session -> {
-                            assertEquals(session.isOpen(), isOpen);
-                            return null;
-                        }));
-
-        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
-    }
-
-
 
     @Then("sessions have correct keyspaces:")
     public void sessions_have_correct_keyspaces(List<String> keyspaceNames) {
@@ -207,7 +198,7 @@ public class ConnectionSteps {
 
     @Then("sessions in parallel have correct keyspaces")
     public void sessions_in_parallel_have_correct_keyspaces() {
-        Stream<CompletableFuture<Void>> assertions = sessionsInParallel.entrySet().stream()
+        Stream<CompletableFuture<Void>> assertions = sessionsMapParallel.entrySet().stream()
                 .map(entry -> entry.getValue()
                         .thenApplyAsync(session -> {
                             assertEquals(session.keyspace().name(), entry.getKey());
