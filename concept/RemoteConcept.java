@@ -20,8 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.function.Function;
