@@ -35,10 +35,6 @@ public class RelationType extends Type<RelationType, Relation> {
         super(tx, id);
     }
 
-    static RelationType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RelationType(tx, id);
-    }
-
     public final Relation create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();

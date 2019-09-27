@@ -31,12 +31,8 @@ import javax.annotation.CheckReturnValue;
  */
 public class EntityType extends Type<EntityType, Entity> {
 
-    private EntityType(GraknClient.Transaction tx, ConceptId id) {
+    public EntityType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
-    }
-
-    static EntityType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new EntityType(tx, id);
     }
 
     public final Entity create() {

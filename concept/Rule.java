@@ -38,10 +38,6 @@ public class Rule extends SchemaConcept<Rule> {
         super(tx, id);
     }
 
-    static Rule construct(GraknClient.Transaction tx, ConceptId id) {
-        return new Rule(tx, id);
-    }
-
     @Nullable
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern when() {

@@ -41,10 +41,6 @@ public class Relation extends Thing<Relation, RelationType> {
         super(tx, id);
     }
 
-    static Relation construct(GraknClient.Transaction tx, ConceptId id) {
-        return new Relation(tx, id);
-    }
-
     public final Map<Role, Set<Thing>> rolePlayersMap() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();

@@ -159,7 +159,7 @@ public class GraknClientTest {
         assertEquals(10, answers.size());
 
         for (ConceptMap answer : answers) {
-            assertEquals(answer.vars(), Collections.singleton(new Variable("x")));
+            assertEquals(answer.map().keySet(), Collections.singleton(new Variable("x")));
             assertEquals(ConceptId.of("V123"), answer.get("x").id());
         }
     }

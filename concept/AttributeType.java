@@ -45,10 +45,6 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         super(tx, id);
     }
 
-    static <D> AttributeType<D> construct(GraknClient.Transaction tx, ConceptId id) {
-        return new AttributeType<>(tx, id);
-    }
-
     public final Attribute<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
@@ -147,49 +143,14 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
      *
      * @param <D> The data type.
      */
-    public abstract static class DataType<D> {
-        public static final AttributeType.DataType<Boolean> BOOLEAN = new AttributeType.DataType<Boolean>(Boolean.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() { return Collections.singleton(AttributeType.DataType.BOOLEAN); }
-        };
-        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<LocalDateTime>(LocalDateTime.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() { return Collections.singleton(AttributeType.DataType.DATE); }
-        };
-        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<Double>(Double.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() {
-                return java.util.Collections.unmodifiableSet(Sets.newHashSet(AttributeType.DataType.DOUBLE,
-                        //DataType.FLOAT,
-                        //DataType.INTEGER,
-                        AttributeType.DataType.LONG));
-            }
-        };
-
-        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<Float>(Float.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() { return new HashSet<>(); }
-        };
-        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<Integer>(Integer.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() { return new HashSet<>(); }
-        };
-        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<Long>(Long.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() {
-                return java.util.Collections.unmodifiableSet(Sets.newHashSet(AttributeType.DataType.DOUBLE,
-                        //DataType.FLOAT,
-                        //DataType.INTEGER,
-                        AttributeType.DataType.LONG));
-            }
-        };
-        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<String>(String.class){
-            @Override
-            public Set<AttributeType.DataType<?>> comparableDataTypes() { return Collections.singleton(AttributeType.DataType.STRING); }
-        };
-
-        private static final List<AttributeType.DataType<?>> values = java.util.Collections.unmodifiableList(
-                Arrays.asList(BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, STRING));
+    public static class DataType<D> {
+        public static final AttributeType.DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
+        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
+        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
+        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
+        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
+        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
+        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
 
         private final Class<D> dataClass;
 
@@ -210,25 +171,6 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         @Override
         public String toString() {
             return name();
-        }
-
-        @CheckReturnValue
-        public static List<AttributeType.DataType<?>> values() {
-            return values;
-        }
-
-        @CheckReturnValue
-        public abstract Set<AttributeType.DataType<?>> comparableDataTypes();
-
-        @SuppressWarnings("unchecked")
-        @CheckReturnValue
-        public static <D> AttributeType.DataType<D> of(Class<D> name) {
-            for (AttributeType.DataType<?> dc : AttributeType.DataType.values()) {
-                if (dc.dataClass.equals(name)) {
-                    return (AttributeType.DataType<D>) dc;
-                }
-            }
-            return null;
         }
 
         @Override

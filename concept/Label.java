@@ -33,7 +33,7 @@ public class Label implements Comparable<Label>, Serializable {
 
     private final String value;
 
-    public Label(String value) {
+    private Label(String value) {
         if (value == null) {
             throw new NullPointerException("Null value");
         }

@@ -53,32 +53,29 @@ public abstract class Concept<SomeConcept extends Concept> {
 
         switch (concept.getBaseType()) {
             case ENTITY:
-                return Entity.construct(tx, id);
+                return new Entity(tx, id);
             case RELATION:
-                return Relation.construct(tx, id);
+                return new Relation(tx, id);
             case ATTRIBUTE:
-                return Attribute.construct(tx, id);
+                return new Attribute(tx, id);
             case ENTITY_TYPE:
-                return EntityType.construct(tx, id);
+                return new EntityType(tx, id);
             case RELATION_TYPE:
-                return RelationType.construct(tx, id);
+                return new RelationType(tx, id);
             case ATTRIBUTE_TYPE:
-                return AttributeType.construct(tx, id);
+                return new AttributeType(tx, id);
             case ROLE:
-                return Role.construct(tx, id);
+                return new Role(tx, id);
             case RULE:
-                return Rule.construct(tx, id);
+                return new Rule(tx, id);
             case META_TYPE:
-                return MetaType.construct(tx, id);
+                return new MetaType(tx, id);
             default:
             case UNRECOGNIZED:
                 throw new IllegalArgumentException("Unrecognised " + concept);
         }
     }
 
-    GraknClient.Transaction tx() {
-        return tx;
-    }
 
     public ConceptId id() {
         return id;
@@ -95,27 +92,6 @@ public abstract class Concept<SomeConcept extends Concept> {
     public final boolean isDeleted() {
         return tx().getConcept(id()) == null;
     }
-
-    abstract SomeConcept asCurrentBaseType(Concept other);
-
-    protected final Stream<? extends Concept> conceptStream
-            (int iteratorId, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-
-        Iterable<? extends Concept> iterable = () -> tx().iterator(
-                iteratorId, res -> of(conceptGetter.apply(res.getConceptMethodIterRes()), tx())
-        );
-
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-        return runMethod(id(), method);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptId id, ConceptProto.Method.Req method) {
-        return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
-    }
-
 
     /**
      * Return as a SchemaConcept if the Concept is a SchemaConcept.
@@ -363,4 +339,28 @@ public abstract class Concept<SomeConcept extends Concept> {
         h ^= id.hashCode();
         return h;
     }
+
+    GraknClient.Transaction tx() {
+        return tx;
+    }
+    abstract SomeConcept asCurrentBaseType(Concept other);
+
+    final Stream<? extends Concept> conceptStream
+            (int iteratorId, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
+
+        Iterable<? extends Concept> iterable = () -> tx().iterator(
+                iteratorId, res -> of(conceptGetter.apply(res.getConceptMethodIterRes()), tx())
+        );
+
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
+        return runMethod(id(), method);
+    }
+
+    protected final ConceptProto.Method.Res runMethod(ConceptId id, ConceptProto.Method.Req method) {
+        return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
+    }
+
 }

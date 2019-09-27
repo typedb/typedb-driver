@@ -21,6 +21,7 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
+import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Label;
@@ -62,6 +63,8 @@ import io.grpc.StatusRuntimeException;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +73,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
@@ -373,12 +379,13 @@ public class GraknClient implements AutoCloseable {
             close();
         }
 
-//        @Nullable
-//        public <T extends Type> T getType(Label label) {
-//            SchemaConcept concept = getSchemaConcept(label);
-//            if (concept == null || !concept.isType()) return null;
-//            return (T) concept.asType();
-//        }
+        @Nullable
+        public <T extends grakn.client.concept.Type> T getType(Label label) {
+            SchemaConcept concept = getSchemaConcept(label);
+            if (concept == null || !concept.isType()) return null;
+            T t = (T) concept.asType();
+            return t;
+        }
 
         @Nullable
         public EntityType getEntityType(String label) {
@@ -443,16 +450,16 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-//        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
-//            transceiver.send(RequestBuilder.Transaction.getAttributes(value));
-//            int iteratorId = responseOrThrow().getGetAttributesIter().getId();
-//            Iterable<Concept> iterable = () -> new RPCIterator<>(
-//                    this, iteratorId, response -> Concept.of(response.getGetAttributesIterRes().getAttribute(), this)
-//            );
-//
-//            return StreamSupport.stream(iterable.spliterator(), false).map(Concept::<V>asAttribute)
-//                    .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
-//        }
+        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
+            transceiver.send(RequestBuilder.Transaction.getAttributes(value));
+            int iteratorId = responseOrThrow().getGetAttributesIter().getId();
+            Iterable<Attribute<V>> iterable = () -> new RPCIterator<Attribute<V>>(
+                    this, iteratorId, response -> Concept.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
+            );
+
+            return StreamSupport.stream(iterable.spliterator(), false)
+                    .collect(Collectors.toSet());
+        }
 
         public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));

@@ -34,10 +34,6 @@ public class Role extends SchemaConcept<Role> {
         super(tx, id);
     }
 
-    static Role construct(GraknClient.Transaction tx, ConceptId id) {
-        return new Role(tx, id);
-    }
-
     public final Stream<RelationType> relations() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();

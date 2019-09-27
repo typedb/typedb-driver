@@ -30,10 +30,6 @@ public class MetaType extends Type<Type, Thing> {
         super(tx, id);
     }
 
-    static MetaType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new MetaType(tx, id);
-    }
-
     @Override
     final Type asCurrentBaseType(Concept other) {
         return other.asType();

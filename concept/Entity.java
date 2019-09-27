@@ -32,20 +32,6 @@ public class Entity extends Thing<Entity, EntityType> {
         super(tx, id);
     }
 
-    static Entity construct(GraknClient.Transaction tx, ConceptId id) {
-        return new Entity(tx, id);
-    }
-
-    @Override
-    final EntityType asCurrentType(Concept concept) {
-        return concept.asEntityType();
-    }
-
-    @Override
-    final Entity asCurrentBaseType(Concept other) {
-        return other.asEntity();
-    }
-
     @Deprecated
     @CheckReturnValue
     @Override
@@ -58,5 +44,15 @@ public class Entity extends Thing<Entity, EntityType> {
     @Override
     public boolean isEntity() {
         return true;
+    }
+
+    @Override
+    final EntityType asCurrentType(Concept concept) {
+        return concept.asEntityType();
+    }
+
+    @Override
+    final Entity asCurrentBaseType(Concept other) {
+        return other.asEntity();
     }
 }

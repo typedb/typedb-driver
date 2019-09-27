@@ -26,7 +26,6 @@ import javax.annotation.CheckReturnValue;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
@@ -38,10 +37,6 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
 
     Attribute(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
-    }
-
-    static <D> Attribute<D> construct(GraknClient.Transaction tx, ConceptId id) {
-        return new Attribute<>(tx, id);
     }
 
     public final D value() {
@@ -94,15 +89,6 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
 
     final Attribute asCurrentBaseType(Concept other) {
         return other.asAttribute();
-    }
-
-    Thing owner() {
-        Iterator<Thing> owners = owners().iterator();
-        if (owners.hasNext()) {
-            return owners.next();
-        } else {
-            return null;
-        }
     }
 
     @SuppressWarnings("unchecked")

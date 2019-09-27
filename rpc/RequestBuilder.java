@@ -41,7 +41,6 @@ import static java.util.stream.Collectors.toList;
  */
 public class RequestBuilder {
 
-
     public static class Session {
 
         public static SessionProto.Session.Open.Req open(String keyspace) {
@@ -223,7 +222,7 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        public static grakn.client.concept.AttributeType.DataType<?> dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
+        public static grakn.client.concept.AttributeType.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
             switch (dataType) {
                 case STRING:
                     return grakn.client.concept.AttributeType.DataType.STRING;
@@ -245,7 +244,7 @@ public class RequestBuilder {
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setDataType(grakn.client.concept.AttributeType.DataType<?> dataType) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(grakn.client.concept.AttributeType.DataType dataType) {
             if (dataType.equals( grakn.client.concept.AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
             } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.BOOLEAN)) {
