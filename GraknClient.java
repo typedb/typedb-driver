@@ -116,6 +116,10 @@ public class GraknClient implements AutoCloseable {
         }
     }
 
+    public boolean isOpen() {
+        return !channel.isShutdown() || !channel.isTerminated();
+    }
+
     public Session session(String keyspace) {
         return new Session(channel, username, password, keyspace);
     }
@@ -131,15 +135,12 @@ public class GraknClient implements AutoCloseable {
     public static class Session {
 
         protected ManagedChannel channel;
-        private String username;
-        private String password;
+        private String username; // TODO: Do we need to save this? It's not used.
+        private String password; // TODO: Do we need to save this? It's not used.
         protected String keyspace;
         protected SessionServiceGrpc.SessionServiceBlockingStub sessionStub;
         protected String sessionId;
         protected boolean isOpen;
-
-        protected Session() {
-        }
 
         private Session(ManagedChannel channel, String username, String password, String keyspace) {
             this.username = username;
@@ -166,6 +167,10 @@ public class GraknClient implements AutoCloseable {
             return new Transaction.Builder(channel, this, sessionId);
         }
 
+        public boolean isOpen() {
+            return isOpen;
+        }
+
         public void close() {
             if (!isOpen) return;
             sessionStub.close(RequestBuilder.Session.close(sessionId));
@@ -181,6 +186,27 @@ public class GraknClient implements AutoCloseable {
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
+
+        public static class Builder implements grakn.core.api.Transaction.Builder {
+
+            private ManagedChannel channel;
+            private GraknClient.Session session;
+            private String sessionId;
+
+            public Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
+                this.channel = channel;
+                this.session = session;
+                this.sessionId = sessionId;
+            }
+
+            public GraknClient.Transaction read() {
+                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.READ);
+            }
+
+            public GraknClient.Transaction write() {
+                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.WRITE);
+            }
+        }
 
         public enum Type {
             READ(0),  //Read only transaction where mutations to the graph are prohibited
@@ -203,30 +229,9 @@ public class GraknClient implements AutoCloseable {
 
             public static Type of(int value) {
                 for (Type t : Type.values()) {
-                    if (t.id() == value) return t;
+                    if (t.type == value) return t;
                 }
                 return null;
-            }
-        }
-
-        public static class Builder {
-
-            private ManagedChannel channel;
-            private GraknClient.Session session;
-            private String sessionId;
-
-            public Builder(ManagedChannel channel, GraknClient.Session session, String sessionId) {
-                this.channel = channel;
-                this.session = session;
-                this.sessionId = sessionId;
-            }
-
-            public GraknClient.Transaction read() {
-                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.READ);
-            }
-
-            public GraknClient.Transaction write() {
-                return new GraknClient.Transaction(channel, session, sessionId, Transaction.Type.WRITE);
             }
         }
 
@@ -336,8 +341,8 @@ public class GraknClient implements AutoCloseable {
             transceiver.close();
         }
 
-        public boolean isClosed() {
-            return transceiver.isClosed();
+        public boolean isOpen() {
+            return transceiver.isOpen();
         }
 
         private SessionProto.Transaction.Res responseOrThrow() {
@@ -376,8 +381,7 @@ public class GraknClient implements AutoCloseable {
         public <T extends grakn.client.concept.Type> T getType(Label label) {
             SchemaConcept concept = getSchemaConcept(label);
             if (concept == null || !concept.isType()) return null;
-            T t = (T) concept.asType();
-            return t;
+            return (T) concept.asType();
         }
 
         @Nullable
@@ -602,7 +606,7 @@ public class GraknClient implements AutoCloseable {
 
         private KeyspaceServiceBlockingStub keyspaceBlockingStub;
 
-        public Keyspaces(ManagedChannel channel, String username, String password) {
+        Keyspaces(ManagedChannel channel, String username, String password) {
             keyspaceBlockingStub = KeyspaceServiceGrpc.newBlockingStub(channel);
             this.username = username;
             this.password = password;
@@ -633,10 +637,11 @@ public class GraknClient implements AutoCloseable {
     public static class Keyspace implements Serializable {
 
         private static final long serialVersionUID = 2726154016735929123L;
+        public static final String DEFAULT = "grakn";
 
         private final String name;
 
-        public Keyspace(String name) {
+        Keyspace(String name) {
             if (name == null) {
                 throw new NullPointerException("Null name");
             }
