@@ -20,4 +20,5 @@
 package grakn.client.test.behaviour.connection.transaction;
 
 public class TransactionSteps {
+
 }

@@ -24,21 +24,16 @@ import grakn.client.test.setup.GraknProperties;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -51,14 +46,6 @@ public class ConnectionSteps {
     public static GraknClient client;
     public static Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
     public static Map<String, CompletableFuture<GraknClient.Session>> sessionsMapParallel = new HashMap<>();
-
-
-
-
-
-    private GraknClient.Session session;
-    private List<GraknClient.Session> sessions = new ArrayList<>();
-    private GraknClient.Transaction transaction;
 
     private static GraknClient connectToGraknCore() {
         System.out.println("Establishing Connection to Grakn Core");
@@ -125,9 +112,6 @@ public class ConnectionSteps {
 
     @After
     public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
-        if (transaction != null) transaction.close();
-        if (session != null) session.close();
-
         if (sessionsMap != null) {
             for (GraknClient.Session session : sessionsMap.values()) {
                 if (!isNull(session)) session.close();
@@ -180,43 +164,5 @@ public class ConnectionSteps {
                     CompletableFuture.supplyAsync(() -> client.session(name.getValue()), threadPool)
             );
         }
-    }
-
-    // =================================================================================================================
-    // =================================================================================================================
-    // =================================================================================================================
-    // =================================================================================================================
-
-    @When("session open transaction: {transaction-type}")
-    public void session_open_transaction(GraknClient.Transaction.Type type) {
-        transaction = type.equals(GraknClient.Transaction.Type.READ) ?
-                session.transaction().read() :
-                session.transaction().write();
-    }
-
-    @Then("transaction is null: {boolean}")
-    public void transaction_is_null(Boolean isNull) {
-        assertEquals(isNull(transaction), isNull);
-    }
-
-    @Then("transaction is open: {boolean}")
-    public void transaction_is_open(Boolean isOpen) {
-        assertEquals(transaction.isOpen(), isOpen);
-    }
-
-    @Then("transaction has type: {transaction-type}")
-    public void transaction_has_type(GraknClient.Transaction.Type type) {
-        // TODO: Remove the conversion of grakn.core.api.Transaction.Type once we resolve graknlabs/grakn#5289
-        assertEquals(GraknClient.Transaction.Type.of(transaction.type().id()), type);
-    }
-
-    @Then("transaction has keyspace: {word}")
-    public void transaction_has_keyspace(String keyspaceName) {
-        assertEquals(transaction.keyspace().name(), keyspaceName);
-    }
-
-    @Then("transaction has session has keyspace: {word}")
-    public void transaction_has_session_has_keyspace(String keyspaceName) {
-        assertEquals(transaction.session().keyspace().name(), keyspaceName);
     }
 }
