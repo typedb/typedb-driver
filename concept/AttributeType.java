@@ -52,7 +52,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     public final Attribute<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
-                                                   .setValue(RequestBuilder.Concept.attributeValue(value))).build();
+                                                   .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
         Concept concept = Concept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
         return asInstance(concept);
@@ -62,7 +62,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     public final Attribute<D> attribute(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
-                                                      .setValue(RequestBuilder.Concept.attributeValue(value))).build();
+                                                      .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
         ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeAttributeRes();
         switch (response.getResCase()) {
@@ -85,7 +85,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             case NULL:
                 return null;
             case DATATYPE:
-                return (AttributeType.DataType<D>) RequestBuilder.Concept.dataType(response.getDataType());
+                return (AttributeType.DataType<D>) RequestBuilder.ConceptMessage.dataType(response.getDataType());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }

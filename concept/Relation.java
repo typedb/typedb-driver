@@ -71,7 +71,7 @@ public class Relation extends Thing<Relation, RelationType> {
     public final Stream<Thing> rolePlayers(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersReq(ConceptProto.Relation.RolePlayers.Req.newBuilder()
-                        .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
+                        .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
         return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept::asThing);
@@ -80,8 +80,8 @@ public class Relation extends Thing<Relation, RelationType> {
     public final Relation assign(Role role, Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
-                        .setRole(RequestBuilder.Concept.concept(role))
-                        .setPlayer(RequestBuilder.Concept.concept(player))).build();
+                        .setRole(RequestBuilder.ConceptMessage.from(role))
+                        .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -90,8 +90,8 @@ public class Relation extends Thing<Relation, RelationType> {
     public final void unassign(Role role, Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
-                        .setRole(RequestBuilder.Concept.concept(role))
-                        .setPlayer(RequestBuilder.Concept.concept(player))).build();
+                        .setRole(RequestBuilder.ConceptMessage.from(role))
+                        .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
 
         runMethod(method);
     }

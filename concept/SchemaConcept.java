@@ -42,7 +42,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
     public final SomeSchemaConcept sup(SomeSchemaConcept type) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSetSupReq(ConceptProto.SchemaConcept.SetSup.Req.newBuilder()
-                                                   .setSchemaConcept(RequestBuilder.Concept.concept(type))).build();
+                                                   .setSchemaConcept(RequestBuilder.ConceptMessage.from(type))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);

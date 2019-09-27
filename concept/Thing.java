@@ -57,7 +57,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
     public final Stream<Attribute<?>> keys(AttributeType... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
-                                         .addAllAttributeTypes(RequestBuilder.Concept.concepts(Arrays.asList(attributeTypes)))).build();
+                                         .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
 
         int iteratorId = runMethod(method).getThingKeysIter().getId();
         return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(Concept::asAttribute);
@@ -66,7 +66,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
     public final Stream<Attribute<?>> attributes(AttributeType... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
-                                               .addAllAttributeTypes(RequestBuilder.Concept.concepts(Arrays.asList(attributeTypes)))).build();
+                                               .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
 
         int iteratorId = runMethod(method).getThingAttributesIter().getId();
         return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept::asAttribute);
@@ -75,7 +75,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
     public final Stream<Relation> relations(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelationsReq(ConceptProto.Thing.Relations.Req.newBuilder()
-                                              .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
+                                              .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getThingRelationsIter().getId();
         return conceptStream(iteratorId, res -> res.getThingRelationsIterRes().getRelation()).map(Concept::asRelation);
@@ -100,7 +100,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
         // TODO: then remove this method altogether and just use has(Attribute attribute)
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelhasReq(ConceptProto.Thing.Relhas.Req.newBuilder()
-                                           .setAttribute(RequestBuilder.Concept.concept(attribute))).build();
+                                           .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
 
         Concept concept = Concept.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
         return concept.asRelation();
@@ -109,7 +109,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
     public final SomeThing unhas(Attribute attribute) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingUnhasReq(ConceptProto.Thing.Unhas.Req.newBuilder()
-                                          .setAttribute(RequestBuilder.Concept.concept(attribute))).build();
+                                          .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);

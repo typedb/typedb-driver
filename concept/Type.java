@@ -89,7 +89,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType key(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeyReq(ConceptProto.Type.Key.Req.newBuilder()
-                                       .setAttributeType(RequestBuilder.Concept.concept(attributeType))).build();
+                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -98,7 +98,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType has(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeHasReq(ConceptProto.Type.Has.Req.newBuilder()
-                                       .setAttributeType(RequestBuilder.Concept.concept(attributeType))).build();
+                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -107,7 +107,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType plays(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypePlaysReq(ConceptProto.Type.Plays.Req.newBuilder()
-                                         .setRole(RequestBuilder.Concept.concept(role))).build();
+                                         .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -116,7 +116,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType unkey(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnkeyReq(ConceptProto.Type.Unkey.Req.newBuilder()
-                                         .setAttributeType(RequestBuilder.Concept.concept(attributeType))).build();
+                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -125,7 +125,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType unhas(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnhasReq(ConceptProto.Type.Unhas.Req.newBuilder()
-                                         .setAttributeType(RequestBuilder.Concept.concept(attributeType))).build();
+                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -134,7 +134,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     public final SomeType unplay(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnplayReq(ConceptProto.Type.Unplay.Req.newBuilder()
-                                          .setRole(RequestBuilder.Concept.concept(role))).build();
+                                          .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);

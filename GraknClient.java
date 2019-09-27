@@ -21,7 +21,6 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Label;
@@ -63,8 +62,6 @@ import io.grpc.StatusRuntimeException;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -73,9 +70,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
@@ -616,7 +610,7 @@ public class GraknClient implements AutoCloseable {
 
         public void delete(String name) {
             try {
-                KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.Keyspace.delete(name, this.username, this.password);
+                KeyspaceProto.Keyspace.Delete.Req request = RequestBuilder.KeyspaceMessage.delete(name, this.username, this.password);
                 keyspaceBlockingStub.delete(request);
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.create(e.getMessage(), e);
@@ -625,7 +619,7 @@ public class GraknClient implements AutoCloseable {
 
         public List<String> retrieve() {
             try {
-                KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.Keyspace.retrieve(this.username, this.password);
+                KeyspaceProto.Keyspace.Retrieve.Req request = RequestBuilder.KeyspaceMessage.retrieve(this.username, this.password);
                 return ImmutableList.copyOf(keyspaceBlockingStub.retrieve(request).getNamesList().iterator());
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.create(e.getMessage(), e);

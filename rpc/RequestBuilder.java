@@ -109,7 +109,7 @@ public class RequestBuilder {
         public static SessionProto.Transaction.Req getAttributes(Object value) {
             return SessionProto.Transaction.Req.newBuilder()
                     .setGetAttributesReq(SessionProto.Transaction.GetAttributes.Req.newBuilder()
-                                                 .setValue(Concept.attributeValue(value))
+                                                 .setValue(ConceptMessage.attributeValue(value))
                     ).build();
         }
 
@@ -122,7 +122,7 @@ public class RequestBuilder {
         public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeType.DataType<?> dataType) {
             SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
-                    .setDataType(Concept.dataType(dataType))
+                    .setDataType(ConceptMessage.setDataType(dataType))
                     .build();
 
             return SessionProto.Transaction.Req.newBuilder().setPutAttributeTypeReq(request).build();
@@ -161,9 +161,9 @@ public class RequestBuilder {
     /**
      * An RPC Request Builder class for Concept messages
      */
-    public static class Concept {
+    public static class ConceptMessage {
 
-        public static ConceptProto.Concept concept(grakn.client.concept.Concept concept) {
+        public static ConceptProto.Concept from(grakn.client.concept.Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
@@ -195,7 +195,7 @@ public class RequestBuilder {
         }
 
         public static Collection<ConceptProto.Concept> concepts(Collection<grakn.client.concept.Concept> concepts) {
-            return concepts.stream().map(Concept::concept).collect(toList());
+            return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
         public static ConceptProto.ValueObject attributeValue(Object value) {
@@ -245,7 +245,7 @@ public class RequestBuilder {
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE dataType( grakn.client.concept.AttributeType.DataType<?> dataType) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(grakn.client.concept.AttributeType.DataType<?> dataType) {
             if (dataType.equals( grakn.client.concept.AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
             } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.BOOLEAN)) {
@@ -269,7 +269,7 @@ public class RequestBuilder {
     /**
      * An RPC Request Builder class for Keyspace Service
      */
-    public static class Keyspace {
+    public static class KeyspaceMessage {
 
         public static KeyspaceProto.Keyspace.Delete.Req delete(String name, String username, String password) {
             KeyspaceProto.Keyspace.Delete.Req.Builder builder = KeyspaceProto.Keyspace.Delete.Req.newBuilder();

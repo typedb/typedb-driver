@@ -59,7 +59,7 @@ public class RelationType extends Type<RelationType, Relation> {
     public final RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
-                                                   .setRole(RequestBuilder.Concept.concept(role))).build();
+                                                   .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -68,7 +68,7 @@ public class RelationType extends Type<RelationType, Relation> {
     public final RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
-                                                    .setRole(RequestBuilder.Concept.concept(role))).build();
+                                                    .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
