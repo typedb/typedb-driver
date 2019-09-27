@@ -34,12 +34,8 @@ public class ConceptList extends Answer {
     private final Explanation explanation;
 
     public ConceptList(List<ConceptId> list) {
-        this(list, new Explanation());
-    }
-
-    public ConceptList(List<ConceptId> list, Explanation explanation) {
         this.list = Collections.unmodifiableList(list);
-        this.explanation = explanation;
+        this.explanation = new Explanation();
     }
 
     @Override

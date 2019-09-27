@@ -41,22 +41,9 @@ public class ConceptMap extends Answer {
     private final Map<Variable, Concept> map;
     private final Explanation explanation;
 
-    public ConceptMap() {
-        this.map = Collections.emptyMap();
-        this.explanation = new Explanation();
-    }
-
-    public ConceptMap(ConceptMap map) {
-        this(map.map, map.explanation);
-    }
-
     public ConceptMap(Map<Variable, Concept> map, Explanation exp) {
         this.map = Collections.unmodifiableMap(map);
         this.explanation = exp;
-    }
-
-    public ConceptMap(Map<Variable, Concept> m) {
-        this(m, new Explanation());
     }
 
     @Override
@@ -69,35 +56,14 @@ public class ConceptMap extends Answer {
         return map;
     }
 
-    @CheckReturnValue
-    public Set<Variable> vars() { return map.keySet();}
 
     @CheckReturnValue
-    public Collection<Concept> Concepts() { return map.values(); }
-
-    @CheckReturnValue
-    public Concept get(String var) {
-        return get(new Variable(var));
-    }
-
-    @CheckReturnValue
-    public Concept get(Variable var) {
+    public Concept get(String variable) {
+        Variable var = new Variable(variable);
         Concept Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }
-
-    @CheckReturnValue
-    public boolean containsVar(Variable var) { return map.containsKey(var);}
-
-    @CheckReturnValue
-    public boolean containsAll(ConceptMap map) { return this.map.entrySet().containsAll(map.map().entrySet());}
-
-    @CheckReturnValue
-    public boolean isEmpty() { return map.isEmpty();}
-
-    @CheckReturnValue
-    public int size() { return map.size();}
 
     @Override
     public String toString() {
@@ -116,32 +82,4 @@ public class ConceptMap extends Answer {
 
     @Override
     public int hashCode() { return map.hashCode();}
-
-    public void forEach(BiConsumer<Variable, Concept> consumer) {
-        map.forEach(consumer);
-    }
-
-    /**
-     * explain this answer by providing explanation with preserving the structure of dependent answers
-     *
-     * @param exp explanation for this answer
-     * @return explained answer
-     */
-    public ConceptMap explain(Explanation exp) {
-        return new ConceptMap(this.map, exp.childOf(this));
-    }
-
-    /**
-     * @param vars variables defining the projection
-     * @return project the answer retaining the requested variables
-     */
-    @CheckReturnValue
-    public ConceptMap project(Set<Variable> vars) {
-        return new ConceptMap(
-                this.map.entrySet().stream()
-                        .filter(e -> vars.contains(e.getKey()))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)),
-                this.explanation()
-        );
-    }
 }
