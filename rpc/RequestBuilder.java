@@ -19,6 +19,7 @@
 
 package grakn.client.rpc;
 
+import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
@@ -57,7 +58,7 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static SessionProto.Transaction.Req open(String sessionId, grakn.core.api.Transaction.Type txType) {
+        public static SessionProto.Transaction.Req open(String sessionId, GraknClient.Transaction.Type txType) {
             SessionProto.Transaction.Open.Req openRequest = SessionProto.Transaction.Open.Req.newBuilder()
                     .setSessionId(sessionId)
                     .setType(SessionProto.Transaction.Type.valueOf(txType.id()))
