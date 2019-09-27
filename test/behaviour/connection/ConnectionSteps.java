@@ -152,8 +152,8 @@ public class ConnectionSteps {
 
     @When("connection open many sessions for many keyspaces:")
     public void connection_open_many_sessions_for_many_keyspaces(Map<String, String> names) {
-        for (Map.Entry<String, String> keyspaceName : names.entrySet()) {
-            sessionsMap.put(keyspaceName.getKey(), client.session(keyspaceName.getValue()));
+        for (Map.Entry<String, String> name : names.entrySet()) {
+            sessionsMap.put(name.getKey(), client.session(name.getValue()));
         }
     }
 
@@ -170,43 +170,22 @@ public class ConnectionSteps {
         }
     }
 
-    // =================================================================================================================
-    // =================================================================================================================
-    // =================================================================================================================
-    // =================================================================================================================
+    @When("connection open many sessions in parallel for many keyspaces:")
+    public void connection_open_many_sessions_in_parallel_for_many_keyspaces(Map<String, String> names) {
+        assertTrue(THREAD_POOL_SIZE >= names.size());
 
-    @When("connection open sessions in parallel for different keyspaces: {number}")
-    public void connection_open_parallel_sessions_for_keyspaces(Integer number) {
-        assertTrue(THREAD_POOL_SIZE >= number);
-
-        for (int i = 0; i < number; i++) {
-            final String keyspaceName = "keyspace_" + i;
+        for (Map.Entry<String, String> name : names.entrySet()) {
             sessionsMapParallel.put(
-                    keyspaceName,
-                    CompletableFuture.supplyAsync(() -> client.session(keyspaceName), threadPool)
+                    name.getKey(),
+                    CompletableFuture.supplyAsync(() -> client.session(name.getValue()), threadPool)
             );
         }
     }
 
-    @Then("sessions have correct keyspaces:")
-    public void sessions_have_correct_keyspaces(List<String> keyspaceNames) {
-        for (String keyspaceName : keyspaceNames) {
-            assertEquals(sessionsMap.get(keyspaceName).keyspace().name(), keyspaceName);
-        }
-        assertEquals(sessionsMap.size(), keyspaceNames.size());
-    }
-
-    @Then("sessions in parallel have correct keyspaces")
-    public void sessions_in_parallel_have_correct_keyspaces() {
-        Stream<CompletableFuture<Void>> assertions = sessionsMapParallel.entrySet().stream()
-                .map(entry -> entry.getValue()
-                        .thenApplyAsync(session -> {
-                            assertEquals(session.keyspace().name(), entry.getKey());
-                            return null;
-                        }));
-
-        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
-    }
+    // =================================================================================================================
+    // =================================================================================================================
+    // =================================================================================================================
+    // =================================================================================================================
 
     @When("session open transaction: {transaction-type}")
     public void session_open_transaction(GraknClient.Transaction.Type type) {

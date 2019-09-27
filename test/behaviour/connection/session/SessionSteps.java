@@ -78,9 +78,11 @@ public class SessionSteps {
 
     @Then("sessions have keyspaces:")
     public void sessions_have_keyspaces(Map<String, String> names) {
-        for (Map.Entry<String, String> name : names.entrySet()) {
-            assertEquals(name.getValue(), ConnectionSteps.sessionsMap.get(name.getKey()).keyspace().name());
+        for (Map.Entry<String, GraknClient.Session> entry : ConnectionSteps.sessionsMap.entrySet()) {
+            assertEquals(names.get(entry.getKey()), entry.getValue().keyspace().name());
         }
+
+        assertEquals(names.size(), ConnectionSteps.sessionsMap.size());
     }
 
     @Then("sessions in parallel have keyspace: {word}")
@@ -89,6 +91,18 @@ public class SessionSteps {
                 .values().stream().map(futureSession -> futureSession
                         .thenApplyAsync(session -> {
                             assertEquals(name, session.keyspace().name());
+                            return null;
+                        }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+    }
+
+    @Then("sessions in parallel have keyspaces:")
+    public void sessions_in_parallel_have_keyspaces(Map<String, String> names) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsMapParallel
+                .entrySet().stream().map(entry -> entry.getValue()
+                        .thenApplyAsync(session -> {
+                            assertEquals(names.get(entry.getKey()), session.keyspace().name());
                             return null;
                         }));
 
