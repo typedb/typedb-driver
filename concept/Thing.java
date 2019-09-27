@@ -21,14 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Attribute;
-import grakn.core.concept.thing.Relation;
-import grakn.core.concept.thing.Thing;
-import grakn.core.concept.type.AttributeType;
-import grakn.core.concept.type.Role;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.Arrays;
@@ -40,9 +32,9 @@ import java.util.stream.Stream;
  * @param <SomeThing> The exact type of this class
  * @param <SomeType>  the type of an instance of this class
  */
-abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> extends RemoteConcept<SomeThing> implements Thing {
+abstract class Thing<SomeThing extends Thing, SomeType extends Type> extends Concept<SomeThing>  {
 
-    RemoteThing(GraknClient.Transaction tx, ConceptId id) {
+    Thing(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -51,7 +43,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getThingTypeRes().getType(), tx());
+        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getThingTypeRes().getType(), tx());
         return asCurrentType(concept);
     }
 
@@ -70,7 +62,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
                                          .addAllAttributeTypes(RequestBuilder.Concept.concepts(Arrays.asList(attributeTypes)))).build();
 
         int iteratorId = runMethod(method).getThingKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(Concept::asAttribute);
+        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(grakn.core.concept.Concept::asAttribute);
     }
 
     @Override
@@ -80,7 +72,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
                                                .addAllAttributeTypes(RequestBuilder.Concept.concepts(Arrays.asList(attributeTypes)))).build();
 
         int iteratorId = runMethod(method).getThingAttributesIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept::asAttribute);
+        return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(grakn.core.concept.Concept::asAttribute);
     }
 
     @Override
@@ -90,7 +82,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
                                               .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getThingRelationsIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingRelationsIterRes().getRelation()).map(Concept::asRelation);
+        return conceptStream(iteratorId, res -> res.getThingRelationsIterRes().getRelation()).map(grakn.core.concept.Concept::asRelation);
     }
 
     @Override
@@ -99,7 +91,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
                 .setThingRolesReq(ConceptProto.Thing.Roles.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getThingRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingRolesIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getThingRolesIterRes().getRole()).map(grakn.core.concept.Concept::asRole);
     }
 
     @Override
@@ -117,7 +109,7 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
                 .setThingRelhasReq(ConceptProto.Thing.Relhas.Req.newBuilder()
                                            .setAttribute(RequestBuilder.Concept.concept(attribute))).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
+        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
         return concept.asRelation();
     }
 
@@ -131,5 +123,5 @@ abstract class RemoteThing<SomeThing extends Thing, SomeType extends Type> exten
         return asCurrentBaseType(this);
     }
 
-    abstract SomeType asCurrentType(Concept concept);
+    abstract SomeType asCurrentType(grakn.core.concept.Concept concept);
 }

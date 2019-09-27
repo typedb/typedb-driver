@@ -21,12 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Relation;
-import grakn.core.concept.thing.Thing;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.Arrays;
@@ -40,18 +34,18 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Relation
  */
-public class RemoteRelation extends RemoteThing<Relation, RelationType> implements Relation {
+public class Relation extends Thing<Relation, RelationType> {
 
-    RemoteRelation(GraknClient.Transaction tx, ConceptId id) {
+    Relation(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRelation construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRelation(tx, id);
+    static Relation construct(GraknClient.Transaction tx, ConceptId id) {
+        return new Relation(tx, id);
     }
 
     @Override // TODO: Weird. Why is this not a stream, while other collections are returned as stream
-    public final Map<Role, Set<Thing>> rolePlayersMap() {
+    public final Map<Role, Set<grakn.core.concept.thing.Thing>> rolePlayersMap() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
 
@@ -60,10 +54,10 @@ public class RemoteRelation extends RemoteThing<Relation, RelationType> implemen
                 iteratorId, res -> res.getConceptMethodIterRes().getRelationRolePlayersMapIterRes()
         );
 
-        Map<Role, Set<Thing>> rolePlayerMap = new HashMap<>();
+        Map<Role, Set<grakn.core.concept.thing.Thing>> rolePlayerMap = new HashMap<>();
         for (ConceptProto.Relation.RolePlayersMap.Iter.Res rolePlayer : rolePlayers) {
-            Role role = RemoteConcept.of(rolePlayer.getRole(), tx()).asRole();
-            Thing player = RemoteConcept.of(rolePlayer.getPlayer(), tx()).asThing();
+            Role role = Concept.of(rolePlayer.getRole(), tx()).asRole();
+            grakn.core.concept.thing.Thing player = Concept.of(rolePlayer.getPlayer(), tx()).asThing();
             if (rolePlayerMap.containsKey(role)) {
                 rolePlayerMap.get(role).add(player);
             } else {
@@ -75,17 +69,17 @@ public class RemoteRelation extends RemoteThing<Relation, RelationType> implemen
     }
 
     @Override
-    public final Stream<Thing> rolePlayers(Role... roles) {
+    public final Stream<grakn.core.concept.thing.Thing> rolePlayers(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersReq(ConceptProto.Relation.RolePlayers.Req.newBuilder()
                                                    .addAllRoles(RequestBuilder.Concept.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept::asThing);
+        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(grakn.core.concept.Concept::asThing);
     }
 
     @Override
-    public final Relation assign(Role role, Thing player) {
+    public final grakn.core.concept.thing.Relation assign(Role role, grakn.core.concept.thing.Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
                                               .setRole(RequestBuilder.Concept.concept(role))
@@ -96,7 +90,7 @@ public class RemoteRelation extends RemoteThing<Relation, RelationType> implemen
     }
 
     @Override
-    public final void unassign(Role role, Thing player) {
+    public final void unassign(Role role, grakn.core.concept.thing.Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
                                                 .setRole(RequestBuilder.Concept.concept(role))
@@ -106,12 +100,12 @@ public class RemoteRelation extends RemoteThing<Relation, RelationType> implemen
     }
 
     @Override
-    final RelationType asCurrentType(Concept concept) {
+    final RelationType asCurrentType(grakn.core.concept.Concept concept) {
         return concept.asRelationType();
     }
 
     @Override
-    final Relation asCurrentBaseType(Concept other) {
+    final grakn.core.concept.thing.Relation asCurrentBaseType(grakn.core.concept.Concept other) {
         return other.asRelation();
     }
 }

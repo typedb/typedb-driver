@@ -63,7 +63,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
  */
-public class RemoteConceptIT {
+public class ConceptIT {
 
     @ClassRule
     public static final GraknTestServer server = new GraknTestServer(

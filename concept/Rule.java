@@ -21,10 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.type.Rule;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -35,14 +31,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Rule
  */
-public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
+public class Rule extends SchemaConcept<Rule> {
 
-    RemoteRule(GraknClient.Transaction tx, ConceptId id) {
+    Rule(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRule construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRule(tx, id);
+    static Rule construct(GraknClient.Transaction tx, ConceptId id) {
+        return new Rule(tx, id);
     }
 
     @Nullable
@@ -102,7 +98,7 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
     }
 
     @Override
-    final Rule asCurrentBaseType(Concept other) {
+    final grakn.core.concept.type.Rule asCurrentBaseType(Concept other) {
         return other.asRule();
     }
 

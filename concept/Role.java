@@ -20,11 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -32,14 +27,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Role
  */
-public class RemoteRole extends RemoteSchemaConcept<Role> implements Role {
+public class Role extends SchemaConcept<Role> {
 
-    RemoteRole(GraknClient.Transaction tx, ConceptId id) {
+    Role(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRole construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRole(tx, id);
+    static Role construct(GraknClient.Transaction tx, ConceptId id) {
+        return new Role(tx, id);
     }
 
     @Override
@@ -59,7 +54,7 @@ public class RemoteRole extends RemoteSchemaConcept<Role> implements Role {
     }
 
     @Override
-    final Role asCurrentBaseType(Concept other) {
+    final grakn.core.concept.type.Role asCurrentBaseType(Concept other) {
         return other.asRole();
     }
 

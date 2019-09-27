@@ -20,11 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Attribute;
-import grakn.core.concept.thing.Thing;
-import grakn.core.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
 import java.time.Instant;
@@ -37,14 +32,14 @@ import java.util.stream.Stream;
  *
  * @param <D> The data type of this attribute
  */
-public class RemoteAttribute<D> extends RemoteThing<Attribute<D>, AttributeType<D>> implements Attribute<D> {
+public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
 
-    RemoteAttribute(GraknClient.Transaction tx, ConceptId id) {
+    Attribute(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static <D> RemoteAttribute<D> construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteAttribute<>(tx, id);
+    static <D> Attribute<D> construct(GraknClient.Transaction tx, ConceptId id) {
+        return new Attribute<>(tx, id);
     }
 
     @Override
@@ -81,7 +76,7 @@ public class RemoteAttribute<D> extends RemoteThing<Attribute<D>, AttributeType<
     }
 
     @Override
-    public final Stream<Thing> owners() {
+    public final Stream<grakn.core.concept.thing.Thing> owners() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
 
@@ -100,7 +95,7 @@ public class RemoteAttribute<D> extends RemoteThing<Attribute<D>, AttributeType<
     }
 
     @Override
-    final Attribute<D> asCurrentBaseType(Concept other) {
+    final grakn.core.concept.thing.Attribute asCurrentBaseType(Concept other) {
         return other.asAttribute();
     }
 }

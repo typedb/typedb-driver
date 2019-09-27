@@ -20,10 +20,9 @@
 package grakn.client.test;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.RemoteConcept;
+import grakn.client.concept.Concept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.Label;
 import grakn.core.concept.answer.ConceptMap;
@@ -251,7 +250,7 @@ public class GraknClientTest {
 
             exception.expect(GraknClientException.class);
             exception.expectMessage(GraknClientException.connectionClosed().getMessage());
-            Concept concept = tx.getMetaConcept();
+            grakn.core.concept.Concept concept = tx.getMetaConcept();
         }
     }
 
@@ -270,7 +269,7 @@ public class GraknClientTest {
                                                                                                                           .setEntityType(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.putEntityType(label), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.putEntityType(label));
+            assertEquals(Concept.of(protoConcept, tx), tx.putEntityType(label));
         }
     }
 
@@ -290,7 +289,7 @@ public class GraknClientTest {
                                                    .setRelationType(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.putRelationType(label), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.putRelationType(label));
+            assertEquals(Concept.of(protoConcept, tx), tx.putRelationType(label));
         }
     }
 
@@ -311,7 +310,7 @@ public class GraknClientTest {
                                                     .setAttributeType(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.putAttributeType(label, dataType), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.putAttributeType(label, dataType));
+            assertEquals(Concept.of(protoConcept, tx), tx.putAttributeType(label, dataType));
         }
     }
 
@@ -331,7 +330,7 @@ public class GraknClientTest {
                                            .setRole(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.putRole(label), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.putRole(label));
+            assertEquals(Concept.of(protoConcept, tx), tx.putRole(label));
         }
     }
 
@@ -353,7 +352,7 @@ public class GraknClientTest {
                                            .setRule(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.putRule(label, when, then), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.putRule(label, when, then));
+            assertEquals(Concept.of(protoConcept, tx), tx.putRule(label, when, then));
         }
     }
 
@@ -372,7 +371,7 @@ public class GraknClientTest {
                                               .setConcept(protoConcept)).build();
             server.setResponse(RequestBuilder.Transaction.getConcept(id), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.getConcept(id));
+            assertEquals(Concept.of(protoConcept, tx), tx.getConcept(id));
         }
     }
 
@@ -410,7 +409,7 @@ public class GraknClientTest {
                     .build();
             server.setResponse(RequestBuilder.Transaction.getSchemaConcept(label), response);
 
-            assertEquals(RemoteConcept.of(protoConcept, tx), tx.getSchemaConcept(label));
+            assertEquals(Concept.of(protoConcept, tx), tx.getSchemaConcept(label));
         }
     }
 

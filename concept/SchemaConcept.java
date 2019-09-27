@@ -22,12 +22,6 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.Label;
-import grakn.core.concept.LabelId;
-import grakn.core.concept.type.Rule;
-import grakn.core.concept.type.SchemaConcept;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.Nullable;
@@ -38,9 +32,9 @@ import java.util.stream.Stream;
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-abstract class RemoteSchemaConcept<SomeSchemaConcept extends SchemaConcept> extends RemoteConcept<SomeSchemaConcept> implements SchemaConcept {
+abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Concept<SomeSchemaConcept> {
 
-    RemoteSchemaConcept(GraknClient.Transaction tx, ConceptId id) {
+    SchemaConcept(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -91,7 +85,7 @@ abstract class RemoteSchemaConcept<SomeSchemaConcept extends SchemaConcept> exte
             case NULL:
                 return null;
             case SCHEMACONCEPT:
-                Concept concept = RemoteConcept.of(response.getSchemaConcept(), tx());
+                grakn.core.concept.Concept concept = Concept.of(response.getSchemaConcept(), tx());
                 return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
@@ -128,5 +122,5 @@ abstract class RemoteSchemaConcept<SomeSchemaConcept extends SchemaConcept> exte
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    abstract boolean equalsCurrentBaseType(Concept other);
+    abstract boolean equalsCurrentBaseType(grakn.core.concept.Concept other);
 }

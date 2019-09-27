@@ -21,11 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Relation;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -33,14 +28,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of RelationType
  */
-public class RemoteRelationType extends RemoteType<RelationType, Relation> implements RelationType {
+public class RelationType extends Type<RelationType, Relation> {
 
-    RemoteRelationType(GraknClient.Transaction tx, ConceptId id) {
+    RelationType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRelationType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRelationType(tx, id);
+    static RelationType construct(GraknClient.Transaction tx, ConceptId id) {
+        return new RelationType(tx, id);
     }
 
     @Override
@@ -48,7 +43,7 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
+        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
 
         return asInstance(concept);
     }
@@ -59,11 +54,11 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getRelationTypeRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(grakn.core.concept.Concept::asRole);
     }
 
     @Override
-    public final RelationType relates(Role role) {
+    public final grakn.core.concept.type.RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
                                                    .setRole(RequestBuilder.Concept.concept(role))).build();
@@ -73,7 +68,7 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
     }
 
     @Override
-    public final RelationType unrelate(Role role) {
+    public final grakn.core.concept.type.RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
                                                     .setRole(RequestBuilder.Concept.concept(role))).build();
@@ -83,17 +78,17 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
     }
 
     @Override
-    final RelationType asCurrentBaseType(Concept other) {
+    final grakn.core.concept.type.RelationType asCurrentBaseType(grakn.core.concept.Concept other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(grakn.core.concept.Concept other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(Concept concept) {
+    protected final Relation asInstance(grakn.core.concept.Concept concept) {
         return concept.asRelation();
     }
 }

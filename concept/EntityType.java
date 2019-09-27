@@ -20,10 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Entity;
-import grakn.core.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -31,14 +27,14 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-public class RemoteEntityType extends RemoteType<EntityType, Entity> implements EntityType {
+public class EntityType extends Type<EntityType, Entity> {
 
-    RemoteEntityType(GraknClient.Transaction tx, ConceptId id) {
+    EntityType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteEntityType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteEntityType(tx, id);
+    static EntityType construct(GraknClient.Transaction tx, ConceptId id) {
+        return new EntityType(tx, id);
     }
 
     @Override
@@ -46,22 +42,22 @@ public class RemoteEntityType extends RemoteType<EntityType, Entity> implements 
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
         return asInstance(concept);
     }
 
     @Override
-    final EntityType asCurrentBaseType(Concept other) {
+    final grakn.core.concept.type.EntityType asCurrentBaseType(grakn.core.concept.Concept other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(grakn.core.concept.Concept other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final Entity asInstance(Concept concept) {
+    protected final Entity asInstance(grakn.core.concept.Concept concept) {
         return concept.asEntity();
     }
 }

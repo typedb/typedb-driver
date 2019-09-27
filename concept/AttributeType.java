@@ -22,10 +22,6 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Attribute;
-import grakn.core.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.Nullable;
@@ -35,14 +31,14 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribute<D>> implements AttributeType<D> {
+public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
 
-    RemoteAttributeType(GraknClient.Transaction tx, ConceptId id) {
+    AttributeType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static <D> RemoteAttributeType<D> construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteAttributeType<>(tx, id);
+    static <D> AttributeType<D> construct(GraknClient.Transaction tx, ConceptId id) {
+        return new AttributeType<>(tx, id);
     }
 
     @Override
@@ -51,7 +47,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                    .setValue(RequestBuilder.Concept.attributeValue(value))).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        grakn.core.concept.Concept concept = Concept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
         return asInstance(concept);
     }
 
@@ -67,7 +63,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return RemoteConcept.of(response.getAttribute(), tx()).asAttribute();
+                return Concept.of(response.getAttribute(), tx()).asAttribute();
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -75,7 +71,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
 
     @Nullable
     @Override
-    public final AttributeType.DataType<D> dataType() {
+    public final grakn.core.concept.type.AttributeType.DataType<D> dataType() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
 
@@ -84,7 +80,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
             case NULL:
                 return null;
             case DATATYPE:
-                return (AttributeType.DataType<D>) RequestBuilder.Concept.dataType(response.getDataType());
+                return (grakn.core.concept.type.AttributeType.DataType<D>) RequestBuilder.Concept.dataType(response.getDataType());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -101,7 +97,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
     }
 
     @Override
-    public final AttributeType<D> regex(String regex) {
+    public final grakn.core.concept.type.AttributeType regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -112,17 +108,17 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
     }
 
     @Override
-    final AttributeType<D> asCurrentBaseType(Concept other) {
+    final grakn.core.concept.type.AttributeType asCurrentBaseType(grakn.core.concept.Concept other) {
         return other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(grakn.core.concept.Concept other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected final Attribute<D> asInstance(Concept concept) {
+    protected final Attribute<D> asInstance(grakn.core.concept.Concept concept) {
         return concept.asAttribute();
     }
 }

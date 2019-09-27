@@ -31,12 +31,12 @@ import java.util.stream.StreamSupport;
  *
  * @param <SomeConcept> represents the actual class of object to downcast to
  */
-public abstract class RemoteConcept<SomeConcept extends Concept> implements Concept {
+public abstract class Concept<SomeConcept extends Concept> {
 
     private final GraknClient.Transaction tx;
     private final ConceptId id;
 
-    RemoteConcept(GraknClient.Transaction tx, ConceptId id) {
+    Concept(GraknClient.Transaction tx, ConceptId id) {
         if (tx == null) {
             throw new NullPointerException("Null tx");
         }
@@ -52,23 +52,23 @@ public abstract class RemoteConcept<SomeConcept extends Concept> implements Conc
 
         switch (concept.getBaseType()) {
             case ENTITY:
-                return RemoteEntity.construct(tx, id);
+                return Entity.construct(tx, id);
             case RELATION:
-                return RemoteRelation.construct(tx, id);
+                return Relation.construct(tx, id);
             case ATTRIBUTE:
-                return RemoteAttribute.construct(tx, id);
+                return Attribute.construct(tx, id);
             case ENTITY_TYPE:
-                return RemoteEntityType.construct(tx, id);
+                return EntityType.construct(tx, id);
             case RELATION_TYPE:
-                return RemoteRelationType.construct(tx, id);
+                return RelationType.construct(tx, id);
             case ATTRIBUTE_TYPE:
-                return RemoteAttributeType.construct(tx, id);
+                return AttributeType.construct(tx, id);
             case ROLE:
-                return RemoteRole.construct(tx, id);
+                return Role.construct(tx, id);
             case RULE:
-                return RemoteRule.construct(tx, id);
+                return Rule.construct(tx, id);
             case META_TYPE:
-                return RemoteMetaType.construct(tx, id);
+                return MetaType.construct(tx, id);
             default:
             case UNRECOGNIZED:
                 throw new IllegalArgumentException("Unrecognised " + concept);
@@ -127,7 +127,7 @@ public abstract class RemoteConcept<SomeConcept extends Concept> implements Conc
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RemoteConcept<?> that = (RemoteConcept<?>) o;
+        Concept<?> that = (Concept<?>) o;
 
         return (tx.equals(that.tx())) &&
                 id.equals(that.id());

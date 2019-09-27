@@ -18,9 +18,7 @@
 
 package grakn.client.concept.answer;
 
-import grakn.core.Concept.ConceptId;
-import grakn.core.Concept.answer.Answer;
-import grakn.core.Concept.answer.Explanation;
+import grakn.client.concept.ConceptId;
 
 import java.util.Collections;
 import java.util.Set;

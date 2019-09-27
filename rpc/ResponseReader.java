@@ -20,8 +20,7 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.RemoteConcept;
-import grakn.core.concept.Concept;
+import grakn.client.concept.Concept;
 import grakn.core.concept.ConceptId;
 import grakn.core.concept.answer.Answer;
 import grakn.core.concept.answer.AnswerGroup;
@@ -81,15 +80,15 @@ public class ResponseReader {
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                RemoteConcept.of(res.getOwner(), tx),
+                Concept.of(res.getOwner(), tx),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, Concept> answers = new HashMap<>();
+        Map<Variable, grakn.core.concept.Concept> answers = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> answers.put(new Variable(resVar), RemoteConcept.of(resConcept, tx))
+                (resVar, resConcept) -> answers.put(new Variable(resVar), Concept.of(resConcept, tx))
         );
         return new ConceptMap(Collections.unmodifiableMap(answers), explanation(res.getExplanation(), tx));
     }

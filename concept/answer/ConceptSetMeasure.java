@@ -18,6 +18,8 @@
 
 package grakn.client.concept.answer;
 
+import grakn.client.concept.ConceptId;
+
 import java.util.Set;
 
 /**

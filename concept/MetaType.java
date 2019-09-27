@@ -20,31 +20,32 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Entity;
-import grakn.core.concept.type.EntityType;
 
 /**
- * Client implementation of Entity
+ * Client implementation of Type
  */
-public class RemoteEntity extends RemoteThing<Entity, EntityType> implements Entity {
+public class MetaType extends Type<Type, Thing> {
 
-    RemoteEntity(GraknClient.Transaction tx, ConceptId id) {
+    MetaType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteEntity construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteEntity(tx, id);
+    static MetaType construct(GraknClient.Transaction tx, ConceptId id) {
+        return new MetaType(tx, id);
     }
 
     @Override
-    final EntityType asCurrentType(Concept concept) {
-        return concept.asEntityType();
+    final grakn.core.concept.type.Type asCurrentBaseType(Concept other) {
+        return other.asType();
     }
 
     @Override
-    final Entity asCurrentBaseType(Concept other) {
-        return other.asEntity();
+    boolean equalsCurrentBaseType(Concept other) {
+        return other.isType();
+    }
+
+    @Override
+    protected final Thing asInstance(Concept concept) {
+        return concept.asThing();
     }
 }

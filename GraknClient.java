@@ -21,7 +21,9 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import grakn.client.concept.RemoteConcept;
+import grakn.client.concept.Concept;
+import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptSet;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -414,7 +416,7 @@ public class GraknClient implements AutoCloseable {
                 case NULL:
                     return null;
                 default:
-                    return (T) RemoteConcept.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
+                    return (T) Concept.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
             }
         }
 
@@ -430,7 +432,7 @@ public class GraknClient implements AutoCloseable {
                 case NULL:
                     return null;
                 default:
-                    return (T) RemoteConcept.of(response.getGetConceptRes().getConcept(), this);
+                    return (T) Concept.of(response.getGetConceptRes().getConcept(), this);
             }
         }
 
@@ -438,7 +440,7 @@ public class GraknClient implements AutoCloseable {
             transceiver.send(RequestBuilder.Transaction.getAttributes(value));
             int iteratorId = responseOrThrow().getGetAttributesIter().getId();
             Iterable<Concept> iterable = () -> new RPCIterator<>(
-                    this, iteratorId, response -> RemoteConcept.of(response.getGetAttributesIterRes().getAttribute(), this)
+                    this, iteratorId, response -> Concept.of(response.getGetAttributesIterRes().getAttribute(), this)
             );
 
             return StreamSupport.stream(iterable.spliterator(), false).map(Concept::<V>asAttribute)
@@ -447,31 +449,31 @@ public class GraknClient implements AutoCloseable {
 
         public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
-            return RemoteConcept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
+            return Concept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
 
         public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
-            return RemoteConcept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
+            return Concept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
 
         public RelationType putRelationType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRelationType(label));
-            return RemoteConcept.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
+            return Concept.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
 
         public Role putRole(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRole(label));
-            return RemoteConcept.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
+            return Concept.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
         }
 
 
         public Rule putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
-            return RemoteConcept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
+            return Concept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
 
 
@@ -525,7 +527,7 @@ public class GraknClient implements AutoCloseable {
             int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
 
             Iterable<? extends Concept> iterable = () -> new RPCIterator<>(
-                    this, iteratorId, res -> RemoteConcept.of(res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
+                    this, iteratorId, res -> Concept.of(res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
             );
 
             Stream<? extends Concept> sups = StreamSupport.stream(iterable.spliterator(), false);

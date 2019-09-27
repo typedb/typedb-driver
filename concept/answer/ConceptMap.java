@@ -18,7 +18,7 @@
 
 package grakn.client.concept.answer;
 
-import grakn.client.concept.RemoteConcept;
+import grakn.client.concept.Concept;
 import graql.lang.statement.Variable;
 
 import javax.annotation.CheckReturnValue;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap extends Answer {
 
-    private final Map<Variable, RemoteConcept> map;
+    private final Map<Variable, Concept> map;
     private final Explanation explanation;
 
     public ConceptMap() {
@@ -48,12 +48,12 @@ public class ConceptMap extends Answer {
         this(map.map, map.explanation);
     }
 
-    public ConceptMap(Map<Variable, RemoteConcept> map, Explanation exp) {
+    public ConceptMap(Map<Variable, Concept> map, Explanation exp) {
         this.map = Collections.unmodifiableMap(map);
         this.explanation = exp;
     }
 
-    public ConceptMap(Map<Variable, RemoteConcept> m) {
+    public ConceptMap(Map<Variable, Concept> m) {
         this(m, new Explanation());
     }
 
@@ -63,7 +63,7 @@ public class ConceptMap extends Answer {
     }
 
     @CheckReturnValue
-    public Map<Variable, RemoteConcept> map() {
+    public Map<Variable, Concept> map() {
         return map;
     }
 
@@ -71,16 +71,16 @@ public class ConceptMap extends Answer {
     public Set<Variable> vars() { return map.keySet();}
 
     @CheckReturnValue
-    public Collection<RemoteConcept> Concepts() { return map.values(); }
+    public Collection<Concept> Concepts() { return map.values(); }
 
     @CheckReturnValue
-    public RemoteConcept get(String var) {
+    public Concept get(String var) {
         return get(new Variable(var));
     }
 
     @CheckReturnValue
-    public RemoteConcept get(Variable var) {
-        RemoteConcept Concept = map.get(var);
+    public Concept get(Variable var) {
+        Concept Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }
@@ -115,7 +115,7 @@ public class ConceptMap extends Answer {
     @Override
     public int hashCode() { return map.hashCode();}
 
-    public void forEach(BiConsumer<Variable, RemoteConcept> consumer) {
+    public void forEach(BiConsumer<Variable, Concept> consumer) {
         map.forEach(consumer);
     }
 

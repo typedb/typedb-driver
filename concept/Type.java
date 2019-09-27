@@ -21,12 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Thing;
-import grakn.core.concept.type.AttributeType;
-import grakn.core.concept.type.Role;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -37,9 +31,9 @@ import java.util.stream.Stream;
  * @param <SomeType>  The exact type of this class
  * @param <SomeThing> the exact type of instances of this class
  */
-abstract class RemoteType<SomeType extends Type, SomeThing extends Thing> extends RemoteSchemaConcept<SomeType> implements Type {
+abstract class Type<SomeType extends Type, SomeThing extends Thing> extends SchemaConcept<SomeType> {
 
-    RemoteType(GraknClient.Transaction tx, ConceptId id) {
+    Type(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
