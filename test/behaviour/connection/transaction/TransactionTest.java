@@ -37,21 +37,28 @@ import java.util.concurrent.TimeoutException;
         features = "external/graknlabs_behaviour/connection/transaction.feature"
 )
 public class TransactionTest {
-    // ATTENTION: When you click RUN from within this class through Intellij IDE,
-    // it will fail, and you can fix it by doing:
-    // Go to 'Run'
-    // Select 'Edit Configurations...'
-    // Select 'Bazel test TestConnectionCore'
-    // Remove the line that says: '--test_filter=grakn.client.*'
+    // ATTENTION:
+    // When you click RUN from within this class through Intellij IDE, it will fail.
+    // You can fix it by doing:
     //
-    // Add the following Bazel flags:
-    // --cache_test_results=no
-    // --test_output=streamed
-    // --subcommands
-    // --sandbox_debug
-    // --spawn_strategy=standalone
+    // 1) Go to 'Run'
+    // 2) Select 'Edit Configurations...'
+    // 3) Select 'Bazel test TestConnectionCore'
     //
-    // Hit the RUN button by selecting the test from the dropdown menu on the top bar
+    // 4) Ensure 'Target Expression' is set correctly:
+    // 1) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
+    // 2) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
+    //
+    // 5) Update 'Bazel Flags':
+    //    a) Remove the line that says: '--test_filter=grakn.client.*'
+    //    b) Use the following Bazel flags:
+    //       --cache_test_results=no
+    //       --test_output=streamed
+    //       --subcommands
+    //       --sandbox_debug
+    //       --spawn_strategy=standalone
+    //
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
