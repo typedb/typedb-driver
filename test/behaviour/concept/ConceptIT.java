@@ -140,7 +140,7 @@ public class ConceptIT {
 
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        GraknClient client = new GraknClient(address);
+        client = new GraknClient(address);
         session = client.session(randomKeyspace);
     }
 
