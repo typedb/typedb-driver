@@ -23,14 +23,14 @@ package(default_visibility = ["//visibility:__pkg__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "remote-concept-it",
+    name = "concept-it",
     srcs = ["ConceptIT.java"],
     test_class = "grakn.client.concept.test.ConceptIT",
     deps = [
         # Grakn Core dependencies
         "//:client-java",
-        "@graknlabs_grakn_core//concept:concept",
-        "@graknlabs_grakn_core//test-integration/rule:grakn-test-server",
+        "//test/setup:grakn-setup",
+        "//test/setup:grakn-properties",
 
         # Grakn Labs dependencies
         "@graknlabs_graql//java:graql",
@@ -41,15 +41,16 @@ java_test(
     ],
     size = "large",
     classpath_resources = [
-        "@graknlabs_grakn_core//test-integration/resources:logback-test",
-        "@graknlabs_grakn_core//test-integration/resources:cassandra-embedded",
-        "@graknlabs_grakn_core//server:conf/grakn.properties"
-    ]
+        "//test/setup:logback",
+    ],
+    data = [
+        "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
+    ],
 )
 
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":remote-concept-it"],
+    targets = [":concept-it"],
     license_type = "apache"
 )

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.test;
+package grakn.client.test.behaviour.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Attribute;
@@ -31,6 +31,8 @@ import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.Thing;
+import grakn.client.test.setup.GraknProperties;
+import grakn.client.test.setup.GraknSetup;
 import graql.lang.pattern.Pattern;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -39,12 +41,14 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
@@ -62,14 +66,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class ConceptIT {
 
-//    @ClassRule
-//    public static final GraknTestServer server = new GraknTestServer(
-//            Paths.get("external/graknlabs_grakn_core/server/conf/grakn.properties"),
-//            Paths.get("external/graknlabs_grakn_core/test-integration/resources/cassandra-embedded.yaml")
-//    );
+    private static GraknClient client;
     private static GraknClient.Session session;
-    private static int EMAIL_COUNTER = 0;
     private GraknClient.Transaction tx;
+
+    private static int EMAIL_COUNTER = 0;
     // Attribute Type Labels
     private Label EMAIL = Label.of("email");
     private Label NAME = Label.of("name");
@@ -134,15 +135,20 @@ public class ConceptIT {
     private Relation selfEmployment;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
+        GraknSetup.bootup();
+
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-//        session = new GraknClient(server.grpcUri().toString()).session(randomKeyspace);
-        session = new GraknClient("localhost:48555").session("testing");
+        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
+        GraknClient client = new GraknClient(address);
+        session = client.session(randomKeyspace);
     }
 
     @AfterClass
-    public static void closeSession() {
+    public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         session.close();
+        client.close();
+        GraknSetup.shutdown();
     }
 
     @Before
