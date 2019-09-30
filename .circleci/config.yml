@@ -67,7 +67,7 @@ jobs:
       - install-bazel-linux-rbe
       - checkout
       - run-bazel-rbe:
-          command: bazel test //test/behavior/concept:concept-it --test_output=errors
+          command: bazel test //test/behaviour/concept:concept-it --test_output=errors
 
   test-keyspace:
     machine: true
@@ -76,7 +76,7 @@ jobs:
       - install-bazel-linux-rbe
       - checkout
       - run-bazel-rbe:
-          command: bazel test //test/behavior/connection/keyspace:test-core --test_output=errors
+          command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
 
   test-session:
     machine: true
