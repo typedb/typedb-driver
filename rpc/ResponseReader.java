@@ -25,14 +25,14 @@ import grakn.protocol.session.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
-import grakn.client.concept.answer.Answer;
-import grakn.client.concept.answer.AnswerGroup;
-import grakn.client.concept.answer.ConceptList;
-import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.answer.ConceptSet;
-import grakn.client.concept.answer.ConceptSetMeasure;
-import grakn.client.concept.answer.Numeric;
-import grakn.client.concept.answer.Explanation;
+import grakn.client.answer.Answer;
+import grakn.client.answer.AnswerGroup;
+import grakn.client.answer.ConceptList;
+import grakn.client.answer.ConceptMap;
+import grakn.client.answer.ConceptSet;
+import grakn.client.answer.ConceptSetMeasure;
+import grakn.client.answer.Numeric;
+import grakn.client.answer.Explanation;
 
 import grakn.client.concept.ConceptId;
 

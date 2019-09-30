@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package grakn.client.answer;
 
 import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;

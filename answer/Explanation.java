@@ -17,35 +17,43 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package grakn.client.answer;
+
+import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
- * An object that contains the answer of every Graql Query.
+ * Reasoner explanation for inferred answers
  */
-public abstract class Answer {
+public class Explanation {
 
-    /**
-     * @return an explanation object indicating how this answer was obtained
-     */
-    @Nullable
-    @CheckReturnValue
-    public abstract Explanation explanation();
+    private final Pattern pattern;
+    private final List<ConceptMap> answers;
 
-    /**
-     * @return all explanations taking part in the derivation of this answer
-     */
-    @CheckReturnValue
-    public Set<Explanation> explanations() {
-        if (this.explanation() == null) return Collections.emptySet();
-        Set<Explanation> explanations = new HashSet<>();
-        explanations.add(this.explanation());
-        this.explanation().getAnswers().forEach(ans -> explanations.addAll(ans.explanations()));
-        return explanations;
+    public Explanation() {
+        this.pattern = null;
+        this.answers = Collections.unmodifiableList(Collections.emptyList());
     }
+
+    public Explanation(Pattern pattern, List<ConceptMap> ans) {
+        this.pattern = pattern;
+        this.answers = Collections.unmodifiableList(ans);
+    }
+
+    /**
+     * @return query pattern associated with this explanation
+     */
+    @CheckReturnValue
+    @Nullable
+    public Pattern getPattern() { return pattern;}
+
+    /**
+     * @return answers this explanation is dependent on
+     */
+    @CheckReturnValue
+    public List<ConceptMap> getAnswers() { return answers;}
 }

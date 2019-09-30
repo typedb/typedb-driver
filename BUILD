@@ -28,8 +28,8 @@ exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.properties"])
 java_library(
     name = "client-java",
     srcs = glob([
+        "answer/*.java",
         "concept/*.java",
-        "concept/answer/*.java",
         "exception/*.java",
         "rpc/*.java",
         "test/*.java",

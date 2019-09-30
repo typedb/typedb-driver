@@ -17,44 +17,63 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package grakn.client.answer;
+
+import grakn.client.concept.Concept;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
- * A type of Answer object that contains a Number.
+ * A type of Answer object that contains a List of Answers as the members and a RemoteConcept
+ * as the owner.
+ *
+ * @param <T> the type of Answer being grouped
  */
-public class Numeric extends Answer {
+public class AnswerGroup<T extends Answer> extends Answer {
 
-    private final Number number;
+    private final Concept owner;
+    private final List<T> answers;
     private final Explanation explanation;
 
-    public Numeric(Number number) {
-        this(number, new Explanation());
+    public AnswerGroup(Concept owner, List<T> answers) {
+        this(owner, answers, new Explanation());
     }
 
-    public Numeric(Number number, Explanation explanation) {
-        this.number = number;
+    public AnswerGroup(Concept owner, List<T> answers, Explanation explanation) {
+        this.owner = owner;
+        this.answers = answers;
         this.explanation = explanation;
     }
 
+    @Nullable
     @Override
     public Explanation explanation() {
         return explanation;
     }
 
-    public Number number() {
-        return number;
+    public Concept owner() {
+        return this.owner;
+    }
+
+    public List<T> answers() {
+        return this.answers;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        Numeric a2 = (Numeric) obj;
-        return this.number.toString().equals(a2.number.toString());
+        AnswerGroup a2 = (AnswerGroup) obj;
+        return this.owner.equals(a2.owner) &&
+                this.answers.equals(a2.answers);
     }
 
     @Override
     public int hashCode() {
-        return number.hashCode();
+        int hash = owner.hashCode();
+        hash = 31 * hash + answers.hashCode();
+
+        return hash;
     }
 }
