@@ -187,7 +187,7 @@ public class GraknClient implements AutoCloseable {
         private final Type type;
         private final Transceiver transceiver;
 
-        public static class Builder implements grakn.core.api.Transaction.Builder {
+        public static class Builder {
 
             private ManagedChannel channel;
             private GraknClient.Session session;
