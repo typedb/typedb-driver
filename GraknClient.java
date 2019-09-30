@@ -31,6 +31,7 @@ import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.answer.Answer;
 import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptList;
 import grakn.client.concept.answer.ConceptMap;
@@ -318,6 +319,52 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
+        public Stream<? extends Answer> stream(GraqlQuery query) {
+            return stream(query, true);
+        }
+
+        public Stream<? extends Answer> stream(GraqlQuery query, boolean infer) {
+            if (query instanceof GraqlDefine) {
+                return stream((GraqlDefine) query);
+
+            } else if (query instanceof GraqlUndefine) {
+                return stream((GraqlUndefine) query);
+
+            } else if (query instanceof GraqlInsert) {
+                return stream((GraqlInsert) query, infer);
+
+            } else if (query instanceof GraqlDelete) {
+                return stream((GraqlDelete) query, infer);
+
+            } else if (query instanceof GraqlGet) {
+                return stream((GraqlGet) query, infer);
+
+            } else if (query instanceof GraqlGet.Aggregate) {
+                return stream((GraqlGet.Aggregate) query, infer);
+
+            } else if (query instanceof GraqlGet.Group.Aggregate) {
+                return stream((GraqlGet.Group.Aggregate) query, infer);
+
+            } else if (query instanceof GraqlGet.Group) {
+                return stream((GraqlGet.Group) query, infer);
+
+            } else if (query instanceof GraqlCompute.Statistics) {
+                return stream((GraqlCompute.Statistics) query);
+
+            } else if (query instanceof GraqlCompute.Path) {
+                return stream((GraqlCompute.Path) query);
+
+            } else if (query instanceof GraqlCompute.Centrality) {
+                return stream((GraqlCompute.Centrality) query);
+
+            } else if (query instanceof GraqlCompute.Cluster) {
+                return stream((GraqlCompute.Cluster) query);
+
+            } else {
+                throw new IllegalArgumentException("Unrecognised Query object");
+            }
+        }
+
         private Iterator rpcIterator(GraqlQuery query) {
             return rpcIterator(query, true);
         }
@@ -343,6 +390,11 @@ public class GraknClient implements AutoCloseable {
 
         public boolean isOpen() {
             return transceiver.isOpen();
+        }
+
+        // TODO remove - backwards compatibility
+        public boolean isClosed() {
+            return !isOpen();
         }
 
         private SessionProto.Transaction.Res responseOrThrow() {
