@@ -18,7 +18,7 @@
 #
 
 
-package(default_visibility = ["//visibility:__pkg__"])
+package(default_visibility = ["//visibility:__subpackages__"])
 
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
