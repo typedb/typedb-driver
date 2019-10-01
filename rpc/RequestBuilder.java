@@ -21,6 +21,7 @@ package grakn.client.rpc;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
@@ -162,14 +163,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(grakn.client.concept.Concept concept) {
+        public static ConceptProto.Concept from(Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(grakn.client.concept.Concept concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -193,7 +194,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<grakn.client.concept.Concept> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
@@ -222,42 +223,42 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        public static grakn.client.concept.AttributeType.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
+        public static AttributeType.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
             switch (dataType) {
                 case STRING:
-                    return grakn.client.concept.AttributeType.DataType.STRING;
+                    return AttributeType.DataType.STRING;
                 case BOOLEAN:
-                    return  grakn.client.concept.AttributeType.DataType.BOOLEAN;
+                    return  AttributeType.DataType.BOOLEAN;
                 case INTEGER:
-                    return  grakn.client.concept.AttributeType.DataType.INTEGER;
+                    return  AttributeType.DataType.INTEGER;
                 case LONG:
-                    return  grakn.client.concept.AttributeType.DataType.LONG;
+                    return AttributeType.DataType.LONG;
                 case FLOAT:
-                    return  grakn.client.concept.AttributeType.DataType.FLOAT;
+                    return  AttributeType.DataType.FLOAT;
                 case DOUBLE:
-                    return  grakn.client.concept.AttributeType.DataType.DOUBLE;
+                    return  AttributeType.DataType.DOUBLE;
                 case DATE:
-                    return  grakn.client.concept.AttributeType.DataType.DATE;
+                    return  AttributeType.DataType.DATE;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + dataType);
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setDataType(grakn.client.concept.AttributeType.DataType dataType) {
-            if (dataType.equals( grakn.client.concept.AttributeType.DataType.STRING)) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType dataType) {
+            if (dataType.equals( AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.BOOLEAN)) {
+            } else if (dataType.equals( AttributeType.DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.INTEGER)) {
+            } else if (dataType.equals( AttributeType.DataType.INTEGER)) {
                 return ConceptProto.AttributeType.DATA_TYPE.INTEGER;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.LONG)) {
+            } else if (dataType.equals( AttributeType.DataType.LONG)) {
                 return ConceptProto.AttributeType.DATA_TYPE.LONG;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.FLOAT)) {
+            } else if (dataType.equals( AttributeType.DataType.FLOAT)) {
                 return ConceptProto.AttributeType.DATA_TYPE.FLOAT;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.DOUBLE)) {
+            } else if (dataType.equals( AttributeType.DataType.DOUBLE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DOUBLE;
-            } else if (dataType.equals( grakn.client.concept.AttributeType.DataType.DATE)) {
+            } else if (dataType.equals( AttributeType.DataType.DATE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DATE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + dataType);
