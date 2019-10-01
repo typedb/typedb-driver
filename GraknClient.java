@@ -133,7 +133,7 @@ public class GraknClient implements AutoCloseable {
      * @see Transaction
      * @see GraknClient
      */
-    public static class Session {
+    public static class Session implements AutoCloseable {
 
         protected ManagedChannel channel;
         private String username; // TODO: Do we need to save this? It's not used.
