@@ -20,33 +20,26 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Entity;
-import grakn.core.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
+
+import javax.annotation.CheckReturnValue;
 
 /**
  * Client implementation of a MetaType, a special type of Type
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-public class RemoteEntityType extends RemoteType<EntityType, Entity> implements EntityType {
+public class EntityType extends Type<EntityType, Entity> {
 
-    RemoteEntityType(GraknClient.Transaction tx, ConceptId id) {
+    public EntityType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteEntityType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteEntityType(tx, id);
-    }
-
-    @Override
     public final Entity create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+        Concept concept = Concept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
         return asInstance(concept);
     }
 
@@ -63,5 +56,19 @@ public class RemoteEntityType extends RemoteType<EntityType, Entity> implements 
     @Override
     protected final Entity asInstance(Concept concept) {
         return concept.asEntity();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public EntityType asEntityType() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public boolean isEntityType() {
+        return true;
     }
 }

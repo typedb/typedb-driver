@@ -20,21 +20,21 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.RemoteConcept;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.answer.Answer;
-import grakn.core.concept.answer.AnswerGroup;
-import grakn.core.concept.answer.ConceptList;
-import grakn.core.concept.answer.ConceptMap;
-import grakn.core.concept.answer.ConceptSet;
-import grakn.core.concept.answer.ConceptSetMeasure;
-import grakn.core.concept.answer.Explanation;
-import grakn.core.concept.answer.Numeric;
+import grakn.client.concept.Concept;
 import grakn.protocol.session.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
+import grakn.client.answer.Answer;
+import grakn.client.answer.AnswerGroup;
+import grakn.client.answer.ConceptList;
+import grakn.client.answer.ConceptMap;
+import grakn.client.answer.ConceptSet;
+import grakn.client.answer.ConceptSetMeasure;
+import grakn.client.answer.Numeric;
+import grakn.client.answer.Explanation;
+
+import grakn.client.concept.ConceptId;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -81,7 +81,7 @@ public class ResponseReader {
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                RemoteConcept.of(res.getOwner(), tx),
+                Concept.of(res.getOwner(), tx),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
@@ -89,7 +89,7 @@ public class ResponseReader {
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
         Map<Variable, Concept> answers = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> answers.put(new Variable(resVar), RemoteConcept.of(resConcept, tx))
+                (resVar, resConcept) -> answers.put(new Variable(resVar), Concept.of(resConcept, tx))
         );
         return new ConceptMap(Collections.unmodifiableMap(answers), explanation(res.getExplanation(), tx));
     }

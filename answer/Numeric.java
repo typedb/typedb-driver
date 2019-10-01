@@ -17,34 +17,44 @@
  * under the License.
  */
 
-package grakn.client.concept;
-
-import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Entity;
-import grakn.core.concept.type.EntityType;
+package grakn.client.answer;
 
 /**
- * Client implementation of Entity
+ * A type of Answer object that contains a Number.
  */
-public class RemoteEntity extends RemoteThing<Entity, EntityType> implements Entity {
+public class Numeric extends Answer {
 
-    RemoteEntity(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    private final Number number;
+    private final Explanation explanation;
+
+    public Numeric(Number number) {
+        this(number, new Explanation());
     }
 
-    static RemoteEntity construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteEntity(tx, id);
+    public Numeric(Number number, Explanation explanation) {
+        this.number = number;
+        this.explanation = explanation;
     }
 
     @Override
-    final EntityType asCurrentType(Concept concept) {
-        return concept.asEntityType();
+    public Explanation explanation() {
+        return explanation;
+    }
+
+    public Number number() {
+        return number;
     }
 
     @Override
-    final Entity asCurrentBaseType(Concept other) {
-        return other.asEntity();
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Numeric a2 = (Numeric) obj;
+        return this.number.toString().equals(a2.number.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return number.hashCode();
     }
 }

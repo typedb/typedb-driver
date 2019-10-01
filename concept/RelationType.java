@@ -21,39 +21,29 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Relation;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
  * Client implementation of RelationType
  */
-public class RemoteRelationType extends RemoteType<RelationType, Relation> implements RelationType {
+public class RelationType extends Type<RelationType, Relation> {
 
-    RemoteRelationType(GraknClient.Transaction tx, ConceptId id) {
+    RelationType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRelationType construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRelationType(tx, id);
-    }
-
-    @Override
     public final Relation create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
+        Concept concept = Concept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
 
         return asInstance(concept);
     }
 
-    @Override
     public final Stream<Role> roles() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
@@ -62,21 +52,19 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
         return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept::asRole);
     }
 
-    @Override
     public final RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
-                                                   .setRole(RequestBuilder.Concept.concept(role))).build();
+                                                   .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
     }
 
-    @Override
     public final RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
-                                                    .setRole(RequestBuilder.Concept.concept(role))).build();
+                                                    .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -95,5 +83,19 @@ public class RemoteRelationType extends RemoteType<RelationType, Relation> imple
     @Override
     protected final Relation asInstance(Concept concept) {
         return concept.asRelation();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public RelationType asRelationType() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public boolean isRelationType() {
+        return true;
     }
 }

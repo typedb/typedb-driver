@@ -22,59 +22,50 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.thing.Attribute;
-import grakn.core.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 
 /**
  * Client implementation of AttributeType
  *
  * @param <D> The data type of this attribute type
  */
-public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribute<D>> implements AttributeType<D> {
+public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
 
-    RemoteAttributeType(GraknClient.Transaction tx, ConceptId id) {
+    AttributeType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static <D> RemoteAttributeType<D> construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteAttributeType<>(tx, id);
-    }
-
-    @Override
     public final Attribute<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
-                                                   .setValue(RequestBuilder.Concept.attributeValue(value))).build();
+                                                   .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-        Concept concept = RemoteConcept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        Concept concept = Concept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
         return asInstance(concept);
     }
 
     @Nullable
-    @Override
     public final Attribute<D> attribute(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
-                                                      .setValue(RequestBuilder.Concept.attributeValue(value))).build();
+                                                      .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
         ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeAttributeRes();
         switch (response.getResCase()) {
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return RemoteConcept.of(response.getAttribute(), tx()).asAttribute();
+                return Concept.of(response.getAttribute(), tx()).asAttribute();
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
     @Nullable
-    @Override
     public final AttributeType.DataType<D> dataType() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
@@ -84,14 +75,13 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
             case NULL:
                 return null;
             case DATATYPE:
-                return (AttributeType.DataType<D>) RequestBuilder.Concept.dataType(response.getDataType());
+                return (AttributeType.DataType<D>) RequestBuilder.ConceptMessage.dataType(response.getDataType());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
     @Nullable
-    @Override
     public final String regex() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
@@ -100,8 +90,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
         return regex.isEmpty() ? null : regex;
     }
 
-    @Override
-    public final AttributeType<D> regex(String regex) {
+    public final AttributeType regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -112,7 +101,7 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
     }
 
     @Override
-    final AttributeType<D> asCurrentBaseType(Concept other) {
+    final AttributeType asCurrentBaseType(Concept other) {
         return other.asAttributeType();
     }
 
@@ -124,5 +113,76 @@ public class RemoteAttributeType<D> extends RemoteType<AttributeType<D>, Attribu
     @Override
     protected final Attribute<D> asInstance(Concept concept) {
         return concept.asAttribute();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public AttributeType asAttributeType() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public boolean isAttributeType() {
+        return true;
+    }
+
+
+    /**
+     * A class used to hold the supported data types of resources and any other concepts.
+     * This is used tp constrain value data types to only those we explicitly support.
+     *
+     * @param <D> The data type.
+     */
+    public static class DataType<D> {
+        public static final AttributeType.DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
+        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
+        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
+        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
+        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
+        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
+        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
+
+        private final Class<D> dataClass;
+
+        private DataType(Class<D> dataClass) {
+            this.dataClass = dataClass;
+        }
+
+        @CheckReturnValue
+        public Class<D> dataClass() {
+            return dataClass;
+        }
+
+        @CheckReturnValue
+        public String name() {
+            return dataClass.getName();
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            AttributeType.DataType<?> that = (AttributeType.DataType<?>) o;
+
+            return (this.dataClass().equals(that.dataClass()));
+        }
+
+        @Override
+        public int hashCode() {
+            int h = 1;
+            h *= 1000003;
+            h ^=  dataClass.hashCode();
+            return h;
+        }
     }
 }

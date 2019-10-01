@@ -21,32 +21,24 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.exception.GraknClientException;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.type.Rule;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
  * Client implementation of Rule
  */
-public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
+public class Rule extends SchemaConcept<Rule> {
 
-    RemoteRule(GraknClient.Transaction tx, ConceptId id) {
+    Rule(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRule construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRule(tx, id);
-    }
-
     @Nullable
-    @Override
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern when() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -64,7 +56,6 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
     }
 
     @Nullable
-    @Override
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern then() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -81,22 +72,18 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
         }
     }
 
-    @Override
     public final Stream<Type> whenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public Stream<Type> whenPositiveTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public Stream<Type> whenNegativeTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    @Override
     public final Stream<Type> thenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
@@ -109,5 +96,19 @@ public class RemoteRule extends RemoteSchemaConcept<Rule> implements Rule {
     @Override
     final boolean equalsCurrentBaseType(Concept other) {
         return other.isRule();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public Rule asRule() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public boolean isRule() {
+        return true;
     }
 }

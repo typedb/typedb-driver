@@ -20,29 +20,20 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.core.concept.Concept;
-import grakn.core.concept.ConceptId;
-import grakn.core.concept.type.RelationType;
-import grakn.core.concept.type.Role;
-import grakn.core.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
  * Client implementation of Role
  */
-public class RemoteRole extends RemoteSchemaConcept<Role> implements Role {
+public class Role extends SchemaConcept<Role> {
 
-    RemoteRole(GraknClient.Transaction tx, ConceptId id) {
+    Role(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    static RemoteRole construct(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteRole(tx, id);
-    }
-
-    @Override
     public final Stream<RelationType> relations() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();
@@ -50,7 +41,6 @@ public class RemoteRole extends RemoteSchemaConcept<Role> implements Role {
         return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept::asRelationType);
     }
 
-    @Override
     public final Stream<Type> players() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
@@ -66,5 +56,19 @@ public class RemoteRole extends RemoteSchemaConcept<Role> implements Role {
     @Override
     final boolean equalsCurrentBaseType(Concept other) {
         return other.isRole();
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public Role asRole() {
+        return this;
+    }
+
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    public boolean isRole() {
+        return true;
     }
 }
