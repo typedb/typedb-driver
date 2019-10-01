@@ -323,6 +323,67 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
+        // Aggregate Query
+
+        public List<Numeric> execute(GraqlGet.Aggregate query) {
+            return execute(query, true);
+        }
+
+        public List<Numeric> execute(GraqlGet.Aggregate query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+
+        public Stream<Numeric> stream(GraqlGet.Aggregate query) {
+            return stream(query, true);
+        }
+
+        // Group Query
+
+        public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query) {
+            return execute(query, true);
+        }
+
+        public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+
+        public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query) {
+            return stream(query, true);
+        }
+
+        // Group Aggregate Query
+
+        public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query) {
+            return execute(query, true);
+        }
+
+        public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+
+        public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query) {
+            return stream(query, true);
+        }
+
+        // Compute Query
+
+        public List<Numeric> execute(GraqlCompute.Statistics query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptList> execute(GraqlCompute.Path query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptSetMeasure> execute(GraqlCompute.Centrality query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+        public List<ConceptSet> execute(GraqlCompute.Cluster query) {
+            return stream(query).collect(Collectors.toList());
+        }
+
+
         public Stream<? extends Answer> stream(GraqlQuery query, boolean infer) {
             if (query instanceof GraqlDefine) {
                 return stream((GraqlDefine) query);
@@ -487,6 +548,26 @@ public class GraknClient implements AutoCloseable {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
+        public RelationType getMetaRelationType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString()));
+        }
+
+        public Role getMetaRole() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString()));
+        }
+
+        public AttributeType getMetaAttributeType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString()));
+        }
+
+        public EntityType getMetaEntityType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString()));
+        }
+
+        public Rule getMetaRule() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString()));
+        }
+
         @Nullable
         public <T extends Concept> T getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
@@ -510,30 +591,43 @@ public class GraknClient implements AutoCloseable {
                     .collect(Collectors.toSet());
         }
 
+
+        public EntityType putEntityType(String label) {
+            return putEntityType(Label.of(label));
+        }
+
         public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
             return Concept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-
+        public <V> AttributeType<V> putAttributeType(String label, AttributeType.DataType<V> dataType) {
+            return putAttributeType(Label.of(label), dataType);
+        }
         public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
             return Concept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
-
+        public RelationType putRelationType(String label) {
+            return putRelationType(Label.of(label));
+        }
         public RelationType putRelationType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRelationType(label));
             return Concept.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
-
+        public Role putRole(String label) {
+            return putRole(Label.of(label));
+        }
         public Role putRole(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRole(label));
             return Concept.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
         }
 
-
+        public Rule putRule(String label, Pattern when, Pattern then) {
+            return putRule(Label.of(label), when, then);
+        }
         public Rule putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
             return Concept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
