@@ -337,6 +337,11 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
+        public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
+            Iterable<Numeric> iterable = () -> rpcIterator(query, infer);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
         // Group Query
 
         public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query) {
@@ -351,6 +356,12 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
+        public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
+            Iterable<AnswerGroup<ConceptMap>> iterable = () -> rpcIterator(query, infer);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
+
         // Group Aggregate Query
 
         public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query) {
@@ -364,6 +375,10 @@ public class GraknClient implements AutoCloseable {
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query) {
             return stream(query, true);
         }
+        public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
+            Iterable<AnswerGroup<Numeric>> iterable = () -> rpcIterator(query, infer);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
 
         // Compute Query
 
@@ -371,17 +386,39 @@ public class GraknClient implements AutoCloseable {
             return stream(query).collect(Collectors.toList());
         }
 
+        public Stream<Numeric> stream(GraqlCompute.Statistics query) {
+            Iterable<Numeric> iterable = () -> rpcIterator(query, false);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
         public List<ConceptList> execute(GraqlCompute.Path query) {
             return stream(query).collect(Collectors.toList());
+        }
+
+        public Stream<ConceptList> stream(GraqlCompute.Path query) {
+            Iterable<ConceptList> iterable = () -> rpcIterator(query, false);
+            return StreamSupport.stream(iterable.spliterator(), false);
         }
 
         public List<ConceptSetMeasure> execute(GraqlCompute.Centrality query) {
             return stream(query).collect(Collectors.toList());
         }
 
+        public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
+            Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, false);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
         public List<ConceptSet> execute(GraqlCompute.Cluster query) {
             return stream(query).collect(Collectors.toList());
         }
+
+        public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
+            Iterable<ConceptSet> iterable = () -> rpcIterator(query, false);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
+
 
 
         public Stream<? extends Answer> stream(GraqlQuery query, boolean infer) {
@@ -632,49 +669,6 @@ public class GraknClient implements AutoCloseable {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
             return Concept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
-
-
-        public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
-            Iterable<Numeric> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
-            Iterable<AnswerGroup<ConceptMap>> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
-            Iterable<AnswerGroup<Numeric>> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<Numeric> stream(GraqlCompute.Statistics query) {
-            Iterable<Numeric> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<ConceptList> stream(GraqlCompute.Path query) {
-            Iterable<ConceptList> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
-            Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-
-        public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
-            Iterable<ConceptSet> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
 
         public Stream<SchemaConcept> sups(SchemaConcept schemaConcept) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
