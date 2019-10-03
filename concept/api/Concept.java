@@ -17,81 +17,31 @@
  * under the License.
  */
 
-package grakn.client.concept;
-
-import grakn.client.GraknClient;
-import grakn.protocol.session.ConceptProto;
+package grakn.client.concept.api;
 
 import javax.annotation.CheckReturnValue;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+
 
 /**
- * Client implementation of Concept
- *
- * @param <SomeConcept> represents the actual class of object to downcast to
+ * The base concept implementation.
+ * A concept which can every object in the graph.
+ * This class forms the basis of assuring the graph follows the Grakn object model.
+ * It provides methods to retrieve information about the Concept, and determine if it is a Type
+ * (EntityType, Role, RelationType, Rule or AttributeType)
+ * or an Thing (Entity, Relation , Attribute).
  */
-public abstract class Concept<SomeConcept extends Concept> {
+public interface Concept {
+    //------------------------------------- Accessors ----------------------------------
 
-    private final GraknClient.Transaction tx;
-    private final ConceptId id;
+    /**
+     * Get the unique ID associated with the Concept.
+     *
+     * @return A value the concept's unique id.
+     */
+    @CheckReturnValue
+    ConceptId id();
 
-    Concept(GraknClient.Transaction tx, ConceptId id) {
-        if (tx == null) {
-            throw new NullPointerException("Null tx");
-        }
-        this.tx = tx;
-        if (id == null) {
-            throw new NullPointerException("Null id");
-        }
-        this.id = id;
-    }
-
-    public static Concept of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
-        ConceptId id = ConceptId.of(concept.getId());
-
-        switch (concept.getBaseType()) {
-            case ENTITY:
-                return new Entity(tx, id);
-            case RELATION:
-                return new Relation(tx, id);
-            case ATTRIBUTE:
-                return new Attribute(tx, id);
-            case ENTITY_TYPE:
-                return new EntityType(tx, id);
-            case RELATION_TYPE:
-                return new RelationType(tx, id);
-            case ATTRIBUTE_TYPE:
-                return new AttributeType(tx, id);
-            case ROLE:
-                return new Role(tx, id);
-            case RULE:
-                return new Rule(tx, id);
-            case META_TYPE:
-                return new MetaType(tx, id);
-            default:
-            case UNRECOGNIZED:
-                throw new IllegalArgumentException("Unrecognised " + concept);
-        }
-    }
-
-
-    public ConceptId id() {
-        return id;
-    }
-
-    public final void delete() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setConceptDeleteReq(ConceptProto.Concept.Delete.Req.getDefaultInstance())
-                .build();
-
-        runMethod(method);
-    }
-
-    public final boolean isDeleted() {
-        return tx().getConcept(id()) == null;
-    }
+    //------------------------------------- Other ---------------------------------
 
     /**
      * Return as a SchemaConcept if the Concept is a SchemaConcept.
@@ -99,7 +49,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    public SchemaConcept asSchemaConcept() {
+    default SchemaConcept asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
     }
 
@@ -109,7 +59,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    public Type asType() {
+    default Type asType() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -119,7 +69,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    public Thing asThing() {
+    default Thing asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -129,7 +79,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A EntityType if the Concept is an EntityType
      */
     @CheckReturnValue
-    public EntityType asEntityType() {
+    default EntityType asEntityType() {
         throw GraknConceptException.invalidCasting(this, EntityType.class);
     }
 
@@ -139,7 +89,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Role if the Concept is a Role
      */
     @CheckReturnValue
-    public Role asRole() {
+    default Role asRole() {
         throw GraknConceptException.invalidCasting(this, Role.class);
     }
 
@@ -149,7 +99,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A RelationType if the Concept is a RelationType
      */
     @CheckReturnValue
-    public RelationType asRelationType() {
+    default RelationType asRelationType() {
         throw GraknConceptException.invalidCasting(this, RelationType.class);
     }
 
@@ -159,7 +109,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    public <D> AttributeType<D> asAttributeType() {
+    default <D> AttributeType<D> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -169,7 +119,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    public Rule asRule() {
+    default Rule asRule() {
         throw GraknConceptException.invalidCasting(this, Rule.class);
     }
 
@@ -179,7 +129,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return An Entity if the Concept is a Thing
      */
     @CheckReturnValue
-    public Entity asEntity() {
+    default Entity asEntity() {
         throw GraknConceptException.invalidCasting(this, Entity.class);
     }
 
@@ -189,7 +139,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Relation  if the Concept is a Relation
      */
     @CheckReturnValue
-    public Relation asRelation() {
+    default Relation asRelation() {
         throw GraknConceptException.invalidCasting(this, Relation.class);
     }
 
@@ -199,7 +149,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    public <D> Attribute<D> asAttribute() {
+    default <D> Attribute<D> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -209,7 +159,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a SchemaConcept
      */
     @CheckReturnValue
-    public boolean isSchemaConcept() {
+    default boolean isSchemaConcept() {
         return false;
     }
 
@@ -219,7 +169,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a Type
      */
     @CheckReturnValue
-    public boolean isType() {
+    default boolean isType() {
         return false;
     }
 
@@ -229,7 +179,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is an Thing
      */
     @CheckReturnValue
-    public boolean isThing() {
+    default boolean isThing() {
         return false;
     }
 
@@ -239,7 +189,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is an EntityType.
      */
     @CheckReturnValue
-    public boolean isEntityType() {
+    default boolean isEntityType() {
         return false;
     }
 
@@ -249,7 +199,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Role
      */
     @CheckReturnValue
-    public boolean isRole() {
+    default boolean isRole() {
         return false;
     }
 
@@ -259,7 +209,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a RelationType
      */
     @CheckReturnValue
-    public boolean isRelationType() {
+    default boolean isRelationType() {
         return false;
     }
 
@@ -269,7 +219,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if theConcept concept is a AttributeType
      */
     @CheckReturnValue
-    public boolean isAttributeType() {
+    default boolean isAttributeType() {
         return false;
     }
 
@@ -279,7 +229,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Rule
      */
     @CheckReturnValue
-    public boolean isRule() {
+    default boolean isRule() {
         return false;
     }
 
@@ -289,7 +239,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Entity
      */
     @CheckReturnValue
-    public boolean isEntity() {
+    default boolean isEntity() {
         return false;
     }
 
@@ -299,7 +249,7 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Relation
      */
     @CheckReturnValue
-    public boolean isRelation() {
+    default boolean isRelation() {
         return false;
     }
 
@@ -309,58 +259,17 @@ public abstract class Concept<SomeConcept extends Concept> {
      * @return true if the Concept is a Attribute
      */
     @CheckReturnValue
-    public boolean isAttribute() {
+    default boolean isAttribute() {
         return false;
     }
 
+    /**
+     * Delete the Concepts
+     */
+    void delete();
 
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{tx=" + tx + ", id=" + id + "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Concept<?> that = (Concept<?>) o;
-
-        return (tx.equals(that.tx())) &&
-                id.equals(that.id());
-    }
-
-    @Override
-    public int hashCode() {
-        int h = 1;
-        h *= 1000003;
-        h ^= tx.hashCode();
-        h *= 1000003;
-        h ^= id.hashCode();
-        return h;
-    }
-
-    GraknClient.Transaction tx() {
-        return tx;
-    }
-    abstract SomeConcept asCurrentBaseType(Concept other);
-
-    final Stream<? extends Concept> conceptStream
-            (int iteratorId, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-
-        Iterable<? extends Concept> iterable = () -> tx().iterator(
-                iteratorId, res -> of(conceptGetter.apply(res.getConceptMethodIterRes()), tx())
-        );
-
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-        return runMethod(id(), method);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptId id, ConceptProto.Method.Req method) {
-        return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
-    }
-
+    /**
+     * Return whether the concept has been deleted.
+     */
+    boolean isDeleted();
 }

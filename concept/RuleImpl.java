@@ -20,6 +20,9 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Rule;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
@@ -32,12 +35,13 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Rule
  */
-public class Rule extends SchemaConcept<Rule> {
+public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
 
-    Rule(GraknClient.Transaction tx, ConceptId id) {
+    RuleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
+    @Override
     @Nullable
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern when() {
@@ -55,6 +59,7 @@ public class Rule extends SchemaConcept<Rule> {
         }
     }
 
+    @Override
     @Nullable
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern then() {
@@ -72,22 +77,6 @@ public class Rule extends SchemaConcept<Rule> {
         }
     }
 
-    public final Stream<Type> whenTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public Stream<Type> whenPositiveTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public Stream<Type> whenNegativeTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public final Stream<Type> thenTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
     @Override
     final Rule asCurrentBaseType(Concept other) {
         return other.asRule();
@@ -98,17 +87,4 @@ public class Rule extends SchemaConcept<Rule> {
         return other.isRule();
     }
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Rule asRule() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isRule() {
-        return true;
-    }
 }

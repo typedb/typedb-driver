@@ -20,6 +20,11 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.RelationType;
+import grakn.client.concept.api.Role;
+import grakn.client.concept.api.Type;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -28,24 +33,26 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Role
  */
-public class Role extends SchemaConcept<Role> {
+public class RoleImpl extends SchemaConceptImpl<Role> implements Role {
 
-    Role(GraknClient.Transaction tx, ConceptId id) {
+    RoleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
+    @Override
     public final Stream<RelationType> relations() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();
         int iteratorId = runMethod(method).getRoleRelationsIter().getId();
-        return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept::asRelationType);
+        return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(ConceptImpl::asRelationType);
     }
 
+    @Override
     public final Stream<Type> players() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
         int iteratorId = runMethod(method).getRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRolePlayersIterRes().getType()).map(Concept::asType);
+        return conceptStream(iteratorId, res -> res.getRolePlayersIterRes().getType()).map(ConceptImpl::asType);
     }
 
     @Override
@@ -58,17 +65,4 @@ public class Role extends SchemaConcept<Role> {
         return other.isRole();
     }
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Role asRole() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isRole() {
-        return true;
-    }
 }

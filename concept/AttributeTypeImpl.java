@@ -20,34 +20,38 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Attribute;
+import grakn.client.concept.api.AttributeType;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.time.LocalDateTime;
 
 /**
  * Client implementation of AttributeType
  *
  * @param <D> The data type of this attribute type
  */
-public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
+public class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>> implements AttributeType<D> {
 
-    AttributeType(GraknClient.Transaction tx, ConceptId id) {
+    AttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
+    @Override
     public final Attribute<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                    .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-        Concept concept = Concept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        ConceptImpl concept = ConceptImpl.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
         return asInstance(concept);
     }
 
+    @Override
     @Nullable
     public final Attribute<D> attribute(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -59,12 +63,13 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return Concept.of(response.getAttribute(), tx()).asAttribute();
+                return ConceptImpl.of(response.getAttribute(), tx()).asAttribute();
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
+    @Override
     @Nullable
     public final AttributeType.DataType<D> dataType() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -81,6 +86,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         }
     }
 
+    @Override
     @Nullable
     public final String regex() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -90,7 +96,8 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         return regex.isEmpty() ? null : regex;
     }
 
-    public final AttributeType regex(String regex) {
+    @Override
+    public final AttributeType<D> regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -101,7 +108,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     }
 
     @Override
-    final AttributeType asCurrentBaseType(Concept other) {
+    final AttributeType<D> asCurrentBaseType(Concept other) {
         return other.asAttributeType();
     }
 
@@ -115,74 +122,4 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         return concept.asAttribute();
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public AttributeType asAttributeType() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isAttributeType() {
-        return true;
-    }
-
-
-    /**
-     * A class used to hold the supported data types of resources and any other concepts.
-     * This is used tp constrain value data types to only those we explicitly support.
-     *
-     * @param <D> The data type.
-     */
-    public static class DataType<D> {
-        public static final AttributeType.DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
-        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
-        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
-        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
-        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
-        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
-        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
-
-        private final Class<D> dataClass;
-
-        private DataType(Class<D> dataClass) {
-            this.dataClass = dataClass;
-        }
-
-        @CheckReturnValue
-        public Class<D> dataClass() {
-            return dataClass;
-        }
-
-        @CheckReturnValue
-        public String name() {
-            return dataClass.getName();
-        }
-
-        @Override
-        public String toString() {
-            return name();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            AttributeType.DataType<?> that = (AttributeType.DataType<?>) o;
-
-            return (this.dataClass().equals(that.dataClass()));
-        }
-
-        @Override
-        public int hashCode() {
-            int h = 1;
-            h *= 1000003;
-            h ^=  dataClass.hashCode();
-            return h;
-        }
-    }
 }

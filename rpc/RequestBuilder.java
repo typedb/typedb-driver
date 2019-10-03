@@ -20,13 +20,14 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
-import grakn.client.concept.Label;
+import grakn.client.concept.AttributeTypeImpl;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.AttributeType;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Label;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.session.ConceptProto;
 import grakn.protocol.keyspace.KeyspaceProto;
+import grakn.protocol.session.ConceptProto;
 import grakn.protocol.session.SessionProto;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlQuery;
@@ -119,7 +120,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeType.DataType<?> dataType) {
+        public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeTypeImpl.DataType<?> dataType) {
             SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setDataType(ConceptMessage.setDataType(dataType))
@@ -223,22 +224,22 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        public static AttributeType.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
+        public static AttributeTypeImpl.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
             switch (dataType) {
                 case STRING:
-                    return AttributeType.DataType.STRING;
+                    return AttributeTypeImpl.DataType.STRING;
                 case BOOLEAN:
-                    return  AttributeType.DataType.BOOLEAN;
+                    return  AttributeTypeImpl.DataType.BOOLEAN;
                 case INTEGER:
-                    return  AttributeType.DataType.INTEGER;
+                    return  AttributeTypeImpl.DataType.INTEGER;
                 case LONG:
-                    return AttributeType.DataType.LONG;
+                    return AttributeTypeImpl.DataType.LONG;
                 case FLOAT:
-                    return  AttributeType.DataType.FLOAT;
+                    return  AttributeTypeImpl.DataType.FLOAT;
                 case DOUBLE:
-                    return  AttributeType.DataType.DOUBLE;
+                    return  AttributeTypeImpl.DataType.DOUBLE;
                 case DATE:
-                    return  AttributeType.DataType.DATE;
+                    return  AttributeTypeImpl.DataType.DATE;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + dataType);
@@ -246,19 +247,19 @@ public class RequestBuilder {
         }
 
         static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType dataType) {
-            if (dataType.equals( AttributeType.DataType.STRING)) {
+            if (dataType.equals(AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
-            } else if (dataType.equals( AttributeType.DataType.BOOLEAN)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;
-            } else if (dataType.equals( AttributeType.DataType.INTEGER)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.INTEGER)) {
                 return ConceptProto.AttributeType.DATA_TYPE.INTEGER;
-            } else if (dataType.equals( AttributeType.DataType.LONG)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.LONG)) {
                 return ConceptProto.AttributeType.DATA_TYPE.LONG;
-            } else if (dataType.equals( AttributeType.DataType.FLOAT)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.FLOAT)) {
                 return ConceptProto.AttributeType.DATA_TYPE.FLOAT;
-            } else if (dataType.equals( AttributeType.DataType.DOUBLE)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.DOUBLE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DOUBLE;
-            } else if (dataType.equals( AttributeType.DataType.DATE)) {
+            } else if (dataType.equals( AttributeTypeImpl.DataType.DATE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DATE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + dataType);

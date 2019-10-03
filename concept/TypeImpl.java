@@ -20,6 +20,12 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.AttributeType;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Role;
+import grakn.client.concept.api.Thing;
+import grakn.client.concept.api.Type;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -32,12 +38,13 @@ import java.util.stream.Stream;
  * @param <SomeType>  The exact type of this class
  * @param <SomeThing> the exact type of instances of this class
  */
-public abstract class Type<SomeType extends Type, SomeThing extends Thing> extends SchemaConcept<SomeType> {
+public abstract class TypeImpl<SomeType extends Type, SomeThing extends Thing> extends SchemaConceptImpl<SomeType> implements Type{
 
-    Type(GraknClient.Transaction tx, ConceptId id) {
+    TypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
+    @Override
     public final Stream<SomeThing> instances() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeInstancesReq(ConceptProto.Type.Instances.Req.getDefaultInstance()).build();
@@ -46,6 +53,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return conceptStream(iteratorId, res -> res.getTypeInstancesIterRes().getThing()).map(this::asInstance);
     }
 
+    @Override
     public final Boolean isAbstract() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()).build();
@@ -53,6 +61,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return runMethod(method).getTypeIsAbstractRes().getAbstract();
     }
 
+    @Override
     public final SomeType isAbstract(Boolean isAbstract) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeSetAbstractReq(ConceptProto.Type.SetAbstract.Req.newBuilder()
@@ -62,30 +71,34 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final Stream<AttributeType> keys() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeysReq(ConceptProto.Type.Keys.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypeKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeKeysIterRes().getAttributeType()).map(Concept::asAttributeType);
+        return conceptStream(iteratorId, res -> res.getTypeKeysIterRes().getAttributeType()).map(ConceptImpl::asAttributeType);
     }
 
+    @Override
     public final Stream<AttributeType> attributes() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeAttributesReq(ConceptProto.Type.Attributes.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypeAttributesIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeAttributesIterRes().getAttributeType()).map(Concept::asAttributeType);
+        return conceptStream(iteratorId, res -> res.getTypeAttributesIterRes().getAttributeType()).map(ConceptImpl::asAttributeType);
     }
 
+    @Override
     public final Stream<Role> playing() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypePlayingReq(ConceptProto.Type.Playing.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypePlayingIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypePlayingIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getTypePlayingIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
+    @Override
     public final SomeType key(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeyReq(ConceptProto.Type.Key.Req.newBuilder()
@@ -95,6 +108,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType has(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeHasReq(ConceptProto.Type.Has.Req.newBuilder()
@@ -104,6 +118,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType plays(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypePlaysReq(ConceptProto.Type.Plays.Req.newBuilder()
@@ -113,6 +128,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType unkey(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnkeyReq(ConceptProto.Type.Unkey.Req.newBuilder()
@@ -122,6 +138,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType unhas(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnhasReq(ConceptProto.Type.Unhas.Req.newBuilder()
@@ -131,6 +148,7 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType unplay(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnplayReq(ConceptProto.Type.Unplay.Req.newBuilder()
@@ -141,18 +159,4 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
     }
 
     protected abstract SomeThing asInstance(Concept concept);
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Type asType() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isType() {
-        return true;
-    }
 }

@@ -20,11 +20,15 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Thing;
+import grakn.client.concept.api.Type;
 
 /**
  * Client implementation of Type
  */
-public class MetaType extends Type<Type, Thing> {
+public class MetaType extends TypeImpl<Type, Thing> {
 
     MetaType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);

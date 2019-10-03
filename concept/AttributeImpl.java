@@ -20,9 +20,13 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Attribute;
+import grakn.client.concept.api.AttributeType;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Thing;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,12 +37,13 @@ import java.util.stream.Stream;
  *
  * @param <D> The data type of this attribute
  */
-public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
+public class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> implements Attribute<D> {
 
-    Attribute(GraknClient.Transaction tx, ConceptId id) {
+    AttributeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
+    @Override
     public final D value() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeValueReq(ConceptProto.Attribute.Value.Req.getDefaultInstance()).build();
@@ -71,38 +76,28 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
         }
     }
 
+    @Override
     public final Stream<Thing> owners() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getAttributeOwnersIter().getId();
-        return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(Concept::asThing);
+        return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(ConceptImpl::asThing);
     }
 
+    @Override
     public final AttributeType.DataType<D> dataType() {
         return type().dataType();
     }
 
+    @Override
     final AttributeType<D> asCurrentType(Concept concept) {
         return concept.asAttributeType();
     }
 
+    @Override
     final Attribute asCurrentBaseType(Concept other) {
         return other.asAttribute();
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Attribute asAttribute() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isAttribute() {
-        return true;
-    }
 }

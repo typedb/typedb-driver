@@ -20,11 +20,14 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Label;
+import grakn.client.concept.api.SchemaConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -33,9 +36,9 @@ import java.util.stream.Stream;
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Concept<SomeSchemaConcept> {
+public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept> extends ConceptImpl<SomeSchemaConcept> implements SchemaConcept {
 
-    SchemaConcept(GraknClient.Transaction tx, ConceptId id) {
+    SchemaConceptImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -48,6 +51,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final Label label() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptGetLabelReq(ConceptProto.SchemaConcept.GetLabel.Req.getDefaultInstance()).build();
@@ -55,6 +59,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return Label.of(runMethod(method).getSchemaConceptGetLabelRes().getLabel());
     }
 
+    @Override
     public final Boolean isImplicit() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptIsImplicitReq(ConceptProto.SchemaConcept.IsImplicit.Req.getDefaultInstance()).build();
@@ -62,6 +67,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return runMethod(method).getSchemaConceptIsImplicitRes().getImplicit();
     }
 
+    @Override
     public final SomeSchemaConcept label(Label label) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSetLabelReq(ConceptProto.SchemaConcept.SetLabel.Req.newBuilder()
@@ -82,7 +88,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
             case NULL:
                 return null;
             case SCHEMACONCEPT:
-                Concept concept = Concept.of(response.getSchemaConcept(), tx());
+                ConceptImpl concept = ConceptImpl.of(response.getSchemaConcept(), tx());
                 return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
@@ -90,10 +96,12 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
 
     }
 
+    @Override
     public final Stream<SomeSchemaConcept> sups() {
         return tx().sups(this).filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
     }
 
+    @Override
     public final Stream<SomeSchemaConcept> subs() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSubsReq(ConceptProto.SchemaConcept.Subs.Req.getDefaultInstance()).build();
@@ -103,18 +111,4 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
     }
 
     abstract boolean equalsCurrentBaseType(Concept other);
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public SchemaConcept asSchemaConcept() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isSchemaConcept() {
-        return true;
-    }
 }

@@ -20,30 +20,20 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Entity;
+import grakn.client.concept.api.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
 /**
  * Client implementation of Entity
  */
-public class Entity extends Thing<Entity, EntityType> {
+public class EntityImpl extends ThingImpl<Entity, EntityType> implements Entity {
 
-    Entity(GraknClient.Transaction tx, ConceptId id) {
+    EntityImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Entity asEntity() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isEntity() {
-        return true;
     }
 
     @Override

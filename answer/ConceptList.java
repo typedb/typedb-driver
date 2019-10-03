@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.api.ConceptId;
 
 import java.util.Collections;
 import java.util.List;

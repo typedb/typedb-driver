@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptImpl;
 import grakn.protocol.session.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -34,7 +34,8 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
 
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Concept;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -81,7 +82,7 @@ public class ResponseReader {
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                Concept.of(res.getOwner(), tx),
+                ConceptImpl.of(res.getOwner(), tx),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
@@ -89,7 +90,7 @@ public class ResponseReader {
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
         Map<Variable, Concept> answers = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> answers.put(new Variable(resVar), Concept.of(resConcept, tx))
+                (resVar, resConcept) -> answers.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
         );
         return new ConceptMap(Collections.unmodifiableMap(answers), explanation(res.getExplanation(), tx));
     }
