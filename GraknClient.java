@@ -319,10 +319,6 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
-        public Stream<? extends Answer> stream(GraqlQuery query) {
-            return stream(query, true);
-        }
-
         // Aggregate Query
 
         public List<Numeric> execute(GraqlGet.Aggregate query) {
@@ -418,8 +414,19 @@ public class GraknClient implements AutoCloseable {
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
+        // Generic queries
 
+        public List<? extends Answer> execute(GraqlQuery query) {
+            return execute(query, true);
+        }
 
+        public List<? extends Answer> execute(GraqlQuery query, boolean infer) {
+            return stream(query, infer).collect(Collectors.toList());
+        }
+
+        public Stream<? extends Answer> stream(GraqlQuery query) {
+            return stream(query, true);
+        }
 
         public Stream<? extends Answer> stream(GraqlQuery query, boolean infer) {
             if (query instanceof GraqlDefine) {
