@@ -24,6 +24,7 @@ import grakn.client.concept.GraknConceptException;
 import graql.lang.statement.Variable;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
@@ -54,9 +55,17 @@ public class ConceptMap extends Answer {
     }
 
 
+    public Collection<Concept> concepts() {
+        return map.values();
+    }
+
     @CheckReturnValue
     public Concept get(String variable) {
-        Variable var = new Variable(variable);
+        return get(new Variable(variable));
+    }
+
+    @CheckReturnValue
+    public Concept get(Variable var) {
         Concept Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
