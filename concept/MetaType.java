@@ -20,28 +20,29 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 
 /**
  * Client implementation of Type
  */
-public class MetaType extends Type<Type, Thing> {
+public class MetaType extends TypeImpl<TypeImpl, Thing> {
 
     MetaType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    final Type asCurrentBaseType(Concept other) {
+    final TypeImpl asCurrentBaseType(ConceptImpl other) {
         return other.asType();
     }
 
     @Override
-    boolean equalsCurrentBaseType(Concept other) {
+    boolean equalsCurrentBaseType(ConceptImpl other) {
         return other.isType();
     }
 
     @Override
-    protected final Thing asInstance(Concept concept) {
+    protected final Thing asInstance(ConceptImpl concept) {
         return concept.asThing();
     }
 }

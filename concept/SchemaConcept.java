@@ -20,6 +20,8 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Label;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -33,7 +35,7 @@ import java.util.stream.Stream;
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends Concept<SomeSchemaConcept> {
+public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> extends ConceptImpl<SomeSchemaConcept> {
 
     SchemaConcept(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -82,7 +84,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
             case NULL:
                 return null;
             case SCHEMACONCEPT:
-                Concept concept = Concept.of(response.getSchemaConcept(), tx());
+                ConceptImpl concept = ConceptImpl.of(response.getSchemaConcept(), tx());
                 return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
@@ -102,7 +104,7 @@ public abstract class SchemaConcept<SomeSchemaConcept extends SchemaConcept> ext
         return conceptStream(iteratorId, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept()).map(this::asCurrentBaseType);
     }
 
-    abstract boolean equalsCurrentBaseType(Concept other);
+    abstract boolean equalsCurrentBaseType(ConceptImpl other);
 
     @Deprecated
     @CheckReturnValue

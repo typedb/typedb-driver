@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -29,17 +30,17 @@ import java.util.stream.Stream;
 /**
  * Client implementation of RelationType
  */
-public class RelationType extends Type<RelationType, Relation> {
+public class RelationType extends TypeImpl<RelationType, RelationImpl> {
 
     RelationType(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    public final Relation create() {
+    public final RelationImpl create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-        Concept concept = Concept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
+        ConceptImpl concept = ConceptImpl.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
 
         return asInstance(concept);
     }
@@ -49,7 +50,7 @@ public class RelationType extends Type<RelationType, Relation> {
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getRelationTypeRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
     public final RelationType relates(Role role) {
@@ -71,17 +72,17 @@ public class RelationType extends Type<RelationType, Relation> {
     }
 
     @Override
-    final RelationType asCurrentBaseType(Concept other) {
+    final RelationType asCurrentBaseType(ConceptImpl other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(ConceptImpl other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(Concept concept) {
+    protected final RelationImpl asInstance(ConceptImpl concept) {
         return concept.asRelation();
     }
 

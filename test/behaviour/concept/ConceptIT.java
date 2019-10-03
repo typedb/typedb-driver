@@ -20,17 +20,18 @@
 package grakn.client.test.behaviour.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.AttributeType.DataType;
-import grakn.client.concept.Entity;
-import grakn.client.concept.EntityType;
-import grakn.client.concept.Label;
-import grakn.client.concept.Relation;
+import grakn.client.concept.AttributeImpl;
+import grakn.client.concept.AttributeTypeImpl;
+import grakn.client.concept.AttributeTypeImpl.DataType;
+import grakn.client.concept.EntityImpl;
+import grakn.client.concept.EntityTypeImpl;
+import grakn.client.concept.api.Label;
+import grakn.client.concept.RelationImpl;
 import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.Thing;
+import grakn.client.concept.TypeImpl;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.pattern.Pattern;
@@ -49,6 +50,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
@@ -106,13 +108,13 @@ public class ConceptIT {
     private String BOB_EMAIL = "bob@email.com";
     private Integer TWENTY = 20;
 
-    private AttributeType<Integer> age;
-    private AttributeType<String> name;
-    private AttributeType<String> email;
-    private EntityType livingThing;
-    private EntityType person;
-    private EntityType man;
-    private EntityType boy;
+    private AttributeTypeImpl<Integer> age;
+    private AttributeTypeImpl<String> name;
+    private AttributeTypeImpl<String> email;
+    private EntityTypeImpl livingThing;
+    private EntityTypeImpl person;
+    private EntityTypeImpl man;
+    private EntityTypeImpl boy;
     private Role husband;
     private Role wife;
     private RelationType marriage;
@@ -124,15 +126,15 @@ public class ConceptIT {
     private Rule metaRule;
     private Rule testRule;
 
-    private Attribute<String> emailAlice;
-    private Attribute<String> emailBob;
-    private Attribute<Integer> age20;
-    private Attribute<String> nameAlice;
-    private Attribute<String> nameBob;
-    private Entity alice;
-    private Entity bob;
-    private Relation aliceAndBob;
-    private Relation selfEmployment;
+    private AttributeImpl<String> emailAlice;
+    private AttributeImpl<String> emailBob;
+    private AttributeImpl<Integer> age20;
+    private AttributeImpl<String> nameAlice;
+    private AttributeImpl<String> nameBob;
+    private EntityImpl alice;
+    private EntityImpl bob;
+    private RelationImpl aliceAndBob;
+    private RelationImpl selfEmployment;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -311,7 +313,7 @@ public class ConceptIT {
 
     @Test
     public void whenDeletingAConcept_ConceptIsDeleted() {
-        Entity randomPerson = person.create();
+        EntityImpl randomPerson = person.create();
         assertFalse(randomPerson.isDeleted());
 
         randomPerson.delete();
@@ -478,7 +480,7 @@ public class ConceptIT {
     @Test
     public void whenSettingTypeLabel_LabelIsSetToType() {
         Label lady = Label.of("lady");
-        EntityType type = tx.putEntityType(lady);
+        EntityTypeImpl type = tx.putEntityType(lady);
         assertEquals(lady, type.label());
 
         Label woman = Label.of("woman");
@@ -515,7 +517,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingAttributeToType_AttributeIsSetAndDeleted() {
-        EntityType cat = tx.putEntityType(Label.of("cat"));
+        EntityTypeImpl cat = tx.putEntityType(Label.of("cat"));
         cat.has(name);
         assertTrue(cat.attributes().anyMatch(c -> c.equals(name)));
 
@@ -525,7 +527,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
-        AttributeType<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
+        AttributeTypeImpl<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
         person.key(username);
         assertTrue(person.keys().anyMatch(c -> c.equals(username)));
 
@@ -535,19 +537,19 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAddEntity_TypeIsCorrect() {
-        Entity newPerson = person.create();
+        EntityImpl newPerson = person.create();
         assertEquals(person, newPerson.type());
     }
 
     @Test
     public void whenCallingAddRelation_TypeIsCorrect() {
-        Relation newMarriage = marriage.create();
+        RelationImpl newMarriage = marriage.create();
         assertEquals(marriage, newMarriage.type());
     }
 
     @Test
     public void whenCallingPutAttribute_TypeIsCorrect() {
-        Attribute<String> nameCharlie = name.create("Charlie");
+        AttributeImpl<String> nameCharlie = name.create("Charlie");
         assertEquals(name, nameCharlie.type());
     }
 
@@ -572,8 +574,8 @@ public class ConceptIT {
 
     @Test
     public void whenCallingDeleteAttribute_ExecuteAConceptMethod() {
-        Entity charlie = person.create();
-        Attribute<String> nameCharlie = name.create("Charlie");
+        EntityImpl charlie = person.create();
+        AttributeImpl<String> nameCharlie = name.create("Charlie");
         charlie.has(nameCharlie);
         assertTrue(charlie.attributes(name).anyMatch(x -> x.equals(nameCharlie)));
 
@@ -583,10 +585,10 @@ public class ConceptIT {
 
     @Test
     public void whenAddingAndRemovingRolePlayer_RolePlayerIsAddedAndRemoved() {
-        Entity dylan = person.create();
-        Entity emily = person.create();
+        EntityImpl dylan = person.create();
+        EntityImpl emily = person.create();
 
-        Relation dylanAndEmily = friendship.create()
+        RelationImpl dylanAndEmily = friendship.create()
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
@@ -596,5 +598,19 @@ public class ConceptIT {
         dylanAndEmily.unassign(friend, emily);
 
         assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+    }
+
+    @Test
+    public void genericTypeDownCast_TypeIsRecognised() {
+
+        Stream<? extends Thing> instances1 = person.instances();
+
+        EntityTypeImpl entityTypeImpl = person;
+
+        TypeImpl<EntityTypeImpl, EntityImpl> asType = entityTypeImpl;
+
+        Stream<EntityImpl> instances = asType.instances();
+
+
     }
 }

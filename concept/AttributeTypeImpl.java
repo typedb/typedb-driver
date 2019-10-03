@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -33,23 +34,23 @@ import java.time.LocalDateTime;
  *
  * @param <D> The data type of this attribute type
  */
-public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
+public class AttributeTypeImpl<D> extends TypeImpl<AttributeTypeImpl, AttributeImpl<D>> {
 
-    AttributeType(GraknClient.Transaction tx, ConceptId id) {
+    AttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    public final Attribute<D> create(D value) {
+    public final AttributeImpl<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                    .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-        Concept concept = Concept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        ConceptImpl concept = ConceptImpl.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
         return asInstance(concept);
     }
 
     @Nullable
-    public final Attribute<D> attribute(D value) {
+    public final AttributeImpl<D> attribute(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
                                                       .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
@@ -59,14 +60,14 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return Concept.of(response.getAttribute(), tx()).asAttribute();
+                return ConceptImpl.of(response.getAttribute(), tx()).asAttribute();
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
     }
 
     @Nullable
-    public final AttributeType.DataType<D> dataType() {
+    public final AttributeTypeImpl.DataType<D> dataType() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
 
@@ -75,7 +76,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             case NULL:
                 return null;
             case DATATYPE:
-                return (AttributeType.DataType<D>) RequestBuilder.ConceptMessage.dataType(response.getDataType());
+                return (AttributeTypeImpl.DataType<D>) RequestBuilder.ConceptMessage.dataType(response.getDataType());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -90,7 +91,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
         return regex.isEmpty() ? null : regex;
     }
 
-    public final AttributeType regex(String regex) {
+    public final AttributeTypeImpl regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -101,17 +102,17 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     }
 
     @Override
-    final AttributeType asCurrentBaseType(Concept other) {
+    final AttributeTypeImpl asCurrentBaseType(ConceptImpl other) {
         return other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(ConceptImpl other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected final Attribute<D> asInstance(Concept concept) {
+    protected final AttributeImpl<D> asInstance(ConceptImpl concept) {
         return concept.asAttribute();
     }
 
@@ -119,7 +120,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
     @Deprecated
     @CheckReturnValue
     @Override
-    public AttributeType asAttributeType() {
+    public AttributeTypeImpl asAttributeType() {
         return this;
     }
 
@@ -138,13 +139,13 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
      * @param <D> The data type.
      */
     public static class DataType<D> {
-        public static final AttributeType.DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
-        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
-        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
-        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
-        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
-        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
-        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
+        public static final AttributeTypeImpl.DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
+        public static final AttributeTypeImpl.DataType<LocalDateTime> DATE = new AttributeTypeImpl.DataType<>(LocalDateTime.class);
+        public static final AttributeTypeImpl.DataType<Double> DOUBLE = new AttributeTypeImpl.DataType<>(Double.class);
+        public static final AttributeTypeImpl.DataType<Float> FLOAT = new AttributeTypeImpl.DataType<>(Float.class);
+        public static final AttributeTypeImpl.DataType<Integer> INTEGER = new AttributeTypeImpl.DataType<>(Integer.class);
+        public static final AttributeTypeImpl.DataType<Long> LONG = new AttributeTypeImpl.DataType<>(Long.class);
+        public static final AttributeTypeImpl.DataType<String> STRING = new AttributeTypeImpl.DataType<>(String.class);
 
         private final Class<D> dataClass;
 
@@ -172,7 +173,7 @@ public class AttributeType<D> extends Type<AttributeType, Attribute<D>> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            AttributeType.DataType<?> that = (AttributeType.DataType<?>) o;
+            AttributeTypeImpl.DataType<?> that = (AttributeTypeImpl.DataType<?>) o;
 
             return (this.dataClass().equals(that.dataClass()));
         }

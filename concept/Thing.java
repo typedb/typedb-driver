@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -33,7 +34,7 @@ import java.util.stream.Stream;
  * @param <SomeThing> The exact type of this class
  * @param <SomeType>  the type of an instance of this class
  */
-public abstract class Thing<SomeThing extends Thing, SomeType extends Type> extends Concept<SomeThing>  {
+public abstract class Thing<SomeThing extends Thing, SomeType extends TypeImpl> extends ConceptImpl<SomeThing> {
 
     Thing(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -43,7 +44,7 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
-        Concept concept = Concept.of(runMethod(method).getThingTypeRes().getType(), tx());
+        ConceptImpl concept = ConceptImpl.of(runMethod(method).getThingTypeRes().getType(), tx());
         return asCurrentType(concept);
     }
 
@@ -54,31 +55,31 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
         return runMethod(method).getThingIsInferredRes().getInferred();
     }
 
-    public final Stream<Attribute<?>> keys(AttributeType... attributeTypes) {
+    public final Stream<AttributeImpl<?>> keys(AttributeTypeImpl... attributeTypeImpls) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
-                                         .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
+                                         .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypeImpls)))).build();
 
         int iteratorId = runMethod(method).getThingKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(Concept::asAttribute);
+        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(ConceptImpl::asAttribute);
     }
 
-    public final Stream<Attribute<?>> attributes(AttributeType... attributeTypes) {
+    public final Stream<AttributeImpl<?>> attributes(AttributeTypeImpl... attributeTypeImpls) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
-                                               .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
+                                               .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypeImpls)))).build();
 
         int iteratorId = runMethod(method).getThingAttributesIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept::asAttribute);
+        return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(ConceptImpl::asAttribute);
     }
 
-    public final Stream<Relation> relations(Role... roles) {
+    public final Stream<RelationImpl> relations(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelationsReq(ConceptProto.Thing.Relations.Req.newBuilder()
                                               .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getThingRelationsIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingRelationsIterRes().getRelation()).map(Concept::asRelation);
+        return conceptStream(iteratorId, res -> res.getThingRelationsIterRes().getRelation()).map(ConceptImpl::asRelation);
     }
 
     public final Stream<Role> roles() {
@@ -86,36 +87,36 @@ public abstract class Thing<SomeThing extends Thing, SomeType extends Type> exte
                 .setThingRolesReq(ConceptProto.Thing.Roles.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getThingRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingRolesIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getThingRolesIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
-    public final SomeThing has(Attribute attribute) {
-        relhas(attribute);
+    public final SomeThing has(AttributeImpl attributeImpl) {
+        relhas(attributeImpl);
         return asCurrentBaseType(this);
     }
 
     @Deprecated
-    public final Relation relhas(Attribute attribute) {
+    public final RelationImpl relhas(AttributeImpl attributeImpl) {
         // TODO: replace usage of this method as a getter, with relations(Attribute attribute)
         // TODO: then remove this method altogether and just use has(Attribute attribute)
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelhasReq(ConceptProto.Thing.Relhas.Req.newBuilder()
-                                           .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
+                                           .setAttribute(RequestBuilder.ConceptMessage.from(attributeImpl))).build();
 
-        Concept concept = Concept.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
+        ConceptImpl concept = ConceptImpl.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
         return concept.asRelation();
     }
 
-    public final SomeThing unhas(Attribute attribute) {
+    public final SomeThing unhas(AttributeImpl attributeImpl) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingUnhasReq(ConceptProto.Thing.Unhas.Req.newBuilder()
-                                          .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
+                                          .setAttribute(RequestBuilder.ConceptMessage.from(attributeImpl))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
     }
 
-    abstract SomeType asCurrentType(Concept concept);
+    abstract SomeType asCurrentType(ConceptImpl concept);
 
     @Deprecated
     @CheckReturnValue

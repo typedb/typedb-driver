@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -32,9 +33,9 @@ import java.util.stream.Stream;
  * @param <SomeType>  The exact type of this class
  * @param <SomeThing> the exact type of instances of this class
  */
-public abstract class Type<SomeType extends Type, SomeThing extends Thing> extends SchemaConcept<SomeType> {
+public abstract class TypeImpl<SomeType extends TypeImpl, SomeThing extends Thing> extends SchemaConcept<SomeType> {
 
-    Type(GraknClient.Transaction tx, ConceptId id) {
+    TypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -62,20 +63,20 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
-    public final Stream<AttributeType> keys() {
+    public final Stream<AttributeTypeImpl> keys() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeysReq(ConceptProto.Type.Keys.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypeKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeKeysIterRes().getAttributeType()).map(Concept::asAttributeType);
+        return conceptStream(iteratorId, res -> res.getTypeKeysIterRes().getAttributeType()).map(ConceptImpl::asAttributeType);
     }
 
-    public final Stream<AttributeType> attributes() {
+    public final Stream<AttributeTypeImpl> attributes() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeAttributesReq(ConceptProto.Type.Attributes.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypeAttributesIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeAttributesIterRes().getAttributeType()).map(Concept::asAttributeType);
+        return conceptStream(iteratorId, res -> res.getTypeAttributesIterRes().getAttributeType()).map(ConceptImpl::asAttributeType);
     }
 
     public final Stream<Role> playing() {
@@ -83,22 +84,22 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
                 .setTypePlayingReq(ConceptProto.Type.Playing.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getTypePlayingIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypePlayingIterRes().getRole()).map(Concept::asRole);
+        return conceptStream(iteratorId, res -> res.getTypePlayingIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
-    public final SomeType key(AttributeType attributeType) {
+    public final SomeType key(AttributeTypeImpl attributeTypeImpl) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeyReq(ConceptProto.Type.Key.Req.newBuilder()
-                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
+                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeTypeImpl))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
     }
 
-    public final SomeType has(AttributeType attributeType) {
+    public final SomeType has(AttributeTypeImpl attributeTypeImpl) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeHasReq(ConceptProto.Type.Has.Req.newBuilder()
-                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
+                                       .setAttributeType(RequestBuilder.ConceptMessage.from(attributeTypeImpl))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -113,19 +114,19 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
-    public final SomeType unkey(AttributeType attributeType) {
+    public final SomeType unkey(AttributeTypeImpl attributeTypeImpl) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnkeyReq(ConceptProto.Type.Unkey.Req.newBuilder()
-                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
+                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeTypeImpl))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
     }
 
-    public final SomeType unhas(AttributeType attributeType) {
+    public final SomeType unhas(AttributeTypeImpl attributeTypeImpl) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnhasReq(ConceptProto.Type.Unhas.Req.newBuilder()
-                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
+                                         .setAttributeType(RequestBuilder.ConceptMessage.from(attributeTypeImpl))).build();
 
         runMethod(method);
         return asCurrentBaseType(this);
@@ -140,12 +141,12 @@ public abstract class Type<SomeType extends Type, SomeThing extends Thing> exten
         return asCurrentBaseType(this);
     }
 
-    protected abstract SomeThing asInstance(Concept concept);
+    protected abstract SomeThing asInstance(ConceptImpl concept);
 
     @Deprecated
     @CheckReturnValue
     @Override
-    public Type asType() {
+    public TypeImpl asType() {
         return this;
     }
 

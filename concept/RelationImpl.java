@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -35,9 +36,9 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Relation
  */
-public class Relation extends Thing<Relation, RelationType> {
+public class RelationImpl extends Thing<RelationImpl, RelationType> {
 
-    Relation(GraknClient.Transaction tx, ConceptId id) {
+    RelationImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -52,8 +53,8 @@ public class Relation extends Thing<Relation, RelationType> {
 
         Map<Role, Set<Thing>> rolePlayerMap = new HashMap<>();
         for (ConceptProto.Relation.RolePlayersMap.Iter.Res rolePlayer : rolePlayers) {
-            Role role = Concept.of(rolePlayer.getRole(), tx()).asRole();
-            Thing player = Concept.of(rolePlayer.getPlayer(), tx()).asThing();
+            Role role = ConceptImpl.of(rolePlayer.getRole(), tx()).asRole();
+            Thing player = ConceptImpl.of(rolePlayer.getPlayer(), tx()).asThing();
             if (rolePlayerMap.containsKey(role)) {
                 rolePlayerMap.get(role).add(player);
             } else {
@@ -70,10 +71,10 @@ public class Relation extends Thing<Relation, RelationType> {
                         .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept::asThing);
+        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(ConceptImpl::asThing);
     }
 
-    public final Relation assign(Role role, Thing player) {
+    public final RelationImpl assign(Role role, Thing player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
                         .setRole(RequestBuilder.ConceptMessage.from(role))
@@ -92,11 +93,12 @@ public class Relation extends Thing<Relation, RelationType> {
         runMethod(method);
     }
 
-    final RelationType asCurrentType(Concept concept) {
+    final RelationType asCurrentType(ConceptImpl concept) {
         return concept.asRelationType();
     }
 
-    final Relation asCurrentBaseType(Concept other) {
+    @Override
+    final RelationImpl asCurrentBaseType(ConceptImpl other) {
         return other.asRelation();
     }
 
@@ -104,7 +106,7 @@ public class Relation extends Thing<Relation, RelationType> {
     @Deprecated
     @CheckReturnValue
     @Override
-    public Relation asRelation() {
+    public RelationImpl asRelation() {
         return this;
     }
 

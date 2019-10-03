@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -33,9 +34,9 @@ import java.util.stream.Stream;
  *
  * @param <D> The data type of this attribute
  */
-public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
+public class AttributeImpl<D> extends Thing<AttributeImpl, AttributeTypeImpl<D>> {
 
-    Attribute(GraknClient.Transaction tx, ConceptId id) {
+    AttributeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -76,18 +77,20 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
                 .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getAttributeOwnersIter().getId();
-        return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(Concept::asThing);
+        return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(ConceptImpl::asThing);
     }
 
-    public final AttributeType.DataType<D> dataType() {
+    public final AttributeTypeImpl.DataType<D> dataType() {
         return type().dataType();
     }
 
-    final AttributeType<D> asCurrentType(Concept concept) {
+    @Override
+    final AttributeTypeImpl<D> asCurrentType(ConceptImpl concept) {
         return concept.asAttributeType();
     }
 
-    final Attribute asCurrentBaseType(Concept other) {
+    @Override
+    final AttributeImpl asCurrentBaseType(ConceptImpl other) {
         return other.asAttribute();
     }
 
@@ -95,7 +98,7 @@ public class Attribute<D> extends Thing<Attribute, AttributeType<D>> {
     @Deprecated
     @CheckReturnValue
     @Override
-    public Attribute asAttribute() {
+    public AttributeImpl asAttribute() {
         return this;
     }
 

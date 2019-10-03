@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.ConceptId;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
@@ -72,29 +73,29 @@ public class Rule extends SchemaConcept<Rule> {
         }
     }
 
-    public final Stream<Type> whenTypes() {
+    public final Stream<TypeImpl> whenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    public Stream<Type> whenPositiveTypes() {
+    public Stream<TypeImpl> whenPositiveTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    public Stream<Type> whenNegativeTypes() {
+    public Stream<TypeImpl> whenNegativeTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
-    public final Stream<Type> thenTypes() {
+    public final Stream<TypeImpl> thenTypes() {
         throw new UnsupportedOperationException(); // TODO: remove from API
     }
 
     @Override
-    final Rule asCurrentBaseType(Concept other) {
+    final Rule asCurrentBaseType(ConceptImpl other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(ConceptImpl other) {
         return other.isRule();
     }
 
