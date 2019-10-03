@@ -64,6 +64,7 @@ public abstract class ThingImpl<SomeThing extends Thing, SomeType extends Type> 
         return runMethod(method).getThingIsInferredRes().getInferred();
     }
 
+    @Override
     public final Stream<Attribute<?>> keys(AttributeType... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
@@ -73,6 +74,7 @@ public abstract class ThingImpl<SomeThing extends Thing, SomeType extends Type> 
         return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(ConceptImpl::asAttribute);
     }
 
+    @Override
     public final Stream<Attribute<?>> attributes(AttributeType... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
@@ -82,6 +84,7 @@ public abstract class ThingImpl<SomeThing extends Thing, SomeType extends Type> 
         return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(ConceptImpl::asAttribute);
     }
 
+    @Override
     public final Stream<Relation> relations(Role... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelationsReq(ConceptProto.Thing.Relations.Req.newBuilder()
@@ -100,6 +103,7 @@ public abstract class ThingImpl<SomeThing extends Thing, SomeType extends Type> 
         return conceptStream(iteratorId, res -> res.getThingRolesIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
+    @Override
     public final SomeThing has(Attribute attribute) {
         relhas(attribute);
         return asCurrentBaseType(this);
@@ -117,6 +121,7 @@ public abstract class ThingImpl<SomeThing extends Thing, SomeType extends Type> 
         return concept.asRelation();
     }
 
+    @Override
     public final SomeThing unhas(Attribute attribute) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingUnhasReq(ConceptProto.Thing.Unhas.Req.newBuilder()

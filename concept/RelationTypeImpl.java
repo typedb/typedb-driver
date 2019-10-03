@@ -40,6 +40,7 @@ public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implement
         super(tx, id);
     }
 
+    @Override
     public final Relation create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
@@ -49,6 +50,7 @@ public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implement
         return asInstance(concept);
     }
 
+    @Override
     public final Stream<Role> roles() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
@@ -57,6 +59,7 @@ public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implement
         return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(ConceptImpl::asRole);
     }
 
+    @Override
     public final RelationType relates(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
@@ -66,6 +69,7 @@ public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implement
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final RelationType unrelate(Role role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()

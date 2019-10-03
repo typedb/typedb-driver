@@ -108,6 +108,7 @@ public abstract class TypeImpl<SomeType extends Type, SomeThing extends Thing> e
         return asCurrentBaseType(this);
     }
 
+    @Override
     public final SomeType has(AttributeType attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeHasReq(ConceptProto.Type.Has.Req.newBuilder()

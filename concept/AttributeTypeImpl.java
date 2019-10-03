@@ -28,9 +28,7 @@ import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.time.LocalDateTime;
 
 /**
  * Client implementation of AttributeType

@@ -41,6 +41,7 @@ public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
         super(tx, id);
     }
 
+    @Override
     @Nullable
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern when() {
@@ -58,6 +59,7 @@ public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
         }
     }
 
+    @Override
     @Nullable
     @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
     public final Pattern then() {
