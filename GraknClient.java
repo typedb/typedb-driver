@@ -589,7 +589,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public SchemaConcept getMetaConcept() {
+        public grakn.client.concept.api.Type getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
