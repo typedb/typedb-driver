@@ -19,19 +19,12 @@
 
 package grakn.client.concept.api;
 
-import grakn.core.concept.Label;
+import grakn.client.concept.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
-
-import static grakn.core.common.util.Collections.list;
-import static grakn.core.common.util.Collections.set;
 
 /**
  * An ontological element which models and categorises the various Attribute in the graph.
@@ -224,54 +217,21 @@ public interface AttributeType<D> extends Type {
         return true;
     }
 
+
     /**
      * A class used to hold the supported data types of resources and any other concepts.
      * This is used tp constrain value data types to only those we explicitly support.
      *
      * @param <D> The data type.
      */
-    abstract class DataType<D> {
-        public static final DataType<Boolean> BOOLEAN = new DataType<Boolean>(Boolean.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() { return Collections.singleton(DataType.BOOLEAN); }
-        };
-        public static final DataType<LocalDateTime> DATE = new DataType<LocalDateTime>(LocalDateTime.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() { return Collections.singleton(DataType.DATE); }
-        };
-        public static final DataType<Double> DOUBLE = new DataType<Double>(Double.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() {
-                return set(DataType.DOUBLE,
-                        //DataType.FLOAT,
-                        //DataType.INTEGER,
-                        DataType.LONG);
-            }
-        };
-
-        public static final DataType<Float> FLOAT = new DataType<Float>(Float.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() { return new HashSet<>(); }
-        };
-        public static final DataType<Integer> INTEGER = new DataType<Integer>(Integer.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() { return new HashSet<>(); }
-        };
-        public static final DataType<Long> LONG = new DataType<Long>(Long.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() {
-                return set(DataType.DOUBLE,
-                        //DataType.FLOAT,
-                        //DataType.INTEGER,
-                        DataType.LONG);
-            }
-        };
-        public static final DataType<String> STRING = new DataType<String>(String.class){
-            @Override
-            public Set<DataType<?>> comparableDataTypes() { return Collections.singleton(DataType.STRING); }
-        };
-
-        private static final List<DataType<?>> values = list(BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, STRING);
+    public static class DataType<D> {
+        public static final AttributeType.DataType<Boolean> BOOLEAN = new AttributeType.DataType<>(Boolean.class);
+        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
+        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
+        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
+        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
+        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
+        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
 
         private final Class<D> dataClass;
 
@@ -294,31 +254,12 @@ public interface AttributeType<D> extends Type {
             return name();
         }
 
-        @CheckReturnValue
-        public static List<DataType<?>> values() {
-            return values;
-        }
-
-        @CheckReturnValue
-        public abstract Set<DataType<?>> comparableDataTypes();
-
-        @SuppressWarnings("unchecked")
-        @CheckReturnValue
-        public static <D> DataType<D> of(Class<D> name) {
-            for (DataType<?> dc : DataType.values()) {
-                if (dc.dataClass.equals(name)) {
-                    return (DataType<D>) dc;
-                }
-            }
-            return null;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            DataType<?> that = (DataType<?>) o;
+            AttributeTypeImpl.DataType<?> that = (AttributeTypeImpl.DataType<?>) o;
 
             return (this.dataClass().equals(that.dataClass()));
         }

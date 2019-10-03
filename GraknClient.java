@@ -21,16 +21,6 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
-import grakn.client.concept.AttributeImpl;
-import grakn.client.concept.AttributeTypeImpl;
-import grakn.client.concept.ConceptImpl;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.EntityTypeImpl;
-import grakn.client.concept.api.Label;
-import grakn.client.concept.RelationType;
-import grakn.client.concept.Role;
-import grakn.client.concept.Rule;
-import grakn.client.concept.SchemaConcept;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
 import grakn.client.answer.ConceptList;
@@ -38,7 +28,17 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
-import grakn.client.concept.TypeImpl;
+import grakn.client.concept.api.Attribute;
+import grakn.client.concept.api.AttributeType;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.EntityType;
+import grakn.client.concept.api.Label;
+import grakn.client.concept.api.RelationType;
+import grakn.client.concept.api.Role;
+import grakn.client.concept.api.Rule;
+import grakn.client.concept.api.SchemaConcept;
+import grakn.client.concept.ConceptImpl;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -536,14 +536,14 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends TypeImpl> T getType(Label label) {
+        public <T extends grakn.client.concept.api.Type> T getType(Label label) {
             SchemaConcept concept = getSchemaConcept(label);
             if (concept == null || !concept.isType()) return null;
             return (T) concept.asType();
         }
 
         @Nullable
-        public EntityTypeImpl getEntityType(String label) {
+        public EntityType getEntityType(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isEntityType()) return null;
             return concept.asEntityType();
@@ -557,7 +557,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <V> AttributeTypeImpl<V> getAttributeType(String label) {
+        public <V> AttributeType<V> getAttributeType(String label) {
             SchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isAttributeType()) return null;
             return concept.asAttributeType();
@@ -601,11 +601,11 @@ public class GraknClient implements AutoCloseable {
             return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString()));
         }
 
-        public AttributeTypeImpl getMetaAttributeType() {
+        public AttributeType getMetaAttributeType() {
             return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString()));
         }
 
-        public EntityTypeImpl getMetaEntityType() {
+        public EntityType getMetaEntityType() {
             return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString()));
         }
 
@@ -614,7 +614,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends ConceptImpl> T getConcept(ConceptId id) {
+        public <T extends Concept> T getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetConceptRes().getResCase()) {
@@ -625,10 +625,10 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public <V> Collection<AttributeImpl<V>> getAttributesByValue(V value) {
+        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
             transceiver.send(RequestBuilder.Transaction.getAttributes(value));
             int iteratorId = responseOrThrow().getGetAttributesIter().getId();
-            Iterable<AttributeImpl<V>> iterable = () -> new RPCIterator<AttributeImpl<V>>(
+            Iterable<Attribute<V>> iterable = () -> new RPCIterator<Attribute<V>>(
                     this, iteratorId, response -> ConceptImpl.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
             );
 
@@ -637,19 +637,19 @@ public class GraknClient implements AutoCloseable {
         }
 
 
-        public EntityTypeImpl putEntityType(String label) {
+        public EntityType putEntityType(String label) {
             return putEntityType(Label.of(label));
         }
 
-        public EntityTypeImpl putEntityType(Label label) {
+        public EntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
             return ConceptImpl.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> AttributeTypeImpl<V> putAttributeType(String label, AttributeTypeImpl.DataType<V> dataType) {
+        public <V> AttributeType<V> putAttributeType(String label, AttributeType.DataType<V> dataType) {
             return putAttributeType(Label.of(label), dataType);
         }
-        public <V> AttributeTypeImpl<V> putAttributeType(Label label, AttributeTypeImpl.DataType<V> dataType) {
+        public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
             return ConceptImpl.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
@@ -685,12 +685,12 @@ public class GraknClient implements AutoCloseable {
             SessionProto.Transaction.Res response = runConceptMethod(schemaConcept.id(), method);
             int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
 
-            Iterable<? extends ConceptImpl> iterable = () -> new RPCIterator<>(
+            Iterable<? extends Concept> iterable = () -> new RPCIterator<>(
                     this, iteratorId, res -> ConceptImpl.of(res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
             );
 
-            Stream<? extends ConceptImpl> sups = StreamSupport.stream(iterable.spliterator(), false);
-            return Objects.requireNonNull(sups).map(ConceptImpl::asSchemaConcept);
+            Stream<? extends Concept> sups = StreamSupport.stream(iterable.spliterator(), false);
+            return Objects.requireNonNull(sups).map(Concept::asSchemaConcept);
         }
 
         public SessionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {

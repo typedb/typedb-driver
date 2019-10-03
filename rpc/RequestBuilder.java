@@ -21,12 +21,13 @@ package grakn.client.rpc;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.AttributeTypeImpl;
-import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.api.Concept;
+import grakn.client.concept.api.AttributeType;
 import grakn.client.concept.api.ConceptId;
 import grakn.client.concept.api.Label;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.session.ConceptProto;
 import grakn.protocol.keyspace.KeyspaceProto;
+import grakn.protocol.session.ConceptProto;
 import grakn.protocol.session.SessionProto;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlQuery;
@@ -163,14 +164,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(ConceptImpl concept) {
+        public static ConceptProto.Concept from(Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(ConceptImpl concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -194,7 +195,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<ConceptImpl> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
@@ -245,8 +246,8 @@ public class RequestBuilder {
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeTypeImpl.DataType dataType) {
-            if (dataType.equals( AttributeTypeImpl.DataType.STRING)) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType dataType) {
+            if (dataType.equals(AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
             } else if (dataType.equals( AttributeTypeImpl.DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;

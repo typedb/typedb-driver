@@ -19,8 +19,6 @@
 
 package grakn.client.concept.api;
 
-import grakn.core.concept.exception.GraknConceptException;
-
 import javax.annotation.CheckReturnValue;
 
 

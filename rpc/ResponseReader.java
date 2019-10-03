@@ -35,6 +35,7 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
 
 import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Concept;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -87,7 +88,7 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, ConceptImpl> answers = new HashMap<>();
+        Map<Variable, Concept> answers = new HashMap<>();
         res.getMapMap().forEach(
                 (resVar, resConcept) -> answers.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
         );

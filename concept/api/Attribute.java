@@ -69,22 +69,6 @@ public interface Attribute<D> extends Thing {
     Stream<Thing> owners();
 
     /**
-     * If the Attribute is unique, this method retrieves the Thing that possesses it.
-     *
-     * @return The Thing which is connected to a unique Attribute.
-     */
-    @CheckReturnValue
-    @Nullable
-    default Thing owner() {
-        Iterator<Thing> owners = owners().iterator();
-        if (owners.hasNext()) {
-            return owners.next();
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Creates a relation from this instance to the provided Attribute.
      *
      * @param attribute The Attribute to which a relation is created

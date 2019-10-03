@@ -20,7 +20,9 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
 import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Rule;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
@@ -33,9 +35,9 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Rule
  */
-public class Rule extends SchemaConcept<Rule> {
+public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
 
-    Rule(GraknClient.Transaction tx, ConceptId id) {
+    RuleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -73,43 +75,14 @@ public class Rule extends SchemaConcept<Rule> {
         }
     }
 
-    public final Stream<TypeImpl> whenTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public Stream<TypeImpl> whenPositiveTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public Stream<TypeImpl> whenNegativeTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
-    public final Stream<TypeImpl> thenTypes() {
-        throw new UnsupportedOperationException(); // TODO: remove from API
-    }
-
     @Override
-    final Rule asCurrentBaseType(ConceptImpl other) {
+    final Rule asCurrentBaseType(Concept other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(ConceptImpl other) {
+    final boolean equalsCurrentBaseType(Concept other) {
         return other.isRule();
     }
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public Rule asRule() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isRule() {
-        return true;
-    }
 }

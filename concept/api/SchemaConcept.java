@@ -19,10 +19,6 @@
 
 package grakn.client.concept.api;
 
-import grakn.core.concept.Concept;
-import grakn.core.concept.Label;
-import grakn.core.concept.LabelId;
-
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -46,14 +42,6 @@ public interface SchemaConcept extends Concept {
     SchemaConcept label(Label label);
 
     //------------------------------------- Accessors ---------------------------------
-
-    /**
-     * Returns the unique id of this Type.
-     *
-     * @return The unique id of this type
-     */
-    @CheckReturnValue
-    LabelId labelId();
 
     /**
      * Returns the unique label of this Type.
@@ -95,23 +83,6 @@ public interface SchemaConcept extends Concept {
     @CheckReturnValue
     Boolean isImplicit();
 
-    /**
-     * Return the collection of Rule for which this SchemaConcept serves as a hypothesis.
-     *
-     * @return A collection of Rule for which this SchemaConcept serves as a hypothesis
-     * @see Rule
-     */
-    @CheckReturnValue
-    Stream<Rule> whenRules();
-
-    /**
-     * Return the collection of Rule for which this SchemaConcept serves as a conclusion.
-     *
-     * @return A collection of Rule for which this SchemaConcept serves as a conclusion
-     * @see Rule
-     */
-    @CheckReturnValue
-    Stream<Rule> thenRules();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

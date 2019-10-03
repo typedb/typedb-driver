@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.api.Concept;
 import grakn.client.concept.api.GraknConceptException;
 import graql.lang.statement.Variable;
 
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap extends Answer {
 
-    private final Map<Variable, ConceptImpl> map;
+    private final Map<Variable, Concept> map;
     private final Explanation explanation;
 
-    public ConceptMap(Map<Variable, ConceptImpl> map, Explanation exp) {
+    public ConceptMap(Map<Variable, Concept> map, Explanation exp) {
         this.map = Collections.unmodifiableMap(map);
         this.explanation = exp;
     }
@@ -49,15 +49,15 @@ public class ConceptMap extends Answer {
     }
 
     @CheckReturnValue
-    public Map<Variable, ConceptImpl> map() {
+    public Map<Variable, Concept> map() {
         return map;
     }
 
 
     @CheckReturnValue
-    public ConceptImpl get(String variable) {
+    public Concept get(String variable) {
         Variable var = new Variable(variable);
-        ConceptImpl Concept = map.get(var);
+        Concept Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }

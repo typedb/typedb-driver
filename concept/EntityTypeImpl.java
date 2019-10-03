@@ -20,7 +20,10 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
 import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Entity;
+import grakn.client.concept.api.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -30,13 +33,14 @@ import javax.annotation.CheckReturnValue;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-public class EntityTypeImpl extends TypeImpl<EntityTypeImpl, EntityImpl> {
+public class EntityTypeImpl extends TypeImpl<EntityType, Entity> implements EntityType {
 
     public EntityTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    public final EntityImpl create() {
+    @Override
+    public final Entity create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
@@ -45,31 +49,18 @@ public class EntityTypeImpl extends TypeImpl<EntityTypeImpl, EntityImpl> {
     }
 
     @Override
-    final EntityTypeImpl asCurrentBaseType(ConceptImpl other) {
+    final EntityType asCurrentBaseType(Concept other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(ConceptImpl other) {
+    final boolean equalsCurrentBaseType(Concept other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final EntityImpl asInstance(ConceptImpl concept) {
+    protected final Entity asInstance(Concept concept) {
         return concept.asEntity();
     }
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public EntityTypeImpl asEntityType() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isEntityType() {
-        return true;
-    }
 }

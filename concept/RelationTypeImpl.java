@@ -20,7 +20,11 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.api.Concept;
 import grakn.client.concept.api.ConceptId;
+import grakn.client.concept.api.Relation;
+import grakn.client.concept.api.RelationType;
+import grakn.client.concept.api.Role;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -30,13 +34,13 @@ import java.util.stream.Stream;
 /**
  * Client implementation of RelationType
  */
-public class RelationType extends TypeImpl<RelationType, RelationImpl> {
+public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implements RelationType {
 
-    RelationType(GraknClient.Transaction tx, ConceptId id) {
+    RelationTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    public final RelationImpl create() {
+    public final Relation create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
@@ -72,31 +76,17 @@ public class RelationType extends TypeImpl<RelationType, RelationImpl> {
     }
 
     @Override
-    final RelationType asCurrentBaseType(ConceptImpl other) {
+    final RelationType asCurrentBaseType(Concept other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(ConceptImpl other) {
+    final boolean equalsCurrentBaseType(Concept other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final RelationImpl asInstance(ConceptImpl concept) {
+    protected final Relation asInstance(Concept concept) {
         return concept.asRelation();
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public RelationType asRelationType() {
-        return this;
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    public boolean isRelationType() {
-        return true;
     }
 }

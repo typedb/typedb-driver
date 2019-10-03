@@ -19,8 +19,6 @@
 
 package grakn.client.concept.api;
 
-import grakn.core.concept.Concept;
-
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 

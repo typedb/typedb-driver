@@ -19,7 +19,6 @@
 
 package grakn.client.concept.api;
 
-import grakn.core.concept.Label;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -51,38 +50,6 @@ public interface Rule extends SchemaConcept {
     @CheckReturnValue
     @Nullable
     Pattern then();
-
-    /**
-     * Retrieve a set of Types that constitute a part of the hypothesis of this Rule.
-     *
-     * @return A collection of Concept Types that constitute a part of the hypothesis of the Rule
-     */
-    @CheckReturnValue
-    Stream<Type> whenTypes();
-
-    /**
-     * Retrieve a set of Types that constitute a positive part of the hypothesis of this Rule.
-     *
-     * @return A collection of Concept Types that constitute a positive part of the hypothesis of the Rule
-     */
-    @CheckReturnValue
-    Stream<Type> whenPositiveTypes();
-
-    /**
-     * Retrieve a set of Types that constitute a negative part of the hypothesis of this Rule.
-     *
-     * @return A collection of Concept Types that constitute a negative part of the hypothesis of the Rule
-     */
-    @CheckReturnValue
-    Stream<Type> whenNegativeTypes();
-
-    /**
-     * Retrieve a set of Types that constitue a part of the conclusion of the Rule.
-     *
-     * @return A collection of Types that constitute a part of the conclusion of the Rule
-     */
-    @CheckReturnValue
-    Stream<Type> thenTypes();
 
     //------------------------------------- Modifiers ----------------------------------
 
