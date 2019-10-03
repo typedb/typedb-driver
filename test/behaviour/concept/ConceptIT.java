@@ -599,16 +599,4 @@ public class ConceptIT {
 
         assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
     }
-
-    @Test
-    public void genericTypeDownCast_TypeIsRecognised() {
-
-        Stream<? extends Thing> instances1 = person.instances();
-
-        EntityType entityType = person;
-
-        Stream<Entity> instances = entityType.instances();
-
-
-    }
 }
