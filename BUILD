@@ -70,7 +70,11 @@ assemble_maven(
     target = ":client-java",
     package = "client-java",
     version_file = "//:VERSION",
-    workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json"
+    workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    project_name = "Grakn Client Java",
+    project_description = "Grakn Client API for Java",
+    project_url = "https://github.com/graknlabs/client-java",
+    scm_url = "https://github.com/graknlabs/client-java",
 )
 
 deploy_maven(
