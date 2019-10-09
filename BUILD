@@ -31,7 +31,6 @@ java_library(
     srcs = glob([
         "answer/*.java",
         "concept/*.java",
-        "concept/api/*.java",
         "exception/*.java",
         "rpc/*.java",
         "test/*.java",

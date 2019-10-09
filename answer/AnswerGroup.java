@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.api.Concept;
+import grakn.client.concept.Concept;
 
 import javax.annotation.Nullable;
 import java.util.List;

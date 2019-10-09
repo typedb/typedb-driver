@@ -20,17 +20,12 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Rule;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 /**
  * Client implementation of Rule

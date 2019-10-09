@@ -20,16 +20,9 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Relation;
-import grakn.client.concept.api.RelationType;
-import grakn.client.concept.api.Role;
-import grakn.client.concept.api.Thing;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.api;
+package grakn.client.concept;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;

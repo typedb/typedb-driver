@@ -28,16 +28,16 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
-import grakn.client.concept.api.Attribute;
-import grakn.client.concept.api.AttributeType;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.EntityType;
-import grakn.client.concept.api.Label;
-import grakn.client.concept.api.RelationType;
-import grakn.client.concept.api.Role;
-import grakn.client.concept.api.Rule;
-import grakn.client.concept.api.SchemaConcept;
+import grakn.client.concept.Attribute;
+import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.EntityType;
+import grakn.client.concept.Label;
+import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
+import grakn.client.concept.Rule;
+import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.ConceptImpl;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
@@ -536,7 +536,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends grakn.client.concept.api.Type> T getType(Label label) {
+        public <T extends grakn.client.concept.Type> T getType(Label label) {
             SchemaConcept concept = getSchemaConcept(label);
             if (concept == null || !concept.isType()) return null;
             return (T) concept.asType();
@@ -589,7 +589,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public grakn.client.concept.api.Type getMetaConcept() {
+        public grakn.client.concept.Type getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 

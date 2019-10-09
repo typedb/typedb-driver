@@ -20,11 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Attribute;
-import grakn.client.concept.api.AttributeType;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Thing;
 import grakn.protocol.session.ConceptProto;
 
 import java.time.Instant;

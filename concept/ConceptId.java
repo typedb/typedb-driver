@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package grakn.client.concept.api;
+package grakn.client.concept;
 
 import javax.annotation.CheckReturnValue;
 import java.io.Serializable;

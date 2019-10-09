@@ -20,12 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Entity;
-import grakn.client.concept.api.EntityType;
-
-import javax.annotation.CheckReturnValue;
 
 /**
  * Client implementation of Entity

@@ -17,7 +17,7 @@
 # under the License.
 #
 
-package(default_visibility = ["@graknlabs_grakn_core//__subpackages__"])
+package(default_visibility = ["@graknlabs_client_java//__subpackages__"])
 
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_build_tools//distribution/maven:rules.bzl", "assemble_maven", "deploy_maven")

@@ -20,23 +20,8 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Attribute;
-import grakn.client.concept.api.AttributeType;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Entity;
-import grakn.client.concept.api.EntityType;
-import grakn.client.concept.api.GraknConceptException;
-import grakn.client.concept.api.Relation;
-import grakn.client.concept.api.RelationType;
-import grakn.client.concept.api.Role;
-import grakn.client.concept.api.Rule;
-import grakn.client.concept.api.SchemaConcept;
-import grakn.client.concept.api.Thing;
-import grakn.client.concept.api.Type;
 import grakn.protocol.session.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;

@@ -34,8 +34,8 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
 
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Concept;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Concept;
 
 import java.text.NumberFormat;
 import java.text.ParseException;

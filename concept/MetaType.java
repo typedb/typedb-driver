@@ -20,10 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Thing;
-import grakn.client.concept.api.Type;
 
 /**
  * Client implementation of Type

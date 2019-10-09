@@ -21,10 +21,10 @@ package grakn.client.rpc;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.AttributeTypeImpl;
-import grakn.client.concept.api.Concept;
-import grakn.client.concept.api.AttributeType;
-import grakn.client.concept.api.ConceptId;
-import grakn.client.concept.api.Label;
+import grakn.client.concept.Concept;
+import grakn.client.concept.AttributeType;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.keyspace.KeyspaceProto;
 import grakn.protocol.session.ConceptProto;

@@ -17,9 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.api;
-
-import grakn.client.concept.AttributeTypeImpl;
+package grakn.client.concept;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;

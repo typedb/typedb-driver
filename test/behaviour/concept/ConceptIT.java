@@ -20,18 +20,17 @@
 package grakn.client.test.behaviour.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.api.Attribute;
-import grakn.client.concept.api.AttributeType;
-import grakn.client.concept.api.AttributeType.DataType;
-import grakn.client.concept.api.Entity;
-import grakn.client.concept.api.EntityType;
-import grakn.client.concept.api.Label;
-import grakn.client.concept.api.Relation;
-import grakn.client.concept.api.RelationType;
-import grakn.client.concept.api.Role;
-import grakn.client.concept.api.Rule;
-import grakn.client.concept.api.Thing;
-import grakn.client.concept.api.Type;
+import grakn.client.concept.Attribute;
+import grakn.client.concept.AttributeType;
+import grakn.client.concept.AttributeType.DataType;
+import grakn.client.concept.Entity;
+import grakn.client.concept.EntityType;
+import grakn.client.concept.Label;
+import grakn.client.concept.Relation;
+import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
+import grakn.client.concept.Rule;
+import grakn.client.concept.Thing;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.pattern.Pattern;
@@ -50,7 +49,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
