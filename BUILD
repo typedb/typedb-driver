@@ -57,7 +57,6 @@ npm_package(
 assemble_npm(
     name = "assemble-npm",
     target = ":client-nodejs",
-    version_file = "//:VERSION",
 )
 
 deploy_npm(

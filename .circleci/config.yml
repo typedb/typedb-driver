@@ -70,7 +70,7 @@ jobs:
           export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
           export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
-          bazel run //:deploy-npm -- snapshot
+          bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
 
   test-deployment:
     machine: true
@@ -147,7 +147,7 @@ jobs:
           export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
           export DEPLOY_NPM_EMAIL=$REPO_NPM_EMAIL
-          bazel run //:deploy-npm -- release
+          bazel run --define version=$(cat VERSION) //:deploy-npm -- release
 
   sync-dependencies-release:
     machine: true
