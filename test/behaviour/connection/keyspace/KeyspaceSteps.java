@@ -25,59 +25,74 @@ import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static grakn.common.util.Collections.set;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class KeyspaceSteps {
 
-    @When("connection create one keyspace: {word}")
-    public void connection_create_one_keyspace(String keyspaceName) {
+    @When("connection create keyspace(s):")
+    public void connection_create_keyspaces(List<String> names) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
-        ConnectionSteps.client.session(keyspaceName);
-    }
-
-    @When("connection create multiple keyspaces:")
-    public void connection_create_multiple_keyspaces(List<String> keyspaceNames) {
-        // TODO: This step should be rewritten once we can create keypsaces without opening sessions
-        for (String name : keyspaceNames) {
+        for (String name : names) {
             ConnectionSteps.client.session(name);
         }
     }
 
-    @When("connection delete one keyspace: {word}")
-    public void connection_delete_one_keyspace(String keyspaceName) {
-        ConnectionSteps.client.keyspaces().delete(keyspaceName);
+    @When("connection create keyspaces in parallel:")
+    public void connection_create_keyspaces_in_parallel(List<String> names) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= names.size());
+
+        // TODO: This step should be rewritten once we can create keypsaces without opening sessions
+        CompletableFuture[] creations = new CompletableFuture[names.size()];
+        int i = 0;
+        for (String name : names) {
+            creations[i++] = CompletableFuture.supplyAsync(
+                    () -> ConnectionSteps.client.session(name),
+                    ConnectionSteps.threadPool
+            );
+        }
+
+        CompletableFuture.allOf(creations);
     }
 
-    @When("connection delete multiple keyspaces:")
-    public void connection_delete_multiple_keyspaces(List<String> keyspaceNames) {
-        for (String keyspaceName : keyspaceNames) {
+    @When("connection delete keyspace(s):")
+    public void connection_delete_keyspaces(List<String> names) {
+        for (String keyspaceName : names) {
             ConnectionSteps.client.keyspaces().delete(keyspaceName);
         }
     }
 
-    @Then("connection has one keyspace: {word}")
-    public void connection_has_one_keyspace(String keyspaceName) {
-        assertEquals(singletonList(keyspaceName), ConnectionSteps.client.keyspaces().retrieve());
+    @When("connection delete keyspaces in parallel:")
+    public void connection_delete_keyspaces_in_parallel(List<String> names) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= names.size());
+
+        // TODO: This step should be rewritten once we can create keypsaces without opening sessions
+        CompletableFuture[] deletions = new CompletableFuture[names.size()];
+        int i = 0;
+        for (String name : names) {
+            deletions[i++] = CompletableFuture.supplyAsync(
+                    () -> {ConnectionSteps.client.keyspaces().delete(name); return null;},
+                    ConnectionSteps.threadPool
+            );
+        }
+
+        CompletableFuture.allOf(deletions);
     }
 
-    @Then("connection has multiple keyspaces:")
-    public void connection_has_multiple_keyspaces(List<String> keyspaceName) {
-        assertEquals(set(keyspaceName), set(ConnectionSteps.client.keyspaces().retrieve()));
+    @Then("connection has keyspace(s):")
+    public void connection_has_keyspaces(List<String> names) {
+        assertEquals(set(names), set(ConnectionSteps.client.keyspaces().retrieve()));
     }
 
-    @Then("connection does not have one keyspace: {word}")
-    public void connection_does_not_have_on_keyspace(String keyspaceName) {
-        assertFalse(ConnectionSteps.client.keyspaces().retrieve().contains(keyspaceName));
-    }
-
-    @Then("connection does not have multiple keyspaces:")
-    public void connection_does_not_have_keyspaces(List<String> keyspaceNames) {
+    @Then("connection does not have keyspace(s):")
+    public void connection_does_not_have_keyspaces(List<String> names) {
         Set<String> keyspaces = set(ConnectionSteps.client.keyspaces().retrieve());
-        for (String keyspaceName : keyspaceNames) {
+        for (String keyspaceName : names) {
             assertFalse(keyspaces.contains(keyspaceName));
         }
     }

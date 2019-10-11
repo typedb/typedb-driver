@@ -34,7 +34,8 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_behaviour/connection/keyspace.feature"
+        features = "external/graknlabs_behaviour/connection/keyspace.feature",
+        tags = "not @ignore and not @ignore-client-java"
 )
 public class KeyspaceTest {
     // ATTENTION:
