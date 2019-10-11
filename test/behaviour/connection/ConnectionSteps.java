@@ -24,7 +24,6 @@ import grakn.client.test.setup.GraknProperties;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,14 +39,15 @@ import static org.junit.Assert.fail;
 
 public class ConnectionSteps {
 
-    private int THREAD_POOL_SIZE = 32;
-    private ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    public static int THREAD_POOL_SIZE = 32;
+    public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     public static GraknClient client;
-    public static Map<String, GraknClient.Session> sessionsMap = new HashMap<>();
+    public static Map<Integer, GraknClient.Session> sessionsMap = new HashMap<>();
     public static Map<String, CompletableFuture<GraknClient.Session>> sessionsMapParallel = new HashMap<>();
+    public static Map<Integer, GraknClient.Transaction> transactionsMap = new HashMap<>();
 
-    private static GraknClient connectToGraknCore() {
+    private static GraknClient connect_to_grakn_core() {
         System.out.println("Establishing Connection to Grakn Core");
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         assertNotNull(address);
@@ -56,7 +56,7 @@ public class ConnectionSteps {
         return new GraknClient(address);
     }
 
-    private static GraknClient connectToGraknKGMS() {
+    private static GraknClient connect_to_grakn_kgms() {
         System.out.println("Establishing Connection to Grakn");
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         String username = System.getProperty(GraknProperties.GRAKN_USERNAME);
@@ -69,7 +69,7 @@ public class ConnectionSteps {
         return new GraknClient(address, username, password);
     }
 
-    private static synchronized void connectToGrakn() {
+    private static synchronized void connect_to_grakn() {
         if (!isNull(client)) return;
 
         System.out.println("Connecting to Grakn ...");
@@ -78,9 +78,9 @@ public class ConnectionSteps {
         assertNotNull(graknType);
 
         if (graknType.equals(GraknProperties.GRAKN_CORE)) {
-            client = connectToGraknCore();
+            client = connect_to_grakn_core();
         } else if (graknType.equals(GraknProperties.GRAKN_KGMS)) {
-            client = connectToGraknKGMS();
+            client = connect_to_grakn_kgms();
         } else {
             fail("Invalid type of Grakn database: ");
         }
@@ -91,7 +91,7 @@ public class ConnectionSteps {
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         if (isNull(client)) {
-            connectToGrakn();
+            connect_to_grakn();
         }
 
         assertNotNull(client);
@@ -112,6 +112,14 @@ public class ConnectionSteps {
 
     @After
     public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
+
+        if (transactionsMap != null) {
+            for (GraknClient.Transaction transaction : transactionsMap.values()) {
+                if (!isNull(transaction)) transaction.close();
+            }
+            transactionsMap = new HashMap<>();
+        }
+
         if (sessionsMap != null) {
             for (GraknClient.Session session : sessionsMap.values()) {
                 if (!isNull(session)) session.close();
@@ -124,45 +132,6 @@ public class ConnectionSteps {
                 future.get().close();
             }
             sessionsMapParallel = new HashMap<>();
-        }
-    }
-
-    @When("connection open {number} session(s) for one keyspace: {word}")
-    public void connection_open_many_sessions_for_one_keyspace(int number, String name) {
-        for (int i = 0; i < number; i++) {
-            sessionsMap.put(Integer.toString(i), client.session(name));
-        }
-    }
-
-    @When("connection open many sessions for many keyspaces:")
-    public void connection_open_many_sessions_for_many_keyspaces(Map<String, String> names) {
-        for (Map.Entry<String, String> name : names.entrySet()) {
-            sessionsMap.put(name.getKey(), client.session(name.getValue()));
-        }
-    }
-
-    @When("connection open {number} sessions in parallel for one keyspace: {word}")
-    public void connection_open_many_sessions_in_parallel_for_one_keyspace(int number, String name) {
-        assertTrue(THREAD_POOL_SIZE >= number);
-        sessionsMapParallel = new HashMap<>();
-
-        for (int i = 0; i < number; i++) {
-            sessionsMapParallel.put(
-                    Integer.toString(i),
-                    CompletableFuture.supplyAsync(() -> client.session(name), threadPool)
-            );
-        }
-    }
-
-    @When("connection open many sessions in parallel for many keyspaces:")
-    public void connection_open_many_sessions_in_parallel_for_many_keyspaces(Map<String, String> names) {
-        assertTrue(THREAD_POOL_SIZE >= names.size());
-
-        for (Map.Entry<String, String> name : names.entrySet()) {
-            sessionsMapParallel.put(
-                    name.getKey(),
-                    CompletableFuture.supplyAsync(() -> client.session(name.getValue()), threadPool)
-            );
         }
     }
 }

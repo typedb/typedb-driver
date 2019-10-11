@@ -19,6 +19,53 @@
 
 package grakn.client.test.behaviour.connection.transaction;
 
+import grakn.client.GraknClient;
+import grakn.client.test.behaviour.connection.ConnectionSteps;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+import static java.util.Objects.isNull;
+import static org.junit.Assert.assertEquals;
+
 public class TransactionSteps {
 
+    @When("session open {number} transaction(s) of type: {transaction-type}")
+    public void session_open_n_transactions(int number, GraknClient.Transaction.Type type) {
+        GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
+
+        for (int i = 0; i < number; i++) {
+            GraknClient.Transaction transaction = type.equals(GraknClient.Transaction.Type.READ) ?
+                    session.transaction().read() :
+                    session.transaction().write();
+            ConnectionSteps.transactionsMap.put(i, transaction);
+        }
+    }
+
+    @Then("transaction(s) is/are null: {boolean}")
+    public void transactions_are_null(Boolean isNull) {
+        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+            assertEquals(isNull(transaction), isNull);
+        }
+    }
+
+    @Then("transaction(s) is/are open: {boolean}")
+    public void transactions_are_open(Boolean isOpen) {
+        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+            assertEquals(transaction.isOpen(), isOpen);
+        }
+    }
+
+    @Then("transaction(s) has/have type: {transaction-type}")
+    public void transactions_have_type(GraknClient.Transaction.Type type) {
+        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+            assertEquals(transaction.type(), type);
+        }
+    }
+
+    @Then("transaction(s) has/have keyspace: {word}")
+    public void transactions_have_keyspace(String name) {
+        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+            assertEquals(transaction.keyspace().name(), name);
+        }
+    }
 }

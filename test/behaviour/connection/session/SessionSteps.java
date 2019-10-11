@@ -22,16 +22,58 @@ package grakn.client.test.behaviour.connection.session;
 import grakn.client.GraknClient;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SessionSteps {
 
+
+    @When("connection open {number} session(s) for one keyspace: {word}")
+    public void connection_open_n_sessions_for_one_keyspace(int number, String name) {
+        for (int i = 0; i < number; i++) {
+            ConnectionSteps.sessionsMap.put(i, ConnectionSteps.client.session(name));
+        }
+    }
+
+    @When("connection open many sessions for many keyspaces:")
+    public void connection_open_many_sessions_for_many_keyspaces(Map<Integer, String> names) {
+        for (Map.Entry<Integer, String> name : names.entrySet()) {
+            ConnectionSteps.sessionsMap.put(name.getKey(), ConnectionSteps.client.session(name.getValue()));
+        }
+    }
+
+    @When("connection open {number} sessions in parallel for one keyspace: {word}")
+    public void connection_open_n_sessions_in_parallel_for_one_keyspace(int number, String name) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
+        ConnectionSteps.sessionsMapParallel = new HashMap<>();
+
+        for (int i = 0; i < number; i++) {
+            ConnectionSteps.sessionsMapParallel.put(
+                    Integer.toString(i),
+                    CompletableFuture.supplyAsync(() -> ConnectionSteps.client.session(name), ConnectionSteps.threadPool)
+            );
+        }
+    }
+
+    @When("connection open many sessions in parallel for many keyspaces:")
+    public void connection_open_many_sessions_in_parallel_for_many_keyspaces(Map<String, String> names) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= names.size());
+
+        for (Map.Entry<String, String> name : names.entrySet()) {
+            ConnectionSteps.sessionsMapParallel.put(
+                    name.getKey(),
+                    CompletableFuture.supplyAsync(() -> ConnectionSteps.client.session(name.getValue()), ConnectionSteps.threadPool)
+            );
+        }
+    }
 
     @Then("session(s) is/are null: {boolean}")
     public void sessions_are_null(Boolean isNull) {
@@ -77,8 +119,8 @@ public class SessionSteps {
     }
 
     @Then("sessions have keyspaces:")
-    public void sessions_have_keyspaces(Map<String, String> names) {
-        for (Map.Entry<String, GraknClient.Session> entry : ConnectionSteps.sessionsMap.entrySet()) {
+    public void sessions_have_keyspaces(Map<Integer, String> names) {
+        for (Map.Entry<Integer, GraknClient.Session> entry : ConnectionSteps.sessionsMap.entrySet()) {
             assertEquals(names.get(entry.getKey()), entry.getValue().keyspace().name());
         }
 

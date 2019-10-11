@@ -32,7 +32,8 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
@@ -48,7 +49,7 @@ java_test(
         "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 # To run this test, you need to provide environment variables:
@@ -67,7 +68,8 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     data = [
@@ -81,7 +83,7 @@ java_test(
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 checkstyle_test(
