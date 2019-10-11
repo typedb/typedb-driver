@@ -84,7 +84,7 @@ jobs:
           nvm install v10.15.3
           nvm use --delete-prefix v10.15.3
           cd tests/deployment/
-          echo -n "$(cat ../../VERSION)-$CIRCLE_SHA1" > ../../VERSION
+          echo -n "0.0.0-$CIRCLE_SHA1" > ../../VERSION
           npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
           npm install jest --global
           jest --detectOpenHandles application.test.js
