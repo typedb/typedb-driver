@@ -25,7 +25,9 @@ import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -43,8 +45,8 @@ public class ConnectionSteps {
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
     public static GraknClient client;
-    public static Map<Integer, GraknClient.Session> sessionsMap = new HashMap<>();
-    public static Map<String, CompletableFuture<GraknClient.Session>> sessionsMapParallel = new HashMap<>();
+    public static List<GraknClient.Session> sessions = new ArrayList<>();
+    public static List<CompletableFuture<GraknClient.Session>> sessionsInParallel = new ArrayList<>();
     public static Map<Integer, GraknClient.Transaction> transactionsMap = new HashMap<>();
     public static Map<Integer, CompletableFuture<GraknClient.Transaction>> transactionsMapParallel = new HashMap<>();
 
@@ -108,6 +110,7 @@ public class ConnectionSteps {
 
     @Given("connection does not have any keyspace")
     public void connection_does_not_have_any_keyspace() {
+        System.out.println(client.keyspaces().retrieve().toString());
         assertTrue(client.keyspaces().retrieve().isEmpty());
     }
 
@@ -128,18 +131,18 @@ public class ConnectionSteps {
             transactionsMapParallel = new HashMap<>();
         }
 
-        if (sessionsMap != null) {
-            for (GraknClient.Session session : sessionsMap.values()) {
+        if (sessions != null) {
+            for (GraknClient.Session session : sessions) {
                 if (!isNull(session)) session.close();
             }
-            sessionsMap = new HashMap<>();
+            sessions = new ArrayList<>();
         }
 
-        if (sessionsMapParallel != null) {
-            for (CompletableFuture<GraknClient.Session> futureSession : sessionsMapParallel.values()) {
+        if (sessionsInParallel != null) {
+            for (CompletableFuture<GraknClient.Session> futureSession : sessionsInParallel) {
                 futureSession.get().close();
             }
-            sessionsMapParallel = new HashMap<>();
+            sessionsInParallel = new ArrayList<>();
         }
     }
 }

@@ -173,6 +173,10 @@ public class GraknClient implements AutoCloseable {
             return new Transaction.Builder(channel, this, sessionId);
         }
 
+        public GraknClient.Transaction transaction(Transaction.Type type) {
+            return new Transaction(channel, this, sessionId, type);
+        }
+
         public boolean isOpen() {
             return isOpen;
         }

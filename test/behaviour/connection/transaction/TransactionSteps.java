@@ -24,6 +24,7 @@ import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -35,12 +36,10 @@ public class TransactionSteps {
 
     @When("session open {number} transaction(s) of type: {transaction-type}")
     public void session_open_n_transactions_of_type(int number, GraknClient.Transaction.Type type) {
-        GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
+        GraknClient.Session session = ConnectionSteps.sessions.get(0);
 
         for (int i = 0; i < number; i++) {
-            GraknClient.Transaction transaction = type.equals(GraknClient.Transaction.Type.READ) ?
-                    session.transaction().read() :
-                    session.transaction().write();
+            GraknClient.Transaction transaction = session.transaction(type);
             ConnectionSteps.transactionsMap.put(i, transaction);
         }
     }
@@ -48,13 +47,34 @@ public class TransactionSteps {
     @When("session open {number} transaction(s) in parallel of type: {transaction-type}")
     public void session_open_n_transactions_in_parallel_of_type(int number, GraknClient.Transaction.Type type) {
         assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
-        GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
+        GraknClient.Session session = ConnectionSteps.sessions.get(0);
 
         for (int i = 0; i < number; i++) {
             ConnectionSteps.transactionsMapParallel.put(i, CompletableFuture.supplyAsync(
-                    () -> type.equals(GraknClient.Transaction.Type.READ) ?
-                            session.transaction().read() :
-                            session.transaction().write(),
+                    () -> session.transaction(type),
+                    ConnectionSteps.threadPool
+            ));
+        }
+    }
+
+    @When("session open many transactions of type:")
+    public void session_open_many_transactions_of_type(Map<Integer,GraknClient.Transaction.Type> types) {
+        GraknClient.Session session = ConnectionSteps.sessions.get(0);
+
+        for (Map.Entry<Integer, GraknClient.Transaction.Type> type : types.entrySet()) {
+            GraknClient.Transaction transaction = session.transaction(type.getValue());
+            ConnectionSteps.transactionsMap.put(type.getKey(), transaction);
+        }
+    }
+
+    @When("session open many transactions in parallel of type:")
+    public void session_open_many_transactions_in_parallel_of_type(Map<Integer,GraknClient.Transaction.Type> types) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= types.size());
+        GraknClient.Session session = ConnectionSteps.sessions.get(0);
+
+        for (Map.Entry<Integer, GraknClient.Transaction.Type> type : types.entrySet()) {
+            ConnectionSteps.transactionsMapParallel.put(type.getKey(), CompletableFuture.supplyAsync(
+                    () -> session.transaction(type.getValue()),
                     ConnectionSteps.threadPool
             ));
         }
@@ -63,11 +83,9 @@ public class TransactionSteps {
     @When("sessions each open {number} transaction(s) of type: {transaction-type}")
     public void sessions_each_open_n_transactions_of_type(int number, GraknClient.Transaction.Type type) {
         int index = 0;
-        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
             for (int i = 0; i < number; i++) {
-                GraknClient.Transaction transaction = type.equals(GraknClient.Transaction.Type.READ) ?
-                        session.transaction().read() :
-                        session.transaction().write();
+                GraknClient.Transaction transaction = session.transaction(type);
                 ConnectionSteps.transactionsMap.put(index++, transaction);
             }
         }
@@ -77,12 +95,10 @@ public class TransactionSteps {
     public void sessions_each_open_n_transactions_in_parallel_of_type(int number, GraknClient.Transaction.Type type) {
         assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
         int index = 0;
-        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
             for (int i = 0; i < number; i++) {
                 ConnectionSteps.transactionsMapParallel.put(index++, CompletableFuture.supplyAsync(
-                        () -> type.equals(GraknClient.Transaction.Type.READ) ?
-                                session.transaction().read() :
-                                session.transaction().write(),
+                        () -> session.transaction(type),
                         ConnectionSteps.threadPool
                 ));
             }
