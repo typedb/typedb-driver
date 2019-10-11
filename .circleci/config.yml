@@ -97,7 +97,7 @@ jobs:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
-          bazel run //:deploy-maven -- snapshot $CIRCLE_SHA1
+          bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
 
   test-deployment-maven:
     machine: true
@@ -164,7 +164,7 @@ jobs:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
-          bazel run //:deploy-maven -- release $(cat VERSION)
+          bazel run --define version=$(cat VERSION) //:deploy-maven -- release
 
   sync-dependencies-release:
     machine: true
