@@ -76,7 +76,10 @@ public class KeyspaceSteps {
         int i = 0;
         for (String name : names) {
             deletions[i++] = CompletableFuture.supplyAsync(
-                    () -> {ConnectionSteps.client.keyspaces().delete(name); return null;},
+                    () -> {
+                        ConnectionSteps.client.keyspaces().delete(name);
+                        return null;
+                    },
                     ConnectionSteps.threadPool
             );
         }
