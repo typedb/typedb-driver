@@ -24,7 +24,6 @@ import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
@@ -53,7 +52,6 @@ public class SessionSteps {
     @When("connection open {number} sessions in parallel for one keyspace: {word}")
     public void connection_open_n_sessions_in_parallel_for_one_keyspace(int number, String name) {
         assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
-        ConnectionSteps.sessionsMapParallel = new HashMap<>();
 
         for (int i = 0; i < number; i++) {
             ConnectionSteps.sessionsMapParallel.put(

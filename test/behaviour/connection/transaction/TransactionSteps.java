@@ -24,13 +24,17 @@ import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
+
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TransactionSteps {
 
     @When("session open {number} transaction(s) of type: {transaction-type}")
-    public void session_open_n_transactions(int number, GraknClient.Transaction.Type type) {
+    public void session_open_n_transactions_of_type(int number, GraknClient.Transaction.Type type) {
         GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
 
         for (int i = 0; i < number; i++) {
@@ -41,31 +45,93 @@ public class TransactionSteps {
         }
     }
 
+    @When("session open {number} transaction(s) in parallel of type: {transaction-type}")
+    public void session_open_n_transactions_in_parallel_of_type(int number, GraknClient.Transaction.Type type) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
+        GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
+
+        for (int i = 0; i < number; i++) {
+            ConnectionSteps.transactionsMapParallel.put(
+                    Integer.toString(i),
+                    CompletableFuture.supplyAsync(
+                            () -> type.equals(GraknClient.Transaction.Type.READ) ?
+                                    session.transaction().read() :
+                                    session.transaction().write(),
+                            ConnectionSteps.threadPool)
+            );
+        }
+    }
+
     @Then("transaction(s) is/are null: {boolean}")
     public void transactions_are_null(Boolean isNull) {
         for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
-            assertEquals(isNull(transaction), isNull);
+            assertEquals(isNull, isNull(transaction));
         }
     }
 
     @Then("transaction(s) is/are open: {boolean}")
     public void transactions_are_open(Boolean isOpen) {
         for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
-            assertEquals(transaction.isOpen(), isOpen);
+            assertEquals(isOpen, transaction.isOpen());
         }
     }
 
     @Then("transaction(s) has/have type: {transaction-type}")
     public void transactions_have_type(GraknClient.Transaction.Type type) {
         for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
-            assertEquals(transaction.type(), type);
+            assertEquals(type, transaction.type());
         }
     }
 
     @Then("transaction(s) has/have keyspace: {word}")
     public void transactions_have_keyspace(String name) {
         for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
-            assertEquals(transaction.keyspace().name(), name);
+            assertEquals(name, transaction.keyspace().name());
         }
+    }
+
+    @Then("transactions in parallel are null: {boolean}")
+    public void transactions_in_parallel_are_null(Boolean isNull) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.transactionsMapParallel
+                .values().stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
+                    assertEquals(isNull, isNull(transaction));
+                    return null;
+                }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+    }
+
+    @Then("transactions in parallel are open: {boolean}")
+    public void transactions_in_parallel_are_open(Boolean isOpen) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.transactionsMapParallel
+                .values().stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
+                    assertEquals(isOpen, transaction.isOpen());
+                    return null;
+                }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+    }
+
+    @Then("transactions in parallel have type: {transaction-type}")
+    public void transactions_in_parallel_have_type(GraknClient.Transaction.Type type) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.transactionsMapParallel
+                .values().stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
+                    assertEquals(type, transaction.type());
+                    return null;
+                }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+    }
+
+    @Then("transactions in parallel have keyspace: {word}")
+    public void transactions_in_parallel_have_keyspace(String name) {
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.transactionsMapParallel
+                .values().stream().map(futureTransaction -> futureTransaction
+                        .thenApplyAsync(transaction -> {
+                            assertEquals(name, transaction.keyspace().name());
+                            return null;
+                        }));
+
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 }
