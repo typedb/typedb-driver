@@ -24,6 +24,7 @@ import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -59,6 +60,19 @@ public class TransactionSteps {
                                     session.transaction().write(),
                             ConnectionSteps.threadPool)
             );
+        }
+    }
+
+    @When("sessions each open {number} transaction(s) of type: {transaction-type}")
+    public void sessions_each_open_n_transactions_of_type(int number, GraknClient.Transaction.Type type) {
+        int index = 0;
+        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+            for (int i = 0; i < number; i++) {
+                GraknClient.Transaction transaction = type.equals(GraknClient.Transaction.Type.READ) ?
+                        session.transaction().read() :
+                        session.transaction().write();
+                ConnectionSteps.transactionsMap.put(index++, transaction);
+            }
         }
     }
 
