@@ -46,7 +46,7 @@ public class ConnectionSteps {
     public static Map<Integer, GraknClient.Session> sessionsMap = new HashMap<>();
     public static Map<String, CompletableFuture<GraknClient.Session>> sessionsMapParallel = new HashMap<>();
     public static Map<Integer, GraknClient.Transaction> transactionsMap = new HashMap<>();
-    public static Map<String, CompletableFuture<GraknClient.Transaction>> transactionsMapParallel = new HashMap<>();
+    public static Map<Integer, CompletableFuture<GraknClient.Transaction>> transactionsMapParallel = new HashMap<>();
 
     private static GraknClient connect_to_grakn_core() {
         System.out.println("Establishing Connection to Grakn Core");

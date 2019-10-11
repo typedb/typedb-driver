@@ -24,7 +24,6 @@ import grakn.client.test.behaviour.connection.ConnectionSteps;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -52,14 +51,12 @@ public class TransactionSteps {
         GraknClient.Session session = ConnectionSteps.sessionsMap.get(0);
 
         for (int i = 0; i < number; i++) {
-            ConnectionSteps.transactionsMapParallel.put(
-                    Integer.toString(i),
-                    CompletableFuture.supplyAsync(
-                            () -> type.equals(GraknClient.Transaction.Type.READ) ?
-                                    session.transaction().read() :
-                                    session.transaction().write(),
-                            ConnectionSteps.threadPool)
-            );
+            ConnectionSteps.transactionsMapParallel.put(i, CompletableFuture.supplyAsync(
+                    () -> type.equals(GraknClient.Transaction.Type.READ) ?
+                            session.transaction().read() :
+                            session.transaction().write(),
+                    ConnectionSteps.threadPool
+            ));
         }
     }
 
@@ -76,30 +73,46 @@ public class TransactionSteps {
         }
     }
 
+    @When("sessions each open {number} transaction(s) in parallel of type: {transaction-type}")
+    public void sessions_each_open_n_transactions_in_parallel_of_type(int number, GraknClient.Transaction.Type type) {
+        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= number);
+        int index = 0;
+        for (GraknClient.Session session : ConnectionSteps.sessionsMap.values()) {
+            for (int i = 0; i < number; i++) {
+                ConnectionSteps.transactionsMapParallel.put(index++, CompletableFuture.supplyAsync(
+                        () -> type.equals(GraknClient.Transaction.Type.READ) ?
+                                session.transaction().read() :
+                                session.transaction().write(),
+                        ConnectionSteps.threadPool
+                ));
+            }
+        }
+    }
+
     @Then("transaction(s) is/are null: {boolean}")
     public void transactions_are_null(Boolean isNull) {
-        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+        for (GraknClient.Transaction transaction : ConnectionSteps.transactionsMap.values()) {
             assertEquals(isNull, isNull(transaction));
         }
     }
 
     @Then("transaction(s) is/are open: {boolean}")
     public void transactions_are_open(Boolean isOpen) {
-        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+        for (GraknClient.Transaction transaction : ConnectionSteps.transactionsMap.values()) {
             assertEquals(isOpen, transaction.isOpen());
         }
     }
 
     @Then("transaction(s) has/have type: {transaction-type}")
     public void transactions_have_type(GraknClient.Transaction.Type type) {
-        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+        for (GraknClient.Transaction transaction : ConnectionSteps.transactionsMap.values()) {
             assertEquals(type, transaction.type());
         }
     }
 
     @Then("transaction(s) has/have keyspace: {word}")
     public void transactions_have_keyspace(String name) {
-        for (GraknClient.Transaction transaction: ConnectionSteps.transactionsMap.values()) {
+        for (GraknClient.Transaction transaction : ConnectionSteps.transactionsMap.values()) {
             assertEquals(name, transaction.keyspace().name());
         }
     }
