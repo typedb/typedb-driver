@@ -86,5 +86,4 @@ deploy_github(
     title = "Grakn Client Java",
     title_append_version = True,
     deployment_properties = "//:deployment.properties",
-    version_file = "//:VERSION"
 )
