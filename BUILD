@@ -72,7 +72,6 @@ deploy_github(
     title = "Grakn Client Node.js",
     title_append_version = True,
     deployment_properties = "//:deployment.properties",
-    version_file = "//:VERSION"
 )
 
 NODEJS_TEST_DEPENDENCIES = [
