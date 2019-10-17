@@ -26,7 +26,7 @@ import io.cucumber.java.en.When;
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.common.util.Collections.set;
+import static grakn.common.util.Collections.set;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
