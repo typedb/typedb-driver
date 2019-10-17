@@ -29,10 +29,11 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//common:common",
         "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
+
+        "@graknlabs_common//:common",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
@@ -65,10 +66,11 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//common:common",
         "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
+
+        "@graknlabs_common//:common",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
