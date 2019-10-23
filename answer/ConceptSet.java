@@ -33,12 +33,8 @@ public class ConceptSet extends Answer {
     private final Explanation explanation;
 
     public ConceptSet(Set<ConceptId> set) {
-        this(set, new Explanation());
-    }
-
-    public ConceptSet(Set<ConceptId> set, Explanation explanation) {
         this.set = Collections.unmodifiableSet(set);
-        this.explanation = explanation;
+        this.explanation = new Explanation();
     }
 
     @Override
