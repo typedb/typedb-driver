@@ -19,41 +19,24 @@
 
 package grakn.client.answer;
 
-import graql.lang.pattern.Pattern;
-
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
-/**
- * Reasoner explanation for inferred answers
- */
-public class Explanation {
+public class Void extends Answer {
+    private final Explanation explanation;
+    private final String message;
 
-    private final Pattern pattern;
-    private final List<ConceptMap> answers;
-
-    Explanation() {
-        this.pattern = null;
-        this.answers = Collections.unmodifiableList(Collections.emptyList());
+    public Void(String message) {
+        this.message = message;
+        explanation = new Explanation();
     }
 
-    public Explanation(Pattern pattern, List<ConceptMap> ans) {
-        this.pattern = pattern;
-        this.answers = Collections.unmodifiableList(ans);
-    }
-
-    /**
-     * @return query pattern associated with this explanation
-     */
-    @CheckReturnValue
     @Nullable
-    public Pattern getPattern() { return pattern;}
+    @Override
+    public Explanation explanation() {
+        return explanation;
+    }
 
-    /**
-     * @return answers this explanation is dependent on
-     */
-    @CheckReturnValue
-    public List<ConceptMap> getAnswers() { return answers;}
+    public String message() {
+        return message;
+    }
 }
