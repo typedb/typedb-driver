@@ -32,6 +32,7 @@ function GrpcCommunicator(stream) {
 
   this.stream.on("error", err => {
     this.pending.shift().reject(err);
+    this.end();
   });
 
   this.stream.on('status', (e) => {

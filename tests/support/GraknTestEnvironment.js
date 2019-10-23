@@ -26,6 +26,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const tmp = require('tmp');
 const unzipper = require('unzipper');
+const propertiesReader = require('properties-reader');
 
 
 const GraknClient = require("../../client-nodejs/src/GraknClient");
@@ -49,38 +50,31 @@ const unzipArchive = function(zipFile, extractPath) {
     });
 };
 
-const execGraknServerCommand = function (cmd) {
-    return new Promise((resolve, reject) => {
-        const graknServer = childProcess.spawn(graknExecutablePath, ['server', cmd], {
-            cwd: graknRootDir,
-        });
-        graknServer.once('exit', function (code) {
-            if (code === 0) {
-                resolve(code);
-            } else {
-                reject(code);
-            }
-        });
-    });
-};
+const execGraknCommand = (command) => {
+    try {
+        childProcess.execSync(command, { cwd: graknRootDir });
+    } catch (error) {
+        throw new Error(`There was a problem when running ${command}`)
+    }
+}
 
-const loadGqlFile = function(filePath, keyspace) {
-    return new Promise((resolve, reject) => {
-        const graknConsole = childProcess.spawn(graknExecutablePath, ['console', '-f', filePath, '-k', keyspace], {
-            cwd: graknRootDir
-        });
+const getServerCommand = (cmd) =>  `${graknExecutablePath} server ${cmd}`
 
-        graknConsole.once('exit', function (code) {
-            if (code === 0) {
-                resolve(code);
-            } else {
-                reject(code);
-            }
-        });
-    });
-};
+const getLoadGraqlCommand = (filePath, keyspace) => `${graknExecutablePath} console -f ${filePath} -k ${keyspace}`;
 
-
+const isGraknRunning = () => {
+    const graknProperties = propertiesReader(tempRootDir + '/grakn-core-all-mac/server/conf/grakn.properties');
+    const SERVER_HOST_NAME = 'server.host';
+    const GRPC_PORT = 'grpc.port';
+    const uri = `${graknProperties.get(SERVER_HOST_NAME)}:${graknProperties.get(GRPC_PORT)}`;
+            
+    try {
+        childProcess.execSync(`curl ${uri}`);
+        return true;      
+    } catch (error) {
+        return false;
+    }
+}
 
 module.exports = {
     session: async () => {
@@ -91,7 +85,7 @@ module.exports = {
     tearDown: async () => {
         if(session) await session.close();
         await graknClient.close();
-        await execGraknServerCommand('stop');
+        execGraknCommand(getServerCommand('stop'));
         fs.removeSync(tempRootDir);
     },
     dataType: () => GraknClient.dataType,
@@ -122,12 +116,18 @@ module.exports = {
 
         graknRootDir = path.join(tempRootDir, 'grakn-core-all-mac');
         graknExecutablePath = path.join(graknRootDir, 'grakn');
-
+        
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
+        // make `/tmp` writable as running console commands creates a file in there
+        fs.chmodSync('/tmp', 0o755);
 
-        await execGraknServerCommand('start');
-        await loadGqlFile(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene');
+        if (isGraknRunning()) {
+            throw new Error('Grakn Server is already running. Stop it before running the integration tests');            
+        } else {
+            execGraknCommand(getServerCommand('start'));
+            execGraknCommand(getLoadGraqlCommand(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene'))
+        }
     },
     beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data
 }
