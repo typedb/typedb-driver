@@ -46,6 +46,10 @@ TransactionService.prototype.close = function () {
     return this.communicator.end();
 }
 
+TransactionService.prototype.isOpen = function () {
+    return this.communicator.stream.writable;
+};
+
 // Concept
 TransactionService.prototype.deleteConcept = function (id) {
     const txRequest = RequestBuilder.deleteConcept(id);

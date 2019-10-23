@@ -98,7 +98,17 @@ describe("Transaction methods", () => {
     const localSession = await env.sessionForKeyspace('computecentralityks');
     let localTx = await localSession.transaction().write();
     await localTx.query("invalid query").catch(() => {});
-    await localTx.query("some query").catch((error) => expect(error).toBe("Transaction is already closed."))
+    expect(localTx.isOpen()).toBe(false);
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('computecentralityks');
+  });
+
+  it("transaction isOpen", async () => {
+    const localSession = await env.sessionForKeyspace('computecentralityks');
+    const localTx = await localSession.transaction().write();
+    expect(localTx.isOpen()).toEqual(true);
+    await localTx.close();
+    expect(localTx.isOpen()).toEqual(false);
     await localSession.close();
     await env.graknClient.keyspaces().delete('computecentralityks');
   });

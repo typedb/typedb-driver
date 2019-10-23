@@ -85,4 +85,8 @@ Transaction.prototype.close = function () {
     return this.txService.close();
 }
 
+Transaction.prototype.isOpen = function () {
+    return this.txService.isOpen();
+}
+
 module.exports = Transaction;
