@@ -20,6 +20,7 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
+import grakn.client.answer.Void;
 import grakn.client.concept.ConceptImpl;
 import grakn.protocol.session.AnswerProto;
 import graql.lang.Graql;
@@ -67,6 +68,8 @@ public class ResponseReader {
                 return conceptSetMeasure(res.getConceptSetMeasure());
             case VALUE:
                 return value(res.getValue());
+            case VOID:
+                return voidAnswer(res.getVoid());
             default:
             case ANSWER_NOT_SET:
                 throw new IllegalArgumentException("Unexpected " + res);
@@ -112,6 +115,10 @@ public class ResponseReader {
 
     private static Numeric value(AnswerProto.Value res) {
         return new Numeric(number(res.getNumber()));
+    }
+
+    private static Void voidAnswer(AnswerProto.Void res) {
+        return new Void(res.getMessage());
     }
 
     private static Number number(AnswerProto.Number res) {
