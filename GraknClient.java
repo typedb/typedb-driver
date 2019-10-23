@@ -28,6 +28,7 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
+import grakn.client.answer.Void;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.Concept;
@@ -272,10 +273,10 @@ public class GraknClient implements AutoCloseable {
             return stream(query).collect(Collectors.toList());
         }
 
-        public List<ConceptSet> execute(GraqlDelete query, boolean infer) {
+        public List<Void> execute(GraqlDelete query, boolean infer) {
             return stream(query, infer).collect(Collectors.toList());
         }
-        public List<ConceptSet> execute(GraqlDelete query) {
+        public List<Void> execute(GraqlDelete query) {
             return stream(query).collect(Collectors.toList());
         }
 
@@ -304,11 +305,11 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
-        public Stream<ConceptSet> stream(GraqlDelete query, boolean infer) {
-            Iterable<ConceptSet> iterable = () -> this.rpcIterator(query, infer);
+        public Stream<Void> stream(GraqlDelete query, boolean infer) {
+            Iterable<Void> iterable = () -> this.rpcIterator(query, infer);
             return StreamSupport.stream(iterable.spliterator(), false);
         }
-        public Stream<ConceptSet> stream(GraqlDelete query) {
+        public Stream<Void> stream(GraqlDelete query) {
             return stream(query, true);
         }
 
