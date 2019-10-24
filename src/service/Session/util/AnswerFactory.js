@@ -32,6 +32,7 @@ AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
     if (grpcAnswer.hasConceptset()) return this.createConceptset(grpcAnswer.getConceptset());
     if (grpcAnswer.hasConceptsetmeasure()) return this.createConceptsetmeasure(grpcAnswer.getConceptsetmeasure());
     if (grpcAnswer.hasValue()) return this.createValue(grpcAnswer.getValue());
+    if (grpcAnswer.hasVoid()) return this.createVoid(grpcAnswer.getVoid());
 }
 
 AnswerFactory.prototype.buildExplanation = function (grpcExplanation) {
@@ -85,6 +86,12 @@ AnswerFactory.prototype.createAnswergroup = function(answer){
         owner: () => this.conceptFactory.createConcept(answer.getOwner()),
         answers: () => answer.getAnswersList().map(a => this.createAnswer(a)),
         explanation: () => this.buildExplanation(answer.getExplanation())
+    }
+}
+
+AnswerFactory.prototype.createVoid = function(answer){
+    return {
+        message: () => answer.getMessage()
     }
 }
 
