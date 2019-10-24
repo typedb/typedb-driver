@@ -205,4 +205,17 @@ describe("Concept methods", () => {
         const bondAttributes = await (await tx.getAttributesByValue('Bond', env.dataType().STRING)).collect();
         expect(bondAttributes.length).toBe(0);
     });
+
+    it("isDeleted", async () => {
+        const personType = await tx.putEntityType('person');
+        const personOne = await personType.create();
+        expect(await personOne.isDeleted()).toEqual(false);
+
+        await personOne.delete();
+        expect(await personOne.isDeleted()).toEqual(true);
+
+        const personTwo = await personType.create();
+        await tx.query("match $x isa person; delete $x;");
+        expect(await personTwo.isDeleted()).toEqual(true);
+    });
 });

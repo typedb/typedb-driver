@@ -36,6 +36,10 @@ const methods = {
     },
     concept: {
         delete: function () { return this.txService.deleteConcept(this.id); },
+        isDeleted: async function () {
+            const concept = await this.txService.getConcept(this.id);
+            return concept === null;
+        },
         isSchemaConcept: function () { return Constant.set.SCHEMA_CONCEPTS.has(this.baseType); },
         isType: function () { return Constant.set.TYPES.has(this.baseType); },
         isThing: function () { return Constant.set.THINGS.has(this.baseType); },
