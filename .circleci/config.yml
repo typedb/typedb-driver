@@ -50,6 +50,8 @@ jobs:
       - run: bazel run @graknlabs_build_tools//checkstyle:test-coverage
       - run-bazel-rbe:
           command: bazel build //...
+      - run: bazel run @graknlabs_build_tools//unused_deps -- list
+
 
   build-checkstyle:
     machine: true
@@ -60,16 +62,6 @@ jobs:
       - run: bazel run @graknlabs_build_tools//checkstyle:test-coverage
       - run-bazel-rbe:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
-
-  build-unused-deps:
-    machine: true
-    working_directory: ~/grakn
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
-      - run:
-          command: bazel run @graknlabs_build_tools//unused_deps -- list
-          no_output_timeout: 30m
 
   test-concept:
     machine: true
@@ -202,10 +194,6 @@ workflows:
             branches:
               ignore: client-java-release-branch
       - build-checkstyle:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - build-unused-deps:
           filters:
             branches:
               ignore: client-java-release-branch

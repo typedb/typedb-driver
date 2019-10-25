@@ -31,7 +31,6 @@ java_test(
         # Package dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
@@ -43,6 +42,9 @@ java_test(
     data = [
         "@graknlabs_behaviour//connection:session.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
+    ],
+    runtime_deps = [
+        "//test/behaviour/config:type-registry-config",
     ],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
@@ -67,7 +69,6 @@ java_test(
         # Package dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
@@ -75,6 +76,9 @@ java_test(
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        "//test/behaviour/config:type-registry-config",
     ],
     data = [
         "@graknlabs_behaviour//connection:session.feature",

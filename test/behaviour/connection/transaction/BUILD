@@ -29,13 +29,15 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        "//test/behaviour/connection:steps",
+        "//test/behaviour/config:type-registry-config",
     ],
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
@@ -62,8 +64,6 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
@@ -72,6 +72,10 @@ java_test(
     ],
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
+    ],
+    runtime_deps = [
+        "//test/behaviour/connection:steps",
+        "//test/behaviour/config:type-registry-config",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]

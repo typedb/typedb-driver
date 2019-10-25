@@ -28,8 +28,6 @@ java_test(
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         # TODO: Add your addition debugging dependencies here
@@ -38,6 +36,10 @@ java_test(
         # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        "//test/behaviour/connection:steps",
+        "//test/behaviour/config:type-registry-config",
     ],
     data = [
         ":debug.feature",

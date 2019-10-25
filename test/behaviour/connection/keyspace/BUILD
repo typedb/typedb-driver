@@ -30,7 +30,6 @@ java_test(
     deps = [
         # Package dependencies
         "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         "@graknlabs_common//:common",
@@ -40,6 +39,9 @@ java_test(
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        "//test/behaviour/config:type-registry-config",
     ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
@@ -67,7 +69,6 @@ java_test(
     deps = [
         # Package dependencies
         "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
         "//test/setup:grakn-setup",
 
         "@graknlabs_common//:common",
@@ -80,6 +81,9 @@ java_test(
     ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
+    ],
+    runtime_deps = [
+        "//test/behaviour/config:type-registry-config",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
