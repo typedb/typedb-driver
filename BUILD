@@ -231,16 +231,6 @@ jasmine_node_test(
     data = NODEJS_TEST_DATA,
 )
 
-jasmine_node_test(
-    name = "query-test",
-    srcs = [
-        "tests/support/GraknTestEnvironment.js",
-        "tests/service/session/transaction/Query.test.js",
-    ],
-    deps = NODEJS_TEST_DEPENDENCIES,
-    data = NODEJS_TEST_DATA,
-)
-
 test_suite(
     name = "test-integration",
     tests = [
@@ -258,6 +248,5 @@ test_suite(
         ":thing-test",
         ":entitytype-test",
         ":committx-test",
-        ":query-test",
     ]
 )
