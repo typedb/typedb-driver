@@ -31,12 +31,18 @@ function GrpcCommunicator(stream) {
   });
 
   this.stream.on("error", err => {
-    this.pending.shift().reject(err);
     this.end();
+    if (this.pending.length) {
+      this.pending.shift().reject(err);
+    } else {
+      throw err;
+    }
   });
 
   this.stream.on('status', (e) => {
-    if (this.pending.length) this.pending.shift().reject(e);
+    if (this.pending.length) {
+      this.pending.shift().reject(e);
+    }
   })
 }
 
