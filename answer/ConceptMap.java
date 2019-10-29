@@ -22,6 +22,7 @@ package grakn.client.answer;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.SessionProto;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
@@ -70,7 +71,11 @@ public class ConceptMap extends Answer {
 
     @CheckReturnValue
     public Explanation explanation() {
-        return tx.getExplanation(this);
+        if (hasExplanation) {
+            return tx.getExplanation(this);
+        } else {
+            throw GraknClientException.explanationNotPresent();
+        }
     }
 
     @Nullable

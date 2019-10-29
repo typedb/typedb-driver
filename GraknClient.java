@@ -727,7 +727,7 @@ public class GraknClient implements AutoCloseable {
             return conceptMapProto.build();
         }
 
-        ConceptProto.Concept concept(Concept concept) {
+        private ConceptProto.Concept concept(Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
@@ -754,7 +754,7 @@ public class GraknClient implements AutoCloseable {
             } else if (concept.isType()) {
                 return ConceptProto.Concept.BASE_TYPE.META_TYPE;
             } else {
-                throw GraknClientException.create("Unrecognised concept base type" + concept);
+                throw GraknClientException.unknownBaseType(concept);
             }
         }
 
