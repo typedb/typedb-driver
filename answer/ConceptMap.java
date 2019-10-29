@@ -22,6 +22,7 @@ package grakn.client.answer;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
+import grakn.protocol.session.SessionProto;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
 
@@ -31,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,8 +70,7 @@ public class ConceptMap extends Answer {
 
     @CheckReturnValue
     public Explanation explanation() {
-        // TODO perform retrieve operation
-        return null;
+        return tx.getExplanation(this);
     }
 
     @Nullable

@@ -76,7 +76,7 @@ public class ResponseReader {
         }
     }
 
-    private static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
+    public static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         return new Explanation(answers);

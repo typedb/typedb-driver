@@ -27,6 +27,7 @@ import grakn.client.answer.ConceptList;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
+import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Attribute;
@@ -47,6 +48,7 @@ import grakn.client.rpc.Transceiver;
 import grakn.protocol.keyspace.KeyspaceProto;
 import grakn.protocol.keyspace.KeyspaceServiceGrpc;
 import grakn.protocol.keyspace.KeyspaceServiceGrpc.KeyspaceServiceBlockingStub;
+import grakn.protocol.session.AnswerProto;
 import grakn.protocol.session.ConceptProto;
 import grakn.protocol.session.SessionProto;
 import grakn.protocol.session.SessionServiceGrpc;
@@ -66,6 +68,7 @@ import io.grpc.StatusRuntimeException;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -701,6 +704,58 @@ public class GraknClient implements AutoCloseable {
 
             transceiver.send(request);
             return responseOrThrow();
+        }
+
+        public Explanation getExplanation(ConceptMap explainable) {
+            AnswerProto.ConceptMap conceptMapProto = conceptMap(explainable);
+            AnswerProto.Explanation.Req explanationReq = AnswerProto.Explanation.Req.newBuilder().setExplainable(conceptMapProto).build();
+            SessionProto.Transaction.Req request = SessionProto.Transaction.Req.newBuilder().setExplanationReq(explanationReq).build();
+            transceiver.send(request);
+            SessionProto.Transaction.Res response = responseOrThrow();
+            return ResponseReader.explanation(response.getExplanationRes(), this);
+        }
+
+        private AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
+            AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
+            conceptMap.map().forEach((var, concept) -> {
+                ConceptProto.Concept conceptProto = concept(concept);
+                conceptMapProto.putMap(var.name(), conceptProto);
+            });
+
+            conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
+            conceptMapProto.setPattern(conceptMap.queryPattern().toString());
+            return conceptMapProto.build();
+        }
+
+        ConceptProto.Concept concept(Concept concept) {
+            return ConceptProto.Concept.newBuilder()
+                    .setId(concept.id().getValue())
+                    .setBaseType(getBaseType(concept))
+                    .build();
+        }
+
+        private ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
+            if (concept.isEntityType()) {
+                return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
+            } else if (concept.isRelationType()) {
+                return ConceptProto.Concept.BASE_TYPE.RELATION_TYPE;
+            } else if (concept.isAttributeType()) {
+                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE_TYPE;
+            } else if (concept.isEntity()) {
+                return ConceptProto.Concept.BASE_TYPE.ENTITY;
+            } else if (concept.isRelation()) {
+                return ConceptProto.Concept.BASE_TYPE.RELATION;
+            } else if (concept.isAttribute()) {
+                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE;
+            } else if (concept.isRole()) {
+                return ConceptProto.Concept.BASE_TYPE.ROLE;
+            } else if (concept.isRule()) {
+                return ConceptProto.Concept.BASE_TYPE.RULE;
+            } else if (concept.isType()) {
+                return ConceptProto.Concept.BASE_TYPE.META_TYPE;
+            } else {
+                throw GraknClientException.create("Unrecognised concept base type" + concept);
+            }
         }
 
         private SessionProto.Transaction.Iter.Res iterate(int iteratorId) {
