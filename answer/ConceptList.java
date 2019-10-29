@@ -31,16 +31,13 @@ public class ConceptList extends Answer {
 
     // TODO: change to store List<Concept> once we are able to construct Concept without a database look up
     private final List<ConceptId> list;
-    private final Explanation explanation;
 
     public ConceptList(List<ConceptId> list) {
         this.list = Collections.unmodifiableList(list);
-        this.explanation = new Explanation();
     }
 
-    @Override
-    public Explanation explanation() {
-        return explanation;
+    public boolean hasExplanation() {
+        return false;
     }
 
     public List<ConceptId> list() {

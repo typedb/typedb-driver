@@ -76,11 +76,10 @@ public class ResponseReader {
         }
     }
 
-    private static Explanation explanation(AnswerProto.Explanation res, GraknClient.Transaction tx) {
+    private static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
         List<ConceptMap> answers = new ArrayList<>();
-        res.getAnswersList().forEach(answer -> answers.add(conceptMap(answer, tx)));
-        Pattern explanation = res.getPattern().isEmpty() ? null : Graql.parsePattern(res.getPattern());
-        return new Explanation(explanation, answers);
+        res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
+        return new Explanation(answers);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
@@ -91,11 +90,14 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, Concept> answers = new HashMap<>();
+        Map<Variable, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> answers.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
+                (resVar, resConcept) -> variableMap.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
         );
-        return new ConceptMap(Collections.unmodifiableMap(answers), explanation(res.getExplanation(), tx));
+        // Pattern is null if no reasoner was used
+        boolean hasExplanation = res.getHasExplanation();
+        Pattern queryPattern = hasExplanation ? Graql.parsePattern(res.getPattern()) : null;
+        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
     }
 
     private static ConceptList conceptList(AnswerProto.ConceptList res) {
