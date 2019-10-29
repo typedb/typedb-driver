@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 /**
  * A type of Answer object that contains a Map of Concepts.
  */
-public class ConceptMap extends Answer {
+public class ConceptMap implements Answer {
 
     private final Map<Variable, Concept> map;
     private final boolean hasExplanation;

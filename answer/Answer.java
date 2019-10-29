@@ -24,12 +24,12 @@ import javax.annotation.CheckReturnValue;
 /**
  * An object that contains the answer of every Graql Query.
  */
-public abstract class Answer {
+public interface Answer {
 
     /**
      * Whether this answer has an Explanation that can be retrieved
      */
     @CheckReturnValue
-    public abstract boolean hasExplanation();
+    boolean hasExplanation();
 
 }

@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-public class Void extends Answer {
+public class Void implements Answer {
     private final String message;
 
     public Void(String message) {
