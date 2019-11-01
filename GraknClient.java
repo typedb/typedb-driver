@@ -373,6 +373,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, infer).collect(Collectors.toList());
         }
 
+
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query) {
             return stream(query, true);
         }
@@ -718,44 +719,12 @@ public class GraknClient implements AutoCloseable {
         private AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
             AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
             conceptMap.map().forEach((var, concept) -> {
-                ConceptProto.Concept conceptProto = concept(concept);
+                ConceptProto.Concept conceptProto = RequestBuilder.ConceptMessage.from(concept);
                 conceptMapProto.putMap(var.name(), conceptProto);
             });
-
             conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
             conceptMapProto.setPattern(conceptMap.queryPattern().toString());
             return conceptMapProto.build();
-        }
-
-        private ConceptProto.Concept concept(Concept concept) {
-            return ConceptProto.Concept.newBuilder()
-                    .setId(concept.id().getValue())
-                    .setBaseType(getBaseType(concept))
-                    .build();
-        }
-
-        private ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
-            if (concept.isEntityType()) {
-                return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
-            } else if (concept.isRelationType()) {
-                return ConceptProto.Concept.BASE_TYPE.RELATION_TYPE;
-            } else if (concept.isAttributeType()) {
-                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE_TYPE;
-            } else if (concept.isEntity()) {
-                return ConceptProto.Concept.BASE_TYPE.ENTITY;
-            } else if (concept.isRelation()) {
-                return ConceptProto.Concept.BASE_TYPE.RELATION;
-            } else if (concept.isAttribute()) {
-                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE;
-            } else if (concept.isRole()) {
-                return ConceptProto.Concept.BASE_TYPE.ROLE;
-            } else if (concept.isRule()) {
-                return ConceptProto.Concept.BASE_TYPE.RULE;
-            } else if (concept.isType()) {
-                return ConceptProto.Concept.BASE_TYPE.META_TYPE;
-            } else {
-                throw GraknClientException.unknownBaseType(concept);
-            }
         }
 
         private SessionProto.Transaction.Iter.Res iterate(int iteratorId) {
