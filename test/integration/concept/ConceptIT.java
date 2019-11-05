@@ -17,9 +17,11 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept;
+package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.answer.ConceptMap;
+import grakn.client.answer.Explanation;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.AttributeType.DataType;
@@ -33,7 +35,9 @@ import grakn.client.concept.Rule;
 import grakn.client.concept.Thing;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
+import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
+import graql.lang.statement.Variable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,6 +61,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -596,5 +601,58 @@ public class ConceptIT {
         dylanAndEmily.unassign(friend, emily);
 
         assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+    }
+
+
+    @Test
+    public void testExplanation() {
+        GraknClient.Session session = client.session("test_rules");
+        GraknClient.Transaction tx = session.transaction().write();
+        tx.execute(Graql.parse(" define\n" +
+                "                    object sub entity, plays owned, plays owner;\n" +
+                "                    ownership sub relation, relates owned, relates owner;\n" +
+                "                    transitive-ownership sub rule, when {\n" +
+                "                        (owned: $x, owner: $y) isa ownership;\n" +
+                "                        (owned: $y, owner: $z) isa ownership;\n" +
+                "                    }, then {\n" +
+                "                        (owned: $x, owner: $z) isa ownership;\n" +
+                "                    };").asDefine());
+        tx.execute(Graql.parse("insert\n" +
+                "                    $a isa object; $b isa object; $c isa object; $d isa object; $e isa object;\n" +
+                "                    (owned: $a, owner: $b) isa ownership;\n" +
+                "                    (owned: $b, owner: $c) isa ownership;\n" +
+                "                    (owned: $c, owner: $d) isa ownership;\n" +
+                "                    (owned: $d, owner: $e) isa ownership;").asInsert());
+
+        tx.commit();
+
+        tx = session.transaction().write();
+
+        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet());
+
+        int hasExplanation = 0;
+        int noExplanation = 0;
+        for (ConceptMap answer : answers) {
+            if (answer.hasExplanation()) {
+                hasExplanation++;
+                assertTrue(answer.queryPattern().toString().length() > 0);
+                for (Variable var : answer.map().keySet()) {
+                    assertTrue(answer.queryPattern().variables().contains(var));
+                }
+
+                Explanation explanation = answer.explanation();
+                assertNotNull(explanation);
+                if (explanation.getAnswers().get(0).hasExplanation()) {
+                    Explanation subExplanation = explanation.getAnswers().get(0).explanation();
+                    assertNotNull(subExplanation);
+                }
+            } else {
+                noExplanation++;
+                assertNull( answer.queryPattern());
+            }
+        }
+
+        assertEquals(4, noExplanation);
+        assertEquals(6, hasExplanation);
     }
 }
