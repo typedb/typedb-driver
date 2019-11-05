@@ -22,23 +22,17 @@ package grakn.client.answer;
 /**
  * A type of Answer object that contains a Number.
  */
-public class Numeric extends Answer {
+public class Numeric implements Answer {
 
     private final Number number;
-    private final Explanation explanation;
 
     public Numeric(Number number) {
-        this(number, new Explanation());
-    }
-
-    public Numeric(Number number, Explanation explanation) {
         this.number = number;
-        this.explanation = explanation;
     }
 
     @Override
-    public Explanation explanation() {
-        return explanation;
+    public boolean hasExplanation() {
+        return false;
     }
 
     public Number number() {

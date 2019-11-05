@@ -19,6 +19,7 @@
 
 package grakn.client.exception;
 
+import grakn.client.concept.Concept;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
@@ -54,6 +55,14 @@ public class GraknClientException extends RuntimeException {
 
     public static GraknClientException unreachableStatement(String message) {
         return create("Statement expected to be unreachable: " + message);
+    }
+
+    public static GraknClientException explanationNotPresent() {
+        return create("No explanation found");
+    }
+
+    public static GraknClientException unknownBaseType(Concept concept) {
+        return create("No known base type for concept: " + concept);
     }
 
     public String getName() {

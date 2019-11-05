@@ -19,37 +19,23 @@
 
 package grakn.client.answer;
 
-import graql.lang.pattern.Pattern;
-
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Reasoner explanation for inferred answers
+ * An Explanation can be retrieved using a specific ConceptMap. The concept map's pattern and variable mapping
+ * correspond to a satisified `then` clause of a rule.
+ * The corresponding Explanation, contains the concept maps that
+ * satisfy the `when` clause of a rule that was satisfied.
  */
 public class Explanation {
 
-    private final Pattern pattern;
     private final List<ConceptMap> answers;
 
-    Explanation() {
-        this.pattern = null;
-        this.answers = Collections.unmodifiableList(Collections.emptyList());
-    }
-
-    public Explanation(Pattern pattern, List<ConceptMap> ans) {
-        this.pattern = pattern;
+    public Explanation(List<ConceptMap> ans) {
         this.answers = Collections.unmodifiableList(ans);
     }
-
-    /**
-     * @return query pattern associated with this explanation
-     */
-    @CheckReturnValue
-    @Nullable
-    public Pattern getPattern() { return pattern;}
 
     /**
      * @return answers this explanation is dependent on

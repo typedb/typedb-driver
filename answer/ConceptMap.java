@@ -19,34 +19,74 @@
 
 package grakn.client.answer;
 
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.exception.GraknClientException;
+import grakn.protocol.session.SessionProto;
+import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 /**
  * A type of Answer object that contains a Map of Concepts.
  */
-public class ConceptMap extends Answer {
+public class ConceptMap implements Answer {
 
     private final Map<Variable, Concept> map;
-    private final Explanation explanation;
+    private final boolean hasExplanation;
+    private GraknClient.Transaction tx;
+    private final Pattern queryPattern;
 
-    public ConceptMap(Map<Variable, Concept> map, Explanation exp) {
+    public ConceptMap(Map<Variable, Concept> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
-        this.explanation = exp;
+        this.queryPattern = queryPattern;
+        this.hasExplanation = hasExplanation;
+        this.tx = tx;
+    }
+
+    /**
+     * @return all explanations taking part in the derivation of this answer
+     */
+    @Nullable
+    @CheckReturnValue
+    public Set<Explanation> explanations() {
+        if (this.explanation() == null) return Collections.emptySet();
+        Set<Explanation> explanations = new HashSet<>();
+        explanations.add(this.explanation());
+        this.explanation().getAnswers().stream().forEach(conceptMap -> explanations.addAll(conceptMap.explanations()));
+        return explanations;
+    }
+
+    @CheckReturnValue
+    public Explanation explanation() {
+        if (hasExplanation) {
+            return tx.getExplanation(this);
+        } else {
+            throw GraknClientException.explanationNotPresent();
+        }
+    }
+
+    @Nullable
+    @CheckReturnValue
+    public Pattern queryPattern() {
+        return queryPattern;
     }
 
     @Override
-    public Explanation explanation() {
-        return explanation;
+    public boolean hasExplanation() {
+        return hasExplanation;
     }
 
     @CheckReturnValue

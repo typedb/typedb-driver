@@ -70,7 +70,16 @@ jobs:
       - install-bazel-linux-rbe
       - checkout
       - run-bazel-rbe:
-          command: bazel test //test/behaviour/concept:concept-it --test_output=errors
+          command: bazel test //test/integration/concept:concept-it --test_output=errors
+
+  test-answer:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/integration/answer:answer-it --test_output=errors
 
   test-keyspace:
     machine: true
@@ -201,6 +210,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
+      - test-answer:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - test-keyspace:
           filters:
             branches:
@@ -217,6 +230,7 @@ workflows:
             - build
             - build-checkstyle
             - test-concept
+            - test-answer
             - test-keyspace
             - test-session
       - test-deployment-maven:

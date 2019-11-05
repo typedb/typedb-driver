@@ -20,32 +20,16 @@
 package grakn.client.answer;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * An object that contains the answer of every Graql Query.
  */
-public abstract class Answer {
+public interface Answer {
 
     /**
-     * @return an explanation object indicating how this answer was obtained
+     * Whether this answer has an Explanation that can be retrieved
      */
-    @Nullable
     @CheckReturnValue
-    public abstract Explanation explanation();
+    boolean hasExplanation();
 
-    /**
-     * @return all explanations taking part in the derivation of this answer
-     */
-    @CheckReturnValue
-    public Set<Explanation> explanations() {
-        if (this.explanation() == null) return Collections.emptySet();
-        Set<Explanation> explanations = new HashSet<>();
-        explanations.add(this.explanation());
-        this.explanation().getAnswers().forEach(ans -> explanations.addAll(ans.explanations()));
-        return explanations;
-    }
 }
