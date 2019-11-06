@@ -37,7 +37,7 @@ const GrpcIteratorFactory = require("./util/GrpcIteratorFactory");
 function TransactionService(txStream) {
     this.communicator = new GrpcCommunicator(txStream);
     const conceptFactory = new ConceptFactory(this);
-    const iteratorFactory = new GrpcIteratorFactory(conceptFactory, this.communicator);
+    const iteratorFactory = new GrpcIteratorFactory(conceptFactory, this);
     this.respConverter = new ResponseConverter(conceptFactory, iteratorFactory);
 }
 
@@ -364,6 +364,11 @@ TransactionService.prototype.query = function executeQuery(query, options) {
     const txRequest = RequestBuilder.executeQuery(query, options);
     return this.communicator.send(txRequest)
         .then(resp => this.respConverter.executeQuery(resp));
+};
+
+TransactionService.prototype.explanation = function (grpcConceptMap) {
+    const txRequest = RequestBuilder.explanation(grpcConceptMap);
+    return this.communicator.send(txRequest);
 };
 
 module.exports = TransactionService;

@@ -43,6 +43,64 @@ afterEach(() => {
 
 describe("Transaction methods", () => {
 
+  it("match get - Answer of ConceptMap", async () => {
+    let localSession = await env.sessionForKeyspace('shortestpathks');
+  
+    localTx = await localSession.transaction().write();
+  
+    await localTx.query(`
+      define
+          object sub entity, plays owned, plays owner;
+          ownership sub relation, relates owned, relates owner;
+          transitive-ownership sub rule, when {
+              (owned: $x, owner: $y) isa ownership;
+              (owned: $y, owner: $z) isa ownership;
+          }, then {
+              (owned: $x, owner: $z) isa ownership;
+          };
+    `);
+
+    await localTx.query(`
+      insert
+        $a isa object; $b isa object; $c isa object; $d isa object; $e isa object;
+        (owned: $a, owner: $b) isa ownership;
+        (owned: $b, owner: $c) isa ownership;
+        (owned: $c, owner: $d) isa ownership;
+        (owned: $d, owner: $e) isa ownership;
+    `);
+
+    await localTx.commit()
+
+    localTx = await localSession.transaction().write();
+    const answers = await (await localTx.query("match (owner: $x, owned: $y) isa ownership; get;")).collect();
+
+    let hasExplanationCounter = 0;
+    let noExplanationCounter = 0;
+
+    for (conceptMap of answers) {
+      const pattern = conceptMap.queryPattern();
+      if (conceptMap.hasExplanation()) {
+        const explanation = await conceptMap.explanation();
+        expect(explanation).not.toBeNull();
+        expect(pattern.length).toBeGreaterThan(0);
+        Array.from(conceptMap.map().entries()).forEach(([variable]) => {
+          expect(pattern.includes(`$${variable}`)).toBeTruthy();
+        });
+        hasExplanationCounter += 1;
+      } else {
+        expect(pattern.length).toEqual(0);
+        noExplanationCounter += 1;
+      }
+    }
+
+    expect(noExplanationCounter).toEqual(4);
+    expect(hasExplanationCounter).toEqual(6);
+
+    await localTx.close();
+    await localSession.close();
+    await env.graknClient.keyspaces().delete('shortestpathks');
+  });
+
   it("shortest path - Answer of conceptList", async ()=>{
     let localSession = await env.sessionForKeyspace('shortestpathks');
     let localTx = await localSession.transaction().write();

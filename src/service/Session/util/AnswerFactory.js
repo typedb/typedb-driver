@@ -21,8 +21,9 @@
  * Factory for Answer and Explanation objects
  * @param {Object} conceptFactory
  */
-function AnswerFactory(conceptFactory) {
+function AnswerFactory(conceptFactory, txService) {
     this.conceptFactory = conceptFactory;
+    this.txService = txService;
 }
 
 AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
@@ -35,56 +36,64 @@ AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
 }
 
 AnswerFactory.prototype.buildExplanation = function (grpcExplanation) {
-    if (!grpcExplanation) return null;
+    const grpcListOfConceptMaps = grpcExplanation.getExplanationRes().getExplanationList();
+    const nativeListOfConceptMaps = grpcListOfConceptMaps.map((grpcConceptMap) => this.createConceptmap(grpcConceptMap));
+
     return {
-        queryPattern: () => grpcExplanation.getPattern(),
-        answers: () => grpcExplanation.getAnswersList().map(a => this.createConceptmap(a))
+        getAnswers: () => nativeListOfConceptMaps,
     }
 }
 
 AnswerFactory.prototype.createConceptmap = function (answer) {
     const answerMap = new Map();
+    
     answer.getMapMap().forEach((grpcConcept, key) => {
-            answerMap.set(key, this.conceptFactory.createConcept(grpcConcept));
-        });
+        answerMap.set(key, this.conceptFactory.createConcept(grpcConcept));
+    });
+
+
     return {
         map: () => answerMap,
         get: (v) => answerMap.get(v),
-        explanation: () => this.buildExplanation(answer.getExplanation())
-    }
+        hasExplanation: () => answer.getHasexplanation(),
+        queryPattern: () => answer.getPattern(),
+        explanation: async () => {
+            if (answer.getHasexplanation()) {
+                const grpcExplanation = await this.txService.explanation(answer);
+                return this.buildExplanation(grpcExplanation);
+            } else {
+                throw "Explanation not available on concept map";
+            }
+        },
+    };
 }
 AnswerFactory.prototype.createValue = function(answer){
     return {
         number: () => Number(answer.getNumber().getValue()),
-        explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
 AnswerFactory.prototype.createConceptlist = function(answer){
     const list = answer.getList();
     return {
         list: () => list.getIdsList(),
-        explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
 AnswerFactory.prototype.createConceptset = function(answer){
     const set = answer.getSet();
     return {
         set: () => new Set(set.getIdsList()),
-        explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
 AnswerFactory.prototype.createConceptsetmeasure = function(answer){
     return {
         measurement: () => Number(answer.getMeasurement().getValue()),
         set: () => new Set(answer.getSet().getIdsList()),
-        explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
 AnswerFactory.prototype.createAnswergroup = function(answer){
     return {
         owner: () => this.conceptFactory.createConcept(answer.getOwner()),
         answers: () => answer.getAnswersList().map(a => this.createAnswer(a)),
-        explanation: () => this.buildExplanation(answer.getExplanation())
     }
 }
 

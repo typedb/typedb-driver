@@ -30,6 +30,7 @@ const propertiesReader = require('properties-reader');
 
 
 const GraknClient = require("../../client-nodejs/src/GraknClient");
+
 const graknClient = new GraknClient(DEFAULT_URI);
 
 let session;
@@ -126,7 +127,7 @@ module.exports = {
             throw new Error('Grakn Server is already running. Stop it before running the integration tests');            
         } else {
             execGraknCommand(getServerCommand('start'));
-            execGraknCommand(getLoadGraqlCommand(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene'))
+            execGraknCommand(getLoadGraqlCommand(path.resolve('.', 'tests/support/basic-genealogy.gql'), 'gene'));
         }
     },
     beforeAllTimeout: 100000 // empirically, this should be enough to unpack, bootup Grakn and load data

@@ -17,6 +17,10 @@
  * under the License.
  */
 
+const reporters = require('jasmine-reporters')
+const tapReporter = new reporters.TapReporter();
+jasmine.getEnv().addReporter(tapReporter)
+
 const env = require('../../../support/GraknTestEnvironment');
 
 let graknClient;
@@ -39,7 +43,7 @@ describe('Integration test', () => {
     it("Tx open in READ mode should throw when trying to define", async () => {
         const tx = await session.transaction().read();
         await expectAsync(tx.query("define person sub entity;")).toBeRejected();
-        tx.close();
+        await tx.close();
     });
 
     it("If tx does not commit, different Tx won't see changes", async () => {
@@ -58,39 +62,61 @@ describe('Integration test', () => {
         const newTx = await session.transaction().write();
         const superman = await newTx.getSchemaConcept('superman');
         expect(superman.isSchemaConcept()).toBeTruthy();
-        newTx.close();
+        await newTx.close();
     });
 
-    xit("explanation and default of infer is true", async () => {
+    it("explanation and default of infer is true", async () => {
         const localSession = await graknClient.session("gene");
-        const tx = await localSession.transaction().write();
-        const iterator = await tx.query("match $x isa cousins; get;"); // TODO: put back offset 0; limit 1;
+        let tx = await localSession.transaction().write();
+        await tx.query(`
+            insert 
+                $p1 isa person; $c1 isa person; (parent: $p1, child: $c1) isa parentship;
+                $p2 isa person; $c2 isa person; (parent: $p2, child: $c2) isa parentship;
+                (sibling: $p1, sibling: $p2) isa siblings;
+        `);
+        await tx.commit();
+
+        tx = await localSession.transaction().write();
+        const iterator = await tx.query("match $x isa cousins; get;");
         const answer = await iterator.next();
         expect(answer.map().size).toBe(1);
-        expect(answer.explanation().answers()).toHaveLength(3);
-        expect(answer.explanation().queryPattern()).toBe("{ $x isa cousins; };");
-        await tx.close()
+        expect((await answer.explanation()).getAnswers().length).toEqual(3);
+        expect(answer.queryPattern().includes("$x isa cousins;")).toBeTruthy();
+        await tx.close();
         await localSession.close();
     });
 
-    xit("explanation with join explanation", async () => {
+    it("explanation with join explanation", async () => {
         const localSession = await graknClient.session("gene");
         const tx = await localSession.transaction().write();
-        const iterator = await tx.query(`match ($x, $y) isa marriage; ($y, $z) isa marriage;
-                                            $x != $z; get;`);
+        await tx.query(`
+            insert 
+                $x isa person; $y isa person; $z isa person; 
+                (spouse: $x, spouse: $y) isa marriage; 
+                (spouse: $y, spouse: $z) isa marriage;
+        `)
+        const iterator = await tx.query(`match ($x, $y) isa marriage; ($y, $z) isa marriage; $x != $z; get;`);
         const answers = await iterator.collect();
-        expect(answers).toHaveLength(4);
-        answers.forEach(a=>{
-            expect(a.explanation).toBeDefined()
-        });
+        expect(answers.length).toEqual(2);
+        answers.forEach(a => expect(a.explanation).toBeDefined());
         await tx.close()
         await localSession.close();
     });
 
-    xit("no results with infer false", async () => {
+    it("no results with infer false", async () => {
         const localSession = await graknClient.session("gene");
-        const tx = await localSession.transaction().write();
-        const iterator = await tx.query("match $x isa cousins; get;", { infer: false }); // TODO: put back offset 0; limit 1;
+        
+        let tx = await localSession.transaction().write();
+        await tx.query(`
+            insert 
+                $p1 isa person; $c1 isa person; (parent: $p1, child: $c1) isa parentship;
+                $p2 isa person; $c2 isa person; (parent: $p2, child: $c2) isa parentship;
+                (sibling: $p1, sibling: $p2) isa siblings;
+        `);
+        await tx.commit();
+
+        tx = await localSession.transaction().write();
+        const iterator = await tx.query("match $x isa cousins; get;", { infer: false });
         const answer = await iterator.next();
         expect(answer).toBeNull();
         await tx.close();

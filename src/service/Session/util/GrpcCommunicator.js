@@ -51,6 +51,7 @@ GrpcCommunicator.prototype.send = function (request) {
   return new Promise((resolve, reject) => {
     this.pending.push({ resolve, reject });
     this.stream.write(request);
+
   })
 };
 

@@ -23,10 +23,10 @@ const AnswerFactory = require("./AnswerFactory");
 /**
  * Factory of Iterators, bound to a specific transaction
  */
-function GrpcIteratorFactory(conceptFactory, communicator) {
-  this.communicator = communicator;
+function GrpcIteratorFactory(conceptFactory, txService) {
+  this.communicator = txService.communicator;
   this.conceptFactory = conceptFactory;
-  this.answerFactory = new AnswerFactory(conceptFactory);
+  this.answerFactory = new AnswerFactory(conceptFactory, txService);
 }
 
 // Query Iterator
