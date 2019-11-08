@@ -23,10 +23,11 @@ workspace(name = "graknlabs_client_nodejs")
 # Grakn Labs dependencies #
 ###########################
 
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core", "graknlabs_build_tools", "graknlabs_protocol")
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core", "graknlabs_build_tools", "graknlabs_protocol", "graknlabs_console")
 graknlabs_grakn_core()
 graknlabs_build_tools()
 graknlabs_protocol()
+graknlabs_console()
 
 load("@graknlabs_build_tools//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
@@ -94,7 +95,7 @@ node_grpc_compile()
 ################################
 
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
-     "graknlabs_graql", "graknlabs_common", "graknlabs_client_java", "graknlabs_console", "graknlabs_benchmark")
+     "graknlabs_graql", "graknlabs_common", "graknlabs_client_java", "graknlabs_benchmark")
 graknlabs_graql()
 graknlabs_common()
 graknlabs_client_java()

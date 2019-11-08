@@ -38,3 +38,10 @@ def graknlabs_protocol():
         remote = "https://github.com/graknlabs/protocol",
         commit = "246139d83ad8d3b5b3f37e2bf26d3b56fad4d8bc" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
+
+def graknlabs_console():
+    git_repository(
+        name = "graknlabs_console",
+        remote = "https://github.com/graknlabs/console",
+        commit = "19fe1b233cf7471093c507568c34b48944f7c66b" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+    )
