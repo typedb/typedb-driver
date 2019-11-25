@@ -41,7 +41,7 @@ java_test(
         "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
         "//dependencies/maven/artifacts/org/slf4j:slf4j-api", # TODO: Do we still need this?
     ],
-    size = "small",
+    size = "large",
     classpath_resources = [
         "//test/setup:logback",
     ],
