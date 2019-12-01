@@ -29,6 +29,8 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
+        "//:client-java",
+        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
@@ -37,7 +39,6 @@ java_test(
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
     ],
     data = [
@@ -65,6 +66,8 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
+        "//:client-java",
+        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
@@ -76,7 +79,6 @@ java_test(
         "@graknlabs_behaviour//connection:transaction.feature",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
         "//test/behaviour/config:type-registry-config",
     ],
     args = [ # The order of the arguments matter
