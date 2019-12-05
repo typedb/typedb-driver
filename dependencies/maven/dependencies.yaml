@@ -79,19 +79,19 @@ dependencies:
 
   io.grpc:
     grpc-core:
-      version: "1.15.0"
+      version: "1.16.0"
       lang: java
     grpc-netty:
-      version: "1.15.0"
+      version: "1.16.0"
       lang: java
     grpc-protobuf:
-      version: "1.15.0"
+      version: "1.16.0"
       lang: java
     grpc-stub:
-      version: "1.15.0"
+      version: "1.16.0"
       lang: java
     grpc-testing:
-      version: "1.15.0"
+      version: "1.16.0"
       lang: java
 
   io.netty:
