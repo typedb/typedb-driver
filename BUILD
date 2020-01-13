@@ -46,6 +46,7 @@ java_library(
         "//dependencies/maven/artifacts/com/google/guava:guava",
         "//dependencies/maven/artifacts/io/grpc:grpc-core",
         "//dependencies/maven/artifacts/io/grpc:grpc-stub",
+        "//dependencies/maven/artifacts/io/grpc:grpc-api",
         "//dependencies/maven/artifacts/org/slf4j:slf4j-api" # TODO: Do we still need this?
     ],
     runtime_deps = [
