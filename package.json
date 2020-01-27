@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "google-protobuf": "^3.6.0",
-    "grpc": "^1.22.2"
+    "grpc": "^1.24.1"
   },
   "devDependencies": {
     "@bazel/jasmine": "latest",
