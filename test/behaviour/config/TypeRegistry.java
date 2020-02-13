@@ -20,11 +20,20 @@
 package grakn.client.test.behaviour.config;
 
 import grakn.client.GraknClient;
+import graql.lang.Graql;
+import graql.lang.pattern.Pattern;
+import graql.lang.statement.Variable;
 import io.cucumber.core.api.TypeRegistryConfigurer;
 import io.cucumber.cucumberexpressions.ParameterType;
 import io.cucumber.cucumberexpressions.Transformer;
 
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Locale.ENGLISH;
 
@@ -54,5 +63,19 @@ public class TypeRegistry implements TypeRegistryConfigurer {
                     return GraknClient.Transaction.Type.of(id);
                 })
         );
+
+        typeRegistry.defineParameterType(new ParameterType<>("patterns", "{}", List.class, Graql::parsePatternList));
+
+        // anything followed by a semicolon can be interpreted as the vars after a `get`
+        typeRegistry.defineParameterType(new ParameterType<>("vars", "/.*/;", List.class, (String vars) ->
+                Arrays.stream(vars.split(","))
+                        .map(Variable::new)
+                        .collect(Collectors.toList())
+                )
+        );
+
+        typeRegistry.defineParameterType(new ParameterType<>("graql-file", ".*.gql", File.class, (String file) ->
+            Paths.get(file).toFile()
+        ));
     }
 }
