@@ -54,21 +54,21 @@ public class SessionSteps {
         }
     }
 
-    @Then("session(s) is/are null: {boolean}")
+    @Then("session(s) is/are null: {bool}")
     public void sessions_are_null(Boolean isNull) {
         for (GraknClient.Session session : ConnectionSteps.sessions) {
             assertEquals(isNull, isNull(session));
         }
     }
 
-    @Then("session(s) is/are open: {boolean}")
+    @Then("session(s) is/are open: {bool}")
     public void sessions_are_open(Boolean isOpen) {
         for (GraknClient.Session session : ConnectionSteps.sessions) {
             assertEquals(isOpen, session.isOpen());
         }
     }
 
-    @Then("sessions in parallel are null: {boolean}")
+    @Then("sessions in parallel are null: {bool}")
     public void sessions_in_parallel_are_null(Boolean isNull) {
         Stream<CompletableFuture<Void>> assertions = ConnectionSteps.futureSessions
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
@@ -79,7 +79,7 @@ public class SessionSteps {
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
     }
 
-    @Then("sessions in parallel are open: {boolean}")
+    @Then("sessions in parallel are open: {bool}")
     public void sessions_in_parallel_are_open(Boolean isOpen) {
         Stream<CompletableFuture<Void>> assertions = ConnectionSteps.futureSessions
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {

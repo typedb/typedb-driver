@@ -39,9 +39,6 @@ java_test(
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
-    runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
-    ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
@@ -79,9 +76,6 @@ java_test(
     ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
-    ],
-    runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]

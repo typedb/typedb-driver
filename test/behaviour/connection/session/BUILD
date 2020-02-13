@@ -32,7 +32,6 @@ java_library(
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
-#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ],
 )
@@ -52,7 +51,6 @@ java_test(
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
-#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
@@ -61,7 +59,7 @@ java_test(
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
+        "//test/behaviour/config:parameters",
     ],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
@@ -90,12 +88,11 @@ java_test(
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
-#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         "@graknlabs_behaviour//connection:session.feature",

@@ -21,7 +21,6 @@ package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
 import grakn.client.test.setup.GraknProperties;
-import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 
@@ -116,7 +115,7 @@ public class ConnectionSteps {
     }
 
     @After
-    public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
+    public void close_transactions_and_sessions() throws ExecutionException, InterruptedException {
         if (sessions != null) {
             for (GraknClient.Session session : sessions) {
                 if (sessionsToTransactions.containsKey(session)) {

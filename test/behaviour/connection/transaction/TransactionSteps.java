@@ -25,11 +25,10 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -67,6 +66,20 @@ public class TransactionSteps {
         }
     }
 
+    @Then("for each session, transaction(s) has/have type:")
+    public void for_each_session_transactions_have_type(List<GraknClient.Transaction.Type> types) {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            List<GraknClient.Transaction> transactions = ConnectionSteps.sessionsToTransactions.get(session);
+            assertEquals(types.size(), transactions.size());
+
+            Iterator<GraknClient.Transaction.Type> typesIterator = types.iterator();
+            Iterator<GraknClient.Transaction> transactionIterator = transactions.iterator();
+            while (typesIterator.hasNext()){
+                assertEquals(typesIterator.next(), transactionIterator.next().type());
+            }
+        }
+    }
+
     @Then("for each session, transactions in parallel are null: {boolean}")
     public void for_each_session_transactions_in_parallel_are_null(boolean isNull) {
         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isNull, isNull(transaction)));
@@ -100,7 +113,7 @@ public class TransactionSteps {
         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
 
-    public void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<GraknClient.Transaction> assertion) {
+    private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<GraknClient.Transaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
         for (CompletableFuture<GraknClient.Session> futureSession : ConnectionSteps.futureSessions) {
             for (CompletableFuture<GraknClient.Transaction> futureTransaction : ConnectionSteps.futureSessionsToFutureTransactions.get(futureSession)) {
@@ -113,13 +126,6 @@ public class TransactionSteps {
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
     }
 
-
-//    @Then("for each session, transaction(s) has/have type: {transaction-type}")
-//    public void for_each_session_transactions_have_type(GraknClient.Transaction.Type type) {
-//        for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.values()) {
-//            assertEquals(type, transaction.type());
-//        }
-//    }
 //
 //    @Then("for all sessions, transaction(s) has/have keyspace:")
 //    public void for_each_session_transactions_have_keyspace(String name) {

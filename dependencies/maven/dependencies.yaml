@@ -61,20 +61,11 @@ dependencies:
       lang: java
 
   io.cucumber:
-    cucumber-core:
-      version: "4.7.2"
-      lang: java
-    cucumber-expressions:
-      version: "8.0.0"
-      lang: java
     cucumber-java:
-      version: "4.7.2"
+      version: "5.1.3"
       lang: java
     cucumber-junit:
-      version: "4.7.2"
-      lang: java
-    datatable:
-      version: "3.0.0"
+      version: "5.1.3"
       lang: java
 
   io.grpc:

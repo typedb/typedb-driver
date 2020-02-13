@@ -243,6 +243,13 @@ public class GraknClient implements AutoCloseable {
                 }
                 return null;
             }
+
+            public static Type of(String value) {
+                for (Type t : Type.values()) {
+                    if (t.name().equalsIgnoreCase(value)) return t;
+                }
+                return null;
+            }
         }
 
         private Transaction(ManagedChannel channel, Session session, String sessionId, Type type) {
