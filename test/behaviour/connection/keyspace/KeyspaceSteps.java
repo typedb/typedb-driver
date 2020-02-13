@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import static grakn.common.util.Collections.set;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
