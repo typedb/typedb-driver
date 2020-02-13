@@ -503,6 +503,11 @@ public class GraknClient implements AutoCloseable {
             return transceiver.isOpen();
         }
 
+        // TODO remove - backwards compatibility
+        public boolean isClosed() {
+            return !isOpen();
+        }
+
         private SessionProto.Transaction.Res responseOrThrow() {
             Transceiver.Response response;
 
