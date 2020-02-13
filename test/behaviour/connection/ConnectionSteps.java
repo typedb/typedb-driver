@@ -46,9 +46,10 @@ public class ConnectionSteps {
 
     public static GraknClient client;
     public static List<GraknClient.Session> sessions = new ArrayList<>();
-    public static List<CompletableFuture<GraknClient.Session>> sessionsInParallel = new ArrayList<>();
-    public static Map<Integer, GraknClient.Transaction> transactionsMap = new HashMap<>();
-    public static Map<Integer, CompletableFuture<GraknClient.Transaction>> transactionsMapParallel = new HashMap<>();
+    public static List<CompletableFuture<GraknClient.Session>> futureSessions = new ArrayList<>();
+    public static Map<GraknClient.Session, List<GraknClient.Transaction>> sessionsToTransactions = new HashMap<>();
+    public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToFutureTransactions = new HashMap<>();
+    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> futureSessionsToFutureTransactions = new HashMap<>();
 
     private static GraknClient connect_to_grakn_core() {
         System.out.println("Establishing Connection to Grakn Core");
@@ -116,33 +117,44 @@ public class ConnectionSteps {
 
     @After
     public void close_transactions_and_sessions(Scenario scenario) throws ExecutionException, InterruptedException {
-
-        if (transactionsMap != null) {
-            for (GraknClient.Transaction transaction : transactionsMap.values()) {
-                if (!isNull(transaction)) transaction.close();
-            }
-            transactionsMap = new HashMap<>();
-        }
-
-        if (transactionsMapParallel != null) {
-            for (CompletableFuture<GraknClient.Transaction> futureTransaction : transactionsMapParallel.values()) {
-                futureTransaction.get().close();
-            }
-            transactionsMapParallel = new HashMap<>();
-        }
-
         if (sessions != null) {
             for (GraknClient.Session session : sessions) {
-                if (!isNull(session)) session.close();
+                if (sessionsToTransactions.containsKey(session)) {
+                    for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+                        transaction.close();
+                    }
+                    sessionsToTransactions.remove(session);
+                }
+
+                if (sessionsToFutureTransactions.containsKey(session)) {
+                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToFutureTransactions.get(session)) {
+                        futureTransaction.get().close();
+                    }
+                    sessionsToFutureTransactions.remove(session);
+                }
+
+                session.close();
             }
+            assertTrue(sessionsToTransactions.isEmpty());
+            assertTrue(sessionsToFutureTransactions.isEmpty());
             sessions = new ArrayList<>();
+            sessionsToTransactions = new HashMap<>();
+            sessionsToFutureTransactions = new HashMap<>();
         }
 
-        if (sessionsInParallel != null) {
-            for (CompletableFuture<GraknClient.Session> futureSession : sessionsInParallel) {
+        if (futureSessions != null) {
+            for (CompletableFuture<GraknClient.Session> futureSession : futureSessions) {
+                if (futureSessionsToFutureTransactions.containsKey(futureSession)) {
+                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : futureSessionsToFutureTransactions.get(futureSession)) {
+                        futureTransaction.get().close();
+                    }
+                    futureSessionsToFutureTransactions.remove(futureSession);
+                }
                 futureSession.get().close();
             }
-            sessionsInParallel = new ArrayList<>();
+            assertTrue(futureSessionsToFutureTransactions.isEmpty());
+            futureSessions = new ArrayList<>();
+            futureSessionsToFutureTransactions = new HashMap<>();
         }
     }
 }

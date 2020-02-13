@@ -495,21 +495,12 @@ public class GraknClient implements AutoCloseable {
             );
         }
 
-        public void abort() {
-            close();
-        }
-
         public void close() {
             transceiver.close();
         }
 
         public boolean isOpen() {
             return transceiver.isOpen();
-        }
-
-        // TODO remove - backwards compatibility
-        public boolean isClosed() {
-            return !isOpen();
         }
 
         private SessionProto.Transaction.Res responseOrThrow() {
