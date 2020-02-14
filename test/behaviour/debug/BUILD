@@ -29,7 +29,7 @@ java_test(
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
-        "//test/behaviour/connection:steps",
+        # "//test/behaviour/connection:steps",
 
         # TODO: Add your addition debugging dependencies here
         # e.g. "//test/behaviour/connection/keyspace:test-core",

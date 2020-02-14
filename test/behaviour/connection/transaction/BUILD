@@ -31,16 +31,16 @@ java_test(
         # Package dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
-        "//test/behaviour/connection/session:steps",
+#        "//test/behaviour/connection/session:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
-#    runtime_deps = [
-#        "//test/behaviour/config:type-registry-config",
-#    ],
+    runtime_deps = [
+        "//test/behaviour/config:parameters",
+    ],
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
@@ -77,9 +77,9 @@ java_test(
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
     ],
-#    runtime_deps = [
-#        "//test/behaviour/config:type-registry-config",
-#    ],
+    runtime_deps = [
+        "//test/behaviour/config:parameters",
+    ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
     ],
