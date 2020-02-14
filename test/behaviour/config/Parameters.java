@@ -20,7 +20,13 @@
 package grakn.client.test.behaviour.config;
 
 import grakn.client.GraknClient;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
 
@@ -37,5 +43,17 @@ public class Parameters {
     @ParameterType("read|write")
     public GraknClient.Transaction.Type transaction_type(String type){
         return GraknClient.Transaction.Type.of(type);
+    }
+
+    @DataTableType
+    public List<GraknClient.Transaction.Type> transaction_types(List<String> values) {
+        List<GraknClient.Transaction.Type> typeList = new ArrayList<>();
+        for (String value : values) {
+            GraknClient.Transaction.Type type = GraknClient.Transaction.Type.of(value);
+            assertNotNull(type);
+            typeList.add(type);
+        }
+
+        return typeList;
     }
 }
