@@ -39,27 +39,23 @@ java_library(
 java_test(
     name = "test-core",
     srcs = [
-        "SessionSteps.java",
         "SessionTest.java"
     ],
     test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
     deps = [
         # Package dependencies
-        "//:client-java",
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        ":steps",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         "@graknlabs_behaviour//connection:session.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
-    ],
-    runtime_deps = [
-        "//test/behaviour/config:parameters",
     ],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
@@ -76,22 +72,18 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "SessionSteps.java",
         "SessionTest.java"
     ],
     test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
     deps = [
         # Package dependencies
-        "//:client-java",
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
+        ":steps",
         "//test/behaviour/config:parameters",
     ],
     data = [
