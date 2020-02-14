@@ -32,7 +32,6 @@ java_library(
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
-#        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ],
 )

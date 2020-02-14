@@ -20,24 +20,39 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
-java_test(
-    name = "test-core",
+java_library(
+    name = "steps",
     srcs = [
-        "KeyspaceSteps.java",
-        "KeyspaceTest.java"
+        "KeyspaceSteps.java"
     ],
-    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
         "//test/behaviour/connection:steps",
-        "//test/setup:grakn-setup",
 
+        # Grakn Labs dependencies
         "@graknlabs_common//:common",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+    ]
+)
+
+java_test(
+    name = "test-core",
+    srcs = [
+        "KeyspaceTest.java"
+    ],
+    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
+    deps = [
+        # Package dependencies
+        "//test/setup:grakn-setup",
+
+        # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        ":steps"
     ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
@@ -58,21 +73,18 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "KeyspaceSteps.java",
         "KeyspaceTest.java"
     ],
     test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
-        "@graknlabs_common//:common",
-
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        ":steps"
     ],
     data = [
         "@graknlabs_behaviour//connection:keyspace.feature",
@@ -87,6 +99,7 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [
+        ":steps",
         ":test-core",
         ":test-kgms",
     ],
