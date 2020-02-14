@@ -20,26 +20,36 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
+java_library(
+    name = "steps",
+    srcs = [
+        "TransactionSteps.java"
+    ],
+    deps = [
+        "//:client-java",
+        "//test/behaviour/connection:steps",
+        "//dependencies/maven/artifacts/junit:junit",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+    ]
+)
+
 java_test(
     name = "test-core",
     srcs = [
-        "TransactionSteps.java",
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//:client-java",
-        "//test/behaviour/connection:steps",
-#        "//test/behaviour/connection/session:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
+        ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/session:steps",
     ],
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
@@ -60,25 +70,23 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "TransactionSteps.java",
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//:client-java",
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+        ":steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/session:steps",
     ],
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
-    ],
-    runtime_deps = [
-        "//test/behaviour/config:parameters",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]

@@ -48,12 +48,12 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transaction(s) is/are null: {boolean}")
+    @Then("for each session, transaction(s) is/are null: {bool}")
     public void for_each_session_transactions_are_null(boolean isNull) {
         for_each_session_transactions_are(transaction -> assertEquals(isNull, isNull(transaction)));
     }
 
-    @Then("for each session, transaction(s) is/are open: {boolean}")
+    @Then("for each session, transaction(s) is/are open: {bool}")
     public void for_each_session_transactions_are_open(boolean isOpen) {
         for_each_session_transactions_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
@@ -80,12 +80,12 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transactions in parallel are null: {boolean}")
+    @Then("for each session, transactions in parallel are null: {bool}")
     public void for_each_session_transactions_in_parallel_are_null(boolean isNull) {
         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isNull, isNull(transaction)));
     }
 
-    @Then("for each session, transactions in parallel are open: {boolean}")
+    @Then("for each session, transactions in parallel are open: {bool}")
     public void for_each_session_transactions_in_parallel_are_open(boolean isOpen) {
         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
@@ -103,12 +103,12 @@ public class TransactionSteps {
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
     }
 
-    @Then("for each session in parallel, transactions in parallel are null: {boolean}")
+    @Then("for each session in parallel, transactions in parallel are null: {bool}")
     public void for_each_session_in_parallel_transactions_in_parallel_are_null(boolean isNull) {
         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isNull, isNull(transaction)));
     }
 
-    @Then("for each session in parallel, transactions in parallel are open: {boolean}")
+    @Then("for each session in parallel, transactions in parallel are open: {bool}")
     public void for_each_session_in_parallel_transactions_in_parallel_are_open(boolean isOpen) {
         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
@@ -161,7 +161,7 @@ public class TransactionSteps {
 //        }
 //    }
 //
-//    @Then("transactions in parallel are null: {boolean}")
+//    @Then("transactions in parallel are null: {bool}")
 //    public void transactions_in_parallel_are_null(Boolean isNull) {
 //        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsToFutureTransactions
 //                .values().stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
@@ -172,7 +172,7 @@ public class TransactionSteps {
 //        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
 //    }
 //
-//    @Then("transactions in parallel are open: {boolean}")
+//    @Then("transactions in parallel are open: {bool}")
 //    public void transactions_in_parallel_are_open(Boolean isOpen) {
 //        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsToFutureTransactions
 //                .values().stream().map(futureTransaction -> futureTransaction.thenApplyAsync(transaction -> {
