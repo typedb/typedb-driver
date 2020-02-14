@@ -47,7 +47,6 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run @graknlabs_build_tools//checkstyle:test-coverage
       - run-bazel-rbe:
           command: bazel build //...
       - run: bazel run @graknlabs_build_tools//unused_deps -- list
