@@ -58,5 +58,5 @@ def graknlabs_behaviour():
     git_repository(
         name = "graknlabs_behaviour",
         remote = "https://github.com/graknlabs/behaviour",
-        commit = "d2129dcf26bafd976a84c3c0dd1096f7fd5fa626"
+        commit = "519389ebb39ac8e40b7bc64959a423607ea77014"
     )
