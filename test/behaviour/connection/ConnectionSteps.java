@@ -45,10 +45,10 @@ public class ConnectionSteps {
 
     public static GraknClient client;
     public static List<GraknClient.Session> sessions = new ArrayList<>();
-    public static List<CompletableFuture<GraknClient.Session>> futureSessions = new ArrayList<>();
+    public static List<CompletableFuture<GraknClient.Session>> sessionsParallel = new ArrayList<>();
     public static Map<GraknClient.Session, List<GraknClient.Transaction>> sessionsToTransactions = new HashMap<>();
-    public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToFutureTransactions = new HashMap<>();
-    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> futureSessionsToFutureTransactions = new HashMap<>();
+    public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
+    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> parallelSessionsToParallelTransactions = new HashMap<>();
 
     private static GraknClient connect_to_grakn_core() {
         System.out.println("Establishing Connection to Grakn Core");
@@ -125,35 +125,35 @@ public class ConnectionSteps {
                     sessionsToTransactions.remove(session);
                 }
 
-                if (sessionsToFutureTransactions.containsKey(session)) {
-                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToFutureTransactions.get(session)) {
+                if (sessionsToTransactionsParallel.containsKey(session)) {
+                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
                         futureTransaction.get().close();
                     }
-                    sessionsToFutureTransactions.remove(session);
+                    sessionsToTransactionsParallel.remove(session);
                 }
 
                 session.close();
             }
             assertTrue(sessionsToTransactions.isEmpty());
-            assertTrue(sessionsToFutureTransactions.isEmpty());
+            assertTrue(sessionsToTransactionsParallel.isEmpty());
             sessions = new ArrayList<>();
             sessionsToTransactions = new HashMap<>();
-            sessionsToFutureTransactions = new HashMap<>();
+            sessionsToTransactionsParallel = new HashMap<>();
         }
 
-        if (futureSessions != null) {
-            for (CompletableFuture<GraknClient.Session> futureSession : futureSessions) {
-                if (futureSessionsToFutureTransactions.containsKey(futureSession)) {
-                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : futureSessionsToFutureTransactions.get(futureSession)) {
+        if (sessionsParallel != null) {
+            for (CompletableFuture<GraknClient.Session> futureSession : sessionsParallel) {
+                if (parallelSessionsToParallelTransactions.containsKey(futureSession)) {
+                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : parallelSessionsToParallelTransactions.get(futureSession)) {
                         futureTransaction.get().close();
                     }
-                    futureSessionsToFutureTransactions.remove(futureSession);
+                    parallelSessionsToParallelTransactions.remove(futureSession);
                 }
                 futureSession.get().close();
             }
-            assertTrue(futureSessionsToFutureTransactions.isEmpty());
-            futureSessions = new ArrayList<>();
-            futureSessionsToFutureTransactions = new HashMap<>();
+            assertTrue(parallelSessionsToParallelTransactions.isEmpty());
+            sessionsParallel = new ArrayList<>();
+            parallelSessionsToParallelTransactions = new HashMap<>();
         }
     }
 }

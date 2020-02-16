@@ -93,7 +93,7 @@ public class TransactionSteps {
     private void for_each_session_transactions_in_parallel_are(Consumer<GraknClient.Transaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
         for (GraknClient.Session session : ConnectionSteps.sessions) {
-            for (CompletableFuture<GraknClient.Transaction> futureTransaction : ConnectionSteps.sessionsToFutureTransactions.get(session)) {
+            for (CompletableFuture<GraknClient.Transaction> futureTransaction : ConnectionSteps.sessionsToTransactionsParallel.get(session)) {
                 assertions.add(futureTransaction.thenApply(transaction -> {
                     assertion.accept(transaction);
                     return null;
@@ -115,8 +115,8 @@ public class TransactionSteps {
 
     private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<GraknClient.Transaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (CompletableFuture<GraknClient.Session> futureSession : ConnectionSteps.futureSessions) {
-            for (CompletableFuture<GraknClient.Transaction> futureTransaction : ConnectionSteps.futureSessionsToFutureTransactions.get(futureSession)) {
+        for (CompletableFuture<GraknClient.Session> futureSession : ConnectionSteps.sessionsParallel) {
+            for (CompletableFuture<GraknClient.Transaction> futureTransaction : ConnectionSteps.parallelSessionsToParallelTransactions.get(futureSession)) {
                 assertions.add(futureTransaction.thenApply(transaction -> {
                     assertion.accept(transaction);
                     return null;
@@ -126,14 +126,6 @@ public class TransactionSteps {
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
     }
 
-//
-//    @Then("for all sessions, transaction(s) has/have keyspace:")
-//    public void for_each_session_transactions_have_keyspace(String name) {
-//        for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.values()) {
-//            assertEquals(name, transaction.keyspace().name());
-//        }
-//    }
-//
 //    @When("session open many transactions in parallel of type:")
 //    public void session_open_many_transactions_in_parallel_of_type(Map<Integer, GraknClient.Transaction.Type> types) {
 //        assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= types.size());

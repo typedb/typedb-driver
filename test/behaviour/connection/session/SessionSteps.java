@@ -47,7 +47,7 @@ public class SessionSteps {
         assertTrue(ConnectionSteps.THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
-            ConnectionSteps.futureSessions.add(CompletableFuture.supplyAsync(
+            ConnectionSteps.sessionsParallel.add(CompletableFuture.supplyAsync(
                     () -> ConnectionSteps.client.session(name),
                     ConnectionSteps.threadPool
             ));
@@ -70,7 +70,7 @@ public class SessionSteps {
 
     @Then("sessions in parallel are null: {bool}")
     public void sessions_in_parallel_are_null(Boolean isNull) {
-        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.futureSessions
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsParallel
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
                     assertEquals(isNull, isNull(session));
                     return null;
@@ -81,7 +81,7 @@ public class SessionSteps {
 
     @Then("sessions in parallel are open: {bool}")
     public void sessions_in_parallel_are_open(Boolean isOpen) {
-        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.futureSessions
+        Stream<CompletableFuture<Void>> assertions = ConnectionSteps.sessionsParallel
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
                     assertEquals(isOpen, session.isOpen());
                     return null;
@@ -102,8 +102,8 @@ public class SessionSteps {
 
     @Then("sessions in parallel have keyspaces:")
     public void sessions_in_parallel_have_keyspaces(List<String> names) {
-        assertEquals(names.size(), ConnectionSteps.futureSessions.size());
-        Iterator<CompletableFuture<GraknClient.Session>> futureSessionIter = ConnectionSteps.futureSessions.iterator();
+        assertEquals(names.size(), ConnectionSteps.sessionsParallel.size());
+        Iterator<CompletableFuture<GraknClient.Session>> futureSessionIter = ConnectionSteps.sessionsParallel.iterator();
         CompletableFuture[] assertions = new CompletableFuture[names.size()];
 
         int i = 0;
