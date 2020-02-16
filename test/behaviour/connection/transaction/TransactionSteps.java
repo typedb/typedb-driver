@@ -36,6 +36,10 @@ import static org.junit.Assert.assertTrue;
 
 public class TransactionSteps {
 
+    // =============================================//
+    // sequential sessions, sequential transactions //
+    // =============================================//
+
     @When("for each session, open transaction(s) of type:")
     public void for_each_session_open_transactions_of_type(List<GraknClient.Transaction.Type> types) {
         for (GraknClient.Session session : ConnectionSteps.sessions) {
@@ -79,6 +83,10 @@ public class TransactionSteps {
             }
         }
     }
+
+    // ===========================================//
+    // sequential sessions, parallel transactions //
+    // ===========================================//
 
     @When("for each session, open transaction(s) in parallel of type:")
     public void for_each_session_open_transactions_in_parallel_of_type(List<GraknClient.Transaction.Type> types) {
@@ -143,6 +151,10 @@ public class TransactionSteps {
 
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
     }
+
+    // =========================================//
+    // parallel sessions, parallel transactions //
+    // =========================================//
 
     @Then("for each session in parallel, transactions in parallel are null: {bool}")
     public void for_each_session_in_parallel_transactions_in_parallel_are_null(boolean isNull) {
