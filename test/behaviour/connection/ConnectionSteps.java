@@ -48,7 +48,7 @@ public class ConnectionSteps {
     public static List<CompletableFuture<GraknClient.Session>> sessionsParallel = new ArrayList<>();
     public static Map<GraknClient.Session, List<GraknClient.Transaction>> sessionsToTransactions = new HashMap<>();
     public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
-    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> parallelSessionsToParallelTransactions = new HashMap<>();
+    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
     private static GraknClient connect_to_grakn_core() {
         System.out.println("Establishing Connection to Grakn Core");
@@ -143,17 +143,17 @@ public class ConnectionSteps {
 
         if (sessionsParallel != null) {
             for (CompletableFuture<GraknClient.Session> futureSession : sessionsParallel) {
-                if (parallelSessionsToParallelTransactions.containsKey(futureSession)) {
-                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : parallelSessionsToParallelTransactions.get(futureSession)) {
+                if (sessionsParallelToTransactionsParallel.containsKey(futureSession)) {
+                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
                         futureTransaction.get().close();
                     }
-                    parallelSessionsToParallelTransactions.remove(futureSession);
+                    sessionsParallelToTransactionsParallel.remove(futureSession);
                 }
                 futureSession.get().close();
             }
-            assertTrue(parallelSessionsToParallelTransactions.isEmpty());
+            assertTrue(sessionsParallelToTransactionsParallel.isEmpty());
             sessionsParallel = new ArrayList<>();
-            parallelSessionsToParallelTransactions = new HashMap<>();
+            sessionsParallelToTransactionsParallel = new HashMap<>();
         }
     }
 }
