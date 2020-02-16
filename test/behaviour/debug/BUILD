@@ -29,17 +29,17 @@ java_test(
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
+        # "//test/behaviour/connection:steps",
 
         # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
+        # e.g. "//test/behaviour/connection/keyspace:test-core",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         ":debug.feature",
