@@ -54,6 +54,7 @@ java_library(
         "//dependencies/maven/artifacts/ch/qos/logback:logback-core",
         "//dependencies/maven/artifacts/io/grpc:grpc-netty",
         "//dependencies/maven/artifacts/io/netty:netty-all",
+        "//dependencies/maven/artifacts/io/netty:netty-tcnative-boringssl-static",
     ],
     resources = ["LICENSE"],
     tags = ["maven_coordinates=io.grakn.client:grakn-client:{pom_version}"],

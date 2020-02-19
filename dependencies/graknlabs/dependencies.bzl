@@ -60,3 +60,10 @@ def graknlabs_behaviour():
         remote = "https://github.com/graknlabs/behaviour",
         commit = "26868c001518e1b1898d4cbd91eb6af9fa9ee431"
     )
+
+def graknlabs_grabl_tracing():
+    # TODO replace with correct remote repository
+    native.local_repository(
+        name = "graknlabs_grabl_tracing",
+        path = "../grabl-tracing",
+    )

@@ -101,6 +101,9 @@ dependencies:
     netty-handler-proxy:
       version: "4.1.38.Final"
       lang: java
+    netty-tcnative-boringssl-static:
+      version: "2.0.25.Final"
+      lang: java
 
   junit:
     junit:
