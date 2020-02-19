@@ -31,7 +31,7 @@ java_test(
         "//test/setup:grakn-setup",
 
         # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
+        "//test/behaviour/connection/keyspace:test-core",
 
         # External dependencies from Maven
         "//dependencies/maven/artifacts/io/cucumber:cucumber-core",

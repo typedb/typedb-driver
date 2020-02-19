@@ -43,11 +43,10 @@ public class DebugTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test TestConnectionCore'
+    // 3) Select 'Bazel test DebugTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    // 1) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
-    // 2) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
+    // 1) Use '//<this>/<package>/<name>:test' to test against grakn-core
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=grakn.client.*'
