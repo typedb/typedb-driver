@@ -55,7 +55,7 @@ java_test(
         ":steps"
     ],
     data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
+        "@graknlabs_verification//behaviour/connection:keyspace.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -87,7 +87,7 @@ java_test(
         ":steps"
     ],
     data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
+        "@graknlabs_verification//behaviour/connection:keyspace.feature",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
