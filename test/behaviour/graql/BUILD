@@ -38,8 +38,8 @@ java_library(
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/com/google/guava:guava",
-
-    ]
+    ],
+    visibility = ["//visibility:public"]
 )
 
 java_test(
@@ -69,6 +69,7 @@ java_test(
     ],
     classpath_resources = ["//test/setup:logback"],
     size = "medium",
+    visibility = ["//visibility:public"]
 )
 
 checkstyle_test(

@@ -27,6 +27,8 @@ import graql.lang.Graql;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -40,6 +42,39 @@ import static org.junit.Assert.assertEquals;
 public class TheoremSteps {
 
     private static List<ConceptMap> answers;
+    private static RefreshingTransaction refreshingTx;
+
+    static class RefreshingTransaction {
+        private GraknClient.Transaction maybeNullTransaction = null;
+        GraknClient.Transaction getTransaction() {
+            if (maybeNullTransaction == null || maybeNullTransaction.isClosed()) {
+                GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
+                maybeNullTransaction = session.transaction().write();
+            }
+            return maybeNullTransaction;
+        }
+
+        void close() {
+            if (maybeNullTransaction != null) {
+                maybeNullTransaction.close();
+            }
+        }
+    }
+
+    private GraknClient.Transaction tx() {
+        return refreshingTx.getTransaction();
+    }
+
+    @Before
+    public void create_refreshing_tx() {
+        refreshingTx = new RefreshingTransaction();
+
+    }
+
+    @After
+    public void close_transaction() {
+        refreshingTx.close();
+    }
 
     @Given("the KB is valid")
     public void check_kb_is_valid() {
@@ -49,23 +84,25 @@ public class TheoremSteps {
     @Given("the schema")
     public void graql_define_schema(List<String> defineQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
-        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-        GraknClient.Transaction tx = session.transaction().write();
-        tx.execute(graqlQuery);
-        tx.commit();
+        tx().execute(graqlQuery);
+        tx().commit();
+    }
+
+    @Given("the data")
+    public void graql_insert_data(List<String> insertQueryStatements) {
+        GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
+        tx().execute(graqlQuery);
+        tx().commit();
     }
 
     @When("executing")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-        GraknClient.Transaction tx = session.transaction().read();
-
-
         if (graqlQuery instanceof GraqlGet) {
-            answers = tx.execute(graqlQuery.asGet());
+            answers = tx().execute(graqlQuery.asGet());
         } else if (graqlQuery instanceof GraqlInsert) {
-            answers = tx.execute(graqlQuery.asInsert());
+            answers = tx().execute(graqlQuery.asInsert());
         } else {
             // TODO specialise exception
             throw new RuntimeException("Only match-get and inserted supported for now");
@@ -85,7 +122,7 @@ public class TheoremSteps {
 
             // convert the concept map into a map from variable to type label
             Map<String, String> answerAsLabels = new HashMap<>();
-            answer.map().forEach((var, concept) -> answerAsLabels.put(var.symbol(), concept.asType().label().toString()));
+            answer.map().forEach((var, concept) -> answerAsLabels.put(var.name(), concept.asSchemaConcept().label().toString()));
 
             int matchingAnswers = 0;
             for (Map<String, String> expectedLabels : conceptLabels) {
@@ -98,5 +135,4 @@ public class TheoremSteps {
             assertEquals(1, matchingAnswers);
         }
     }
-
 }
