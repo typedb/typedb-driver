@@ -20,10 +20,22 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
+java_library(
+    name = "steps",
+    srcs = [
+        "TransactionSteps.java"
+    ],
+    deps = [
+        "//:client-java",
+        "//test/behaviour/connection:steps",
+        "//dependencies/maven/artifacts/junit:junit",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+    ]
+)
+
 java_test(
     name = "test-core",
     srcs = [
-        "TransactionSteps.java",
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
@@ -32,15 +44,15 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
+        ":steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/session:steps",
     ],
     data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -48,7 +60,7 @@ java_test(
         "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 # To run this test, you need to provide environment variables:
@@ -58,7 +70,6 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "TransactionSteps.java",
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
@@ -67,26 +78,27 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
-    data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
-    ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
+        ":steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/session:steps",
+    ],
+    data = [
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
+        ":steps",
         ":test-core",
         ":test-kgms",
     ],

@@ -6,12 +6,15 @@ java_library(
     runtime_deps = [
         "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api",
         ":cucumber-expressions",
+        ":cucumber-gherkin",
+        ":cucumber-gherkin-vintage",
+        ":cucumber-plugin",
         ":datatable",
-        ":gherkin",
+        ":docstring",
         ":tag-expressions"
     ],
     visibility = [
-        "//visibility:public"
+        "//dependencies/maven/artifacts:__subpackages__"
     ]
 )
 
@@ -23,12 +26,40 @@ java_library(
         "//external:jar/io/cucumber/cucumber-expressions"
     ],
     runtime_deps = [
-        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api",
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-core",
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library"
+        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api"
     ],
     visibility = [
-        "//visibility:public"
+        "//dependencies/maven/artifacts:__subpackages__"
+    ]
+)
+
+
+
+java_library(
+    name = "cucumber-gherkin",
+    exports = [
+        "//external:jar/io/cucumber/cucumber-gherkin"
+    ],
+    runtime_deps = [
+        ":cucumber-plugin"
+    ],
+    visibility = [
+        "//dependencies/maven/artifacts:__subpackages__"
+    ]
+)
+
+
+
+java_library(
+    name = "cucumber-gherkin-vintage",
+    exports = [
+        "//external:jar/io/cucumber/cucumber-gherkin-vintage"
+    ],
+    runtime_deps = [
+        ":cucumber-gherkin"
+    ],
+    visibility = [
+        "//dependencies/maven/artifacts:__subpackages__"
     ]
 )
 
@@ -68,25 +99,12 @@ java_library(
 
 
 java_library(
-    name = "datatable",
+    name = "cucumber-plugin",
     exports = [
-        "//external:jar/io/cucumber/datatable"
+        "//external:jar/io/cucumber/cucumber-plugin"
     ],
     runtime_deps = [
-        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api",
-        ":datatable-dependencies"
-    ],
-    visibility = [
-        "//visibility:public"
-    ]
-)
-
-
-
-java_library(
-    name = "datatable-dependencies",
-    exports = [
-        "//external:jar/io/cucumber/datatable-dependencies"
+        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api"
     ],
     visibility = [
         "//dependencies/maven/artifacts:__subpackages__"
@@ -96,9 +114,27 @@ java_library(
 
 
 java_library(
-    name = "gherkin",
+    name = "datatable",
     exports = [
-        "//external:jar/io/cucumber/gherkin"
+        "//external:jar/io/cucumber/datatable"
+    ],
+    runtime_deps = [
+        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api"
+    ],
+    visibility = [
+        "//dependencies/maven/artifacts:__subpackages__"
+    ]
+)
+
+
+
+java_library(
+    name = "docstring",
+    exports = [
+        "//external:jar/io/cucumber/docstring"
+    ],
+    runtime_deps = [
+        "//dependencies/maven/artifacts/org/apiguardian:apiguardian-api"
     ],
     visibility = [
         "//dependencies/maven/artifacts:__subpackages__"

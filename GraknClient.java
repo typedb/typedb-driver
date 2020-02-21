@@ -172,6 +172,10 @@ public class GraknClient implements AutoCloseable {
             return new Transaction.Builder(channel, this, sessionId);
         }
 
+        public GraknClient.Transaction transaction(Transaction.Type type) {
+            return new Transaction(channel, this, sessionId, type);
+        }
+
         public boolean isOpen() {
             return isOpen;
         }
@@ -235,6 +239,13 @@ public class GraknClient implements AutoCloseable {
             public static Type of(int value) {
                 for (Type t : Type.values()) {
                     if (t.type == value) return t;
+                }
+                return null;
+            }
+
+            public static Type of(String value) {
+                for (Type t : Type.values()) {
+                    if (t.name().equalsIgnoreCase(value)) return t;
                 }
                 return null;
             }
@@ -488,10 +499,6 @@ public class GraknClient implements AutoCloseable {
                     iteratorId,
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this)
             );
-        }
-
-        public void abort() {
-            close();
         }
 
         public void close() {

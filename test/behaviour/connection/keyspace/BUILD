@@ -20,31 +20,42 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
+java_library(
+    name = "steps",
+    srcs = [
+        "KeyspaceSteps.java"
+    ],
+    deps = [
+        # Package dependencies
+        "//test/behaviour/connection:steps",
+
+        # Grakn Labs dependencies
+        "@graknlabs_common//:common",
+
+        # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+    ]
+)
+
 java_test(
     name = "test-core",
     srcs = [
-        "KeyspaceSteps.java",
         "KeyspaceTest.java"
     ],
     test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
-        "@graknlabs_common//:common",
-
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
+        ":steps"
     ],
     data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
+        "@graknlabs_verification//behaviour/connection:keyspace.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -62,28 +73,21 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "KeyspaceSteps.java",
         "KeyspaceTest.java"
     ],
     test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
         "//test/setup:grakn-setup",
 
-        "@graknlabs_common//:common",
-
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
-    data = [
-        "@graknlabs_behaviour//connection:keyspace.feature",
-    ],
     runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
+        ":steps"
+    ],
+    data = [
+        "@graknlabs_verification//behaviour/connection:keyspace.feature",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
@@ -95,6 +99,7 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [
+        ":steps",
         ":test-core",
         ":test-kgms",
     ],

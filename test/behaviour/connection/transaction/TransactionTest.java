@@ -34,7 +34,8 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_behaviour/connection/transaction.feature"
+        features = "external/graknlabs_verification/behaviour/connection/transaction.feature",
+        tags = "not @ignore and not @ignore-client-java"
 )
 public class TransactionTest {
     // ATTENTION:
@@ -43,11 +44,11 @@ public class TransactionTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test TestConnectionCore'
+    // 3) Select 'Bazel test TransactionTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    // 1) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
-    // 2) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
+    //    a) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
+    //    b) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=grakn.client.*'

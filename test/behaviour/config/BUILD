@@ -21,20 +21,17 @@ package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "type-registry-config",
-    srcs = ["TypeRegistry.java"],
+    name = "parameters",
+    srcs = ["Parameters.java"],
     deps = [
         "//:client-java",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
-        "//dependencies/maven/artifacts/io/cucumber:datatable",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-expressions",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
-    ],
+        "//dependencies/maven/artifacts/junit:junit",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java"
+    ]
 )
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":type-registry-config"],
+    targets = [":parameters"],
     license_type = "apache"
 )
