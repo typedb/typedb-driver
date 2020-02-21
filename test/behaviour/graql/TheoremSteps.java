@@ -24,59 +24,79 @@ import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
-import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlGet;
+import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
-import graql.lang.statement.Variable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 public class TheoremSteps {
 
-    private static List<ConceptMap> matchAnswers;
+    private static List<ConceptMap> answers;
 
-    @Given("load file: {graql-file}")
-    public void load_graql_file(Path graqlFilePath) throws IOException {
-        List<String> graqlLines = Files.readAllLines(graqlFilePath, StandardCharsets.UTF_8);
-        GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlLines));
+    @Given("the KB is valid")
+    public void check_kb_is_valid() {
 
+    }
+
+    @Given("the schema")
+    public void graql_define_schema(List<String> defineQueryStatements) {
+        GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
         GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessionsMap.values().iterator());
         GraknClient.Transaction tx = session.transaction().write();
         tx.execute(graqlQuery);
         tx.commit();
     }
 
-    @When("match {patterns}; get {vars};")
-    public void answer_generator(List<?> matchPatterns, List<?> variables) {
-        GraqlGet query = Graql.match((List<Pattern>)matchPatterns).get((List<Variable>)variables);
+    @When("executing")
+    public void graql_query(List<String> graqlQueryStatements) {
+        GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessionsMap.values().iterator());
-        matchAnswers = session.transaction().read().execute(query);
-    }
+        GraknClient.Transaction tx = session.transaction().read();
 
-    @Then("answers satisfy match {patterns}; get {vars};")
-    public void verify_computed_answers_against_new_query(List<?> matchPatterns, List<?> variables) {
-        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessionsMap.values().iterator());
 
-        for (ConceptMap answer : matchAnswers) {
-            List<Pattern> matchWithIds = new ArrayList<>(variables.size());
-            for (Variable var : (List<Variable>)variables) {
-                matchWithIds.add(Graql.var(var).id(answer.get(var).id().toString()));
-            }
-            matchWithIds.addAll((List<Pattern>)matchPatterns);
-            GraqlGet query = Graql.match(matchWithIds).get((List<Variable>)variables);
-
-            List<ConceptMap> execute = session.transaction().read().execute(query);
-            assertEquals(1, execute.size());
+        if (graqlQuery instanceof GraqlGet) {
+            answers = tx.execute(graqlQuery.asGet());
+        } else if (graqlQuery instanceof GraqlInsert) {
+            answers = tx.execute(graqlQuery.asInsert());
+        } else {
+            // TODO specialise exception
+            throw new RuntimeException("Only match-get and inserted supported for now");
         }
     }
+
+    @Then("there is/are {number} answer(s)")
+    public void answer_quantity_assertion(int expectedAnswers) {
+        assertEquals(expectedAnswers, answers.size());
+    }
+
+    @Then("answers have concepts labeled")
+    public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
+        assertEquals(conceptLabels.size(), answers.size());
+
+        for (ConceptMap answer : answers) {
+
+            // convert the concept map into a map from variable to type label
+            Map<String, String> answerAsLabels = new HashMap<>();
+            answer.map().forEach((var, concept) -> answerAsLabels.put(var.symbol(), concept.asType().label().toString()));
+
+            int matchingAnswers = 0;
+            for (Map<String, String> expectedLabels : conceptLabels) {
+                if (expectedLabels.equals(answerAsLabels)) {
+                    matchingAnswers++;
+                }
+            }
+
+            // we expect exactly one matching answer from the expected answer set
+            assertEquals(1, matchingAnswers);
+        }
+    }
+
 }
