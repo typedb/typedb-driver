@@ -49,7 +49,7 @@ public class TheoremSteps {
     @Given("the schema")
     public void graql_define_schema(List<String> defineQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
-        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessionsMap.values().iterator());
+        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
         GraknClient.Transaction tx = session.transaction().write();
         tx.execute(graqlQuery);
         tx.commit();
@@ -58,7 +58,7 @@ public class TheoremSteps {
     @When("executing")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
-        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessionsMap.values().iterator());
+        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
         GraknClient.Transaction tx = session.transaction().read();
 
 

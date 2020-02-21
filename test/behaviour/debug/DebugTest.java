@@ -46,11 +46,7 @@ public class DebugTest {
     // 3) Select 'Bazel test DebugTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-<<<<<<< HEAD
-    // 1) Use '//<this>/<package>/<name>:test' to test against grakn-core
-=======
     //    a) Use '//<this>/<package>/<name>:test' to test against grakn-core
->>>>>>> 346ba333da7ba948d46aae00026a924a3657aa8a
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=grakn.client.*'

@@ -20,26 +20,47 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
-java_test(
-    name = "match-theorems-core",
+java_library(
+    name = "steps",
     srcs = [
-        "MatchTheoremTest.java",
-        "TheoremSteps.java",
+        "TheoremSteps.java"
     ],
-    test_class = "grakn.client.test.behaviour.graql.MatchTheoremTest",
     deps = [
         # Package dependencies
         "//test/behaviour/connection:steps",
+        "//:client-java",
+
+        # Grakn Labs dependencies
+        "@graknlabs_common//:common",
+        "@graknlabs_graql//java:graql",
+
+        # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
+        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+        "//dependencies/maven/artifacts/com/google/guava:guava",
+
+    ]
+)
+
+java_test(
+    name = "define-test-core",
+    srcs = [
+        "DefineTest.java",
+    ],
+    test_class = "grakn.client.test.behaviour.graql.DefineTest",
+    deps = [
+        # Package dependencies
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/config:type-registry-config",
+        ":steps",
+        "//test/behaviour/config:parameters",
     ],
     data = [
+        "@graknlabs_verification//behaviour/graql/language:define.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -53,7 +74,8 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":match-theorems-core"
+        ":steps",
+        ":define-test-core"
     ],
     license_type = "apache"
 )

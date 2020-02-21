@@ -19,5 +19,5 @@
 
 package grakn.client.test.behaviour.graql;
 
-public class MatchTheoremTest {
+public class DefineTest {
 }
