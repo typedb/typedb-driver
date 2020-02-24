@@ -43,7 +43,7 @@ public class DebugTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test TestConnectionCore'
+    // 3) Select 'Bazel test DebugTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     // 1) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
