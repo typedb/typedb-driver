@@ -97,7 +97,7 @@ public class GraqlSteps {
         tx().commit();
     }
 
-    @When("executing graql query")
+    @When("get answers of graql query")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         if (graqlQuery instanceof GraqlGet) {

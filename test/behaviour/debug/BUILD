@@ -39,7 +39,7 @@ java_test(
     ],
     runtime_deps = [
         "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         ":debug.feature",

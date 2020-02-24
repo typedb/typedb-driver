@@ -17,7 +17,7 @@
 # under the License.
 #
 
-package(default_visibility = ["//test/behaviour/graql/language:__subpackages__"])
+package(default_visibility = ["//test/behaviour/graql/language/define:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
