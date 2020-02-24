@@ -359,7 +359,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<Numeric> execute(GraqlGet.Aggregate query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.get_aggregate")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
                 return executeInternal(query, infer);
             }
         }
@@ -369,7 +369,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.get_aggregate")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
                 return streamInternal(query, infer);
             }
         }
@@ -381,7 +381,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.get_group")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
                 return executeInternal(query, infer);
             }
         }
@@ -391,7 +391,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.get_group")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
                 return streamInternal(query, infer);
             }
         }
@@ -404,7 +404,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.get_group_aggregate")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
                 return executeInternal(query, infer);
             }
         }
@@ -415,7 +415,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.get_group_aggregate")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
                 return streamInternal(query, infer);
             }
         }
@@ -423,49 +423,49 @@ public class GraknClient implements AutoCloseable {
         // Compute Query
 
         public List<Numeric> execute(GraqlCompute.Statistics query) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.compute_statistics")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute.statistics")) {
                 return executeInternal(query, false);
             }
         }
 
         public Stream<Numeric> stream(GraqlCompute.Statistics query) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.compute_statistics")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute.statistics")) {
                 return streamInternal(query, false);
             }
         }
 
         public List<ConceptList> execute(GraqlCompute.Path query) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.compute_path")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute.path")) {
                 return executeInternal(query, false);
             }
         }
 
         public Stream<ConceptList> stream(GraqlCompute.Path query) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.compute_path")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute.path")) {
                 return streamInternal(query, false);
             }
         }
 
         public List<ConceptSetMeasure> execute(GraqlCompute.Centrality query) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.compute_centrality")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute.centrality")) {
                 return executeInternal(query, false);
             }
         }
 
         public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.compute_centrality")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute.centrality")) {
                 return streamInternal(query, false);
             }
         }
 
         public List<ConceptSet> execute(GraqlCompute.Cluster query) {
-            try (ThreadTrace trace = traceOnThread("tx.execute.compute_cluster")) {
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute.cluster")) {
                 return executeInternal(query, false);
             }
         }
 
         public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
-            try (ThreadTrace trace = traceOnThread("tx.stream.compute_cluster")) {
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute.cluster")) {
                 return streamInternal(query, false);
             }
         }
@@ -849,21 +849,15 @@ public class GraknClient implements AutoCloseable {
 
 
             protected final T computeNext() {
-                try (ThreadTrace trace =
-                             parentTrace != null
-                                     ? parentTrace.traceOnThread("rpc_iterator")
-                                     : traceOnThread("tx.rpc_iterator")
-                ) {
-                    SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
+                SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
 
-                    switch (response.getResCase()) {
-                        case DONE:
-                            return endOfData();
-                        case RES_NOT_SET:
-                            throw GraknClientException.unreachableStatement("Unexpected " + response);
-                        default:
-                            return responseReader.apply(response);
-                    }
+                switch (response.getResCase()) {
+                    case DONE:
+                        return endOfData();
+                    case RES_NOT_SET:
+                        throw GraknClientException.unreachableStatement("Unexpected " + response);
+                    default:
+                        return responseReader.apply(response);
                 }
             }
         }
