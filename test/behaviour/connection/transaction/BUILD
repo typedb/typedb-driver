@@ -52,7 +52,7 @@ java_test(
         "//test/behaviour/connection/session:steps",
     ],
     data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -86,7 +86,7 @@ java_test(
         "//test/behaviour/connection/session:steps",
     ],
     data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]

@@ -54,11 +54,11 @@ def graknlabs_protocol():
         tag = "1.0.4", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
 
-def graknlabs_behaviour():
+def graknlabs_verification():
     git_repository(
-        name = "graknlabs_behaviour",
-        remote = "https://github.com/graknlabs/behaviour",
-        commit = "26868c001518e1b1898d4cbd91eb6af9fa9ee431"
+        name = "graknlabs_verification",
+        remote = "https://github.com/graknlabs/verification",
+        commit = "4751651f2129e9a09cfc41e3d5cd77721c8f6bb4"
     )
 
 def graknlabs_grabl_tracing():
