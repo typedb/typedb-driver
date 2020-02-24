@@ -97,6 +97,7 @@ public class Transceiver implements AutoCloseable {
     public void close() {
         try {
             requestSender.onCompleted();
+            responseListener.onCompleted();
         } catch (IllegalStateException e) {
             //IGNORED
             //This is needed to handle the fact that:
