@@ -21,6 +21,7 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
+import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
 import grakn.client.answer.ConceptList;
@@ -68,16 +69,15 @@ import io.grpc.StatusRuntimeException;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
+import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
@@ -253,11 +253,13 @@ public class GraknClient implements AutoCloseable {
         }
 
         private Transaction(ManagedChannel channel, Session session, String sessionId, Type type) {
-            this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
-            this.session = session;
-            this.type = type;
-            transceiver.send(RequestBuilder.Transaction.open(sessionId, type));
-            responseOrThrow();
+            try (ThreadTrace trace = traceOnThread(type == Type.WRITE ? "tx.write" : "tx.read")) {
+                this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
+                this.session = session;
+                this.type = type;
+                transceiver.send(RequestBuilder.Transaction.open(sessionId, type));
+                responseOrThrow();
+            }
         }
 
         public Type type() {
@@ -273,63 +275,78 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<ConceptMap> execute(GraqlDefine query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.define")) {
+                return executeInternal(query, true);
+            }
         }
 
         public List<ConceptMap> execute(GraqlUndefine query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
+                return executeInternal(query, true);
+            }
         }
 
         public List<ConceptMap> execute(GraqlInsert query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
+                return executeInternal(query, infer);
+            }
         }
         public List<ConceptMap> execute(GraqlInsert query) {
-            return stream(query).collect(Collectors.toList());
+            return execute(query, true);
         }
 
         public List<Void> execute(GraqlDelete query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.delete")) {
+                return executeInternal(query, infer);
+            }
         }
         public List<Void> execute(GraqlDelete query) {
-            return stream(query).collect(Collectors.toList());
+            return execute(query, true);
         }
 
         public List<ConceptMap> execute(GraqlGet query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
+                return executeInternal(query, infer);
+            }
         }
         public List<ConceptMap> execute(GraqlGet query) {
-            return stream(query).collect(Collectors.toList());
+            return execute(query, true);
         }
 
         public Stream<ConceptMap> stream(GraqlDefine query) {
-            Iterable<ConceptMap> iterable = () -> this.rpcIterator(query);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.define")) {
+                return streamInternal(query, true);
+            }
         }
 
         public Stream<ConceptMap> stream(GraqlUndefine query) {
-            Iterable<ConceptMap> iterable = () -> this.rpcIterator(query);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.undefine")) {
+                return streamInternal(query, true);
+            }
         }
 
         public Stream<ConceptMap> stream(GraqlInsert query, boolean infer) {
-            Iterable<ConceptMap> iterable = () -> this.rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.insert")) {
+                return streamInternal(query, infer);
+            }
         }
         public Stream<ConceptMap> stream(GraqlInsert query) {
             return stream(query, true);
         }
 
         public Stream<Void> stream(GraqlDelete query, boolean infer) {
-            Iterable<Void> iterable = () -> this.rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.delete")) {
+                return streamInternal(query, infer);
+            }
         }
         public Stream<Void> stream(GraqlDelete query) {
             return stream(query, true);
         }
 
         public Stream<ConceptMap> stream(GraqlGet query, boolean infer) {
-            Iterable<ConceptMap> iterable = () -> this.rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.get")) {
+                return streamInternal(query, infer);
+            }
         }
         public Stream<ConceptMap> stream(GraqlGet query) {
             return stream(query, true);
@@ -342,7 +359,9 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<Numeric> execute(GraqlGet.Aggregate query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.get_aggregate")) {
+                return executeInternal(query, infer);
+            }
         }
 
         public Stream<Numeric> stream(GraqlGet.Aggregate query) {
@@ -350,8 +369,9 @@ public class GraknClient implements AutoCloseable {
         }
 
         public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
-            Iterable<Numeric> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.get_aggregate")) {
+                return streamInternal(query, infer);
+            }
         }
 
         // Group Query
@@ -361,7 +381,9 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.get_group")) {
+                return executeInternal(query, infer);
+            }
         }
 
         public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query) {
@@ -369,8 +391,9 @@ public class GraknClient implements AutoCloseable {
         }
 
         public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
-            Iterable<AnswerGroup<ConceptMap>> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.get_group")) {
+                return streamInternal(query, infer);
+            }
         }
 
 
@@ -381,54 +404,70 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.get_group_aggregate")) {
+                return executeInternal(query, infer);
+            }
         }
 
 
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query) {
             return stream(query, true);
         }
+
         public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
-            Iterable<AnswerGroup<Numeric>> iterable = () -> rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.get_group_aggregate")) {
+                return streamInternal(query, infer);
+            }
         }
 
         // Compute Query
 
         public List<Numeric> execute(GraqlCompute.Statistics query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute_statistics")) {
+                return executeInternal(query, false);
+            }
         }
 
         public Stream<Numeric> stream(GraqlCompute.Statistics query) {
-            Iterable<Numeric> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute_statistics")) {
+                return streamInternal(query, false);
+            }
         }
 
         public List<ConceptList> execute(GraqlCompute.Path query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute_path")) {
+                return executeInternal(query, false);
+            }
         }
 
         public Stream<ConceptList> stream(GraqlCompute.Path query) {
-            Iterable<ConceptList> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute_path")) {
+                return streamInternal(query, false);
+            }
         }
 
         public List<ConceptSetMeasure> execute(GraqlCompute.Centrality query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute_centrality")) {
+                return executeInternal(query, false);
+            }
         }
 
         public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
-            Iterable<ConceptSetMeasure> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute_centrality")) {
+                return streamInternal(query, false);
+            }
         }
 
         public List<ConceptSet> execute(GraqlCompute.Cluster query) {
-            return stream(query).collect(Collectors.toList());
+            try (ThreadTrace trace = traceOnThread("tx.execute.compute_cluster")) {
+                return executeInternal(query, false);
+            }
         }
 
         public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
-            Iterable<ConceptSet> iterable = () -> rpcIterator(query, false);
-            return StreamSupport.stream(iterable.spliterator(), false);
+            try (ThreadTrace trace = traceOnThread("tx.stream.compute_cluster")) {
+                return streamInternal(query, false);
+            }
         }
 
         // Generic queries
@@ -438,7 +477,45 @@ public class GraknClient implements AutoCloseable {
         }
 
         public List<? extends Answer> execute(GraqlQuery query, boolean infer) {
-            return stream(query, infer).collect(Collectors.toList());
+            if (query instanceof GraqlDefine) {
+                return execute((GraqlDefine) query);
+
+            } else if (query instanceof GraqlUndefine) {
+                return execute((GraqlUndefine) query);
+
+            } else if (query instanceof GraqlInsert) {
+                return execute((GraqlInsert) query, infer);
+
+            } else if (query instanceof GraqlDelete) {
+                return execute((GraqlDelete) query, infer);
+
+            } else if (query instanceof GraqlGet) {
+                return execute((GraqlGet) query, infer);
+
+            } else if (query instanceof GraqlGet.Aggregate) {
+                return execute((GraqlGet.Aggregate) query, infer);
+
+            } else if (query instanceof GraqlGet.Group.Aggregate) {
+                return execute((GraqlGet.Group.Aggregate) query, infer);
+
+            } else if (query instanceof GraqlGet.Group) {
+                return execute((GraqlGet.Group) query, infer);
+
+            } else if (query instanceof GraqlCompute.Statistics) {
+                return execute((GraqlCompute.Statistics) query);
+
+            } else if (query instanceof GraqlCompute.Path) {
+                return execute((GraqlCompute.Path) query);
+
+            } else if (query instanceof GraqlCompute.Centrality) {
+                return execute((GraqlCompute.Centrality) query);
+
+            } else if (query instanceof GraqlCompute.Cluster) {
+                return execute((GraqlCompute.Cluster) query);
+
+            } else {
+                throw new IllegalArgumentException("Unrecognised Query object");
+            }
         }
 
         public Stream<? extends Answer> stream(GraqlQuery query) {
@@ -487,18 +564,23 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private Iterator rpcIterator(GraqlQuery query) {
-            return rpcIterator(query, true);
+        private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
+            return (List<T>) streamInternal(query, infer).collect(Collectors.toList());
         }
 
-        private Iterator rpcIterator(GraqlQuery query, boolean infer) {
+        private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
+            Iterable<T> iterable = () -> this.rpcIterator(query, infer);
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }
+
+        private <T extends Answer> Iterator<T> rpcIterator(GraqlQuery query, boolean infer) {
             transceiver.send(RequestBuilder.Transaction.query(query.toString(), infer));
             SessionProto.Transaction.Res txResponse = responseOrThrow();
             int iteratorId = txResponse.getQueryIter().getId();
             return new RPCIterator<>(
                     this,
                     iteratorId,
-                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this)
+                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this)
             );
         }
 
@@ -735,8 +817,10 @@ public class GraknClient implements AutoCloseable {
         }
 
         private SessionProto.Transaction.Iter.Res iterate(int iteratorId) {
-            transceiver.send(RequestBuilder.Transaction.iterate(iteratorId));
-            return responseOrThrow().getIterateRes();
+            try (ThreadTrace trace = traceOnThread("iterate")) {
+                transceiver.send(RequestBuilder.Transaction.iterate(iteratorId));
+                return responseOrThrow().getIterateRes();
+            }
         }
 
         public <T> RPCIterator<T> iterator(int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
@@ -750,6 +834,7 @@ public class GraknClient implements AutoCloseable {
          * @param <T> class type of objects being iterated
          */
         public class RPCIterator<T> extends AbstractIterator<T> {
+            private final ThreadTrace parentTrace;
             private final int iteratorId;
             private Transaction tx;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
@@ -758,19 +843,27 @@ public class GraknClient implements AutoCloseable {
                 this.tx = tx;
                 this.iteratorId = iteratorId;
                 this.responseReader = responseReader;
+
+                parentTrace = currentThreadTrace();
             }
 
 
             protected final T computeNext() {
-                SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
+                try (ThreadTrace trace =
+                             parentTrace != null
+                                     ? parentTrace.traceOnThread("rpc_iterator")
+                                     : traceOnThread("tx.rpc_iterator")
+                ) {
+                    SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
 
-                switch (response.getResCase()) {
-                    case DONE:
-                        return endOfData();
-                    case RES_NOT_SET:
-                        throw GraknClientException.unreachableStatement("Unexpected " + response);
-                    default:
-                        return responseReader.apply(response);
+                    switch (response.getResCase()) {
+                        case DONE:
+                            return endOfData();
+                        case RES_NOT_SET:
+                            throw GraknClientException.unreachableStatement("Unexpected " + response);
+                        default:
+                            return responseReader.apply(response);
+                    }
                 }
             }
         }

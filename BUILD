@@ -41,6 +41,8 @@ java_library(
         "@graknlabs_graql//java:graql",
         "@graknlabs_protocol//grpc/java:protocol",
 
+        "@graknlabs_grabl_tracing//client",
+
         # External dependencies from Maven
         "//dependencies/maven/artifacts/com/google/code/findbugs:jsr305",
         "//dependencies/maven/artifacts/com/google/guava:guava",
