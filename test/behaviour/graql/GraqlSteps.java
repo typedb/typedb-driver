@@ -42,38 +42,18 @@ import static org.junit.Assert.assertEquals;
 public class GraqlSteps {
 
     private static List<ConceptMap> answers;
-    private static RefreshingTransaction refreshingTx;
-
-    static class RefreshingTransaction {
-        private GraknClient.Transaction maybeNullTransaction = null;
-        GraknClient.Transaction getTransaction() {
-            if (maybeNullTransaction == null || maybeNullTransaction.isClosed()) {
-                GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-                maybeNullTransaction = session.transaction().write();
-            }
-            return maybeNullTransaction;
-        }
-
-        void close() {
-            if (maybeNullTransaction != null) {
-                maybeNullTransaction.close();
-            }
-        }
-    }
-
-    private GraknClient.Transaction tx() {
-        return refreshingTx.getTransaction();
-    }
+    private static GraknClient.Session session;
+    private static GraknClient.Transaction tx;
 
     @Before
-    public void create_refreshing_tx() {
-        refreshingTx = new RefreshingTransaction();
-
+    public void open_transaction() {
+        session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
+        tx = session.transaction().write();
     }
 
     @After
     public void close_transaction() {
-        refreshingTx.close();
+        tx.close();
     }
 
     @Given("the integrity is validated")
@@ -86,24 +66,26 @@ public class GraqlSteps {
     @Given("graql define")
     public void graql_define(List<String> defineQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
-        tx().execute(graqlQuery);
-        tx().commit();
+        tx.execute(graqlQuery);
+        tx.commit();
+        tx = session.transaction().write();
     }
 
     @Given("graql insert")
     public void graql_insert(List<String> insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
-        tx().execute(graqlQuery);
-        tx().commit();
+        tx.execute(graqlQuery);
+        tx.commit();
+        tx = session.transaction().write();
     }
 
     @When("get answers of graql query")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         if (graqlQuery instanceof GraqlGet) {
-            answers = tx().execute(graqlQuery.asGet());
+            answers = tx.execute(graqlQuery.asGet());
         } else if (graqlQuery instanceof GraqlInsert) {
-            answers = tx().execute(graqlQuery.asInsert());
+            answers = tx.execute(graqlQuery.asInsert());
         } else {
             // TODO specialise exception
             throw new RuntimeException("Only match-get and inserted supported for now");
