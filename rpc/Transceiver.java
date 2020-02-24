@@ -19,6 +19,7 @@
 
 package grakn.client.rpc;
 
+import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.SessionProto;
 import grakn.protocol.session.SessionProto.Transaction;
@@ -30,6 +31,8 @@ import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
 
 /**
@@ -67,21 +70,27 @@ public class Transceiver implements AutoCloseable {
          * This method is non-blocking - it returns immediately.
      */
     public void send(Transaction.Req request) {
-        if (responseListener.terminated.get()) {
-            throw GraknClientException.connectionClosed();
+        try (ThreadTrace trace = traceOnThread("request")) {
+            trace.data(request.toString());
+            if (responseListener.terminated.get()) {
+                throw GraknClientException.connectionClosed();
+            }
+            requestSender.onNext(request);
         }
-        requestSender.onNext(request);
     }
 
     /**
      * Block until a response is returned.
      */
     public Response receive() throws InterruptedException {
-        Response response = responseListener.poll();
-        if (response.type() != Response.Type.OK) {
-            close();
+        try (ThreadTrace trace = traceOnThread("receive")) {
+            Response response = responseListener.poll();
+            if (response.type() != Response.Type.OK) {
+                close();
+            }
+            trace.data(response.toString());
+            return response;
         }
-        return response;
     }
 
     @Override
