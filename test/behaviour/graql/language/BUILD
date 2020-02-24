@@ -21,28 +21,24 @@ package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "test",
+    name = "define-test-core",
     srcs = [
-        "DebugTest.java",
+        "DefineTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.debug.DebugTest",
+    test_class = "grakn.client.test.behaviour.graql.DefineTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
 
-        # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
-
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-core",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:type-registry-config",
+        "//test/behaviour/graql:steps",
+        "//test/behaviour/config:parameters",
     ],
     data = [
-        ":debug.feature",
+        "@graknlabs_verification//behaviour/graql/language:define.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -51,12 +47,13 @@ java_test(
     ],
     classpath_resources = ["//test/setup:logback"],
     size = "medium",
+    visibility = ["//visibility:public"]
 )
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test"
+        ":define-test-core"
     ],
     license_type = "apache"
 )

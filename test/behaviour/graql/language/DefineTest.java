@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.graql;
+package grakn.client.test.behaviour.graql.language;
 
 import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;

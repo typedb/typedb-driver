@@ -39,7 +39,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class TheoremSteps {
+public class GraqlSteps {
 
     private static List<ConceptMap> answers;
     private static RefreshingTransaction refreshingTx;
@@ -76,29 +76,30 @@ public class TheoremSteps {
         refreshingTx.close();
     }
 
-    @Given("the KB is valid")
+    @Given("the integrity is validated")
     public void check_kb_is_valid() {
+
+        // TODO
 
     }
 
-    @Given("the schema")
-    public void graql_define_schema(List<String> defineQueryStatements) {
+    @Given("graql define")
+    public void graql_define(List<String> defineQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
         tx().execute(graqlQuery);
         tx().commit();
     }
 
-    @Given("the data")
-    public void graql_insert_data(List<String> insertQueryStatements) {
+    @Given("graql insert")
+    public void graql_insert(List<String> insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         tx().execute(graqlQuery);
         tx().commit();
     }
 
-    @When("executing")
+    @When("executing graql query")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
-        GraknClient.Session session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
         if (graqlQuery instanceof GraqlGet) {
             answers = tx().execute(graqlQuery.asGet());
         } else if (graqlQuery instanceof GraqlInsert) {
