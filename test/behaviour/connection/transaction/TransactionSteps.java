@@ -62,6 +62,39 @@ public class TransactionSteps {
         for_each_session_transactions_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
 
+    @Then("for each session, transaction commit")
+    public void for_each_session_transaction_commit() {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
+                transaction.commit();
+            }
+        }
+    }
+
+    @Then("for each session, transaction commit throws")
+    public void for_each_session_transaction_commit_throws() {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
+                boolean threw = false;
+                try {
+                    transaction.commit();
+                } catch (RuntimeException commitException) {
+                    threw = true;
+                }
+                assertTrue(threw);
+            }
+        }
+    }
+
+    @Then("for each session, transaction close")
+    public void for_each_session_transaction_close() {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
+                transaction.close();
+            }
+        }
+    }
+
     private void for_each_session_transactions_are(Consumer<GraknClient.Transaction> assertion) {
         for (GraknClient.Session session : ConnectionSteps.sessions) {
             for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
