@@ -21,7 +21,7 @@ package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "define-test-core",
+    name = "test-core",
     srcs = [
         "DefineTest.java",
     ],
@@ -50,10 +50,44 @@ java_test(
     visibility = ["//visibility:public"]
 )
 
+# To run this test, you need to provide environment variables:
+# --test_env GRAKN_KGMS_ADDRESS=***
+# --test_env GRAKN_KGMS_USERNAME=****
+# --test_env GRAKN_KGMS_PASSWORD=****
+java_test(
+    name = "test-kgms",
+    srcs = [
+        "DefineTest.java",
+    ],
+    test_class = "grakn.client.test.behaviour.graql.DefineTest",
+    deps = [
+            # Package dependencies
+            "//test/setup:grakn-setup",
+
+            # External dependencies from Maven
+            "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+            "//test/behaviour/graql:steps",
+            "//test/behaviour/config:parameters",
+    ],
+    data = [
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
+    ],
+    args = [ # The order of the arguments matter
+        "grakn-kgms", # Keep at index 0, will be accessible at args[1]
+    ],
+    classpath_resources = ["//test/setup:logback"],
+    size = "large",
+)
+
+
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":define-test-core"
+        ":test-core",
+        ":test-kgms",
+
     ],
     license_type = "apache"
 )
