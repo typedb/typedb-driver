@@ -32,6 +32,7 @@ import java.util.function.Consumer;
 
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TransactionSteps {
@@ -60,6 +61,34 @@ public class TransactionSteps {
     @Then("for each session, transaction(s) is/are open: {bool}")
     public void for_each_session_transactions_are_open(boolean isOpen) {
         for_each_session_transactions_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
+    }
+
+    @Then("for each session, transaction commits successfully: {bool}")
+    public void for_each_session_transaction_commit(boolean expectNoException) {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
+                boolean threw = false;
+                try {
+                    transaction.commit();
+                } catch (RuntimeException commitException) {
+                    threw = true;
+                }
+                if (expectNoException) {
+                    assertFalse(threw);
+                } else {
+                    assertTrue(threw);
+                }
+            }
+        }
+    }
+
+    @Then("for each session, transaction close")
+    public void for_each_session_transaction_close() {
+        for (GraknClient.Session session : ConnectionSteps.sessions) {
+            for (GraknClient.Transaction transaction : ConnectionSteps.sessionsToTransactions.get(session)) {
+                transaction.close();
+            }
+        }
     }
 
     private void for_each_session_transactions_are(Consumer<GraknClient.Transaction> assertion) {

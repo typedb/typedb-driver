@@ -51,7 +51,6 @@ jobs:
           command: bazel build //...
       - run: bazel run @graknlabs_build_tools//unused_deps -- list
 
-
   build-checkstyle:
     machine: true
     working_directory: ~/client-java
