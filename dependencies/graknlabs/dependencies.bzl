@@ -60,3 +60,10 @@ def graknlabs_verification():
         remote = "https://github.com/graknlabs/verification",
         commit = "0dcf18a2ca92cfb7b5ba2a1986f771bc19bbbf84"
     )
+
+def graknlabs_grabl_tracing():
+    git_repository(
+        name = "graknlabs_grabl_tracing",
+        remote = "https://github.com/graknlabs/grabl-tracing",
+        commit = "555b090293cf98cd57e590090e355612cde662b5"
+    )
