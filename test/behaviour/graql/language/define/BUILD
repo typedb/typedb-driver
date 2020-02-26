@@ -21,28 +21,24 @@ package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "test",
+    name = "test-core",
     srcs = [
-        "DebugTest.java",
+        "DefineTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.debug.DebugTest",
+    test_class = "grakn.client.test.behaviour.graql.DefineTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
 
-        # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
-
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/graql:steps",
         "//test/behaviour/config:parameters",
     ],
     data = [
-        ":debug.feature",
+        "@graknlabs_verification//behaviour/graql/language:define.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -51,12 +47,47 @@ java_test(
     ],
     classpath_resources = ["//test/setup:logback"],
     size = "medium",
+    visibility = ["//visibility:public"]
 )
+
+# To run this test, you need to provide environment variables:
+# --test_env GRAKN_KGMS_ADDRESS=***
+# --test_env GRAKN_KGMS_USERNAME=****
+# --test_env GRAKN_KGMS_PASSWORD=****
+java_test(
+    name = "test-kgms",
+    srcs = [
+        "DefineTest.java",
+    ],
+    test_class = "grakn.client.test.behaviour.graql.DefineTest",
+    deps = [
+            # Package dependencies
+            "//test/setup:grakn-setup",
+
+            # External dependencies from Maven
+            "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+    ],
+    runtime_deps = [
+            "//test/behaviour/graql:steps",
+            "//test/behaviour/config:parameters",
+    ],
+    data = [
+        "@graknlabs_verification//behaviour/connection:transaction.feature",
+    ],
+    args = [ # The order of the arguments matter
+        "grakn-kgms", # Keep at index 0, will be accessible at args[1]
+    ],
+    classpath_resources = ["//test/setup:logback"],
+    size = "large",
+)
+
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test"
+        ":test-core",
+        ":test-kgms",
+
     ],
     license_type = "apache"
 )

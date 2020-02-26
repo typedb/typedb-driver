@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.debug;
+package grakn.client.test.behaviour.graql.language.define;
 
 import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
@@ -34,20 +34,21 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "test/behaviour/debug/debug.feature"
+        features = "external/graknlabs_verification/behaviour/graql/language/define.feature",
+        tags = "not @ignore and not @ignore-client-java"
 )
-public class DebugTest {
+public class DefineTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DebugTest'
+    // 3) Select 'Bazel test TransactionTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    // 1) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
-    // 2) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
+    //    a) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
+    //    b) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=grakn.client.*'
@@ -61,12 +62,12 @@ public class DebugTest {
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
     @BeforeClass
-    public static void graknStart() throws InterruptedException, IOException, TimeoutException {
+    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
         GraknSetup.bootup();
     }
 
     @AfterClass
-    public static void graknStop() throws InterruptedException, TimeoutException, IOException {
+    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
         GraknSetup.shutdown();
     }
 }

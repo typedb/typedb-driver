@@ -17,46 +17,34 @@
 # under the License.
 #
 
-package(default_visibility = ["//visibility:__subpackages__"])
+package(default_visibility = ["//test/behaviour/graql/language/define:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
-java_test(
-    name = "test",
+java_library(
+    name = "steps",
     srcs = [
-        "DebugTest.java",
+        "GraqlSteps.java"
     ],
-    test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
         # Package dependencies
-        "//test/setup:grakn-setup",
+        "//test/behaviour/connection:steps",
+        "//:client-java",
 
-        # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
+        # Grakn Labs dependencies
+        "@graknlabs_graql//java:graql",
 
         # External dependencies from Maven
+        "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+        "//dependencies/maven/artifacts/com/google/guava:guava",
     ],
-    runtime_deps = [
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/config:parameters",
-    ],
-    data = [
-        ":debug.feature",
-        "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
-    ],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
-    ],
-    classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test"
+        ":steps",
     ],
     license_type = "apache"
 )
