@@ -252,13 +252,13 @@ workflows:
             branches:
               ignore: client-java-release-branch
       - test-graql-define:
-        filters:
-          branches:
-            ignore: client-java-release-branch
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - test-graql-insert:
-        filters:
-          branches:
-            ignore: client-java-release-branch
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - deploy-maven-snapshot:
           filters:
             branches:
