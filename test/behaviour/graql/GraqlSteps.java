@@ -29,7 +29,6 @@ import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import io.cucumber.java.After;
-import io.cucumber.java.BeforeStep;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -49,15 +48,16 @@ public class GraqlSteps {
     private static List<ConceptMap> answers;
     private static String answerConceptKey = null;
 
-    @Given("transaction is initialised")
-    public void initialise_transaction() {
-        session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-        tx = session.transaction().write();
-    }
-
     @After
     public void close_transaction() {
         tx.close();
+    }
+
+    @Given("transaction is initialised")
+    public void transaction_is_initialised() {
+        session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
+        tx = session.transaction().write();
+        assertTrue(tx.isOpen());
     }
 
     @Given("the integrity is validated")
