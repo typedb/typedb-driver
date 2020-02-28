@@ -116,6 +116,7 @@ public class ConnectionSteps {
 
     @After
     public void close_transactions_and_sessions() throws ExecutionException, InterruptedException {
+        System.out.println("ConnectionSteps.after");
         if (sessions != null) {
             for (GraknClient.Session session : sessions) {
                 if (sessionsToTransactions.containsKey(session)) {

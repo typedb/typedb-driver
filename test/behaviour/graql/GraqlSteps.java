@@ -22,13 +22,13 @@ package grakn.client.test.behaviour.graql;
 import com.google.common.collect.Iterators;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
+import grakn.client.concept.AttributeType;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -38,26 +38,30 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
-    private static List<ConceptMap> answers;
-    private static GraknClient.Session session;
-    private static GraknClient.Transaction tx;
+    private static GraknClient.Session session = null;
+    private static GraknClient.Transaction tx = null;
 
-    @Before
-    public void open_transaction() {
-        session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-        tx = session.transaction().write();
-    }
+    private static List<ConceptMap> answers;
+    private static String answerConceptKey = null;
 
     @After
     public void close_transaction() {
         tx.close();
     }
 
+    @Given("transaction is initialised")
+    public void transaction_is_initialised() {
+        session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
+        tx = session.transaction().write();
+        assertTrue(tx.isOpen());
+    }
+
     @Given("the integrity is validated")
-    public void check_kb_is_valid() {
+    public void integrity_is_validated(){
 
         // TODO
 
@@ -79,6 +83,22 @@ public class GraqlSteps {
         tx = session.transaction().write();
     }
 
+    @Given("graql insert throws")
+    public void graql_insert_throws(List<String> insertQueryStatements) {
+        GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
+        boolean threw = false;
+        try {
+            tx.execute(graqlQuery);
+            tx.commit();
+        } catch (RuntimeException e) {
+            threw = true;
+        } finally {
+            tx.close();
+            tx = session.transaction().write();
+        }
+        assertTrue(threw);
+    }
+
     @When("get answers of graql query")
     public void graql_query(List<String> graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
@@ -92,12 +112,43 @@ public class GraqlSteps {
         }
     }
 
-    @Then("there is/are {number} answer(s)")
+    @Then("answer size is: {number}")
     public void answer_quantity_assertion(int expectedAnswers) {
         assertEquals(expectedAnswers, answers.size());
     }
 
-    @Then("answers have concepts labeled")
+
+    @Then("answer concepts all have key: {word}")
+    public void answer_concepts_have_key_labeled(String label) {
+        answerConceptKey = label;
+    }
+
+    @Then("answer keys are")
+    public void answer_keys_are(List<Map<String, String>> conceptKeys) {
+      assertEquals(conceptKeys.size(), answers.size());
+
+        for (ConceptMap answer : answers) {
+
+            Map<String, String> answerKeys = new HashMap<>();
+            AttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
+            // remap each concept and save its key value into the map from variable to key value
+            answer.map().forEach((var, concept) ->
+                            answerKeys.put(var.name(),
+                                    concept.asThing().attributes(keyType).findFirst().get().value().toString()));
+
+            int matchingAnswers = 0;
+            for (Map<String, String> expectedKeys : conceptKeys) {
+                if (expectedKeys.equals(answerKeys)) {
+                    matchingAnswers++;
+                }
+            }
+
+            // we expect exactly one matching answer from the expected answer keys
+            assertEquals(1, matchingAnswers);
+        }
+    }
+
+    @Then("answers are labeled")
     public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
         assertEquals(conceptLabels.size(), answers.size());
 
