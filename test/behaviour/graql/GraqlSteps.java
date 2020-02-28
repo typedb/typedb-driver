@@ -148,7 +148,7 @@ public class GraqlSteps {
         }
     }
 
-    @Then("answers have concepts labeled")
+    @Then("answers are labeled")
     public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
         assertEquals(conceptLabels.size(), answers.size());
 
