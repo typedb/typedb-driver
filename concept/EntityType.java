@@ -120,15 +120,6 @@ public interface EntityType extends Type {
 
     //------------------------------------- Accessors ----------------------------------
 
-//    /**
-//     * Returns the supertype of this EntityType.
-//     *
-//     * @return The supertype of this EntityType
-//     */
-//    @Override
-//    @Nullable
-//    EntityType sup();
-
     /**
      * Returns a collection of supertypes of this EntityType.
      *

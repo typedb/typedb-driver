@@ -134,15 +134,6 @@ public interface AttributeType<D> extends Type {
     AttributeType<D> has(AttributeType attributeType);
 
     //------------------------------------- Accessors ---------------------------------
-//
-//    /**
-//     * Returns the supertype of this AttributeType.
-//     *
-//     * @return The supertype of this AttributeType,
-//     */
-//    @Override
-//    @Nullable
-//    AttributeType<D> sup();
 
     /**
      * Get the Attribute with the value provided, and its type, or return NULL
