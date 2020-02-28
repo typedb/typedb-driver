@@ -136,15 +136,6 @@ public interface AttributeType<D> extends Type {
     //------------------------------------- Accessors ---------------------------------
 
     /**
-     * Returns the supertype of this AttributeType.
-     *
-     * @return The supertype of this AttributeType,
-     */
-    @Override
-    @Nullable
-    AttributeType<D> sup();
-
-    /**
      * Get the Attribute with the value provided, and its type, or return NULL
      *
      * @param value A value which an Attribute in the graph may be holding

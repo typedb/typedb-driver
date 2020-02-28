@@ -50,15 +50,6 @@ public interface Role extends SchemaConcept {
     //------------------------------------- Accessors ----------------------------------
 
     /**
-     * Returns the super of this Role.
-     *
-     * @return The super of this Role
-     */
-    @Nullable
-    @Override
-    Role sup();
-
-    /**
      * @return All the super-types of this this Role
      */
     @Override

@@ -33,6 +33,7 @@ import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.Thing;
+import grakn.client.concept.Type;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.Graql;
@@ -128,6 +129,7 @@ public class ConceptIT {
     private RelationType employment;
     private Rule metaRule;
     private Rule testRule;
+    private Type metaType;
 
     private Attribute<String> emailAlice;
     private Attribute<String> emailBob;
@@ -210,6 +212,8 @@ public class ConceptIT {
         // Relations
         aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
+
+        metaType = tx.getType(Label.of("thing"));
 
     }
 
@@ -339,8 +343,8 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingSupOnMetaType_GetNull() {
-        assertNull(tx.getEntityType("entity").sup());
+    public void whenCallingSupOnEntity_GetMetaType() {
+        assertEquals(metaType, livingThing.sup().sup());
     }
 
     @Test
