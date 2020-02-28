@@ -74,7 +74,7 @@ public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept>
     }
 
     @Nullable
-    public final SomeSchemaConcept sup() {
+    public final SchemaConcept sup() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptGetSupReq(ConceptProto.SchemaConcept.GetSup.Req.getDefaultInstance()).build();
 
@@ -85,7 +85,8 @@ public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept>
                 return null;
             case SCHEMACONCEPT:
                 ConceptImpl concept = ConceptImpl.of(response.getSchemaConcept(), tx());
-                return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
+                return concept.asSchemaConcept();
+//                return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }

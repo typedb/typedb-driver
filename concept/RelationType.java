@@ -117,14 +117,14 @@ public interface RelationType extends Type {
     @Override
     RelationType isAbstract(Boolean isAbstract);
 
-    /**
-     * Returns the direct supertype of this RelationType.
-     *
-     * @return The direct supertype of this RelationType
-     */
-    @Override
-    @Nullable
-    RelationType sup();
+//    /**
+//     * Returns the direct supertype of this RelationType.
+//     *
+//     * @return The direct supertype of this RelationType
+//     */
+//    @Override
+//    @Nullable
+//    RelationType sup();
 
     /**
      * Returns a collection of supertypes of this RelationType.

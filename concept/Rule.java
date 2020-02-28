@@ -61,12 +61,12 @@ public interface Rule extends SchemaConcept {
      */
     Rule label(Label label);
 
-    /**
-     * @return The super of this Rule
-     */
-    @Nullable
-    @Override
-    Rule sup();
+//    /**
+//     * @return The super of this Rule
+//     */
+//    @Nullable
+//    @Override
+//    Rule sup();
 
     /**
      * @param superRule The super of this Rule
