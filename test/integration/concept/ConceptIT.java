@@ -347,12 +347,6 @@ public class ConceptIT {
         assertEquals(metaType, livingThing.sup().sup());
     }
 
-
-    @Test
-    public void whenCallingSupOnMetaType_GetNull() {
-        assertNull(tx.getEntityType("entity").sup());
-    }
-
     @Test
     public void whenCallingType_GetTheExpectedResult() {
         assertEquals(email, emailAlice.type());
