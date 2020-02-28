@@ -86,7 +86,6 @@ public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept>
             case SCHEMACONCEPT:
                 ConceptImpl concept = ConceptImpl.of(response.getSchemaConcept(), tx());
                 return concept.asSchemaConcept();
-//                return equalsCurrentBaseType(concept) ? asCurrentBaseType(concept) : null;
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }

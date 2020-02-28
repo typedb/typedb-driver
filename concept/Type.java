@@ -88,13 +88,6 @@ public interface Type extends SchemaConcept {
     @CheckReturnValue
     Stream<AttributeType> keys();
 
-//    /**
-//     * @return The direct super of this Type
-//     */
-//    @CheckReturnValue
-//    @Nullable
-//    Type sup();
-
     /**
      * @return All the the super-types of this Type
      */
