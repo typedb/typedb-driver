@@ -43,5 +43,5 @@ def graknlabs_console():
     git_repository(
         name = "graknlabs_console",
         remote = "https://github.com/graknlabs/console",
-        commit = "ba9128ab8b7495aae008b5bcf51c6618ac3d5d94" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        commit = "ba9128ab8b7495aae008b5bcf51c6618ac3d5d94" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_console
     )
