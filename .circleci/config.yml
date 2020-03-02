@@ -115,6 +115,15 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
 
+  test-graql-undefine:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
+
   test-graql-insert:
     machine: true
     working_directory: ~/client-java
@@ -248,6 +257,10 @@ workflows:
             branches:
               ignore: client-java-release-branch
       - test-transaction:
+          filters:
+            branches:
+              ignore: client-java-release-branch
+      - test-graql-define:
           filters:
             branches:
               ignore: client-java-release-branch

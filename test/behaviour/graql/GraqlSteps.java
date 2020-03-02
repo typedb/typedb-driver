@@ -25,9 +25,11 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.concept.AttributeType;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
+import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
+import graql.lang.query.GraqlUndefine;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -69,10 +71,35 @@ public class GraqlSteps {
 
     @Given("graql define")
     public void graql_define(List<String> defineQueryStatements) {
-        GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
+        GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
         tx.execute(graqlQuery);
         tx.commit();
         tx = session.transaction().write();
+    }
+
+    @Given("graql undefine")
+    public void graql_undefine(List<String> undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        tx.execute(graqlQuery);
+        tx.commit();
+        tx = session.transaction().write();
+    }
+
+    @Given("graql undefine throws")
+    public void graql_undefine_throws(List<String> undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        boolean threw = false;
+        try {
+            tx.execute(graqlQuery);
+            tx.commit();
+        } catch (RuntimeException e) {
+            threw = true;
+        } finally {
+            tx.close();
+            tx = session.transaction().write();
+        }
+
+        assertTrue(threw);
     }
 
     @Given("graql insert")
@@ -82,6 +109,7 @@ public class GraqlSteps {
         tx.commit();
         tx = session.transaction().write();
     }
+
 
     @Given("graql insert throws")
     public void graql_insert_throws(List<String> insertQueryStatements) {
