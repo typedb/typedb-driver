@@ -74,7 +74,7 @@ public class GraqlSteps {
     }
 
     @Given("graql define")
-    public void graql_define(List<String> defineQueryStatements) {
+    public void graql_define(String defineQueryStatements) {
         GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
         tx.execute(graqlQuery);
         tx.commit();
@@ -82,7 +82,7 @@ public class GraqlSteps {
     }
 
     @Given("graql undefine")
-    public void graql_undefine(List<String> undefineQueryStatements) {
+    public void graql_undefine(String undefineQueryStatements) {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
         tx.execute(graqlQuery);
         tx.commit();
@@ -90,7 +90,7 @@ public class GraqlSteps {
     }
 
     @Given("graql undefine throws")
-    public void graql_undefine_throws(List<String> undefineQueryStatements) {
+    public void graql_undefine_throws(String undefineQueryStatements) {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
         boolean threw = false;
         try {
@@ -107,7 +107,7 @@ public class GraqlSteps {
     }
 
     @Given("graql insert")
-    public void graql_insert(List<String> insertQueryStatements) {
+    public void graql_insert(String insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         tx.execute(graqlQuery);
         tx.commit();
@@ -116,7 +116,7 @@ public class GraqlSteps {
 
 
     @Given("graql insert throws")
-    public void graql_insert_throws(List<String> insertQueryStatements) {
+    public void graql_insert_throws(String insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         boolean threw = false;
         try {
@@ -132,7 +132,7 @@ public class GraqlSteps {
     }
 
     @When("get answers of graql query")
-    public void graql_query(List<String> graqlQueryStatements) {
+    public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         if (graqlQuery instanceof GraqlGet) {
             answers = tx.execute(graqlQuery.asGet());
@@ -203,7 +203,7 @@ public class GraqlSteps {
     }
 
     @Then("each answer satisfies")
-    public void each_answer_satisfies(List<String> templatedGraqlQuery) {
+    public void each_answer_satisfies(String templatedGraqlQuery) {
         String templatedQuery = String.join("\n", templatedGraqlQuery);
         for (ConceptMap answer : answers) {
             String query = applyQueryTemplate(templatedQuery, answer);
