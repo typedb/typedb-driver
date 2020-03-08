@@ -21,13 +21,17 @@ package grakn.client.test.behaviour.graql;
 
 import com.google.common.collect.Iterators;
 import grakn.client.GraknClient;
+import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
 import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
+import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
+import graql.lang.query.GraqlUndefine;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -36,6 +40,8 @@ import io.cucumber.java.en.When;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -68,23 +74,49 @@ public class GraqlSteps {
     }
 
     @Given("graql define")
-    public void graql_define(List<String> defineQueryStatements) {
-        GraqlQuery graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
+    public void graql_define(String defineQueryStatements) {
+        GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
         tx.execute(graqlQuery);
         tx.commit();
         tx = session.transaction().write();
     }
 
+    @Given("graql undefine")
+    public void graql_undefine(String undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        tx.execute(graqlQuery);
+        tx.commit();
+        tx = session.transaction().write();
+    }
+
+    @Given("graql undefine throws")
+    public void graql_undefine_throws(String undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        boolean threw = false;
+        try {
+            tx.execute(graqlQuery);
+            tx.commit();
+        } catch (RuntimeException e) {
+            threw = true;
+        } finally {
+            tx.close();
+            tx = session.transaction().write();
+        }
+
+        assertTrue(threw);
+    }
+
     @Given("graql insert")
-    public void graql_insert(List<String> insertQueryStatements) {
+    public void graql_insert(String insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         tx.execute(graqlQuery);
         tx.commit();
         tx = session.transaction().write();
     }
 
+
     @Given("graql insert throws")
-    public void graql_insert_throws(List<String> insertQueryStatements) {
+    public void graql_insert_throws(String insertQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         boolean threw = false;
         try {
@@ -100,7 +132,7 @@ public class GraqlSteps {
     }
 
     @When("get answers of graql query")
-    public void graql_query(List<String> graqlQueryStatements) {
+    public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         if (graqlQuery instanceof GraqlGet) {
             answers = tx.execute(graqlQuery.asGet());
@@ -167,6 +199,52 @@ public class GraqlSteps {
 
             // we expect exactly one matching answer from the expected answer set
             assertEquals(1, matchingAnswers);
+        }
+    }
+
+    @Then("each answer satisfies")
+    public void each_answer_satisfies(String templatedGraqlQuery) {
+        String templatedQuery = String.join("\n", templatedGraqlQuery);
+        for (ConceptMap answer : answers) {
+            String query = applyQueryTemplate(templatedQuery, answer);
+            GraqlQuery graqlQuery = Graql.parse(query);
+            List<? extends Answer> answers = tx.execute(graqlQuery);
+            assertEquals(1, answers.size());
+        }
+    }
+
+    private String applyQueryTemplate(String template, ConceptMap templateFiller) {
+        // find shortest matching strings between <>
+        Pattern pattern = Pattern.compile("<.+?>");
+        Matcher matcher = pattern.matcher(template);
+
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        while (matcher.find()) {
+            String matched = matcher.group(0);
+            String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
+            Concept concept = templateFiller.get(requiredVariable);
+
+            builder.append(template.substring(i, matcher.start()));
+            if (concept == null) {
+                throw new RuntimeException(String.format("No ID available for template placeholder: %s", matched));
+            } else {
+                String conceptId = concept.id().toString();
+                builder.append(conceptId);
+            }
+            i = matcher.end();
+        }
+        builder.append(template.substring(i));
+        return builder.toString();
+    }
+
+    private String variableFromTemplatePlaceholder(String placeholder) {
+        if (placeholder.endsWith(".id")) {
+            String stripped = placeholder.replace(".id", "");
+            String withoutPrefix = stripped.replace("answer.", "");
+            return withoutPrefix;
+        } else {
+            throw new RuntimeException("Cannot replace template not based on ID");
         }
     }
 }

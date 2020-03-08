@@ -23,9 +23,9 @@ load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 java_test(
     name = "test-core",
     srcs = [
-        "DefineTest.java",
+        "MatchTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.language.define.DefineTest",
+    test_class = "grakn.client.test.behaviour.graql.language.match.MatchTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -40,7 +40,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:define.feature",
+        "@graknlabs_verification//behaviour/graql/language:match.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -59,9 +59,9 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "DefineTest.java",
+        "MatchTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.language.define.DefineTest",
+    test_class = "grakn.client.test.behaviour.graql.language.match.MatchTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -76,7 +76,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:define.feature"
+        "@graknlabs_verification//behaviour/graql/language:match.feature"
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
@@ -91,7 +91,6 @@ checkstyle_test(
     targets = [
         ":test-core",
         ":test-kgms",
-
     ],
     license_type = "apache"
 )
