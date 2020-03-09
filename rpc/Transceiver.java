@@ -71,7 +71,6 @@ public class Transceiver implements AutoCloseable {
      */
     public void send(Transaction.Req request) {
         try (ThreadTrace trace = traceOnThread("request")) {
-            trace.data(request.toString());
             if (responseListener.terminated.get()) {
                 throw GraknClientException.connectionClosed();
             }
@@ -88,7 +87,6 @@ public class Transceiver implements AutoCloseable {
             if (response.type() != Response.Type.OK) {
                 close();
             }
-            trace.data(response.toString());
             return response;
         }
     }
