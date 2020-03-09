@@ -314,6 +314,10 @@ public class RequestBuilder {
                 return Collections.emptyMap();
             }
 
+            if (threadTrace.getId() == null || threadTrace.getRootId() == null) {
+                return Collections.emptyMap();
+            }
+
             Map<String, String> metadata = new HashMap<>(2);
             metadata.put("traceParentId", threadTrace.getId().toString());
             metadata.put("traceRootId", threadTrace.getRootId().toString());
