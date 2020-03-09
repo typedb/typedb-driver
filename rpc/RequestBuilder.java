@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
@@ -311,6 +312,10 @@ public class RequestBuilder {
         if (isTracingEnabled()) {
             ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) {
+                return Collections.emptyMap();
+            }
+
+            if (threadTrace.getId() == null || threadTrace.getRootId() == null) {
                 return Collections.emptyMap();
             }
 
