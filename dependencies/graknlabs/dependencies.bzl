@@ -65,5 +65,5 @@ def graknlabs_grabl_tracing():
     git_repository(
         name = "graknlabs_grabl_tracing",
         remote = "https://github.com/graknlabs/grabl-tracing",
-        commit = "555b090293cf98cd57e590090e355612cde662b5"
+        commit = "7f04b4a9629402b958325717a7ebb9ebf03b47fe"
     )

@@ -35,7 +35,13 @@ import graql.lang.query.GraqlQuery;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import static grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
+import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
+import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -46,11 +52,11 @@ public class RequestBuilder {
     public static class Session {
 
         public static SessionProto.Session.Open.Req open(String keyspace) {
-            return SessionProto.Session.Open.Req.newBuilder().setKeyspace(keyspace).build();
+            return SessionProto.Session.Open.Req.newBuilder().putAllMetadata(getTracingData()).setKeyspace(keyspace).build();
         }
 
         public static SessionProto.Session.Close.Req close(String sessionId) {
-            return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build();
+            return SessionProto.Session.Close.Req.newBuilder().putAllMetadata(getTracingData()).setSessionId(sessionId).build();
         }
     }
 
@@ -65,11 +71,12 @@ public class RequestBuilder {
                     .setType(SessionProto.Transaction.Type.valueOf(txType.id()))
                     .build();
 
-            return SessionProto.Transaction.Req.newBuilder().setOpenReq(openRequest).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setOpenReq(openRequest).build();
         }
 
         public static SessionProto.Transaction.Req commit() {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setCommitReq(SessionProto.Transaction.Commit.Req.getDefaultInstance())
                     .build();
         }
@@ -91,17 +98,19 @@ public class RequestBuilder {
                     .setQuery(queryString)
                     .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
                     .build();
-            return SessionProto.Transaction.Req.newBuilder().setQueryReq(request).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setQueryReq(request).build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setGetSchemaConceptReq(SessionProto.Transaction.GetSchemaConcept.Req.newBuilder().setLabel(label.getValue()))
                     .build();
         }
 
         public static SessionProto.Transaction.Req getConcept(ConceptId id) {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setGetConceptReq(SessionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
                     .build();
         }
@@ -109,6 +118,7 @@ public class RequestBuilder {
 
         public static SessionProto.Transaction.Req getAttributes(Object value) {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setGetAttributesReq(SessionProto.Transaction.GetAttributes.Req.newBuilder()
                                                  .setValue(ConceptMessage.attributeValue(value))
                     ).build();
@@ -116,6 +126,7 @@ public class RequestBuilder {
 
         public static SessionProto.Transaction.Req putEntityType(Label label) {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setPutEntityTypeReq(SessionProto.Transaction.PutEntityType.Req.newBuilder().setLabel(label.getValue()))
                     .build();
         }
@@ -126,21 +137,21 @@ public class RequestBuilder {
                     .setDataType(ConceptMessage.setDataType(dataType))
                     .build();
 
-            return SessionProto.Transaction.Req.newBuilder().setPutAttributeTypeReq(request).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
         }
 
         public static SessionProto.Transaction.Req putRelationType(Label label) {
             SessionProto.Transaction.PutRelationType.Req request = SessionProto.Transaction.PutRelationType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .build();
-            return SessionProto.Transaction.Req.newBuilder().setPutRelationTypeReq(request).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
         }
 
         public static SessionProto.Transaction.Req putRole(Label label) {
             SessionProto.Transaction.PutRole.Req request = SessionProto.Transaction.PutRole.Req.newBuilder()
                     .setLabel(label.getValue())
                     .build();
-            return SessionProto.Transaction.Req.newBuilder().setPutRoleReq(request).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRoleReq(request).build();
         }
 
         public static SessionProto.Transaction.Req putRule(Label label, Pattern when, Pattern then) {
@@ -149,11 +160,12 @@ public class RequestBuilder {
                     .setWhen(when.toString())
                     .setThen(then.toString())
                     .build();
-            return SessionProto.Transaction.Req.newBuilder().setPutRuleReq(request).build();
+            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRuleReq(request).build();
         }
 
         public static SessionProto.Transaction.Req iterate(int iteratorId) {
             return SessionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
                     .setIterateReq(SessionProto.Transaction.Iter.Req.newBuilder()
                                            .setId(iteratorId)).build();
         }
@@ -292,6 +304,22 @@ public class RequestBuilder {
                 builder.setPassword(password);
             }
             return builder.build();
+        }
+    }
+
+    private static Map<String, String> getTracingData() {
+        if (isTracingEnabled()) {
+            ThreadTrace threadTrace = currentThreadTrace();
+            if (threadTrace == null) {
+                return Collections.emptyMap();
+            }
+
+            Map<String, String> metadata = new HashMap<>(2);
+            metadata.put("traceParentId", threadTrace.getId().toString());
+            metadata.put("traceRootId", threadTrace.getRootId().toString());
+            return metadata;
+        } else {
+            return Collections.emptyMap();
         }
     }
 }
