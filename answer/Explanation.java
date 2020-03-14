@@ -19,6 +19,8 @@
 
 package grakn.client.answer;
 
+import grakn.client.concept.Rule;
+
 import javax.annotation.CheckReturnValue;
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +34,11 @@ import java.util.List;
 public class Explanation {
 
     private final List<ConceptMap> answers;
+    private final Rule rule;
 
-    public Explanation(List<ConceptMap> ans) {
+    public Explanation(List<ConceptMap> ans, Rule rule) {
         this.answers = Collections.unmodifiableList(ans);
+        this.rule = rule;
     }
 
     /**
@@ -42,4 +46,9 @@ public class Explanation {
      */
     @CheckReturnValue
     public List<ConceptMap> getAnswers() { return answers;}
+
+    @CheckReturnValue
+    public Rule getRule() {
+        return rule;
+    }
 }

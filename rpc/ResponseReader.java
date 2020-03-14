@@ -22,7 +22,10 @@ package grakn.client.rpc;
 import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.Rule;
+import grakn.client.concept.RuleImpl;
 import grakn.protocol.session.AnswerProto;
+import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
@@ -79,7 +82,13 @@ public class ResponseReader {
     public static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
-        return new Explanation(answers);
+        ConceptProto.Concept ruleProto = res.getRule();
+        Rule rule = res.hasRule() ? rule(ruleProto, tx) : null;
+        return new Explanation(answers, rule);
+    }
+
+    public static Rule rule(ConceptProto.Concept res, GraknClient.Transaction tx) {
+        return ConceptImpl.of(res, tx).asRule();
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
