@@ -20,26 +20,24 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.answer.Void;
-import grakn.client.concept.ConceptImpl;
-import grakn.client.concept.Rule;
-import grakn.client.concept.RuleImpl;
-import grakn.protocol.session.AnswerProto;
-import grakn.protocol.session.ConceptProto;
-import graql.lang.Graql;
-import graql.lang.pattern.Pattern;
-import graql.lang.statement.Variable;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
 import grakn.client.answer.ConceptList;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
-import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
-
-import grakn.client.concept.ConceptId;
+import grakn.client.answer.Numeric;
+import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.Rule;
+import grakn.protocol.session.AnswerProto;
+import grakn.protocol.session.ConceptProto;
+import graql.lang.Graql;
+import graql.lang.pattern.Pattern;
+import graql.lang.statement.Variable;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -83,12 +81,8 @@ public class ResponseReader {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
-        Rule rule = res.hasRule() ? rule(ruleProto, tx) : null;
+        Rule rule = res.hasRule() ? ConceptImpl.of(ruleProto, tx).asRule() : null;
         return new Explanation(answers, rule);
-    }
-
-    public static Rule rule(ConceptProto.Concept res, GraknClient.Transaction tx) {
-        return ConceptImpl.of(res, tx).asRule();
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
