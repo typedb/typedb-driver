@@ -64,6 +64,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -645,6 +646,7 @@ public class ConceptIT {
                 }
 
                 Explanation explanation = answer.explanation();
+                assertEquals("transitive-ownership", explanation.getRule().label().toString());
                 assertNotNull(explanation);
                 if (explanation.getAnswers().get(0).hasExplanation()) {
                     Explanation subExplanation = explanation.getAnswers().get(0).explanation();

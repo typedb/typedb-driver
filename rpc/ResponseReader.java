@@ -97,9 +97,8 @@ public class ResponseReader {
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
         );
-        // Pattern is null if no reasoner was used
         boolean hasExplanation = res.getHasExplanation();
-        Pattern queryPattern = hasExplanation ? Graql.parsePattern(res.getPattern()) : null;
+        Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
         return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
     }
 
