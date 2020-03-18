@@ -22,6 +22,7 @@ package grakn.client.answer;
 import grakn.client.concept.Rule;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Explanation {
     private final List<ConceptMap> answers;
     private final Rule rule;
 
-    public Explanation(List<ConceptMap> ans, Rule rule) {
+    public Explanation(List<ConceptMap> ans, @Nullable Rule rule) {
         this.answers = Collections.unmodifiableList(ans);
         this.rule = rule;
     }
