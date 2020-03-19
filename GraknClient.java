@@ -71,6 +71,7 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -568,23 +569,20 @@ public class GraknClient implements AutoCloseable {
         }
 
         private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
-            return (List<T>) streamInternal(query, infer).collect(Collectors.toList());
+            return getAll(startIterator(query, infer),
+                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
         private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
-            Iterable<T> iterable = () -> this.rpcIterator(query, infer);
+            Iterable<T> iterable = () -> iterator(startIterator(query, infer),
+                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
-        private <T extends Answer> Iterator<T> rpcIterator(GraqlQuery query, boolean infer) {
+        private int startIterator(GraqlQuery query, boolean infer) {
             transceiver.send(RequestBuilder.Transaction.query(query.toString(), infer));
             SessionProto.Transaction.Res txResponse = responseOrThrow();
-            int iteratorId = txResponse.getQueryIter().getId();
-            return new RPCIterator<>(
-                    this,
-                    iteratorId,
-                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this)
-            );
+            return txResponse.getQueryIter().getId();
         }
 
         public void close() {
@@ -726,7 +724,7 @@ public class GraknClient implements AutoCloseable {
             transceiver.send(RequestBuilder.Transaction.getAttributes(value));
             int iteratorId = responseOrThrow().getGetAttributesIter().getId();
             Iterable<Attribute<V>> iterable = () -> new RPCIterator<Attribute<V>>(
-                    this, iteratorId, response -> ConceptImpl.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
+                    iteratorId, response -> ConceptImpl.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
             );
 
             return StreamSupport.stream(iterable.spliterator(), false)
@@ -782,8 +780,9 @@ public class GraknClient implements AutoCloseable {
             SessionProto.Transaction.Res response = runConceptMethod(schemaConcept.id(), method);
             int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
 
-            Iterable<? extends Concept> iterable = () -> new RPCIterator<>(
-                    this, iteratorId, res -> ConceptImpl.of(res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
+            Iterable<? extends Concept> iterable = () -> iterator(iteratorId,
+                    res -> ConceptImpl.of(
+                            res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
             );
 
             Stream<? extends Concept> sups = StreamSupport.stream(iterable.spliterator(), false);
@@ -826,8 +825,32 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
+        private <T> List<T> getAll(int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
+            try (ThreadTrace trace = traceOnThread("iterateAll")) {
+                transceiver.send(RequestBuilder.Transaction.iterate(iteratorId, true));
+
+                List<T> results = new ArrayList<>();
+
+                iterate:
+                while (true) {
+                    SessionProto.Transaction.Iter.Res response = responseOrThrow().getIterateRes();
+
+                    switch (response.getResCase()) {
+                        case DONE:
+                            break iterate;
+                        case RES_NOT_SET:
+                            throw GraknClientException.unreachableStatement("Unexpected " + response);
+                        default:
+                            results.add(responseReader.apply(response));
+                    }
+                }
+
+                return results;
+            }
+        }
+
         public <T> RPCIterator<T> iterator(int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-            return new RPCIterator<>(this, iteratorId, responseReader);
+            return new RPCIterator<>(iteratorId, responseReader);
         }
 
         /**
@@ -842,8 +865,7 @@ public class GraknClient implements AutoCloseable {
             private Transaction tx;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
 
-            private RPCIterator(Transaction tx, int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-                this.tx = tx;
+            private RPCIterator(int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
                 this.iteratorId = iteratorId;
                 this.responseReader = responseReader;
 

@@ -164,10 +164,16 @@ public class RequestBuilder {
         }
 
         public static SessionProto.Transaction.Req iterate(int iteratorId) {
+            return iterate(iteratorId, false);
+        }
+
+        public static SessionProto.Transaction.Req iterate(int iteratorId, boolean all) {
             return SessionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
                     .setIterateReq(SessionProto.Transaction.Iter.Req.newBuilder()
-                                           .setId(iteratorId)).build();
+                            .setId(iteratorId)
+                            .setAll(all)
+                    ).build();
         }
     }
 
