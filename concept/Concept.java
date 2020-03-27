@@ -19,6 +19,10 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteConcept;
+import grakn.protocol.session.ConceptProto;
+
 import javax.annotation.CheckReturnValue;
 
 
@@ -30,7 +34,39 @@ import javax.annotation.CheckReturnValue;
  * (EntityType, Role, RelationType, Rule or AttributeType)
  * or an Thing (Entity, Relation , Attribute).
  */
-public interface Concept {
+public interface Concept<
+        ConceptType extends Concept<ConceptType, RemoteConceptType>,
+        RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>> {
+
+    @SuppressWarnings("unchecked")
+    static <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
+            ConceptType extends Concept<ConceptType, RemoteConceptType>>
+        ConceptType of(ConceptProto.Concept concept) {
+        switch (concept.getBaseType()) {
+            case ENTITY:
+                return (ConceptType) new EntityImpl(concept);
+            case RELATION:
+                return (ConceptType) new RelationImpl(concept);
+            case ATTRIBUTE:
+                return (ConceptType) new AttributeImpl<>(concept);
+            case ENTITY_TYPE:
+                return (ConceptType) new EntityTypeImpl(concept);
+            case RELATION_TYPE:
+                return (ConceptType) new RelationTypeImpl(concept);
+            case ATTRIBUTE_TYPE:
+                return (ConceptType) new AttributeTypeImpl<>(concept);
+            case ROLE:
+                return (ConceptType) new RoleImpl(concept);
+            case RULE:
+                return (ConceptType) new RuleImpl(concept);
+            case META_TYPE:
+                return (ConceptType) new MetaTypeImpl<>(concept);
+            default:
+            case UNRECOGNIZED:
+                throw new IllegalArgumentException("Unrecognised " + concept);
+        }
+    }
+
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -49,7 +85,7 @@ public interface Concept {
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    default SchemaConcept asSchemaConcept() {
+    default SchemaConcept<? extends ConceptType> asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
     }
 
@@ -59,7 +95,7 @@ public interface Concept {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default Type asType() {
+    default Type<?, ?> asType() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -69,7 +105,7 @@ public interface Concept {
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    default Thing asThing() {
+    default Thing<?, ?> asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -152,6 +188,25 @@ public interface Concept {
     default <D> Attribute<D> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
+
+    /**
+     * Return as a MetaType if the Concept is a MetaType.
+     *
+     * @return A MetaType if the Concept is a MetaType
+     */
+    @CheckReturnValue
+    default MetaType<?, ?> asMetaType() {
+        throw GraknConceptException.invalidCasting(this, MetaType.class);
+    }
+
+    /**
+     * Return a RemoteConcept for this Concept.
+     *
+     * @param tx The transaction to use for the RPCs.
+     * @return A remote concept using the given transaction to enable RPCs.
+     */
+    <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>>
+    RemoteConcept<RemoteConceptType, ConceptType> asRemote(GraknClient.Transaction tx);
 
     /**
      * Determine if the Concept is a SchemaConcept
@@ -264,12 +319,20 @@ public interface Concept {
     }
 
     /**
-     * Delete the Concepts
+     * Determine if the Concept is a MetaType.
+     *
+     * @return true if the Concept is a MetaType.
      */
-    void delete();
+    default boolean isMetaType() {
+        return false;
+    }
 
     /**
-     * Return whether the concept has been deleted.
+     * Determine if the Concept is remote.
+     *
+     * @return true if the Concept is remote.
      */
-    boolean isDeleted();
+    default boolean isRemote() {
+        return false;
+    }
 }

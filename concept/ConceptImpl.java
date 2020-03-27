@@ -19,62 +19,20 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
-
-import java.util.function.Function;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Client implementation of Concept
  *
  * @param <SomeConcept> represents the actual class of object to downcast to
  */
-public abstract class ConceptImpl<SomeConcept extends Concept> implements Concept {
+public abstract class ConceptImpl<SomeConcept extends Concept<SomeConcept>> implements Concept<SomeConcept> {
 
-    private final GraknClient.Transaction tx;
     private final ConceptId id;
 
-    ConceptImpl(GraknClient.Transaction tx, ConceptId id) {
-        if (tx == null) {
-            throw new NullPointerException("Null tx");
-        }
-        this.tx = tx;
-        if (id == null) {
-            throw new NullPointerException("Null id");
-        }
-        this.id = id;
+    protected ConceptImpl(ConceptProto.Concept concept) {
+        this.id = ConceptId.of(concept.getId());
     }
-
-    public static ConceptImpl of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
-        ConceptId id = ConceptId.of(concept.getId());
-
-        switch (concept.getBaseType()) {
-            case ENTITY:
-                return new EntityImpl(tx, id);
-            case RELATION:
-                return new RelationImpl(tx, id);
-            case ATTRIBUTE:
-                return new AttributeImpl(tx, id);
-            case ENTITY_TYPE:
-                return new EntityTypeImpl(tx, id);
-            case RELATION_TYPE:
-                return new RelationTypeImpl(tx, id);
-            case ATTRIBUTE_TYPE:
-                return new AttributeTypeImpl(tx, id);
-            case ROLE:
-                return new RoleImpl(tx, id);
-            case RULE:
-                return new RuleImpl(tx, id);
-            case META_TYPE:
-                return new MetaType(tx, id);
-            default:
-            case UNRECOGNIZED:
-                throw new IllegalArgumentException("Unrecognised " + concept);
-        }
-    }
-
 
     @Override
     public ConceptId id() {
@@ -82,22 +40,8 @@ public abstract class ConceptImpl<SomeConcept extends Concept> implements Concep
     }
 
     @Override
-    public final void delete() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setConceptDeleteReq(ConceptProto.Concept.Delete.Req.getDefaultInstance())
-                .build();
-
-        runMethod(method);
-    }
-
-    @Override
-    public final boolean isDeleted() {
-        return tx().getConcept(id()) == null;
-    }
-
-    @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{tx=" + tx + ", id=" + id + "}";
+        return this.getClass().getSimpleName() + "{id=" + id + "}";
     }
 
     @Override
@@ -107,42 +51,16 @@ public abstract class ConceptImpl<SomeConcept extends Concept> implements Concep
 
         ConceptImpl<?> that = (ConceptImpl<?>) o;
 
-        return (tx.equals(that.tx())) &&
-                id.equals(that.id());
+        return id.equals(that.id());
     }
 
     @Override
     public int hashCode() {
         int h = 1;
         h *= 1000003;
-        h ^= tx.hashCode();
-        h *= 1000003;
         h ^= id.hashCode();
         return h;
     }
 
-    GraknClient.Transaction tx() {
-        return tx;
-    }
-
-    abstract SomeConcept asCurrentBaseType(Concept other);
-
-    final Stream<? extends ConceptImpl> conceptStream
-            (int iteratorId, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-
-        Iterable<? extends ConceptImpl> iterable = () -> tx().iterator(
-                iteratorId, res -> of(conceptGetter.apply(res.getConceptMethodIterRes()), tx())
-        );
-
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-        return runMethod(id(), method);
-    }
-
-    protected final ConceptProto.Method.Res runMethod(ConceptId id, ConceptProto.Method.Req method) {
-        return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
-    }
-
+    abstract SomeConcept asCurrentBaseType(Concept<SomeConcept> other);
 }

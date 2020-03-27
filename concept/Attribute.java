@@ -19,8 +19,11 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteAttribute;
+import grakn.protocol.session.ConceptProto;
+
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
 /**
  * Represent a literal Attribute in the graph.
@@ -31,7 +34,7 @@ import java.util.stream.Stream;
  * @param <D> The data type of this resource type.
  *            Supported Types include: String, Long, Double, and Boolean
  */
-public interface Attribute<D> extends Thing {
+public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -58,39 +61,19 @@ public interface Attribute<D> extends Thing {
     @CheckReturnValue
     AttributeType.DataType<D> dataType();
 
-    /**
-     * Retrieves the set of all Instances that possess this Attribute.
-     *
-     * @return The list of all Instances that possess this Attribute.
-     */
-    @CheckReturnValue
-    Stream<Thing> owners();
-
-    /**
-     * Creates a relation from this instance to the provided Attribute.
-     *
-     * @param attribute The Attribute to which a relation is created
-     * @return The instance itself
-     */
-    @Override
-    Attribute has(Attribute attribute);
-
-    /**
-     * Removes the provided Attribute from this Attribute
-     *
-     * @param attribute the Attribute to be removed
-     * @return The Attribute itself
-     */
-    @Override
-    Attribute unhas(Attribute attribute);
-
     //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default Attribute asAttribute() {
+    default Attribute<D> asAttribute() {
         return this;
+    }
+
+    @CheckReturnValue
+    @Override
+    default RemoteAttribute<D> asRemote(GraknClient.Transaction tx) {
+        return RemoteAttribute.of(tx, id());
     }
 
     @Deprecated

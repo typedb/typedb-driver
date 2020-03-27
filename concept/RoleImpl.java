@@ -19,43 +19,24 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
-
-import java.util.stream.Stream;
 
 /**
  * Client implementation of Role
  */
 public class RoleImpl extends SchemaConceptImpl<Role> implements Role {
 
-    RoleImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    RoleImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public final Stream<RelationType> relations() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();
-        int iteratorId = runMethod(method).getRoleRelationsIter().getId();
-        return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(ConceptImpl::asRelationType);
-    }
-
-    @Override
-    public final Stream<Type> players() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
-        int iteratorId = runMethod(method).getRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRolePlayersIterRes().getType()).map(ConceptImpl::asType);
-    }
-
-    @Override
-    final Role asCurrentBaseType(Concept other) {
+    final Role asCurrentBaseType(Concept<Role> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(Concept<Role> other) {
         return other.isRole();
     }
 

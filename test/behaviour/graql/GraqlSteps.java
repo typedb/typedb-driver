@@ -23,8 +23,8 @@ import com.google.common.collect.Iterators;
 import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.Concept;
+import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.remote.RemoteConcept;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.query.GraqlDefine;
@@ -162,7 +162,7 @@ public class GraqlSteps {
         for (ConceptMap answer : answers) {
 
             Map<String, String> answerKeys = new HashMap<>();
-            AttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
+            RemoteAttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
             // remap each concept and save its key value into the map from variable to key value
             answer.map().forEach((var, concept) ->
                             answerKeys.put(var.name(),
@@ -223,7 +223,7 @@ public class GraqlSteps {
         while (matcher.find()) {
             String matched = matcher.group(0);
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-            Concept concept = templateFiller.get(requiredVariable);
+            RemoteConcept concept = templateFiller.get(requiredVariable);
 
             builder.append(template.substring(i, matcher.start()));
             if (concept == null) {

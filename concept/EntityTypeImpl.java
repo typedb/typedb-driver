@@ -19,7 +19,6 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -27,33 +26,24 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-public class EntityTypeImpl extends TypeImpl<EntityType, Entity> implements EntityType {
+class EntityTypeImpl extends UserTypeImpl<EntityType, Entity> implements EntityType {
 
-    public EntityTypeImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    public EntityTypeImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public final Entity create() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
-
-        ConceptImpl concept = ConceptImpl.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
-        return asInstance(concept);
-    }
-
-    @Override
-    final EntityType asCurrentBaseType(Concept other) {
+    final EntityType asCurrentBaseType(Concept<EntityType> other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(Concept<EntityType> other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final Entity asInstance(Concept concept) {
+    protected final Entity asInstance(Concept<Entity> concept) {
         return concept.asEntity();
     }
 

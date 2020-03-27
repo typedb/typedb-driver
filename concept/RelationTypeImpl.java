@@ -19,72 +19,29 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
-
-import java.util.stream.Stream;
 
 /**
  * Client implementation of RelationType
  */
-public class RelationTypeImpl extends TypeImpl<RelationType, Relation> implements RelationType {
+class RelationTypeImpl extends UserTypeImpl<RelationType, Relation> implements RelationType {
 
-    RelationTypeImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    RelationTypeImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public final Relation create() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
-
-        ConceptImpl concept = ConceptImpl.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
-
-        return asInstance(concept);
-    }
-
-    @Override
-    public final Stream<Role> roles() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
-
-        int iteratorId = runMethod(method).getRelationTypeRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(ConceptImpl::asRole);
-    }
-
-    @Override
-    public final RelationType relates(Role role) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
-                                                   .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
-        runMethod(method);
-        return asCurrentBaseType(this);
-    }
-
-    @Override
-    public final RelationType unrelate(Role role) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
-                                                    .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
-        runMethod(method);
-        return asCurrentBaseType(this);
-    }
-
-    @Override
-    final RelationType asCurrentBaseType(Concept other) {
+    final RelationType asCurrentBaseType(Concept<RelationType> other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(Concept<RelationType> other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(Concept concept) {
+    protected final Relation asInstance(Concept<Relation> concept) {
         return concept.asRelation();
     }
 }

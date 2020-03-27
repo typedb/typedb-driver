@@ -19,10 +19,10 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteRelation;
+
 import javax.annotation.CheckReturnValue;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * Encapsulates relations between Thing
@@ -30,18 +30,7 @@ import java.util.stream.Stream;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation extends Thing {
-    //------------------------------------- Modifiers ----------------------------------
-
-    /**
-     * Creates a relation from this instance to the provided Attribute.
-     *
-     * @param attribute The Attribute to which a relation is created
-     * @return The instance itself
-     */
-    @Override
-    Relation has(Attribute attribute);
-
+public interface Relation extends Thing<Relation, RelationType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -53,58 +42,17 @@ public interface Relation extends Thing {
     @Override
     RelationType type();
 
-    /**
-     * Retrieve a list of all Instances involved in the Relation, and the Role they play.
-     *
-     * @return A list of all the role types and the instances playing them in this Relation.
-     * @see Role
-     */
-    @CheckReturnValue
-    Map<Role, Set<Thing>> rolePlayersMap();
-
-    /**
-     * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
-     *
-     * @param roles used to filter the returned instances only to ones that play any of the role types.
-     *              If blank, returns all role players.
-     * @return a list of every Thing involved in the Relation.
-     */
-    @CheckReturnValue
-    Stream<Thing> rolePlayers(Role... roles);
-
-    /**
-     * Expands this Relation to include a new role player which is playing a specific role.
-     *
-     * @param role   The Role Type of the new role player.
-     * @param player The new role player.
-     * @return The Relation itself.
-     */
-    Relation assign(Role role, Thing player);
-
-    /**
-     * Removes the provided Attribute from this Relation
-     *
-     * @param attribute the Attribute to be removed
-     * @return The Relation itself
-     */
-    @Override
-    Relation unhas(Attribute attribute);
-
-    /**
-     * Removes the Thing which is playing a Role in this Relation.
-     * If the Thing is not playing any Role in this Relation nothing happens.
-     *
-     * @param role   The Role being played by the Thing
-     * @param player The Thing playing the Role in this Relation
-     */
-    void unassign(Role role, Thing player);
-
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
     default Relation asRelation() {
         return this;
+    }
+
+    @Override
+    default RemoteRelation asRemote(GraknClient.Transaction tx) {
+        return RemoteRelation.of(tx, id());
     }
 
     @Deprecated

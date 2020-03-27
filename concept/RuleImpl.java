@@ -19,66 +19,24 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
-import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
-import graql.lang.Graql;
-import graql.lang.pattern.Pattern;
-
-import javax.annotation.Nullable;
 
 /**
  * Client implementation of Rule
  */
 public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
 
-    RuleImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    RuleImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    @Nullable
-    @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-    public final Pattern when() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
-
-        ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
-        switch (response.getResCase()) {
-            case NULL:
-                return null;
-            case PATTERN:
-                return Graql.parsePattern(response.getPattern());
-            default:
-                throw GraknClientException.unreachableStatement("Unexpected response " + response);
-        }
-    }
-
-    @Override
-    @Nullable
-    @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-    public final Pattern then() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
-
-        ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();
-        switch (response.getResCase()) {
-            case NULL:
-                return null;
-            case PATTERN:
-                return Graql.parsePattern(response.getPattern());
-            default:
-                throw GraknClientException.unreachableStatement("Unexpected response " + response);
-        }
-    }
-
-    @Override
-    final Rule asCurrentBaseType(Concept other) {
+    final Rule asCurrentBaseType(Concept<Rule> other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept other) {
+    final boolean equalsCurrentBaseType(Concept<Rule> other) {
         return other.isRule();
     }
 

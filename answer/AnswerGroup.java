@@ -19,9 +19,8 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.Concept;
+import grakn.client.concept.remote.RemoteConcept;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,10 +31,10 @@ import java.util.List;
  */
 public class AnswerGroup<T extends Answer> implements Answer {
 
-    private final Concept owner;
+    private final RemoteConcept owner;
     private final List<T> answers;
 
-    public AnswerGroup(Concept owner, List<T> answers) {
+    public AnswerGroup(RemoteConcept owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
@@ -45,7 +44,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
         return false;
     }
 
-    public Concept owner() {
+    public RemoteConcept owner() {
         return this.owner;
     }
 

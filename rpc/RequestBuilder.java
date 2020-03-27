@@ -20,8 +20,9 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.AttributeTypeImpl;
 import grakn.client.concept.Concept;
+import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
@@ -131,7 +132,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeTypeImpl.DataType<?> dataType) {
+        public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeType.DataType<?> dataType) {
             SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setDataType(ConceptMessage.setDataType(dataType))
@@ -182,14 +183,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(Concept concept) {
+        public static ConceptProto.Concept from(Concept<?> concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept<?> concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -213,7 +214,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<Concept> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?>> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
@@ -242,42 +243,43 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        public static AttributeTypeImpl.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
+        @SuppressWarnings("unchecked")
+        public static <D> AttributeType.DataType<D> dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
             switch (dataType) {
                 case STRING:
-                    return AttributeTypeImpl.DataType.STRING;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.STRING;
                 case BOOLEAN:
-                    return  AttributeTypeImpl.DataType.BOOLEAN;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.BOOLEAN;
                 case INTEGER:
-                    return  AttributeTypeImpl.DataType.INTEGER;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.INTEGER;
                 case LONG:
-                    return AttributeTypeImpl.DataType.LONG;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.LONG;
                 case FLOAT:
-                    return  AttributeTypeImpl.DataType.FLOAT;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.FLOAT;
                 case DOUBLE:
-                    return  AttributeTypeImpl.DataType.DOUBLE;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.DOUBLE;
                 case DATE:
-                    return  AttributeTypeImpl.DataType.DATE;
+                    return (AttributeType.DataType<D>) AttributeType.DataType.DATE;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + dataType);
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType dataType) {
-            if (dataType.equals(AttributeType.DataType.STRING)) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType<?> dataType) {
+            if (dataType.equals(RemoteAttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.BOOLEAN)) {
+            } else if (dataType.equals( AttributeType.DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.INTEGER)) {
+            } else if (dataType.equals( AttributeType.DataType.INTEGER)) {
                 return ConceptProto.AttributeType.DATA_TYPE.INTEGER;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.LONG)) {
+            } else if (dataType.equals( AttributeType.DataType.LONG)) {
                 return ConceptProto.AttributeType.DATA_TYPE.LONG;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.FLOAT)) {
+            } else if (dataType.equals( AttributeType.DataType.FLOAT)) {
                 return ConceptProto.AttributeType.DATA_TYPE.FLOAT;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.DOUBLE)) {
+            } else if (dataType.equals( AttributeType.DataType.DOUBLE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DOUBLE;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.DATE)) {
+            } else if (dataType.equals( AttributeType.DataType.DATE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DATE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + dataType);

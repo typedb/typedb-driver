@@ -31,17 +31,18 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.Concept;
+import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.remote.RemoteConcept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.EntityType;
+import grakn.client.concept.remote.RemoteEntityType;
 import grakn.client.concept.Label;
-import grakn.client.concept.RelationType;
-import grakn.client.concept.Role;
-import grakn.client.concept.Rule;
-import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.remote.RemoteRelationType;
+import grakn.client.concept.remote.RemoteType;
+import grakn.client.concept.remote.RemoteRole;
+import grakn.client.concept.remote.RemoteRule;
+import grakn.client.concept.remote.RemoteSchemaConcept;
+import grakn.client.concept.remote.RemoteConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -70,7 +71,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -631,100 +631,100 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends grakn.client.concept.Type> T getType(Label label) {
-            SchemaConcept concept = getSchemaConcept(label);
+        public <T extends RemoteType> T getType(Label label) {
+            RemoteSchemaConcept concept = getSchemaConcept(label);
             if (concept == null || !concept.isType()) return null;
             return (T) concept.asType();
         }
 
         @Nullable
-        public EntityType getEntityType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
+        public RemoteEntityType getEntityType(String label) {
+            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isEntityType()) return null;
             return concept.asEntityType();
         }
 
         @Nullable
-        public RelationType getRelationType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
+        public RemoteRelationType getRelationType(String label) {
+            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRelationType()) return null;
             return concept.asRelationType();
         }
 
         @Nullable
-        public <V> AttributeType<V> getAttributeType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
+        public <V> RemoteAttributeType<V> getAttributeType(String label) {
+            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isAttributeType()) return null;
             return concept.asAttributeType();
         }
 
         @Nullable
-        public Role getRole(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
+        public RemoteRole getRole(String label) {
+            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRole()) return null;
             return concept.asRole();
         }
 
         @Nullable
-        public Rule getRule(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
+        public RemoteRule getRule(String label) {
+            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
             if (concept == null || !concept.isRule()) return null;
             return concept.asRule();
         }
 
         @Nullable
-        public <T extends SchemaConcept> T getSchemaConcept(Label label) {
+        public <T extends RemoteSchemaConcept> T getSchemaConcept(Label label) {
             transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetSchemaConceptRes().getResCase()) {
                 case NULL:
                     return null;
                 default:
-                    return (T) ConceptImpl.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
+                    return (T) RemoteConcept.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
             }
         }
 
-        public grakn.client.concept.Type getMetaConcept() {
+        public RemoteType getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
-        public RelationType getMetaRelationType() {
+        public RemoteRelationType getMetaRelationType() {
             return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString()));
         }
 
-        public Role getMetaRole() {
+        public RemoteRole getMetaRole() {
             return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString()));
         }
 
-        public AttributeType getMetaAttributeType() {
+        public RemoteAttributeType getMetaAttributeType() {
             return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString()));
         }
 
-        public EntityType getMetaEntityType() {
+        public RemoteEntityType getMetaEntityType() {
             return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString()));
         }
 
-        public Rule getMetaRule() {
+        public RemoteRule getMetaRule() {
             return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString()));
         }
 
         @Nullable
-        public <T extends Concept> T getConcept(ConceptId id) {
+        public <T extends RemoteConcept> T getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetConceptRes().getResCase()) {
                 case NULL:
                     return null;
                 default:
-                    return (T) ConceptImpl.of(response.getGetConceptRes().getConcept(), this);
+                    return (T) RemoteConcept.of(response.getGetConceptRes().getConcept(), this);
             }
         }
 
-        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
+        public <V> Collection<RemoteAttribute<V>> getAttributesByValue(V value) {
             transceiver.send(RequestBuilder.Transaction.getAttributes(value));
             int iteratorId = responseOrThrow().getGetAttributesIter().getId();
-            Iterable<Attribute<V>> iterable = () -> new RPCIterator<Attribute<V>>(
-                    iteratorId, response -> ConceptImpl.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
+            Iterable<RemoteAttribute<V>> iterable = () -> new RPCIterator<RemoteAttribute<V>>(
+                    iteratorId, response -> RemoteConcept.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
             );
 
             return StreamSupport.stream(iterable.spliterator(), false)
@@ -732,61 +732,61 @@ public class GraknClient implements AutoCloseable {
         }
 
 
-        public EntityType putEntityType(String label) {
+        public RemoteEntityType putEntityType(String label) {
             return putEntityType(Label.of(label));
         }
 
-        public EntityType putEntityType(Label label) {
+        public RemoteEntityType putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
-            return ConceptImpl.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
+            return RemoteConcept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> AttributeType<V> putAttributeType(String label, AttributeType.DataType<V> dataType) {
+        public <V> RemoteAttributeType<V> putAttributeType(String label, RemoteAttributeType.DataType<V> dataType) {
             return putAttributeType(Label.of(label), dataType);
         }
-        public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
+        public <V> RemoteAttributeType<V> putAttributeType(Label label, RemoteAttributeType.DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
-            return ConceptImpl.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
+            return RemoteConcept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
-        public RelationType putRelationType(String label) {
+        public RemoteRelationType putRelationType(String label) {
             return putRelationType(Label.of(label));
         }
-        public RelationType putRelationType(Label label) {
+        public RemoteRelationType putRelationType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRelationType(label));
-            return ConceptImpl.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
+            return RemoteConcept.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
-        public Role putRole(String label) {
+        public RemoteRole putRole(String label) {
             return putRole(Label.of(label));
         }
-        public Role putRole(Label label) {
+        public RemoteRole putRole(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRole(label));
-            return ConceptImpl.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
+            return RemoteConcept.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
         }
 
-        public Rule putRule(String label, Pattern when, Pattern then) {
+        public RemoteRule putRule(String label, Pattern when, Pattern then) {
             return putRule(Label.of(label), when, then);
         }
-        public Rule putRule(Label label, Pattern when, Pattern then) {
+        public RemoteRule putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
-            return ConceptImpl.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
+            return RemoteConcept.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
 
-        public Stream<SchemaConcept> sups(SchemaConcept schemaConcept) {
+        public Stream<RemoteSchemaConcept> sups(RemoteSchemaConcept schemaConcept) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setSchemaConceptSupsReq(ConceptProto.SchemaConcept.Sups.Req.getDefaultInstance()).build();
 
             SessionProto.Transaction.Res response = runConceptMethod(schemaConcept.id(), method);
             int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
 
-            Iterable<? extends Concept> iterable = () -> iterator(iteratorId,
-                    res -> ConceptImpl.of(
+            Iterable<? extends RemoteConcept> iterable = () -> iterator(iteratorId,
+                    res -> RemoteConcept.of(
                             res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
             );
 
-            Stream<? extends Concept> sups = StreamSupport.stream(iterable.spliterator(), false);
-            return Objects.requireNonNull(sups).map(Concept::asSchemaConcept);
+            Stream<? extends RemoteConcept> sups = StreamSupport.stream(iterable.spliterator(), false);
+            return Objects.requireNonNull(sups).map(RemoteConcept::asSchemaConcept);
         }
 
         public SessionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {

@@ -19,6 +19,9 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteEntity;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -27,7 +30,7 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity extends Thing {
+public interface Entity extends Thing<Entity, EntityType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -37,30 +40,18 @@ public interface Entity extends Thing {
     @Override
     EntityType type();
 
-    /**
-     * Creates a relation from this instance to the provided Attribute.
-     *
-     * @param attribute The Attribute to which a relation is created
-     * @return The instance itself
-     */
-    @Override
-    Entity has(Attribute attribute);
-
-    /**
-     * Removes the provided Attribute from this Entity
-     *
-     * @param attribute the Attribute to be removed
-     * @return The Entity itself
-     */
-    @Override
-    Entity unhas(Attribute attribute);
-
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
     default Entity asEntity() {
         return this;
+    }
+
+    @CheckReturnValue
+    @Override
+    default RemoteEntity asRemote(GraknClient.Transaction tx) {
+        return RemoteEntity.of(tx, id());
     }
 
     @Deprecated

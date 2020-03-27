@@ -19,92 +19,27 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
-import grakn.client.exception.GraknClientException;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
-
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 /**
  * Client implementation of SchemaConcept
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept> extends ConceptImpl<SomeSchemaConcept> implements SchemaConcept {
+public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept<SomeSchemaConcept>>
+        extends ConceptImpl<SomeSchemaConcept> implements SchemaConcept<SomeSchemaConcept> {
 
-    SchemaConceptImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
-    }
+    private final Label label;
 
-    public final SomeSchemaConcept sup(SomeSchemaConcept type) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptSetSupReq(ConceptProto.SchemaConcept.SetSup.Req.newBuilder()
-                                                   .setSchemaConcept(RequestBuilder.ConceptMessage.from(type))).build();
-
-        runMethod(method);
-        return asCurrentBaseType(this);
+    protected SchemaConceptImpl(ConceptProto.Concept concept) {
+        super(concept);
+        this.label = Label.of(concept.getLabelRes().getLabel());
     }
 
     @Override
     public final Label label() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptGetLabelReq(ConceptProto.SchemaConcept.GetLabel.Req.getDefaultInstance()).build();
-
-        return Label.of(runMethod(method).getSchemaConceptGetLabelRes().getLabel());
+        return label;
     }
 
-    @Override
-    public final Boolean isImplicit() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptIsImplicitReq(ConceptProto.SchemaConcept.IsImplicit.Req.getDefaultInstance()).build();
-
-        return runMethod(method).getSchemaConceptIsImplicitRes().getImplicit();
-    }
-
-    @Override
-    public final SomeSchemaConcept label(Label label) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptSetLabelReq(ConceptProto.SchemaConcept.SetLabel.Req.newBuilder()
-                                                     .setLabel(label.getValue())).build();
-
-        runMethod(method);
-        return asCurrentBaseType(this);
-    }
-
-    @Nullable
-    public final SchemaConcept sup() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptGetSupReq(ConceptProto.SchemaConcept.GetSup.Req.getDefaultInstance()).build();
-
-        ConceptProto.SchemaConcept.GetSup.Res response = runMethod(method).getSchemaConceptGetSupRes();
-
-        switch (response.getResCase()) {
-            case NULL:
-                return null;
-            case SCHEMACONCEPT:
-                ConceptImpl concept = ConceptImpl.of(response.getSchemaConcept(), tx());
-                return concept.asSchemaConcept();
-            default:
-                throw GraknClientException.unreachableStatement("Unexpected response " + response);
-        }
-
-    }
-
-    @Override
-    public final Stream<SomeSchemaConcept> sups() {
-        return tx().sups(this).filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
-    }
-
-    @Override
-    public final Stream<SomeSchemaConcept> subs() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptSubsReq(ConceptProto.SchemaConcept.Subs.Req.getDefaultInstance()).build();
-
-        int iteratorId = runMethod(method).getSchemaConceptSubsIter().getId();
-        return conceptStream(iteratorId, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept()).map(this::asCurrentBaseType);
-    }
-
-    abstract boolean equalsCurrentBaseType(Concept other);
+    abstract boolean equalsCurrentBaseType(Concept<SomeSchemaConcept> other);
 }

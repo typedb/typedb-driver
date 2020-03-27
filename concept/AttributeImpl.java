@@ -19,65 +19,25 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
 import grakn.protocol.session.ConceptProto;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.stream.Stream;
 
 /**
  * Client implementation of Attribute
  *
  * @param <D> The data type of this attribute
  */
-public class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> implements Attribute<D> {
+class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> implements Attribute<D> {
 
-    AttributeImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    private final D value;
+
+    AttributeImpl(ConceptProto.Concept concept) {
+        super(concept);
+        this.value = AttributeType.DataType.staticCastValue(concept.getValueRes().getValue());
     }
 
     @Override
     public final D value() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setAttributeValueReq(ConceptProto.Attribute.Value.Req.getDefaultInstance()).build();
-
-        ConceptProto.ValueObject value = runMethod(method).getAttributeValueRes().getValue();
-        return castValue(value);
-    }
-
-    @SuppressWarnings("unchecked")
-    private D castValue(ConceptProto.ValueObject value) {
-        switch (value.getValueCase()) {
-            case DATE:
-                return (D) LocalDateTime.ofInstant(Instant.ofEpochMilli(value.getDate()), ZoneId.of("Z"));
-            case STRING:
-                return (D) value.getString();
-            case BOOLEAN:
-                return (D) (Boolean) value.getBoolean();
-            case INTEGER:
-                return (D) (Integer) value.getInteger();
-            case LONG:
-                return (D) (Long) value.getLong();
-            case FLOAT:
-                return (D) (Float) value.getFloat();
-            case DOUBLE:
-                return (D) (Double) value.getDouble();
-            case VALUE_NOT_SET:
-                return null;
-            default:
-                throw new IllegalArgumentException("Unexpected value for attribute: " + value);
-        }
-    }
-
-    @Override
-    public final Stream<Thing> owners() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
-
-        int iteratorId = runMethod(method).getAttributeOwnersIter().getId();
-        return conceptStream(iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(ConceptImpl::asThing);
+        return value;
     }
 
     @Override
@@ -86,13 +46,12 @@ public class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> 
     }
 
     @Override
-    final AttributeType<D> asCurrentType(Concept concept) {
+    final AttributeType<D> asCurrentType(Concept<AttributeType<D>> concept) {
         return concept.asAttributeType();
     }
 
     @Override
-    final Attribute asCurrentBaseType(Concept other) {
+    final Attribute<D> asCurrentBaseType(Concept<Attribute<D>> other) {
         return other.asAttribute();
     }
-
 }

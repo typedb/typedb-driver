@@ -19,89 +19,24 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * Client implementation of Relation
  */
-public class RelationImpl extends ThingImpl<Relation, RelationType> implements Relation {
+class RelationImpl extends ThingImpl<Relation, RelationType> implements Relation {
 
-    RelationImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    RelationImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public final Map<Role, Set<Thing>> rolePlayersMap() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
-
-        int iteratorId = runMethod(method).getRelationRolePlayersMapIter().getId();
-        Iterable<ConceptProto.Relation.RolePlayersMap.Iter.Res> rolePlayers = () -> tx().iterator(
-                iteratorId, res -> res.getConceptMethodIterRes().getRelationRolePlayersMapIterRes()
-        );
-
-        Map<Role, Set<Thing>> rolePlayerMap = new HashMap<>();
-        for (ConceptProto.Relation.RolePlayersMap.Iter.Res rolePlayer : rolePlayers) {
-            Role role = ConceptImpl.of(rolePlayer.getRole(), tx()).asRole();
-            Thing player = ConceptImpl.of(rolePlayer.getPlayer(), tx()).asThing();
-            if (rolePlayerMap.containsKey(role)) {
-                rolePlayerMap.get(role).add(player);
-            } else {
-                rolePlayerMap.put(role, new HashSet<>(Collections.singletonList(player)));
-            }
-        }
-
-        return rolePlayerMap;
-    }
-
-    @Override
-    public final Stream<Thing> rolePlayers(Role... roles) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationRolePlayersReq(ConceptProto.Relation.RolePlayers.Req.newBuilder()
-                        .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
-
-        int iteratorId = runMethod(method).getRelationRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationRolePlayersIterRes().getThing()).map(ConceptImpl::asThing);
-    }
-
-    @Override
-    public final Relation assign(Role role, Thing player) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
-                        .setRole(RequestBuilder.ConceptMessage.from(role))
-                        .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
-
-        runMethod(method);
-        return asCurrentBaseType(this);
-    }
-
-    @Override
-    public final void unassign(Role role, Thing player) {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
-                        .setRole(RequestBuilder.ConceptMessage.from(role))
-                        .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
-
-        runMethod(method);
-    }
-
-    @Override
-    final RelationType asCurrentType(Concept concept) {
+    final RelationType asCurrentType(Concept<RelationType> concept) {
         return concept.asRelationType();
     }
 
     @Override
-    final Relation asCurrentBaseType(Concept other) {
+    final Relation asCurrentBaseType(Concept<Relation> other) {
         return other.asRelation();
     }
 

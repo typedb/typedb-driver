@@ -22,18 +22,19 @@ package grakn.client.test.integration.concept;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
-import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.AttributeType.DataType;
-import grakn.client.concept.Entity;
-import grakn.client.concept.EntityType;
+import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.remote.RemoteEntity;
+import grakn.client.concept.remote.RemoteEntityType;
 import grakn.client.concept.Label;
-import grakn.client.concept.Relation;
-import grakn.client.concept.RelationType;
-import grakn.client.concept.Role;
-import grakn.client.concept.Rule;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
+import grakn.client.concept.remote.RemoteRelation;
+import grakn.client.concept.remote.RemoteRelationType;
+import grakn.client.concept.remote.RemoteRole;
+import grakn.client.concept.remote.RemoteRule;
+import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.remote.RemoteType;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.Graql;
@@ -70,7 +71,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
  */
-public class ConceptIT {
+public class RemoteConceptIT {
 
     private static GraknClient client;
     private static GraknClient.Session session;
@@ -112,34 +113,34 @@ public class ConceptIT {
     private String BOB_EMAIL = "bob@email.com";
     private Integer TWENTY = 20;
 
-    private AttributeType<Integer> age;
-    private AttributeType<String> name;
-    private AttributeType<String> email;
-    private EntityType livingThing;
-    private EntityType person;
-    private EntityType man;
-    private EntityType boy;
-    private Role husband;
-    private Role wife;
-    private RelationType marriage;
-    private Role friend;
-    private RelationType friendship;
-    private Role employer;
-    private Role employee;
-    private RelationType employment;
-    private Rule metaRule;
-    private Rule testRule;
-    private Type metaType;
+    private RemoteAttributeType<Integer> age;
+    private RemoteAttributeType<String> name;
+    private RemoteAttributeType<String> email;
+    private RemoteEntityType livingThing;
+    private RemoteEntityType person;
+    private RemoteEntityType man;
+    private RemoteEntityType boy;
+    private RemoteRole husband;
+    private RemoteRole wife;
+    private RemoteRelationType marriage;
+    private RemoteRole friend;
+    private RemoteRelationType friendship;
+    private RemoteRole employer;
+    private RemoteRole employee;
+    private RemoteRelationType employment;
+    private RemoteRule metaRule;
+    private RemoteRule testRule;
+    private RemoteType metaType;
 
-    private Attribute<String> emailAlice;
-    private Attribute<String> emailBob;
-    private Attribute<Integer> age20;
-    private Attribute<String> nameAlice;
-    private Attribute<String> nameBob;
-    private Entity alice;
-    private Entity bob;
-    private Relation aliceAndBob;
-    private Relation selfEmployment;
+    private RemoteAttribute<String> emailAlice;
+    private RemoteAttribute<String> emailBob;
+    private RemoteAttribute<Integer> age20;
+    private RemoteAttribute<String> nameAlice;
+    private RemoteAttribute<String> nameBob;
+    private RemoteEntity alice;
+    private RemoteEntity bob;
+    private RemoteRelation aliceAndBob;
+    private RemoteRelation selfEmployment;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -320,7 +321,7 @@ public class ConceptIT {
 
     @Test
     public void whenDeletingAConcept_ConceptIsDeleted() {
-        Entity randomPerson = person.create();
+        RemoteEntity randomPerson = person.create();
         assertFalse(randomPerson.isDeleted());
 
         randomPerson.delete();
@@ -434,7 +435,7 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role, Set<Thing>> expected = new HashMap<>();
+        Map<RemoteRole, Set<RemoteThing>> expected = new HashMap<>();
         expected.put(wife, Collections.singleton(alice));
         expected.put(husband, Collections.singleton(bob));
 
@@ -448,7 +449,7 @@ public class ConceptIT {
 
     @Test
     public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetDistinctExpectedResult() {
-        List<Thing> list = selfEmployment.rolePlayers().collect(toList());
+        List<RemoteThing> list = selfEmployment.rolePlayers().collect(toList());
         assertEquals(1, list.size());
         assertThat(list, containsInAnyOrder(alice));
     }
@@ -487,7 +488,7 @@ public class ConceptIT {
     @Test
     public void whenSettingTypeLabel_LabelIsSetToType() {
         Label lady = Label.of("lady");
-        EntityType type = tx.putEntityType(lady);
+        RemoteEntityType type = tx.putEntityType(lady);
         assertEquals(lady, type.label());
 
         Label woman = Label.of("woman");
@@ -524,7 +525,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingAttributeToType_AttributeIsSetAndDeleted() {
-        EntityType cat = tx.putEntityType(Label.of("cat"));
+        RemoteEntityType cat = tx.putEntityType(Label.of("cat"));
         cat.has(name);
         assertTrue(cat.attributes().anyMatch(c -> c.equals(name)));
 
@@ -534,7 +535,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
-        AttributeType<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
+        RemoteAttributeType<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
         person.key(username);
         assertTrue(person.keys().anyMatch(c -> c.equals(username)));
 
@@ -544,19 +545,19 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAddEntity_TypeIsCorrect() {
-        Entity newPerson = person.create();
+        RemoteEntity newPerson = person.create();
         assertEquals(person, newPerson.type());
     }
 
     @Test
     public void whenCallingAddRelation_TypeIsCorrect() {
-        Relation newMarriage = marriage.create();
+        RemoteRelation newMarriage = marriage.create();
         assertEquals(marriage, newMarriage.type());
     }
 
     @Test
     public void whenCallingPutAttribute_TypeIsCorrect() {
-        Attribute<String> nameCharlie = name.create("Charlie");
+        RemoteAttribute<String> nameCharlie = name.create("Charlie");
         assertEquals(name, nameCharlie.type());
     }
 
@@ -581,8 +582,8 @@ public class ConceptIT {
 
     @Test
     public void whenCallingDeleteAttribute_ExecuteAConceptMethod() {
-        Entity charlie = person.create();
-        Attribute<String> nameCharlie = name.create("Charlie");
+        RemoteEntity charlie = person.create();
+        RemoteAttribute<String> nameCharlie = name.create("Charlie");
         charlie.has(nameCharlie);
         assertTrue(charlie.attributes(name).anyMatch(x -> x.equals(nameCharlie)));
 
@@ -592,10 +593,10 @@ public class ConceptIT {
 
     @Test
     public void whenAddingAndRemovingRolePlayer_RolePlayerIsAddedAndRemoved() {
-        Entity dylan = person.create();
-        Entity emily = person.create();
+        RemoteEntity dylan = person.create();
+        RemoteEntity emily = person.create();
 
-        Relation dylanAndEmily = friendship.create()
+        RemoteRelation dylanAndEmily = friendship.create()
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
