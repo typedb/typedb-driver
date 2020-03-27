@@ -56,7 +56,7 @@ public class KeyspaceSteps {
             );
         }
 
-        CompletableFuture.allOf(creations);
+        CompletableFuture.allOf(creations).join();
     }
 
     @When("connection delete keyspace(s):")
@@ -83,7 +83,7 @@ public class KeyspaceSteps {
             );
         }
 
-        CompletableFuture.allOf(deletions);
+        CompletableFuture.allOf(deletions).join();
     }
 
     @Then("connection has keyspace(s):")

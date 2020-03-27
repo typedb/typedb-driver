@@ -154,7 +154,7 @@ public class TransactionSteps {
                 }));
             }
         }
-        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
+        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
     }
 
     @Then("for each session, transactions in parallel have type:")
@@ -178,7 +178,7 @@ public class TransactionSteps {
             }
         }
 
-        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
+        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
     }
 
     // =========================================//
@@ -205,6 +205,6 @@ public class TransactionSteps {
                 }));
             }
         }
-        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0]));
+        CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
     }
 }

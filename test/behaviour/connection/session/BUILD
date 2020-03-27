@@ -52,6 +52,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:session.feature",
@@ -85,6 +86,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:session.feature",

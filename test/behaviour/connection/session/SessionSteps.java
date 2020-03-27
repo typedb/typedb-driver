@@ -76,7 +76,7 @@ public class SessionSteps {
                     return null;
                 }));
 
-        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new)).join();
     }
 
     @Then("sessions in parallel are open: {bool}")
@@ -87,7 +87,7 @@ public class SessionSteps {
                     return null;
                 }));
 
-        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new));
+        CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new)).join();
     }
 
     @Then("session(s) has/have keyspace(s):")
@@ -114,6 +114,6 @@ public class SessionSteps {
             });
         }
 
-        CompletableFuture.allOf(assertions);
+        CompletableFuture.allOf(assertions).join();
     }
 }

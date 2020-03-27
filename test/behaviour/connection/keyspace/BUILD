@@ -17,7 +17,7 @@
 # under the License.
 #
 
-package(default_visibility = ["//visibility:__subpackages__"])
+package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
