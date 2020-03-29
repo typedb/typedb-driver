@@ -26,13 +26,13 @@ java_library(
         "KeyspaceSteps.java"
     ],
     deps = [
-        # Package dependencies
+        # Internal Package Dependencies
         "//test/behaviour/connection:steps",
 
-        # Grakn Labs dependencies
+        # Internal Repository Dependencies
         "@graknlabs_common//:common",
 
-        # External dependencies from Maven
+        # External Maven Dependencies
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ]
