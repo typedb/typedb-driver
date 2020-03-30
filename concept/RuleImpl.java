@@ -32,12 +32,12 @@ public class RuleImpl extends SchemaConceptImpl<Rule, RemoteRule> implements Rul
     }
 
     @Override
-    final Rule asCurrentBaseType(Concept<Rule, RemoteRule> other) {
+    final Rule asCurrentBaseType(Concept<?, ?> other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<Rule, RemoteRule> other) {
+    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isRule();
     }
 

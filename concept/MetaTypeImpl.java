@@ -37,18 +37,18 @@ class MetaTypeImpl<
 
     @SuppressWarnings("unchecked")
     @Override
-    protected SomeThing asInstance(Concept<SomeThing, SomeRemoteThing> concept) {
+    protected SomeThing asInstance(Concept<?, ?> concept) {
         return (SomeThing) concept.asThing();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    SomeType asCurrentBaseType(Concept<SomeType, SomeRemoteType> other) {
+    SomeType asCurrentBaseType(Concept<?, ?> other) {
         return (SomeType) other.asMetaType();
     }
 
     @Override
-    boolean equalsCurrentBaseType(Concept<SomeType, SomeRemoteType> other) {
+    boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isMetaType();
     }
 

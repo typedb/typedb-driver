@@ -33,17 +33,17 @@ class RelationTypeImpl extends TypeImpl<RelationType, Relation, RemoteRelationTy
     }
 
     @Override
-    final RelationType asCurrentBaseType(Concept<RelationType, RemoteRelationType> other) {
+    final RelationType asCurrentBaseType(Concept<?, ?> other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<RelationType, RemoteRelationType> other) {
+    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(Concept<Relation, RemoteRelation> concept) {
+    protected final Relation asInstance(Concept<?, ?> concept) {
         return concept.asRelation();
     }
 }

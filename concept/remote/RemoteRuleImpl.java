@@ -80,12 +80,12 @@ public class RemoteRuleImpl extends RemoteSchemaConceptImpl<RemoteRule, Rule> im
     }
 
     @Override
-    final RemoteRule asCurrentBaseType(RemoteConcept<RemoteRule, Rule> other) {
+    final RemoteRule asCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<RemoteRule, Rule> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.isRule();
     }
 

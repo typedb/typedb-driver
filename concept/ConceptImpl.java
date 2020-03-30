@@ -66,5 +66,5 @@ public abstract class ConceptImpl<
         return h;
     }
 
-    abstract SomeConcept asCurrentBaseType(Concept<SomeConcept, SomeRemoteConcept> other);
+    abstract SomeConcept asCurrentBaseType(Concept<?, ?> other);
 }

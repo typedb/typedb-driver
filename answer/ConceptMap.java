@@ -42,12 +42,12 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap implements Answer {
 
-    private final Map<Variable, RemoteConcept> map;
+    private final Map<Variable, RemoteConcept<?, ?>> map;
     private final boolean hasExplanation;
     private GraknClient.Transaction tx;
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<Variable, RemoteConcept> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
+    public ConceptMap(Map<Variable, RemoteConcept<?, ?>> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;
@@ -63,7 +63,12 @@ public class ConceptMap implements Answer {
         if (this.explanation() == null) return Collections.emptySet();
         Set<Explanation> explanations = new HashSet<>();
         explanations.add(this.explanation());
-        this.explanation().getAnswers().stream().forEach(conceptMap -> explanations.addAll(conceptMap.explanations()));
+        this.explanation().getAnswers().forEach(conceptMap -> {
+            Set<Explanation> subexplanations = conceptMap.explanations();
+            if (subexplanations != null) {
+                explanations.addAll(subexplanations);
+            }
+        });
         return explanations;
     }
 
@@ -88,23 +93,23 @@ public class ConceptMap implements Answer {
     }
 
     @CheckReturnValue
-    public Map<Variable, RemoteConcept> map() {
+    public Map<Variable, RemoteConcept<?, ?>> map() {
         return map;
     }
 
 
-    public Collection<RemoteConcept> concepts() {
+    public Collection<RemoteConcept<?, ?>> concepts() {
         return map.values();
     }
 
     @CheckReturnValue
-    public RemoteConcept get(String variable) {
+    public RemoteConcept<?, ?> get(String variable) {
         return get(new Variable(variable));
     }
 
     @CheckReturnValue
-    public RemoteConcept get(Variable var) {
-        RemoteConcept Concept = map.get(var);
+    public RemoteConcept<?, ?> get(Variable var) {
+        RemoteConcept<?, ?> Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }

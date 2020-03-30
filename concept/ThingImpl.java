@@ -56,5 +56,5 @@ public abstract class ThingImpl<
         return inferred;
     }
 
-    abstract SomeType asCurrentType(Concept<SomeType, SomeRemoteType> concept);
+    abstract SomeType asCurrentType(Concept<?, ?> concept);
 }

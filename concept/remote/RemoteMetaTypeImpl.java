@@ -49,13 +49,13 @@ class RemoteMetaTypeImpl<
 
     @SuppressWarnings("unchecked")
     @Override
-    final SomeRemoteType asCurrentBaseType(RemoteConcept<SomeRemoteType, SomeType> other) {
+    final SomeRemoteType asCurrentBaseType(RemoteConcept<?, ?> other) {
         return (SomeRemoteType) other.asMetaType();
     }
 
     @Override
     boolean equalsCurrentBaseType(
-            RemoteConcept<SomeRemoteType, SomeType> other) {
+            RemoteConcept<?, ?> other) {
         return other.isType();
     }
 }

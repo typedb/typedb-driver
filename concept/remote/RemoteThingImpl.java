@@ -29,6 +29,7 @@ import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 /**
@@ -77,6 +78,16 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
+    public final <T> Stream<RemoteAttribute<T>> keys(AttributeType<T> attributeType) {
+        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
+                        .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
+
+        int iteratorId = runMethod(method).getThingKeysIter().getId();
+        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(RemoteConcept::asAttribute);
+    }
+
+    @Override
     public final Stream<RemoteAttribute<?>> attributes(AttributeType<?>... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
@@ -84,6 +95,16 @@ public abstract class RemoteThingImpl<
 
         int iteratorId = runMethod(method).getThingAttributesIter().getId();
         return conceptStream(iteratorId, res -> res.getThingAttributesIterRes().getAttribute()).map(RemoteConcept::asAttribute);
+    }
+
+    @Override
+    public final <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T> attributeType) {
+        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
+                        .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
+
+        int iteratorId = runMethod(method).getThingAttributesIter().getId();
+        return conceptStream(tx(), iteratorId, res -> res.getThingAttributesIterRes().getAttribute());
     }
 
     @Override
@@ -119,7 +140,7 @@ public abstract class RemoteThingImpl<
                 .setThingRelhasReq(ConceptProto.Thing.Relhas.Req.newBuilder()
                                            .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
 
-        return RemoteConcept.of(runMethod(method).getThingRelhasRes().getRelation(), tx());
+        return RemoteConcept.of(runMethod(method).getThingRelhasRes().getRelation(), tx()).asRelation();
     }
 
     @Override
@@ -132,5 +153,5 @@ public abstract class RemoteThingImpl<
         return asCurrentBaseType(this);
     }
 
-    abstract SomeRemoteType asCurrentType(RemoteConcept<SomeRemoteType, SomeType> concept);
+    abstract SomeRemoteType asCurrentType(RemoteConcept<?, ?> concept);
 }

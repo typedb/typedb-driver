@@ -97,7 +97,7 @@ abstract class RemoteConceptImpl<
         return tx;
     }
 
-    abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<SomeRemoteConcept, SomeConcept> other);
+    abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<?, ?> other);
 
 
     static <R extends RemoteConcept<R, C>, C extends Concept<C, R>>

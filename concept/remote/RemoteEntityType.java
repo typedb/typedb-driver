@@ -104,6 +104,14 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
     RemoteEntity create();
 
     /**
+     * Sets the supertype of this instance to the given type.
+     *
+     * @return the new super type.
+     * @see RemoteEntity This concept itself.
+     */
+    RemoteEntityType sup(EntityType superEntityType);
+
+    /**
      * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
      *
      * @param attributeType The resource type which instances of this type should be allowed to play.

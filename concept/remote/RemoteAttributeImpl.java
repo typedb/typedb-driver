@@ -61,17 +61,19 @@ class RemoteAttributeImpl<D>
     }
 
     @Override
-    public final RemoteAttributeType.DataType<D> dataType() {
+    public final AttributeType.DataType<D> dataType() {
         return type().dataType();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    RemoteAttributeType<D> asCurrentType(RemoteConcept<RemoteAttributeType<D>, AttributeType<D>> concept) {
-        return concept.asAttributeType();
+    RemoteAttributeType<D> asCurrentType(RemoteConcept<?, ?> concept) {
+        return (RemoteAttributeType<D>) concept.asAttributeType();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    final RemoteAttribute<D> asCurrentBaseType(RemoteConcept<RemoteAttribute<D>, Attribute<D>> other) {
-        return other.asAttribute();
+    final RemoteAttribute<D> asCurrentBaseType(RemoteConcept<?, ?> other) {
+        return (RemoteAttribute<D>) other.asAttribute();
     }
 }

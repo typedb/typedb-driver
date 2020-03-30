@@ -65,6 +65,10 @@ public class GraknClientException extends RuntimeException {
         return create("No known base type for concept: " + concept);
     }
 
+    public static GraknClientException resultNotPresent() {
+        return create("Result not present");
+    }
+
     public String getName() {
         return this.getClass().getName();
     }

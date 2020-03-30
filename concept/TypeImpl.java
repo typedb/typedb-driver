@@ -40,5 +40,5 @@ public abstract class TypeImpl<
         super(concept);
     }
 
-    protected abstract SomeThing asInstance(Concept<SomeThing, SomeRemoteThing> concept);
+    protected abstract SomeThing asInstance(Concept<?, ?> concept);
 }

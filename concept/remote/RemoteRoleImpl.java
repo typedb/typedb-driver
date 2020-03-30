@@ -57,12 +57,12 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole, Role> im
     }
 
     @Override
-    final RemoteRole asCurrentBaseType(RemoteConcept<RemoteRole, Role> other) {
+    final RemoteRole asCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<RemoteRole, Role> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.isRole();
     }
 

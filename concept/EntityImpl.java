@@ -33,12 +33,12 @@ class EntityImpl extends ThingImpl<Entity, EntityType, RemoteEntity, RemoteEntit
     }
 
     @Override
-    final EntityType asCurrentType(Concept<EntityType, RemoteEntityType> concept) {
+    final EntityType asCurrentType(Concept<?, ?> concept) {
         return concept.asEntityType();
     }
 
     @Override
-    final Entity asCurrentBaseType(Concept<Entity, RemoteEntity> other) {
+    final Entity asCurrentBaseType(Concept<?, ?> other) {
         return other.asEntity();
     }
 }

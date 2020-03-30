@@ -46,28 +46,12 @@ public interface RemoteAttribute<D> extends Attribute<D>,
     //------------------------------------- Accessors ----------------------------------
 
     /**
-     * Retrieves the value of the Attribute.
-     *
-     * @return The value itself
-     */
-    @CheckReturnValue
-    D value();
-
-    /**
      * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is an Thing.
      *
      * @return The AttributeType of which this resource is an Thing.
      */
     @Override
     RemoteAttributeType<D> type();
-
-    /**
-     * Retrieves the data type of this Attribute's AttributeType.
-     *
-     * @return The data type of this Attribute's type.
-     */
-    @CheckReturnValue
-    RemoteAttributeType.DataType<D> dataType();
 
     /**
      * Retrieves the set of all Instances that possess this Attribute.
@@ -100,7 +84,7 @@ public interface RemoteAttribute<D> extends Attribute<D>,
     @Deprecated
     @CheckReturnValue
     @Override
-    default RemoteAttribute<D> asAttribute() {
+    default RemoteAttribute<?> asAttribute() {
         return this;
     }
 

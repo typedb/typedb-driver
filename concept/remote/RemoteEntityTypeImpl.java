@@ -45,12 +45,12 @@ class RemoteEntityTypeImpl extends RemoteTypeImpl<RemoteEntityType, RemoteEntity
     }
 
     @Override
-    final RemoteEntityType asCurrentBaseType(RemoteConcept<RemoteEntityType, EntityType> other) {
+    final RemoteEntityType asCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<RemoteEntityType, EntityType> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.isEntityType();
     }
 

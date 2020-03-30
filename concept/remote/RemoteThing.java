@@ -25,6 +25,8 @@ import grakn.client.concept.Thing;
 import grakn.client.concept.Type;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
@@ -101,6 +103,9 @@ public interface RemoteThing<
     @CheckReturnValue
     Stream<RemoteAttribute<?>> attributes(AttributeType<?>... attributeTypes);
 
+    @CheckReturnValue
+    <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T> attributeType);
+
     /**
      * Retrieves a collection of Attribute attached to this Thing as a key
      *
@@ -110,6 +115,9 @@ public interface RemoteThing<
      */
     @CheckReturnValue
     Stream<RemoteAttribute<?>> keys(AttributeType<?>... attributeTypes);
+
+    @CheckReturnValue
+    <T> Stream<RemoteAttribute<T>> keys(AttributeType<T> attributeType);
 
     /**
      * Removes the provided Attribute from this Thing

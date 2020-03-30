@@ -36,12 +36,12 @@ class RemoteEntityImpl
     }
 
     @Override
-    final RemoteEntityType asCurrentType(RemoteConcept<RemoteEntityType, EntityType> concept) {
+    final RemoteEntityType asCurrentType(RemoteConcept<?, ?> concept) {
         return concept.asEntityType();
     }
 
     @Override
-    final RemoteEntity asCurrentBaseType(RemoteConcept<RemoteEntity, Entity> other) {
+    final RemoteEntity asCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.asEntity();
     }
 }

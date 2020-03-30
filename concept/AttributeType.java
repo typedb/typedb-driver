@@ -83,13 +83,13 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>, R
      * @param <D> The data type.
      */
     class DataType<D> {
-        public static final AttributeType.DataType<Boolean> BOOLEAN = new AttributeType.DataType<>(Boolean.class);
-        public static final AttributeType.DataType<LocalDateTime> DATE = new AttributeType.DataType<>(LocalDateTime.class);
-        public static final AttributeType.DataType<Double> DOUBLE = new AttributeType.DataType<>(Double.class);
-        public static final AttributeType.DataType<Float> FLOAT = new AttributeType.DataType<>(Float.class);
-        public static final AttributeType.DataType<Integer> INTEGER = new AttributeType.DataType<>(Integer.class);
-        public static final AttributeType.DataType<Long> LONG = new AttributeType.DataType<>(Long.class);
-        public static final AttributeType.DataType<String> STRING = new AttributeType.DataType<>(String.class);
+        public static final DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
+        public static final DataType<LocalDateTime> DATE = new DataType<>(LocalDateTime.class);
+        public static final DataType<Double> DOUBLE = new DataType<>(Double.class);
+        public static final DataType<Float> FLOAT = new DataType<>(Float.class);
+        public static final DataType<Integer> INTEGER = new DataType<>(Integer.class);
+        public static final DataType<Long> LONG = new DataType<>(Long.class);
+        public static final DataType<String> STRING = new DataType<>(String.class);
 
         private final Class<D> dataClass;
 
@@ -117,7 +117,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>, R
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            AttributeType.DataType<?> that = (AttributeType.DataType<?>) o;
+            DataType<?> that = (DataType<?>) o;
 
             return (this.dataClass().equals(that.dataClass()));
         }

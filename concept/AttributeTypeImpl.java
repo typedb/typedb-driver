@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>, RemoteAttributeType<D>, RemoteAttribute<D>>
         implements AttributeType<D> {
 
-    private final AttributeType.DataType<D> dataType;
+    private final DataType<D> dataType;
 
     AttributeTypeImpl(ConceptProto.Concept concept) {
         super(concept);
@@ -43,23 +43,23 @@ class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>, Remo
 
     @Override
     @Nullable
-    public AttributeType.DataType<D> dataType() {
+    public DataType<D> dataType() {
         return dataType;
     }
 
     @Override
-    final AttributeType<D> asCurrentBaseType(Concept<AttributeType<D>, RemoteAttributeType<D>> other) {
-        return other.asAttributeType();
+    final AttributeType<D> asCurrentBaseType(Concept<?, ?> other) {
+        return (AttributeType<D>) other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<AttributeType<D>, RemoteAttributeType<D>> other) {
+    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected Attribute<D> asInstance(Concept<Attribute<D>, RemoteAttribute<D>> concept) {
-        return concept.asAttribute();
+    protected Attribute<D> asInstance(Concept<?, ?> concept) {
+        return (Attribute<D>) concept.asAttribute();
     }
 
 }

@@ -71,7 +71,7 @@ class RemoteAttributeTypeImpl<D>
 
     @Override
     @Nullable
-    public final RemoteAttributeType.DataType<D> dataType() {
+    public final DataType<D> dataType() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
 
@@ -108,12 +108,12 @@ class RemoteAttributeTypeImpl<D>
     }
 
     @Override
-    final RemoteAttributeType<D> asCurrentBaseType(RemoteConcept<RemoteAttributeType<D>, AttributeType<D>> other) {
-        return other.asAttributeType();
+    final RemoteAttributeType<D> asCurrentBaseType(RemoteConcept<?, ?> other) {
+        return (RemoteAttributeType<D>) other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<RemoteAttributeType<D>, AttributeType<D>> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.isAttributeType();
     }
 

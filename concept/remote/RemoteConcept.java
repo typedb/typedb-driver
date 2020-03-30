@@ -143,7 +143,7 @@ public interface RemoteConcept<
      */
     @Override
     @CheckReturnValue
-    default <D> RemoteAttributeType<D> asAttributeType() {
+    default RemoteAttributeType<?> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, RemoteAttributeType.class);
     }
 
@@ -188,7 +188,7 @@ public interface RemoteConcept<
     @SuppressWarnings("unchecked")
     @Override
     @CheckReturnValue
-    default <D> RemoteAttribute<D> asAttribute() {
+    default <T> RemoteAttribute<T> asAttribute() {
         throw GraknConceptException.invalidCasting(this, RemoteAttribute.class);
     }
 

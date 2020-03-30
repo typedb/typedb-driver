@@ -22,7 +22,6 @@ package grakn.client.concept;
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteAttribute;
 import grakn.client.concept.remote.RemoteAttributeType;
-import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
@@ -67,7 +66,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>, Remo
     @Deprecated
     @CheckReturnValue
     @Override
-    default Attribute<D> asAttribute() {
+    default Attribute<?> asAttribute() {
         return this;
     }
 

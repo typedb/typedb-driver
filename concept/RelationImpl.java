@@ -33,12 +33,12 @@ class RelationImpl extends ThingImpl<Relation, RelationType, RemoteRelation, Rem
     }
 
     @Override
-    final RelationType asCurrentType(Concept<RelationType, RemoteRelationType> concept) {
+    final RelationType asCurrentType(Concept<?, ?> concept) {
         return concept.asRelationType();
     }
 
     @Override
-    final Relation asCurrentBaseType(Concept<Relation, RemoteRelation> other) {
+    final Relation asCurrentBaseType(Concept<?, ?> other) {
         return other.asRelation();
     }
 

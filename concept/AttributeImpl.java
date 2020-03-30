@@ -48,12 +48,12 @@ class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>, RemoteA
     }
 
     @Override
-    final AttributeType<D> asCurrentType(Concept<AttributeType<D>, RemoteAttributeType<D>> concept) {
-        return concept.asAttributeType();
+    final AttributeType<D> asCurrentType(Concept<?, ?> concept) {
+        return (AttributeType<D>) concept.asAttributeType();
     }
 
     @Override
-    final Attribute<D> asCurrentBaseType(Concept<Attribute<D>, RemoteAttribute<D>> other) {
-        return other.asAttribute();
+    final Attribute<D> asCurrentBaseType(Concept<?, ?> other) {
+        return (Attribute<D>) other.asAttribute();
     }
 }

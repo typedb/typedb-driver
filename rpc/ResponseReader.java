@@ -90,7 +90,7 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, RemoteConcept> variableMap = new HashMap<>();
+        Map<Variable, RemoteConcept<?, ?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(new Variable(resVar), RemoteConcept.of(resConcept, tx))
         );

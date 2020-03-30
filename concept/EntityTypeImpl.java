@@ -35,17 +35,17 @@ class EntityTypeImpl extends TypeImpl<EntityType, Entity, RemoteEntityType, Remo
     }
 
     @Override
-    final EntityType asCurrentBaseType(Concept<EntityType, RemoteEntityType> other) {
+    final EntityType asCurrentBaseType(Concept<?, ?> other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<EntityType, RemoteEntityType> other) {
+    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final Entity asInstance(Concept<Entity, RemoteEntity> concept) {
+    protected final Entity asInstance(Concept<?, ?> concept) {
         return concept.asEntity();
     }
 

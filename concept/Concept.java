@@ -147,7 +147,7 @@ public interface Concept<
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default <D> AttributeType<D> asAttributeType() {
+    default AttributeType<?> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -187,7 +187,7 @@ public interface Concept<
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default <D> Attribute<D> asAttribute() {
+    default <T> Attribute<T> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 

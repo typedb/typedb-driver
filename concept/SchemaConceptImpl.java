@@ -45,5 +45,5 @@ public abstract class SchemaConceptImpl<
         return label;
     }
 
-    abstract boolean equalsCurrentBaseType(Concept<SomeSchemaConcept, SomeRemoteSchemaConcept> other);
+    abstract boolean equalsCurrentBaseType(Concept<?, ?> other);
 }

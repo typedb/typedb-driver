@@ -20,10 +20,8 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
-import grakn.client.concept.remote.RemoteConcept;
-import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
@@ -267,7 +265,7 @@ public class RequestBuilder {
         }
 
         static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType<?> dataType) {
-            if (dataType.equals(RemoteAttributeType.DataType.STRING)) {
+            if (dataType.equals(AttributeType.DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
             } else if (dataType.equals( AttributeType.DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;

@@ -75,12 +75,12 @@ class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRe
     }
 
     @Override
-    final RemoteRelationType asCurrentBaseType(RemoteConcept<RemoteRelationType, RelationType> other) {
+    final RemoteRelationType asCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<RemoteRelationType, RelationType> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
         return other.isRelationType();
     }
 

@@ -32,12 +32,12 @@ public class RoleImpl extends SchemaConceptImpl<Role, RemoteRole> implements Rol
     }
 
     @Override
-    final Role asCurrentBaseType(Concept<Role, RemoteRole> other) {
+    final Role asCurrentBaseType(Concept<?, ?> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<Role, RemoteRole> other) {
+    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
         return other.isRole();
     }
 
