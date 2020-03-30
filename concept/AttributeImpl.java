@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -26,7 +28,7 @@ import grakn.protocol.session.ConceptProto;
  *
  * @param <D> The data type of this attribute
  */
-class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> implements Attribute<D> {
+class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>, RemoteAttribute<D>, RemoteAttributeType<D>> implements Attribute<D> {
 
     private final D value;
 
@@ -46,12 +48,12 @@ class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> impleme
     }
 
     @Override
-    final AttributeType<D> asCurrentType(Concept<AttributeType<D>> concept) {
+    final AttributeType<D> asCurrentType(Concept<AttributeType<D>, RemoteAttributeType<D>> concept) {
         return concept.asAttributeType();
     }
 
     @Override
-    final Attribute<D> asCurrentBaseType(Concept<Attribute<D>> other) {
+    final Attribute<D> asCurrentBaseType(Concept<Attribute<D>, RemoteAttribute<D>> other) {
         return other.asAttribute();
     }
 }

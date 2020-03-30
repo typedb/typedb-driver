@@ -36,8 +36,10 @@ import java.util.stream.Stream;
 public interface RemoteThing<
         SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
         SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType>, SomeType extends Type<SomeType, SomeThing>>
-        extends Thing<SomeThing, SomeType>, RemoteConcept<SomeRemoteThing, SomeThing> {
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>>
+        extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        RemoteConcept<SomeRemoteThing, SomeThing> {
     //------------------------------------- Accessors ----------------------------------
 
     /**

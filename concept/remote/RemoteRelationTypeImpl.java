@@ -21,6 +21,8 @@ package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.Relation;
+import grakn.client.concept.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -29,7 +31,7 @@ import java.util.stream.Stream;
 /**
  * Client implementation of RelationType
  */
-class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRelation> implements RemoteRelationType {
+class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRelation, RelationType, Relation> implements RemoteRelationType {
 
     RemoteRelationTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -40,9 +42,7 @@ class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRe
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-        RemoteConcept concept = RemoteConcept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
-
-        return asInstance(concept);
+        return RemoteConcept.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
     }
 
     @Override
@@ -75,17 +75,17 @@ class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRe
     }
 
     @Override
-    final RemoteRelationType asCurrentBaseType(RemoteConcept other) {
+    final RemoteRelationType asCurrentBaseType(RemoteConcept<RemoteRelationType, RelationType> other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<RemoteRelationType, RelationType> other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final RemoteRelation asInstance(RemoteConcept concept) {
+    protected final RemoteRelation asInstance(RemoteConcept<RemoteRelation, Relation> concept) {
         return concept.asRelation();
     }
 }

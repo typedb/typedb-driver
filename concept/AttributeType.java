@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteAttribute;
 import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.protocol.session.ConceptProto;
 
@@ -40,7 +41,7 @@ import java.time.ZoneId;
  * @param <D> The data type of this resource type.
  *            Supported Types include: String, Long, Double, and Boolean
  */
-public interface AttributeType<D> extends UserType<AttributeType<D>, Attribute<D>> {
+public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>, RemoteAttributeType<D>, RemoteAttribute<D>> {
     //------------------------------------- Accessors ---------------------------------
     /**
      * Get the data type to which instances of the AttributeType must conform.

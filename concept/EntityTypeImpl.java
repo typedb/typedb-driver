@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteEntity;
+import grakn.client.concept.remote.RemoteEntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -26,24 +28,24 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-class EntityTypeImpl extends UserTypeImpl<EntityType, Entity> implements EntityType {
+class EntityTypeImpl extends TypeImpl<EntityType, Entity, RemoteEntityType, RemoteEntity> implements EntityType {
 
     public EntityTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final EntityType asCurrentBaseType(Concept<EntityType> other) {
+    final EntityType asCurrentBaseType(Concept<EntityType, RemoteEntityType> other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<EntityType> other) {
+    final boolean equalsCurrentBaseType(Concept<EntityType, RemoteEntityType> other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final Entity asInstance(Concept<Entity> concept) {
+    protected final Entity asInstance(Concept<Entity, RemoteEntity> concept) {
         return concept.asEntity();
     }
 

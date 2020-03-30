@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  */
 abstract class RemoteConceptImpl<
         SomeRemoteConcept extends RemoteConcept<SomeRemoteConcept, SomeConcept>,
-        SomeConcept extends Concept<SomeConcept>>
+        SomeConcept extends Concept<SomeConcept, SomeRemoteConcept>>
         implements RemoteConcept<SomeRemoteConcept, SomeConcept> {
 
     private final GraknClient.Transaction tx;
@@ -100,7 +100,7 @@ abstract class RemoteConceptImpl<
     abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<SomeRemoteConcept, SomeConcept> other);
 
 
-    static <R extends RemoteConcept<R, C>, C extends Concept<C>>
+    static <R extends RemoteConcept<R, C>, C extends Concept<C, R>>
     Stream<R> conceptStream(GraknClient.Transaction tx,
                             int iteratorId,
                             Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {

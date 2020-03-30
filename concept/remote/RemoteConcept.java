@@ -33,13 +33,14 @@ import javax.annotation.CheckReturnValue;
  *
  * Provides the basic RPCs to delete a concept and check if it is deleted.
  */
-public interface RemoteConcept<RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
-        ConceptType extends Concept<ConceptType>>
-        extends Concept<ConceptType> {
+public interface RemoteConcept<
+        RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
+        ConceptType extends Concept<ConceptType, RemoteConceptType>>
+        extends Concept<ConceptType, RemoteConceptType> {
 
     @SuppressWarnings("unchecked")
     static <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
-            ConceptType extends Concept<ConceptType>> RemoteConceptType
+            ConceptType extends Concept<ConceptType, RemoteConceptType>> RemoteConceptType
     of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
         ConceptId id = ConceptId.of(concept.getId());
         switch (concept.getBaseType()) {
@@ -60,7 +61,7 @@ public interface RemoteConcept<RemoteConceptType extends RemoteConcept<RemoteCon
             case RULE:
                 return (RemoteConceptType) new RemoteRuleImpl(tx, id);
             case META_TYPE:
-                return (RemoteConceptType) new RemoteMetaTypeImpl(tx, id);
+                return (RemoteConceptType) new RemoteMetaTypeImpl<>(tx, id);
             default:
             case UNRECOGNIZED:
                 throw new IllegalArgumentException("Unrecognised " + concept);

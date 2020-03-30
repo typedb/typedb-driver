@@ -88,7 +88,7 @@ public interface RemoteRole extends Role, RemoteSchemaConcept<RemoteRole, Role> 
      * @see RemoteType
      */
     @CheckReturnValue
-    Stream<RemoteType> players();
+    Stream<RemoteType<?, ?, ?, ?>> players();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

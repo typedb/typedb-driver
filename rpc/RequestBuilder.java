@@ -183,14 +183,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(Concept<?> concept) {
+        public static ConceptProto.Concept from(Concept<?, ?> concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept<?> concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept<?, ?> concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -214,7 +214,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?>> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?, ?>> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 

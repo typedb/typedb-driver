@@ -35,8 +35,9 @@ import java.util.stream.Stream;
  */
 public interface RemoteSchemaConcept<
         RemoteSchemaConceptType extends RemoteSchemaConcept<RemoteSchemaConceptType, SchemaConceptType>,
-        SchemaConceptType extends SchemaConcept<SchemaConceptType>>
-        extends SchemaConcept<SchemaConceptType>, RemoteConcept<RemoteSchemaConceptType, SchemaConceptType> {
+        SchemaConceptType extends SchemaConcept<SchemaConceptType, RemoteSchemaConceptType>>
+        extends SchemaConcept<SchemaConceptType, RemoteSchemaConceptType>,
+        RemoteConcept<RemoteSchemaConceptType, SchemaConceptType> {
     //------------------------------------- Modifiers ----------------------------------
 
     /**

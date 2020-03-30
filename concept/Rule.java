@@ -27,7 +27,7 @@ import javax.annotation.CheckReturnValue;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface Rule extends SchemaConcept<Rule> {
+public interface Rule extends SchemaConcept<Rule, RemoteRule> {
     @Deprecated
     @CheckReturnValue
     @Override

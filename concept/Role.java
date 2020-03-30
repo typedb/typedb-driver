@@ -29,7 +29,7 @@ import javax.annotation.CheckReturnValue;
  * This ontological element defines the Role which make up a RelationType.
  * It behaves similarly to SchemaConcept when relating to other types.
  */
-public interface Role extends SchemaConcept<Role> {
+public interface Role extends SchemaConcept<Role, RemoteRole> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

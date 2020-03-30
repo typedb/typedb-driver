@@ -19,29 +19,37 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteMetaType;
+import grakn.client.concept.remote.RemoteThing;
 import grakn.protocol.session.ConceptProto;
 
-class MetaTypeImpl<SomeType extends Type<SomeType, SomeThing>, SomeThing extends Thing<SomeThing, SomeType>>
-        extends TypeImpl<SomeType, SomeThing> implements MetaType<SomeType, SomeThing> {
+class MetaTypeImpl<
+        SomeType extends MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        SomeRemoteType extends RemoteMetaType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
+        extends TypeImpl<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>
+        implements MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> {
 
     MetaTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    SomeType asCurrentBaseType(Concept<SomeType> other) {
-        return null;
+    protected SomeThing asInstance(Concept<SomeThing, SomeRemoteThing> concept) {
+        return (SomeThing) concept.asThing();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    SomeType asCurrentBaseType(Concept<SomeType, SomeRemoteType> other) {
+        return (SomeType) other.asMetaType();
     }
 
     @Override
-    boolean equalsCurrentBaseType(Concept<SomeType> other) {
+    boolean equalsCurrentBaseType(Concept<SomeType, SomeRemoteType> other) {
         return other.isMetaType();
     }
 
-    @Override
-    public RemoteMetaType asRemote(GraknClient.Transaction tx) {
-        return null;
-    }
 }

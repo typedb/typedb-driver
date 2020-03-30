@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.remote.RemoteType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -27,8 +29,13 @@ import grakn.protocol.session.ConceptProto;
  * @param <SomeThing> The exact type of this class
  * @param <SomeType>  the type of an instance of this class
  */
-public abstract class ThingImpl<SomeThing extends Thing<SomeThing, SomeType>, SomeType extends Type<SomeType, SomeThing>>
-        extends ConceptImpl<SomeThing> implements Thing<SomeThing, SomeType> {
+public abstract class ThingImpl<
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>>
+        extends ConceptImpl<SomeThing, SomeRemoteThing>
+        implements Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType> {
 
     private final SomeType type;
     private final boolean inferred;
@@ -49,5 +56,5 @@ public abstract class ThingImpl<SomeThing extends Thing<SomeThing, SomeType>, So
         return inferred;
     }
 
-    abstract SomeType asCurrentType(Concept<SomeType> concept);
+    abstract SomeType asCurrentType(Concept<SomeType, SomeRemoteType> concept);
 }

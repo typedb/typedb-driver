@@ -21,6 +21,7 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteEntity;
+import grakn.client.concept.remote.RemoteEntityType;
 
 import javax.annotation.CheckReturnValue;
 
@@ -30,7 +31,7 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity extends Thing<Entity, EntityType> {
+public interface Entity extends Thing<Entity, EntityType, RemoteEntity, RemoteEntityType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**

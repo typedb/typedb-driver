@@ -23,19 +23,23 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.MetaType;
 import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
 
 /**
  * Type Class of a MetaType
  */
 public interface RemoteMetaType<
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
+        SomeRemoteType extends RemoteMetaType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
         SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeType extends Type<SomeType, SomeThing>, SomeThing extends Thing<SomeThing, SomeType>>
-    extends MetaType<SomeType, SomeThing>,
+        SomeType extends MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>>
+    extends MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
         RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> {
 
-    static RemoteMetaType of(GraknClient.Transaction tx, ConceptId id) {
-        return new RemoteMetaTypeImpl(tx, id);
+    static <SomeRemoteType extends RemoteMetaType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
+            SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
+            SomeType extends MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+            SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>>
+    RemoteMetaType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> of(GraknClient.Transaction tx, ConceptId id) {
+        return new RemoteMetaTypeImpl<>(tx, id);
     }
 }

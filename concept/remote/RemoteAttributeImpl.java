@@ -42,8 +42,6 @@ class RemoteAttributeImpl<D>
         super(tx, id);
     }
 
-
-
     @Override
     public final D value() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()

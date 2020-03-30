@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -29,7 +31,8 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-class AttributeTypeImpl<D> extends UserTypeImpl<AttributeType<D>, Attribute<D>> implements AttributeType<D> {
+class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>, RemoteAttributeType<D>, RemoteAttribute<D>>
+        implements AttributeType<D> {
 
     private final AttributeType.DataType<D> dataType;
 
@@ -45,17 +48,17 @@ class AttributeTypeImpl<D> extends UserTypeImpl<AttributeType<D>, Attribute<D>> 
     }
 
     @Override
-    final AttributeType<D> asCurrentBaseType(Concept<AttributeType<D>> other) {
+    final AttributeType<D> asCurrentBaseType(Concept<AttributeType<D>, RemoteAttributeType<D>> other) {
         return other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<AttributeType<D>> other) {
+    final boolean equalsCurrentBaseType(Concept<AttributeType<D>, RemoteAttributeType<D>> other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected Attribute<D> asInstance(Concept<Attribute<D>> concept) {
+    protected Attribute<D> asInstance(Concept<Attribute<D>, RemoteAttribute<D>> concept) {
         return concept.asAttribute();
     }
 

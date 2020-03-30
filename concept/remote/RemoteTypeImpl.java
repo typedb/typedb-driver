@@ -39,8 +39,8 @@ import java.util.stream.Stream;
 public abstract class RemoteTypeImpl<
         SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
         SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeType extends Type<SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType>>
+        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>>
         extends RemoteSchemaConceptImpl<SomeRemoteType, SomeType>
         implements RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> {
 

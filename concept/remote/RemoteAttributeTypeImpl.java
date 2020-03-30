@@ -121,5 +121,4 @@ class RemoteAttributeTypeImpl<D>
     protected final RemoteAttribute<D> asInstance(RemoteConcept<RemoteAttribute<D>, Attribute<D>> concept) {
         return concept.asAttribute();
     }
-
 }

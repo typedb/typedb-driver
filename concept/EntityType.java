@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteEntity;
 import grakn.client.concept.remote.RemoteEntityType;
 
 import javax.annotation.CheckReturnValue;
@@ -29,7 +30,7 @@ import javax.annotation.CheckReturnValue;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType extends UserType<EntityType, Entity> {
+public interface EntityType extends Type<EntityType, Entity, RemoteEntityType, RemoteEntity> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

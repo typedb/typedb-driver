@@ -19,24 +19,25 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteRule;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Rule
  */
-public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule {
+public class RuleImpl extends SchemaConceptImpl<Rule, RemoteRule> implements Rule {
 
     RuleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final Rule asCurrentBaseType(Concept<Rule> other) {
+    final Rule asCurrentBaseType(Concept<Rule, RemoteRule> other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<Rule> other) {
+    final boolean equalsCurrentBaseType(Concept<Rule, RemoteRule> other) {
         return other.isRule();
     }
 

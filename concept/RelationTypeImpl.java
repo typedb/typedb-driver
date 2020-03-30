@@ -19,29 +19,31 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteRelation;
+import grakn.client.concept.remote.RemoteRelationType;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of RelationType
  */
-class RelationTypeImpl extends UserTypeImpl<RelationType, Relation> implements RelationType {
+class RelationTypeImpl extends TypeImpl<RelationType, Relation, RemoteRelationType, RemoteRelation> implements RelationType {
 
     RelationTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final RelationType asCurrentBaseType(Concept<RelationType> other) {
+    final RelationType asCurrentBaseType(Concept<RelationType, RemoteRelationType> other) {
         return other.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<RelationType> other) {
+    final boolean equalsCurrentBaseType(Concept<RelationType, RemoteRelationType> other) {
         return other.isRelationType();
     }
 
     @Override
-    protected final Relation asInstance(Concept<Relation> concept) {
+    protected final Relation asInstance(Concept<Relation, RemoteRelation> concept) {
         return concept.asRelation();
     }
 }

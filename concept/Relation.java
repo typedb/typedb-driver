@@ -21,6 +21,7 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteRelation;
+import grakn.client.concept.remote.RemoteRelationType;
 
 import javax.annotation.CheckReturnValue;
 
@@ -30,7 +31,7 @@ import javax.annotation.CheckReturnValue;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation extends Thing<Relation, RelationType> {
+public interface Relation extends Thing<Relation, RelationType, RemoteRelation, RemoteRelationType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**

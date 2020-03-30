@@ -19,6 +19,7 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteSchemaConcept;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -26,8 +27,11 @@ import grakn.protocol.session.ConceptProto;
  *
  * @param <SomeSchemaConcept> The exact type of this class
  */
-public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept<SomeSchemaConcept>>
-        extends ConceptImpl<SomeSchemaConcept> implements SchemaConcept<SomeSchemaConcept> {
+public abstract class SchemaConceptImpl<
+        SomeSchemaConcept extends SchemaConcept<SomeSchemaConcept, SomeRemoteSchemaConcept>,
+        SomeRemoteSchemaConcept extends RemoteSchemaConcept<SomeRemoteSchemaConcept, SomeSchemaConcept>>
+        extends ConceptImpl<SomeSchemaConcept, SomeRemoteSchemaConcept>
+        implements SchemaConcept<SomeSchemaConcept, SomeRemoteSchemaConcept> {
 
     private final Label label;
 
@@ -41,5 +45,5 @@ public abstract class SchemaConceptImpl<SomeSchemaConcept extends SchemaConcept<
         return label;
     }
 
-    abstract boolean equalsCurrentBaseType(Concept<SomeSchemaConcept> other);
+    abstract boolean equalsCurrentBaseType(Concept<SomeSchemaConcept, SomeRemoteSchemaConcept> other);
 }

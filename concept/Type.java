@@ -19,6 +19,9 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.remote.RemoteType;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -27,14 +30,16 @@ import javax.annotation.CheckReturnValue;
  * They also aid in categorising Thing to different types.
  */
 public interface Type<
-        SomeType extends Type<SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType>>
-        extends SchemaConcept<SomeType> {
+        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
+        extends SchemaConcept<SomeType, SomeRemoteType> {
 
     @Deprecated
     @CheckReturnValue
     @Override
-    default Type<SomeType, SomeThing> asType() {
+    default Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> asType() {
         return this;
     }
 

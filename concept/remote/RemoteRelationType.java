@@ -44,6 +44,21 @@ public interface RemoteRelationType extends RelationType,
     //------------------------------------- Modifiers ----------------------------------
 
     /**
+     * Create a relation of this relation type.
+     *
+     * @return The newly created relation.
+     */
+    RemoteRelation create();
+
+    /**
+     * Set the super type of this relation type.
+     *
+     * @param superRelationType The super type to set.
+     * @return This concept itself.
+     */
+    RemoteRelationType sup(RelationType superRelationType);
+
+    /**
      * Changes the Label of this Concept to a new one.
      *
      * @param label The new Label.
@@ -51,24 +66,6 @@ public interface RemoteRelationType extends RelationType,
      */
     @Override
     RemoteRelationType label(Label label);
-
-    /**
-     * Creates and returns a new Relation instance, whose direct type will be this type.
-     *
-     * @return a new empty relation.
-     * @see RemoteRelation
-     */
-    @Override
-    RemoteRelation create();
-
-    /**
-     * Sets the supertype of the RelationType to be the RelationType specified.
-     *
-     * @param type The supertype of this RelationType
-     * @return The RelationType itself.
-     */
-    @Override
-    RemoteRelationType sup(RelationType type);
 
     /**
      * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.

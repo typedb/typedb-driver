@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  */
 public abstract class RemoteSchemaConceptImpl<
         SomeRemoteSchemaConceptType extends RemoteSchemaConcept<SomeRemoteSchemaConceptType, SomeSchemaConceptType>,
-        SomeSchemaConceptType extends SchemaConcept<SomeSchemaConceptType>>
+        SomeSchemaConceptType extends SchemaConcept<SomeSchemaConceptType, SomeRemoteSchemaConceptType>>
         extends RemoteConceptImpl<SomeRemoteSchemaConceptType, SomeSchemaConceptType>
         implements RemoteSchemaConcept<SomeRemoteSchemaConceptType, SomeSchemaConceptType> {
 

@@ -21,6 +21,7 @@ package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.Role;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -28,10 +29,15 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Role
  */
-public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implements RemoteRole {
+public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole, Role> implements RemoteRole {
 
     RemoteRoleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
+    }
+
+    @Override
+    public RemoteRole sup(RemoteRole superRole) {
+        return super.sup(superRole);
     }
 
     @Override
@@ -43,7 +49,7 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implemen
     }
 
     @Override
-    public final Stream<RemoteType> players() {
+    public final Stream<RemoteType<?, ?, ?, ?>> players() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
         int iteratorId = runMethod(method).getRolePlayersIter().getId();
@@ -51,12 +57,12 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implemen
     }
 
     @Override
-    final RemoteRole asCurrentBaseType(RemoteConcept other) {
+    final RemoteRole asCurrentBaseType(RemoteConcept<RemoteRole, Role> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<RemoteRole, Role> other) {
         return other.isRole();
     }
 

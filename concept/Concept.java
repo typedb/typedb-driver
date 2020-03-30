@@ -21,6 +21,8 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.remote.RemoteType;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -85,7 +87,7 @@ public interface Concept<
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    default SchemaConcept<? extends ConceptType> asSchemaConcept() {
+    default SchemaConcept<?, ?> asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
     }
 
@@ -95,7 +97,7 @@ public interface Concept<
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default Type<?, ?> asType() {
+    default Type<?, ?, ?, ?> asType() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -105,7 +107,7 @@ public interface Concept<
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    default Thing<?, ?> asThing() {
+    default Thing<?, ?, ?, ?> asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -195,7 +197,7 @@ public interface Concept<
      * @return A MetaType if the Concept is a MetaType
      */
     @CheckReturnValue
-    default MetaType<?, ?> asMetaType() {
+    default MetaType<?, ?, ?, ?> asMetaType() {
         throw GraknConceptException.invalidCasting(this, MetaType.class);
     }
 
@@ -205,8 +207,7 @@ public interface Concept<
      * @param tx The transaction to use for the RPCs.
      * @return A remote concept using the given transaction to enable RPCs.
      */
-    <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>>
-    RemoteConcept<RemoteConceptType, ConceptType> asRemote(GraknClient.Transaction tx);
+    RemoteConceptType asRemote(GraknClient.Transaction tx);
 
     /**
      * Determine if the Concept is a SchemaConcept

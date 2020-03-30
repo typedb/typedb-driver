@@ -19,24 +19,26 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteEntity;
+import grakn.client.concept.remote.RemoteEntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Entity
  */
-class EntityImpl extends ThingImpl<Entity, EntityType> implements Entity {
+class EntityImpl extends ThingImpl<Entity, EntityType, RemoteEntity, RemoteEntityType> implements Entity {
 
     EntityImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final EntityType asCurrentType(Concept<EntityType> concept) {
+    final EntityType asCurrentType(Concept<EntityType, RemoteEntityType> concept) {
         return concept.asEntityType();
     }
 
     @Override
-    final Entity asCurrentBaseType(Concept<Entity> other) {
+    final Entity asCurrentBaseType(Concept<Entity, RemoteEntity> other) {
         return other.asEntity();
     }
 }

@@ -35,7 +35,7 @@ public interface Thing<
         SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
         SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
         SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeRemoteType extends RemoteType<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>>
         extends Concept<SomeThing, SomeRemoteThing> {
     //------------------------------------- Accessors ----------------------------------
 
@@ -45,7 +45,7 @@ public interface Thing<
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    Type<SomeType, SomeThing> type();
+    Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> type();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -59,7 +59,7 @@ public interface Thing<
     @Deprecated
     @CheckReturnValue
     @Override
-    default Thing<SomeThing, SomeType> asThing() {
+    default Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType> asThing() {
         return this;
     }
 

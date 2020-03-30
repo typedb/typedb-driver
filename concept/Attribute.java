@@ -21,6 +21,7 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -34,7 +35,7 @@ import javax.annotation.CheckReturnValue;
  * @param <D> The data type of this resource type.
  *            Supported Types include: String, Long, Double, and Boolean
  */
-public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
+public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>, RemoteAttribute<D>, RemoteAttributeType<D>> {
     //------------------------------------- Accessors ----------------------------------
 
     /**

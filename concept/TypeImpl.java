@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.remote.RemoteType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -27,11 +29,16 @@ import grakn.protocol.session.ConceptProto;
  * @param <SomeType>  The exact type of this class
  */
 public abstract class TypeImpl<
-        SomeType extends Type<SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType>>
-        extends SchemaConceptImpl<SomeType> implements Type<SomeType, SomeThing> {
+        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
+        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
+        extends SchemaConceptImpl<SomeType, SomeRemoteType>
+        implements Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> {
 
     TypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
+
+    protected abstract SomeThing asInstance(Concept<SomeThing, SomeRemoteThing> concept);
 }

@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteRelation;
 import grakn.client.concept.remote.RemoteRelationType;
 
 import javax.annotation.CheckReturnValue;
@@ -29,7 +30,7 @@ import javax.annotation.CheckReturnValue;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType extends UserType<RelationType, Relation> {
+public interface RelationType extends Type<RelationType, Relation, RemoteRelationType, RemoteRelation> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue

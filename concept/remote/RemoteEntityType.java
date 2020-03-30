@@ -60,14 +60,6 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
     RemoteEntityType isAbstract(Boolean isAbstract);
 
     /**
-     * Sets the direct supertype of the EntityType to be the EntityType specified.
-     *
-     * @param type The supertype of this EntityType
-     * @return The EntityType itself
-     */
-    RemoteEntityType sup(RemoteEntityType type);
-
-    /**
      * Sets the Role which instances of this EntityType may play.
      *
      * @param role The Role Type which the instances of this EntityType are allowed to play.

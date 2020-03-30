@@ -19,24 +19,25 @@
 
 package grakn.client.concept;
 
+import grakn.client.concept.remote.RemoteRole;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Role
  */
-public class RoleImpl extends SchemaConceptImpl<Role> implements Role {
+public class RoleImpl extends SchemaConceptImpl<Role, RemoteRole> implements Role {
 
     RoleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final Role asCurrentBaseType(Concept<Role> other) {
+    final Role asCurrentBaseType(Concept<Role, RemoteRole> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<Role> other) {
+    final boolean equalsCurrentBaseType(Concept<Role, RemoteRole> other) {
         return other.isRole();
     }
 
