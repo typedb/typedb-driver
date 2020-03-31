@@ -17,28 +17,35 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteRule;
+import grakn.client.concept.Concept;
+import grakn.client.concept.Label;
+import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.local.ConceptImpl;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Rule
+ * Client implementation of SchemaConcept
+ *
+ * @param <SomeSchemaConcept> The exact type of this class
  */
-public class RuleImpl extends SchemaConceptImpl<Rule, RemoteRule> implements Rule {
+public abstract class SchemaConceptImpl<
+        SomeSchemaConcept extends LocalSchemaConcept<SomeSchemaConcept>>
+        extends ConceptImpl<SomeSchemaConcept>
+        implements LocalSchemaConcept<SomeSchemaConcept> {
 
-    RuleImpl(ConceptProto.Concept concept) {
+    private final Label label;
+
+    protected SchemaConceptImpl(ConceptProto.Concept concept) {
         super(concept);
+        this.label = Label.of(concept.getLabelRes().getLabel());
     }
 
     @Override
-    final Rule asCurrentBaseType(Concept<?, ?> other) {
-        return other.asRule();
+    public final Label label() {
+        return label;
     }
 
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
-        return other.isRule();
-    }
-
+    abstract boolean equalsCurrentBaseType(Concept<?> other);
 }

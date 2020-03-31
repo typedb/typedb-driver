@@ -227,7 +227,7 @@ public class GraqlSteps {
         while (matcher.find()) {
             String matched = matcher.group(0);
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-            RemoteConcept<?, ?> concept = templateFiller.get(requiredVariable);
+            RemoteConcept<?> concept = templateFiller.get(requiredVariable);
 
             builder.append(template, i, matcher.start());
             if (concept == null) {

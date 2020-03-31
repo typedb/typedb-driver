@@ -31,9 +31,7 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.Concept;
-import grakn.client.concept.MetaType;
+import grakn.client.concept.DataType;
 import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.remote.RemoteAttribute;
 import grakn.client.concept.remote.RemoteAttributeType;
@@ -573,12 +571,12 @@ public class GraknClient implements AutoCloseable {
 
         private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
             return getAll(startIterator(query, infer),
-                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
+                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
         private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
             Iterable<T> iterable = () -> iterator(startIterator(query, infer),
-                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
+                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
             return StreamSupport.stream(iterable.spliterator(), false);
         }
 
@@ -634,22 +632,28 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends RemoteType> T getType(Label label) {
-            RemoteSchemaConcept concept = getSchemaConcept(label);
-            if (concept == null || !concept.isType()) return null;
-            return (T) concept.asType();
+        public RemoteType<?, ?> getType(Label label) {
+            RemoteSchemaConcept<?> concept = getSchemaConcept(label);
+            if (concept instanceof RemoteType) {
+                return (RemoteType<?, ?>) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
         public RemoteEntityType getEntityType(String label) {
-            RemoteSchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isEntityType()) return null;
-            return concept.asEntityType();
+            RemoteSchemaConcept<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof RemoteEntityType) {
+                return (RemoteEntityType) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
         public RemoteRelationType getRelationType(String label) {
-            RemoteSchemaConcept<?, ?> concept = getSchemaConcept(Label.of(label));
+            RemoteSchemaConcept<?> concept = getSchemaConcept(Label.of(label));
             if (concept instanceof RemoteRelationType) {
                 return (RemoteRelationType) concept;
             } else {
@@ -660,7 +664,7 @@ public class GraknClient implements AutoCloseable {
         @SuppressWarnings("unchecked")
         @Nullable
         public <V> RemoteAttributeType<V> getAttributeType(String label) {
-            RemoteConcept<?, ?> concept = getSchemaConcept(Label.of(label));
+            RemoteSchemaConcept<?> concept = getSchemaConcept(Label.of(label));
             if (concept instanceof RemoteAttributeType) {
                 return (RemoteAttributeType<V>) concept;
             } else {
@@ -670,7 +674,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public RemoteRole getRole(String label) {
-            RemoteConcept<?, ?> concept = getSchemaConcept(Label.of(label));
+            RemoteSchemaConcept<?> concept = getSchemaConcept(Label.of(label));
             if (concept instanceof RemoteRole) {
                 return (RemoteRole) concept;
             } else {
@@ -680,7 +684,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public RemoteRule getRule(String label) {
-            RemoteConcept<?, ?> concept = getSchemaConcept(Label.of(label));
+            RemoteSchemaConcept<?> concept = getSchemaConcept(Label.of(label));
             if (concept instanceof RemoteRule) {
                 return (RemoteRule) concept;
             } else {
@@ -689,20 +693,20 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends RemoteSchemaConcept<?, ?>> T getSchemaConcept(Label label) {
+        public <T extends RemoteSchemaConcept<T>> T getSchemaConcept(Label label) {
             transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetSchemaConceptRes().getResCase()) {
                 case NULL:
                     return null;
                 case SCHEMACONCEPT:
-                    return (T) RemoteConcept.of(response.getGetSchemaConceptRes().getSchemaConcept(), this);
+                    return RemoteConcept.of(response.getGetSchemaConceptRes().getSchemaConcept(), this);
                 default:
                     throw GraknClientException.resultNotPresent();
             }
         }
 
-        public SchemaConcept<?, ?> getMetaConcept() {
+        public SchemaConcept<?> getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
@@ -727,7 +731,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public RemoteConcept<?, ?> getConcept(ConceptId id) {
+        public RemoteConcept<?> getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetConceptRes().getResCase()) {
@@ -761,10 +765,10 @@ public class GraknClient implements AutoCloseable {
             return RemoteConcept.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> RemoteAttributeType<V> putAttributeType(String label, AttributeType.DataType<V> dataType) {
+        public <V> RemoteAttributeType<V> putAttributeType(String label, DataType<V> dataType) {
             return putAttributeType(Label.of(label), dataType);
         }
-        public <V> RemoteAttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
+        public <V> RemoteAttributeType<V> putAttributeType(Label label, DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
             return RemoteConcept.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this);
         }
@@ -793,7 +797,7 @@ public class GraknClient implements AutoCloseable {
             return RemoteConcept.of(responseOrThrow().getPutRuleRes().getRule(), this);
         }
 
-        public <T extends RemoteSchemaConcept<?, ?>> Stream<T> sups(RemoteSchemaConcept<?, ?> schemaConcept) {
+        public <T extends RemoteSchemaConcept<T>> Stream<T> sups(RemoteSchemaConcept<T> schemaConcept) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setSchemaConceptSupsReq(ConceptProto.SchemaConcept.Sups.Req.getDefaultInstance()).build();
 
@@ -801,7 +805,7 @@ public class GraknClient implements AutoCloseable {
             int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
 
             Iterable<T> iterable = () -> iterator(iteratorId,
-                    res -> (T) RemoteConcept.of(
+                    res -> RemoteConcept.of(
                             res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
             );
 

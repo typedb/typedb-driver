@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -34,16 +35,15 @@ import java.util.stream.Stream;
  * Client implementation of SchemaConcept
  */
 public abstract class RemoteSchemaConceptImpl<
-        SomeRemoteSchemaConceptType extends RemoteSchemaConcept<SomeRemoteSchemaConceptType, SomeSchemaConceptType>,
-        SomeSchemaConceptType extends SchemaConcept<SomeSchemaConceptType, SomeRemoteSchemaConceptType>>
-        extends RemoteConceptImpl<SomeRemoteSchemaConceptType, SomeSchemaConceptType>
-        implements RemoteSchemaConcept<SomeRemoteSchemaConceptType, SomeSchemaConceptType> {
+        SomeRemoteSchemaConceptType extends RemoteSchemaConcept<SomeRemoteSchemaConceptType>>
+        extends RemoteConceptImpl<SomeRemoteSchemaConceptType>
+        implements RemoteSchemaConcept<SomeRemoteSchemaConceptType> {
 
     RemoteSchemaConceptImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
-    public final SomeRemoteSchemaConceptType sup(SomeSchemaConceptType type) {
+    public final SomeRemoteSchemaConceptType sup(SchemaConcept<?> type) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setSchemaConceptSetSupReq(ConceptProto.SchemaConcept.SetSup.Req.newBuilder()
                                                    .setSchemaConcept(RequestBuilder.ConceptMessage.from(type))).build();
@@ -110,5 +110,5 @@ public abstract class RemoteSchemaConceptImpl<
         return conceptStream(iteratorId, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept());
     }
 
-    abstract boolean equalsCurrentBaseType(RemoteConcept<?, ?> other);
+    abstract boolean equalsCurrentBaseType(RemoteConcept<?> other);
 }

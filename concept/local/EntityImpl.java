@@ -17,28 +17,27 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteThing;
-import grakn.client.concept.remote.RemoteType;
+import grakn.client.concept.Concept;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Type
- *
- * @param <SomeType>  The exact type of this class
+ * Client implementation of Entity
  */
-public abstract class TypeImpl<
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
-        extends SchemaConceptImpl<SomeType, SomeRemoteType>
-        implements Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> {
+class EntityImpl extends ThingImpl<LocalEntity, LocalEntityType> implements LocalEntity {
 
-    TypeImpl(ConceptProto.Concept concept) {
+    EntityImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
-    protected abstract SomeThing asInstance(Concept<?, ?> concept);
+    @Override
+    final LocalEntityType asCurrentType(Concept<?> concept) {
+        return (LocalEntityType) concept.asEntityType();
+    }
+
+    @Override
+    final LocalEntity asCurrentBaseType(Concept<?> other) {
+        return (LocalEntity) other.asEntity();
+    }
 }

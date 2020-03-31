@@ -22,9 +22,9 @@ package grakn.client.concept.remote;
 import grakn.client.GraknClient;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Entity;
 import grakn.client.concept.EntityType;
 import grakn.client.concept.Label;
+import grakn.client.concept.Role;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityType, RemoteEntity, EntityType, Entity> {
+public interface RemoteEntityType extends EntityType<RemoteEntityType, RemoteEntity>, RemoteType<RemoteEntityType, RemoteEntity> {
 
     static RemoteEntityType of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteEntityTypeImpl(tx, id);
@@ -66,7 +66,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The EntityType itself
      */
     @Override
-    RemoteEntityType plays(RemoteRole role);
+    RemoteEntityType plays(Role<?> role);
 
     /**
      * Removes the ability of this EntityType to play a specific Role
@@ -75,7 +75,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The EntityType itself.
      */
     @Override
-    RemoteEntityType unplay(RemoteRole role);
+    RemoteEntityType unplay(Role<?> role);
 
     /**
      * Removes the ability for Things of this EntityType to have Attributes of type AttributeType
@@ -84,7 +84,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The EntityType itself.
      */
     @Override
-    RemoteEntityType unhas(AttributeType<?> attributeType);
+    RemoteEntityType unhas(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Removes AttributeType as a key to this EntityType
@@ -93,7 +93,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The EntityType itself.
      */
     @Override
-    RemoteEntityType unkey(AttributeType<?> attributeType);
+    RemoteEntityType unkey(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -109,7 +109,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return the new super type.
      * @see RemoteEntity This concept itself.
      */
-    RemoteEntityType sup(EntityType superEntityType);
+    RemoteEntityType sup(EntityType<?, ?> superEntityType);
 
     /**
      * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
@@ -118,7 +118,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The Type itself.
      */
     @Override
-    RemoteEntityType key(AttributeType<?> attributeType);
+    RemoteEntityType key(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Creates a RelationType which allows this type and a resource type to be linked.
@@ -127,7 +127,7 @@ public interface RemoteEntityType extends EntityType, RemoteType<RemoteEntityTyp
      * @return The Type itself.
      */
     @Override
-    RemoteEntityType has(AttributeType<?> attributeType);
+    RemoteEntityType has(AttributeType<?, ?, ?> attributeType);
 
     //------------------------------------- Accessors ----------------------------------
 

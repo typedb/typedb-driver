@@ -19,11 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.concept.remote.RemoteThing;
-import grakn.client.concept.remote.RemoteType;
-
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
 /**
  * A data instance in the graph belonging to a specific Type
@@ -31,12 +27,9 @@ import java.util.stream.Stream;
  * Every instance belongs to a Type which serves as a way of categorising them.
  * Instances can relate to one another via Relation
  */
-public interface Thing<
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>>
-        extends Concept<SomeThing, SomeRemoteThing> {
+public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
+                       SomeType extends Type<SomeType, SomeThing>>
+        extends Concept<SomeThing> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -45,7 +38,7 @@ public interface Thing<
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> type();
+    SomeType type();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -59,7 +52,7 @@ public interface Thing<
     @Deprecated
     @CheckReturnValue
     @Override
-    default Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType> asThing() {
+    default Thing<SomeThing, SomeType> asThing() {
         return this;
     }
 

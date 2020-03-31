@@ -20,10 +20,11 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
+import grakn.client.concept.Role;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -40,8 +41,8 @@ import java.util.stream.Stream;
  * @param <D> The data type of this resource type.
  *            Supported Types include: String, Long, Double, and Boolean
  */
-public interface RemoteAttributeType<D> extends AttributeType<D>,
-        RemoteType<RemoteAttributeType<D>, RemoteAttribute<D>, AttributeType<D>, Attribute<D>> {
+public interface RemoteAttributeType<D> extends AttributeType<D, RemoteAttributeType<D>, RemoteAttribute<D>>,
+        RemoteType<RemoteAttributeType<D>, RemoteAttribute<D>> {
 
     static <D> RemoteAttributeType<D> of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteAttributeTypeImpl<>(tx, id);
@@ -72,7 +73,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @param type The super type of this AttributeType.
      * @return The AttributeType itself.
      */
-    RemoteAttributeType<D> sup(AttributeType<D> type);
+    RemoteAttributeType<D> sup(AttributeType<D, ?, ?> type);
 
     /**
      * Sets the Role which instances of this AttributeType may play.
@@ -81,7 +82,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The AttributeType itself.
      */
     @Override
-    RemoteAttributeType<D> plays(RemoteRole role);
+    RemoteAttributeType<D> plays(Role<?> role);
 
     /**
      * Removes the ability of this AttributeType to play a specific Role
@@ -90,7 +91,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The AttributeType itself.
      */
     @Override
-    RemoteAttributeType<D> unplay(RemoteRole role);
+    RemoteAttributeType<D> unplay(Role<?> role);
 
     /**
      * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType
@@ -99,7 +100,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The AttributeType itself.
      */
     @Override
-    RemoteAttributeType<D> unhas(AttributeType<?> attributeType);
+    RemoteAttributeType<D> unhas(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Removes AttributeType as a key to this AttributeType
@@ -108,7 +109,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The AttributeType itself.
      */
     @Override
-    RemoteAttributeType<D> unkey(AttributeType<?> attributeType);
+    RemoteAttributeType<D> unkey(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Set the regular expression that instances of the AttributeType must conform to.
@@ -133,7 +134,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The Type itself.
      */
     @Override
-    RemoteAttributeType<D> key(AttributeType<?> attributeType);
+    RemoteAttributeType<D> key(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Creates a RelationType which allows this type and a resource type to be linked.
@@ -142,7 +143,7 @@ public interface RemoteAttributeType<D> extends AttributeType<D>,
      * @return The Type itself.
      */
     @Override
-    RemoteAttributeType<D> has(AttributeType<?> attributeType);
+    RemoteAttributeType<D> has(AttributeType<?, ?, ?> attributeType);
 
     //------------------------------------- Accessors ---------------------------------
 

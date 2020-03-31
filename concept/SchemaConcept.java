@@ -19,8 +19,6 @@
 
 package grakn.client.concept;
 
-import grakn.client.concept.remote.RemoteSchemaConcept;
-
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -30,10 +28,7 @@ import javax.annotation.CheckReturnValue;
  * 1. They have a unique Label which identifies them
  * 2. You can link them together into a hierarchical structure
  */
-public interface SchemaConcept<
-        SchemaConceptType extends SchemaConcept<SchemaConceptType, RemoteSchemaConceptType>,
-        RemoteSchemaConceptType extends RemoteSchemaConcept<RemoteSchemaConceptType, SchemaConceptType>>
-        extends Concept<SchemaConceptType, RemoteSchemaConceptType> {
+public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaConceptType>> extends Concept<SchemaConceptType> {
     //------------------------------------- Accessors ---------------------------------
 
     /**
@@ -48,7 +43,7 @@ public interface SchemaConcept<
     @Deprecated
     @CheckReturnValue
     @Override
-    default SchemaConcept<SchemaConceptType, RemoteSchemaConceptType> asSchemaConcept() {
+    default SchemaConcept<SchemaConceptType> asSchemaConcept() {
         return this;
     }
 

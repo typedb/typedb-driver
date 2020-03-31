@@ -21,6 +21,7 @@ package grakn.client.concept.remote;
 
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
+import grakn.client.concept.Role;
 import grakn.client.concept.Thing;
 import grakn.client.concept.Type;
 
@@ -36,12 +37,9 @@ import java.util.stream.Stream;
  * Instances can relate to one another via Relation
  */
 public interface RemoteThing<
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>>
-        extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        RemoteConcept<SomeRemoteThing, SomeThing> {
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType>,
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing>>
+        extends Thing<SomeRemoteThing, SomeRemoteType>, RemoteConcept<SomeRemoteThing> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -51,7 +49,7 @@ public interface RemoteThing<
      */
     @Override
     @CheckReturnValue
-    RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> type();
+    SomeRemoteType type();
 
     /**
      * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
@@ -63,7 +61,7 @@ public interface RemoteThing<
      * @see RemoteRelation
      */
     @CheckReturnValue
-    Stream<RemoteRelation> relations(RemoteRole... roles);
+    Stream<RemoteRelation> relations(Role<?>... roles);
 
     /**
      * Determine the Roles that this Thing is currently playing.
@@ -82,7 +80,7 @@ public interface RemoteThing<
      * @param attribute The Attribute to which a Relation is created
      * @return The instance itself
      */
-    SomeRemoteThing has(Attribute<?> attribute);
+    SomeRemoteThing has(Attribute<?, ?, ?> attribute);
 
     /**
      * Creates a Relation from this instance to the provided Attribute.
@@ -91,7 +89,7 @@ public interface RemoteThing<
      * @param attribute The Attribute to which a Relation is created
      * @return The Relation connecting the Thing and the Attribute
      */
-    RemoteRelation relhas(Attribute<?> attribute);
+    RemoteRelation relhas(Attribute<?, ?, ?> attribute);
 
     /**
      * Retrieves a collection of Attribute attached to this Thing
@@ -101,10 +99,10 @@ public interface RemoteThing<
      * @see RemoteAttribute
      */
     @CheckReturnValue
-    Stream<RemoteAttribute<?>> attributes(AttributeType<?>... attributeTypes);
+    Stream<RemoteAttribute<?>> attributes(AttributeType<?, ?, ?>... attributeTypes);
 
     @CheckReturnValue
-    <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T> attributeType);
+    <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T, ?, ?> attributeType);
 
     /**
      * Retrieves a collection of Attribute attached to this Thing as a key
@@ -114,10 +112,10 @@ public interface RemoteThing<
      * @see RemoteAttribute
      */
     @CheckReturnValue
-    Stream<RemoteAttribute<?>> keys(AttributeType<?>... attributeTypes);
+    Stream<RemoteAttribute<?>> keys(AttributeType<?, ?, ?>... attributeTypes);
 
     @CheckReturnValue
-    <T> Stream<RemoteAttribute<T>> keys(AttributeType<T> attributeType);
+    <T> Stream<RemoteAttribute<T>> keys(AttributeType<T, ?, ?> attributeType);
 
     /**
      * Removes the provided Attribute from this Thing
@@ -125,7 +123,7 @@ public interface RemoteThing<
      * @param attribute the Attribute to be removed
      * @return The Thing itself
      */
-    SomeRemoteThing unhas(Attribute<?> attribute);
+    SomeRemoteThing unhas(Attribute<?, ?, ?> attribute);
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -139,7 +137,7 @@ public interface RemoteThing<
     @Deprecated
     @CheckReturnValue
     @Override
-    default RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType> asThing() {
+    default RemoteThing<SomeRemoteThing, SomeRemoteType> asThing() {
         return this;
     }
 

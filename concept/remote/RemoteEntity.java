@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Entity;
-import grakn.client.concept.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
@@ -33,7 +32,7 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface RemoteEntity extends Entity, RemoteThing<RemoteEntity, RemoteEntityType, Entity, EntityType> {
+public interface RemoteEntity extends Entity<RemoteEntity, RemoteEntityType>, RemoteThing<RemoteEntity, RemoteEntityType> {
 
     static RemoteEntity of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteEntityImpl(tx, id);
@@ -55,7 +54,7 @@ public interface RemoteEntity extends Entity, RemoteThing<RemoteEntity, RemoteEn
      * @return The instance itself
      */
     @Override
-    RemoteEntity has(Attribute<?> attribute);
+    RemoteEntity has(Attribute<?, ?, ?> attribute);
 
     /**
      * Removes the provided Attribute from this Entity
@@ -64,7 +63,7 @@ public interface RemoteEntity extends Entity, RemoteThing<RemoteEntity, RemoteEn
      * @return The Entity itself
      */
     @Override
-    RemoteEntity unhas(Attribute<?> attribute);
+    RemoteEntity unhas(Attribute<?, ?, ?> attribute);
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

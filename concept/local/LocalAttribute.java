@@ -17,28 +17,19 @@
  * under the License.
  */
 
-package grakn.client.concept.remote;
+package grakn.client.concept.local;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.Attribute;
 
 /**
- * Client implementation of Entity
+ * Represent a literal Attribute in the graph.
+ * Acts as an Thing when relating to other instances except it has the added functionality of:
+ * 1. It is unique to its AttributeType based on it's value.
+ * 2. It has an AttributeType.DataType associated with it which constrains the allowed values.
+ *
+ * @param <D> The data type of this resource type.
+ *            Supported Types include: String, Long, Double, and Boolean
  */
-class RemoteEntityImpl extends RemoteThingImpl<RemoteEntity, RemoteEntityType>
-        implements RemoteEntity {
-
-    RemoteEntityImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
-    }
-
-    @Override
-    final RemoteEntityType asCurrentType(RemoteConcept<?> concept) {
-        return concept.asEntityType();
-    }
-
-    @Override
-    final RemoteEntity asCurrentBaseType(RemoteConcept<?> other) {
-        return other.asEntity();
-    }
+public interface LocalAttribute<D> extends LocalThing<LocalAttribute<D>, LocalAttributeType<D>>,
+        Attribute<D, LocalAttribute<D>, LocalAttributeType<D>> {
 }

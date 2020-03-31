@@ -22,7 +22,7 @@ package grakn.client.test.integration.concept;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
-import grakn.client.concept.AttributeType;
+import grakn.client.concept.DataType;
 import grakn.client.concept.remote.RemoteAttribute;
 import grakn.client.concept.remote.RemoteAttributeType;
 import grakn.client.concept.remote.RemoteEntity;
@@ -163,9 +163,9 @@ public class RemoteConceptIT {
         tx = session.transaction().write();
 
         // Attribute Types
-        email = tx.putAttributeType(EMAIL, AttributeType.DataType.STRING).regex(EMAIL_REGEX);
-        name = tx.putAttributeType(NAME, AttributeType.DataType.STRING);
-        age = tx.putAttributeType(AGE, AttributeType.DataType.INTEGER);
+        email = tx.putAttributeType(EMAIL, DataType.STRING).regex(EMAIL_REGEX);
+        name = tx.putAttributeType(NAME, DataType.STRING);
+        age = tx.putAttributeType(AGE, DataType.INTEGER);
 
         // Entity Types
         livingThing = tx.putEntityType(LIVING_THING).isAbstract(true);
@@ -256,18 +256,18 @@ public class RemoteConceptIT {
 
     @Test
     public void whenCallingGetDataTypeOnAttributeType_GetTheExpectedResult() {
-        assertEquals(AttributeType.DataType.STRING, email.dataType());
-        assertEquals(AttributeType.DataType.STRING, name.dataType());
-        assertEquals(AttributeType.DataType.INTEGER, age.dataType());
+        assertEquals(DataType.STRING, email.dataType());
+        assertEquals(DataType.STRING, name.dataType());
+        assertEquals(DataType.INTEGER, age.dataType());
     }
 
     @Test
     public void whenCallingGetDataTypeOnAttribute_GetTheExpectedResult() {
-        assertEquals(AttributeType.DataType.STRING, emailAlice.dataType());
-        assertEquals(AttributeType.DataType.STRING, emailBob.dataType());
-        assertEquals(AttributeType.DataType.STRING, nameAlice.dataType());
-        assertEquals(AttributeType.DataType.STRING, nameBob.dataType());
-        assertEquals(AttributeType.DataType.INTEGER, age20.dataType());
+        assertEquals(DataType.STRING, emailAlice.dataType());
+        assertEquals(DataType.STRING, emailBob.dataType());
+        assertEquals(DataType.STRING, nameAlice.dataType());
+        assertEquals(DataType.STRING, nameBob.dataType());
+        assertEquals(DataType.INTEGER, age20.dataType());
     }
 
     @Test
@@ -534,7 +534,7 @@ public class RemoteConceptIT {
 
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
-        RemoteAttributeType<String> username = tx.putAttributeType(Label.of("username"), AttributeType.DataType.STRING);
+        RemoteAttributeType<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
         person.key(username);
         assertTrue(person.keys().anyMatch(c -> c.equals(username)));
 

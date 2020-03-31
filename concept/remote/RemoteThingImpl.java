@@ -23,8 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
+import grakn.client.concept.Role;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -35,16 +34,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Thing
  *
- * @param <SomeThing> The exact type of this class
- * @param <SomeType>  the type of an instance of this class
+ * @param <SomeRemoteThing> The exact type of this class
+ * @param <SomeRemoteType>  the type of an instance of this class
  */
 public abstract class RemoteThingImpl<
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>>
-        extends RemoteConceptImpl<SomeRemoteThing, SomeThing>
-        implements RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType> {
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType>,
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing>>
+        extends RemoteConceptImpl<SomeRemoteThing>
+        implements RemoteThing<SomeRemoteThing, SomeRemoteType> {
 
     RemoteThingImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -68,7 +65,7 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final Stream<RemoteAttribute<?>> keys(AttributeType<?>... attributeTypes) {
+    public final Stream<RemoteAttribute<?>> keys(AttributeType<?, ?, ?>... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
                                          .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
@@ -78,17 +75,17 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final <T> Stream<RemoteAttribute<T>> keys(AttributeType<T> attributeType) {
+    public final <T> Stream<RemoteAttribute<T>> keys(AttributeType<T, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingKeysReq(ConceptProto.Thing.Keys.Req.newBuilder()
                         .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
 
         int iteratorId = runMethod(method).getThingKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getThingKeysIterRes().getAttribute()).map(RemoteConcept::asAttribute);
+        return conceptStream(tx(), iteratorId, res -> res.getThingKeysIterRes().getAttribute());
     }
 
     @Override
-    public final Stream<RemoteAttribute<?>> attributes(AttributeType<?>... attributeTypes) {
+    public final Stream<RemoteAttribute<?>> attributes(AttributeType<?, ?, ?>... attributeTypes) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
                                                .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
@@ -98,7 +95,7 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T> attributeType) {
+    public final <T> Stream<RemoteAttribute<T>> attributes(AttributeType<T, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingAttributesReq(ConceptProto.Thing.Attributes.Req.newBuilder()
                         .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
@@ -108,7 +105,7 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final Stream<RemoteRelation> relations(RemoteRole... roles) {
+    public final Stream<RemoteRelation> relations(Role<?>... roles) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingRelationsReq(ConceptProto.Thing.Relations.Req.newBuilder()
                                               .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
@@ -127,13 +124,13 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final SomeRemoteThing has(Attribute<?> attribute) {
+    public final SomeRemoteThing has(Attribute<?, ?, ?> attribute) {
         relhas(attribute);
         return asCurrentBaseType(this);
     }
 
     @Deprecated
-    public final RemoteRelation relhas(Attribute<?> attribute) {
+    public final RemoteRelation relhas(Attribute<?, ?, ?> attribute) {
         // TODO: replace usage of this method as a getter, with relations(Attribute attribute)
         // TODO: then remove this method altogether and just use has(Attribute attribute)
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -144,7 +141,7 @@ public abstract class RemoteThingImpl<
     }
 
     @Override
-    public final SomeRemoteThing unhas(Attribute<?> attribute) {
+    public final SomeRemoteThing unhas(Attribute<?, ?, ?> attribute) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setThingUnhasReq(ConceptProto.Thing.Unhas.Req.newBuilder()
                                           .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
@@ -153,5 +150,5 @@ public abstract class RemoteThingImpl<
         return asCurrentBaseType(this);
     }
 
-    abstract SomeRemoteType asCurrentType(RemoteConcept<?, ?> concept);
+    abstract SomeRemoteType asCurrentType(RemoteConcept<?> concept);
 }

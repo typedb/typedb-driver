@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * This ontological element defines the Role which make up a RelationType.
  * It behaves similarly to SchemaConcept when relating to other types.
  */
-public interface RemoteRole extends Role, RemoteSchemaConcept<RemoteRole, Role> {
+public interface RemoteRole extends Role<RemoteRole>, RemoteSchemaConcept<RemoteRole> {
 
     static RemoteRole of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteRoleImpl(tx, id);
@@ -54,7 +54,7 @@ public interface RemoteRole extends Role, RemoteSchemaConcept<RemoteRole, Role> 
      * @param type The super of this Role
      * @return The Role itself
      */
-    RemoteRole sup(RemoteRole type);
+    RemoteRole sup(Role<?> type);
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -88,7 +88,7 @@ public interface RemoteRole extends Role, RemoteSchemaConcept<RemoteRole, Role> 
      * @see RemoteType
      */
     @CheckReturnValue
-    Stream<RemoteType<?, ?, ?, ?>> players();
+    Stream<RemoteType<?, ?>> players();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

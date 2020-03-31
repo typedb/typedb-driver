@@ -17,28 +17,41 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteEntity;
-import grakn.client.concept.remote.RemoteEntityType;
+import grakn.client.concept.Concept;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Entity
+ * Client implementation of Thing
+ *
+ * @param <SomeThing> The exact type of this class
+ * @param <SomeType>  the type of an instance of this class
  */
-class EntityImpl extends ThingImpl<Entity, EntityType, RemoteEntity, RemoteEntityType> implements Entity {
+public abstract class ThingImpl<
+        SomeThing extends LocalThing<SomeThing, SomeType>,
+        SomeType extends LocalType<SomeType, SomeThing>>
+        extends ConceptImpl<SomeThing>
+        implements LocalThing<SomeThing, SomeType> {
 
-    EntityImpl(ConceptProto.Concept concept) {
+    private final SomeType type;
+    private final boolean inferred;
+
+    protected ThingImpl(ConceptProto.Concept concept) {
         super(concept);
+        this.type = LocalConcept.of(concept.getTypeRes().getType());
+        this.inferred = concept.getInferredRes().getInferred();
     }
 
     @Override
-    final EntityType asCurrentType(Concept<?, ?> concept) {
-        return concept.asEntityType();
+    public final SomeType type() {
+        return type;
     }
 
     @Override
-    final Entity asCurrentBaseType(Concept<?, ?> other) {
-        return other.asEntity();
+    public final boolean isInferred() {
+        return inferred;
     }
+
+    abstract SomeType asCurrentType(Concept<?> concept);
 }

@@ -17,33 +17,43 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteSchemaConcept;
+import grakn.client.concept.Concept;
+import grakn.client.concept.DataType;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of SchemaConcept
+ * Client implementation of Attribute
  *
- * @param <SomeSchemaConcept> The exact type of this class
+ * @param <D> The data type of this attribute
  */
-public abstract class SchemaConceptImpl<
-        SomeSchemaConcept extends SchemaConcept<SomeSchemaConcept, SomeRemoteSchemaConcept>,
-        SomeRemoteSchemaConcept extends RemoteSchemaConcept<SomeRemoteSchemaConcept, SomeSchemaConcept>>
-        extends ConceptImpl<SomeSchemaConcept, SomeRemoteSchemaConcept>
-        implements SchemaConcept<SomeSchemaConcept, SomeRemoteSchemaConcept> {
+class AttributeImpl<D> extends ThingImpl<LocalAttribute<D>, LocalAttributeType<D>> implements LocalAttribute<D> {
 
-    private final Label label;
+    private final D value;
 
-    protected SchemaConceptImpl(ConceptProto.Concept concept) {
+    AttributeImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.label = Label.of(concept.getLabelRes().getLabel());
+        this.value = DataType.staticCastValue(concept.getValueRes().getValue());
     }
 
     @Override
-    public final Label label() {
-        return label;
+    public final D value() {
+        return value;
     }
 
-    abstract boolean equalsCurrentBaseType(Concept<?, ?> other);
+    @Override
+    public final DataType<D> dataType() {
+        return type().dataType();
+    }
+
+    @Override
+    final LocalAttributeType<D> asCurrentType(Concept<?> concept) {
+        return (LocalAttributeType<D>) concept.asAttributeType();
+    }
+
+    @Override
+    final LocalAttribute<D> asCurrentBaseType(Concept<?> other) {
+        return (LocalAttribute<D>) other.asAttribute();
+    }
 }

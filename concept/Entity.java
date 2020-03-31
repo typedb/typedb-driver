@@ -31,7 +31,8 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity extends Thing<Entity, EntityType, RemoteEntity, RemoteEntityType> {
+public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
+        SomeType extends EntityType<SomeType, SomeThing>> extends Thing<SomeThing, SomeType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -39,14 +40,14 @@ public interface Entity extends Thing<Entity, EntityType, RemoteEntity, RemoteEn
      * @see EntityType
      */
     @Override
-    EntityType type();
+    SomeType type();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Entity asEntity() {
-        return this;
+    default SomeThing asEntity() {
+        return (SomeThing) this;
     }
 
     @CheckReturnValue

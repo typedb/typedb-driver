@@ -25,6 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.Relation;
 import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -34,8 +35,8 @@ import java.util.stream.Stream;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RemoteRelationType extends RelationType,
-        RemoteType<RemoteRelationType, RemoteRelation, RelationType, Relation> {
+public interface RemoteRelationType extends RelationType<RemoteRelationType, RemoteRelation>,
+        RemoteType<RemoteRelationType, RemoteRelation> {
 
     static RemoteRelationType of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteRelationTypeImpl(tx, id);
@@ -56,7 +57,7 @@ public interface RemoteRelationType extends RelationType,
      * @param superRelationType The super type to set.
      * @return This concept itself.
      */
-    RemoteRelationType sup(RelationType superRelationType);
+    RemoteRelationType sup(RelationType<?, ?> superRelationType);
 
     /**
      * Changes the Label of this Concept to a new one.
@@ -74,7 +75,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The Type itself.
      */
     @Override
-    RemoteRelationType key(AttributeType<?> attributeType);
+    RemoteRelationType key(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Creates a RelationType which allows this type and a resource type to be linked.
@@ -83,7 +84,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The Type itself.
      */
     @Override
-    RemoteRelationType has(AttributeType<?> attributeType);
+    RemoteRelationType has(AttributeType<?, ?, ?> attributeType);
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -105,7 +106,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The RelationType itself.
      * @see RemoteRole
      */
-    RemoteRelationType relates(RemoteRole role);
+    RemoteRelationType relates(Role<?> role);
 
     //------------------------------------- Other ----------------------------------
 
@@ -116,7 +117,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The RelationType itself.
      * @see RemoteRole
      */
-    RemoteRelationType unrelate(RemoteRole role);
+    RemoteRelationType unrelate(Role<?> role);
 
     //---- Inherited Methods
 
@@ -152,7 +153,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The RelationType itself.
      */
     @Override
-    RemoteRelationType plays(RemoteRole role);
+    RemoteRelationType plays(Role<?> role);
 
     /**
      * Removes the ability of this RelationType to play a specific Role
@@ -161,7 +162,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The Rule itself.
      */
     @Override
-    RemoteRelationType unplay(RemoteRole role);
+    RemoteRelationType unplay(Role<?> role);
 
     /**
      * Removes the ability for Things of this RelationType to have Attributes of type AttributeType
@@ -170,7 +171,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The RelationType itself.
      */
     @Override
-    RemoteRelationType unhas(AttributeType<?> attributeType);
+    RemoteRelationType unhas(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Removes AttributeType as a key to this RelationType
@@ -179,7 +180,7 @@ public interface RemoteRelationType extends RelationType,
      * @return The RelationType itself.
      */
     @Override
-    RemoteRelationType unkey(AttributeType<?> attributeType);
+    RemoteRelationType unkey(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Retrieve all the Relation instances of this RelationType

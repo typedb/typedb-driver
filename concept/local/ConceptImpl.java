@@ -17,9 +17,10 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -27,10 +28,7 @@ import grakn.protocol.session.ConceptProto;
  *
  * @param <SomeConcept> represents the actual class of object to downcast to
  */
-public abstract class ConceptImpl<
-        SomeConcept extends Concept<SomeConcept, SomeRemoteConcept>,
-        SomeRemoteConcept extends RemoteConcept<SomeRemoteConcept, SomeConcept>>
-        implements Concept<SomeConcept, SomeRemoteConcept> {
+public abstract class ConceptImpl<SomeConcept extends LocalConcept<SomeConcept>> implements LocalConcept<SomeConcept> {
 
     private final ConceptId id;
 
@@ -53,7 +51,7 @@ public abstract class ConceptImpl<
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ConceptImpl<?, ?> that = (ConceptImpl<?, ?>) o;
+        ConceptImpl<?> that = (ConceptImpl<?>) o;
 
         return id.equals(that.id());
     }
@@ -66,5 +64,5 @@ public abstract class ConceptImpl<
         return h;
     }
 
-    abstract SomeConcept asCurrentBaseType(Concept<?, ?> other);
+    abstract SomeConcept asCurrentBaseType(Concept<?> other);
 }

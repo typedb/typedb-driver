@@ -17,43 +17,36 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteAttribute;
-import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.Relation;
+import grakn.client.concept.RelationType;
+import grakn.client.concept.remote.RemoteRelation;
+import grakn.client.concept.remote.RemoteRelationType;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Attribute
- *
- * @param <D> The data type of this attribute
+ * Client implementation of RelationType
  */
-class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>, RemoteAttribute<D>, RemoteAttributeType<D>> implements Attribute<D> {
+class RelationTypeImpl extends TypeImpl<LocalRelationType, LocalRelation> implements LocalRelationType {
 
-    private final D value;
-
-    AttributeImpl(ConceptProto.Concept concept) {
+    RelationTypeImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.value = AttributeType.DataType.staticCastValue(concept.getValueRes().getValue());
     }
 
     @Override
-    public final D value() {
-        return value;
+    final LocalRelationType asCurrentBaseType(Concept<?> other) {
+        return (LocalRelationType) other.asRelationType();
     }
 
     @Override
-    public final AttributeType.DataType<D> dataType() {
-        return type().dataType();
+    final boolean equalsCurrentBaseType(Concept<?> other) {
+        return other.isRelationType();
     }
 
     @Override
-    final AttributeType<D> asCurrentType(Concept<?, ?> concept) {
-        return (AttributeType<D>) concept.asAttributeType();
-    }
-
-    @Override
-    final Attribute<D> asCurrentBaseType(Concept<?, ?> other) {
-        return (Attribute<D>) other.asAttribute();
+    protected final LocalRelation asInstance(Concept<?> concept) {
+        return (LocalRelation) concept.asRelation();
     }
 }

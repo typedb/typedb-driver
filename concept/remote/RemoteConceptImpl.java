@@ -20,7 +20,6 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
@@ -33,12 +32,10 @@ import static java.util.Objects.requireNonNull;
 /**
  * Client implementation of Concept
  *
- * @param <SomeConcept> represents the actual class of object to downcast to
+ * @param <SomeRemoteConcept> represents the actual class of object to downcast to
  */
-abstract class RemoteConceptImpl<
-        SomeRemoteConcept extends RemoteConcept<SomeRemoteConcept, SomeConcept>,
-        SomeConcept extends Concept<SomeConcept, SomeRemoteConcept>>
-        implements RemoteConcept<SomeRemoteConcept, SomeConcept> {
+abstract class RemoteConceptImpl<SomeRemoteConcept extends RemoteConcept<SomeRemoteConcept>>
+        implements RemoteConcept<SomeRemoteConcept> {
 
     private final GraknClient.Transaction tx;
     private final ConceptId id;
@@ -77,7 +74,7 @@ abstract class RemoteConceptImpl<
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RemoteConceptImpl<?, ?> that = (RemoteConceptImpl<?, ?>) o;
+        RemoteConceptImpl<?> that = (RemoteConceptImpl<?>) o;
 
         return (tx.equals(that.tx())) &&
                 id.equals(that.id());
@@ -97,10 +94,10 @@ abstract class RemoteConceptImpl<
         return tx;
     }
 
-    abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<?, ?> other);
+    abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<?> other);
 
 
-    static <R extends RemoteConcept<R, C>, C extends Concept<C, R>>
+    static <R extends RemoteConcept<R>>
     Stream<R> conceptStream(GraknClient.Transaction tx,
                             int iteratorId,
                             Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {

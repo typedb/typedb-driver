@@ -30,7 +30,10 @@ import javax.annotation.CheckReturnValue;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType extends Type<RelationType, Relation, RemoteRelationType, RemoteRelation> {
+public interface RelationType<
+        SomeType extends RelationType<SomeType, SomeThing>,
+        SomeThing extends Relation<SomeThing, SomeType>>
+        extends Type<SomeType, SomeThing> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue

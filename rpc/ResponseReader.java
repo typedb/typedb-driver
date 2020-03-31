@@ -36,7 +36,6 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
 
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.remote.RemoteConcept;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -54,22 +53,23 @@ import static java.util.stream.Collectors.toSet;
  */
 public class ResponseReader {
 
-    public static Answer answer(AnswerProto.Answer res, GraknClient.Transaction tx) {
+    @SuppressWarnings("unchecked")
+    public static <T extends Answer> T answer(AnswerProto.Answer res, GraknClient.Transaction tx) {
         switch (res.getAnswerCase()) {
             case ANSWERGROUP:
-                return answerGroup(res.getAnswerGroup(), tx);
+                return (T) answerGroup(res.getAnswerGroup(), tx);
             case CONCEPTMAP:
-                return conceptMap(res.getConceptMap(), tx);
+                return (T) conceptMap(res.getConceptMap(), tx);
             case CONCEPTLIST:
-                return conceptList(res.getConceptList());
+                return (T) conceptList(res.getConceptList());
             case CONCEPTSET:
-                return conceptSet(res.getConceptSet());
+                return (T) conceptSet(res.getConceptSet());
             case CONCEPTSETMEASURE:
-                return conceptSetMeasure(res.getConceptSetMeasure());
+                return (T) conceptSetMeasure(res.getConceptSetMeasure());
             case VALUE:
-                return value(res.getValue());
+                return (T) value(res.getValue());
             case VOID:
-                return voidAnswer(res.getVoid());
+                return (T) voidAnswer(res.getVoid());
             default:
             case ANSWER_NOT_SET:
                 throw new IllegalArgumentException("Unexpected " + res);
@@ -90,7 +90,7 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, RemoteConcept<?, ?>> variableMap = new HashMap<>();
+        Map<Variable, RemoteConcept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(new Variable(resVar), RemoteConcept.of(resConcept, tx))
         );

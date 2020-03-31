@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface RemoteRule extends Rule, RemoteSchemaConcept<RemoteRule, Rule> {
+public interface RemoteRule extends Rule<RemoteRule>, RemoteSchemaConcept<RemoteRule> {
 
     static RemoteRule of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteRuleImpl(tx, id);
@@ -75,7 +75,7 @@ public interface RemoteRule extends Rule, RemoteSchemaConcept<RemoteRule, Rule> 
      * @param superRule The super of this Rule
      * @return The Rule itself
      */
-    RemoteRule sup(RemoteRule superRule);
+    RemoteRule sup(Rule<?> superRule);
 
     /**
      * @return All the super-types of this this Rule

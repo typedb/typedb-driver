@@ -17,19 +17,20 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
+import grakn.client.concept.Concept;
+import grakn.client.concept.MetaType;
+import grakn.client.concept.Thing;
 import grakn.client.concept.remote.RemoteMetaType;
 import grakn.client.concept.remote.RemoteThing;
 import grakn.protocol.session.ConceptProto;
 
 class MetaTypeImpl<
-        SomeType extends MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>,
-        SomeRemoteType extends RemoteMetaType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>>
-        extends TypeImpl<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>
-        implements MetaType<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing> {
+        SomeType extends LocalMetaType<SomeType, SomeThing>,
+        SomeThing extends LocalThing<SomeThing, SomeType>>
+        extends TypeImpl<SomeType, SomeThing>
+        implements LocalMetaType<SomeType, SomeThing> {
 
     MetaTypeImpl(ConceptProto.Concept concept) {
         super(concept);
@@ -37,18 +38,18 @@ class MetaTypeImpl<
 
     @SuppressWarnings("unchecked")
     @Override
-    protected SomeThing asInstance(Concept<?, ?> concept) {
+    protected SomeThing asInstance(Concept<?> concept) {
         return (SomeThing) concept.asThing();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    SomeType asCurrentBaseType(Concept<?, ?> other) {
+    SomeType asCurrentBaseType(Concept<?> other) {
         return (SomeType) other.asMetaType();
     }
 
     @Override
-    boolean equalsCurrentBaseType(Concept<?, ?> other) {
+    boolean equalsCurrentBaseType(Concept<?> other) {
         return other.isMetaType();
     }
 

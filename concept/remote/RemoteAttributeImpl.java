@@ -20,22 +20,20 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.DataType;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.concept.AttributeType.DataType.staticCastValue;
+import static grakn.client.concept.DataType.staticCastValue;
 
 /**
  * Client implementation of Attribute
  *
  * @param <D> The data type of this attribute
  */
-class RemoteAttributeImpl<D>
-        extends RemoteThingImpl<RemoteAttribute<D>, RemoteAttributeType<D>, Attribute<D>, AttributeType<D>>
+class RemoteAttributeImpl<D> extends RemoteThingImpl<RemoteAttribute<D>, RemoteAttributeType<D>>
         implements RemoteAttribute<D> {
 
     RemoteAttributeImpl(GraknClient.Transaction tx, ConceptId id) {
@@ -52,7 +50,7 @@ class RemoteAttributeImpl<D>
     }
 
     @Override
-    public final Stream<RemoteThing<?, ?, ?, ?>> owners() {
+    public final Stream<RemoteThing<?, ?>> owners() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
 
@@ -61,19 +59,19 @@ class RemoteAttributeImpl<D>
     }
 
     @Override
-    public final AttributeType.DataType<D> dataType() {
+    public final DataType<D> dataType() {
         return type().dataType();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    RemoteAttributeType<D> asCurrentType(RemoteConcept<?, ?> concept) {
+    RemoteAttributeType<D> asCurrentType(RemoteConcept<?> concept) {
         return (RemoteAttributeType<D>) concept.asAttributeType();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    final RemoteAttribute<D> asCurrentBaseType(RemoteConcept<?, ?> other) {
+    final RemoteAttribute<D> asCurrentBaseType(RemoteConcept<?> other) {
         return (RemoteAttribute<D>) other.asAttribute();
     }
 }

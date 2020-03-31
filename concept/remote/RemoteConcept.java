@@ -33,14 +33,11 @@ import javax.annotation.CheckReturnValue;
  *
  * Provides the basic RPCs to delete a concept and check if it is deleted.
  */
-public interface RemoteConcept<
-        RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
-        ConceptType extends Concept<ConceptType, RemoteConceptType>>
-        extends Concept<ConceptType, RemoteConceptType> {
+public interface RemoteConcept<RemoteConceptType extends RemoteConcept<RemoteConceptType>>
+        extends Concept<RemoteConceptType> {
 
     @SuppressWarnings("unchecked")
-    static <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
-            ConceptType extends Concept<ConceptType, RemoteConceptType>> RemoteConceptType
+    static <RemoteConceptType extends RemoteConcept<RemoteConceptType>> RemoteConceptType
     of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
         ConceptId id = ConceptId.of(concept.getId());
         switch (concept.getBaseType()) {
@@ -77,7 +74,7 @@ public interface RemoteConcept<
      */
     @Override
     @CheckReturnValue
-    default RemoteSchemaConcept<?, ?> asSchemaConcept() {
+    default RemoteSchemaConcept<?> asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, RemoteSchemaConcept.class);
     }
 
@@ -88,7 +85,7 @@ public interface RemoteConcept<
      */
     @Override
     @CheckReturnValue
-    default RemoteType<?, ?, ?, ?> asType() {
+    default RemoteType<?, ?> asType() {
         throw GraknConceptException.invalidCasting(this, RemoteType.class);
     }
 
@@ -99,7 +96,7 @@ public interface RemoteConcept<
      */
     @Override
     @CheckReturnValue
-    default RemoteThing<?, ?, ?, ?> asThing() {
+    default RemoteThing<?, ?> asThing() {
         throw GraknConceptException.invalidCasting(this, RemoteThing.class);
     }
 
@@ -188,7 +185,7 @@ public interface RemoteConcept<
     @SuppressWarnings("unchecked")
     @Override
     @CheckReturnValue
-    default <T> RemoteAttribute<T> asAttribute() {
+    default RemoteAttribute<?> asAttribute() {
         throw GraknConceptException.invalidCasting(this, RemoteAttribute.class);
     }
 

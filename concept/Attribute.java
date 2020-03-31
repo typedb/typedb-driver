@@ -1,40 +1,14 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteAttribute;
-import grakn.client.concept.remote.RemoteAttributeType;
 
 import javax.annotation.CheckReturnValue;
 
-/**
- * Represent a literal Attribute in the graph.
- * Acts as an Thing when relating to other instances except it has the added functionality of:
- * 1. It is unique to its AttributeType based on it's value.
- * 2. It has an AttributeType.DataType associated with it which constrains the allowed values.
- *
- * @param <D> The data type of this resource type.
- *            Supported Types include: String, Long, Double, and Boolean
- */
-public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>, RemoteAttribute<D>, RemoteAttributeType<D>> {
+public interface Attribute<D,
+        AttrThing extends Attribute<D, AttrThing, AttrType>,
+        AttrType extends AttributeType<D, AttrType, AttrThing>>
+        extends Thing<AttrThing, AttrType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -51,7 +25,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>, Remo
      * @return The AttributeType of which this resource is an Thing.
      */
     @Override
-    AttributeType<D> type();
+    AttrType type();
 
     /**
      * Retrieves the data type of this Attribute's AttributeType.
@@ -59,15 +33,15 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>, Remo
      * @return The data type of this Attribute's type.
      */
     @CheckReturnValue
-    AttributeType.DataType<D> dataType();
+    DataType<D> dataType();
 
     //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default Attribute<?> asAttribute() {
-        return this;
+    default AttrThing asAttribute() {
+        return (AttrThing) this;
     }
 
     @CheckReturnValue

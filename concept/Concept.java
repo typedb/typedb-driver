@@ -21,9 +21,6 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.remote.RemoteConcept;
-import grakn.client.concept.remote.RemoteThing;
-import grakn.client.concept.remote.RemoteType;
-import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
@@ -36,38 +33,7 @@ import javax.annotation.CheckReturnValue;
  * (EntityType, Role, RelationType, Rule or AttributeType)
  * or an Thing (Entity, Relation , Attribute).
  */
-public interface Concept<
-        ConceptType extends Concept<ConceptType, RemoteConceptType>,
-        RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>> {
-
-    @SuppressWarnings("unchecked")
-    static <RemoteConceptType extends RemoteConcept<RemoteConceptType, ConceptType>,
-            ConceptType extends Concept<ConceptType, RemoteConceptType>>
-        ConceptType of(ConceptProto.Concept concept) {
-        switch (concept.getBaseType()) {
-            case ENTITY:
-                return (ConceptType) new EntityImpl(concept);
-            case RELATION:
-                return (ConceptType) new RelationImpl(concept);
-            case ATTRIBUTE:
-                return (ConceptType) new AttributeImpl<>(concept);
-            case ENTITY_TYPE:
-                return (ConceptType) new EntityTypeImpl(concept);
-            case RELATION_TYPE:
-                return (ConceptType) new RelationTypeImpl(concept);
-            case ATTRIBUTE_TYPE:
-                return (ConceptType) new AttributeTypeImpl<>(concept);
-            case ROLE:
-                return (ConceptType) new RoleImpl(concept);
-            case RULE:
-                return (ConceptType) new RuleImpl(concept);
-            case META_TYPE:
-                return (ConceptType) new MetaTypeImpl<>(concept);
-            default:
-            case UNRECOGNIZED:
-                throw new IllegalArgumentException("Unrecognised " + concept);
-        }
-    }
+public interface Concept<ConceptType extends Concept<ConceptType>> {
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -87,7 +53,7 @@ public interface Concept<
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    default SchemaConcept<?, ?> asSchemaConcept() {
+    default SchemaConcept<?> asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
     }
 
@@ -97,7 +63,7 @@ public interface Concept<
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default Type<?, ?, ?, ?> asType() {
+    default Type<?, ?> asType() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -107,7 +73,7 @@ public interface Concept<
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    default Thing<?, ?, ?, ?> asThing() {
+    default Thing<?, ?> asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -117,7 +83,7 @@ public interface Concept<
      * @return A EntityType if the Concept is an EntityType
      */
     @CheckReturnValue
-    default EntityType asEntityType() {
+    default EntityType<?, ?> asEntityType() {
         throw GraknConceptException.invalidCasting(this, EntityType.class);
     }
 
@@ -127,7 +93,7 @@ public interface Concept<
      * @return A Role if the Concept is a Role
      */
     @CheckReturnValue
-    default Role asRole() {
+    default Role<?> asRole() {
         throw GraknConceptException.invalidCasting(this, Role.class);
     }
 
@@ -137,7 +103,7 @@ public interface Concept<
      * @return A RelationType if the Concept is a RelationType
      */
     @CheckReturnValue
-    default RelationType asRelationType() {
+    default RelationType<?, ?> asRelationType() {
         throw GraknConceptException.invalidCasting(this, RelationType.class);
     }
 
@@ -147,7 +113,7 @@ public interface Concept<
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default AttributeType<?> asAttributeType() {
+    default AttributeType<?, ?, ?> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -157,7 +123,7 @@ public interface Concept<
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    default Rule asRule() {
+    default Rule<?> asRule() {
         throw GraknConceptException.invalidCasting(this, Rule.class);
     }
 
@@ -167,7 +133,7 @@ public interface Concept<
      * @return An Entity if the Concept is a Thing
      */
     @CheckReturnValue
-    default Entity asEntity() {
+    default Entity<?, ?> asEntity() {
         throw GraknConceptException.invalidCasting(this, Entity.class);
     }
 
@@ -177,7 +143,7 @@ public interface Concept<
      * @return A Relation  if the Concept is a Relation
      */
     @CheckReturnValue
-    default Relation asRelation() {
+    default Relation<?, ?> asRelation() {
         throw GraknConceptException.invalidCasting(this, Relation.class);
     }
 
@@ -187,7 +153,7 @@ public interface Concept<
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default <T> Attribute<T> asAttribute() {
+    default Attribute<?, ?, ?> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -197,7 +163,7 @@ public interface Concept<
      * @return A MetaType if the Concept is a MetaType
      */
     @CheckReturnValue
-    default MetaType<?, ?, ?, ?> asMetaType() {
+    default MetaType<?, ?> asMetaType() {
         throw GraknConceptException.invalidCasting(this, MetaType.class);
     }
 
@@ -207,7 +173,7 @@ public interface Concept<
      * @param tx The transaction to use for the RPCs.
      * @return A remote concept using the given transaction to enable RPCs.
      */
-    RemoteConceptType asRemote(GraknClient.Transaction tx);
+    RemoteConcept<?> asRemote(GraknClient.Transaction tx);
 
     /**
      * Determine if the Concept is a SchemaConcept

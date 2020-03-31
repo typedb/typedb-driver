@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteAttribute;
-import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.DataType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -31,8 +31,7 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>, RemoteAttributeType<D>, RemoteAttribute<D>>
-        implements AttributeType<D> {
+class AttributeTypeImpl<D> extends TypeImpl<LocalAttributeType<D>, LocalAttribute<D>> implements LocalAttributeType<D> {
 
     private final DataType<D> dataType;
 
@@ -48,18 +47,18 @@ class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>, Remo
     }
 
     @Override
-    final AttributeType<D> asCurrentBaseType(Concept<?, ?> other) {
-        return (AttributeType<D>) other.asAttributeType();
+    final LocalAttributeType<D> asCurrentBaseType(Concept<?> other) {
+        return (LocalAttributeType<D>) other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
+    final boolean equalsCurrentBaseType(Concept<?> other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected Attribute<D> asInstance(Concept<?, ?> concept) {
-        return (Attribute<D>) concept.asAttribute();
+    protected LocalAttribute<D> asInstance(Concept<?> concept) {
+        return (LocalAttribute<D>) concept.asAttribute();
     }
 
 }

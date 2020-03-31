@@ -21,7 +21,6 @@ package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
 
 import javax.annotation.CheckReturnValue;
@@ -36,8 +35,8 @@ import java.util.stream.Stream;
  * @param <D> The data type of this resource type.
  *            Supported Types include: String, Long, Double, and Boolean
  */
-public interface RemoteAttribute<D> extends Attribute<D>,
-        RemoteThing<RemoteAttribute<D>, RemoteAttributeType<D>, Attribute<D>, AttributeType<D>> {
+public interface RemoteAttribute<D> extends Attribute<D, RemoteAttribute<D>, RemoteAttributeType<D>>,
+        RemoteThing<RemoteAttribute<D>, RemoteAttributeType<D>> {
 
     static <D> RemoteAttribute<D> of(GraknClient.Transaction tx, ConceptId id) {
         return new RemoteAttributeImpl<>(tx, id);
@@ -59,7 +58,7 @@ public interface RemoteAttribute<D> extends Attribute<D>,
      * @return The list of all Instances that possess this Attribute.
      */
     @CheckReturnValue
-    Stream<RemoteThing<?, ?, ?, ?>> owners();
+    Stream<RemoteThing<?, ?>> owners();
 
     /**
      * Creates a relation from this instance to the provided Attribute.
@@ -68,7 +67,7 @@ public interface RemoteAttribute<D> extends Attribute<D>,
      * @return The instance itself
      */
     @Override
-    RemoteAttribute<D> has(Attribute<?> attribute);
+    RemoteAttribute<D> has(Attribute<?, ?, ?> attribute);
 
     /**
      * Removes the provided Attribute from this Attribute
@@ -77,14 +76,14 @@ public interface RemoteAttribute<D> extends Attribute<D>,
      * @return The Attribute itself
      */
     @Override
-    RemoteAttribute<D> unhas(Attribute<?> attribute);
+    RemoteAttribute<D> unhas(Attribute<?, ?, ?> attribute);
 
     //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default RemoteAttribute<?> asAttribute() {
+    default RemoteAttribute<D> asAttribute() {
         return this;
     }
 

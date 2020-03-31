@@ -17,33 +17,32 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
+import grakn.client.concept.Concept;
+import grakn.client.concept.Relation;
+import grakn.client.concept.RelationType;
 import grakn.client.concept.remote.RemoteRelation;
 import grakn.client.concept.remote.RemoteRelationType;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of RelationType
+ * Client implementation of Relation
  */
-class RelationTypeImpl extends TypeImpl<RelationType, Relation, RemoteRelationType, RemoteRelation> implements RelationType {
+class RelationImpl extends ThingImpl<LocalRelation, LocalRelationType> implements LocalRelation {
 
-    RelationTypeImpl(ConceptProto.Concept concept) {
+    RelationImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final RelationType asCurrentBaseType(Concept<?, ?> other) {
-        return other.asRelationType();
+    final LocalRelationType asCurrentType(Concept<?> concept) {
+        return (LocalRelationType) concept.asRelationType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
-        return other.isRelationType();
+    final LocalRelation asCurrentBaseType(Concept<?> other) {
+        return (LocalRelation) other.asRelation();
     }
 
-    @Override
-    protected final Relation asInstance(Concept<?, ?> concept) {
-        return concept.asRelation();
-    }
 }

@@ -30,14 +30,17 @@ import javax.annotation.CheckReturnValue;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType extends Type<EntityType, Entity, RemoteEntityType, RemoteEntity> {
+public interface EntityType<
+        SomeType extends EntityType<SomeType, SomeThing>,
+        SomeThing extends Entity<SomeThing, SomeType>>
+        extends Type<SomeType, SomeThing> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default EntityType asEntityType() {
-        return this;
+    default SomeType asEntityType() {
+        return (SomeType) this;
     }
 
     @CheckReturnValue

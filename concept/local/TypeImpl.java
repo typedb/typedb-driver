@@ -17,28 +17,27 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteRole;
+import grakn.client.concept.Concept;
+import grakn.client.concept.Thing;
+import grakn.client.concept.Type;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Role
+ * Client implementation of Type
+ *
+ * @param <SomeType>  The exact type of this class
  */
-public class RoleImpl extends SchemaConceptImpl<Role, RemoteRole> implements Role {
+public abstract class TypeImpl<
+        SomeType extends LocalType<SomeType, SomeThing>,
+        SomeThing extends LocalThing<SomeThing, SomeType>>
+        extends SchemaConceptImpl<SomeType>
+        implements LocalType<SomeType, SomeThing> {
 
-    RoleImpl(ConceptProto.Concept concept) {
+    TypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
-    @Override
-    final Role asCurrentBaseType(Concept<?, ?> other) {
-        return other.asRole();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
-        return other.isRole();
-    }
-
+    protected abstract SomeThing asInstance(Concept<?> concept);
 }

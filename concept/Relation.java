@@ -31,7 +31,10 @@ import javax.annotation.CheckReturnValue;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation extends Thing<Relation, RelationType, RemoteRelation, RemoteRelationType> {
+public interface Relation<
+        SomeThing extends Relation<SomeThing, SomeType>,
+        SomeType extends RelationType<SomeType, SomeThing>>
+        extends Thing<SomeThing, SomeType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -41,14 +44,14 @@ public interface Relation extends Thing<Relation, RelationType, RemoteRelation, 
      * @see RelationType
      */
     @Override
-    RelationType type();
+    SomeType type();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Relation asRelation() {
-        return this;
+    default SomeThing asRelation() {
+        return (SomeThing) this;
     }
 
     @Override

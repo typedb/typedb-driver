@@ -17,11 +17,13 @@
  * under the License.
  */
 
-package grakn.client.concept.remote;
+package grakn.client.concept.local;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.Concept;
+import grakn.client.concept.Entity;
 import grakn.client.concept.EntityType;
+import grakn.client.concept.remote.RemoteEntity;
+import grakn.client.concept.remote.RemoteEntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -29,38 +31,25 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-class RemoteEntityTypeImpl extends RemoteTypeImpl<RemoteEntityType, RemoteEntity> implements RemoteEntityType {
+class EntityTypeImpl extends TypeImpl<LocalEntityType, LocalEntity> implements LocalEntityType {
 
-    RemoteEntityTypeImpl(GraknClient.Transaction tx, ConceptId id) {
-        super(tx, id);
+    public EntityTypeImpl(ConceptProto.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public final RemoteEntity create() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
-
-        return RemoteConcept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+    final LocalEntityType asCurrentBaseType(Concept<?> other) {
+        return (LocalEntityType) other.asEntityType();
     }
 
     @Override
-    public RemoteEntityType sup(EntityType<?, ?> superEntityType) {
-        return super.sup(superEntityType);
-    }
-
-    @Override
-    final RemoteEntityType asCurrentBaseType(RemoteConcept<?> other) {
-        return other.asEntityType();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
+    final boolean equalsCurrentBaseType(Concept<?> other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final RemoteEntity asInstance(RemoteConcept<?> concept) {
-        return concept.asEntity();
+    protected final LocalEntity asInstance(Concept<?> concept) {
+        return (LocalEntity) concept.asEntity();
     }
 
 }

@@ -24,6 +24,7 @@ import grakn.client.concept.Attribute;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Relation;
 import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
 import grakn.client.concept.Thing;
 
 import javax.annotation.CheckReturnValue;
@@ -37,8 +38,8 @@ import java.util.stream.Stream;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface RemoteRelation extends Relation,
-        RemoteThing<RemoteRelation, RemoteRelationType, Relation, RelationType> {
+public interface RemoteRelation extends Relation<RemoteRelation, RemoteRelationType>,
+        RemoteThing<RemoteRelation, RemoteRelationType> {
 
     static RemoteRelation of (GraknClient.Transaction tx, ConceptId id) {
         return new RemoteRelationImpl(tx, id);
@@ -53,7 +54,7 @@ public interface RemoteRelation extends Relation,
      * @return The instance itself
      */
     @Override
-    RemoteRelation has(Attribute<?> attribute);
+    RemoteRelation has(Attribute<?, ?, ?> attribute);
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -73,7 +74,7 @@ public interface RemoteRelation extends Relation,
      * @see RemoteRole
      */
     @CheckReturnValue
-    Map<RemoteRole, Set<RemoteThing<?, ?, ?, ?>>> rolePlayersMap();
+    Map<RemoteRole, Set<RemoteThing<?, ?>>> rolePlayersMap();
 
     /**
      * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
@@ -83,7 +84,7 @@ public interface RemoteRelation extends Relation,
      * @return a list of every Thing involved in the Relation.
      */
     @CheckReturnValue
-    Stream<RemoteThing<?, ?, ?, ?>> rolePlayers(RemoteRole... roles);
+    Stream<RemoteThing<?, ?>> rolePlayers(Role<?>... roles);
 
     /**
      * Expands this Relation to include a new role player which is playing a specific role.
@@ -92,7 +93,7 @@ public interface RemoteRelation extends Relation,
      * @param player The new role player.
      * @return The Relation itself.
      */
-    RemoteRelation assign(RemoteRole role, Thing<?, ?, ?, ?> player);
+    RemoteRelation assign(Role<?> role, Thing<?, ?> player);
 
     /**
      * Removes the provided Attribute from this Relation
@@ -101,7 +102,7 @@ public interface RemoteRelation extends Relation,
      * @return The Relation itself
      */
     @Override
-    RemoteRelation unhas(Attribute<?> attribute);
+    RemoteRelation unhas(Attribute<?, ?, ?> attribute);
 
     /**
      * Removes the Thing which is playing a Role in this Relation.
@@ -110,7 +111,7 @@ public interface RemoteRelation extends Relation,
      * @param role   The Role being played by the Thing
      * @param player The Thing playing the Role in this Relation
      */
-    void unassign(RemoteRole role, Thing<?, ?, ?, ?> player);
+    void unassign(Role<?> role, Thing<?, ?> player);
 
     //------------------------------------- Other ---------------------------------
     @Deprecated

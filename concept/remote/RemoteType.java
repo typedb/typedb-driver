@@ -22,6 +22,7 @@ package grakn.client.concept.remote;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.Label;
 import grakn.client.concept.RelationType;
+import grakn.client.concept.Role;
 import grakn.client.concept.Thing;
 import grakn.client.concept.Type;
 
@@ -34,12 +35,10 @@ import java.util.stream.Stream;
  * They also aid in categorising Thing to different types.
  */
 public interface RemoteType<
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>>
-        extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        RemoteSchemaConcept<SomeRemoteType, SomeType> {
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType>>
+        extends Type<SomeRemoteType, SomeRemoteThing>,
+        RemoteSchemaConcept<SomeRemoteType> {
 
     //------------------------------------- Modifiers ----------------------------------
 
@@ -63,7 +62,7 @@ public interface RemoteType<
      * @param role The Role Type which the instances of this Type are allowed to play.
      * @return The Type itself.
      */
-    SomeRemoteType plays(RemoteRole role);
+    SomeRemoteType plays(Role<?> role);
 
     /**
      * Creates a RelationType which allows this type and a AttributeType to be linked in a strictly one-to-one mapping.
@@ -71,7 +70,7 @@ public interface RemoteType<
      * @param attributeType The AttributeType which instances of this type should be allowed to play.
      * @return The Type itself.
      */
-    SomeRemoteType key(AttributeType<?> attributeType);
+    SomeRemoteType key(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Creates a RelationType which allows this type and a AttributeType  to be linked.
@@ -79,7 +78,7 @@ public interface RemoteType<
      * @param attributeType The AttributeType  which instances of this type should be allowed to play.
      * @return The Type itself.
      */
-    SomeRemoteType has(AttributeType<?> attributeType);
+    SomeRemoteType has(AttributeType<?, ?, ?> attributeType);
 
     //------------------------------------- Accessors ---------------------------------
 
@@ -142,7 +141,7 @@ public interface RemoteType<
      * @param role The Role which the Things of this Type should no longer be allowed to play.
      * @return The Type itself.
      */
-    SomeRemoteType unplay(RemoteRole role);
+    SomeRemoteType unplay(Role<?> role);
 
     /**
      * Removes the ability for Things of this Type to have Attributes of type AttributeType
@@ -150,7 +149,7 @@ public interface RemoteType<
      * @param attributeType the AttributeType which this Type can no longer have
      * @return The Type itself.
      */
-    SomeRemoteType unhas(AttributeType<?> attributeType);
+    SomeRemoteType unhas(AttributeType<?, ?, ?> attributeType);
 
     /**
      * Removes AttributeType as a key to this Type
@@ -158,12 +157,12 @@ public interface RemoteType<
      * @param attributeType the AttributeType which this Type can no longer have as a key
      * @return The Type itself.
      */
-    SomeRemoteType unkey(AttributeType<?> attributeType);
+    SomeRemoteType unkey(AttributeType<?, ?, ?> attributeType);
 
     @Deprecated
     @CheckReturnValue
     @Override
-    default RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> asType() {
+    default RemoteType<SomeRemoteType, SomeRemoteThing> asType() {
         return this;
     }
 

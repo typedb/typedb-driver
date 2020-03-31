@@ -29,12 +29,12 @@ import java.util.List;
  *
  * @param <T> the type of Answer being grouped
  */
-public class AnswerGroup<T extends Answer> implements Answer {
+public class AnswerGroup<T> implements Answer {
 
-    private final RemoteConcept owner;
+    private final RemoteConcept<?> owner;
     private final List<T> answers;
 
-    public AnswerGroup(RemoteConcept owner, List<T> answers) {
+    public AnswerGroup(RemoteConcept<?> owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
@@ -44,7 +44,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
         return false;
     }
 
-    public RemoteConcept owner() {
+    public RemoteConcept<?> owner() {
         return this.owner;
     }
 
@@ -56,7 +56,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        AnswerGroup a2 = (AnswerGroup) obj;
+        AnswerGroup<?> a2 = (AnswerGroup<?>) obj;
         return this.owner.equals(a2.owner) &&
                 this.answers.equals(a2.answers);
     }

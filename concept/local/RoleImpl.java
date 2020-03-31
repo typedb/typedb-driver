@@ -17,36 +17,30 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.local;
 
-import grakn.client.concept.remote.RemoteEntity;
-import grakn.client.concept.remote.RemoteEntityType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.Role;
+import grakn.client.concept.remote.RemoteRole;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of a MetaType, a special type of Type
- * TODO: This class is not defined in Concept API, and at server side implementation.
- * TODO: we should remove this class, or implement properly on server side.
+ * Client implementation of Role
  */
-class EntityTypeImpl extends TypeImpl<EntityType, Entity, RemoteEntityType, RemoteEntity> implements EntityType {
+public class RoleImpl extends SchemaConceptImpl<LocalRole> implements LocalRole {
 
-    public EntityTypeImpl(ConceptProto.Concept concept) {
+    RoleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final EntityType asCurrentBaseType(Concept<?, ?> other) {
-        return other.asEntityType();
+    final LocalRole asCurrentBaseType(Concept<?> other) {
+        return (LocalRole) other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Concept<?, ?> other) {
-        return other.isEntityType();
-    }
-
-    @Override
-    protected final Entity asInstance(Concept<?, ?> concept) {
-        return concept.asEntity();
+    final boolean equalsCurrentBaseType(Concept<?> other) {
+        return other.isRole();
     }
 
 }

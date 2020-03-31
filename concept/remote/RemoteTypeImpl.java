@@ -22,8 +22,7 @@ package grakn.client.concept.remote;
 import grakn.client.GraknClient;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
+import grakn.client.concept.Role;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -33,16 +32,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Type
  *
- * @param <SomeType>  The exact type of this class
- * @param <SomeThing> the exact type of instances of this class
+ * @param <SomeRemoteType>  The exact type of this class
+ * @param <SomeRemoteThing> the exact type of instances of this class
  */
 public abstract class RemoteTypeImpl<
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType, SomeThing, SomeType>,
-        SomeType extends Type<SomeType, SomeThing, SomeRemoteType, SomeRemoteThing>,
-        SomeThing extends Thing<SomeThing, SomeType, SomeRemoteThing, SomeRemoteType>>
-        extends RemoteSchemaConceptImpl<SomeRemoteType, SomeType>
-        implements RemoteType<SomeRemoteType, SomeRemoteThing, SomeType, SomeThing> {
+        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing>,
+        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType>>
+        extends RemoteSchemaConceptImpl<SomeRemoteType>
+        implements RemoteType<SomeRemoteType, SomeRemoteThing> {
 
     RemoteTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -108,7 +105,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType key(AttributeType<?> attributeType) {
+    public final SomeRemoteType key(AttributeType<?, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeKeyReq(ConceptProto.Type.Key.Req.newBuilder()
                                        .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
@@ -118,7 +115,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType has(AttributeType<?> attributeType) {
+    public final SomeRemoteType has(AttributeType<?, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeHasReq(ConceptProto.Type.Has.Req.newBuilder()
                                        .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
@@ -128,7 +125,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType plays(RemoteRole role) {
+    public final SomeRemoteType plays(Role<?> role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypePlaysReq(ConceptProto.Type.Plays.Req.newBuilder()
                                          .setRole(RequestBuilder.ConceptMessage.from(role))).build();
@@ -138,7 +135,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType unkey(AttributeType<?> attributeType) {
+    public final SomeRemoteType unkey(AttributeType<?, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnkeyReq(ConceptProto.Type.Unkey.Req.newBuilder()
                                          .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
@@ -148,7 +145,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType unhas(AttributeType<?> attributeType) {
+    public final SomeRemoteType unhas(AttributeType<?, ?, ?> attributeType) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnhasReq(ConceptProto.Type.Unhas.Req.newBuilder()
                                          .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
@@ -158,7 +155,7 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final SomeRemoteType unplay(RemoteRole role) {
+    public final SomeRemoteType unplay(Role<?> role) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setTypeUnplayReq(ConceptProto.Type.Unplay.Req.newBuilder()
                                           .setRole(RequestBuilder.ConceptMessage.from(role))).build();
@@ -167,5 +164,5 @@ public abstract class RemoteTypeImpl<
         return asCurrentBaseType(this);
     }
 
-    protected abstract SomeRemoteThing asInstance(RemoteConcept<SomeRemoteThing, SomeThing> concept);
+    protected abstract SomeRemoteThing asInstance(RemoteConcept<?> concept);
 }

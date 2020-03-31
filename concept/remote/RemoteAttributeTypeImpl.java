@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.DataType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * @param <D> The data type of this attribute type
  */
 class RemoteAttributeTypeImpl<D>
-        extends RemoteTypeImpl<RemoteAttributeType<D>, RemoteAttribute<D>, AttributeType<D>, Attribute<D>>
+        extends RemoteTypeImpl<RemoteAttributeType<D>, RemoteAttribute<D>>
         implements RemoteAttributeType<D> {
 
     RemoteAttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
@@ -63,7 +64,7 @@ class RemoteAttributeTypeImpl<D>
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return RemoteConcept.of(response.getAttribute(), tx()).asAttribute();
+                return RemoteConcept.of(response.getAttribute(), tx());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -97,6 +98,11 @@ class RemoteAttributeTypeImpl<D>
     }
 
     @Override
+    public RemoteAttributeType<D> sup(AttributeType<D, ?, ?> type) {
+        return super.sup(type);
+    }
+
+    @Override
     public final RemoteAttributeType<D> regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -108,17 +114,17 @@ class RemoteAttributeTypeImpl<D>
     }
 
     @Override
-    final RemoteAttributeType<D> asCurrentBaseType(RemoteConcept<?, ?> other) {
+    final RemoteAttributeType<D> asCurrentBaseType(RemoteConcept<?> other) {
         return (RemoteAttributeType<D>) other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected final RemoteAttribute<D> asInstance(RemoteConcept<RemoteAttribute<D>, Attribute<D>> concept) {
-        return concept.asAttribute();
+    protected final RemoteAttribute<D> asInstance(RemoteConcept<?> concept) {
+        return (RemoteAttribute<D>) concept.asAttribute();
     }
 }

@@ -29,14 +29,14 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Role
  */
-public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole, Role> implements RemoteRole {
+public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implements RemoteRole {
 
     RemoteRoleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public RemoteRole sup(RemoteRole superRole) {
+    public RemoteRole sup(Role<?> superRole) {
         return super.sup(superRole);
     }
 
@@ -49,7 +49,7 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole, Role> im
     }
 
     @Override
-    public final Stream<RemoteType<?, ?, ?, ?>> players() {
+    public final Stream<RemoteType<?, ?>> players() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
         int iteratorId = runMethod(method).getRolePlayersIter().getId();
@@ -57,12 +57,12 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole, Role> im
     }
 
     @Override
-    final RemoteRole asCurrentBaseType(RemoteConcept<?, ?> other) {
+    final RemoteRole asCurrentBaseType(RemoteConcept<?> other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?, ?> other) {
+    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
         return other.isRole();
     }
 

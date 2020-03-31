@@ -33,11 +33,9 @@ import java.util.stream.Stream;
  * 1. They have a unique Label which identifies them
  * 2. You can link them together into a hierarchical structure
  */
-public interface RemoteSchemaConcept<
-        RemoteSchemaConceptType extends RemoteSchemaConcept<RemoteSchemaConceptType, SchemaConceptType>,
-        SchemaConceptType extends SchemaConcept<SchemaConceptType, RemoteSchemaConceptType>>
-        extends SchemaConcept<SchemaConceptType, RemoteSchemaConceptType>,
-        RemoteConcept<RemoteSchemaConceptType, SchemaConceptType> {
+public interface RemoteSchemaConcept<RemoteSchemaConceptType extends RemoteSchemaConcept<RemoteSchemaConceptType>>
+        extends SchemaConcept<RemoteSchemaConceptType>,
+        RemoteConcept<RemoteSchemaConceptType> {
     //------------------------------------- Modifiers ----------------------------------
 
     /**
@@ -87,7 +85,7 @@ public interface RemoteSchemaConcept<
     @Deprecated
     @CheckReturnValue
     @Override
-    default RemoteSchemaConcept<RemoteSchemaConceptType, SchemaConceptType> asSchemaConcept() {
+    default RemoteSchemaConcept<RemoteSchemaConceptType> asSchemaConcept() {
         return this;
     }
 
