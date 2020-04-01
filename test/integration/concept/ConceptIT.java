@@ -47,6 +47,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +141,7 @@ public class ConceptIT {
     private Entity bob;
     private Relation aliceAndBob;
     private Relation selfEmployment;
+    private Relation selfFriendship;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -212,6 +214,7 @@ public class ConceptIT {
         // Relations
         aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
+        selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
 
         metaType = tx.getType(Label.of("thing"));
 
@@ -436,9 +439,16 @@ public class ConceptIT {
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
         Map<Role, List<Thing>> expected = new HashMap<>();
         expected.put(wife, Collections.singletonList(alice));
-        expected.put(husband, Collections.singletonList(bob)));
+        expected.put(husband, Collections.singletonList(bob));
 
         assertEquals(expected, aliceAndBob.rolePlayersMap());
+    }
+
+    @Test
+    public void whenCallingAllRolePlayers_GetExpectedDuplicates() {
+        Map<Role, List<Thing>> expected = new HashMap<>();
+        expected.put(friend, Arrays.asList(alice, alice));
+        assertEquals(expected, selfFriendship.rolePlayersMap());
     }
 
     @Test
