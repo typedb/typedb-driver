@@ -402,13 +402,13 @@ public class ConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer));
+        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
         assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment));
+        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
         assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
@@ -457,10 +457,10 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetDistinctExpectedResult() {
+    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetExpectedResult() {
         List<Thing> list = selfEmployment.rolePlayers().collect(toList());
-        assertEquals(1, list.size());
-        assertThat(list, containsInAnyOrder(alice));
+        assertEquals(2, list.size());
+        assertThat(list, containsInAnyOrder(alice, alice));
     }
 
     @Test
