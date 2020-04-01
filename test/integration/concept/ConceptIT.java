@@ -434,16 +434,16 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role, Set<Thing>> expected = new HashMap<>();
-        expected.put(wife, Collections.singleton(alice));
-        expected.put(husband, Collections.singleton(bob));
+        Map<Role, List<Thing>> expected = new HashMap<>();
+        expected.put(wife, Collections.singletonList(alice));
+        expected.put(husband, Collections.singletonList(bob)));
 
         assertEquals(expected, aliceAndBob.rolePlayersMap());
     }
 
     @Test
     public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers().collect(toSet()), containsInAnyOrder(alice, bob));
+        assertThat(aliceAndBob.rolePlayers().collect(toList()), containsInAnyOrder(alice, bob));
     }
 
     @Test
@@ -455,8 +455,8 @@ public class ConceptIT {
 
     @Test
     public void whenCallingRolePlayersWithRoles_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers(wife).collect(toSet()), containsInAnyOrder(alice));
-        assertThat(aliceAndBob.rolePlayers(husband).collect(toSet()), containsInAnyOrder(bob));
+        assertThat(aliceAndBob.rolePlayers(wife).collect(toList()), containsInAnyOrder(alice));
+        assertThat(aliceAndBob.rolePlayers(husband).collect(toList()), containsInAnyOrder(bob));
     }
 
     @Test
@@ -599,12 +599,12 @@ public class ConceptIT {
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toSet()), containsInAnyOrder(dylan, emily));
+        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan, emily));
 
         dylanAndEmily.unassign(friend, dylan);
         dylanAndEmily.unassign(friend, emily);
 
-        assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+        assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
 
