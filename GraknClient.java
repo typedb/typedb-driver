@@ -202,6 +202,8 @@ public class GraknClient implements AutoCloseable {
         private final Type type;
         private final Transceiver transceiver;
 
+        private int currentIteratorId = 1;
+
         public static class Builder {
 
             private ManagedChannel channel;
@@ -581,9 +583,10 @@ public class GraknClient implements AutoCloseable {
         }
 
         private int startIterator(GraqlQuery query, boolean infer) {
-            transceiver.send(RequestBuilder.Transaction.query(query.toString(), infer));
-            SessionProto.Transaction.Res txResponse = responseOrThrow();
-            return txResponse.getQueryIter().getId();
+            int iterId = currentIteratorId;
+            currentIteratorId++;
+            transceiver.send(RequestBuilder.Transaction.query(query.toString(), infer, iterId));
+            return iterId;
         }
 
         public void close() {

@@ -80,22 +80,11 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req query(GraqlQuery query) {
-            return query(query.toString(), true);
-        }
-
-        public static SessionProto.Transaction.Req query(GraqlQuery query, boolean infer) {
-            return query(query.toString(), infer);
-        }
-
-        public static SessionProto.Transaction.Req query(String queryString) {
-            return query(queryString, true);
-        }
-
-        public static SessionProto.Transaction.Req query(String queryString, boolean infer) {
+        public static SessionProto.Transaction.Req query(String queryString, boolean infer, int iterId) {
             SessionProto.Transaction.Query.Req request = SessionProto.Transaction.Query.Req.newBuilder()
                     .setQuery(queryString)
                     .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
+                    .setId(iterId)
                     .build();
             return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setQueryReq(request).build();
         }
