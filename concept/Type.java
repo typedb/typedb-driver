@@ -19,6 +19,9 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteType;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -36,6 +39,9 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
     default Type<SomeType, SomeThing> asType() {
         return this;
     }
+
+    @Override
+    RemoteType<?, ?> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue

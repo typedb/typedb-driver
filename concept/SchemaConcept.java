@@ -19,6 +19,9 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+import grakn.client.concept.remote.RemoteSchemaConcept;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -46,6 +49,9 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
     default SchemaConcept<SchemaConceptType> asSchemaConcept() {
         return this;
     }
+
+    @Override
+    RemoteSchemaConcept<?> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue

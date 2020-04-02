@@ -26,6 +26,8 @@ import grakn.protocol.session.SessionProto.Transaction;
 import grakn.protocol.session.SessionServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
@@ -51,6 +53,8 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
  */
 public class Transceiver implements AutoCloseable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
+
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
 
@@ -74,6 +78,7 @@ public class Transceiver implements AutoCloseable {
             if (responseListener.terminated.get()) {
                 throw GraknClientException.connectionClosed();
             }
+            LOG.trace("send:{}", request);
             requestSender.onNext(request);
         }
     }
@@ -84,6 +89,7 @@ public class Transceiver implements AutoCloseable {
     public Response receive() throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("receive")) {
             Response response = responseListener.poll();
+            LOG.trace("receive:{}", response);
             if (response.type() != Response.Type.OK) {
                 close();
             }

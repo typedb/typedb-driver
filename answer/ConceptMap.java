@@ -20,7 +20,7 @@
 package grakn.client.answer;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.exception.GraknClientException;
 import graql.lang.pattern.Pattern;
@@ -42,12 +42,12 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap implements Answer {
 
-    private final Map<Variable, RemoteConcept<?>> map;
+    private final Map<Variable, Concept<?>> map;
     private final boolean hasExplanation;
     private GraknClient.Transaction tx;
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<Variable, RemoteConcept<?>> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
+    public ConceptMap(Map<Variable, Concept<?>> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;
@@ -93,23 +93,23 @@ public class ConceptMap implements Answer {
     }
 
     @CheckReturnValue
-    public Map<Variable, RemoteConcept<?>> map() {
+    public Map<Variable, Concept<?>> map() {
         return map;
     }
 
 
-    public Collection<RemoteConcept<?>> concepts() {
+    public Collection<Concept<?>> concepts() {
         return map.values();
     }
 
     @CheckReturnValue
-    public RemoteConcept<?> get(String variable) {
+    public Concept<?> get(String variable) {
         return get(new Variable(variable));
     }
 
     @CheckReturnValue
-    public RemoteConcept<?> get(Variable var) {
-        RemoteConcept<?> Concept = map.get(var);
+    public Concept<?> get(Variable var) {
+        Concept<?> Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }

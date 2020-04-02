@@ -23,11 +23,8 @@ import com.google.common.collect.Iterators;
 import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.remote.RemoteAttribute;
+import grakn.client.concept.Concept;
 import grakn.client.concept.remote.RemoteAttributeType;
-import grakn.client.concept.remote.RemoteConcept;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.query.GraqlDefine;
@@ -45,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -169,7 +165,8 @@ public class GraqlSteps {
             RemoteAttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
             // remap each concept and save its key value into the map from variable to key value
             answer.map().forEach((var, concept) -> {
-                            answerKeys.put(var.name(), concept.asThing().attributes(keyType).findFirst().get().value().toString());
+                            answerKeys.put(var.name(), concept.asThing().asRemote(tx)
+                                    .attributes(keyType).findFirst().get().value().toString());
             });
 
             int matchingAnswers = 0;
@@ -227,7 +224,7 @@ public class GraqlSteps {
         while (matcher.find()) {
             String matched = matcher.group(0);
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-            RemoteConcept<?> concept = templateFiller.get(requiredVariable);
+            Concept<?> concept = templateFiller.get(requiredVariable);
 
             builder.append(template, i, matcher.start());
             if (concept == null) {
