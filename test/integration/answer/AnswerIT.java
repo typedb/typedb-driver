@@ -99,6 +99,8 @@ public class AnswerIT {
                 hasExplanation++;
                 Explanation explanation = answer.explanation();
                 assertEquals("transitive-ownership", explanation.getRule().label().toString());
+                assertEquals("{ (owned: $x, owner: $y) isa ownership; (owned: $y, owner: $z) isa ownership; };", explanation.getRule().when().toString());
+                assertEquals("{ (owned: $x, owner: $z) isa ownership; };", explanation.getRule().then().toString());
                 assertNotNull(explanation);
                 if (explanation.getAnswers().get(0).hasExplanation()) {
                     Explanation subExplanation = explanation.getAnswers().get(0).explanation();
