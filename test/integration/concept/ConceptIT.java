@@ -20,8 +20,6 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.answer.ConceptMap;
-import grakn.client.answer.Explanation;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.AttributeType;
 import grakn.client.concept.AttributeType.DataType;
@@ -36,9 +34,7 @@ import grakn.client.concept.Thing;
 import grakn.client.concept.Type;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
-import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
-import graql.lang.statement.Variable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -62,7 +58,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

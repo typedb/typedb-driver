@@ -89,14 +89,16 @@ public class AnswerIT {
         int hasExplanation = 0;
         int noExplanation = 0;
         for (ConceptMap answer : answers) {
+
+            assertTrue(answer.queryPattern().toString().length() > 0);
+            for (Variable var : answer.map().keySet()) {
+                assertTrue(answer.queryPattern().variables().contains(var));
+            }
+
             if (answer.hasExplanation()) {
                 hasExplanation++;
-                assertTrue(answer.queryPattern().toString().length() > 0);
-                for (Variable var : answer.map().keySet()) {
-                    assertTrue(answer.queryPattern().variables().contains(var));
-                }
-
                 Explanation explanation = answer.explanation();
+                assertEquals("transitive-ownership", explanation.getRule().label().toString());
                 assertNotNull(explanation);
                 if (explanation.getAnswers().get(0).hasExplanation()) {
                     Explanation subExplanation = explanation.getAnswers().get(0).explanation();
@@ -104,7 +106,6 @@ public class AnswerIT {
                 }
             } else {
                 noExplanation++;
-                assertNull( answer.queryPattern());
             }
         }
 
