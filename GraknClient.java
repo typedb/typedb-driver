@@ -836,8 +836,7 @@ public class GraknClient implements AutoCloseable {
          *
          * @param <T> class type of objects being iterated
          */
-        public class RPCIterator<T> extends AbstractIterator<T> {
-            private final ThreadTrace parentTrace;
+        public static class RPCIterator<T> extends AbstractIterator<T> {
             private final int iteratorId;
             private Transaction tx;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
@@ -846,8 +845,6 @@ public class GraknClient implements AutoCloseable {
                 this.tx = tx;
                 this.iteratorId = iteratorId;
                 this.responseReader = responseReader;
-
-                parentTrace = currentThreadTrace();
             }
 
 

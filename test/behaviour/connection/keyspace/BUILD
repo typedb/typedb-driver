@@ -17,7 +17,7 @@
 # under the License.
 #
 
-package(default_visibility = ["//visibility:__subpackages__"])
+package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
@@ -26,13 +26,13 @@ java_library(
         "KeyspaceSteps.java"
     ],
     deps = [
-        # Package dependencies
+        # Internal Package Dependencies
         "//test/behaviour/connection:steps",
 
-        # Grakn Labs dependencies
+        # Internal Repository Dependencies
         "@graknlabs_common//:common",
 
-        # External dependencies from Maven
+        # External Maven Dependencies
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ]
@@ -63,7 +63,7 @@ java_test(
         "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 # To run this test, you need to provide environment variables:
@@ -93,7 +93,7 @@ java_test(
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
 )
 
 checkstyle_test(

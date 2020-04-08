@@ -110,12 +110,11 @@ public class ConnectionSteps {
 
     @Given("connection does not have any keyspace")
     public void connection_does_not_have_any_keyspace() {
-        System.out.println(client.keyspaces().retrieve().toString());
         assertTrue(client.keyspaces().retrieve().isEmpty());
     }
 
     @After
-    public void close_transactions_and_sessions() throws ExecutionException, InterruptedException {
+    public void close_session_and_transactions() throws ExecutionException, InterruptedException {
         System.out.println("ConnectionSteps.after");
         if (sessions != null) {
             for (GraknClient.Session session : sessions) {

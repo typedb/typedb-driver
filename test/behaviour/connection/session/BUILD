@@ -26,11 +26,14 @@ java_library(
         "SessionSteps.java",
     ],
     deps = [
-        # Package dependencies
+        # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
 
-        # External dependencies from Maven
+        # Internal Repository Dependencies
+        "@graknlabs_common//:common",
+
+        # External Maven Dependencies
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ],
@@ -52,6 +55,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:session.feature",
@@ -85,6 +89,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:session.feature",
