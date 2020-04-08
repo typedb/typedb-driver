@@ -23,7 +23,8 @@ import com.google.common.collect.Iterators;
 import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
-import grakn.client.concept.AttributeType;
+import grakn.client.answer.Explanation;
+import grakn.client.concept.Attribute;
 import grakn.client.concept.Concept;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
@@ -37,11 +38,16 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -52,7 +58,7 @@ public class GraqlSteps {
     private static GraknClient.Transaction tx = null;
 
     private static List<ConceptMap> answers;
-    private static String answerConceptKey = null;
+    HashMap<String, UniquenessCheck> identifierChecks = new HashMap<>();
 
     @After
     public void close_transaction() {
@@ -149,38 +155,192 @@ public class GraqlSteps {
         assertEquals(expectedAnswers, answers.size());
     }
 
+    @Then("concept identifier symbols are")
+    public void concept_identifier_symbols_are(Map<String, Map<String, String>> identifiers) {
+        for (Map.Entry<String, Map<String, String>> entry : identifiers.entrySet()) {
+            String identifier = entry.getKey();
+            String type = entry.getValue().get("Identifier Type");
+            String value = entry.getValue().get("Identifier Value");
 
-    @Then("answer concepts all have key: {word}")
-    public void answer_concepts_have_key_labeled(String label) {
-        answerConceptKey = label;
-    }
-
-    @Then("answer keys are")
-    public void answer_keys_are(List<Map<String, String>> conceptKeys) {
-      assertEquals(conceptKeys.size(), answers.size());
-
-        for (ConceptMap answer : answers) {
-
-            Map<String, String> answerKeys = new HashMap<>();
-            AttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
-            // remap each concept and save its key value into the map from variable to key value
-            answer.map().forEach((var, concept) ->
-                            answerKeys.put(var.name(),
-                                    concept.asThing().attributes(keyType).findFirst().get().value().toString()));
-
-            int matchingAnswers = 0;
-            for (Map<String, String> expectedKeys : conceptKeys) {
-                if (expectedKeys.equals(answerKeys)) {
-                    matchingAnswers++;
-                }
+            switch (type) {
+                case "key":
+                    identifierChecks.put(identifier, new KeyUniquenessCheck(value));
+                    break;
+                case "value":
+                    identifierChecks.put(identifier, new ValueUniquenessCheck(value));
+                    break;
+                case "label":
+                    identifierChecks.put(identifier, new LabelUniquenessCheck(value));
+                    break;
+                default:
+                    throw new RuntimeException(String.format("Unrecognised Identifier Type \"%s\"", type));
             }
-
-            // we expect exactly one matching answer from the expected answer keys
-            assertEquals(1, matchingAnswers);
         }
     }
 
-    @Then("answers are labeled")
+    private interface UniquenessCheck {
+        boolean check(Concept concept);
+    }
+
+    public static class LabelUniquenessCheck implements UniquenessCheck {
+
+        private final String label;
+
+        LabelUniquenessCheck(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean check(Concept concept) {
+            return concept.isType() && label.equals(concept.asType().label().toString());
+        }
+    }
+
+    public static class AttributeUniquenessCheck {
+
+        protected final String type;
+        protected final String value;
+
+        AttributeUniquenessCheck(String typeAndValue) {
+            String[] s = typeAndValue.split(":");
+            assertEquals(2, s.length);
+            type = s[0];
+            value = s[1];
+        }
+    }
+
+    public static class ValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
+        ValueUniquenessCheck(String typeAndValue) {
+            super(typeAndValue);
+        }
+
+        public boolean check(Concept concept) {
+            return concept.isAttribute()
+            && type.equals(concept.asAttribute().type().label().toString())
+            && value.equals(concept.asAttribute().value().toString());
+        }
+    }
+
+    public static class KeyUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
+        KeyUniquenessCheck(String typeAndValue) {
+            super(typeAndValue);
+        }
+
+        /**
+         * Check that the given key is in the concept's keys
+         * @param concept to check
+         * @return whether the given key matches a key belonging to the concept
+         */
+        @Override
+        public boolean check(Concept concept) {
+            if(!concept.isThing()) { return false; }
+
+            Set<Attribute<?>> keys = concept.asThing().keys().collect(Collectors.toSet());
+            HashMap<String, String> keyMap = new HashMap<>();
+
+            for (Attribute<?> key : keys) {
+                keyMap.put(
+                        key.type().label().toString(),
+                        key.value().toString());
+            }
+            return value.equals(keyMap.get(type));
+        }
+    }
+
+    @Then("uniquely identify answer concepts by symbols")
+    public void uniquely_identify_answer_concepts_by_symbols(List<Map<String, String>> answersIdentifiers) {
+      assertEquals(answersIdentifiers.size(), answers.size());
+
+        for (ConceptMap answer : answers) {
+
+            List<Map<String, String>> matchingIdentifiers = matchingAnswers(answersIdentifiers, answer);
+
+            // we expect exactly one matching answer from the expected answer keys TODO This may no longer be true
+            assertEquals(1, matchingIdentifiers.size());
+        }
+    }
+
+    private List<Map<String, String>> matchingAnswers(List<Map<String, String>> answersIdentifiers, ConceptMap answer) {
+        List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
+
+        for (Map<String, String> answerIdentifiers : answersIdentifiers) {
+
+            if (matchAnswer(answerIdentifiers, answer)) {
+                matchingIdentifiers.add(answerIdentifiers);
+            }
+        }
+        return matchingIdentifiers;
+    }
+
+    private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
+        final boolean[] match = {true};
+
+        for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
+            String varName = entry.getKey();
+            String identifier = entry.getValue();
+
+            match[0] = match[0] && identifierChecks.get(identifier).check(answer.get(varName));
+        }
+        return match[0];
+    }
+
+    @Then("answers contain explanation tree")
+    public void answers_contain_explanation_tree(Map<Integer, Map<String, String>> explanationTree) {
+        checkExplanationContains(answers, explanationTree, 0);
+    }
+
+    private void checkExplanationContains(List<ConceptMap> answers, Map<Integer, Map<String, String>> explanationTree, Integer entryId) {
+        Map<String, String> explanationEntry = explanationTree.get(entryId);
+        String[] vars = explanationEntry.get("Vars").split(", ");
+        String[] identifiers = explanationEntry.get("Identifiers").split(", ");
+        String[] children = explanationEntry.get("Children").split(", ");
+
+        // TODO Assert or throw when its the test that's been defined incorrectly?
+//        assertEquals(vars.length, identifiers.length);
+        if (vars.length != identifiers.length) {
+            throw new RuntimeException(String.format("Vars and Identifiers should correspond. Found %d Vars and %s Identifiers", vars.length, identifiers.length));
+        }
+
+        Map<String, String> answerIdentifiers = IntStream.range(0, vars.length).boxed().collect(Collectors.toMap(i -> vars[i], i -> identifiers[i]));
+
+        Optional<ConceptMap> matchingAnswer = answers.stream().filter(answer -> matchAnswer(answerIdentifiers, answer)).findFirst();
+
+        assertTrue(matchingAnswer.isPresent());
+
+        ConceptMap answer = matchingAnswer.get();
+
+        String queryWithIds = applyQueryTemplate(explanationEntry.get("Pattern"), answer);
+        assertEquals(Graql.and(Graql.parsePatternList(queryWithIds)), answer.queryPattern());
+
+        if (answer.hasExplanation()) {
+            Explanation explanation = answer.explanation();
+            List<ConceptMap> explAnswers = explanation.getAnswers();
+            if (explAnswers.size() == 1) {
+                // Rule explanation
+                assertEquals(explanationEntry.get("Explanation"), "rule");
+//                assertEquals(explanation.getRule(), explanationEntry.get("Rule Label")); //TODO Requires the relevant PR to be merged
+                // TODO Validate that in the given table rule labels should be "-" unless the Explanation is "rule"
+                // TODO validate that the when and then of the rule are correct according to rules already stored
+            } else {
+                // Join explanation
+                assertEquals(explanationEntry.get("Explanation"), "join");
+//                assertEquals(explanation.getRule(), null); //TODO Requires the relevant PR to be merged
+            }
+
+            assertEquals(children.length, explAnswers.size());
+
+            for (String child : children) {
+                // Recurse
+                checkExplanationContains(explAnswers, explanationTree, Integer.valueOf(child));
+            }
+        } else {
+            // This is a lookup
+            assertEquals(explanationEntry.get("Explanation"), "lookup");
+//            assertEquals(explanation.getRule(), null); //TODO Requires the relevant PR to be merged
+        }
+    }
+
+    @Then("answers are labeled") // TODO Update this with the latest structure
     public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
         assertEquals(conceptLabels.size(), answers.size());
 
