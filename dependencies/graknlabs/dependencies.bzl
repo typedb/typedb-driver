@@ -59,7 +59,7 @@ def graknlabs_verification():
         name = "graknlabs_verification",
 #        remote = "https://github.com/graknlabs/verification",
         remote = "https://github.com/flyingsilverfin/verification",
-        commit = "a72b4943bd30aa13071568e014d7d1e30224008b"
+        commit = "99bbe914fb2f97233cea697b42b8966d05bf58cc"
     )
 
 def graknlabs_grabl_tracing():
