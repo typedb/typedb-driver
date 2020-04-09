@@ -43,6 +43,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -135,6 +136,7 @@ public class ConceptIT {
     private Entity bob;
     private Relation aliceAndBob;
     private Relation selfEmployment;
+    private Relation selfFriendship;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -207,6 +209,7 @@ public class ConceptIT {
         // Relations
         aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
+        selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
 
         metaType = tx.getType(Label.of("thing"));
 
@@ -394,13 +397,13 @@ public class ConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer));
+        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
         assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment));
+        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
         assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
@@ -429,29 +432,36 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role, Set<Thing>> expected = new HashMap<>();
-        expected.put(wife, Collections.singleton(alice));
-        expected.put(husband, Collections.singleton(bob));
+        Map<Role, List<Thing>> expected = new HashMap<>();
+        expected.put(wife, Collections.singletonList(alice));
+        expected.put(husband, Collections.singletonList(bob));
 
         assertEquals(expected, aliceAndBob.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers().collect(toSet()), containsInAnyOrder(alice, bob));
+    public void whenCallingAllRolePlayers_GetExpectedDuplicates() {
+        Map<Role, List<Thing>> expected = new HashMap<>();
+        expected.put(friend, Arrays.asList(alice, alice));
+        assertEquals(expected, selfFriendship.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetDistinctExpectedResult() {
+    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
+        assertThat(aliceAndBob.rolePlayers().collect(toList()), containsInAnyOrder(alice, bob));
+    }
+
+    @Test
+    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetExpectedResult() {
         List<Thing> list = selfEmployment.rolePlayers().collect(toList());
-        assertEquals(1, list.size());
-        assertThat(list, containsInAnyOrder(alice));
+        assertEquals(2, list.size());
+        assertThat(list, containsInAnyOrder(alice, alice));
     }
 
     @Test
     public void whenCallingRolePlayersWithRoles_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers(wife).collect(toSet()), containsInAnyOrder(alice));
-        assertThat(aliceAndBob.rolePlayers(husband).collect(toSet()), containsInAnyOrder(bob));
+        assertThat(aliceAndBob.rolePlayers(wife).collect(toList()), containsInAnyOrder(alice));
+        assertThat(aliceAndBob.rolePlayers(husband).collect(toList()), containsInAnyOrder(bob));
     }
 
     @Test
@@ -594,12 +604,12 @@ public class ConceptIT {
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toSet()), containsInAnyOrder(dylan, emily));
+        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan, emily));
 
         dylanAndEmily.unassign(friend, dylan);
         dylanAndEmily.unassign(friend, emily);
 
-        assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+        assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
 }

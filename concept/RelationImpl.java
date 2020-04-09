@@ -23,10 +23,12 @@ import grakn.client.GraknClient;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -41,7 +43,7 @@ public class RelationImpl extends ThingImpl<Relation, RelationType> implements R
     }
 
     @Override
-    public final Map<Role, Set<Thing>> rolePlayersMap() {
+    public final Map<Role, List<Thing>> rolePlayersMap() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
 
@@ -50,14 +52,14 @@ public class RelationImpl extends ThingImpl<Relation, RelationType> implements R
                 iteratorId, res -> res.getConceptMethodIterRes().getRelationRolePlayersMapIterRes()
         );
 
-        Map<Role, Set<Thing>> rolePlayerMap = new HashMap<>();
+        Map<Role, List<Thing>> rolePlayerMap = new HashMap<>();
         for (ConceptProto.Relation.RolePlayersMap.Iter.Res rolePlayer : rolePlayers) {
             Role role = ConceptImpl.of(rolePlayer.getRole(), tx()).asRole();
             Thing player = ConceptImpl.of(rolePlayer.getPlayer(), tx()).asThing();
             if (rolePlayerMap.containsKey(role)) {
                 rolePlayerMap.get(role).add(player);
             } else {
-                rolePlayerMap.put(role, new HashSet<>(Collections.singletonList(player)));
+                rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
             }
         }
 
