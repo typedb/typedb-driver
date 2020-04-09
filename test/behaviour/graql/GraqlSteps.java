@@ -26,6 +26,7 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
 import grakn.client.concept.Attribute;
 import grakn.client.concept.Concept;
+import grakn.client.concept.Rule;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.query.GraqlDefine;
@@ -33,6 +34,7 @@ import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
+import graql.lang.statement.Variable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -49,7 +52,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
@@ -59,6 +65,7 @@ public class GraqlSteps {
 
     private static List<ConceptMap> answers;
     HashMap<String, UniquenessCheck> identifierChecks = new HashMap<>();
+    private Map<String, Map<String, String>> rules;
 
     @After
     public void close_transaction() {
@@ -273,15 +280,24 @@ public class GraqlSteps {
     }
 
     private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
-        final boolean[] match = {true};
-
         for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
             String varName = entry.getKey();
             String identifier = entry.getValue();
 
-            match[0] = match[0] && identifierChecks.get(identifier).check(answer.get(varName));
+            if(!answer.map().containsKey(new Variable(varName))){
+                return false;
+            }
+
+            if(!identifierChecks.get(identifier).check(answer.get(varName))) {
+                return false;
+            }
         }
-        return match[0];
+        return true;
+    }
+
+    @Then("rules are")
+    public void rules_are(Map<String, Map<String, String>> rules) {
+        this.rules = rules;
     }
 
     @Then("answers contain explanation tree")
@@ -312,32 +328,47 @@ public class GraqlSteps {
         String queryWithIds = applyQueryTemplate(explanationEntry.get("Pattern"), answer);
         assertEquals(Graql.and(Graql.parsePatternList(queryWithIds)), answer.queryPattern());
 
-        if (answer.hasExplanation()) {
+        String expectedExplType = explanationEntry.get("Explanation");
+        boolean hasExplanation = answer.hasExplanation();
+
+        if (!(expectedExplType.equals("lookup") | expectedExplType.equals("join") | expectedExplType.equals("rule"))) {
+            throw new RuntimeException(String.format("Explanation type %s not recognised", expectedExplType));
+        }
+
+        if (expectedExplType.equals("lookup")) {
+            if(!explanationEntry.get("Rule Label").equals("-")) {
+                throw new RuntimeException("Rule Label should be \"-\" for lookup explanations");
+            }
+            assertFalse(hasExplanation);
+            String[] expectedChildren = {"-"};
+            assertArrayEquals(expectedChildren, children);
+        } else {
+
             Explanation explanation = answer.explanation();
             List<ConceptMap> explAnswers = explanation.getAnswers();
-            if (explAnswers.size() == 1) {
-                // Rule explanation
-                assertEquals(explanationEntry.get("Explanation"), "rule");
-//                assertEquals(explanation.getRule(), explanationEntry.get("Rule Label")); //TODO Requires the relevant PR to be merged
-                // TODO Validate that in the given table rule labels should be "-" unless the Explanation is "rule"
-                // TODO validate that the when and then of the rule are correct according to rules already stored
-            } else {
-                // Join explanation
-                assertEquals(explanationEntry.get("Explanation"), "join");
-//                assertEquals(explanation.getRule(), null); //TODO Requires the relevant PR to be merged
-            }
 
             assertEquals(children.length, explAnswers.size());
 
+            if (expectedExplType.equals("join")) {
+                if(!explanationEntry.get("Rule Label").equals("-")) {
+                    throw new RuntimeException("Rule Label should be \"-\" for join explanations");
+                }
+                assertNull(explanation.getRule());
+            } else {
+                // rule
+                Rule rule = explanation.getRule();
+                assertEquals(explanationEntry.get("Rule Label"), rule.label().toString());
+
+                Map<String, String> expectedRule = rules.get(explanationEntry.get("Rule Label"));
+                assertEquals(expectedRule.get("when"), Objects.requireNonNull(rule.when()).toString());
+                assertEquals(expectedRule.get("then"), Objects.requireNonNull(rule.then()).toString());
+            }
             for (String child : children) {
                 // Recurse
                 checkExplanationContains(explAnswers, explanationTree, Integer.valueOf(child));
             }
-        } else {
-            // This is a lookup
-            assertEquals(explanationEntry.get("Explanation"), "lookup");
-//            assertEquals(explanation.getRule(), null); //TODO Requires the relevant PR to be merged
         }
+//      TODO Validate that in the given table rule labels should be "-" unless the Explanation is "rule"
     }
 
     @Then("answers are labeled") // TODO Update this with the latest structure
