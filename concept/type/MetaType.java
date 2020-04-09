@@ -2,16 +2,9 @@ package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Label;
-import grakn.client.concept.Role;
-import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.remote.RemoteMetaTypeImpl;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.Type;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 public interface MetaType<
         SomeType extends Type<SomeType, SomeThing>,
@@ -55,7 +48,7 @@ public interface MetaType<
         static <SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteMetaTypeImpl<>(tx, id);
+            return new MetaTypeImpl.Remote<>(tx, id);
         }
 
         @Override

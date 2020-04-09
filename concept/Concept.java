@@ -21,21 +21,10 @@ package grakn.client.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.thing.AttributeImpl;
-import grakn.client.concept.type.AttributeTypeImpl;
 import grakn.client.concept.thing.EntityImpl;
-import grakn.client.concept.type.EntityTypeImpl;
-import grakn.client.concept.type.MetaTypeImpl;
 import grakn.client.concept.thing.RelationImpl;
-import grakn.client.concept.type.RelationTypeImpl;
-import grakn.client.concept.remote.RemoteAttributeImpl;
-import grakn.client.concept.remote.RemoteAttributeTypeImpl;
-import grakn.client.concept.remote.RemoteEntityImpl;
-import grakn.client.concept.remote.RemoteEntityTypeImpl;
-import grakn.client.concept.remote.RemoteMetaTypeImpl;
-import grakn.client.concept.remote.RemoteRelationImpl;
-import grakn.client.concept.remote.RemoteRelationTypeImpl;
-import grakn.client.concept.remote.RemoteRoleImpl;
-import grakn.client.concept.remote.RemoteRuleImpl;
+import grakn.client.concept.type.AttributeTypeImpl;
+import grakn.client.concept.type.EntityTypeImpl;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -43,7 +32,9 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.MetaType;
+import grakn.client.concept.type.MetaTypeImpl;
 import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RelationTypeImpl;
 import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
@@ -335,23 +326,23 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         BaseType of(ConceptProto.Concept concept) {
             switch (concept.getBaseType()) {
                 case ENTITY:
-                    return (BaseType) new EntityImpl(concept);
+                    return (BaseType) new EntityImpl.Local(concept);
                 case RELATION:
-                    return (BaseType) new RelationImpl(concept);
+                    return (BaseType) new RelationImpl.Local(concept);
                 case ATTRIBUTE:
-                    return (BaseType) new AttributeImpl<>(concept);
+                    return (BaseType) new AttributeImpl.Local<>(concept);
                 case ENTITY_TYPE:
-                    return (BaseType) new EntityTypeImpl(concept);
+                    return (BaseType) new EntityTypeImpl.Local(concept);
                 case RELATION_TYPE:
-                    return (BaseType) new RelationTypeImpl(concept);
+                    return (BaseType) new RelationTypeImpl.Local(concept);
                 case ATTRIBUTE_TYPE:
-                    return (BaseType) new AttributeTypeImpl<>(concept);
+                    return (BaseType) new AttributeTypeImpl.Local<>(concept);
                 case ROLE:
-                    return (BaseType) new RoleImpl(concept);
+                    return (BaseType) new RoleImpl.Local(concept);
                 case RULE:
-                    return (BaseType) new RuleImpl(concept);
+                    return (BaseType) new RuleImpl.Local(concept);
                 case META_TYPE:
-                    return (BaseType) new MetaTypeImpl<>(concept);
+                    return (BaseType) new MetaTypeImpl.Local<>(concept);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
@@ -368,28 +359,28 @@ public interface Concept<BaseType extends Concept<BaseType>> {
             extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
+        static <RemoteType extends Remote, BaseType extends Concept<BaseType>>
         RemoteType of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
             ConceptId id = ConceptId.of(concept.getId());
             switch (concept.getBaseType()) {
                 case ENTITY:
-                    return (RemoteType) new RemoteEntityImpl(tx, id);
+                    return (RemoteType) new EntityImpl.Remote(tx, id);
                 case RELATION:
-                    return (RemoteType) new RemoteRelationImpl(tx, id);
+                    return (RemoteType) new RelationImpl.Remote(tx, id);
                 case ATTRIBUTE:
-                    return (RemoteType) new RemoteAttributeImpl<>(tx, id);
+                    return (RemoteType) new AttributeImpl.Remote<>(tx, id);
                 case ENTITY_TYPE:
-                    return (RemoteType) new RemoteEntityTypeImpl(tx, id);
+                    return (RemoteType) new EntityTypeImpl.Remote(tx, id);
                 case RELATION_TYPE:
-                    return (RemoteType) new RemoteRelationTypeImpl(tx, id);
+                    return (RemoteType) new RelationTypeImpl.Remote(tx, id);
                 case ATTRIBUTE_TYPE:
-                    return (RemoteType) new RemoteAttributeTypeImpl<>(tx, id);
+                    return (RemoteType) new AttributeTypeImpl.Remote<>(tx, id);
                 case ROLE:
-                    return (RemoteType) new RemoteRoleImpl(tx, id);
+                    return (RemoteType) new RoleImpl.Remote(tx, id);
                 case RULE:
-                    return (RemoteType) new RemoteRuleImpl(tx, id);
+                    return (RemoteType) new RuleImpl.Remote(tx, id);
                 case META_TYPE:
-                    return (RemoteType) new RemoteMetaTypeImpl<>(tx, id);
+                    return (RemoteType) new MetaTypeImpl.Remote<>(tx, id);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);

@@ -2,7 +2,6 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.remote.RemoteAttributeImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.DataType;
 
@@ -81,7 +80,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
     interface Remote<D> extends Thing.Remote<Attribute<D>, AttributeType<D>>, Attribute<D> {
 
         static <D> Attribute.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteAttributeImpl<>(tx, id);
+            return new AttributeImpl.Remote<>(tx, id);
         }
 
         //------------------------------------- Accessors ----------------------------------

@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.Role;
-import grakn.client.concept.remote.RemoteRelationTypeImpl;
 import grakn.client.concept.thing.Relation;
 
 import javax.annotation.CheckReturnValue;
@@ -66,7 +65,7 @@ public interface RelationType extends Type<RelationType, Relation> {
     interface Remote extends Type.Remote<RelationType, Relation>, RelationType {
 
         static RelationType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteRelationTypeImpl(tx, id);
+            return new RelationTypeImpl.Remote(tx, id);
         }
 
         //------------------------------------- Modifiers ----------------------------------

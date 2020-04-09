@@ -5,7 +5,6 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.concept.Role;
-import grakn.client.concept.remote.RemoteAttributeTypeImpl;
 import grakn.client.concept.thing.Attribute;
 
 import javax.annotation.CheckReturnValue;
@@ -75,7 +74,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
     interface Remote<D> extends Type.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
         static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteAttributeTypeImpl<>(tx, id);
+            return new AttributeTypeImpl.Remote<>(tx, id);
         }
 
         //------------------------------------- Modifiers ----------------------------------

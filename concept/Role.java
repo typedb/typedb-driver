@@ -20,7 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.remote.RemoteRoleImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.Type;
 
@@ -65,7 +64,7 @@ public interface Role extends SchemaConcept<Role> {
     interface Remote extends SchemaConcept.Remote<Role>, Role {
 
         static Role.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteRoleImpl(tx, id);
+            return new RoleImpl.Remote(tx, id);
         }
 
         //------------------------------------- Modifiers ----------------------------------

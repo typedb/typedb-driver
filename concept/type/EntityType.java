@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.Role;
-import grakn.client.concept.remote.RemoteEntityTypeImpl;
 import grakn.client.concept.thing.Entity;
 
 import javax.annotation.CheckReturnValue;
@@ -68,7 +67,7 @@ public interface EntityType extends Type<EntityType, Entity> {
     interface Remote extends Type.Remote<EntityType, Entity>, EntityType {
 
         static EntityType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteEntityTypeImpl(tx, id);
+            return new EntityTypeImpl.Remote(tx, id);
         }
 
         //------------------------------------- Modifiers ----------------------------------

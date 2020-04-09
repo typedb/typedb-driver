@@ -20,7 +20,6 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.remote.RemoteRuleImpl;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -59,7 +58,7 @@ public interface Rule extends SchemaConcept<Rule> {
     interface Remote extends SchemaConcept.Remote<Rule>, Rule {
 
         static Rule.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RemoteRuleImpl(tx, id);
+            return new RuleImpl.Remote(tx, id);
         }
 
         //------------------------------------- Accessors ----------------------------------
