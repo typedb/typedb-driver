@@ -22,7 +22,6 @@ package grakn.client.concept.local;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.local.ConceptImpl;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -31,9 +30,9 @@ import grakn.protocol.session.ConceptProto;
  * @param <SomeSchemaConcept> The exact type of this class
  */
 public abstract class SchemaConceptImpl<
-        SomeSchemaConcept extends LocalSchemaConcept<SomeSchemaConcept>>
+        SomeSchemaConcept extends SchemaConcept.Local<SomeSchemaConcept>>
         extends ConceptImpl<SomeSchemaConcept>
-        implements LocalSchemaConcept<SomeSchemaConcept> {
+        implements SchemaConcept.Local<SomeSchemaConcept> {
 
     private final Label label;
 

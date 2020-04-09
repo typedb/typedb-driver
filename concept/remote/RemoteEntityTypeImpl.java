@@ -20,8 +20,10 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.EntityType;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -29,37 +31,37 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-class RemoteEntityTypeImpl extends RemoteTypeImpl<RemoteEntityType, RemoteEntity> implements RemoteEntityType {
+public class RemoteEntityTypeImpl extends RemoteTypeImpl<EntityType.Remote, Entity.Remote> implements EntityType.Remote {
 
-    RemoteEntityTypeImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteEntityTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public final RemoteEntity create() {
+    public final Entity.Remote create() {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-        return RemoteConcept.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+        return Concept.Remote.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
     }
 
     @Override
-    public RemoteEntityType sup(EntityType<?, ?> superEntityType) {
+    public Remote sup(EntityType<?, ?> superEntityType) {
         return super.sup(superEntityType);
     }
 
     @Override
-    final RemoteEntityType asCurrentBaseType(RemoteConcept<?> other) {
+    final Remote asCurrentBaseType(Concept.Remote<?> other) {
         return other.asEntityType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
+    final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
         return other.isEntityType();
     }
 
     @Override
-    protected final RemoteEntity asInstance(RemoteConcept<?> concept) {
+    protected final Entity.Remote asInstance(Concept.Remote<?> concept) {
         return concept.asEntity();
     }
 

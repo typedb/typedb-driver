@@ -22,8 +22,6 @@ package grakn.client.rpc;
 import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.local.LocalConcept;
-import grakn.client.concept.remote.RemoteConcept;
 import grakn.protocol.session.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -86,7 +84,7 @@ public class ResponseReader {
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                LocalConcept.of(res.getOwner()),
+                Concept.Local.of(res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
@@ -94,7 +92,7 @@ public class ResponseReader {
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
         Map<Variable, Concept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> variableMap.put(new Variable(resVar), LocalConcept.of(resConcept))
+                (resVar, resConcept) -> variableMap.put(new Variable(resVar), Concept.Local.of(resConcept))
         );
         // Pattern is null if no reasoner was used
         boolean hasExplanation = res.getHasExplanation();

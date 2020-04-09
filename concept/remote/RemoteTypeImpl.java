@@ -20,13 +20,15 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Role;
+import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -36,12 +38,12 @@ import java.util.stream.Stream;
  * @param <SomeRemoteThing> the exact type of instances of this class
  */
 public abstract class RemoteTypeImpl<
-        SomeRemoteType extends RemoteType<SomeRemoteType, SomeRemoteThing>,
-        SomeRemoteThing extends RemoteThing<SomeRemoteThing, SomeRemoteType>>
+        SomeRemoteType extends Type.Remote,
+        SomeRemoteThing extends Thing.Remote<SomeRemoteThing, SomeRemoteType>>
         extends RemoteSchemaConceptImpl<SomeRemoteType>
-        implements RemoteType<SomeRemoteType, SomeRemoteThing> {
+        implements Type.Remote {
 
-    RemoteTypeImpl(GraknClient.Transaction tx, ConceptId id) {
+    protected RemoteTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -72,27 +74,27 @@ public abstract class RemoteTypeImpl<
     }
 
     @Override
-    public final Stream<RemoteAttributeType<?>> keys() {
+    public final Stream<AttributeType.Remote<?>> keys() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setTypeKeysIterReq(ConceptProto.Type.Keys.Iter.Req.getDefaultInstance()).build();
 
-        return conceptStream(method, res -> res.getTypeKeysIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
+        return conceptStream(method, res -> res.getTypeKeysIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
     }
 
     @Override
-    public final Stream<RemoteAttributeType<?>> attributes() {
+    public final Stream<AttributeType.Remote<?>> attributes() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setTypeAttributesIterReq(ConceptProto.Type.Attributes.Iter.Req.getDefaultInstance()).build();
 
-        return conceptStream(method, res -> res.getTypeAttributesIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
+        return conceptStream(method, res -> res.getTypeAttributesIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
     }
 
     @Override
-    public final Stream<RemoteRole> playing() {
+    public final Stream<Role.Remote> playing() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setTypePlayingIterReq(ConceptProto.Type.Playing.Iter.Req.getDefaultInstance()).build();
 
-        return conceptStream(method, res -> res.getTypePlayingIterRes().getRole()).map(RemoteConcept::asRole);
+        return conceptStream(method, res -> res.getTypePlayingIterRes().getRole()).map(Concept.Remote::asRole);
     }
 
     @Override
@@ -155,5 +157,5 @@ public abstract class RemoteTypeImpl<
         return asCurrentBaseType(this);
     }
 
-    protected abstract SomeRemoteThing asInstance(RemoteConcept<?> concept);
+    protected abstract SomeRemoteThing asInstance(Concept.Remote<?> concept);
 }

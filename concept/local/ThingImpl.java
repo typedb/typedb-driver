@@ -20,6 +20,8 @@
 package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -29,17 +31,17 @@ import grakn.protocol.session.ConceptProto;
  * @param <SomeType>  the type of an instance of this class
  */
 public abstract class ThingImpl<
-        SomeThing extends LocalThing<SomeThing, SomeType>,
-        SomeType extends LocalType<SomeType, SomeThing>>
+        SomeThing extends Thing.Local,
+        SomeType extends Type.Local<SomeType, SomeThing>>
         extends ConceptImpl<SomeThing>
-        implements LocalThing<SomeThing, SomeType> {
+        implements Thing.Local {
 
     private final SomeType type;
     private final boolean inferred;
 
     protected ThingImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.type = LocalConcept.of(concept.getTypeRes().getType());
+        this.type = Concept.Local.of(concept.getTypeRes().getType());
         this.inferred = concept.getInferredRes().getInferred();
     }
 

@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -35,11 +34,11 @@ import java.util.stream.Stream;
  * Client implementation of SchemaConcept
  */
 public abstract class RemoteSchemaConceptImpl<
-        SomeRemoteSchemaConceptType extends RemoteSchemaConcept<SomeRemoteSchemaConceptType>>
+        SomeRemoteSchemaConceptType extends SchemaConcept.Remote<SomeRemoteSchemaConceptType>>
         extends RemoteConceptImpl<SomeRemoteSchemaConceptType>
-        implements RemoteSchemaConcept<SomeRemoteSchemaConceptType> {
+        implements SchemaConcept.Remote<SomeRemoteSchemaConceptType> {
 
-    RemoteSchemaConceptImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteSchemaConceptImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -89,7 +88,7 @@ public abstract class RemoteSchemaConceptImpl<
             case NULL:
                 return null;
             case SCHEMACONCEPT:
-                return RemoteConcept.of(response.getSchemaConcept(), tx());
+                return Remote.of(response.getSchemaConcept(), tx());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -109,5 +108,5 @@ public abstract class RemoteSchemaConceptImpl<
         return conceptStream(method, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept());
     }
 
-    abstract boolean equalsCurrentBaseType(RemoteConcept<?> other);
+    abstract boolean equalsCurrentBaseType(Remote<?> other);
 }

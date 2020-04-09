@@ -20,24 +20,26 @@
 package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Entity
  */
-class EntityImpl extends ThingImpl<LocalEntity, LocalEntityType> implements LocalEntity {
+public class EntityImpl extends ThingImpl<Entity.Local, EntityType.Local> implements Entity.Local {
 
-    EntityImpl(ConceptProto.Concept concept) {
+    public EntityImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final LocalEntityType asCurrentType(Concept<?> concept) {
-        return (LocalEntityType) concept.asEntityType();
+    final EntityType.Local asCurrentType(Concept<?> concept) {
+        return (EntityType.Local) concept.asEntityType();
     }
 
     @Override
-    final LocalEntity asCurrentBaseType(Concept<?> other) {
-        return (LocalEntity) other.asEntity();
+    final Local asCurrentBaseType(Concept<?> other) {
+        return (Local) other.asEntity();
     }
 }

@@ -24,7 +24,7 @@ import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
 import grakn.client.concept.Concept;
-import grakn.client.concept.remote.RemoteAttributeType;
+import grakn.client.concept.type.AttributeType;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.query.GraqlDefine;
@@ -162,7 +162,7 @@ public class GraqlSteps {
         for (ConceptMap answer : answers) {
 
             Map<String, String> answerKeys = new HashMap<>();
-            RemoteAttributeType<?> keyType = tx.getAttributeType(answerConceptKey);
+            AttributeType.Remote<?> keyType = tx.getAttributeType(answerConceptKey);
             // remap each concept and save its key value into the map from variable to key value
             answer.map().forEach((var, concept) -> {
                             answerKeys.put(var.name(), concept.asThing().asRemote(tx)

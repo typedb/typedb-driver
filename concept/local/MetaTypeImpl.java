@@ -20,19 +20,17 @@
 package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.MetaType;
-import grakn.client.concept.Thing;
-import grakn.client.concept.remote.RemoteMetaType;
-import grakn.client.concept.remote.RemoteThing;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.MetaType;
 import grakn.protocol.session.ConceptProto;
 
-class MetaTypeImpl<
-        SomeType extends LocalMetaType<SomeType, SomeThing>,
-        SomeThing extends LocalThing<SomeThing, SomeType>>
+public class MetaTypeImpl<
+        SomeType extends MetaType.Local<SomeType, SomeThing>,
+        SomeThing extends Thing.Local<SomeThing, SomeType>>
         extends TypeImpl<SomeType, SomeThing>
-        implements LocalMetaType<SomeType, SomeThing> {
+        implements MetaType.Local<SomeType, SomeThing> {
 
-    MetaTypeImpl(ConceptProto.Concept concept) {
+    public MetaTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 

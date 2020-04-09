@@ -21,6 +21,8 @@ package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.type.AttributeType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -31,11 +33,11 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-class AttributeTypeImpl<D> extends TypeImpl<LocalAttributeType<D>, LocalAttribute<D>> implements LocalAttributeType<D> {
+public class AttributeTypeImpl<D> extends TypeImpl<AttributeType.Local<D>, Attribute.Local<D>> implements AttributeType.Local<D> {
 
     private final DataType<D> dataType;
 
-    AttributeTypeImpl(ConceptProto.Concept concept) {
+    public AttributeTypeImpl(ConceptProto.Concept concept) {
         super(concept);
         this.dataType = RequestBuilder.ConceptMessage.dataType(concept.getDataTypeRes().getDataType());
     }
@@ -47,8 +49,8 @@ class AttributeTypeImpl<D> extends TypeImpl<LocalAttributeType<D>, LocalAttribut
     }
 
     @Override
-    final LocalAttributeType<D> asCurrentBaseType(Concept<?> other) {
-        return (LocalAttributeType<D>) other.asAttributeType();
+    final Local<D> asCurrentBaseType(Concept<?> other) {
+        return (Local<D>) other.asAttributeType();
     }
 
     @Override
@@ -57,8 +59,8 @@ class AttributeTypeImpl<D> extends TypeImpl<LocalAttributeType<D>, LocalAttribut
     }
 
     @Override
-    protected LocalAttribute<D> asInstance(Concept<?> concept) {
-        return (LocalAttribute<D>) concept.asAttribute();
+    protected Attribute.Local<D> asInstance(Concept<?> concept) {
+        return (Attribute.Local<D>) concept.asAttribute();
     }
 
 }

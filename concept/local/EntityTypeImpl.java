@@ -20,10 +20,8 @@
 package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.Entity;
-import grakn.client.concept.EntityType;
-import grakn.client.concept.remote.RemoteEntity;
-import grakn.client.concept.remote.RemoteEntityType;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -31,15 +29,15 @@ import grakn.protocol.session.ConceptProto;
  * TODO: This class is not defined in Concept API, and at server side implementation.
  * TODO: we should remove this class, or implement properly on server side.
  */
-class EntityTypeImpl extends TypeImpl<LocalEntityType, LocalEntity> implements LocalEntityType {
+public class EntityTypeImpl extends TypeImpl<EntityType.Local, Entity.Local> implements EntityType.Local {
 
     public EntityTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final LocalEntityType asCurrentBaseType(Concept<?> other) {
-        return (LocalEntityType) other.asEntityType();
+    final Local asCurrentBaseType(Concept<?> other) {
+        return (Local) other.asEntityType();
     }
 
     @Override
@@ -48,8 +46,8 @@ class EntityTypeImpl extends TypeImpl<LocalEntityType, LocalEntity> implements L
     }
 
     @Override
-    protected final LocalEntity asInstance(Concept<?> concept) {
-        return (LocalEntity) concept.asEntity();
+    protected final Entity.Local asInstance(Concept<?> concept) {
+        return (Entity.Local) concept.asEntity();
     }
 
 }

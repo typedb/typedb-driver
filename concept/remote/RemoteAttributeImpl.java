@@ -20,8 +20,12 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -33,10 +37,10 @@ import static grakn.client.concept.DataType.staticCastValue;
  *
  * @param <D> The data type of this attribute
  */
-class RemoteAttributeImpl<D> extends RemoteThingImpl<RemoteAttribute<D>, RemoteAttributeType<D>>
-        implements RemoteAttribute<D> {
+public class RemoteAttributeImpl<D> extends RemoteThingImpl<Attribute.Remote<D>, AttributeType.Remote<D>>
+        implements Attribute.Remote<D> {
 
-    RemoteAttributeImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteAttributeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
@@ -50,10 +54,10 @@ class RemoteAttributeImpl<D> extends RemoteThingImpl<RemoteAttribute<D>, RemoteA
     }
 
     @Override
-    public final Stream<RemoteThing<?, ?>> owners() {
+    public final Stream<Thing.Remote<?, ?>> owners() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setAttributeOwnersIterReq(ConceptProto.Attribute.Owners.Iter.Req.getDefaultInstance()).build();
-        return conceptStream(method, res -> res.getAttributeOwnersIterRes().getThing()).map(RemoteConcept::asThing);
+        return conceptStream(method, res -> res.getAttributeOwnersIterRes().getThing()).map(Concept.Remote::asThing);
     }
 
     @Override
@@ -63,13 +67,13 @@ class RemoteAttributeImpl<D> extends RemoteThingImpl<RemoteAttribute<D>, RemoteA
 
     @SuppressWarnings("unchecked")
     @Override
-    RemoteAttributeType<D> asCurrentType(RemoteConcept<?> concept) {
-        return (RemoteAttributeType<D>) concept.asAttributeType();
+    AttributeType.Remote<D> asCurrentType(Concept.Remote<?> concept) {
+        return (AttributeType.Remote<D>) concept.asAttributeType();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    final RemoteAttribute<D> asCurrentBaseType(RemoteConcept<?> other) {
-        return (RemoteAttribute<D>) other.asAttribute();
+    final Attribute.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
+        return (Attribute.Remote<D>) other.asAttribute();
     }
 }

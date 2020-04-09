@@ -20,8 +20,8 @@
 package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 /**
@@ -30,12 +30,12 @@ import grakn.protocol.session.ConceptProto;
  * @param <SomeType>  The exact type of this class
  */
 public abstract class TypeImpl<
-        SomeType extends LocalType<SomeType, SomeThing>,
-        SomeThing extends LocalThing<SomeThing, SomeType>>
+        SomeType extends Type.Local<SomeType, SomeThing>,
+        SomeThing extends Thing.Local<SomeThing, SomeType>>
         extends SchemaConceptImpl<SomeType>
-        implements LocalType<SomeType, SomeThing> {
+        implements Type.Local<SomeType, SomeThing> {
 
-    TypeImpl(ConceptProto.Concept concept) {
+    protected TypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 

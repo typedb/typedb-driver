@@ -19,7 +19,7 @@
 
 package grakn.client.exception;
 
-import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.Concept;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
@@ -61,7 +61,7 @@ public class GraknClientException extends RuntimeException {
         return create("No explanation found");
     }
 
-    public static GraknClientException unknownBaseType(RemoteConcept concept) {
+    public static GraknClientException unknownBaseType(Concept.Remote concept) {
         return create("No known base type for concept: " + concept);
     }
 

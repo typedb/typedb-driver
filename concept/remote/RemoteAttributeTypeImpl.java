@@ -20,8 +20,9 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
 import grakn.client.exception.GraknClientException;
@@ -35,26 +36,26 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-class RemoteAttributeTypeImpl<D>
-        extends RemoteTypeImpl<RemoteAttributeType<D>, RemoteAttribute<D>>
-        implements RemoteAttributeType<D> {
+public class RemoteAttributeTypeImpl<D>
+        extends RemoteTypeImpl<AttributeType.Remote<D>, Attribute.Remote<D>>
+        implements AttributeType.Remote<D> {
 
-    RemoteAttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteAttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public final RemoteAttribute<D> create(D value) {
+    public final Attribute.Remote<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                    .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-        return RemoteConcept.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        return Concept.Remote.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
     }
 
     @Override
     @Nullable
-    public final RemoteAttribute<D> attribute(D value) {
+    public final Attribute.Remote<D> attribute(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
                                                       .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
@@ -64,7 +65,7 @@ class RemoteAttributeTypeImpl<D>
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return RemoteConcept.of(response.getAttribute(), tx());
+                return Concept.Remote.of(response.getAttribute(), tx());
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -98,12 +99,12 @@ class RemoteAttributeTypeImpl<D>
     }
 
     @Override
-    public RemoteAttributeType<D> sup(AttributeType<D, ?, ?> type) {
+    public Remote<D> sup(AttributeType<D, ?, ?> type) {
         return super.sup(type);
     }
 
     @Override
-    public final RemoteAttributeType<D> regex(String regex) {
+    public final Remote<D> regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -114,17 +115,17 @@ class RemoteAttributeTypeImpl<D>
     }
 
     @Override
-    final RemoteAttributeType<D> asCurrentBaseType(RemoteConcept<?> other) {
-        return (RemoteAttributeType<D>) other.asAttributeType();
+    final Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
+        return (Remote<D>) other.asAttributeType();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
+    final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
         return other.isAttributeType();
     }
 
     @Override
-    protected final RemoteAttribute<D> asInstance(RemoteConcept<?> concept) {
-        return (RemoteAttribute<D>) concept.asAttribute();
+    protected final Attribute.Remote<D> asInstance(Concept.Remote<?> concept) {
+        return (Attribute.Remote<D>) concept.asAttribute();
     }
 }

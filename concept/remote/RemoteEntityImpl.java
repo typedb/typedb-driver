@@ -20,25 +20,28 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.EntityType;
 
 /**
  * Client implementation of Entity
  */
-class RemoteEntityImpl extends RemoteThingImpl<RemoteEntity, RemoteEntityType>
-        implements RemoteEntity {
+public class RemoteEntityImpl extends RemoteThingImpl<Entity.Remote, EntityType.Remote>
+        implements Entity.Remote {
 
-    RemoteEntityImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteEntityImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    final RemoteEntityType asCurrentType(RemoteConcept<?> concept) {
+    final EntityType.Remote asCurrentType(Concept.Remote<?> concept) {
         return concept.asEntityType();
     }
 
     @Override
-    final RemoteEntity asCurrentBaseType(RemoteConcept<?> other) {
+    final Entity.Remote asCurrentBaseType(Concept.Remote<?> other) {
         return other.asEntity();
     }
 }

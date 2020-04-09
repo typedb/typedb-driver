@@ -22,6 +22,8 @@ package grakn.client.concept.remote;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Role;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
@@ -29,38 +31,38 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Role
  */
-public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implements RemoteRole {
+public class RemoteRoleImpl extends RemoteSchemaConceptImpl<Role.Remote> implements Role.Remote {
 
-    RemoteRoleImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteRoleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public RemoteRole sup(Role<?> superRole) {
+    public Role.Remote sup(Role<?> superRole) {
         return super.sup(superRole);
     }
 
     @Override
-    public final Stream<RemoteRelationType> relations() {
+    public final Stream<RelationType.Remote> relations() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setRoleRelationsIterReq(ConceptProto.Role.Relations.Iter.Req.getDefaultInstance()).build();
-        return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(RemoteConcept::asRelationType);
+        return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(grakn.client.concept.Concept.Remote::asRelationType);
     }
 
     @Override
-    public final Stream<RemoteType<?, ?>> players() {
+    public final Stream<Type.Remote<?, ?>> players() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setRolePlayersIterReq(ConceptProto.Role.Players.Iter.Req.getDefaultInstance()).build();
-        return conceptStream(method, res -> res.getRolePlayersIterRes().getType()).map(RemoteConcept::asType);
+        return conceptStream(method, res -> res.getRolePlayersIterRes().getType()).map(grakn.client.concept.Concept.Remote::asType);
     }
 
     @Override
-    final RemoteRole asCurrentBaseType(RemoteConcept<?> other) {
+    final Role.Remote asCurrentBaseType(grakn.client.concept.Concept.Remote other) {
         return other.asRole();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(RemoteConcept<?> other) {
+    final boolean equalsCurrentBaseType(grakn.client.concept.Concept.Remote other) {
         return other.isRole();
     }
 

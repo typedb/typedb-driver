@@ -20,9 +20,12 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Role;
-import grakn.client.concept.Thing;
+import grakn.client.concept.thing.Relation;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
@@ -37,23 +40,23 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Relation
  */
-class RemoteRelationImpl extends RemoteThingImpl<RemoteRelation, RemoteRelationType> implements RemoteRelation {
+public class RemoteRelationImpl extends RemoteThingImpl<Relation.Remote, RelationType.Remote> implements Relation.Remote {
 
-    RemoteRelationImpl(GraknClient.Transaction tx, ConceptId id) {
+    public RemoteRelationImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public final Map<RemoteRole, Set<RemoteThing<?, ?>>> rolePlayersMap() {
+    public final Map<Role.Remote, Set<Thing.Remote<?, ?>>> rolePlayersMap() {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setRelationRolePlayersMapIterReq(ConceptProto.Relation.RolePlayersMap.Iter.Req.getDefaultInstance()).build();
 
         Stream<ConceptProto.Relation.RolePlayersMap.Iter.Res> stream = tx().iterateConceptMethod(id(), method, ConceptProto.Method.Iter.Res::getRelationRolePlayersMapIterRes);
 
-        Map<RemoteRole, Set<RemoteThing<?, ?>>> rolePlayerMap = new HashMap<>();
+        Map<Role.Remote, Set<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
         stream.forEach(rolePlayer -> {
-            RemoteRole role = RemoteConcept.of(rolePlayer.getRole(), tx()).asRole();
-            RemoteThing<?, ?> player = RemoteConcept.of(rolePlayer.getPlayer(), tx()).asThing();
+            Role.Remote role = Concept.Remote.of(rolePlayer.getRole(), tx()).asRole();
+            Thing.Remote<?, ?> player = Concept.Remote.of(rolePlayer.getPlayer(), tx()).asThing();
             if (rolePlayerMap.containsKey(role)) {
                 rolePlayerMap.get(role).add(player);
             } else {
@@ -65,16 +68,16 @@ class RemoteRelationImpl extends RemoteThingImpl<RemoteRelation, RemoteRelationT
     }
 
     @Override
-    public final Stream<RemoteThing<?, ?>> rolePlayers(Role<?>... roles) {
+    public final Stream<Thing.Remote<?, ?>> rolePlayers(Role<?>... roles) {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setRelationRolePlayersIterReq(ConceptProto.Relation.RolePlayers.Iter.Req.newBuilder()
                         .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
-        return conceptStream(method, res -> res.getRelationRolePlayersIterRes().getThing()).map(RemoteConcept::asThing);
+        return conceptStream(method, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept.Remote::asThing);
     }
 
     @Override
-    public final RemoteRelation assign(Role<?> role, Thing<?, ?> player) {
+    public final Relation.Remote assign(Role<?> role, Thing<?, ?> player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
                         .setRole(RequestBuilder.ConceptMessage.from(role))
@@ -95,12 +98,12 @@ class RemoteRelationImpl extends RemoteThingImpl<RemoteRelation, RemoteRelationT
     }
 
     @Override
-    final RemoteRelationType asCurrentType(RemoteConcept<?> concept) {
+    final RelationType.Remote asCurrentType(Concept.Remote<?> concept) {
         return concept.asRelationType();
     }
 
     @Override
-    final RemoteRelation asCurrentBaseType(RemoteConcept<?> other) {
+    final Relation.Remote asCurrentBaseType(Concept.Remote<?> other) {
         return other.asRelation();
     }
 

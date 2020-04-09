@@ -20,12 +20,12 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,13 +34,13 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <SomeRemoteConcept> represents the actual class of object to downcast to
  */
-abstract class RemoteConceptImpl<SomeRemoteConcept extends RemoteConcept<SomeRemoteConcept>>
-        implements RemoteConcept<SomeRemoteConcept> {
+public abstract class RemoteConceptImpl<SomeRemoteConcept extends Concept.Remote<SomeRemoteConcept>>
+        implements Concept.Remote<SomeRemoteConcept> {
 
     private final GraknClient.Transaction tx;
     private final ConceptId id;
 
-    RemoteConceptImpl(GraknClient.Transaction tx, ConceptId id) {
+    protected RemoteConceptImpl(GraknClient.Transaction tx, ConceptId id) {
         this.tx = requireNonNull(tx, "Null tx");
         this.id = requireNonNull(id, "Null id");
     }
@@ -94,16 +94,16 @@ abstract class RemoteConceptImpl<SomeRemoteConcept extends RemoteConcept<SomeRem
         return tx;
     }
 
-    abstract SomeRemoteConcept asCurrentBaseType(RemoteConcept<?> other);
+    abstract SomeRemoteConcept asCurrentBaseType(Remote<?> other);
 
 
-    static <R extends RemoteConcept<R>>
+    static <R extends Remote<R>>
     Stream<R> conceptStream(GraknClient.Transaction tx, ConceptId id, ConceptProto.Method.Iter.Req request,
                             Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        return tx.iterateConceptMethod(id, request, response -> RemoteConcept.of(conceptGetter.apply(response), tx));
+        return tx.iterateConceptMethod(id, request, response -> Remote.of(conceptGetter.apply(response), tx));
     }
 
-    <R extends RemoteConcept<R>> Stream<R> conceptStream
+    <R extends Remote<R>> Stream<R> conceptStream
             (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
         return conceptStream(tx(), id(), request, conceptGetter);
     }

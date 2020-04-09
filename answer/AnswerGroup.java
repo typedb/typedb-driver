@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.remote.RemoteConcept;
+import grakn.client.concept.Concept;
 
 import java.util.List;
 
@@ -31,10 +31,10 @@ import java.util.List;
  */
 public class AnswerGroup<T> implements Answer {
 
-    private final RemoteConcept<?> owner;
+    private final Concept.Remote<?> owner;
     private final List<T> answers;
 
-    public AnswerGroup(RemoteConcept<?> owner, List<T> answers) {
+    public AnswerGroup(Concept.Remote<?> owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
@@ -44,7 +44,7 @@ public class AnswerGroup<T> implements Answer {
         return false;
     }
 
-    public RemoteConcept<?> owner() {
+    public Concept.Remote<?> owner() {
         return this.owner;
     }
 

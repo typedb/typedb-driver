@@ -21,15 +21,14 @@ package grakn.client.concept.local;
 
 import grakn.client.concept.Concept;
 import grakn.client.concept.Rule;
-import grakn.client.concept.remote.RemoteRule;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Rule
  */
-public class RuleImpl extends SchemaConceptImpl<LocalRule> implements LocalRule {
+public class RuleImpl extends SchemaConceptImpl<Rule.LocalRule> implements Rule.LocalRule {
 
-    RuleImpl(ConceptProto.Concept concept) {
+    public RuleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 

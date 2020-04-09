@@ -20,9 +20,12 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.remote.RemoteRole;
+import grakn.client.concept.remote.RemoteRoleImpl;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.Type;
 
 import javax.annotation.CheckReturnValue;
+import java.util.stream.Stream;
 
 /**
  * An SchemaConcept which defines a role which can be played in a RelationType
@@ -35,13 +38,13 @@ public interface Role<RoleType extends Role<RoleType>> extends SchemaConcept<Rol
     @Deprecated
     @CheckReturnValue
     @Override
-    default RoleType asRole() {
-        return (RoleType) this;
+    default Role<RoleType> asRole() {
+        return this;
     }
 
     @Override
-    default RemoteRole asRemote(GraknClient.Transaction tx) {
-        return RemoteRole.of(tx, id());
+    default Remote asRemote(GraknClient.Transaction tx) {
+        return Role.Remote.of(tx, id());
     }
 
     @Deprecated
@@ -49,6 +52,88 @@ public interface Role<RoleType extends Role<RoleType>> extends SchemaConcept<Rol
     @Override
     default boolean isRole() {
         return true;
+    }
+
+    interface Local extends SchemaConcept.Local<Local>, Role<Local> {
+    }
+
+    /**
+     * An SchemaConcept which defines a role which can be played in a RelationType
+     * This ontological element defines the Role which make up a RelationType.
+     * It behaves similarly to SchemaConcept when relating to other types.
+     */
+    interface Remote extends Role<Remote>, SchemaConcept.Remote<Remote> {
+
+        static Role.Remote of(GraknClient.Transaction tx, ConceptId id) {
+            return new RemoteRoleImpl(tx, id);
+        }
+
+        //------------------------------------- Modifiers ----------------------------------
+
+        /**
+         * Changes the Label of this Concept to a new one.
+         *
+         * @param label The new Label.
+         * @return The Concept itself
+         */
+        Role.Remote label(Label label);
+
+        /**
+         * Sets the super of this Role.
+         *
+         * @param type The super of this Role
+         * @return The Role itself
+         */
+        Role.Remote sup(Role<?> type);
+
+        //------------------------------------- Accessors ----------------------------------
+
+        /**
+         * @return All the super-types of this this Role
+         */
+        @Override
+        Stream<Role.Remote> sups();
+
+        /**
+         * Returns the sub of this Role.
+         *
+         * @return The sub of this Role
+         */
+        @Override
+        Stream<Role.Remote> subs();
+
+        /**
+         * Returns the RelationTypes that this Role takes part in.
+         *
+         * @return The RelationType which this Role takes part in.
+         * @see RelationType.Remote
+         */
+        @CheckReturnValue
+        Stream<RelationType.Remote> relations();
+
+        /**
+         * Returns a collection of the Types that can play this Role.
+         *
+         * @return A list of all the Types which can play this Role.
+         * @see Type.Remote
+         */
+        @CheckReturnValue
+        Stream<Type.Remote<?, ?>> players();
+
+        //------------------------------------- Other ---------------------------------
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default Role.Remote asRole() {
+            return this;
+        }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default boolean isRole() {
+            return true;
+        }
     }
 }
 
