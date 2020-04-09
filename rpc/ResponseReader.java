@@ -83,7 +83,7 @@ public class ResponseReader {
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
-        return new AnswerGroup<>(
+        return new AnswerGroup(
                 Concept.Local.of(res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );

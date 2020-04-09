@@ -23,8 +23,8 @@ import grakn.client.concept.thing.Thing;
 import grakn.protocol.session.ConceptProto;
 
 public class MetaTypeImpl<
-        SomeType extends MetaType.Local<SomeType, SomeThing>,
-        SomeThing extends Thing.Local<SomeThing, SomeType>>
+        SomeType extends Type<SomeType, SomeThing>,
+        SomeThing extends Thing<SomeThing, SomeType>>
         extends TypeImpl<SomeType, SomeThing>
         implements MetaType.Local<SomeType, SomeThing> {
 

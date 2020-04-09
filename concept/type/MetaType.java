@@ -7,13 +7,14 @@ import grakn.client.concept.Role;
 import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.remote.RemoteMetaTypeImpl;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.Type;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface MetaType<
-        SomeType extends MetaType<SomeType, SomeThing>,
+        SomeType extends Type<SomeType, SomeThing>,
         SomeThing extends Thing<SomeThing, SomeType>>
         extends Type<SomeType, SomeThing> {
     //------------------------------------- Other ---------------------------------
@@ -37,7 +38,7 @@ public interface MetaType<
     }
 
     interface Local<
-            SomeType extends MetaType<SomeType, SomeThing>,
+            SomeType extends Type<SomeType, SomeThing>,
             SomeThing extends Thing<SomeThing, SomeType>>
             extends Type.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
     }
@@ -46,15 +47,20 @@ public interface MetaType<
      * Type Class of a MetaType
      */
     interface Remote<
-            SomeRemoteType extends MetaType<SomeRemoteType, SomeRemoteThing>,
+            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         extends MetaType<SomeRemoteType, SomeRemoteThing>,
             Type.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        static <SomeRemoteType extends MetaType<SomeRemoteType, SomeRemoteThing>,
+        static <SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteMetaTypeImpl<>(tx, id);
+        }
+
+        @Override
+        default MetaType.Remote<SomeRemoteType, SomeRemoteThing> asMetaType() {
+            return this;
         }
     }
 }

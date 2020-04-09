@@ -193,7 +193,7 @@ public class RemoteConceptIT {
         person.plays(wife).plays(husband);
 
         //Rules
-        metaRule = tx.getSchemaConcept(Label.of("rule"));
+        metaRule = tx.getRule("rule");
         testRule = tx.putRule(TEST_RULE, testRuleWhen, testRuleThen);
 
         // Attributes

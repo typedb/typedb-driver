@@ -22,15 +22,15 @@ package grakn.client.concept.remote;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.MetaType;
+import grakn.client.concept.type.Type;
 
 /**
  * Client implementation of Type
  */
 public class RemoteMetaTypeImpl<
-        SomeRemoteType extends MetaType<SomeRemoteType, SomeRemoteThing>,
+        SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
         SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         extends RemoteTypeImpl<SomeRemoteType, SomeRemoteThing>
         implements MetaType.Remote<SomeRemoteType, SomeRemoteThing> {

@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Role;
+import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.ThingImpl;
@@ -41,10 +42,25 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Relation
  */
-public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remote, RelationType.Remote> implements Relation.Remote {
+public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation, RelationType> implements Relation.Remote {
 
     public RemoteRelationImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
+    }
+
+    @Override
+    public final RelationType.Remote type() {
+        return (RelationType.Remote) super.type();
+    }
+
+    @Override
+    public Relation.Remote has(Attribute<?> attribute) {
+        return (Relation.Remote) super.has(attribute);
+    }
+
+    @Override
+    public Relation.Remote unhas(Attribute<?> attribute) {
+        return (Relation.Remote) super.unhas(attribute);
     }
 
     @Override
@@ -69,7 +85,7 @@ public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remot
     }
 
     @Override
-    public final Stream<Thing.Remote<?, ?>> rolePlayers(Role<?>... roles) {
+    public final Stream<Thing.Remote<?, ?>> rolePlayers(Role... roles) {
         ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                 .setRelationRolePlayersIterReq(ConceptProto.Relation.RolePlayers.Iter.Req.newBuilder()
                         .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
@@ -78,7 +94,7 @@ public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remot
     }
 
     @Override
-    public final Relation.Remote assign(Role<?> role, Thing<?, ?> player) {
+    public final Relation.Remote assign(Role role, Thing<?, ?> player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
                         .setRole(RequestBuilder.ConceptMessage.from(role))
@@ -89,7 +105,7 @@ public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remot
     }
 
     @Override
-    public final void unassign(Role<?> role, Thing<?, ?> player) {
+    public final void unassign(Role role, Thing<?, ?> player) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
                         .setRole(RequestBuilder.ConceptMessage.from(role))
@@ -99,12 +115,7 @@ public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remot
     }
 
     @Override
-    final RelationType.Remote asCurrentType(Concept.Remote<?> concept) {
-        return concept.asRelationType();
-    }
-
-    @Override
-    final Relation.Remote asCurrentBaseType(Concept.Remote<?> other) {
+    protected final Relation.Remote asCurrentBaseType(Concept.Remote<?> other) {
         return other.asRelation();
     }
 
