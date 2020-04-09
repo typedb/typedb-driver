@@ -17,29 +17,49 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.type;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.Role;
+import grakn.client.concept.DataType;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
-/**
- * Client implementation of Role
- */
-public class RoleImpl extends SchemaConceptImpl<Role.Local> implements Role.Local {
+import javax.annotation.Nullable;
 
-    public RoleImpl(ConceptProto.Concept concept) {
+/**
+ * Client implementation of AttributeType
+ *
+ * @param <D> The data type of this attribute type
+ */
+public class AttributeTypeImpl<D> extends TypeImpl<AttributeType.Local<D>, Attribute.Local<D>> implements AttributeType.Local<D> {
+
+    private final DataType<D> dataType;
+
+    public AttributeTypeImpl(ConceptProto.Concept concept) {
         super(concept);
+        this.dataType = RequestBuilder.ConceptMessage.dataType(concept.getDataTypeRes().getDataType());
     }
 
     @Override
-    final Role.Local asCurrentBaseType(Concept<?> other) {
-        return (Role.Local) other.asRole();
+    @Nullable
+    public DataType<D> dataType() {
+        return dataType;
+    }
+
+    @Override
+    final Local<D> asCurrentBaseType(Concept<?> other) {
+        return (Local<D>) other.asAttributeType();
     }
 
     @Override
     final boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isRole();
+        return other.isAttributeType();
+    }
+
+    @Override
+    protected Attribute.Local<D> asInstance(Concept<?> concept) {
+        return (Attribute.Local<D>) concept.asAttribute();
     }
 
 }

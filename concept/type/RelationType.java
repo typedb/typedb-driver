@@ -34,15 +34,12 @@ import java.util.stream.Stream;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType<
-        SomeType extends RelationType<SomeType, SomeThing>,
-        SomeThing extends Relation<SomeThing, SomeType>>
-        extends Type<SomeType, SomeThing> {
+public interface RelationType extends Type<RelationType, Relation> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default RelationType<SomeType, SomeThing> asRelationType() {
+    default RelationType asRelationType() {
         return this;
     }
 
@@ -58,8 +55,7 @@ public interface RelationType<
         return true;
     }
 
-    interface Local extends Type.Local<Local, Relation.Local>,
-            RelationType<Local, Relation.Local> {
+    interface Local extends Type.Local<RelationType, Relation>, RelationType {
     }
 
     /**
@@ -67,8 +63,7 @@ public interface RelationType<
      * A RelationType defines how Type may relate to one another.
      * They are used to model and categorise n-ary Relations.
      */
-    interface Remote extends RelationType<Remote, Relation.Remote>,
-            Type.Remote<Remote, Relation.Remote> {
+    interface Remote extends Type.Remote<RelationType, Relation>, RelationType {
 
         static RelationType.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteRelationTypeImpl(tx, id);
@@ -89,7 +84,7 @@ public interface RelationType<
          * @param superRelationType The super type to set.
          * @return This concept itself.
          */
-        RelationType.Remote sup(RelationType<?, ?> superRelationType);
+        RelationType.Remote sup(RelationType superRelationType);
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -107,7 +102,7 @@ public interface RelationType<
          * @return The Type itself.
          */
         @Override
-        RelationType.Remote key(AttributeType<?, ?, ?> attributeType);
+        RelationType.Remote key(AttributeType<?> attributeType);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -116,7 +111,7 @@ public interface RelationType<
          * @return The Type itself.
          */
         @Override
-        RelationType.Remote has(AttributeType<?, ?, ?> attributeType);
+        RelationType.Remote has(AttributeType<?> attributeType);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -138,7 +133,7 @@ public interface RelationType<
          * @return The RelationType itself.
          * @see Role.Remote
          */
-        RelationType.Remote relates(Role<?> role);
+        RelationType.Remote relates(Role role);
 
         //------------------------------------- Other ----------------------------------
 
@@ -149,7 +144,7 @@ public interface RelationType<
          * @return The RelationType itself.
          * @see Role.Remote
          */
-        RelationType.Remote unrelate(Role<?> role);
+        RelationType.Remote unrelate(Role role);
 
         //---- Inherited Methods
 
@@ -203,7 +198,7 @@ public interface RelationType<
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote unhas(AttributeType<?, ?, ?> attributeType);
+        RelationType.Remote unhas(AttributeType<?> attributeType);
 
         /**
          * Removes AttributeType as a key to this RelationType
@@ -212,7 +207,7 @@ public interface RelationType<
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote unkey(AttributeType<?, ?, ?> attributeType);
+        RelationType.Remote unkey(AttributeType<?> attributeType);
 
         /**
          * Retrieve all the Relation instances of this RelationType

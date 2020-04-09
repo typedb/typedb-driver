@@ -17,34 +17,35 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.Relation;
-import grakn.client.concept.type.RelationType;
+import grakn.client.concept.Label;
+import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.ConceptImpl;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of RelationType
+ * Client implementation of SchemaConcept
+ *
+ * @param <SomeSchemaConcept> The exact type of this class
  */
-public class RelationTypeImpl extends TypeImpl<RelationType.Local, Relation.Local> implements RelationType.Local {
+public abstract class SchemaConceptImpl<
+        SomeSchemaConcept extends SchemaConcept.Local<SomeSchemaConcept>>
+        extends ConceptImpl<SomeSchemaConcept>
+        implements SchemaConcept.Local<SomeSchemaConcept> {
 
-    public RelationTypeImpl(ConceptProto.Concept concept) {
+    private final Label label;
+
+    protected SchemaConceptImpl(ConceptProto.Concept concept) {
         super(concept);
+        this.label = Label.of(concept.getLabelRes().getLabel());
     }
 
     @Override
-    final RelationType.Local asCurrentBaseType(Concept<?> other) {
-        return (RelationType.Local) other.asRelationType();
+    public final Label label() {
+        return label;
     }
 
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isRelationType();
-    }
-
-    @Override
-    protected final Relation.Local asInstance(Concept<?> concept) {
-        return (Relation.Local) concept.asRelation();
-    }
+    abstract boolean equalsCurrentBaseType(Concept<?> other);
 }

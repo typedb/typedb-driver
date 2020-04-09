@@ -12,10 +12,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public interface AttributeType<D,
-        AttrType extends AttributeType<D, AttrType, AttrThing>,
-        AttrThing extends Attribute<D, AttrThing, AttrType>>
-        extends Type<AttrType, AttrThing> {
+public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
 
     //------------------------------------- Accessors ---------------------------------
     /**
@@ -31,13 +28,13 @@ public interface AttributeType<D,
     @Deprecated
     @CheckReturnValue
     @Override
-    default AttributeType<D, AttrType, AttrThing> asAttributeType() {
+    default AttributeType<D> asAttributeType() {
         return this;
     }
 
     @CheckReturnValue
     @Override
-    default Remote<D> asRemote(GraknClient.Transaction tx) {
+    default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
         return AttributeType.Remote.of(tx, id());
     }
 
@@ -59,8 +56,7 @@ public interface AttributeType<D,
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Local<D> extends Type.Local<Local<D>, Attribute.Local<D>>,
-            AttributeType<D, Local<D>, Attribute.Local<D>> {
+    interface Local<D> extends Type.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
     }
 
     /**
@@ -74,8 +70,7 @@ public interface AttributeType<D,
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Remote<D> extends AttributeType<D, Remote<D>, Attribute.Remote<D>>,
-            Type.Remote<Remote<D>, Attribute.Remote<D>> {
+    interface Remote<D> extends Type.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
         static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteAttributeTypeImpl<>(tx, id);
@@ -106,7 +101,7 @@ public interface AttributeType<D,
          * @param type The super type of this AttributeType.
          * @return The AttributeType itself.
          */
-        AttributeType.Remote<D> sup(AttributeType<D, ?, ?> type);
+        AttributeType.Remote<D> sup(AttributeType<D> type);
 
         /**
          * Sets the Role which instances of this AttributeType may play.
@@ -133,7 +128,7 @@ public interface AttributeType<D,
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unhas(AttributeType<?, ?, ?> attributeType);
+        AttributeType.Remote<D> unhas(AttributeType<?> attributeType);
 
         /**
          * Removes AttributeType as a key to this AttributeType
@@ -142,7 +137,7 @@ public interface AttributeType<D,
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unkey(AttributeType<?, ?, ?> attributeType);
+        AttributeType.Remote<D> unkey(AttributeType<?> attributeType);
 
         /**
          * Set the regular expression that instances of the AttributeType must conform to.
@@ -167,7 +162,7 @@ public interface AttributeType<D,
          * @return The Type itself.
          */
         @Override
-        AttributeType.Remote<D> key(AttributeType<?, ?, ?> attributeType);
+        AttributeType.Remote<D> key(AttributeType<?> attributeType);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -176,7 +171,7 @@ public interface AttributeType<D,
          * @return The Type itself.
          */
         @Override
-        AttributeType.Remote<D> has(AttributeType<?, ?, ?> attributeType);
+        AttributeType.Remote<D> has(AttributeType<?> attributeType);
 
         //------------------------------------- Accessors ---------------------------------
 

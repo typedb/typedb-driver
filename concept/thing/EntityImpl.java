@@ -17,45 +17,28 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.thing;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.DataType;
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Attribute
- *
- * @param <D> The data type of this attribute
+ * Client implementation of Entity
  */
-public class AttributeImpl<D> extends ThingImpl<Attribute.Local<D>, AttributeType.Local<D>> implements Attribute.Local<D> {
+public class EntityImpl extends ThingImpl<Entity.Local, EntityType.Local> implements Entity.Local {
 
-    private final D value;
-
-    public AttributeImpl(ConceptProto.Concept concept) {
+    public EntityImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.value = DataType.staticCastValue(concept.getValueRes().getValue());
     }
 
     @Override
-    public final D value() {
-        return value;
+    final EntityType.Local asCurrentType(Concept<?> concept) {
+        return (EntityType.Local) concept.asEntityType();
     }
 
     @Override
-    public final DataType<D> dataType() {
-        return type().dataType();
-    }
-
-    @Override
-    final AttributeType.Local<D> asCurrentType(Concept<?> concept) {
-        return (AttributeType.Local<D>) concept.asAttributeType();
-    }
-
-    @Override
-    final Local<D> asCurrentBaseType(Concept<?> other) {
-        return (Local<D>) other.asAttribute();
+    final Local asCurrentBaseType(Concept<?> other) {
+        return (Local) other.asEntity();
     }
 }

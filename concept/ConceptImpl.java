@@ -17,10 +17,8 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept;
 
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 /**

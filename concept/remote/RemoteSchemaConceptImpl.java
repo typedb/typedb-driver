@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.type.AttributeType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -96,7 +97,7 @@ public abstract class RemoteSchemaConceptImpl<
     }
 
     @Override
-    public final Stream<SomeRemoteSchemaConceptType> sups() {
+    public final Stream<AttributeType.Remote<D>> sups() {
         return tx().sups(this).filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
     }
 

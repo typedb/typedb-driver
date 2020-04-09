@@ -127,8 +127,8 @@ public class RemoteConceptIT {
     private Role.Remote employer;
     private Role.Remote employee;
     private RelationType.Remote employment;
-    private Rule.RemoteRule metaRule;
-    private Rule.RemoteRule testRule;
+    private Rule.Remote metaRule;
+    private Rule.Remote testRule;
     private Type.Remote metaType;
 
     private Attribute.Remote<String> emailAlice;

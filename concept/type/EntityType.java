@@ -34,16 +34,13 @@ import java.util.stream.Stream;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType<
-        SomeType extends EntityType<SomeType, SomeThing>,
-        SomeThing extends Entity<SomeThing, SomeType>>
-        extends Type<SomeType, SomeThing> {
+public interface EntityType extends Type<EntityType, Entity> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default EntityType<SomeType, SomeThing> asEntityType() {
+    default EntityType asEntityType() {
         return this;
     }
 
@@ -60,8 +57,7 @@ public interface EntityType<
         return true;
     }
 
-    interface Local extends Type.Local<Local, Entity.Local>,
-            EntityType<Local, Entity.Local> {
+    interface Local extends Type.Local<EntityType, Entity>, EntityType {
     }
 
     /**
@@ -69,7 +65,7 @@ public interface EntityType<
      * An ontological element which represents categories instances can fall within.
      * Any instance of a Entity Type is called an Entity.
      */
-    interface Remote extends EntityType<Remote, Entity.Remote>, Type.Remote<Remote, Entity.Remote> {
+    interface Remote extends Type.Remote<EntityType, Entity>, EntityType {
 
         static EntityType.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteEntityTypeImpl(tx, id);
@@ -119,7 +115,7 @@ public interface EntityType<
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unhas(AttributeType<?, ?, ?> attributeType);
+        EntityType.Remote unhas(AttributeType<?> attributeType);
 
         /**
          * Removes AttributeType as a key to this EntityType
@@ -128,7 +124,7 @@ public interface EntityType<
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unkey(AttributeType<?, ?, ?> attributeType);
+        EntityType.Remote unkey(AttributeType<?> attributeType);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -144,7 +140,7 @@ public interface EntityType<
          * @return the new super type.
          * @see Entity.Remote This concept itself.
          */
-        EntityType.Remote sup(EntityType<?, ?> superEntityType);
+        EntityType.Remote sup(EntityType superEntityType);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
@@ -153,7 +149,7 @@ public interface EntityType<
          * @return The Type itself.
          */
         @Override
-        EntityType.Remote key(AttributeType<?, ?, ?> attributeType);
+        EntityType.Remote key(AttributeType<?> attributeType);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -162,7 +158,7 @@ public interface EntityType<
          * @return The Type itself.
          */
         @Override
-        EntityType.Remote has(AttributeType<?, ?, ?> attributeType);
+        EntityType.Remote has(AttributeType<?> attributeType);
 
         //------------------------------------- Accessors ----------------------------------
 

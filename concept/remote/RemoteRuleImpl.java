@@ -32,14 +32,14 @@ import javax.annotation.Nullable;
 /**
  * Client implementation of Rule
  */
-public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule.RemoteRule> implements Rule.RemoteRule {
+public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule.Remote> implements Rule.Remote {
 
     public RemoteRuleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public RemoteRule sup(Rule<?> superRule) {
+    public Rule.Remote sup(Rule<?> superRule) {
         return super.sup(superRule);
     }
 
@@ -80,7 +80,7 @@ public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule.RemoteRule> imp
     }
 
     @Override
-    final RemoteRule asCurrentBaseType(Remote<?> other) {
+    final Rule.Remote asCurrentBaseType(Remote<?> other) {
         return other.asRule();
     }
 

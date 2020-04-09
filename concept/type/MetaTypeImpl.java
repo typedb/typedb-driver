@@ -17,29 +17,37 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.type;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.Entity;
-import grakn.client.concept.type.EntityType;
+import grakn.client.concept.thing.Thing;
 import grakn.protocol.session.ConceptProto;
 
-/**
- * Client implementation of Entity
- */
-public class EntityImpl extends ThingImpl<Entity.Local, EntityType.Local> implements Entity.Local {
+public class MetaTypeImpl<
+        SomeType extends MetaType.Local<SomeType, SomeThing>,
+        SomeThing extends Thing.Local<SomeThing, SomeType>>
+        extends TypeImpl<SomeType, SomeThing>
+        implements MetaType.Local<SomeType, SomeThing> {
 
-    public EntityImpl(ConceptProto.Concept concept) {
+    public MetaTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    final EntityType.Local asCurrentType(Concept<?> concept) {
-        return (EntityType.Local) concept.asEntityType();
+    protected SomeThing asInstance(Concept<?> concept) {
+        return (SomeThing) concept.asThing();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    SomeType asCurrentBaseType(Concept<?> other) {
+        return (SomeType) other.asMetaType();
     }
 
     @Override
-    final Local asCurrentBaseType(Concept<?> other) {
-        return (Local) other.asEntity();
+    boolean equalsCurrentBaseType(Concept<?> other) {
+        return other.isMetaType();
     }
+
 }

@@ -32,8 +32,7 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
-        SomeType extends EntityType<SomeType, SomeThing>> extends Thing<SomeThing, SomeType> {
+public interface Entity extends Thing<Entity, EntityType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -41,13 +40,13 @@ public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
      * @see EntityType
      */
     @Override
-    SomeType type();
+    EntityType type();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Entity<SomeThing, SomeType> asEntity() {
+    default Entity asEntity() {
         return this;
     }
 
@@ -64,8 +63,7 @@ public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
         return true;
     }
 
-    interface Local extends Thing.Local<Local, EntityType.Local>,
-            Entity<Local, EntityType.Local> {
+    interface Local extends Thing.Local<Entity, EntityType>, Entity {
     }
 
     /**
@@ -74,7 +72,7 @@ public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
      * Entities are objects which are defined by their Attribute and their links to
      * other entities via Relation
      */
-    interface Remote extends Entity<Remote, EntityType.Remote>, Thing.Remote<Remote, EntityType.Remote> {
+    interface Remote extends Thing.Remote<Entity, EntityType>, Entity {
 
         static Entity.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteEntityImpl(tx, id);
@@ -96,7 +94,7 @@ public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
          * @return The instance itself
          */
         @Override
-        Entity.Remote has(Attribute<?, ?, ?> attribute);
+        Entity.Remote has(Attribute<?> attribute);
 
         /**
          * Removes the provided Attribute from this Entity
@@ -105,7 +103,7 @@ public interface Entity<SomeThing extends Entity<SomeThing, SomeType>,
          * @return The Entity itself
          */
         @Override
-        Entity.Remote unhas(Attribute<?, ?, ?> attribute);
+        Entity.Remote unhas(Attribute<?> attribute);
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

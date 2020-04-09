@@ -45,7 +45,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
     }
 
     @Override
-    Remote<?, ?> asRemote(GraknClient.Transaction tx);
+    Type.Remote<SomeType, SomeThing> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -55,8 +55,8 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
     }
 
     interface Local<
-            SomeType extends Local<SomeType, SomeThing>,
-            SomeThing extends Thing.Local<SomeThing, SomeType>>
+            SomeType extends Type<SomeType, SomeThing>,
+            SomeThing extends Thing<SomeThing, SomeType>>
             extends SchemaConcept.Local<SomeType>, Type<SomeType, SomeThing> {
     }
 
@@ -66,10 +66,9 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
      * They also aid in categorising Thing to different types.
      */
     interface Remote<
-            SomeRemoteType extends Remote<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing.Remote<SomeRemoteThing, SomeRemoteType>>
-            extends Type<SomeRemoteType, SomeRemoteThing>,
-            SchemaConcept.Remote<SomeRemoteType> {
+            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
+            extends SchemaConcept.Remote<SomeRemoteType>, Type<SomeRemoteType, SomeRemoteThing> {
 
         //------------------------------------- Modifiers ----------------------------------
 
@@ -79,7 +78,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param label The new Label.
          * @return The Concept itself
          */
-        SomeRemoteType label(Label label);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> label(Label label);
 
         /**
          * Sets the Type to be abstract - which prevents it from having any instances.
@@ -87,13 +86,13 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
          * @return The concept itself
          */
-        SomeRemoteType isAbstract(Boolean isAbstract);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract);
 
         /**
          * @param role The Role Type which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
-        SomeRemoteType plays(Role<?> role);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role<?> role);
 
         /**
          * Creates a RelationType which allows this type and a AttributeType to be linked in a strictly one-to-one mapping.
@@ -101,7 +100,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param attributeType The AttributeType which instances of this type should be allowed to play.
          * @return The Type itself.
          */
-        SomeRemoteType key(AttributeType<?, ?, ?> attributeType);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> key(AttributeType<?> attributeType);
 
         /**
          * Creates a RelationType which allows this type and a AttributeType  to be linked.
@@ -109,7 +108,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
          * @return The Type itself.
          */
-        SomeRemoteType has(AttributeType<?, ?, ?> attributeType);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType);
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -134,7 +133,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @return All the the super-types of this Type
          */
         @Override
-        Stream<SomeRemoteType> sups();
+        Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> sups();
 
         /**
          * Get all indirect sub-types of this type.
@@ -144,7 +143,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          */
         @Override
         @CheckReturnValue
-        Stream<SomeRemoteType> subs();
+        Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> subs();
 
         /**
          * Get all indirect instances of this type.
@@ -153,7 +152,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @return All the indirect instances of this type.
          */
         @CheckReturnValue
-        Stream<SomeRemoteThing> instances();
+        Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> instances();
 
         /**
          * Return if the type is set to abstract.
@@ -172,7 +171,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param role The Role which the Things of this Type should no longer be allowed to play.
          * @return The Type itself.
          */
-        SomeRemoteType unplay(Role<?> role);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> unplay(Role<?> role);
 
         /**
          * Removes the ability for Things of this Type to have Attributes of type AttributeType
@@ -180,7 +179,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param attributeType the AttributeType which this Type can no longer have
          * @return The Type itself.
          */
-        SomeRemoteType unhas(AttributeType<?, ?, ?> attributeType);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType);
 
         /**
          * Removes AttributeType as a key to this Type
@@ -188,7 +187,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param attributeType the AttributeType which this Type can no longer have as a key
          * @return The Type itself.
          */
-        SomeRemoteType unkey(AttributeType<?, ?, ?> attributeType);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> unkey(AttributeType<?> attributeType);
 
         @Deprecated
         @CheckReturnValue

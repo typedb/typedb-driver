@@ -17,43 +17,44 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.thing;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.DataType;
+import grakn.client.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Thing
+ * Client implementation of Attribute
  *
- * @param <SomeThing> The exact type of this class
- * @param <SomeType>  the type of an instance of this class
+ * @param <D> The data type of this attribute
  */
-public abstract class ThingImpl<
-        SomeThing extends Thing.Local,
-        SomeType extends Type.Local<SomeType, SomeThing>>
-        extends ConceptImpl<SomeThing>
-        implements Thing.Local {
+public class AttributeImpl<D> extends ThingImpl<Attribute.Local<D>, AttributeType.Local<D>> implements Attribute.Local<D> {
 
-    private final SomeType type;
-    private final boolean inferred;
+    private final D value;
 
-    protected ThingImpl(ConceptProto.Concept concept) {
+    public AttributeImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.type = Concept.Local.of(concept.getTypeRes().getType());
-        this.inferred = concept.getInferredRes().getInferred();
+        this.value = DataType.staticCastValue(concept.getValueRes().getValue());
     }
 
     @Override
-    public final SomeType type() {
-        return type;
+    public final D value() {
+        return value;
     }
 
     @Override
-    public final boolean isInferred() {
-        return inferred;
+    public final DataType<D> dataType() {
+        return type().dataType();
     }
 
-    abstract SomeType asCurrentType(Concept<?> concept);
+    @Override
+    final AttributeType.Local<D> asCurrentType(Concept<?> concept) {
+        return (AttributeType.Local<D>) concept.asAttributeType();
+    }
+
+    @Override
+    final Attribute.Local<D> asCurrentBaseType(Concept<?> other) {
+        return (Attribute.Local<D>) other.asAttribute();
+    }
 }

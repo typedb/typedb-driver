@@ -17,24 +17,22 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept;
 
-import grakn.client.concept.Concept;
-import grakn.client.concept.Rule;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Rule
  */
-public class RuleImpl extends SchemaConceptImpl<Rule.LocalRule> implements Rule.LocalRule {
+public class RuleImpl extends SchemaConceptImpl<Rule.Local> implements Rule.Local {
 
     public RuleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final LocalRule asCurrentBaseType(Concept<?> other) {
-        return (LocalRule) other.asRule();
+    final Rule.Local asCurrentBaseType(Concept<?> other) {
+        return (Rule.Local) other.asRule();
     }
 
     @Override

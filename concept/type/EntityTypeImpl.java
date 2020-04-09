@@ -17,30 +17,36 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.type;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.Relation;
-import grakn.client.concept.type.RelationType;
+import grakn.client.concept.thing.Entity;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Relation
+ * Client implementation of a MetaType, a special type of Type
+ * TODO: This class is not defined in Concept API, and at server side implementation.
+ * TODO: we should remove this class, or implement properly on server side.
  */
-public class RelationImpl extends ThingImpl<Relation.Local, RelationType.Local> implements Relation.Local {
+public class EntityTypeImpl extends TypeImpl<EntityType.Local, Entity.Local> implements EntityType.Local {
 
-    public RelationImpl(ConceptProto.Concept concept) {
+    public EntityTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
     @Override
-    final RelationType.Local asCurrentType(Concept<?> concept) {
-        return (RelationType.Local) concept.asRelationType();
+    final Local asCurrentBaseType(Concept<?> other) {
+        return (Local) other.asEntityType();
     }
 
     @Override
-    final Local asCurrentBaseType(Concept<?> other) {
-        return (Local) other.asRelation();
+    final boolean equalsCurrentBaseType(Concept<?> other) {
+        return other.isEntityType();
+    }
+
+    @Override
+    protected final Entity.Local asInstance(Concept<?> concept) {
+        return (Entity.Local) concept.asEntity();
     }
 
 }

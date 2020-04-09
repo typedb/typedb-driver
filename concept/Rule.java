@@ -30,17 +30,17 @@ import java.util.stream.Stream;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface Rule<RuleType extends Rule<RuleType>> extends SchemaConcept<RuleType> {
+public interface Rule extends SchemaConcept<Rule> {
     @Deprecated
     @CheckReturnValue
     @Override
-    default Rule<RuleType> asRule() {
+    default Rule asRule() {
         return this;
     }
 
     @Override
-    default RemoteRule asRemote(GraknClient.Transaction tx) {
-        return RemoteRule.of(tx, id());
+    default Remote asRemote(GraknClient.Transaction tx) {
+        return Remote.of(tx, id());
     }
 
     @Deprecated
@@ -50,15 +50,15 @@ public interface Rule<RuleType extends Rule<RuleType>> extends SchemaConcept<Rul
         return true;
     }
 
-    interface LocalRule extends Local<LocalRule>, Rule<LocalRule> {
+    interface Local extends SchemaConcept.Local<Rule>, Rule {
     }
 
     /**
      * A SchemaConcept used to model and categorise Rules.
      */
-    interface RemoteRule extends Rule<RemoteRule>, Remote<RemoteRule> {
+    interface Remote extends SchemaConcept.Remote<Rule>, Rule {
 
-        static RemoteRule of(GraknClient.Transaction tx, ConceptId id) {
+        static Rule.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteRuleImpl(tx, id);
         }
 
@@ -92,32 +92,32 @@ public interface Rule<RuleType extends Rule<RuleType>> extends SchemaConcept<Rul
          * @param label The new Label.
          * @return The Concept itself
          */
-        RemoteRule label(Label label);
+        Rule.Remote label(Label label);
 
 
         /**
          * @param superRule The super of this Rule
          * @return The Rule itself
          */
-        RemoteRule sup(Rule<?> superRule);
+        Rule.Remote sup(Rule superRule);
 
         /**
          * @return All the super-types of this this Rule
          */
         @Override
-        Stream<RemoteRule> sups();
+        Stream<Rule.Remote> sups();
 
         /**
          * @return All the sub of this Rule
          */
         @Override
-        Stream<RemoteRule> subs();
+        Stream<Rule.Remote> subs();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override
-        default RemoteRule asRule() {
+        default Rule.Remote asRule() {
             return this;
         }
 

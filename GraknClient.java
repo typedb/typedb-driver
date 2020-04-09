@@ -674,10 +674,10 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public Rule.RemoteRule getRule(String label) {
+        public Rule.Remote getRule(String label) {
             SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
-            if (concept instanceof Rule.RemoteRule) {
-                return (Rule.RemoteRule) concept;
+            if (concept instanceof Rule.Remote) {
+                return (Rule.Remote) concept;
             } else {
                 return null;
             }
@@ -717,7 +717,7 @@ public class GraknClient implements AutoCloseable {
             return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString()));
         }
 
-        public Rule.RemoteRule getMetaRule() {
+        public Rule.Remote getMetaRule() {
             return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString()));
         }
 
@@ -774,10 +774,10 @@ public class GraknClient implements AutoCloseable {
             return Concept.Remote.of(responseOrThrow().getPutRoleRes().getRole(), this);
         }
 
-        public Rule.RemoteRule putRule(String label, Pattern when, Pattern then) {
+        public Rule.Remote putRule(String label, Pattern when, Pattern then) {
             return putRule(Label.of(label), when, then);
         }
-        public Rule.RemoteRule putRule(Label label, Pattern when, Pattern then) {
+        public Rule.Remote putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
             return Concept.Remote.of(responseOrThrow().getPutRuleRes().getRule(), this);
         }

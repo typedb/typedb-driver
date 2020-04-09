@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * 1. They have a unique Label which identifies them
  * 2. You can link them together into a hierarchical structure
  */
-public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaConceptType>> extends Concept<SchemaConceptType> {
+public interface SchemaConcept<BaseType extends SchemaConcept<BaseType>> extends Concept<BaseType> {
     //------------------------------------- Accessors ---------------------------------
 
     /**
@@ -47,12 +47,12 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
     @Deprecated
     @CheckReturnValue
     @Override
-    default SchemaConcept<SchemaConceptType> asSchemaConcept() {
+    default SchemaConcept<BaseType> asSchemaConcept() {
         return this;
     }
 
     @Override
-    Remote<?> asRemote(GraknClient.Transaction tx);
+    Remote<BaseType> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -61,7 +61,7 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
         return true;
     }
 
-    interface Local<T extends Local<T>> extends SchemaConcept<T>, Concept.Local<T> {
+    interface Local<T extends SchemaConcept<T>> extends SchemaConcept<T>, Concept.Local<T> {
     }
 
     /**
@@ -71,9 +71,9 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
      * 1. They have a unique Label which identifies them
      * 2. You can link them together into a hierarchical structure
      */
-    interface Remote<RemoteSchemaConceptType extends Remote<RemoteSchemaConceptType>>
-            extends SchemaConcept<RemoteSchemaConceptType>,
-            Concept.Remote<RemoteSchemaConceptType> {
+    interface Remote<BaseType extends SchemaConcept<BaseType>>
+            extends SchemaConcept<BaseType>,
+            Concept.Remote<BaseType> {
         //------------------------------------- Modifiers ----------------------------------
 
         /**
@@ -82,7 +82,7 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
          * @param label The new Label.
          * @return The Concept itself
          */
-        RemoteSchemaConceptType label(Label label);
+        SchemaConcept.Remote<BaseType> label(Label label);
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -91,14 +91,14 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
          */
         @CheckReturnValue
         @Nullable
-        RemoteSchemaConceptType sup();
+        SchemaConcept.Remote<BaseType> sup();
 
         /**
          * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
          * Schema.MetaSchema#THING.
          * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
          */
-        Stream<? extends RemoteSchemaConceptType> sups();
+        Stream<? extends SchemaConcept.Remote<BaseType>> sups();
 
         /**
          * Get all indirect subs of this concept.
@@ -107,7 +107,7 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
          * @return All the indirect sub-types of this SchemaConcept
          */
         @CheckReturnValue
-        Stream<? extends RemoteSchemaConceptType> subs();
+        Stream<? extends SchemaConcept.Remote<BaseType>> subs();
 
         /**
          * Return whether the SchemaConcept was created implicitly.
@@ -123,7 +123,7 @@ public interface SchemaConcept<SchemaConceptType extends SchemaConcept<SchemaCon
         @Deprecated
         @CheckReturnValue
         @Override
-        default SchemaConcept.Remote<RemoteSchemaConceptType> asSchemaConcept() {
+        default SchemaConcept.Remote<BaseType> asSchemaConcept() {
             return this;
         }
 

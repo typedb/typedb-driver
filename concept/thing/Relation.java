@@ -36,10 +36,7 @@ import java.util.stream.Stream;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation<
-        SomeThing extends Relation<SomeThing, SomeType>,
-        SomeType extends RelationType<SomeType, SomeThing>>
-        extends Thing<SomeThing, SomeType> {
+public interface Relation extends Thing<Relation, RelationType> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -49,13 +46,13 @@ public interface Relation<
      * @see RelationType
      */
     @Override
-    SomeType type();
+    RelationType type();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Relation<SomeThing, SomeType> asRelation() {
+    default Relation asRelation() {
         return this;
     }
 
@@ -71,8 +68,7 @@ public interface Relation<
         return true;
     }
 
-    interface Local extends Thing.Local<Local, RelationType.Local>,
-            Relation<Local, RelationType.Local> {
+    interface Local extends Thing.Local<Relation, RelationType>, Relation {
     }
 
     /**
@@ -81,8 +77,7 @@ public interface Relation<
      * It represents how different entities relate to one another.
      * Relation are used to model n-ary relations between instances.
      */
-    interface Remote extends Relation<Remote, RelationType.Remote>,
-            Thing.Remote<Remote, RelationType.Remote> {
+    interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
 
         static Relation.Remote of (GraknClient.Transaction tx, ConceptId id) {
             return new RemoteRelationImpl(tx, id);
@@ -97,7 +92,7 @@ public interface Relation<
          * @return The instance itself
          */
         @Override
-        Relation.Remote has(Attribute<?, ?, ?> attribute);
+        Relation.Remote has(Attribute<?> attribute);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -127,7 +122,7 @@ public interface Relation<
          * @return a list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> rolePlayers(Role<?>... roles);
+        Stream<Thing.Remote<?, ?>> rolePlayers(Role... roles);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
@@ -136,7 +131,7 @@ public interface Relation<
          * @param player The new role player.
          * @return The Relation itself.
          */
-        Relation.Remote assign(Role<?> role, Thing<?, ?> player);
+        Relation.Remote assign(Role role, Thing<?, ?> player);
 
         /**
          * Removes the provided Attribute from this Relation
@@ -145,7 +140,7 @@ public interface Relation<
          * @return The Relation itself
          */
         @Override
-        Relation.Remote unhas(Attribute<?, ?, ?> attribute);
+        Relation.Remote unhas(Attribute<?> attribute);
 
         /**
          * Removes the Thing which is playing a Role in this Relation.
@@ -154,7 +149,7 @@ public interface Relation<
          * @param role   The Role being played by the Thing
          * @param player The Thing playing the Role in this Relation
          */
-        void unassign(Role<?> role, Thing<?, ?> player);
+        void unassign(Role role, Thing<?, ?> player);
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

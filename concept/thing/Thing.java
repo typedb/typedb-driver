@@ -46,7 +46,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    SomeType type();
+    Type<SomeType, SomeThing> type();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -65,7 +65,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
     }
 
     @Override
-    Remote<? extends Remote<?, ?>, ? extends Type.Remote<?, ?>> asRemote(GraknClient.Transaction tx);
+    Remote<SomeThing, SomeType> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -75,8 +75,8 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
     }
 
     interface Local<
-            SomeThing extends Local<SomeThing, SomeType>,
-            SomeType extends Type.Local<SomeType, SomeThing>>
+            SomeThing extends Thing<SomeThing, SomeType>,
+            SomeType extends Type<SomeType, SomeThing>>
             extends Concept.Local<SomeThing>, Thing<SomeThing, SomeType> {
     }
 
@@ -87,9 +87,9 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * Instances can relate to one another via Relation
      */
     interface Remote<
-            SomeRemoteThing extends Remote<SomeRemoteThing, SomeRemoteType>,
-            SomeRemoteType extends Type.Remote<SomeRemoteType, SomeRemoteThing>>
-            extends Thing<SomeRemoteThing, SomeRemoteType>, Concept.Remote<SomeRemoteThing> {
+            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
+            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>>
+            extends Concept.Remote<SomeRemoteThing>, Thing<SomeRemoteThing, SomeRemoteType> {
         //------------------------------------- Accessors ----------------------------------
 
         /**
@@ -99,7 +99,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         @Override
         @CheckReturnValue
-        SomeRemoteType type();
+        Type.Remote<SomeRemoteType, SomeRemoteThing> type();
 
         /**
          * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
@@ -130,7 +130,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute The Attribute to which a Relation is created
          * @return The instance itself
          */
-        SomeRemoteThing has(Attribute<?, ?, ?> attribute);
+        Thing.Remote<SomeRemoteThing, SomeRemoteType> has(Attribute<?> attribute);
 
         /**
          * Creates a Relation from this instance to the provided Attribute.
@@ -139,7 +139,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute The Attribute to which a Relation is created
          * @return The Relation connecting the Thing and the Attribute
          */
-        Relation.Remote relhas(Attribute<?, ?, ?> attribute);
+        Relation.Remote relhas(Attribute<?> attribute);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing
@@ -149,10 +149,10 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> attributes(AttributeType<?, ?, ?>... attributeTypes);
+        Stream<Attribute.Remote<?>> attributes(AttributeType<?>... attributeTypes);
 
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T, ?, ?> attributeType);
+        <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing as a key
@@ -162,10 +162,10 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> keys(AttributeType<?, ?, ?>... attributeTypes);
+        Stream<Attribute.Remote<?>> keys(AttributeType<?>... attributeTypes);
 
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> keys(AttributeType<T, ?, ?> attributeType);
+        <T> Stream<Attribute.Remote<T>> keys(AttributeType<T> attributeType);
 
         /**
          * Removes the provided Attribute from this Thing
@@ -173,13 +173,13 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute the Attribute to be removed
          * @return The Thing itself
          */
-        SomeRemoteThing unhas(Attribute<?, ?, ?> attribute);
+        SomeRemoteThing unhas(Attribute<?> attribute);
 
         /**
          * Used to indicate if this Thing has been created as the result of a Rule inference.
          *
          * @return true if this Thing exists due to a rule
-         * @see Rule.RemoteRule
+         * @see Rule.Remote
          */
         boolean isInferred();
 
@@ -187,7 +187,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
         @Deprecated
         @CheckReturnValue
         @Override
-        default Thing.Remote asThing() {
+        default Thing.Remote<SomeRemoteThing, SomeRemoteType> asThing() {
             return this;
         }
 

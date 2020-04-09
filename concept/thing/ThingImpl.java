@@ -17,27 +17,44 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.thing;
 
 import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptImpl;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of Type
+ * Client implementation of Thing
  *
- * @param <SomeType>  The exact type of this class
+ * @param <SomeThing> The exact type of this class
+ * @param <SomeType>  the type of an instance of this class
  */
-public abstract class TypeImpl<
-        SomeType extends Type.Local<SomeType, SomeThing>,
-        SomeThing extends Thing.Local<SomeThing, SomeType>>
-        extends SchemaConceptImpl<SomeType>
-        implements Type.Local<SomeType, SomeThing> {
+public abstract class ThingImpl<
+        SomeThing extends Thing.Local<SomeThing, SomeType>,
+        SomeType extends Type.Local<SomeType, SomeThing>>
+        extends ConceptImpl<SomeThing>
+        implements Thing.Local<SomeThing, SomeType> {
 
-    protected TypeImpl(ConceptProto.Concept concept) {
+    private final SomeType type;
+    private final boolean inferred;
+
+    protected ThingImpl(ConceptProto.Concept concept) {
         super(concept);
+        this.type = Concept.Local.of(concept.getTypeRes().getType());
+        this.inferred = concept.getInferredRes().getInferred();
     }
 
-    protected abstract SomeThing asInstance(Concept<?> concept);
+    @Override
+    public final SomeType type() {
+        return type;
+    }
+
+    @Override
+    public final boolean isInferred() {
+        return inferred;
+    }
+
+    abstract SomeType asCurrentType(Concept<?> concept);
 }

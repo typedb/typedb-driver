@@ -17,34 +17,28 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.type;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.Label;
-import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.SchemaConceptImpl;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 
 /**
- * Client implementation of SchemaConcept
+ * Client implementation of Type
  *
- * @param <SomeSchemaConcept> The exact type of this class
+ * @param <SomeType>  The exact type of this class
  */
-public abstract class SchemaConceptImpl<
-        SomeSchemaConcept extends SchemaConcept.Local<SomeSchemaConcept>>
-        extends ConceptImpl<SomeSchemaConcept>
-        implements SchemaConcept.Local<SomeSchemaConcept> {
+public abstract class TypeImpl<
+        SomeType extends Type.Local<SomeType, SomeThing>,
+        SomeThing extends Thing.Local<SomeThing, SomeType>>
+        extends SchemaConceptImpl<SomeType>
+        implements Type.Local<SomeType, SomeThing> {
 
-    private final Label label;
-
-    protected SchemaConceptImpl(ConceptProto.Concept concept) {
+    protected TypeImpl(ConceptProto.Concept concept) {
         super(concept);
-        this.label = Label.of(concept.getLabelRes().getLabel());
     }
 
-    @Override
-    public final Label label() {
-        return label;
-    }
-
-    abstract boolean equalsCurrentBaseType(Concept<?> other);
+    protected abstract SomeThing asInstance(Concept<?> concept);
 }

@@ -20,15 +20,13 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.local.AttributeImpl;
-import grakn.client.concept.local.AttributeTypeImpl;
-import grakn.client.concept.local.EntityImpl;
-import grakn.client.concept.local.EntityTypeImpl;
-import grakn.client.concept.local.MetaTypeImpl;
-import grakn.client.concept.local.RelationImpl;
-import grakn.client.concept.local.RelationTypeImpl;
-import grakn.client.concept.local.RoleImpl;
-import grakn.client.concept.local.RuleImpl;
+import grakn.client.concept.thing.AttributeImpl;
+import grakn.client.concept.type.AttributeTypeImpl;
+import grakn.client.concept.thing.EntityImpl;
+import grakn.client.concept.type.EntityTypeImpl;
+import grakn.client.concept.type.MetaTypeImpl;
+import grakn.client.concept.thing.RelationImpl;
+import grakn.client.concept.type.RelationTypeImpl;
 import grakn.client.concept.remote.RemoteAttributeImpl;
 import grakn.client.concept.remote.RemoteAttributeTypeImpl;
 import grakn.client.concept.remote.RemoteEntityImpl;
@@ -60,7 +58,7 @@ import javax.annotation.CheckReturnValue;
  * (EntityType, Role, RelationType, Rule or AttributeType)
  * or an Thing (Entity, Relation , Attribute).
  */
-public interface Concept<ConceptType extends Concept<ConceptType>> {
+public interface Concept<BaseType extends Concept<BaseType>> {
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -110,7 +108,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A EntityType if the Concept is an EntityType
      */
     @CheckReturnValue
-    default EntityType<?, ?> asEntityType() {
+    default EntityType asEntityType() {
         throw GraknConceptException.invalidCasting(this, EntityType.class);
     }
 
@@ -120,7 +118,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A Role if the Concept is a Role
      */
     @CheckReturnValue
-    default Role<?> asRole() {
+    default Role asRole() {
         throw GraknConceptException.invalidCasting(this, Role.class);
     }
 
@@ -130,7 +128,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A RelationType if the Concept is a RelationType
      */
     @CheckReturnValue
-    default RelationType<?, ?> asRelationType() {
+    default RelationType asRelationType() {
         throw GraknConceptException.invalidCasting(this, RelationType.class);
     }
 
@@ -140,7 +138,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default AttributeType<?, ?, ?> asAttributeType() {
+    default AttributeType<?> asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -150,7 +148,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    default Rule<?> asRule() {
+    default Rule asRule() {
         throw GraknConceptException.invalidCasting(this, Rule.class);
     }
 
@@ -160,7 +158,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return An Entity if the Concept is a Thing
      */
     @CheckReturnValue
-    default Entity<?, ?> asEntity() {
+    default Entity asEntity() {
         throw GraknConceptException.invalidCasting(this, Entity.class);
     }
 
@@ -170,7 +168,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A Relation  if the Concept is a Relation
      */
     @CheckReturnValue
-    default Relation<?, ?> asRelation() {
+    default Relation asRelation() {
         throw GraknConceptException.invalidCasting(this, Relation.class);
     }
 
@@ -180,7 +178,7 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default Attribute<?, ?, ?> asAttribute() {
+    default Attribute<?> asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -330,30 +328,30 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
         return false;
     }
 
-    interface Local<ConceptType extends Local<ConceptType>> extends Concept<ConceptType> {
+    interface Local<BaseType extends Concept<BaseType>> extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <ConceptType extends Local<ConceptType>>
-        ConceptType of(ConceptProto.Concept concept) {
+        static <BaseType extends Local<BaseType>>
+        BaseType of(ConceptProto.Concept concept) {
             switch (concept.getBaseType()) {
                 case ENTITY:
-                    return (ConceptType) new EntityImpl(concept);
+                    return (BaseType) new EntityImpl(concept);
                 case RELATION:
-                    return (ConceptType) new RelationImpl(concept);
+                    return (BaseType) new RelationImpl(concept);
                 case ATTRIBUTE:
-                    return (ConceptType) new AttributeImpl<>(concept);
+                    return (BaseType) new AttributeImpl<>(concept);
                 case ENTITY_TYPE:
-                    return (ConceptType) new EntityTypeImpl(concept);
+                    return (BaseType) new EntityTypeImpl(concept);
                 case RELATION_TYPE:
-                    return (ConceptType) new RelationTypeImpl(concept);
+                    return (BaseType) new RelationTypeImpl(concept);
                 case ATTRIBUTE_TYPE:
-                    return (ConceptType) new AttributeTypeImpl<>(concept);
+                    return (BaseType) new AttributeTypeImpl<>(concept);
                 case ROLE:
-                    return (ConceptType) new RoleImpl(concept);
+                    return (BaseType) new RoleImpl(concept);
                 case RULE:
-                    return (ConceptType) new RuleImpl(concept);
+                    return (BaseType) new RuleImpl(concept);
                 case META_TYPE:
-                    return (ConceptType) new MetaTypeImpl<>(concept);
+                    return (BaseType) new MetaTypeImpl<>(concept);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
@@ -366,11 +364,11 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
      *
      * Provides the basic RPCs to delete a concept and check if it is deleted.
      */
-    interface Remote<RemoteConceptType extends Remote<RemoteConceptType>>
-            extends Concept<RemoteConceptType> {
+    interface Remote<BaseType extends Concept<BaseType>>
+            extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <RemoteConceptType extends Remote<RemoteConceptType>> RemoteConceptType
+        static <RemoteConceptType extends Remote> RemoteConceptType
         of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
             ConceptId id = ConceptId.of(concept.getId());
             switch (concept.getBaseType()) {
@@ -484,8 +482,8 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
          */
         @Override
         @CheckReturnValue
-        default Rule.RemoteRule asRule() {
-            throw GraknConceptException.invalidCasting(this, Rule.RemoteRule.class);
+        default Rule.Remote asRule() {
+            throw GraknConceptException.invalidCasting(this, Rule.Remote.class);
         }
 
         /**
@@ -515,7 +513,6 @@ public interface Concept<ConceptType extends Concept<ConceptType>> {
          *
          * @return A Attribute if the Concept is a Attribute
          */
-        @SuppressWarnings("unchecked")
         @Override
         @CheckReturnValue
         default Attribute.Remote<?> asAttribute() {

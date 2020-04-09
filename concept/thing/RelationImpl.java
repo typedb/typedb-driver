@@ -17,38 +17,31 @@
  * under the License.
  */
 
-package grakn.client.concept.local;
+package grakn.client.concept.thing;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.MetaType;
+import grakn.client.concept.thing.ThingImpl;
+import grakn.client.concept.thing.Relation;
+import grakn.client.concept.type.RelationType;
 import grakn.protocol.session.ConceptProto;
 
-public class MetaTypeImpl<
-        SomeType extends MetaType.Local<SomeType, SomeThing>,
-        SomeThing extends Thing.Local<SomeThing, SomeType>>
-        extends TypeImpl<SomeType, SomeThing>
-        implements MetaType.Local<SomeType, SomeThing> {
+/**
+ * Client implementation of Relation
+ */
+public class RelationImpl extends ThingImpl<Relation.Local, RelationType.Local> implements Relation.Local {
 
-    public MetaTypeImpl(ConceptProto.Concept concept) {
+    public RelationImpl(ConceptProto.Concept concept) {
         super(concept);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected SomeThing asInstance(Concept<?> concept) {
-        return (SomeThing) concept.asThing();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    SomeType asCurrentBaseType(Concept<?> other) {
-        return (SomeType) other.asMetaType();
+    final RelationType.Local asCurrentType(Concept<?> concept) {
+        return (RelationType.Local) concept.asRelationType();
     }
 
     @Override
-    boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isMetaType();
+    final Local asCurrentBaseType(Concept<?> other) {
+        return (Local) other.asRelation();
     }
 
 }

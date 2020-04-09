@@ -9,10 +9,7 @@ import grakn.client.concept.DataType;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-public interface Attribute<D,
-        AttrThing extends Attribute<D, AttrThing, AttrType>,
-        AttrType extends AttributeType<D, AttrType, AttrThing>>
-        extends Thing<AttrThing, AttrType> {
+public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -29,7 +26,7 @@ public interface Attribute<D,
      * @return The AttributeType of which this resource is an Thing.
      */
     @Override
-    AttrType type();
+    AttributeType<D> type();
 
     /**
      * Retrieves the data type of this Attribute's AttributeType.
@@ -40,17 +37,16 @@ public interface Attribute<D,
     DataType<D> dataType();
 
     //------------------------------------- Other ---------------------------------
-    @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default AttrThing asAttribute() {
-        return (AttrThing) this;
+    default Attribute<D> asAttribute() {
+        return this;
     }
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Thing.Remote<Attribute<D>, AttributeType<D>> asRemote(GraknClient.Transaction tx) {
         return Attribute.Remote.of(tx, id());
     }
 
@@ -70,8 +66,7 @@ public interface Attribute<D,
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Local<D> extends Thing.Local<Local<D>, AttributeType.Local<D>>,
-            Attribute<D, Local<D>, AttributeType.Local<D>> {
+    interface Local<D> extends Thing.Local<Attribute<D>, AttributeType<D>>, Attribute<D> {
     }
 
     /**
@@ -83,8 +78,7 @@ public interface Attribute<D,
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Remote<D> extends Attribute<D, Remote<D>, AttributeType.Remote<D>>,
-            Thing.Remote<Remote<D>, AttributeType.Remote<D>> {
+    interface Remote<D> extends Thing.Remote<Attribute<D>, AttributeType<D>>, Attribute<D> {
 
         static <D> Attribute.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
             return new RemoteAttributeImpl<>(tx, id);
@@ -115,7 +109,7 @@ public interface Attribute<D,
          * @return The instance itself
          */
         @Override
-        Attribute.Remote<D> has(Attribute<?, ?, ?> attribute);
+        Attribute.Remote<D> has(Attribute<?> attribute);
 
         /**
          * Removes the provided Attribute from this Attribute
@@ -124,10 +118,9 @@ public interface Attribute<D,
          * @return The Attribute itself
          */
         @Override
-        Attribute.Remote<D> unhas(Attribute<?, ?, ?> attribute);
+        Attribute.Remote<D> unhas(Attribute<?> attribute);
 
         //------------------------------------- Other ---------------------------------
-        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
