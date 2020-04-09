@@ -166,10 +166,10 @@ public class GraqlSteps {
     public void concept_identifier_symbols_are(Map<String, Map<String, String>> identifiers) {
         for (Map.Entry<String, Map<String, String>> entry : identifiers.entrySet()) {
             String identifier = entry.getKey();
-            String type = entry.getValue().get("Identifier Type");
-            String value = entry.getValue().get("Identifier Value");
+            String check = entry.getValue().get("check");
+            String value = entry.getValue().get("value");
 
-            switch (type) {
+            switch (check) {
                 case "key":
                     identifierChecks.put(identifier, new KeyUniquenessCheck(value));
                     break;
@@ -180,7 +180,7 @@ public class GraqlSteps {
                     identifierChecks.put(identifier, new LabelUniquenessCheck(value));
                     break;
                 default:
-                    throw new RuntimeException(String.format("Unrecognised Identifier Type \"%s\"", type));
+                    throw new RuntimeException(String.format("Unrecognised identifier check \"%s\"", check));
             }
         }
     }
@@ -307,14 +307,12 @@ public class GraqlSteps {
 
     private void checkExplanationContains(List<ConceptMap> answers, Map<Integer, Map<String, String>> explanationTree, Integer entryId) {
         Map<String, String> explanationEntry = explanationTree.get(entryId);
-        String[] vars = explanationEntry.get("Vars").split(", ");
-        String[] identifiers = explanationEntry.get("Identifiers").split(", ");
-        String[] children = explanationEntry.get("Children").split(", ");
+        String[] vars = explanationEntry.get("vars").split(", ");
+        String[] identifiers = explanationEntry.get("identifiers").split(", ");
+        String[] children = explanationEntry.get("children").split(", ");
 
-        // TODO Assert or throw when its the test that's been defined incorrectly?
-//        assertEquals(vars.length, identifiers.length);
         if (vars.length != identifiers.length) {
-            throw new RuntimeException(String.format("Vars and Identifiers should correspond. Found %d Vars and %s Identifiers", vars.length, identifiers.length));
+            throw new RuntimeException(String.format("vars and identifiers should correspond. Found %d vars and %s identifiers", vars.length, identifiers.length));
         }
 
         Map<String, String> answerIdentifiers = IntStream.range(0, vars.length).boxed().collect(Collectors.toMap(i -> vars[i], i -> identifiers[i]));
@@ -325,10 +323,10 @@ public class GraqlSteps {
 
         ConceptMap answer = matchingAnswer.get();
 
-        String queryWithIds = applyQueryTemplate(explanationEntry.get("Pattern"), answer);
+        String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
         assertEquals(Graql.and(Graql.parsePatternList(queryWithIds)), answer.queryPattern());
 
-        String expectedRule = explanationEntry.get("Rule");
+        String expectedRule = explanationEntry.get("rule");
         boolean hasExplanation = answer.hasExplanation();
 
         if (expectedRule.equals("lookup")) {
