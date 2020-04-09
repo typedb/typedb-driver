@@ -45,18 +45,12 @@ public abstract class RemoteTypeImpl<
         super(tx, id);
     }
 
-    final Stream<SomeRemoteThing> thingStream(int iteratorId,
-                                              Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        return conceptStream(tx(), iteratorId, conceptGetter);
-    }
-
     @Override
     public final Stream<SomeRemoteThing> instances() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setTypeInstancesReq(ConceptProto.Type.Instances.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setTypeInstancesIterReq(ConceptProto.Type.Instances.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getTypeInstancesIter().getId();
-        return thingStream(iteratorId, res -> res.getTypeInstancesIterRes().getThing()).map(this::asInstance);
+        return conceptStream(method, res -> res.getTypeInstancesIterRes().getThing()).map(this::asInstance);
     }
 
     @Override
@@ -79,29 +73,26 @@ public abstract class RemoteTypeImpl<
 
     @Override
     public final Stream<RemoteAttributeType<?>> keys() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setTypeKeysReq(ConceptProto.Type.Keys.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setTypeKeysIterReq(ConceptProto.Type.Keys.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getTypeKeysIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeKeysIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
+        return conceptStream(method, res -> res.getTypeKeysIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
     }
 
     @Override
     public final Stream<RemoteAttributeType<?>> attributes() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setTypeAttributesReq(ConceptProto.Type.Attributes.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setTypeAttributesIterReq(ConceptProto.Type.Attributes.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getTypeAttributesIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypeAttributesIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
+        return conceptStream(method, res -> res.getTypeAttributesIterRes().getAttributeType()).map(RemoteConcept::asAttributeType);
     }
 
     @Override
     public final Stream<RemoteRole> playing() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setTypePlayingReq(ConceptProto.Type.Playing.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setTypePlayingIterReq(ConceptProto.Type.Playing.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getTypePlayingIter().getId();
-        return conceptStream(iteratorId, res -> res.getTypePlayingIterRes().getRole()).map(RemoteConcept::asRole);
+        return conceptStream(method, res -> res.getTypePlayingIterRes().getRole()).map(RemoteConcept::asRole);
     }
 
     @Override

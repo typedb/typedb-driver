@@ -51,11 +51,9 @@ class RemoteAttributeImpl<D> extends RemoteThingImpl<RemoteAttribute<D>, RemoteA
 
     @Override
     public final Stream<RemoteThing<?, ?>> owners() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setAttributeOwnersReq(ConceptProto.Attribute.Owners.Req.getDefaultInstance()).build();
-
-        int iteratorId = runMethod(method).getAttributeOwnersIter().getId();
-        return conceptStream(tx(), iteratorId, res -> res.getAttributeOwnersIterRes().getThing()).map(RemoteConcept::asThing);
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setAttributeOwnersIterReq(ConceptProto.Attribute.Owners.Iter.Req.getDefaultInstance()).build();
+        return conceptStream(method, res -> res.getAttributeOwnersIterRes().getThing()).map(RemoteConcept::asThing);
     }
 
     @Override

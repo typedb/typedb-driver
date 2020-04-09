@@ -42,18 +42,16 @@ public class RemoteRoleImpl extends RemoteSchemaConceptImpl<RemoteRole> implemen
 
     @Override
     public final Stream<RemoteRelationType> relations() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRoleRelationsReq(ConceptProto.Role.Relations.Req.getDefaultInstance()).build();
-        int iteratorId = runMethod(method).getRoleRelationsIter().getId();
-        return conceptStream(iteratorId, res -> res.getRoleRelationsIterRes().getRelationType()).map(RemoteConcept::asRelationType);
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setRoleRelationsIterReq(ConceptProto.Role.Relations.Iter.Req.getDefaultInstance()).build();
+        return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(RemoteConcept::asRelationType);
     }
 
     @Override
     public final Stream<RemoteType<?, ?>> players() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRolePlayersReq(ConceptProto.Role.Players.Req.getDefaultInstance()).build();
-        int iteratorId = runMethod(method).getRolePlayersIter().getId();
-        return conceptStream(iteratorId, res -> res.getRolePlayersIterRes().getType()).map(RemoteConcept::asType);
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setRolePlayersIterReq(ConceptProto.Role.Players.Iter.Req.getDefaultInstance()).build();
+        return conceptStream(method, res -> res.getRolePlayersIterRes().getType()).map(RemoteConcept::asType);
     }
 
     @Override

@@ -98,20 +98,14 @@ abstract class RemoteConceptImpl<SomeRemoteConcept extends RemoteConcept<SomeRem
 
 
     static <R extends RemoteConcept<R>>
-    Stream<R> conceptStream(GraknClient.Transaction tx,
-                            int iteratorId,
+    Stream<R> conceptStream(GraknClient.Transaction tx, ConceptId id, ConceptProto.Method.Iter.Req request,
                             Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        Iterable<R> iterable = () -> tx.iterate(
-                iteratorId, res -> RemoteConcept.of(conceptGetter.apply(res.getConceptMethodIterRes()), tx)
-        );
-
-        return StreamSupport.stream(iterable.spliterator(), false);
+        return tx.iterateConceptMethod(id, request, response -> RemoteConcept.of(conceptGetter.apply(response), tx));
     }
 
-
-    Stream<SomeRemoteConcept> conceptStream
-            (int iteratorId, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        return conceptStream(tx(), iteratorId, conceptGetter);
+    <R extends RemoteConcept<R>> Stream<R> conceptStream
+            (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
+        return conceptStream(tx(), id(), request, conceptGetter);
     }
 
     protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {

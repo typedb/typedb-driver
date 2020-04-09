@@ -94,8 +94,7 @@ public class ResponseReader {
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
         Map<Variable, Concept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> variableMap.put(new Variable(resVar),
-                        resConcept.getIsPrefilled() ? LocalConcept.of(resConcept) : RemoteConcept.of(resConcept, tx))
+                (resVar, resConcept) -> variableMap.put(new Variable(resVar), LocalConcept.of(resConcept))
         );
         // Pattern is null if no reasoner was used
         boolean hasExplanation = res.getHasExplanation();

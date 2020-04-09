@@ -53,11 +53,10 @@ class RemoteRelationTypeImpl extends RemoteTypeImpl<RemoteRelationType, RemoteRe
 
     @Override
     public final Stream<RemoteRole> roles() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setRelationTypeRolesReq(ConceptProto.RelationType.Roles.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setRelationTypeRolesIterReq(ConceptProto.RelationType.Roles.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getRelationTypeRolesIter().getId();
-        return conceptStream(iteratorId, res -> res.getRelationTypeRolesIterRes().getRole()).map(RemoteConcept::asRole);
+        return conceptStream(method, res -> res.getRelationTypeRolesIterRes().getRole()).map(RemoteConcept::asRole);
     }
 
     @Override

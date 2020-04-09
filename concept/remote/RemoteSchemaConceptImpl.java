@@ -103,11 +103,10 @@ public abstract class RemoteSchemaConceptImpl<
 
     @Override
     public final Stream<SomeRemoteSchemaConceptType> subs() {
-        ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                .setSchemaConceptSubsReq(ConceptProto.SchemaConcept.Subs.Req.getDefaultInstance()).build();
+        ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                .setSchemaConceptSubsIterReq(ConceptProto.SchemaConcept.Subs.Iter.Req.getDefaultInstance()).build();
 
-        int iteratorId = runMethod(method).getSchemaConceptSubsIter().getId();
-        return conceptStream(iteratorId, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept());
+        return conceptStream(method, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept());
     }
 
     abstract boolean equalsCurrentBaseType(RemoteConcept<?> other);
