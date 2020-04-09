@@ -19,28 +19,14 @@
 
 package grakn.client.concept;
 
-import grakn.client.concept.Concept;
-import grakn.client.concept.Role;
-import grakn.client.concept.SchemaConceptImpl;
 import grakn.protocol.session.ConceptProto;
 
 /**
  * Client implementation of Role
  */
-public class RoleImpl extends SchemaConceptImpl<Role.Local> implements Role.Local {
+public class RoleImpl extends SchemaConceptImpl<Role> implements Role.Local {
 
     public RoleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
-
-    @Override
-    final Role.Local asCurrentBaseType(Concept<?> other) {
-        return (Role.Local) other.asRole();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isRole();
-    }
-
 }

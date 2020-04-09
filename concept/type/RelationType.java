@@ -180,7 +180,7 @@ public interface RelationType extends Type<RelationType, Relation> {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote plays(Role<?> role);
+        RelationType.Remote plays(Role role);
 
         /**
          * Removes the ability of this RelationType to play a specific Role
@@ -189,7 +189,7 @@ public interface RelationType extends Type<RelationType, Relation> {
          * @return The Rule itself.
          */
         @Override
-        RelationType.Remote unplay(Role<?> role);
+        RelationType.Remote unplay(Role role);
 
         /**
          * Removes the ability for Things of this RelationType to have Attributes of type AttributeType

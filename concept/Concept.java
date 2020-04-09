@@ -331,7 +331,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
     interface Local<BaseType extends Concept<BaseType>> extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <BaseType extends Local<BaseType>>
+        static <BaseType extends Concept<? extends BaseType>>
         BaseType of(ConceptProto.Concept concept) {
             switch (concept.getBaseType()) {
                 case ENTITY:
@@ -368,28 +368,28 @@ public interface Concept<BaseType extends Concept<BaseType>> {
             extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <RemoteConceptType extends Remote> RemoteConceptType
-        of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
+        static <RemoteType extends Remote<BaseConceptType>, BaseConceptType extends Concept<BaseConceptType>>
+        RemoteType of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
             ConceptId id = ConceptId.of(concept.getId());
             switch (concept.getBaseType()) {
                 case ENTITY:
-                    return (RemoteConceptType) new RemoteEntityImpl(tx, id);
+                    return (RemoteType) new RemoteEntityImpl(tx, id);
                 case RELATION:
-                    return (RemoteConceptType) new RemoteRelationImpl(tx, id);
+                    return (RemoteType) new RemoteRelationImpl(tx, id);
                 case ATTRIBUTE:
-                    return (RemoteConceptType) new RemoteAttributeImpl<>(tx, id);
+                    return (RemoteType) new RemoteAttributeImpl<>(tx, id);
                 case ENTITY_TYPE:
-                    return (RemoteConceptType) new RemoteEntityTypeImpl(tx, id);
+                    return (RemoteType) new RemoteEntityTypeImpl(tx, id);
                 case RELATION_TYPE:
-                    return (RemoteConceptType) new RemoteRelationTypeImpl(tx, id);
+                    return (RemoteType) new RemoteRelationTypeImpl(tx, id);
                 case ATTRIBUTE_TYPE:
-                    return (RemoteConceptType) new RemoteAttributeTypeImpl<>(tx, id);
+                    return (RemoteType) new RemoteAttributeTypeImpl<>(tx, id);
                 case ROLE:
-                    return (RemoteConceptType) new RemoteRoleImpl(tx, id);
+                    return (RemoteType) new RemoteRoleImpl(tx, id);
                 case RULE:
-                    return (RemoteConceptType) new RemoteRuleImpl(tx, id);
+                    return (RemoteType) new RemoteRuleImpl(tx, id);
                 case META_TYPE:
-                    return (RemoteConceptType) new RemoteMetaTypeImpl<>(tx, id);
+                    return (RemoteType) new RemoteMetaTypeImpl<>(tx, id);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);

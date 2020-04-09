@@ -683,15 +683,16 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
-        public <T extends SchemaConcept.Remote<T>> T getSchemaConcept(Label label) {
+        public <T extends SchemaConcept.Remote<? extends T>> T getSchemaConcept(Label label) {
             transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetSchemaConceptRes().getResCase()) {
                 case NULL:
                     return null;
                 case SCHEMACONCEPT:
-                    return Concept.Remote.of(response.getGetSchemaConceptRes().getSchemaConcept(), this);
+                    return (T) Concept.Remote.of(response.getGetSchemaConceptRes().getSchemaConcept(), this);
                 default:
                     throw GraknClientException.resultNotPresent();
             }
@@ -782,12 +783,12 @@ public class GraknClient implements AutoCloseable {
             return Concept.Remote.of(responseOrThrow().getPutRuleRes().getRule(), this);
         }
 
-        public <T extends SchemaConcept.Remote<T>> Stream<T> sups(SchemaConcept.Remote<T> schemaConcept) {
+        public Stream<? extends SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setSchemaConceptSupsIterReq(ConceptProto.SchemaConcept.Sups.Iter.Req.getDefaultInstance()).build();
 
             return iterateConceptMethod(schemaConcept.id(), method,
-                    res -> Concept.Remote.of(res.getSchemaConceptSupsIterRes().getSchemaConcept(), this));
+                    res -> Concept.Remote.of(res.getSchemaConceptSupsIterRes().getSchemaConcept(), this).asSchemaConcept());
         }
 
         public SessionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {

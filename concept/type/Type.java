@@ -92,7 +92,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param role The Role Type which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role<?> role);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role role);
 
         /**
          * Creates a RelationType which allows this type and a AttributeType to be linked in a strictly one-to-one mapping.
@@ -171,7 +171,7 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param role The Role which the Things of this Type should no longer be allowed to play.
          * @return The Type itself.
          */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> unplay(Role<?> role);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> unplay(Role role);
 
         /**
          * Removes the ability for Things of this Type to have Attributes of type AttributeType

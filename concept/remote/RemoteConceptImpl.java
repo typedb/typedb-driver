@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <SomeRemoteConcept> represents the actual class of object to downcast to
  */
-public abstract class RemoteConceptImpl<SomeRemoteConcept extends Concept.Remote<SomeRemoteConcept>>
+public abstract class RemoteConceptImpl<SomeRemoteConcept extends Concept<SomeRemoteConcept>>
         implements Concept.Remote<SomeRemoteConcept> {
 
     private final GraknClient.Transaction tx;
@@ -90,22 +90,16 @@ public abstract class RemoteConceptImpl<SomeRemoteConcept extends Concept.Remote
         return h;
     }
 
-    GraknClient.Transaction tx() {
+    protected GraknClient.Transaction tx() {
         return tx;
     }
 
-    abstract SomeRemoteConcept asCurrentBaseType(Remote<?> other);
+    protected abstract Concept.Remote<SomeRemoteConcept> asCurrentBaseType(Concept.Remote<?> other);
 
-
-    static <R extends Remote<R>>
-    Stream<R> conceptStream(GraknClient.Transaction tx, ConceptId id, ConceptProto.Method.Iter.Req request,
-                            Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        return tx.iterateConceptMethod(id, request, response -> Remote.of(conceptGetter.apply(response), tx));
-    }
-
-    <R extends Remote<R>> Stream<R> conceptStream
+    @SuppressWarnings("unchecked")
+    protected  <R extends Remote<R>> Stream<R> conceptStream
             (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        return conceptStream(tx(), id(), request, conceptGetter);
+        return tx.iterateConceptMethod(id, request, response -> Remote.of(conceptGetter.apply(response), tx));
     }
 
     protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {

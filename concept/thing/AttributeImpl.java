@@ -19,7 +19,6 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
 import grakn.client.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
@@ -29,7 +28,7 @@ import grakn.protocol.session.ConceptProto;
  *
  * @param <D> The data type of this attribute
  */
-public class AttributeImpl<D> extends ThingImpl<Attribute.Local<D>, AttributeType.Local<D>> implements Attribute.Local<D> {
+public class AttributeImpl<D> extends ThingImpl<Attribute<D>, AttributeType<D>> implements Attribute.Local<D> {
 
     private final D value;
 
@@ -46,15 +45,5 @@ public class AttributeImpl<D> extends ThingImpl<Attribute.Local<D>, AttributeTyp
     @Override
     public final DataType<D> dataType() {
         return type().dataType();
-    }
-
-    @Override
-    final AttributeType.Local<D> asCurrentType(Concept<?> concept) {
-        return (AttributeType.Local<D>) concept.asAttributeType();
-    }
-
-    @Override
-    final Attribute.Local<D> asCurrentBaseType(Concept<?> other) {
-        return (Attribute.Local<D>) other.asAttribute();
     }
 }

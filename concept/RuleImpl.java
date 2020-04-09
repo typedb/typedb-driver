@@ -24,20 +24,9 @@ import grakn.protocol.session.ConceptProto;
 /**
  * Client implementation of Rule
  */
-public class RuleImpl extends SchemaConceptImpl<Rule.Local> implements Rule.Local {
+public class RuleImpl extends SchemaConceptImpl<Rule> implements Rule.Local {
 
     public RuleImpl(ConceptProto.Concept concept) {
         super(concept);
     }
-
-    @Override
-    final Rule.Local asCurrentBaseType(Concept<?> other) {
-        return (Rule.Local) other.asRule();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isRule();
-    }
-
 }

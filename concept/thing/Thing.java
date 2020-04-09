@@ -111,7 +111,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Relation.Remote
          */
         @CheckReturnValue
-        Stream<Relation.Remote> relations(Role<?>... roles);
+        Stream<Relation.Remote> relations(Role... roles);
 
         /**
          * Determine the Roles that this Thing is currently playing.
@@ -173,7 +173,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute the Attribute to be removed
          * @return The Thing itself
          */
-        SomeRemoteThing unhas(Attribute<?> attribute);
+        Thing.Remote<SomeRemoteThing, SomeRemoteType> unhas(Attribute<?> attribute);
 
         /**
          * Used to indicate if this Thing has been created as the result of a Rule inference.

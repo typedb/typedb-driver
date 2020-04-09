@@ -19,7 +19,6 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Thing;
 import grakn.protocol.session.ConceptProto;
 
@@ -32,22 +31,4 @@ public class MetaTypeImpl<
     public MetaTypeImpl(ConceptProto.Concept concept) {
         super(concept);
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected SomeThing asInstance(Concept<?> concept) {
-        return (SomeThing) concept.asThing();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    SomeType asCurrentBaseType(Concept<?> other) {
-        return (SomeType) other.asMetaType();
-    }
-
-    @Override
-    boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isMetaType();
-    }
-
 }

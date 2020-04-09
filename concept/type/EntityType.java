@@ -97,7 +97,7 @@ public interface EntityType extends Type<EntityType, Entity> {
          * @return The EntityType itself
          */
         @Override
-        EntityType.Remote plays(Role<?> role);
+        EntityType.Remote plays(Role role);
 
         /**
          * Removes the ability of this EntityType to play a specific Role
@@ -106,7 +106,7 @@ public interface EntityType extends Type<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unplay(Role<?> role);
+        EntityType.Remote unplay(Role role);
 
         /**
          * Removes the ability for Things of this EntityType to have Attributes of type AttributeType

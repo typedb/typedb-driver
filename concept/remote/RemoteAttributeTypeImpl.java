@@ -21,38 +21,107 @@ package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
+import grakn.client.concept.Label;
+import grakn.client.concept.Role;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
+import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 /**
  * Client implementation of AttributeType
  *
  * @param <D> The data type of this attribute type
  */
-public class RemoteAttributeTypeImpl<D>
-        extends RemoteTypeImpl<AttributeType.Remote<D>, Attribute.Remote<D>>
-        implements AttributeType.Remote<D> {
+public class RemoteAttributeTypeImpl<D> extends RemoteTypeImpl<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
 
     public RemoteAttributeTypeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
+    public final AttributeType.Remote<D> key(AttributeType<?> attributeType) {
+        return (AttributeType.Remote<D>) super.key(attributeType);
+    }
+
+    @Override
+    public final AttributeType.Remote<D> has(AttributeType<?> attributeType) {
+        return (AttributeType.Remote<D>) super.key(attributeType);
+
+    }
+
+    @Override
+    public final AttributeType.Remote<D> plays(Role role) {
+        return (AttributeType.Remote<D>) super.plays(role);
+
+    }
+
+    @Override
+    public final AttributeType.Remote<D> unkey(AttributeType<?> attributeType) {
+        return (AttributeType.Remote<D>) super.unkey(attributeType);
+
+    }
+
+    @Override
+    public final AttributeType.Remote<D> unhas(AttributeType<?> attributeType) {
+        return (AttributeType.Remote<D>) super.unhas(attributeType);
+
+    }
+
+    @Override
+    public final AttributeType.Remote<D> unplay(Role role) {
+        return (AttributeType.Remote<D>) super.unplay(role);
+    }
+
+    @Override
+    public final AttributeType.Remote<D> isAbstract(Boolean isAbstract) {
+        return (AttributeType.Remote<D>) super.isAbstract(isAbstract);
+    }
+
+    @Override
+    public final Stream<Attribute.Remote<D>> instances() {
+        return super.instances().map(this::asInstance);
+    }
+
+    @Override
+    public final Stream<AttributeType.Remote<D>> sups() {
+        return super.sups().map(this::asCurrentBaseType);
+    }
+
+    @Override
+    public final Stream<AttributeType.Remote<D>> subs() {
+        return super.subs().map(this::asCurrentBaseType);
+    }
+
+    @Override
+    public final AttributeType.Remote<D> label(Label label) {
+        return (AttributeType.Remote<D>) super.label(label);
+    }
+
+    @Override
+    public final AttributeType.Remote<D> sup(AttributeType<D> type) {
+        return (AttributeType.Remote<D>) super.sup(type);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public final Attribute.Remote<D> create(D value) {
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                    .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-        return Concept.Remote.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx());
+        return (Attribute.Remote<D>) Concept.Remote.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx()).asAttribute();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Nullable
     public final Attribute.Remote<D> attribute(D value) {
@@ -65,7 +134,7 @@ public class RemoteAttributeTypeImpl<D>
             case NULL:
                 return null;
             case ATTRIBUTE:
-                return Concept.Remote.of(response.getAttribute(), tx());
+                return (Attribute.Remote<D>) Concept.Remote.of(response.getAttribute(), tx()).asAttribute();
             default:
                 throw GraknClientException.unreachableStatement("Unexpected response " + response);
         }
@@ -99,33 +168,30 @@ public class RemoteAttributeTypeImpl<D>
     }
 
     @Override
-    public Remote<D> sup(AttributeType<D, ?, ?> type) {
-        return super.sup(type);
-    }
-
-    @Override
-    public final Remote<D> regex(String regex) {
+    public final AttributeType.Remote<D> regex(String regex) {
         if (regex == null) regex = "";
         ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                 .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
                                                      .setRegex(regex)).build();
 
         runMethod(method);
-        return asCurrentBaseType(this);
+        return this;
     }
 
-    @Override
-    final Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
-        return (Remote<D>) other.asAttributeType();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
-        return other.isAttributeType();
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
     protected final Attribute.Remote<D> asInstance(Concept.Remote<?> concept) {
         return (Attribute.Remote<D>) concept.asAttribute();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected final AttributeType.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
+        return (AttributeType.Remote<D>) other.asAttributeType();
+    }
+
+    @Override
+    protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        return other.isAttributeType();
     }
 }

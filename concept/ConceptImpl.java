@@ -26,7 +26,7 @@ import grakn.protocol.session.ConceptProto;
  *
  * @param <SomeConcept> represents the actual class of object to downcast to
  */
-public abstract class ConceptImpl<SomeConcept extends Concept.Local<SomeConcept>> implements Concept.Local<SomeConcept> {
+public abstract class ConceptImpl<SomeConcept extends Concept<SomeConcept>> implements Concept.Local<SomeConcept> {
 
     private final ConceptId id;
 
@@ -61,6 +61,4 @@ public abstract class ConceptImpl<SomeConcept extends Concept.Local<SomeConcept>
         h ^= id.hashCode();
         return h;
     }
-
-    abstract SomeConcept asCurrentBaseType(Concept<?> other);
 }

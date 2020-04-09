@@ -19,7 +19,6 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.rpc.RequestBuilder;
@@ -32,7 +31,7 @@ import javax.annotation.Nullable;
  *
  * @param <D> The data type of this attribute type
  */
-public class AttributeTypeImpl<D> extends TypeImpl<AttributeType.Local<D>, Attribute.Local<D>> implements AttributeType.Local<D> {
+public class AttributeTypeImpl<D> extends TypeImpl<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
 
     private final DataType<D> dataType;
 
@@ -46,20 +45,4 @@ public class AttributeTypeImpl<D> extends TypeImpl<AttributeType.Local<D>, Attri
     public DataType<D> dataType() {
         return dataType;
     }
-
-    @Override
-    final Local<D> asCurrentBaseType(Concept<?> other) {
-        return (Local<D>) other.asAttributeType();
-    }
-
-    @Override
-    final boolean equalsCurrentBaseType(Concept<?> other) {
-        return other.isAttributeType();
-    }
-
-    @Override
-    protected Attribute.Local<D> asInstance(Concept<?> concept) {
-        return (Attribute.Local<D>) concept.asAttribute();
-    }
-
 }

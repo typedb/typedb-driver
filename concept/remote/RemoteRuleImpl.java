@@ -20,7 +20,10 @@
 package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
+import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.ConceptProto;
@@ -28,19 +31,35 @@ import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 /**
  * Client implementation of Rule
  */
-public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule.Remote> implements Rule.Remote {
+public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule> implements Rule.Remote {
 
     public RemoteRuleImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
     }
 
     @Override
-    public Rule.Remote sup(Rule<?> superRule) {
-        return super.sup(superRule);
+    public final Stream<Rule.Remote> sups() {
+        return super.sups().map(this::asCurrentBaseType);
+    }
+
+    @Override
+    public final Stream<Rule.Remote> subs() {
+        return super.subs().map(this::asCurrentBaseType);
+    }
+
+    @Override
+    public final Rule.Remote label(Label label) {
+        return (Rule.Remote) super.label(label);
+    }
+
+    @Override
+    public Rule.Remote sup(Rule superRule) {
+        return (Rule.Remote) super.sup(superRule);
     }
 
     @Override
@@ -80,12 +99,12 @@ public class RemoteRuleImpl extends RemoteSchemaConceptImpl<Rule.Remote> impleme
     }
 
     @Override
-    final Rule.Remote asCurrentBaseType(Remote<?> other) {
+    protected final Rule.Remote asCurrentBaseType(Concept.Remote<?> other) {
         return other.asRule();
     }
 
     @Override
-    final boolean equalsCurrentBaseType(Remote<?> other) {
+    protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
         return other.isRule();
     }
 

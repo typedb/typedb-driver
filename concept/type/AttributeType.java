@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 
 public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
 
+
+
     //------------------------------------- Accessors ---------------------------------
     /**
      * Get the data type to which instances of the AttributeType must conform.
@@ -110,7 +112,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> plays(Role<?> role);
+        AttributeType.Remote<D> plays(Role role);
 
         /**
          * Removes the ability of this AttributeType to play a specific Role
@@ -119,7 +121,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unplay(Role<?> role);
+        AttributeType.Remote<D> unplay(Role role);
 
         /**
          * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType
@@ -209,15 +211,6 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          */
         @Override
         Stream<Attribute.Remote<D>> instances();
-
-        /**
-         * Get the data type to which instances of the AttributeType must conform.
-         *
-         * @return The data type to which instances of this Attribute  must conform.
-         */
-        @Nullable
-        @CheckReturnValue
-        DataType<D> dataType();
 
         /**
          * Retrieve the regular expression to which instances of this AttributeType must conform, or {@code null} if no

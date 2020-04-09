@@ -25,6 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.protocol.session.ConceptProto;
 
@@ -37,8 +38,7 @@ import static grakn.client.concept.DataType.staticCastValue;
  *
  * @param <D> The data type of this attribute
  */
-public class RemoteAttributeImpl<D> extends RemoteThingImpl<Attribute.Remote<D>, AttributeType.Remote<D>>
-        implements Attribute.Remote<D> {
+public class RemoteAttributeImpl<D> extends ThingImpl.RemoteThingImpl<Attribute<D>, AttributeType<D>> implements Attribute.Remote<D> {
 
     public RemoteAttributeImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
@@ -65,15 +65,24 @@ public class RemoteAttributeImpl<D> extends RemoteThingImpl<Attribute.Remote<D>,
         return type().dataType();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    AttributeType.Remote<D> asCurrentType(Concept.Remote<?> concept) {
-        return (AttributeType.Remote<D>) concept.asAttributeType();
+    public AttributeType.Remote<D> type() {
+        return (AttributeType.Remote<D>) super.type();
+    }
+
+    @Override
+    public Attribute.Remote<D> has(Attribute<?> attribute) {
+        return (Attribute.Remote<D>) super.has(attribute);
+    }
+
+    @Override
+    public Attribute.Remote<D> unhas(Attribute<?> attribute) {
+        return (Attribute.Remote<D>) super.unhas(attribute);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    final Attribute.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
+    protected final Attribute.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
         return (Attribute.Remote<D>) other.asAttribute();
     }
 }

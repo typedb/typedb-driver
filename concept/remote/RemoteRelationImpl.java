@@ -25,6 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.Role;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.ThingImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
@@ -40,7 +41,7 @@ import java.util.stream.Stream;
 /**
  * Client implementation of Relation
  */
-public class RemoteRelationImpl extends RemoteThingImpl<Relation.Remote, RelationType.Remote> implements Relation.Remote {
+public class RemoteRelationImpl extends ThingImpl.RemoteThingImpl<Relation.Remote, RelationType.Remote> implements Relation.Remote {
 
     public RemoteRelationImpl(GraknClient.Transaction tx, ConceptId id) {
         super(tx, id);
