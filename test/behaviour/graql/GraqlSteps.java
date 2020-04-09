@@ -328,17 +328,10 @@ public class GraqlSteps {
         String queryWithIds = applyQueryTemplate(explanationEntry.get("Pattern"), answer);
         assertEquals(Graql.and(Graql.parsePatternList(queryWithIds)), answer.queryPattern());
 
-        String expectedExplType = explanationEntry.get("Explanation");
+        String expectedRule = explanationEntry.get("Rule");
         boolean hasExplanation = answer.hasExplanation();
 
-        if (!(expectedExplType.equals("lookup") | expectedExplType.equals("join") | expectedExplType.equals("rule"))) {
-            throw new RuntimeException(String.format("Explanation type %s not recognised", expectedExplType));
-        }
-
-        if (expectedExplType.equals("lookup")) {
-            if(!explanationEntry.get("Rule Label").equals("-")) {
-                throw new RuntimeException("Rule Label should be \"-\" for lookup explanations");
-            }
+        if (expectedRule.equals("lookup")) {
             assertFalse(hasExplanation);
             String[] expectedChildren = {"-"};
             assertArrayEquals(expectedChildren, children);
@@ -349,26 +342,22 @@ public class GraqlSteps {
 
             assertEquals(children.length, explAnswers.size());
 
-            if (expectedExplType.equals("join")) {
-                if(!explanationEntry.get("Rule Label").equals("-")) {
-                    throw new RuntimeException("Rule Label should be \"-\" for join explanations");
-                }
+            if (expectedRule.equals("join")) {
                 assertNull(explanation.getRule());
             } else {
                 // rule
                 Rule rule = explanation.getRule();
-                assertEquals(explanationEntry.get("Rule Label"), rule.label().toString());
+                assertEquals(expectedRule, rule.label().toString());
 
-                Map<String, String> expectedRule = rules.get(explanationEntry.get("Rule Label"));
-                assertEquals(expectedRule.get("when"), Objects.requireNonNull(rule.when()).toString());
-                assertEquals(expectedRule.get("then"), Objects.requireNonNull(rule.then()).toString());
+                Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
+                assertEquals(expectedRuleDefinition.get("when"), Objects.requireNonNull(rule.when()).toString());
+                assertEquals(expectedRuleDefinition.get("then"), Objects.requireNonNull(rule.then()).toString());
             }
             for (String child : children) {
                 // Recurse
                 checkExplanationContains(explAnswers, explanationTree, Integer.valueOf(child));
             }
         }
-//      TODO Validate that in the given table rule labels should be "-" unless the Explanation is "rule"
     }
 
     @Then("answers are labeled") // TODO Update this with the latest structure
