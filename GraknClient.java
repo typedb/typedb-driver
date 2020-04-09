@@ -755,6 +755,7 @@ public class GraknClient implements AutoCloseable {
         public <V> AttributeType.Remote<V> putAttributeType(String label, DataType<V> dataType) {
             return putAttributeType(Label.of(label), dataType);
         }
+        @SuppressWarnings("unchecked")
         public <V> AttributeType.Remote<V> putAttributeType(Label label, DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
             return (AttributeType.Remote<V>) Concept.Remote.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
@@ -784,7 +785,7 @@ public class GraknClient implements AutoCloseable {
             return Concept.Remote.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
 
-        public Stream<? extends SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
+        public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setSchemaConceptSupsIterReq(ConceptProto.SchemaConcept.Sups.Iter.Req.getDefaultInstance()).build();
 

@@ -359,7 +359,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
             extends Concept<BaseType> {
 
         @SuppressWarnings("unchecked")
-        static <RemoteType extends Remote, BaseType extends Concept<BaseType>>
+        static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
         RemoteType of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
             ConceptId id = ConceptId.of(concept.getId());
             switch (concept.getBaseType()) {
