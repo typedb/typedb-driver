@@ -80,13 +80,12 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req query(String queryString, boolean infer, int iterId) {
-            SessionProto.Transaction.Query.Req request = SessionProto.Transaction.Query.Req.newBuilder()
-                    .setQuery(queryString)
-                    .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
-                    .setId(iterId)
-                    .build();
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setQueryReq(request).build();
+        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer) {
+            return SessionProto.Transaction.Iter.Req.newBuilder()
+                    .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
+                            .setQuery(queryString)
+                            .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
+                            .build()).build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
@@ -104,12 +103,10 @@ public class RequestBuilder {
         }
 
 
-        public static SessionProto.Transaction.Req getAttributes(Object value) {
-            return SessionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setGetAttributesReq(SessionProto.Transaction.GetAttributes.Req.newBuilder()
-                                                 .setValue(ConceptMessage.attributeValue(value))
-                    ).build();
+        public static SessionProto.Transaction.Iter.Req getAttributes(Object value) {
+            return SessionProto.Transaction.Iter.Req.newBuilder()
+                            .setGetAttributesIterReq(SessionProto.Transaction.GetAttributes.Iter.Req.newBuilder()
+                                                 .setValue(ConceptMessage.attributeValue(value))).build();
         }
 
         public static SessionProto.Transaction.Req putEntityType(Label label) {
@@ -149,19 +146,6 @@ public class RequestBuilder {
                     .setThen(then.toString())
                     .build();
             return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRuleReq(request).build();
-        }
-
-        public static SessionProto.Transaction.Req iterate(int iteratorId) {
-            return iterate(iteratorId, false);
-        }
-
-        public static SessionProto.Transaction.Req iterate(int iteratorId, boolean all) {
-            return SessionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setIterateReq(SessionProto.Transaction.Iter.Req.newBuilder()
-                            .setId(iteratorId)
-                            .setAll(all)
-                    ).build();
         }
     }
 
@@ -302,7 +286,7 @@ public class RequestBuilder {
         }
     }
 
-    private static Map<String, String> getTracingData() {
+    public static Map<String, String> getTracingData() {
         if (isTracingEnabled()) {
             ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) {

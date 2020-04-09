@@ -101,7 +101,7 @@ abstract class RemoteConceptImpl<SomeRemoteConcept extends RemoteConcept<SomeRem
     Stream<R> conceptStream(GraknClient.Transaction tx,
                             int iteratorId,
                             Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-        Iterable<R> iterable = () -> tx.iterator(
+        Iterable<R> iterable = () -> tx.iterate(
                 iteratorId, res -> RemoteConcept.of(conceptGetter.apply(res.getConceptMethodIterRes()), tx)
         );
 

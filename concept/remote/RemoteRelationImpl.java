@@ -21,8 +21,6 @@ package grakn.client.concept.remote;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Relation;
-import grakn.client.concept.RelationType;
 import grakn.client.concept.Role;
 import grakn.client.concept.Thing;
 import grakn.client.rpc.RequestBuilder;
@@ -51,7 +49,7 @@ class RemoteRelationImpl extends RemoteThingImpl<RemoteRelation, RemoteRelationT
                 .setRelationRolePlayersMapReq(ConceptProto.Relation.RolePlayersMap.Req.getDefaultInstance()).build();
 
         int iteratorId = runMethod(method).getRelationRolePlayersMapIter().getId();
-        Iterable<ConceptProto.Relation.RolePlayersMap.Iter.Res> rolePlayers = () -> tx().iterator(
+        Iterable<ConceptProto.Relation.RolePlayersMap.Iter.Res> rolePlayers = () -> tx().iterate(
                 iteratorId, res -> res.getConceptMethodIterRes().getRelationRolePlayersMapIterRes()
         );
 
