@@ -259,10 +259,7 @@ public class GraqlSteps {
       assertEquals(answersIdentifiers.size(), answers.size());
 
         for (ConceptMap answer : answers) {
-
             List<Map<String, String>> matchingIdentifiers = matchingAnswers(answersIdentifiers, answer);
-
-            // we expect exactly one matching answer from the expected answer keys TODO This may no longer be true
             assertEquals(1, matchingIdentifiers.size());
         }
     }
