@@ -29,6 +29,7 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.Rule;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
+import graql.lang.pattern.Conjunction;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
@@ -299,10 +300,10 @@ public class GraqlSteps {
 
     @Then("answers contain explanation tree")
     public void answers_contain_explanation_tree(Map<Integer, Map<String, String>> explanationTree) {
-        checkExplanationContains(answers, explanationTree, 0);
+        checkExplanationEntry(answers, explanationTree, 0);
     }
 
-    private void checkExplanationContains(List<ConceptMap> answers, Map<Integer, Map<String, String>> explanationTree, Integer entryId) {
+    private void checkExplanationEntry(List<ConceptMap> answers, Map<Integer, Map<String, String>> explanationTree, Integer entryId) {
         Map<String, String> explanationEntry = explanationTree.get(entryId);
         String[] vars = explanationEntry.get("vars").split(", ");
         String[] identifiers = explanationEntry.get("identifiers").split(", ");
@@ -316,12 +317,13 @@ public class GraqlSteps {
 
         Optional<ConceptMap> matchingAnswer = answers.stream().filter(answer -> matchAnswer(answerIdentifiers, answer)).findFirst();
 
-        assertTrue(matchingAnswer.isPresent());
+        assert matchingAnswer.isPresent() : String.format("No answer found for explanation entry %d that satisfies the vars and identifiers given", entryId);
 
         ConceptMap answer = matchingAnswer.get();
 
         String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
-        assertEquals(Graql.and(Graql.parsePatternList(queryWithIds)), answer.queryPattern());
+        Conjunction<?> queryWithIdsConj = Graql.and(Graql.parsePatternList(queryWithIds));
+        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Pattern is not as expected for explanation entry %d.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
 
         String expectedRule = explanationEntry.get("rule");
         boolean hasExplanation = answer.hasExplanation();
@@ -342,15 +344,19 @@ public class GraqlSteps {
             } else {
                 // rule
                 Rule rule = explanation.getRule();
-                assertEquals(expectedRule, rule.label().toString());
+                String ruleLabel = rule.label().toString();
+                assert (expectedRule.equals(ruleLabel)) : String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
-                assertEquals(expectedRuleDefinition.get("when"), Objects.requireNonNull(rule.when()).toString());
-                assertEquals(expectedRuleDefinition.get("then"), Objects.requireNonNull(rule.then()).toString());
+                String when = Objects.requireNonNull(rule.when()).toString();
+                assert expectedRuleDefinition.get("when").equals(when) : String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when);
+
+                String then = Objects.requireNonNull(rule.then()).toString();
+                assert expectedRuleDefinition.get("then").equals(then) : String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then);
             }
             for (String child : children) {
                 // Recurse
-                checkExplanationContains(explAnswers, explanationTree, Integer.valueOf(child));
+                checkExplanationEntry(explAnswers, explanationTree, Integer.valueOf(child));
             }
         }
     }
@@ -398,14 +404,16 @@ public class GraqlSteps {
         while (matcher.find()) {
             String matched = matcher.group(0);
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-            Concept concept = templateFiller.get(requiredVariable);
 
             builder.append(template.substring(i, matcher.start()));
-            if (concept == null) {
-                throw new RuntimeException(String.format("No ID available for template placeholder: %s", matched));
-            } else {
+            if (templateFiller.map().containsKey(new Variable(requiredVariable))) {
+
+                Concept concept = templateFiller.get(requiredVariable);
                 String conceptId = concept.id().toString();
                 builder.append(conceptId);
+
+            } else {
+                throw new RuntimeException(String.format("No ID available for template placeholder: %s", matched));
             }
             i = matcher.end();
         }
