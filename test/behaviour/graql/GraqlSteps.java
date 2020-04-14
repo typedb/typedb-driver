@@ -311,7 +311,7 @@ public class GraqlSteps {
         String[] children = explanationEntry.get("children").split(", ");
 
         if (vars.length != identifiers.length) {
-            throw new RuntimeException(String.format("vars and identifiers should correspond. Found %d vars and %s identifiers", vars.length, identifiers.length));
+            throw new RuntimeException(String.format("vars and identifiers do not correspond for explanation entry %d. Found %d vars and %s identifiers", entryId, vars.length, identifiers.length));
         }
 
         Map<String, String> answerIdentifiers = IntStream.range(0, vars.length).boxed().collect(Collectors.toMap(i -> vars[i], i -> identifiers[i]));
@@ -324,8 +324,8 @@ public class GraqlSteps {
 
         String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
         Conjunction<?> queryWithIdsConj = Graql.and(Graql.parsePatternList(queryWithIds));
-        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Pattern is not as expected for explanation entry %d.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
-        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Pattern is not as expected for explanation entry %d.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
+        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
+        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
 
         String expectedRule = explanationEntry.get("rule");
         boolean hasExplanation = answer.hasExplanation();
