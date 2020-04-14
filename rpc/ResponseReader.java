@@ -22,7 +22,10 @@ package grakn.client.rpc;
 import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Rule;
 import grakn.protocol.session.AnswerProto;
+import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
@@ -34,8 +37,6 @@ import grakn.client.answer.ConceptSet;
 import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Explanation;
-
-import grakn.client.concept.ConceptId;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -79,11 +80,13 @@ public class ResponseReader {
     public static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
-        return new Explanation(answers);
+        ConceptProto.Concept ruleProto = res.getRule();
+        Rule rule = res.hasRule() ? Concept.of(ruleProto, tx).asRule() : null;
+        return new Explanation(answers, rule);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
-        return new AnswerGroup(
+        return new AnswerGroup<>(
                 Concept.Local.of(res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
@@ -94,9 +97,8 @@ public class ResponseReader {
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(new Variable(resVar), Concept.Local.of(resConcept))
         );
-        // Pattern is null if no reasoner was used
         boolean hasExplanation = res.getHasExplanation();
-        Pattern queryPattern = hasExplanation ? Graql.parsePattern(res.getPattern()) : null;
+        Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
         return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
     }
 

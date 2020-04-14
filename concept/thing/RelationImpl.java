@@ -8,12 +8,12 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public class RelationImpl {
@@ -52,20 +52,20 @@ public class RelationImpl {
         }
 
         @Override
-        public final Map<Role.Remote, Set<Thing.Remote<?, ?>>> rolePlayersMap() {
+        public final Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayersMap() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationRolePlayersMapIterReq(ConceptProto.Relation.RolePlayersMap.Iter.Req.getDefaultInstance()).build();
 
             Stream<ConceptProto.Relation.RolePlayersMap.Iter.Res> stream = tx().iterateConceptMethod(id(), method, ConceptProto.Method.Iter.Res::getRelationRolePlayersMapIterRes);
 
-            Map<Role.Remote, Set<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
+            Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
                 Role.Remote role = Concept.Remote.of(rolePlayer.getRole(), tx()).asRole();
                 Thing.Remote<?, ?> player = Concept.Remote.of(rolePlayer.getPlayer(), tx()).asThing();
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {
-                    rolePlayerMap.put(role, new HashSet<>(Collections.singletonList(player)));
+                    rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
                 }
             });
 

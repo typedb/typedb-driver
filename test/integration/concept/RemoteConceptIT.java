@@ -20,12 +20,10 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.answer.ConceptMap;
-import grakn.client.answer.Explanation;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
-import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -36,9 +34,7 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.Type;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
-import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
-import graql.lang.statement.Variable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,6 +43,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +59,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -70,7 +66,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
  */
-public class RemoteConceptIT {
+public class ConceptIT {
 
     private static GraknClient client;
     private static GraknClient.Session session;
@@ -140,6 +136,7 @@ public class RemoteConceptIT {
     private Entity.Remote bob;
     private Relation.Remote aliceAndBob;
     private Relation.Remote selfEmployment;
+    private Relation.Remote selfFriendship;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -212,6 +209,7 @@ public class RemoteConceptIT {
         // Relations
         aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
+        selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
 
         metaType = tx.getType(Label.of("thing"));
 
@@ -399,13 +397,13 @@ public class RemoteConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer));
+        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
         assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment));
+        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
         assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
@@ -434,29 +432,36 @@ public class RemoteConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role.Remote, Set<Thing.Remote>> expected = new HashMap<>();
-        expected.put(wife, Collections.singleton(alice));
-        expected.put(husband, Collections.singleton(bob));
+        Map<Role.Remote, List<Thing.Remote<?, ?>>> expected = new HashMap<>();
+        expected.put(wife, Collections.singletonList(alice));
+        expected.put(husband, Collections.singletonList(bob));
 
         assertEquals(expected, aliceAndBob.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers().collect(toSet()), containsInAnyOrder(alice, bob));
+    public void whenCallingAllRolePlayers_GetExpectedDuplicates() {
+        Map<Role, List<Thing<?, ?>>> expected = new HashMap<>();
+        expected.put(friend, Arrays.asList(alice, alice));
+        assertEquals(expected, selfFriendship.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetDistinctExpectedResult() {
-        List<Thing.Remote> list = selfEmployment.rolePlayers().collect(toList());
-        assertEquals(1, list.size());
-        assertThat(list, containsInAnyOrder(alice));
+    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
+        assertThat(aliceAndBob.rolePlayers().collect(toList()), containsInAnyOrder(alice, bob));
+    }
+
+    @Test
+    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetExpectedResult() {
+        List<Thing.Remote<?, ?>> list = selfEmployment.rolePlayers().collect(toList());
+        assertEquals(2, list.size());
+        assertThat(list, containsInAnyOrder(alice, alice));
     }
 
     @Test
     public void whenCallingRolePlayersWithRoles_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers(wife).collect(toSet()), containsInAnyOrder(alice));
-        assertThat(aliceAndBob.rolePlayers(husband).collect(toSet()), containsInAnyOrder(bob));
+        assertThat(aliceAndBob.rolePlayers(wife).collect(toList()), containsInAnyOrder(alice));
+        assertThat(aliceAndBob.rolePlayers(husband).collect(toList()), containsInAnyOrder(bob));
     }
 
     @Test
@@ -599,64 +604,12 @@ public class RemoteConceptIT {
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toSet()), containsInAnyOrder(dylan, emily));
+        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan, emily));
 
         dylanAndEmily.unassign(friend, dylan);
         dylanAndEmily.unassign(friend, emily);
 
-        assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+        assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
-
-    @Test
-    public void testExplanation() {
-        GraknClient.Session session = client.session("test_rules");
-        GraknClient.Transaction tx = session.transaction().write();
-        tx.execute(Graql.parse(" define\n" +
-                "                    object sub entity, plays owned, plays owner;\n" +
-                "                    ownership sub relation, relates owned, relates owner;\n" +
-                "                    transitive-ownership sub rule, when {\n" +
-                "                        (owned: $x, owner: $y) isa ownership;\n" +
-                "                        (owned: $y, owner: $z) isa ownership;\n" +
-                "                    }, then {\n" +
-                "                        (owned: $x, owner: $z) isa ownership;\n" +
-                "                    };").asDefine());
-        tx.execute(Graql.parse("insert\n" +
-                "                    $a isa object; $b isa object; $c isa object; $d isa object; $e isa object;\n" +
-                "                    (owned: $a, owner: $b) isa ownership;\n" +
-                "                    (owned: $b, owner: $c) isa ownership;\n" +
-                "                    (owned: $c, owner: $d) isa ownership;\n" +
-                "                    (owned: $d, owner: $e) isa ownership;").asInsert());
-
-        tx.commit();
-
-        tx = session.transaction().write();
-
-        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet());
-
-        int hasExplanation = 0;
-        int noExplanation = 0;
-        for (ConceptMap answer : answers) {
-            if (answer.hasExplanation()) {
-                hasExplanation++;
-                assertTrue(answer.queryPattern().toString().length() > 0);
-                for (Variable var : answer.map().keySet()) {
-                    assertTrue(answer.queryPattern().variables().contains(var));
-                }
-
-                Explanation explanation = answer.explanation();
-                assertNotNull(explanation);
-                if (explanation.getAnswers().get(0).hasExplanation()) {
-                    Explanation subExplanation = explanation.getAnswers().get(0).explanation();
-                    assertNotNull(subExplanation);
-                }
-            } else {
-                noExplanation++;
-                assertNull( answer.queryPattern());
-            }
-        }
-
-        assertEquals(4, noExplanation);
-        assertEquals(6, hasExplanation);
-    }
 }

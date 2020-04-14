@@ -25,8 +25,8 @@ import grakn.client.concept.type.Role;
 import grakn.client.concept.type.RelationType;
 
 import javax.annotation.CheckReturnValue;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -111,7 +111,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see Role.Remote
          */
         @CheckReturnValue
-        Map<Role.Remote, Set<Thing.Remote<?, ?>>> rolePlayersMap();
+        Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayersMap();
 
         /**
          * Retrieves a list of every Thing involved in the Relation, filtered by Role played.

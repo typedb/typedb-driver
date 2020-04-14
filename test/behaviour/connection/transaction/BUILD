@@ -17,7 +17,7 @@
 # under the License.
 #
 
-package(default_visibility = ["//visibility:__subpackages__"])
+package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
@@ -26,8 +26,14 @@ java_library(
         "TransactionSteps.java"
     ],
     deps = [
+        # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
+
+        # Internal Repository Dependencies
+        "@graknlabs_common//:common",
+
+        # External Maven Dependencies
         "//dependencies/maven/artifacts/junit:junit",
         "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
     ]
@@ -49,6 +55,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
         "//test/behaviour/connection/session:steps",
     ],
     data = [
@@ -83,6 +90,7 @@ java_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/keyspace:steps",
         "//test/behaviour/connection/session:steps",
     ],
     data = [

@@ -81,7 +81,6 @@ public class ConceptMap implements Answer {
         }
     }
 
-    @Nullable
     @CheckReturnValue
     public Pattern queryPattern() {
         return queryPattern;
