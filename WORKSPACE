@@ -25,7 +25,7 @@ workspace(name = "graknlabs_client_java")
 ###########################
 
 load("//dependencies/graknlabs:dependencies.bzl",
-"graknlabs_graql", "graknlabs_build_tools", "graknlabs_common", "graknlabs_protocol", "graknlabs_verification", "graknlabs_grakn_core", "graknlabs_grabl_tracing", "graknlabs_console")
+"graknlabs_graql", "graknlabs_build_tools", "graknlabs_common", "graknlabs_protocol", "graknlabs_verification", "graknlabs_grakn_core", "graknlabs_grabl_tracing")
 graknlabs_graql()
 graknlabs_build_tools()
 graknlabs_common()
@@ -33,7 +33,6 @@ graknlabs_protocol()
 graknlabs_verification()
 graknlabs_grakn_core()
 graknlabs_grabl_tracing()
-graknlabs_console()
 
 load("@graknlabs_build_tools//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
