@@ -81,12 +81,12 @@ public class ResponseReader {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
-        Rule rule = res.hasRule() ? Concept.of(ruleProto, tx).asRule() : null;
+        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(ruleProto, tx).asRule() : null;
         return new Explanation(answers, rule);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
-        return new AnswerGroup<>(
+        return new AnswerGroup(
                 Concept.Local.of(res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
