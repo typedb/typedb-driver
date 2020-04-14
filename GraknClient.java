@@ -898,7 +898,7 @@ public class GraknClient implements AutoCloseable {
                 }
 
                 if (state == RPCIteratorState.ITERATING) {
-                    if (responseBuffer.size() > 0) {
+                    if (index < responseBuffer.size()) {
                         return responseReader.apply(responseBuffer.get(index++));
                     } else {
                         requestBatch();
