@@ -30,10 +30,7 @@ java_library(
     name = "client-java",
     srcs = glob([
         "answer/*.java",
-        "concept/*.java",
-        "concept/thing/*.java",
-        "concept/type/*.java",
-        "concept/remote/*.java",
+        "concept/**/*.java",
         "exception/*.java",
         "rpc/*.java",
         "test/*.java",
