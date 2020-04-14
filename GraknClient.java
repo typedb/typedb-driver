@@ -894,21 +894,21 @@ public class GraknClient implements AutoCloseable {
             }
 
             protected final T computeNext() {
-                if (state == RPCIteratorState.PRE_START) {
-                    startIterating();
-                    receiveBatch();
-                }
-
-                if (state == RPCIteratorState.ITERATING) {
-                    if (index < responseBuffer.size()) {
-                        return responseReader.apply(responseBuffer.get(index++));
-                    } else {
-                        requestBatch();
-                        receiveBatch();
-                        return computeNext();
-                    }
+                if (index < responseBuffer.size()) {
+                    return responseReader.apply(responseBuffer.get(index++));
                 } else {
-                    return endOfData();
+                    switch (state) {
+                        case PRE_START:
+                            startIterating();
+                            break;
+                        case ITERATING:
+                            requestBatch();
+                            break;
+                        case DONE:
+                            return endOfData();
+                    }
+                    receiveBatch();
+                    return computeNext();
                 }
             }
         }
