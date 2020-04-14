@@ -125,7 +125,7 @@ public class ConceptIT {
     private RelationType.Remote employment;
     private Rule.Remote metaRule;
     private Rule.Remote testRule;
-    private Type.Remote metaType;
+    private Type.Remote<?, ?> metaType;
 
     private Attribute.Remote<String> emailAlice;
     private Attribute.Remote<String> emailBob;

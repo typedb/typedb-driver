@@ -62,26 +62,22 @@ public class EntityTypeImpl {
 
         @Override
         public final EntityType.Remote has(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.key(attributeType);
-
+            return (EntityType.Remote) super.has(attributeType);
         }
 
         @Override
         public final EntityType.Remote plays(Role role) {
             return (EntityType.Remote) super.plays(role);
-
         }
 
         @Override
         public final EntityType.Remote unkey(AttributeType<?> attributeType) {
             return (EntityType.Remote) super.unkey(attributeType);
-
         }
 
         @Override
         public final EntityType.Remote unhas(AttributeType<?> attributeType) {
             return (EntityType.Remote) super.unhas(attributeType);
-
         }
 
         @Override

@@ -74,26 +74,22 @@ public class AttributeTypeImpl {
 
         @Override
         public final AttributeType.Remote<D> has(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.key(attributeType);
-
+            return (AttributeType.Remote<D>) super.has(attributeType);
         }
 
         @Override
         public final AttributeType.Remote<D> plays(Role role) {
             return (AttributeType.Remote<D>) super.plays(role);
-
         }
 
         @Override
         public final AttributeType.Remote<D> unkey(AttributeType<?> attributeType) {
             return (AttributeType.Remote<D>) super.unkey(attributeType);
-
         }
 
         @Override
         public final AttributeType.Remote<D> unhas(AttributeType<?> attributeType) {
             return (AttributeType.Remote<D>) super.unhas(attributeType);
-
         }
 
         @Override

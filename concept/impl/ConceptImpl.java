@@ -109,7 +109,7 @@ public abstract class ConceptImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getSimpleName() + "{tx=" + tx + ", id=" + id + "}";
+            return this.getClass().getCanonicalName() + "{tx=" + tx + ", id=" + id + "}";
         }
 
         @Override

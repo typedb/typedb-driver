@@ -59,26 +59,22 @@ public class RelationTypeImpl {
 
         @Override
         public final RelationType.Remote has(AttributeType<?> attributeType) {
-            return (RelationType.Remote) super.key(attributeType);
-
+            return (RelationType.Remote) super.has(attributeType);
         }
 
         @Override
         public final RelationType.Remote plays(Role role) {
             return (RelationType.Remote) super.plays(role);
-
         }
 
         @Override
         public final RelationType.Remote unkey(AttributeType<?> attributeType) {
             return (RelationType.Remote) super.unkey(attributeType);
-
         }
 
         @Override
         public final RelationType.Remote unhas(AttributeType<?> attributeType) {
             return (RelationType.Remote) super.unhas(attributeType);
-
         }
 
         @Override
