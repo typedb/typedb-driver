@@ -1,10 +1,13 @@
-package grakn.client.concept.type;
+package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.Role;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;

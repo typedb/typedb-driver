@@ -1,9 +1,12 @@
-package grakn.client.concept.thing;
+package grakn.client.concept.thing.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.impl.ConceptImpl;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Relation;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Type;

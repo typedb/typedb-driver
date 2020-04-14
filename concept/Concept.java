@@ -20,11 +20,12 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.thing.AttributeImpl;
-import grakn.client.concept.thing.EntityImpl;
-import grakn.client.concept.thing.RelationImpl;
-import grakn.client.concept.type.AttributeTypeImpl;
-import grakn.client.concept.type.EntityTypeImpl;
+import grakn.client.concept.impl.RuleImpl;
+import grakn.client.concept.thing.impl.AttributeImpl;
+import grakn.client.concept.thing.impl.EntityImpl;
+import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.concept.type.impl.AttributeTypeImpl;
+import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -32,11 +33,11 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.MetaType;
-import grakn.client.concept.type.MetaTypeImpl;
+import grakn.client.concept.type.impl.MetaTypeImpl;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RelationTypeImpl;
+import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.Role;
-import grakn.client.concept.type.RoleImpl;
+import grakn.client.concept.type.impl.RoleImpl;
 import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 

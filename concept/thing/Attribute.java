@@ -2,6 +2,7 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.DataType;
 

@@ -21,6 +21,7 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;

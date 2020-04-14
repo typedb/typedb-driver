@@ -1,4 +1,4 @@
-package grakn.client.concept.type;
+package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
@@ -6,6 +6,8 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.Role;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;

@@ -1,6 +1,8 @@
-package grakn.client.concept;
+package grakn.client.concept.impl;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
 import grakn.protocol.session.ConceptProto;
 
 import java.util.function.Function;

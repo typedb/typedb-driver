@@ -5,6 +5,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.type.impl.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;

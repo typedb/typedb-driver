@@ -1,6 +1,10 @@
-package grakn.client.concept;
+package grakn.client.concept.impl;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
+import grakn.client.concept.SchemaConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;

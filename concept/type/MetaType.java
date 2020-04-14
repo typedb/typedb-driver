@@ -3,6 +3,7 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.impl.MetaTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 

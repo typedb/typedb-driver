@@ -20,6 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;

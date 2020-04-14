@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
+import grakn.client.concept.type.impl.EntityTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;

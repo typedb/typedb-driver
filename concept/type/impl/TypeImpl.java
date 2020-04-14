@@ -1,11 +1,14 @@
-package grakn.client.concept.type;
+package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.SchemaConceptImpl;
+import grakn.client.concept.impl.SchemaConceptImpl;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.Role;
+import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;
 

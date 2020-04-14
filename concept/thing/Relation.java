@@ -21,6 +21,7 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.type.RelationType;
 
