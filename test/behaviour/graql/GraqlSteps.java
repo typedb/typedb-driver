@@ -42,6 +42,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,7 +212,7 @@ public class GraqlSteps {
 
         AttributeUniquenessCheck(String typeAndValue) {
             String[] s = typeAndValue.split(":");
-            assertEquals(2, s.length);
+            assert 2 == s.length : String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s", typeAndValue);
             type = s[0];
             value = s[1];
         }
@@ -257,11 +258,11 @@ public class GraqlSteps {
 
     @Then("uniquely identify answer concepts by symbols")
     public void uniquely_identify_answer_concepts_by_symbols(List<Map<String, String>> answersIdentifiers) {
-      assertEquals(answersIdentifiers.size(), answers.size());
+      assert answersIdentifiers.size() == answers.size() : String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers", answersIdentifiers.size(), answers.size());
 
         for (ConceptMap answer : answers) {
             List<Map<String, String>> matchingIdentifiers = matchingAnswers(answersIdentifiers, answer);
-            assertEquals(1, matchingIdentifiers.size());
+            assert 1 == matchingIdentifiers.size() : String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s", matchingIdentifiers.size(), answer.map().keySet().toString());
         }
     }
 
@@ -324,23 +325,24 @@ public class GraqlSteps {
         String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
         Conjunction<?> queryWithIdsConj = Graql.and(Graql.parsePatternList(queryWithIds));
         assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Pattern is not as expected for explanation entry %d.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
+        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Pattern is not as expected for explanation entry %d.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
 
         String expectedRule = explanationEntry.get("rule");
         boolean hasExplanation = answer.hasExplanation();
 
         if (expectedRule.equals("lookup")) {
-            assertFalse(hasExplanation);
+            assert !hasExplanation : String.format("Explanation entry %d is declared as a lookup, but an explanation was found", entryId);
             String[] expectedChildren = {"-"};
-            assertArrayEquals(expectedChildren, children);
+            assert Arrays.equals(expectedChildren, children) : String.format("Explanation entry %d is declared as a lookup, and so it should have no children, indicated as \"-\", but got children %s instead", entryId, Arrays.toString(children));
         } else {
 
             Explanation explanation = answer.explanation();
             List<ConceptMap> explAnswers = explanation.getAnswers();
 
-            assertEquals(children.length, explAnswers.size());
+            assert children.length == explAnswers.size() : String.format("Explanation entry %d should have as many children as it has answers. Instead, %d children were declared, and %d answers were found.", entryId, children.length, explAnswers.size());
 
             if (expectedRule.equals("join")) {
-                assertNull(explanation.getRule());
+                assert explanation.getRule() == null : String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId);
             } else {
                 // rule
                 Rule rule = explanation.getRule();
