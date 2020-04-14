@@ -870,7 +870,7 @@ public class GraknClient implements AutoCloseable {
                         .build());
             }
 
-            private boolean receiveBatch() {
+            private void receiveBatch() {
                 assert index == responseBuffer.size();
                 index = 0;
                 responseBuffer.clear();
@@ -880,10 +880,11 @@ public class GraknClient implements AutoCloseable {
 
                     switch (response.getResCase()) {
                         case DONE:
-                            return true;
+                            state = RPCIteratorState.DONE;
+                            return;
                         case ITERATORID:
                             iteratorId = response.getIteratorId();
-                            return false;
+                            return;
                         case RES_NOT_SET:
                             throw GraknClientException.unreachableStatement("Unexpected " + response);
                         default:
@@ -895,6 +896,7 @@ public class GraknClient implements AutoCloseable {
             protected final T computeNext() {
                 if (state == RPCIteratorState.PRE_START) {
                     startIterating();
+                    receiveBatch();
                 }
 
                 if (state == RPCIteratorState.ITERATING) {
@@ -902,12 +904,8 @@ public class GraknClient implements AutoCloseable {
                         return responseReader.apply(responseBuffer.get(index++));
                     } else {
                         requestBatch();
-                        if (receiveBatch()) {
-                            return computeNext();
-                        } else {
-                            state = RPCIteratorState.DONE;
-                            return endOfData();
-                        }
+                        receiveBatch();
+                        return computeNext();
                     }
                 } else {
                     return endOfData();
