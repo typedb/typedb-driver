@@ -31,17 +31,18 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
-import grakn.client.concept.EntityType;
-import grakn.client.concept.Label;
-import grakn.client.concept.RelationType;
-import grakn.client.concept.Role;
+import grakn.client.concept.DataType;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.ConceptImpl;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.MetaType;
+import grakn.client.concept.type.RelationType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -70,7 +71,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +80,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
 /**
@@ -199,6 +199,8 @@ public class GraknClient implements AutoCloseable {
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
+
+        private int currentIteratorId = 1;
 
         public static class Builder {
 
@@ -568,23 +570,12 @@ public class GraknClient implements AutoCloseable {
         }
 
         private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
-            return (List<T>) streamInternal(query, infer).collect(Collectors.toList());
+            return this.<T>streamInternal(query, infer).collect(Collectors.toList());
         }
 
         private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
-            Iterable<T> iterable = () -> this.rpcIterator(query, infer);
-            return StreamSupport.stream(iterable.spliterator(), false);
-        }
-
-        private <T extends Answer> Iterator<T> rpcIterator(GraqlQuery query, boolean infer) {
-            transceiver.send(RequestBuilder.Transaction.query(query.toString(), infer));
-            SessionProto.Transaction.Res txResponse = responseOrThrow();
-            int iteratorId = txResponse.getQueryIter().getId();
-            return new RPCIterator<>(
-                    this,
-                    iteratorId,
-                    response -> (T) ResponseReader.answer(response.getQueryIterRes().getAnswer(), this)
-            );
+            return iterate(RequestBuilder.Transaction.query(query.toString(), infer),
+                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
         public void close() {
@@ -633,161 +624,173 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public <T extends grakn.client.concept.Type> T getType(Label label) {
-            SchemaConcept concept = getSchemaConcept(label);
-            if (concept == null || !concept.isType()) return null;
-            return (T) concept.asType();
+        public grakn.client.concept.type.Type.Remote<?, ?> getType(Label label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(label);
+            if (concept instanceof grakn.client.concept.type.Type.Remote) {
+                return (grakn.client.concept.type.Type.Remote<?, ?>) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
-        public EntityType getEntityType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isEntityType()) return null;
-            return concept.asEntityType();
+        public EntityType.Remote getEntityType(String label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof EntityType.Remote) {
+                return (EntityType.Remote) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
-        public RelationType getRelationType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isRelationType()) return null;
-            return concept.asRelationType();
+        public RelationType.Remote getRelationType(String label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof RelationType.Remote) {
+                return (RelationType.Remote) concept;
+            } else {
+                return null;
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Nullable
+        public <V> AttributeType.Remote<V> getAttributeType(String label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof AttributeType.Remote) {
+                return (AttributeType.Remote<V>) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
-        public <V> AttributeType<V> getAttributeType(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isAttributeType()) return null;
-            return concept.asAttributeType();
+        public Role.Remote getRole(String label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof Role.Remote) {
+                return (Role.Remote) concept;
+            } else {
+                return null;
+            }
         }
 
         @Nullable
-        public Role getRole(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isRole()) return null;
-            return concept.asRole();
+        public Rule.Remote getRule(String label) {
+            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            if (concept instanceof Rule.Remote) {
+                return (Rule.Remote) concept;
+            } else {
+                return null;
+            }
         }
 
+        @SuppressWarnings("unchecked")
         @Nullable
-        public Rule getRule(String label) {
-            SchemaConcept concept = getSchemaConcept(Label.of(label));
-            if (concept == null || !concept.isRule()) return null;
-            return concept.asRule();
-        }
-
-        @Nullable
-        public <T extends SchemaConcept> T getSchemaConcept(Label label) {
+        public SchemaConcept.Remote<?> getSchemaConcept(Label label) {
             transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetSchemaConceptRes().getResCase()) {
                 case NULL:
                     return null;
+                case SCHEMACONCEPT:
+                    return Concept.Remote.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
                 default:
-                    return (T) ConceptImpl.of(response.getGetSchemaConceptRes().getSchemaConcept(), this).asSchemaConcept();
+                    throw GraknClientException.resultNotPresent();
             }
         }
 
-        public grakn.client.concept.Type getMetaConcept() {
+        public SchemaConcept<?> getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
-        public RelationType getMetaRelationType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString()));
+        public MetaType.Remote<?, ?> getMetaRelationType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString())).asMetaType();
         }
 
-        public Role getMetaRole() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString()));
+        public MetaType.Remote<?, ?> getMetaRole() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString())).asMetaType();
         }
 
-        public AttributeType getMetaAttributeType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString()));
+        public MetaType.Remote<?, ?> getMetaAttributeType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asMetaType();
         }
 
-        public EntityType getMetaEntityType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString()));
+        public MetaType.Remote<?, ?> getMetaEntityType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString())).asMetaType();
         }
 
-        public Rule getMetaRule() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString()));
+        public MetaType.Remote<?, ?> getMetaRule() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString())).asMetaType();
         }
 
         @Nullable
-        public <T extends Concept> T getConcept(ConceptId id) {
+        public Concept.Remote<?> getConcept(ConceptId id) {
             transceiver.send(RequestBuilder.Transaction.getConcept(id));
             SessionProto.Transaction.Res response = responseOrThrow();
             switch (response.getGetConceptRes().getResCase()) {
                 case NULL:
                     return null;
+                case CONCEPT:
+                    return Concept.Remote.of(response.getGetConceptRes().getConcept(), this);
                 default:
-                    return (T) ConceptImpl.of(response.getGetConceptRes().getConcept(), this);
+                    throw GraknClientException.resultNotPresent();
             }
         }
 
-        public <V> Collection<Attribute<V>> getAttributesByValue(V value) {
-            transceiver.send(RequestBuilder.Transaction.getAttributes(value));
-            int iteratorId = responseOrThrow().getGetAttributesIter().getId();
-            Iterable<Attribute<V>> iterable = () -> new RPCIterator<Attribute<V>>(
-                    this, iteratorId, response -> ConceptImpl.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()
-            );
-
-            return StreamSupport.stream(iterable.spliterator(), false)
-                    .collect(Collectors.toSet());
+        @SuppressWarnings("unchecked")
+        public <V> Collection<Attribute.Remote<V>> getAttributesByValue(V value) {
+            return iterate(RequestBuilder.Transaction.getAttributes(value),
+                    response -> (Attribute.Remote<V>) Concept.Remote.of(response.getGetAttributesIterRes().getAttribute(), this).asAttribute()).collect(Collectors.toSet());
         }
 
-
-        public EntityType putEntityType(String label) {
+        public EntityType.Remote putEntityType(String label) {
             return putEntityType(Label.of(label));
         }
 
-        public EntityType putEntityType(Label label) {
+        public EntityType.Remote putEntityType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putEntityType(label));
-            return ConceptImpl.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
+            return Concept.Remote.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> AttributeType<V> putAttributeType(String label, AttributeType.DataType<V> dataType) {
+        public <V> AttributeType.Remote<V> putAttributeType(String label, DataType<V> dataType) {
             return putAttributeType(Label.of(label), dataType);
         }
-        public <V> AttributeType<V> putAttributeType(Label label, AttributeType.DataType<V> dataType) {
+        @SuppressWarnings("unchecked")
+        public <V> AttributeType.Remote<V> putAttributeType(Label label, DataType<V> dataType) {
             transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
-            return ConceptImpl.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
+            return (AttributeType.Remote<V>) Concept.Remote.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
-        public RelationType putRelationType(String label) {
+        public RelationType.Remote putRelationType(String label) {
             return putRelationType(Label.of(label));
         }
-        public RelationType putRelationType(Label label) {
+        public RelationType.Remote putRelationType(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRelationType(label));
-            return ConceptImpl.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
+            return Concept.Remote.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
-        public Role putRole(String label) {
+        public Role.Remote putRole(String label) {
             return putRole(Label.of(label));
         }
-        public Role putRole(Label label) {
+        public Role.Remote putRole(Label label) {
             transceiver.send(RequestBuilder.Transaction.putRole(label));
-            return ConceptImpl.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
+            return Concept.Remote.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
         }
 
-        public Rule putRule(String label, Pattern when, Pattern then) {
+        public Rule.Remote putRule(String label, Pattern when, Pattern then) {
             return putRule(Label.of(label), when, then);
         }
-        public Rule putRule(Label label, Pattern when, Pattern then) {
+        public Rule.Remote putRule(Label label, Pattern when, Pattern then) {
             transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
-            return ConceptImpl.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
+            return Concept.Remote.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
         }
 
-        public Stream<SchemaConcept> sups(SchemaConcept schemaConcept) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptSupsReq(ConceptProto.SchemaConcept.Sups.Req.getDefaultInstance()).build();
+        public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                    .setSchemaConceptSupsIterReq(ConceptProto.SchemaConcept.Sups.Iter.Req.getDefaultInstance()).build();
 
-            SessionProto.Transaction.Res response = runConceptMethod(schemaConcept.id(), method);
-            int iteratorId = response.getConceptMethodRes().getResponse().getSchemaConceptSupsIter().getId();
-
-            Iterable<? extends Concept> iterable = () -> new RPCIterator<>(
-                    this, iteratorId, res -> ConceptImpl.of(res.getConceptMethodIterRes().getSchemaConceptSupsIterRes().getSchemaConcept(), this)
-            );
-
-            Stream<? extends Concept> sups = StreamSupport.stream(iterable.spliterator(), false);
-            return Objects.requireNonNull(sups).map(Concept::asSchemaConcept);
+            return iterateConceptMethod(schemaConcept.id(), method,
+                    res -> Concept.Remote.of(res.getSchemaConceptSupsIterRes().getSchemaConcept(), this).asSchemaConcept());
         }
 
         public SessionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {
@@ -797,6 +800,14 @@ public class GraknClient implements AutoCloseable {
 
             transceiver.send(request);
             return responseOrThrow();
+        }
+
+        public <T> Stream<T> iterateConceptMethod(ConceptId id, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
+            SessionProto.Transaction.ConceptMethod.Iter.Req conceptIterMethod = SessionProto.Transaction.ConceptMethod.Iter.Req.newBuilder()
+                    .setId(id.getValue()).setMethod(method).build();
+            SessionProto.Transaction.Iter.Req request = SessionProto.Transaction.Iter.Req.newBuilder().setConceptMethodIterReq(conceptIterMethod).build();
+
+            return iterate(request, res -> responseReader.apply(res.getConceptMethodIterRes().getResponse()));
         }
 
         public Explanation getExplanation(ConceptMap explainable) {
@@ -819,15 +830,8 @@ public class GraknClient implements AutoCloseable {
             return conceptMapProto.build();
         }
 
-        private SessionProto.Transaction.Iter.Res iterate(int iteratorId) {
-            try (ThreadTrace trace = traceOnThread("iterate")) {
-                transceiver.send(RequestBuilder.Transaction.iterate(iteratorId));
-                return responseOrThrow().getIterateRes();
-            }
-        }
-
-        public <T> RPCIterator<T> iterator(int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-            return new RPCIterator<>(this, iteratorId, responseReader);
+        public <T> Stream<T> iterate(SessionProto.Transaction.Iter.Req request, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
+            return Objects.requireNonNull(StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false));
         }
 
         /**
@@ -836,28 +840,75 @@ public class GraknClient implements AutoCloseable {
          *
          * @param <T> class type of objects being iterated
          */
-        public static class RPCIterator<T> extends AbstractIterator<T> {
-            private final int iteratorId;
-            private Transaction tx;
+        public class RPCIterator<T> extends AbstractIterator<T> {
+            private RPCIteratorState state = RPCIteratorState.PRE_START;
+            private SessionProto.Transaction.Iter.Req request;
+            private SessionProto.Transaction.Iter.Req.Options requestOptions;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
+            private int iteratorId = 0;
 
-            private RPCIterator(Transaction tx, int iteratorId, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-                this.tx = tx;
-                this.iteratorId = iteratorId;
+            private int index = 0;
+            private List<SessionProto.Transaction.Iter.Res> responseBuffer = new ArrayList<>();
+
+            private RPCIterator(SessionProto.Transaction.Iter.Req request, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
+                this.request = request;
                 this.responseReader = responseReader;
+                this.requestOptions = request.getOptions();
             }
 
+            private void startIterating() {
+                transceiver.send(SessionProto.Transaction.Req.newBuilder().setIterReq(request).putAllMetadata(RequestBuilder.getTracingData()).build());
+                state = RPCIteratorState.ITERATING;
+            }
+
+            private void requestBatch() {
+                transceiver.send(SessionProto.Transaction.Req.newBuilder()
+                        .putAllMetadata(RequestBuilder.getTracingData())
+                        .setIterReq(SessionProto.Transaction.Iter.Req.newBuilder()
+                                .setOptions(requestOptions)
+                                .setIteratorId(iteratorId).build())
+                        .build());
+            }
+
+            private void receiveBatch() {
+                assert index == responseBuffer.size();
+                index = 0;
+                responseBuffer.clear();
+
+                while (true) {
+                    SessionProto.Transaction.Iter.Res response = responseOrThrow().getIterRes();
+
+                    switch (response.getResCase()) {
+                        case DONE:
+                            state = RPCIteratorState.DONE;
+                            return;
+                        case ITERATORID:
+                            iteratorId = response.getIteratorId();
+                            return;
+                        case RES_NOT_SET:
+                            throw GraknClientException.unreachableStatement("Unexpected " + response);
+                        default:
+                            responseBuffer.add(response);
+                    }
+                }
+            }
 
             protected final T computeNext() {
-                SessionProto.Transaction.Iter.Res response = tx.iterate(iteratorId);
-
-                switch (response.getResCase()) {
-                    case DONE:
-                        return endOfData();
-                    case RES_NOT_SET:
-                        throw GraknClientException.unreachableStatement("Unexpected " + response);
-                    default:
-                        return responseReader.apply(response);
+                if (index < responseBuffer.size()) {
+                    return responseReader.apply(responseBuffer.get(index++));
+                } else {
+                    switch (state) {
+                        case PRE_START:
+                            startIterating();
+                            break;
+                        case ITERATING:
+                            requestBatch();
+                            break;
+                        case DONE:
+                            return endOfData();
+                    }
+                    receiveBatch();
+                    return computeNext();
                 }
             }
         }
@@ -896,6 +947,12 @@ public class GraknClient implements AutoCloseable {
                 throw GraknClientException.create(e.getMessage(), e);
             }
         }
+    }
+
+    private enum RPCIteratorState {
+        PRE_START,
+        ITERATING,
+        DONE
     }
 
     /**

@@ -35,9 +35,9 @@ import java.util.List;
 public class Explanation {
 
     private final List<ConceptMap> answers;
-    private final Rule rule;
+    private final Rule.Remote rule;
 
-    public Explanation(List<ConceptMap> ans, @Nullable Rule rule) {
+    public Explanation(List<ConceptMap> ans, @Nullable Rule.Remote rule) {
         this.answers = Collections.unmodifiableList(ans);
         this.rule = rule;
     }
@@ -49,7 +49,7 @@ public class Explanation {
     public List<ConceptMap> getAnswers() { return answers;}
 
     @CheckReturnValue
-    public Rule getRule() {
+    public Rule.Remote getRule() {
         return rule;
     }
 }

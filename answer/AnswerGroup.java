@@ -21,7 +21,6 @@ package grakn.client.answer;
 
 import grakn.client.concept.Concept;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -30,12 +29,12 @@ import java.util.List;
  *
  * @param <T> the type of Answer being grouped
  */
-public class AnswerGroup<T extends Answer> implements Answer {
+public class AnswerGroup<T> implements Answer {
 
-    private final Concept owner;
+    private final Concept.Remote<?> owner;
     private final List<T> answers;
 
-    public AnswerGroup(Concept owner, List<T> answers) {
+    public AnswerGroup(Concept.Remote<?> owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
@@ -45,7 +44,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
         return false;
     }
 
-    public Concept owner() {
+    public Concept.Remote<?> owner() {
         return this.owner;
     }
 
@@ -57,7 +56,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        AnswerGroup a2 = (AnswerGroup) obj;
+        AnswerGroup<?> a2 = (AnswerGroup<?>) obj;
         return this.owner.equals(a2.owner) &&
                 this.answers.equals(a2.answers);
     }

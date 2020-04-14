@@ -101,10 +101,10 @@ java_grpc_compile()
 ################################
 
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
-"graknlabs_common", "graknlabs_console", "graknlabs_benchmark")
+"graknlabs_common", "graknlabs_benchmark", "graknlabs_console")
 graknlabs_common()
-graknlabs_console()
 graknlabs_benchmark()
+graknlabs_console()
 
 load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
 graknlabs_grakn_core_maven_dependencies = "maven_dependencies")

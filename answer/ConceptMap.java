@@ -42,12 +42,12 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap implements Answer {
 
-    private final Map<Variable, Concept> map;
+    private final Map<Variable, Concept<?>> map;
     private final boolean hasExplanation;
     private GraknClient.Transaction tx;
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<Variable, Concept> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
+    public ConceptMap(Map<Variable, Concept<?>> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;
@@ -63,7 +63,12 @@ public class ConceptMap implements Answer {
         if (this.explanation() == null) return Collections.emptySet();
         Set<Explanation> explanations = new HashSet<>();
         explanations.add(this.explanation());
-        this.explanation().getAnswers().stream().forEach(conceptMap -> explanations.addAll(conceptMap.explanations()));
+        this.explanation().getAnswers().forEach(conceptMap -> {
+            Set<Explanation> subexplanations = conceptMap.explanations();
+            if (subexplanations != null) {
+                explanations.addAll(subexplanations);
+            }
+        });
         return explanations;
     }
 
@@ -87,23 +92,23 @@ public class ConceptMap implements Answer {
     }
 
     @CheckReturnValue
-    public Map<Variable, Concept> map() {
+    public Map<Variable, Concept<?>> map() {
         return map;
     }
 
 
-    public Collection<Concept> concepts() {
+    public Collection<Concept<?>> concepts() {
         return map.values();
     }
 
     @CheckReturnValue
-    public Concept get(String variable) {
+    public Concept<?> get(String variable) {
         return get(new Variable(variable));
     }
 
     @CheckReturnValue
-    public Concept get(Variable var) {
-        Concept Concept = map.get(var);
+    public Concept<?> get(Variable var) {
+        Concept<?> Concept = map.get(var);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(var.toString());
         return Concept;
     }
