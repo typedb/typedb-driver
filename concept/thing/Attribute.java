@@ -45,7 +45,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
 
     @CheckReturnValue
     @Override
-    default Thing.Remote<Attribute<D>, AttributeType<D>> asRemote(GraknClient.Transaction tx) {
+    default Remote<D> asRemote(GraknClient.Transaction tx) {
         return Attribute.Remote.of(tx, id());
     }
 

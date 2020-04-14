@@ -35,6 +35,8 @@ import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.MetaTypeImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RelationTypeImpl;
+import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleImpl;
 import grakn.client.concept.type.Type;
 import grakn.protocol.session.ConceptProto;
 

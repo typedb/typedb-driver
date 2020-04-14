@@ -33,7 +33,7 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
-import grakn.client.concept.Role;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.ConceptId;

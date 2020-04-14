@@ -4,7 +4,7 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.ConceptImpl;
-import grakn.client.concept.Role;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;

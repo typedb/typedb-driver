@@ -3,7 +3,7 @@ package grakn.client.concept.thing;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Role;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.session.ConceptProto;

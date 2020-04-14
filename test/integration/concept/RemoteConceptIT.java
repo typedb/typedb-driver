@@ -24,7 +24,7 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
-import grakn.client.concept.Role;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;

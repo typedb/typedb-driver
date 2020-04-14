@@ -17,11 +17,12 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
+import grakn.client.concept.SchemaConcept;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;

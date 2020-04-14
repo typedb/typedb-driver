@@ -22,7 +22,6 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.Role;
 import grakn.client.concept.thing.Relation;
 
 import javax.annotation.CheckReturnValue;
