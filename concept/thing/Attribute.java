@@ -57,6 +57,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
+    @SuppressWarnings("unchecked")
     @CheckReturnValue
     @Override
     default Attribute<D> asAttribute() {
@@ -140,6 +141,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
         Attribute.Remote<D> unhas(Attribute<?> attribute);
 
         //------------------------------------- Other ---------------------------------
+        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override

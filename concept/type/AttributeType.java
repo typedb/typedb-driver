@@ -45,6 +45,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
     DataType<D> dataType();
 
     //------------------------------------- Other ---------------------------------
+    @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
@@ -242,6 +243,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         String regex();
 
         //------------------------------------- Other ---------------------------------
+        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
