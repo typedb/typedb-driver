@@ -267,21 +267,16 @@ public class GraqlSteps {
       assert answersIdentifiers.size() == answers.size() : String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers", answersIdentifiers.size(), answers.size());
 
         for (ConceptMap answer : answers) {
-            List<Map<String, String>> matchingIdentifiers = matchingAnswers(answersIdentifiers, answer);
-            assert 1 == matchingIdentifiers.size() : String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s", matchingIdentifiers.size(), answer.map().keySet().toString());
-        }
-    }
+            List<Map<String, String>> matchingIdentifiers1 = new ArrayList<>();
 
-    private List<Map<String, String>> matchingAnswers(List<Map<String, String>> answersIdentifiers, ConceptMap answer) {
-        List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
+            for (Map<String, String> answerIdentifiers : answersIdentifiers) {
 
-        for (Map<String, String> answerIdentifiers : answersIdentifiers) {
-
-            if (matchAnswer(answerIdentifiers, answer)) {
-                matchingIdentifiers.add(answerIdentifiers);
+                if (matchAnswer(answerIdentifiers, answer)) {
+                    matchingIdentifiers1.add(answerIdentifiers);
+                }
             }
+            assert 1 == matchingIdentifiers1.size() : String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s", matchingIdentifiers1.size(), answer.map().keySet().toString());
         }
-        return matchingIdentifiers;
     }
 
     private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
