@@ -164,8 +164,8 @@ public class GraqlSteps {
         assertEquals(expectedAnswers, answers.size());
     }
 
-    @Then("concept identifier symbols are")
-    public void concept_identifier_symbols_are(Map<String, Map<String, String>> identifiers) {
+    @Then("concept identifiers are")
+    public void concept_identifiers_are(Map<String, Map<String, String>> identifiers) {
         for (Map.Entry<String, Map<String, String>> entry : identifiers.entrySet()) {
             String identifier = entry.getKey();
             String check = entry.getValue().get("check");
@@ -201,7 +201,13 @@ public class GraqlSteps {
 
         @Override
         public boolean check(Concept concept) {
-            return concept.isType() && label.equals(concept.asType().label().toString());
+            if (concept.isType()) {
+                return label.equals(concept.asType().label().toString());
+            } else if (concept.isRole()) {
+                return label.equals(concept.asRole().label().toString());
+            } else {
+                throw new RuntimeException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
+            }
         }
     }
 
@@ -256,8 +262,8 @@ public class GraqlSteps {
         }
     }
 
-    @Then("uniquely identify answer concepts by symbols")
-    public void uniquely_identify_answer_concepts_by_symbols(List<Map<String, String>> answersIdentifiers) {
+    @Then("uniquely identify answer concepts")
+    public void uniquely_identify_answer_concepts(List<Map<String, String>> answersIdentifiers) {
       assert answersIdentifiers.size() == answers.size() : String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers", answersIdentifiers.size(), answers.size());
 
         for (ConceptMap answer : answers) {
@@ -285,6 +291,10 @@ public class GraqlSteps {
 
             if(!answer.map().containsKey(new Variable(varName))){
                 return false;
+            }
+
+            if(!identifierChecks.containsKey(identifier)) {
+                throw new RuntimeException(String.format("Identifier \"%s\" hasn't previously been declared", identifier));
             }
 
             if(!identifierChecks.get(identifier).check(answer.get(varName))) {
