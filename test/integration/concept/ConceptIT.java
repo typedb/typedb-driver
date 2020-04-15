@@ -20,6 +20,7 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
@@ -611,4 +612,9 @@ public class ConceptIT {
         assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
+    @Test
+    public void whenCastingAttributeWithDataType_castsWithoutError() {
+        Concept<?> untypedAge = age;
+        AttributeType<Integer> typedAge = untypedAge.asAttributeType(DataType.INTEGER);
+    }
 }
