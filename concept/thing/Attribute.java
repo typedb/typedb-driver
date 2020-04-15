@@ -21,11 +21,13 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.DataType;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
@@ -56,11 +58,23 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
     DataType<D> dataType();
 
     //------------------------------------- Other ---------------------------------
+    @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default Attribute<D> asAttribute() {
-        return this;
+    default <T> Attribute<T> asAttribute() {
+        return (Attribute<T>) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    default <T> Attribute<T> asAttribute(DataType<T> dataType) {
+        if (!dataType().equals(dataType)) {
+            throw GraknConceptException.invalidCasting(this, dataType.getClass());
+        }
+        return (Attribute<T>) this;
     }
 
     @CheckReturnValue
@@ -140,11 +154,19 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
         Attribute.Remote<D> unhas(Attribute<?> attribute);
 
         //------------------------------------- Other ---------------------------------
+        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
-        default Attribute.Remote<D> asAttribute() {
-            return this;
+        default <T> Attribute.Remote<T> asAttribute() {
+            return (Attribute.Remote<T>) this;
+        }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default <T> Attribute.Remote<T> asAttribute(DataType<T> dataType) {
+            return (Attribute.Remote<T>) Attribute.super.asAttribute(dataType);
         }
 
         @Deprecated

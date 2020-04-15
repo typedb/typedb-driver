@@ -20,7 +20,9 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
 import grakn.client.concept.type.Role;
@@ -48,7 +50,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -62,6 +63,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
@@ -612,4 +614,29 @@ public class ConceptIT {
         assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
+    @Test
+    public void whenCastingAttributeWithCorrectDataType_castsWithoutError() {
+        Concept<?> untypedAgeType = age;
+        AttributeType<Integer> typedAgeType = untypedAgeType.asAttributeType(DataType.INTEGER);
+        Concept<?> untypedAgeAttr = age20;
+        Attribute<Integer> typedAgeAttr = untypedAgeAttr.asAttribute(DataType.INTEGER);
+    }
+
+    @Test
+    public void whenCastingAttributeWithWrongDataType_fails() {
+        Concept<?> untypedAgeType = age;
+        try {
+            AttributeType<String> wrong = untypedAgeType.asAttributeType(DataType.STRING);
+            fail();
+        } catch (GraknConceptException ignored) {
+            assertTrue(true);
+        }
+        Concept<?> untypedAgeAttr = age20;
+        try {
+            Attribute<String> wrong = untypedAgeAttr.asAttribute(DataType.STRING);
+            fail();
+        } catch (GraknConceptException ignored) {
+            assertTrue(true);
+        }
+    }
 }

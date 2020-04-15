@@ -22,11 +22,13 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -45,14 +47,25 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
     DataType<D> dataType();
 
     //------------------------------------- Other ---------------------------------
+    @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default AttributeType<D> asAttributeType() {
-        return this;
+    default <T> AttributeType<T> asAttributeType() {
+        return (AttributeType<T>) this;
     }
 
+    @SuppressWarnings("unchecked")
+    @Deprecated
     @CheckReturnValue
+    @Override
+    default <T> AttributeType<T> asAttributeType(DataType<T> dataType) {
+        if (!dataType.equals(dataType())) {
+            throw GraknConceptException.invalidCasting(this, dataType.getClass());
+        }
+        return (AttributeType<T>) this;
+    }
+
     @Override
     default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
         return AttributeType.Remote.of(tx, id());
@@ -242,11 +255,19 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         String regex();
 
         //------------------------------------- Other ---------------------------------
+        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
-        default AttributeType.Remote<D> asAttributeType() {
-            return this;
+        default <T> AttributeType.Remote<T> asAttributeType() {
+            return (AttributeType.Remote<T>) this;
+        }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default <T> AttributeType.Remote<T> asAttributeType(DataType<T> dataType) {
+            return (AttributeType.Remote<T>) AttributeType.super.asAttributeType(dataType);
         }
 
         @Deprecated
