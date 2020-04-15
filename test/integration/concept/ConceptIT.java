@@ -629,12 +629,14 @@ public class ConceptIT {
             AttributeType<String> wrong = untypedAgeType.asAttributeType(DataType.STRING);
             fail();
         } catch (GraknConceptException ignored) {
+            assertTrue(true);
         }
         Concept<?> untypedAgeAttr = age20;
         try {
             Attribute<String> wrong = untypedAgeAttr.asAttribute(DataType.STRING);
             fail();
         } catch (GraknConceptException ignored) {
+            assertTrue(true);
         }
     }
 }
