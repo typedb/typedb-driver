@@ -24,9 +24,9 @@ import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
-import grakn.client.concept.Attribute;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Rule;
+import grakn.client.concept.thing.Attribute;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -188,7 +188,7 @@ public class GraqlSteps {
     }
 
     private interface UniquenessCheck {
-        boolean check(Concept concept);
+        boolean check(Concept<?> concept);
     }
 
     public static class LabelUniquenessCheck implements UniquenessCheck {
@@ -250,10 +250,11 @@ public class GraqlSteps {
          * @return whether the given key matches a key belonging to the concept
          */
         @Override
-        public boolean check(Concept concept) {
+        public boolean check(Concept<?> concept) {
             if(!concept.isThing()) { return false; }
 
-            Set<Attribute<?>> keys = concept.asThing().keys().collect(Collectors.toSet());
+            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).keys().collect(Collectors.toSet());
+
             HashMap<String, String> keyMap = new HashMap<>();
 
             for (Attribute<?> key : keys) {
@@ -364,7 +365,7 @@ public class GraqlSteps {
                 assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
             } else {
                 // rule
-                Rule rule = explanation.getRule();
+                Rule.Remote rule = explanation.getRule().asRemote(tx);
                 String ruleLabel = rule.label().toString();
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 

@@ -37,7 +37,7 @@ commands:
     steps:
       - run-bazel-rbe:
           command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
-      - run: mkdir dist && tar -xvzf bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
+      - run: mkdir dist && tar -xvzf bazel-bin/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
       - run: nohup ./dist/grakn-core-all-linux/grakn server start
 
 jobs:
@@ -184,7 +184,7 @@ jobs:
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-java@$CIRCLE_SHA1 \
-          --targets console:master grakn-kgms:master benchmark:master
+          --targets console:master grakn-kgms:master
 
   release-approval:
     machine: true
@@ -239,7 +239,7 @@ jobs:
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
           --source client-java@$(cat VERSION) \
-          --targets console:master grakn-kgms:master benchmark:master docs:master examples:master
+          --targets console:master grakn-kgms:master docs:master examples:master
 
   release-cleanup:
     machine: true

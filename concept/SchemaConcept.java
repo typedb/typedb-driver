@@ -19,6 +19,8 @@
 
 package grakn.client.concept;
 
+import grakn.client.GraknClient;
+
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -30,17 +32,7 @@ import java.util.stream.Stream;
  * 1. They have a unique Label which identifies them
  * 2. You can link them together into a hierarchical structure
  */
-public interface SchemaConcept extends Concept {
-    //------------------------------------- Modifiers ----------------------------------
-
-    /**
-     * Changes the Label of this Concept to a new one.
-     *
-     * @param label The new Label.
-     * @return The Concept itself
-     */
-    SchemaConcept label(Label label);
-
+public interface SchemaConcept<BaseType extends SchemaConcept<BaseType>> extends Concept<BaseType> {
     //------------------------------------- Accessors ---------------------------------
 
     /**
@@ -51,51 +43,95 @@ public interface SchemaConcept extends Concept {
     @CheckReturnValue
     Label label();
 
-    /**
-     * @return The direct super of this concept
-     */
-    @CheckReturnValue
-    @Nullable
-    SchemaConcept sup();
-
-    /**
-     * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
-     * Schema.MetaSchema#THING.
-     * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
-     */
-    Stream<? extends SchemaConcept> sups();
-
-    /**
-     * Get all indirect subs of this concept.
-     * The indirect subs are the concept itself and all indirect subs of direct subs.
-     *
-     * @return All the indirect sub-types of this SchemaConcept
-     */
-    @CheckReturnValue
-    Stream<? extends SchemaConcept> subs();
-
-    /**
-     * Return whether the SchemaConcept was created implicitly.
-     * By default, SchemaConcept are not implicit.
-     *
-     * @return returns true if the type was created implicitly through the Attribute syntax
-     */
-    @CheckReturnValue
-    Boolean isImplicit();
-
-
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default SchemaConcept asSchemaConcept() {
+    default SchemaConcept<BaseType> asSchemaConcept() {
         return this;
     }
+
+    @Override
+    Remote<BaseType> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue
     @Override
     default boolean isSchemaConcept() {
         return true;
+    }
+
+    interface Local<T extends SchemaConcept<T>> extends SchemaConcept<T>, Concept.Local<T> {
+    }
+
+    /**
+     * Facilitates construction of ontological elements.
+     * Allows you to create schema or ontological elements.
+     * These differ from normal graph constructs in two ways:
+     * 1. They have a unique Label which identifies them
+     * 2. You can link them together into a hierarchical structure
+     */
+    interface Remote<BaseType extends SchemaConcept<BaseType>>
+            extends SchemaConcept<BaseType>,
+            Concept.Remote<BaseType> {
+        //------------------------------------- Modifiers ----------------------------------
+
+        /**
+         * Changes the Label of this Concept to a new one.
+         *
+         * @param label The new Label.
+         * @return The Concept itself
+         */
+        SchemaConcept.Remote<BaseType> label(Label label);
+
+        //------------------------------------- Accessors ---------------------------------
+
+        /**
+         * @return The direct super of this concept
+         */
+        @CheckReturnValue
+        @Nullable
+        SchemaConcept.Remote<BaseType> sup();
+
+        /**
+         * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
+         * Schema.MetaSchema#THING.
+         * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
+         */
+        Stream<? extends SchemaConcept.Remote<BaseType>> sups();
+
+        /**
+         * Get all indirect subs of this concept.
+         * The indirect subs are the concept itself and all indirect subs of direct subs.
+         *
+         * @return All the indirect sub-types of this SchemaConcept
+         */
+        @CheckReturnValue
+        Stream<? extends SchemaConcept.Remote<BaseType>> subs();
+
+        /**
+         * Return whether the SchemaConcept was created implicitly.
+         * By default, SchemaConcept are not implicit.
+         *
+         * @return returns true if the type was created implicitly through the Attribute syntax
+         */
+        @CheckReturnValue
+        Boolean isImplicit();
+
+
+        //------------------------------------- Other ---------------------------------
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default SchemaConcept.Remote<BaseType> asSchemaConcept() {
+            return this;
+        }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default boolean isSchemaConcept() {
+            return true;
+        }
     }
 }

@@ -20,10 +20,9 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.AttributeTypeImpl;
 import grakn.client.concept.Concept;
-import grakn.client.concept.AttributeType;
 import grakn.client.concept.ConceptId;
+import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.keyspace.KeyspaceProto;
@@ -81,24 +80,12 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req query(GraqlQuery query) {
-            return query(query.toString(), true);
-        }
-
-        public static SessionProto.Transaction.Req query(GraqlQuery query, boolean infer) {
-            return query(query.toString(), infer);
-        }
-
-        public static SessionProto.Transaction.Req query(String queryString) {
-            return query(queryString, true);
-        }
-
-        public static SessionProto.Transaction.Req query(String queryString, boolean infer) {
-            SessionProto.Transaction.Query.Req request = SessionProto.Transaction.Query.Req.newBuilder()
-                    .setQuery(queryString)
-                    .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
-                    .build();
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setQueryReq(request).build();
+        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer) {
+            return SessionProto.Transaction.Iter.Req.newBuilder()
+                    .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
+                            .setQuery(queryString)
+                            .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
+                            .build()).build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
@@ -116,12 +103,10 @@ public class RequestBuilder {
         }
 
 
-        public static SessionProto.Transaction.Req getAttributes(Object value) {
-            return SessionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setGetAttributesReq(SessionProto.Transaction.GetAttributes.Req.newBuilder()
-                                                 .setValue(ConceptMessage.attributeValue(value))
-                    ).build();
+        public static SessionProto.Transaction.Iter.Req getAttributes(Object value) {
+            return SessionProto.Transaction.Iter.Req.newBuilder()
+                            .setGetAttributesIterReq(SessionProto.Transaction.GetAttributes.Iter.Req.newBuilder()
+                                                 .setValue(ConceptMessage.attributeValue(value))).build();
         }
 
         public static SessionProto.Transaction.Req putEntityType(Label label) {
@@ -131,7 +116,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Req putAttributeType(Label label, AttributeTypeImpl.DataType<?> dataType) {
+        public static SessionProto.Transaction.Req putAttributeType(Label label, DataType<?> dataType) {
             SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setDataType(ConceptMessage.setDataType(dataType))
@@ -162,13 +147,6 @@ public class RequestBuilder {
                     .build();
             return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRuleReq(request).build();
         }
-
-        public static SessionProto.Transaction.Req iterate(int iteratorId) {
-            return SessionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setIterateReq(SessionProto.Transaction.Iter.Req.newBuilder()
-                                           .setId(iteratorId)).build();
-        }
     }
 
     /**
@@ -176,14 +154,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(Concept concept) {
+        public static ConceptProto.Concept from(Concept<?> concept) {
             return ConceptProto.Concept.newBuilder()
                     .setId(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept concept) {
+        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept<?> concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -207,7 +185,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<Concept> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?>> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
@@ -236,42 +214,43 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        public static AttributeTypeImpl.DataType dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
+        @SuppressWarnings("unchecked")
+        public static <D> DataType<D> dataType(ConceptProto.AttributeType.DATA_TYPE dataType) {
             switch (dataType) {
                 case STRING:
-                    return AttributeTypeImpl.DataType.STRING;
+                    return (DataType<D>) DataType.STRING;
                 case BOOLEAN:
-                    return  AttributeTypeImpl.DataType.BOOLEAN;
+                    return (DataType<D>) DataType.BOOLEAN;
                 case INTEGER:
-                    return  AttributeTypeImpl.DataType.INTEGER;
+                    return (DataType<D>) DataType.INTEGER;
                 case LONG:
-                    return AttributeTypeImpl.DataType.LONG;
+                    return (DataType<D>) DataType.LONG;
                 case FLOAT:
-                    return  AttributeTypeImpl.DataType.FLOAT;
+                    return (DataType<D>) DataType.FLOAT;
                 case DOUBLE:
-                    return  AttributeTypeImpl.DataType.DOUBLE;
+                    return (DataType<D>) DataType.DOUBLE;
                 case DATE:
-                    return  AttributeTypeImpl.DataType.DATE;
+                    return (DataType<D>) DataType.DATE;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + dataType);
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setDataType(AttributeType.DataType dataType) {
-            if (dataType.equals(AttributeType.DataType.STRING)) {
+        static ConceptProto.AttributeType.DATA_TYPE setDataType(DataType<?> dataType) {
+            if (dataType.equals(DataType.STRING)) {
                 return ConceptProto.AttributeType.DATA_TYPE.STRING;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.BOOLEAN)) {
+            } else if (dataType.equals( DataType.BOOLEAN)) {
                 return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.INTEGER)) {
+            } else if (dataType.equals( DataType.INTEGER)) {
                 return ConceptProto.AttributeType.DATA_TYPE.INTEGER;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.LONG)) {
+            } else if (dataType.equals( DataType.LONG)) {
                 return ConceptProto.AttributeType.DATA_TYPE.LONG;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.FLOAT)) {
+            } else if (dataType.equals( DataType.FLOAT)) {
                 return ConceptProto.AttributeType.DATA_TYPE.FLOAT;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.DOUBLE)) {
+            } else if (dataType.equals( DataType.DOUBLE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DOUBLE;
-            } else if (dataType.equals( AttributeTypeImpl.DataType.DATE)) {
+            } else if (dataType.equals( DataType.DATE)) {
                 return ConceptProto.AttributeType.DATA_TYPE.DATE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + dataType);
@@ -307,7 +286,7 @@ public class RequestBuilder {
         }
     }
 
-    private static Map<String, String> getTracingData() {
+    public static Map<String, String> getTracingData() {
         if (isTracingEnabled()) {
             ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) {

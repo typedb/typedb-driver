@@ -20,18 +20,18 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.Attribute;
-import grakn.client.concept.AttributeType;
-import grakn.client.concept.AttributeType.DataType;
-import grakn.client.concept.Entity;
-import grakn.client.concept.EntityType;
+import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
-import grakn.client.concept.Relation;
-import grakn.client.concept.RelationType;
-import grakn.client.concept.Role;
 import grakn.client.concept.Rule;
-import grakn.client.concept.Thing;
-import grakn.client.concept.Type;
+import grakn.client.concept.type.Role;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.thing.Relation;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.Type;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.pattern.Pattern;
@@ -43,6 +43,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -107,34 +108,35 @@ public class ConceptIT {
     private String BOB_EMAIL = "bob@email.com";
     private Integer TWENTY = 20;
 
-    private AttributeType<Integer> age;
-    private AttributeType<String> name;
-    private AttributeType<String> email;
-    private EntityType livingThing;
-    private EntityType person;
-    private EntityType man;
-    private EntityType boy;
-    private Role husband;
-    private Role wife;
-    private RelationType marriage;
-    private Role friend;
-    private RelationType friendship;
-    private Role employer;
-    private Role employee;
-    private RelationType employment;
-    private Rule metaRule;
-    private Rule testRule;
-    private Type metaType;
+    private AttributeType.Remote<Integer> age;
+    private AttributeType.Remote<String> name;
+    private AttributeType.Remote<String> email;
+    private EntityType.Remote livingThing;
+    private EntityType.Remote person;
+    private EntityType.Remote man;
+    private EntityType.Remote boy;
+    private Role.Remote husband;
+    private Role.Remote wife;
+    private RelationType.Remote marriage;
+    private Role.Remote friend;
+    private RelationType.Remote friendship;
+    private Role.Remote employer;
+    private Role.Remote employee;
+    private RelationType.Remote employment;
+    private Rule.Remote metaRule;
+    private Rule.Remote testRule;
+    private Type.Remote<?, ?> metaType;
 
-    private Attribute<String> emailAlice;
-    private Attribute<String> emailBob;
-    private Attribute<Integer> age20;
-    private Attribute<String> nameAlice;
-    private Attribute<String> nameBob;
-    private Entity alice;
-    private Entity bob;
-    private Relation aliceAndBob;
-    private Relation selfEmployment;
+    private Attribute.Remote<String> emailAlice;
+    private Attribute.Remote<String> emailBob;
+    private Attribute.Remote<Integer> age20;
+    private Attribute.Remote<String> nameAlice;
+    private Attribute.Remote<String> nameBob;
+    private Entity.Remote alice;
+    private Entity.Remote bob;
+    private Relation.Remote aliceAndBob;
+    private Relation.Remote selfEmployment;
+    private Relation.Remote selfFriendship;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
@@ -188,7 +190,7 @@ public class ConceptIT {
         person.plays(wife).plays(husband);
 
         //Rules
-        metaRule = tx.getSchemaConcept(Label.of("rule"));
+        metaRule = tx.getRule("rule");
         testRule = tx.putRule(TEST_RULE, testRuleWhen, testRuleThen);
 
         // Attributes
@@ -207,6 +209,7 @@ public class ConceptIT {
         // Relations
         aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
+        selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
 
         metaType = tx.getType(Label.of("thing"));
 
@@ -315,7 +318,7 @@ public class ConceptIT {
 
     @Test
     public void whenDeletingAConcept_ConceptIsDeleted() {
-        Entity randomPerson = person.create();
+        Entity.Remote randomPerson = person.create();
         assertFalse(randomPerson.isDeleted());
 
         randomPerson.delete();
@@ -394,13 +397,13 @@ public class ConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer));
+        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
         assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment));
+        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
         assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
@@ -429,29 +432,36 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role, Set<Thing>> expected = new HashMap<>();
-        expected.put(wife, Collections.singleton(alice));
-        expected.put(husband, Collections.singleton(bob));
+        Map<Role.Remote, List<Thing.Remote<?, ?>>> expected = new HashMap<>();
+        expected.put(wife, Collections.singletonList(alice));
+        expected.put(husband, Collections.singletonList(bob));
 
         assertEquals(expected, aliceAndBob.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers().collect(toSet()), containsInAnyOrder(alice, bob));
+    public void whenCallingAllRolePlayers_GetExpectedDuplicates() {
+        Map<Role, List<Thing<?, ?>>> expected = new HashMap<>();
+        expected.put(friend, Arrays.asList(alice, alice));
+        assertEquals(expected, selfFriendship.rolePlayersMap());
     }
 
     @Test
-    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetDistinctExpectedResult() {
-        List<Thing> list = selfEmployment.rolePlayers().collect(toList());
-        assertEquals(1, list.size());
-        assertThat(list, containsInAnyOrder(alice));
+    public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
+        assertThat(aliceAndBob.rolePlayers().collect(toList()), containsInAnyOrder(alice, bob));
+    }
+
+    @Test
+    public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetExpectedResult() {
+        List<Thing.Remote<?, ?>> list = selfEmployment.rolePlayers().collect(toList());
+        assertEquals(2, list.size());
+        assertThat(list, containsInAnyOrder(alice, alice));
     }
 
     @Test
     public void whenCallingRolePlayersWithRoles_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers(wife).collect(toSet()), containsInAnyOrder(alice));
-        assertThat(aliceAndBob.rolePlayers(husband).collect(toSet()), containsInAnyOrder(bob));
+        assertThat(aliceAndBob.rolePlayers(wife).collect(toList()), containsInAnyOrder(alice));
+        assertThat(aliceAndBob.rolePlayers(husband).collect(toList()), containsInAnyOrder(bob));
     }
 
     @Test
@@ -482,7 +492,7 @@ public class ConceptIT {
     @Test
     public void whenSettingTypeLabel_LabelIsSetToType() {
         Label lady = Label.of("lady");
-        EntityType type = tx.putEntityType(lady);
+        EntityType.Remote type = tx.putEntityType(lady);
         assertEquals(lady, type.label());
 
         Label woman = Label.of("woman");
@@ -519,7 +529,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingAttributeToType_AttributeIsSetAndDeleted() {
-        EntityType cat = tx.putEntityType(Label.of("cat"));
+        EntityType.Remote cat = tx.putEntityType(Label.of("cat"));
         cat.has(name);
         assertTrue(cat.attributes().anyMatch(c -> c.equals(name)));
 
@@ -529,7 +539,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
-        AttributeType<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
+        AttributeType.Remote<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
         person.key(username);
         assertTrue(person.keys().anyMatch(c -> c.equals(username)));
 
@@ -539,19 +549,19 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAddEntity_TypeIsCorrect() {
-        Entity newPerson = person.create();
+        Entity.Remote newPerson = person.create();
         assertEquals(person, newPerson.type());
     }
 
     @Test
     public void whenCallingAddRelation_TypeIsCorrect() {
-        Relation newMarriage = marriage.create();
+        Relation.Remote newMarriage = marriage.create();
         assertEquals(marriage, newMarriage.type());
     }
 
     @Test
     public void whenCallingPutAttribute_TypeIsCorrect() {
-        Attribute<String> nameCharlie = name.create("Charlie");
+        Attribute.Remote<String> nameCharlie = name.create("Charlie");
         assertEquals(name, nameCharlie.type());
     }
 
@@ -576,8 +586,8 @@ public class ConceptIT {
 
     @Test
     public void whenCallingDeleteAttribute_ExecuteAConceptMethod() {
-        Entity charlie = person.create();
-        Attribute<String> nameCharlie = name.create("Charlie");
+        Entity.Remote charlie = person.create();
+        Attribute.Remote<String> nameCharlie = name.create("Charlie");
         charlie.has(nameCharlie);
         assertTrue(charlie.attributes(name).anyMatch(x -> x.equals(nameCharlie)));
 
@@ -587,19 +597,19 @@ public class ConceptIT {
 
     @Test
     public void whenAddingAndRemovingRolePlayer_RolePlayerIsAddedAndRemoved() {
-        Entity dylan = person.create();
-        Entity emily = person.create();
+        Entity.Remote dylan = person.create();
+        Entity.Remote emily = person.create();
 
-        Relation dylanAndEmily = friendship.create()
+        Relation.Remote dylanAndEmily = friendship.create()
                 .assign(friend, dylan)
                 .assign(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toSet()), containsInAnyOrder(dylan, emily));
+        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan, emily));
 
         dylanAndEmily.unassign(friend, dylan);
         dylanAndEmily.unassign(friend, emily);
 
-        assertTrue(dylanAndEmily.rolePlayers().collect(toSet()).isEmpty());
+        assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
 }

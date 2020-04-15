@@ -61,8 +61,12 @@ public class GraknClientException extends RuntimeException {
         return create("No explanation found");
     }
 
-    public static GraknClientException unknownBaseType(Concept concept) {
+    public static GraknClientException unknownBaseType(Concept.Remote concept) {
         return create("No known base type for concept: " + concept);
+    }
+
+    public static GraknClientException resultNotPresent() {
+        return create("Result not present");
     }
 
     public String getName() {

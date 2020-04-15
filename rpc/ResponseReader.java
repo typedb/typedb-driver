@@ -20,24 +20,23 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.answer.Answer;
-import grakn.client.answer.AnswerGroup;
-import grakn.client.answer.ConceptList;
-import grakn.client.answer.ConceptMap;
-import grakn.client.answer.ConceptSet;
-import grakn.client.answer.ConceptSetMeasure;
-import grakn.client.answer.Explanation;
-import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.ConceptImpl;
 import grakn.client.concept.Rule;
 import grakn.protocol.session.AnswerProto;
 import grakn.protocol.session.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
+import grakn.client.answer.Answer;
+import grakn.client.answer.AnswerGroup;
+import grakn.client.answer.ConceptList;
+import grakn.client.answer.ConceptMap;
+import grakn.client.answer.ConceptSet;
+import grakn.client.answer.ConceptSetMeasure;
+import grakn.client.answer.Numeric;
+import grakn.client.answer.Explanation;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -55,22 +54,23 @@ import static java.util.stream.Collectors.toSet;
  */
 public class ResponseReader {
 
-    public static Answer answer(AnswerProto.Answer res, GraknClient.Transaction tx) {
+    @SuppressWarnings("unchecked")
+    public static <T extends Answer> T answer(AnswerProto.Answer res, GraknClient.Transaction tx) {
         switch (res.getAnswerCase()) {
             case ANSWERGROUP:
-                return answerGroup(res.getAnswerGroup(), tx);
+                return (T) answerGroup(res.getAnswerGroup(), tx);
             case CONCEPTMAP:
-                return conceptMap(res.getConceptMap(), tx);
+                return (T) conceptMap(res.getConceptMap(), tx);
             case CONCEPTLIST:
-                return conceptList(res.getConceptList());
+                return (T) conceptList(res.getConceptList());
             case CONCEPTSET:
-                return conceptSet(res.getConceptSet());
+                return (T) conceptSet(res.getConceptSet());
             case CONCEPTSETMEASURE:
-                return conceptSetMeasure(res.getConceptSetMeasure());
+                return (T) conceptSetMeasure(res.getConceptSetMeasure());
             case VALUE:
-                return value(res.getValue());
+                return (T) value(res.getValue());
             case VOID:
-                return voidAnswer(res.getVoid());
+                return (T) voidAnswer(res.getVoid());
             default:
             case ANSWER_NOT_SET:
                 throw new IllegalArgumentException("Unexpected " + res);
@@ -81,21 +81,21 @@ public class ResponseReader {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
-        Rule rule = res.hasRule() ? ConceptImpl.of(ruleProto, tx).asRule() : null;
+        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(ruleProto, tx).asRule() : null;
         return new Explanation(answers, rule);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                ConceptImpl.of(res.getOwner(), tx),
+                Concept.Remote.of(res.getOwner(), tx),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, Concept> variableMap = new HashMap<>();
+        Map<Variable, Concept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> variableMap.put(new Variable(resVar), ConceptImpl.of(resConcept, tx))
+                (resVar, resConcept) -> variableMap.put(new Variable(resVar), Concept.Local.of(resConcept))
         );
         boolean hasExplanation = res.getHasExplanation();
         Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
