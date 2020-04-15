@@ -294,6 +294,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
+      - test-graql-explanation:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - deploy-maven-snapshot:
           filters:
             branches:
