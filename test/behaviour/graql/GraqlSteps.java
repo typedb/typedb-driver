@@ -373,28 +373,6 @@ public class GraqlSteps {
         }
     }
 
-    @Then("answers are labeled") // TODO Update this with the latest structure
-    public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
-        assertEquals(conceptLabels.size(), answers.size());
-
-        for (ConceptMap answer : answers) {
-
-            // convert the concept map into a map from variable to type label
-            Map<String, String> answerAsLabels = new HashMap<>();
-            answer.map().forEach((var, concept) -> answerAsLabels.put(var.name(), concept.asSchemaConcept().label().toString()));
-
-            int matchingAnswers = 0;
-            for (Map<String, String> expectedLabels : conceptLabels) {
-                if (expectedLabels.equals(answerAsLabels)) {
-                    matchingAnswers++;
-                }
-            }
-
-            // we expect exactly one matching answer from the expected answer set
-            assertEquals(1, matchingAnswers);
-        }
-    }
-
     @Then("each answer satisfies")
     public void each_answer_satisfies(String templatedGraqlQuery) {
         String templatedQuery = String.join("\n", templatedGraqlQuery);
