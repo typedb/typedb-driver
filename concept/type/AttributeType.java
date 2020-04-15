@@ -259,8 +259,8 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         @Deprecated
         @CheckReturnValue
         @Override
-        default AttributeType.Remote<D> asAttributeType() {
-            return this;
+        default <T> AttributeType.Remote<T> asAttributeType() {
+            return (AttributeType.Remote<T>) this;
         }
 
         @Deprecated
