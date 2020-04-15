@@ -218,7 +218,10 @@ public class GraqlSteps {
 
         AttributeUniquenessCheck(String typeAndValue) {
             String[] s = typeAndValue.split(":");
-            assert 2 == s.length : String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s", typeAndValue);
+            assertEquals(
+                    String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s", typeAndValue),
+                    2, s.length
+            );
             type = s[0];
             value = s[1];
         }
@@ -264,7 +267,11 @@ public class GraqlSteps {
 
     @Then("uniquely identify answer concepts")
     public void uniquely_identify_answer_concepts(List<Map<String, String>> answersIdentifiers) {
-      assert answersIdentifiers.size() == answers.size() : String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers", answersIdentifiers.size(), answers.size());
+        assertEquals(
+                String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers",
+                        answersIdentifiers.size(), answers.size()),
+                answersIdentifiers.size(), answers.size()
+        );
 
         for (ConceptMap answer : answers) {
             List<Map<String, String>> matchingIdentifiers1 = new ArrayList<>();
@@ -275,7 +282,11 @@ public class GraqlSteps {
                     matchingIdentifiers1.add(answerIdentifiers);
                 }
             }
-            assert 1 == matchingIdentifiers1.size() : String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s", matchingIdentifiers1.size(), answer.map().keySet().toString());
+            assertEquals(
+                    String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s",
+                            matchingIdentifiers1.size(), answer.map().keySet().toString()),
+                    1, matchingIdentifiers1.size()
+            );
         }
     }
 
@@ -323,43 +334,46 @@ public class GraqlSteps {
 
         Optional<ConceptMap> matchingAnswer = answers.stream().filter(answer -> matchAnswer(answerIdentifiers, answer)).findFirst();
 
-        assert matchingAnswer.isPresent() : String.format("No answer found for explanation entry %d that satisfies the vars and identifiers given", entryId);
-
+        assertTrue(String.format("No answer found for explanation entry %d that satisfies the vars and identifiers given", entryId), matchingAnswer.isPresent());
         ConceptMap answer = matchingAnswer.get();
 
         String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
         Conjunction<?> queryWithIdsConj = Graql.and(Graql.parsePatternList(queryWithIds));
-        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
-        assert queryWithIdsConj.equals(answer.queryPattern()) : String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern());
+        assertEquals(
+                String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern()),
+                queryWithIdsConj, answer.queryPattern()
+        );
 
         String expectedRule = explanationEntry.get("rule");
         boolean hasExplanation = answer.hasExplanation();
 
         if (expectedRule.equals("lookup")) {
-            assert !hasExplanation : String.format("Explanation entry %d is declared as a lookup, but an explanation was found", entryId);
+
+            assertFalse(String.format("Explanation entry %d is declared as a lookup, but an explanation was found", entryId), hasExplanation);
+
             String[] expectedChildren = {"-"};
-            assert Arrays.equals(expectedChildren, children) : String.format("Explanation entry %d is declared as a lookup, and so it should have no children, indicated as \"-\", but got children %s instead", entryId, Arrays.toString(children));
+            assertArrayEquals(String.format("Explanation entry %d is declared as a lookup, and so it should have no children, indicated as \"-\", but got children %s instead", entryId, Arrays.toString(children)), expectedChildren, children);
         } else {
 
             Explanation explanation = answer.explanation();
             List<ConceptMap> explAnswers = explanation.getAnswers();
 
-            assert children.length == explAnswers.size() : String.format("Explanation entry %d should have as many children as it has answers. Instead, %d children were declared, and %d answers were found.", entryId, children.length, explAnswers.size());
+            assertEquals(String.format("Explanation entry %d should have as many children as it has answers. Instead, %d children were declared, and %d answers were found.", entryId, children.length, explAnswers.size()), children.length, explAnswers.size());
 
             if (expectedRule.equals("join")) {
-                assert explanation.getRule() == null : String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId);
+                assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
             } else {
                 // rule
                 Rule rule = explanation.getRule();
                 String ruleLabel = rule.label().toString();
-                assert (expectedRule.equals(ruleLabel)) : String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel);
+                assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
                 String when = Objects.requireNonNull(rule.when()).toString();
-                assert expectedRuleDefinition.get("when").equals(when) : String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when);
+                assertEquals(String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when), expectedRuleDefinition.get("when"), when);
 
                 String then = Objects.requireNonNull(rule.then()).toString();
-                assert expectedRuleDefinition.get("then").equals(then) : String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then);
+                assertEquals(String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then), expectedRuleDefinition.get("then"), then);
             }
             for (String child : children) {
                 // Recurse
