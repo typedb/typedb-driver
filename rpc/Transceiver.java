@@ -31,8 +31,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
@@ -55,8 +61,12 @@ public class Transceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Transceiver(StreamObserver<Transaction.Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
@@ -73,7 +83,7 @@ public class Transceiver implements AutoCloseable {
      * Send a request and return immediately.
          * This method is non-blocking - it returns immediately.
      */
-    public void send(Transaction.Req request) {
+    private void send(Transaction.Req request) {
         try (ThreadTrace trace = traceOnThread("request")) {
             if (responseListener.terminated.get()) {
                 throw GraknClientException.connectionClosed();
@@ -86,7 +96,7 @@ public class Transceiver implements AutoCloseable {
     /**
      * Block until a response is returned.
      */
-    public Response receive() throws InterruptedException {
+    private Response receive() throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("receive")) {
             Response response = responseListener.poll();
             LOG.trace("receive:{}", response);
@@ -97,9 +107,67 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
+    public Response sendAndReceive(Transaction.Req request) throws InterruptedException {
+        try {
+            lock.lock();
+            send(request);
+            return receive();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public ResponseIterator sendAndReceiveMultipleAsync(Transaction.Req request,
+                                                               Function<Response, Boolean> inspector) {
+        try {
+            lock.lock();
+            send(request);
+            return new ResponseIterator(inspector);
+        } catch (RuntimeException ex) {
+            // Do not unlock unless something failed
+            lock.unlock();
+            throw ex;
+        }
+    }
+
+    public class ResponseIterator {
+        private final BlockingQueue<Response> resultsQueue = new LinkedBlockingQueue<>();
+        private volatile Exception error;
+
+        private ResponseIterator(Function<Response, Boolean> inspector) {
+            executorService.execute(() -> {
+                try {
+                    while (true) {
+                        Response res = receive();
+                        resultsQueue.put(res);
+                        if (!inspector.apply(res)) {
+                            break;
+                        }
+                    }
+                } catch (Exception ex) {
+                    setError(ex);
+                } finally {
+                    lock.unlock();
+                }
+            });
+        }
+
+        public synchronized Response poll() throws Exception {
+            if (error != null) {
+                throw error;
+            }
+            return resultsQueue.poll();
+        }
+
+        public synchronized void setError(Exception ex) {
+            error = ex;
+        }
+    }
+
     @Override
     public void close() {
         try {
+            executorService.shutdownNow();
             requestSender.onCompleted();
             responseListener.onCompleted();
         } catch (IllegalStateException e) {

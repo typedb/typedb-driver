@@ -75,6 +75,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -591,6 +592,8 @@ public class GraknClient implements AutoCloseable {
             return !isOpen();
         }
 
+        private ReentrantLock lock = new ReentrantLock();
+
         private SessionProto.Transaction.Res responseOrThrow() {
             Transceiver.Response response;
 
@@ -622,6 +625,8 @@ public class GraknClient implements AutoCloseable {
             responseOrThrow();
             close();
         }
+
+        private SessionProto.Transaction.Res response
 
         @Nullable
         public grakn.client.concept.type.Type.Remote<?, ?> getType(Label label) {
