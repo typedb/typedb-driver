@@ -32,7 +32,7 @@ public class GraknClientException extends RuntimeException {
         super(error);
     }
 
-    protected GraknClientException(String error, RuntimeException e) {
+    protected GraknClientException(String error, Exception e) {
         super(error, e);
     }
 
@@ -45,7 +45,10 @@ public class GraknClientException extends RuntimeException {
         return new GraknClientException(error);
     }
 
-    public static GraknClientException create(String error, StatusRuntimeException e) {
+    public static GraknClientException create(String error, Exception e) {
+        if (e instanceof StatusRuntimeException) {
+            return new GraknClientException(error, (StatusRuntimeException) e);
+        }
         return new GraknClientException(error, e);
     }
 

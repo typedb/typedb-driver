@@ -33,6 +33,7 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
@@ -72,8 +73,12 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
@@ -82,6 +87,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.client.rpc.Transceiver.Response.Type.OK;
 
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
@@ -263,8 +269,7 @@ public class GraknClient implements AutoCloseable {
                 this.transceiver = Transceiver.create(SessionServiceGrpc.newStub(channel));
                 this.session = session;
                 this.type = type;
-                transceiver.send(RequestBuilder.Transaction.open(sessionId, type));
-                responseOrThrow();
+                sendAndReceiveOrThrow(RequestBuilder.Transaction.open(sessionId, type));
             }
         }
 
@@ -594,11 +599,11 @@ public class GraknClient implements AutoCloseable {
 
         private ReentrantLock lock = new ReentrantLock();
 
-        private SessionProto.Transaction.Res responseOrThrow() {
+        private SessionProto.Transaction.Res sendAndReceiveOrThrow(SessionProto.Transaction.Req request) {
             Transceiver.Response response;
 
             try {
-                response = transceiver.receive();
+                response = transceiver.sendAndReceive(request);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 // This is called from classes like Transaction, that impl methods which do not throw InterruptedException
@@ -620,13 +625,57 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public void commit() {
-            transceiver.send(RequestBuilder.Transaction.commit());
-            responseOrThrow();
-            close();
+        private static class TransactionIterator extends AbstractIterator<SessionProto.Transaction.Iter.Res> implements Transceiver.ResponseReceiver {
+            private final BlockingQueue<Transceiver.Response> queue = new LinkedBlockingQueue<>();
+
+            @Override
+            public boolean onResponse(Transceiver.Response response) {
+                queue.add(response);
+                if (response.type() == OK) {
+                    SessionProto.Transaction.Iter.Res iterRes = response.ok().getIterRes();
+                    switch (iterRes.getResCase()) {
+                        case DONE:
+                        case ITERATORID:
+                            return false;
+                        default:
+                            return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            protected SessionProto.Transaction.Iter.Res computeNext() {
+                Transceiver.Response response;
+                try {
+                    response = queue.take();
+                } catch (InterruptedException e) {
+                    throw GraknConceptException.create("Iteration Interrupted");
+                }
+
+                switch (response.type()) {
+                    case OK:
+                        return response.ok().getIterRes();
+                    case ERROR:
+                        throw GraknClientException.create(response.error().getMessage(), response.error());
+                    case COMPLETED:
+                        throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
+                    default:
+                        throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                }
+            }
         }
 
-        private SessionProto.Transaction.Res response
+        private Iterator<SessionProto.Transaction.Iter.Res> sendAndReceiveIter(SessionProto.Transaction.Iter.Req request) {
+            TransactionIterator iterator = new TransactionIterator();
+            transceiver.sendAndReceiveAsync(SessionProto.Transaction.Req.newBuilder().setIterReq(request).build(), iterator);
+            return iterator;
+        }
+
+        public void commit() {
+            sendAndReceiveOrThrow(RequestBuilder.Transaction.commit());
+            close();
+        }
 
         @Nullable
         public grakn.client.concept.type.Type.Remote<?, ?> getType(Label label) {
@@ -692,8 +741,7 @@ public class GraknClient implements AutoCloseable {
         @SuppressWarnings("unchecked")
         @Nullable
         public SchemaConcept.Remote<?> getSchemaConcept(Label label) {
-            transceiver.send(RequestBuilder.Transaction.getSchemaConcept(label));
-            SessionProto.Transaction.Res response = responseOrThrow();
+            SessionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getSchemaConcept(label));
             switch (response.getGetSchemaConceptRes().getResCase()) {
                 case NULL:
                     return null;
@@ -730,8 +778,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public Concept.Remote<?> getConcept(ConceptId id) {
-            transceiver.send(RequestBuilder.Transaction.getConcept(id));
-            SessionProto.Transaction.Res response = responseOrThrow();
+            SessionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getConcept(id));
             switch (response.getGetConceptRes().getResCase()) {
                 case NULL:
                     return null;
@@ -753,8 +800,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         public EntityType.Remote putEntityType(Label label) {
-            transceiver.send(RequestBuilder.Transaction.putEntityType(label));
-            return Concept.Remote.of(responseOrThrow().getPutEntityTypeRes().getEntityType(), this).asEntityType();
+            return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
         public <V> AttributeType.Remote<V> putAttributeType(String label, DataType<V> dataType) {
@@ -762,32 +808,32 @@ public class GraknClient implements AutoCloseable {
         }
         @SuppressWarnings("unchecked")
         public <V> AttributeType.Remote<V> putAttributeType(Label label, DataType<V> dataType) {
-            transceiver.send(RequestBuilder.Transaction.putAttributeType(label, dataType));
-            return (AttributeType.Remote<V>) Concept.Remote.of(responseOrThrow().getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
+            return (AttributeType.Remote<V>) Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, dataType))
+                    .getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
         public RelationType.Remote putRelationType(String label) {
             return putRelationType(Label.of(label));
         }
         public RelationType.Remote putRelationType(Label label) {
-            transceiver.send(RequestBuilder.Transaction.putRelationType(label));
-            return Concept.Remote.of(responseOrThrow().getPutRelationTypeRes().getRelationType(), this).asRelationType();
+            return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putRelationType(label))
+                    .getPutRelationTypeRes().getRelationType(), this).asRelationType();
         }
 
         public Role.Remote putRole(String label) {
             return putRole(Label.of(label));
         }
         public Role.Remote putRole(Label label) {
-            transceiver.send(RequestBuilder.Transaction.putRole(label));
-            return Concept.Remote.of(responseOrThrow().getPutRoleRes().getRole(), this).asRole();
+            return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putRole(label))
+                    .getPutRoleRes().getRole(), this).asRole();
         }
 
         public Rule.Remote putRule(String label, Pattern when, Pattern then) {
             return putRule(Label.of(label), when, then);
         }
         public Rule.Remote putRule(Label label, Pattern when, Pattern then) {
-            transceiver.send(RequestBuilder.Transaction.putRule(label, when, then));
-            return Concept.Remote.of(responseOrThrow().getPutRuleRes().getRule(), this).asRule();
+            return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putRule(label, when, then))
+                    .getPutRuleRes().getRule(), this).asRule();
         }
 
         public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
@@ -803,8 +849,7 @@ public class GraknClient implements AutoCloseable {
                     .setId(id.getValue()).setMethod(method).build();
             SessionProto.Transaction.Req request = SessionProto.Transaction.Req.newBuilder().setConceptMethodReq(conceptMethod).build();
 
-            transceiver.send(request);
-            return responseOrThrow();
+            return sendAndReceiveOrThrow(request);
         }
 
         public <T> Stream<T> iterateConceptMethod(ConceptId id, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
@@ -819,8 +864,7 @@ public class GraknClient implements AutoCloseable {
             AnswerProto.ConceptMap conceptMapProto = conceptMap(explainable);
             AnswerProto.Explanation.Req explanationReq = AnswerProto.Explanation.Req.newBuilder().setExplainable(conceptMapProto).build();
             SessionProto.Transaction.Req request = SessionProto.Transaction.Req.newBuilder().setExplanationReq(explanationReq).build();
-            transceiver.send(request);
-            SessionProto.Transaction.Res response = responseOrThrow();
+            SessionProto.Transaction.Res response = sendAndReceiveOrThrow(request);
             return ResponseReader.explanation(response.getExplanationRes(), this);
         }
 
@@ -846,14 +890,12 @@ public class GraknClient implements AutoCloseable {
          * @param <T> class type of objects being iterated
          */
         public class RPCIterator<T> extends AbstractIterator<T> {
-            private RPCIteratorState state = RPCIteratorState.PRE_START;
             private SessionProto.Transaction.Iter.Req request;
             private SessionProto.Transaction.Iter.Req.Options requestOptions;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
             private int iteratorId = 0;
 
-            private int index = 0;
-            private List<SessionProto.Transaction.Iter.Res> responseBuffer = new ArrayList<>();
+            private Iterator<SessionProto.Transaction.Iter.Res> currentIterator = null;
 
             private RPCIterator(SessionProto.Transaction.Iter.Req request, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
                 this.request = request;
@@ -862,58 +904,40 @@ public class GraknClient implements AutoCloseable {
             }
 
             private void startIterating() {
-                transceiver.send(SessionProto.Transaction.Req.newBuilder().setIterReq(request).putAllMetadata(RequestBuilder.getTracingData()).build());
-                state = RPCIteratorState.ITERATING;
+                currentIterator = sendAndReceiveIter(request);
             }
 
             private void requestBatch() {
-                transceiver.send(SessionProto.Transaction.Req.newBuilder()
-                        .putAllMetadata(RequestBuilder.getTracingData())
-                        .setIterReq(SessionProto.Transaction.Iter.Req.newBuilder()
+                currentIterator = sendAndReceiveIter(SessionProto.Transaction.Iter.Req.newBuilder()
                                 .setOptions(requestOptions)
-                                .setIteratorId(iteratorId).build())
-                        .build());
+                                .setIteratorId(iteratorId).build());
             }
 
-            private void receiveBatch() {
-                assert index == responseBuffer.size();
-                index = 0;
-                responseBuffer.clear();
-
-                while (true) {
-                    SessionProto.Transaction.Iter.Res response = responseOrThrow().getIterRes();
-
-                    switch (response.getResCase()) {
-                        case DONE:
-                            state = RPCIteratorState.DONE;
-                            return;
-                        case ITERATORID:
-                            iteratorId = response.getIteratorId();
-                            return;
-                        case RES_NOT_SET:
-                            throw GraknClientException.unreachableStatement("Unexpected " + response);
-                        default:
-                            responseBuffer.add(response);
-                    }
+            private T processNext(SessionProto.Transaction.Iter.Res response) {
+                switch (response.getResCase()) {
+                    case DONE:
+                        return endOfData();
+                    case ITERATORID:
+                        iteratorId = response.getIteratorId();
+                        requestBatch();
+                        return computeNext();
+                    case RES_NOT_SET:
+                        throw GraknClientException.unreachableStatement("Unexpected " + response);
+                    default:
+                        return responseReader.apply(response);
                 }
             }
 
             protected final T computeNext() {
-                if (index < responseBuffer.size()) {
-                    return responseReader.apply(responseBuffer.get(index++));
+                if (currentIterator == null) {
+                    startIterating();
+                }
+
+                if (currentIterator.hasNext()) {
+                    return processNext(currentIterator.next());
                 } else {
-                    switch (state) {
-                        case PRE_START:
-                            startIterating();
-                            break;
-                        case ITERATING:
-                            requestBatch();
-                            break;
-                        case DONE:
-                            return endOfData();
-                    }
-                    receiveBatch();
-                    return computeNext();
+                    // processNext should handle the iteration end due to a done or batch done response
+                    throw GraknClientException.create("Unexpected end of iteration");
                 }
             }
         }
@@ -952,12 +976,6 @@ public class GraknClient implements AutoCloseable {
                 throw GraknClientException.create(e.getMessage(), e);
             }
         }
-    }
-
-    private enum RPCIteratorState {
-        PRE_START,
-        ITERATING,
-        DONE
     }
 
     /**

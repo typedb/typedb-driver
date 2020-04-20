@@ -34,11 +34,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
@@ -61,7 +59,7 @@ public class Transceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
 
-    private final ReentrantLock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
@@ -117,51 +115,27 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
-    public ResponseIterator sendAndReceiveMultipleAsync(Transaction.Req request,
-                                                               Function<Response, Boolean> inspector) {
-        try {
+    public void sendAndReceiveAsync(Transaction.Req request, ResponseReceiver receiver) {
+        executorService.execute(() -> {
             lock.lock();
-            send(request);
-            return new ResponseIterator(inspector);
-        } catch (RuntimeException ex) {
-            // Do not unlock unless something failed
-            lock.unlock();
-            throw ex;
-        }
+            try {
+                send(request);
+                while (true) {
+                    Response res = receive();
+                    if (!receiver.onResponse(res)) {
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                receiver.onResponse(Response.error(ex));
+            } finally {
+                lock.unlock();
+            }
+        });
     }
 
-    public class ResponseIterator {
-        private final BlockingQueue<Response> resultsQueue = new LinkedBlockingQueue<>();
-        private volatile Exception error;
-
-        private ResponseIterator(Function<Response, Boolean> inspector) {
-            executorService.execute(() -> {
-                try {
-                    while (true) {
-                        Response res = receive();
-                        resultsQueue.put(res);
-                        if (!inspector.apply(res)) {
-                            break;
-                        }
-                    }
-                } catch (Exception ex) {
-                    setError(ex);
-                } finally {
-                    lock.unlock();
-                }
-            });
-        }
-
-        public synchronized Response poll() throws Exception {
-            if (error != null) {
-                throw error;
-            }
-            return resultsQueue.poll();
-        }
-
-        public synchronized void setError(Exception ex) {
-            error = ex;
-        }
+    public interface ResponseReceiver {
+        boolean onResponse(Response response);
     }
 
     @Override
@@ -236,14 +210,14 @@ public class Transceiver implements AutoCloseable {
     public static class Response {
 
         private final SessionProto.Transaction.Res nullableOk;
-        private final StatusRuntimeException nullableError;
+        private final Exception nullableError;
 
-        Response(@Nullable SessionProto.Transaction.Res nullableOk, @Nullable StatusRuntimeException nullableError) {
+        Response(@Nullable SessionProto.Transaction.Res nullableOk, @Nullable Exception nullableError) {
             this.nullableOk = nullableOk;
             this.nullableError = nullableError;
         }
 
-        private static Response create(@Nullable Transaction.Res response, @Nullable StatusRuntimeException error) {
+        private static Response create(@Nullable Transaction.Res response, @Nullable Exception error) {
             if (!(response == null || error == null)) {
                 throw new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null");
             }
@@ -254,7 +228,7 @@ public class Transceiver implements AutoCloseable {
             return create(null, null);
         }
 
-        static Response error(StatusRuntimeException error) {
+        static Response error(Exception error) {
             return create(null, error);
         }
 
@@ -268,7 +242,7 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Nullable
-        StatusRuntimeException nullableError() {
+        Exception nullableError() {
             return nullableError;
         }
 
@@ -301,8 +275,8 @@ public class Transceiver implements AutoCloseable {
          *
          * @throws IllegalStateException if this is not an error
          */
-        public final StatusRuntimeException error() {
-            StatusRuntimeException throwable = nullableError();
+        public final Exception error() {
+            Exception throwable = nullableError();
             if (throwable == null) {
                 throw new IllegalStateException("Expected error not found: " + toString());
             } else {
