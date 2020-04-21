@@ -85,7 +85,7 @@ dependencies:
       version: "1.24.1"
       lang: java
     grpc-api:
-      version: "1.24.1"
+      version: "1.23.1"
       lang: java
 
   io.netty:
