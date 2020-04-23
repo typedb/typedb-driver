@@ -44,6 +44,7 @@ import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -292,13 +293,13 @@ public class GraqlSteps {
     }
 
     private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
+
+        assertEquals("Expected variables and returned variables don't match.\n",
+                new HashSet<>((answerIdentifiers).keySet()), new HashSet<>(answer.map().keySet().stream().map(k -> k.name()).collect(Collectors.toSet())));
+
         for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
             String varName = entry.getKey();
             String identifier = entry.getValue();
-
-            if(!answer.map().containsKey(new Variable(varName))){
-                return false;
-            }
 
             if(!identifierChecks.containsKey(identifier)) {
                 throw new RuntimeException(String.format("Identifier \"%s\" hasn't previously been declared", identifier));
