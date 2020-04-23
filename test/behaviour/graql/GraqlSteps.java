@@ -155,8 +155,7 @@ public class GraqlSteps {
         } else if (graqlQuery instanceof GraqlInsert) {
             answers = tx.execute(graqlQuery.asInsert());
         } else {
-            // TODO specialise exception
-            throw new RuntimeException("Only match-get and inserted supported for now");
+            throw new ScenarioDefinitionException("Only match-get and inserted supported for now");
         }
     }
 
@@ -183,7 +182,7 @@ public class GraqlSteps {
                     identifierChecks.put(identifier, new LabelUniquenessCheck(value));
                     break;
                 default:
-                    throw new RuntimeException(String.format("Unrecognised identifier check \"%s\"", check));
+                    throw new ScenarioDefinitionException(String.format("Unrecognised identifier check \"%s\"", check));
             }
         }
     }
@@ -207,7 +206,7 @@ public class GraqlSteps {
             } else if (concept.isRole()) {
                 return label.equals(concept.asRole().label().toString());
             } else {
-                throw new RuntimeException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
+                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
             }
         }
     }
@@ -302,7 +301,7 @@ public class GraqlSteps {
             String identifier = entry.getValue();
 
             if(!identifierChecks.containsKey(identifier)) {
-                throw new RuntimeException(String.format("Identifier \"%s\" hasn't previously been declared", identifier));
+                throw new ScenarioDefinitionException(String.format("Identifier \"%s\" hasn't previously been declared", identifier));
             }
 
             if(!identifierChecks.get(identifier).check(answer.get(varName))) {
@@ -329,7 +328,7 @@ public class GraqlSteps {
         String[] children = explanationEntry.get("children").split(", ");
 
         if (vars.length != identifiers.length) {
-            throw new RuntimeException(String.format("vars and identifiers do not correspond for explanation entry %d. Found %d vars and %s identifiers", entryId, vars.length, identifiers.length));
+            throw new ScenarioDefinitionException(String.format("vars and identifiers do not correspond for explanation entry %d. Found %d vars and %s identifiers", entryId, vars.length, identifiers.length));
         }
 
         Map<String, String> answerIdentifiers = IntStream.range(0, vars.length).boxed().collect(Collectors.toMap(i -> vars[i], i -> identifiers[i]));
@@ -414,7 +413,7 @@ public class GraqlSteps {
                 builder.append(conceptId);
 
             } else {
-                throw new RuntimeException(String.format("No ID available for template placeholder: %s", matched));
+                throw new ScenarioDefinitionException(String.format("No ID available for template placeholder: %s", matched));
             }
             i = matcher.end();
         }
@@ -428,7 +427,13 @@ public class GraqlSteps {
             String withoutPrefix = stripped.replace("answer.", "");
             return withoutPrefix;
         } else {
-            throw new RuntimeException("Cannot replace template not based on ID");
+            throw new ScenarioDefinitionException("Cannot replace template not based on ID");
+        }
+    }
+
+    private static class ScenarioDefinitionException extends RuntimeException {
+        ScenarioDefinitionException(String message) {
+            super(message);
         }
     }
 }
