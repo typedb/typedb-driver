@@ -32,7 +32,7 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.DataType;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
@@ -72,12 +72,10 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -803,12 +801,12 @@ public class GraknClient implements AutoCloseable {
             return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> AttributeType.Remote<V> putAttributeType(String label, DataType<V> dataType) {
-            return putAttributeType(Label.of(label), dataType);
+        public <V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType) {
+            return putAttributeType(Label.of(label), valueType);
         }
         @SuppressWarnings("unchecked")
-        public <V> AttributeType.Remote<V> putAttributeType(Label label, DataType<V> dataType) {
-            return (AttributeType.Remote<V>) Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, dataType))
+        public <V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType) {
+            return (AttributeType.Remote<V>) Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
                     .getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 

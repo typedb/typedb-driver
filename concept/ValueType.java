@@ -32,29 +32,29 @@ import java.time.ZoneId;
  *
  * @param <D> The data type.
  */
-public class DataType<D> {
-    public static final DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
-    public static final DataType<LocalDateTime> DATE = new DataType<>(LocalDateTime.class);
-    public static final DataType<Double> DOUBLE = new DataType<>(Double.class);
-    public static final DataType<Float> FLOAT = new DataType<>(Float.class);
-    public static final DataType<Integer> INTEGER = new DataType<>(Integer.class);
-    public static final DataType<Long> LONG = new DataType<>(Long.class);
-    public static final DataType<String> STRING = new DataType<>(String.class);
+public class ValueType<D> {
+    public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean.class);
+    public static final ValueType<LocalDateTime> DATE = new ValueType<>(LocalDateTime.class);
+    public static final ValueType<Double> DOUBLE = new ValueType<>(Double.class);
+    public static final ValueType<Float> FLOAT = new ValueType<>(Float.class);
+    public static final ValueType<Integer> INTEGER = new ValueType<>(Integer.class);
+    public static final ValueType<Long> LONG = new ValueType<>(Long.class);
+    public static final ValueType<String> STRING = new ValueType<>(String.class);
 
-    private final Class<D> dataClass;
+    private final Class<D> valueClass;
 
-    private DataType(Class<D> dataClass) {
-        this.dataClass = dataClass;
+    private ValueType(Class<D> valueClass) {
+        this.valueClass = valueClass;
     }
 
     @CheckReturnValue
-    public Class<D> dataClass() {
-        return dataClass;
+    public Class<D> valueClass() {
+        return valueClass;
     }
 
     @CheckReturnValue
     public String name() {
-        return dataClass.getName();
+        return valueClass.getName();
     }
 
     @Override
@@ -67,16 +67,16 @@ public class DataType<D> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DataType<?> that = (DataType<?>) o;
+        ValueType<?> that = (ValueType<?>) o;
 
-        return (this.dataClass().equals(that.dataClass()));
+        return (this.valueClass().equals(that.valueClass()));
     }
 
     @Override
     public int hashCode() {
         int h = 1;
         h *= 1000003;
-        h ^=  dataClass.hashCode();
+        h ^=  valueClass.hashCode();
         return h;
     }
 
@@ -85,8 +85,7 @@ public class DataType<D> {
      *
      * @param value The value protocol object.
      * @return the value cast to D Java type.
-     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this
-     *      DataType.
+     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueType.
      */
     @SuppressWarnings("unchecked")
     public static <D> D staticCastValue(ConceptProto.ValueObject value) {
@@ -112,17 +111,16 @@ public class DataType<D> {
                     throw new IllegalArgumentException("Unexpected value for attribute: " + value);
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Value type did not match DataType ", ex);
+            throw new IllegalArgumentException("Value type did not match ValueType ", ex);
         }
     }
 
     /**
-     * Obtains the value from the given value protocol and casts it to this DataType's type D.
+     * Obtains the value from the given value protocol and casts it to this ValueType's type D.
      *
      * @param value The value protocol object.
      * @return the value cast to D Java type.
-     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this
-     *      DataType.
+     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueType.
      */
     D instanceCastValue(ConceptProto.ValueObject value) {
         return staticCastValue(value);
