@@ -57,8 +57,8 @@ def graknlabs_protocol():
 def graknlabs_verification():
     git_repository(
         name = "graknlabs_verification",
-        remote = "https://github.com/graknlabs/verification",
-        commit = "2e776ed631dd2c1162506adb2a560df8df8c71f5"
+        remote = "https://github.com/haikalpribadi/verification",
+        commit = "cad7ad5a7d4ad9cda03ca370e3f4c76bc1266928"
     )
 
 def graknlabs_grabl_tracing():
