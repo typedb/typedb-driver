@@ -181,6 +181,7 @@ public class GraqlSteps {
         }
     }
 
+
     @Then("answers are labeled")
     public void answers_satisfy_labels(List<Map<String, String>> conceptLabels) {
         assertEquals(conceptLabels.size(), answers.size());
@@ -212,6 +213,16 @@ public class GraqlSteps {
             List<? extends Answer> answers = tx.execute(graqlQuery);
             assertEquals(1, answers.size());
         }
+    }
+
+    @Then("concept identifiers are")
+    public void concept_identifiers_are(Map<String, Map<String, String>> identifiers) {
+        // TODO: to implement
+    }
+
+    @Then("uniquely identify answer concepts")
+    public void uniquely_identify_answer_concepts(List<Map<String, String>> answersIdentifiers) {
+        // TODO: to implement
     }
 
     private String applyQueryTemplate(String template, ConceptMap templateFiller) {
