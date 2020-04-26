@@ -46,7 +46,7 @@ public class AttributeTypeImpl {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
-            this.valueType = RequestBuilder.ConceptMessage.valueType(concept.getDataTypeRes().getDataType());
+            this.valueType = RequestBuilder.ConceptMessage.valueType(concept.getValueTypeRes().getValueType());
         }
 
         @Override
@@ -160,14 +160,14 @@ public class AttributeTypeImpl {
         @Nullable
         public final ValueType<D> valueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
+                    .setAttributeTypeValueTypeReq(ConceptProto.AttributeType.ValueType.Req.getDefaultInstance()).build();
 
-            ConceptProto.AttributeType.DataType.Res response = runMethod(method).getAttributeTypeDataTypeRes();
+            ConceptProto.AttributeType.ValueType.Res response = runMethod(method).getAttributeTypeValueTypeRes();
             switch (response.getResCase()) {
                 case NULL:
                     return null;
-                case DATATYPE:
-                    return RequestBuilder.ConceptMessage.valueType(response.getDataType());
+                case VALUETYPE:
+                    return RequestBuilder.ConceptMessage.valueType(response.getValueType());
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }

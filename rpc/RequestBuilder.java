@@ -118,7 +118,7 @@ public class RequestBuilder {
         public static SessionProto.Transaction.Req putAttributeType(Label label, ValueType<?> valueType) {
             SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
-                    .setDataType(ConceptMessage.setValueType(valueType))
+                    .setValueType(ConceptMessage.setValueType(valueType))
                     .build();
 
             return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
@@ -214,7 +214,7 @@ public class RequestBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        public static <D> ValueType<D> valueType(ConceptProto.AttributeType.DATA_TYPE valueType) {
+        public static <D> ValueType<D> valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
             switch (valueType) {
                 case STRING:
                     return (ValueType<D>) ValueType.STRING;
@@ -236,21 +236,21 @@ public class RequestBuilder {
             }
         }
 
-        static ConceptProto.AttributeType.DATA_TYPE setValueType(ValueType<?> valueType) {
+        static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType<?> valueType) {
             if (valueType.equals(ValueType.STRING)) {
-                return ConceptProto.AttributeType.DATA_TYPE.STRING;
+                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             } else if (valueType.equals(ValueType.BOOLEAN)) {
-                return ConceptProto.AttributeType.DATA_TYPE.BOOLEAN;
+                return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
             } else if (valueType.equals(ValueType.INTEGER)) {
-                return ConceptProto.AttributeType.DATA_TYPE.INTEGER;
+                return ConceptProto.AttributeType.VALUE_TYPE.INTEGER;
             } else if (valueType.equals(ValueType.LONG)) {
-                return ConceptProto.AttributeType.DATA_TYPE.LONG;
+                return ConceptProto.AttributeType.VALUE_TYPE.LONG;
             } else if (valueType.equals(ValueType.FLOAT)) {
-                return ConceptProto.AttributeType.DATA_TYPE.FLOAT;
+                return ConceptProto.AttributeType.VALUE_TYPE.FLOAT;
             } else if (valueType.equals(ValueType.DOUBLE)) {
-                return ConceptProto.AttributeType.DATA_TYPE.DOUBLE;
+                return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
             } else if (valueType.equals(ValueType.DATE)) {
-                return ConceptProto.AttributeType.DATA_TYPE.DATE;
+                return ConceptProto.AttributeType.VALUE_TYPE.DATE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
             }
