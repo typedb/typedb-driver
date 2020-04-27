@@ -293,8 +293,9 @@ public class GraqlSteps {
 
     private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
 
-        assertEquals("Expected variables and returned variables don't match.\n",
-                new HashSet<>((answerIdentifiers).keySet()), new HashSet<>(answer.map().keySet().stream().map(k -> k.name()).collect(Collectors.toSet())));
+        if (!(answerIdentifiers).keySet().equals(answer.map().keySet().stream().map(Variable::name).collect(Collectors.toSet()))) {
+            return false;
+        }
 
         for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
             String varName = entry.getKey();
