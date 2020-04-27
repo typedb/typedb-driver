@@ -20,7 +20,9 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.DataType;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ValueType;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
 import grakn.client.concept.type.Role;
@@ -48,7 +50,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
@@ -62,6 +63,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Integration Tests for testing methods of all subclasses of grakn.client.concept.RemoteConcept.
@@ -160,9 +162,9 @@ public class ConceptIT {
         tx = session.transaction().write();
 
         // Attribute Types
-        email = tx.putAttributeType(EMAIL, DataType.STRING).regex(EMAIL_REGEX);
-        name = tx.putAttributeType(NAME, DataType.STRING);
-        age = tx.putAttributeType(AGE, DataType.INTEGER);
+        email = tx.putAttributeType(EMAIL, ValueType.STRING).regex(EMAIL_REGEX);
+        name = tx.putAttributeType(NAME, ValueType.STRING);
+        age = tx.putAttributeType(AGE, ValueType.INTEGER);
 
         // Entity Types
         livingThing = tx.putEntityType(LIVING_THING).isAbstract(true);
@@ -253,19 +255,19 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingGetDataTypeOnAttributeType_GetTheExpectedResult() {
-        assertEquals(DataType.STRING, email.dataType());
-        assertEquals(DataType.STRING, name.dataType());
-        assertEquals(DataType.INTEGER, age.dataType());
+    public void whenCallingGetValueTypeOnAttributeType_GetTheExpectedResult() {
+        assertEquals(ValueType.STRING, email.valueType());
+        assertEquals(ValueType.STRING, name.valueType());
+        assertEquals(ValueType.INTEGER, age.valueType());
     }
 
     @Test
-    public void whenCallingGetDataTypeOnAttribute_GetTheExpectedResult() {
-        assertEquals(DataType.STRING, emailAlice.dataType());
-        assertEquals(DataType.STRING, emailBob.dataType());
-        assertEquals(DataType.STRING, nameAlice.dataType());
-        assertEquals(DataType.STRING, nameBob.dataType());
-        assertEquals(DataType.INTEGER, age20.dataType());
+    public void whenCallingGetValueTypeOnAttribute_GetTheExpectedResult() {
+        assertEquals(ValueType.STRING, emailAlice.valueType());
+        assertEquals(ValueType.STRING, emailBob.valueType());
+        assertEquals(ValueType.STRING, nameAlice.valueType());
+        assertEquals(ValueType.STRING, nameBob.valueType());
+        assertEquals(ValueType.INTEGER, age20.valueType());
     }
 
     @Test
@@ -539,7 +541,7 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
-        AttributeType.Remote<String> username = tx.putAttributeType(Label.of("username"), DataType.STRING);
+        AttributeType.Remote<String> username = tx.putAttributeType(Label.of("username"), ValueType.STRING);
         person.key(username);
         assertTrue(person.keys().anyMatch(c -> c.equals(username)));
 
@@ -612,4 +614,29 @@ public class ConceptIT {
         assertTrue(dylanAndEmily.rolePlayers().collect(toList()).isEmpty());
     }
 
+    @Test
+    public void whenCastingAttributeWithCorrectValueType_castsWithoutError() {
+        Concept<?> untypedAgeType = age;
+        AttributeType<Integer> typedAgeType = untypedAgeType.asAttributeType(ValueType.INTEGER);
+        Concept<?> untypedAgeAttr = age20;
+        Attribute<Integer> typedAgeAttr = untypedAgeAttr.asAttribute(ValueType.INTEGER);
+    }
+
+    @Test
+    public void whenCastingAttributeWithWrongValueType_fails() {
+        Concept<?> untypedAgeType = age;
+        try {
+            AttributeType<String> wrong = untypedAgeType.asAttributeType(ValueType.STRING);
+            fail();
+        } catch (GraknConceptException ignored) {
+            assertTrue(true);
+        }
+        Concept<?> untypedAgeAttr = age20;
+        try {
+            Attribute<String> wrong = untypedAgeAttr.asAttribute(ValueType.STRING);
+            fail();
+        } catch (GraknConceptException ignored) {
+            assertTrue(true);
+        }
+    }
 }

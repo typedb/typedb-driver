@@ -132,7 +132,17 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default AttributeType<?> asAttributeType() {
+    default <D> AttributeType<D> asAttributeType() {
+        throw GraknConceptException.invalidCasting(this, AttributeType.class);
+    }
+
+    /**
+     * Return as a AttributeType if the Concept is a AttributeType
+     *
+     * @return A AttributeType if the Concept is a AttributeType
+     */
+    @CheckReturnValue
+    default <D> AttributeType<D> asAttributeType(ValueType<D> valueType) {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -172,7 +182,17 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default Attribute<?> asAttribute() {
+    default <D> Attribute<D> asAttribute() {
+        throw GraknConceptException.invalidCasting(this, Attribute.class);
+    }
+
+    /**
+     * Return as a Attribute  if the Concept is a Attribute Thing.
+     *
+     * @return A Attribute if the Concept is a Attribute
+     */
+    @CheckReturnValue
+    default <D> Attribute<D> asAttribute(ValueType<D> valueType) {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -465,8 +485,19 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default AttributeType.Remote<?> asAttributeType() {
-            throw GraknConceptException.invalidCasting(this, AttributeType.Remote.class);
+        default <D> AttributeType.Remote<D> asAttributeType() {
+            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+        }
+
+        /**
+         * Return as a AttributeType if the Concept is a AttributeType
+         *
+         * @return A AttributeType if the Concept is a AttributeType
+         */
+        @Override
+        @CheckReturnValue
+        default <D> AttributeType.Remote<D> asAttributeType(ValueType<D> valueType) {
+            throw GraknConceptException.invalidCasting(this, AttributeType.class);
         }
 
         /**
@@ -509,7 +540,18 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default Attribute.Remote<?> asAttribute() {
+        default <D> Attribute.Remote<D> asAttribute() {
+            throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
+        }
+
+        /**
+         * Return as a Attribute  if the Concept is a Attribute Thing.
+         *
+         * @return A Attribute if the Concept is a Attribute
+         */
+        @Override
+        @CheckReturnValue
+        default <D> Attribute.Remote<D> asAttribute(ValueType<D> valueType) {
             throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
         }
 

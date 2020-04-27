@@ -31,8 +31,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
@@ -55,8 +59,12 @@ public class Transceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
 
+    private final Lock lock = new ReentrantLock();
+
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Transceiver(StreamObserver<Transaction.Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
@@ -73,7 +81,7 @@ public class Transceiver implements AutoCloseable {
      * Send a request and return immediately.
          * This method is non-blocking - it returns immediately.
      */
-    public void send(Transaction.Req request) {
+    private void send(Transaction.Req request) {
         try (ThreadTrace trace = traceOnThread("request")) {
             if (responseListener.terminated.get()) {
                 throw GraknClientException.connectionClosed();
@@ -86,7 +94,7 @@ public class Transceiver implements AutoCloseable {
     /**
      * Block until a response is returned.
      */
-    public Response receive() throws InterruptedException {
+    private Response receive() throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("receive")) {
             Response response = responseListener.poll();
             LOG.trace("receive:{}", response);
@@ -97,9 +105,43 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
+    public Response sendAndReceive(Transaction.Req request) throws InterruptedException {
+        try {
+            lock.lock();
+            send(request);
+            return receive();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void sendAndReceiveAsync(Transaction.Req request, ResponseReceiver receiver) {
+        executorService.execute(() -> {
+            lock.lock();
+            try {
+                send(request);
+                while (true) {
+                    Response res = receive();
+                    if (!receiver.onResponse(res)) {
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                receiver.onResponse(Response.error(ex));
+            } finally {
+                lock.unlock();
+            }
+        });
+    }
+
+    public interface ResponseReceiver {
+        boolean onResponse(Response response);
+    }
+
     @Override
     public void close() {
         try {
+            executorService.shutdownNow();
             requestSender.onCompleted();
             responseListener.onCompleted();
         } catch (IllegalStateException e) {
@@ -168,14 +210,14 @@ public class Transceiver implements AutoCloseable {
     public static class Response {
 
         private final SessionProto.Transaction.Res nullableOk;
-        private final StatusRuntimeException nullableError;
+        private final Exception nullableError;
 
-        Response(@Nullable SessionProto.Transaction.Res nullableOk, @Nullable StatusRuntimeException nullableError) {
+        Response(@Nullable SessionProto.Transaction.Res nullableOk, @Nullable Exception nullableError) {
             this.nullableOk = nullableOk;
             this.nullableError = nullableError;
         }
 
-        private static Response create(@Nullable Transaction.Res response, @Nullable StatusRuntimeException error) {
+        private static Response create(@Nullable Transaction.Res response, @Nullable Exception error) {
             if (!(response == null || error == null)) {
                 throw new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null");
             }
@@ -186,7 +228,7 @@ public class Transceiver implements AutoCloseable {
             return create(null, null);
         }
 
-        static Response error(StatusRuntimeException error) {
+        static Response error(Exception error) {
             return create(null, error);
         }
 
@@ -200,7 +242,7 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Nullable
-        StatusRuntimeException nullableError() {
+        Exception nullableError() {
             return nullableError;
         }
 
@@ -233,8 +275,8 @@ public class Transceiver implements AutoCloseable {
          *
          * @throws IllegalStateException if this is not an error
          */
-        public final StatusRuntimeException error() {
-            StatusRuntimeException throwable = nullableError();
+        public final Exception error() {
+            Exception throwable = nullableError();
             if (throwable == null) {
                 throw new IllegalStateException("Expected error not found: " + toString());
             } else {

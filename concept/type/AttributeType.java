@@ -21,7 +21,8 @@ package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.DataType;
+import grakn.client.concept.ValueType;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
@@ -42,17 +43,28 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      */
     @Nullable
     @CheckReturnValue
-    DataType<D> dataType();
+    ValueType<D> valueType();
 
     //------------------------------------- Other ---------------------------------
+    @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default AttributeType<D> asAttributeType() {
-        return this;
+    default <T> AttributeType<T> asAttributeType() {
+        return (AttributeType<T>) this;
     }
 
+    @SuppressWarnings("unchecked")
+    @Deprecated
     @CheckReturnValue
+    @Override
+    default <T> AttributeType<T> asAttributeType(ValueType<T> valueType) {
+        if (!valueType.equals(valueType())) {
+            throw GraknConceptException.invalidCasting(this, valueType.getClass());
+        }
+        return (AttributeType<T>) this;
+    }
+
     @Override
     default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
         return AttributeType.Remote.of(tx, id());
@@ -69,7 +81,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * An ontological element which models and categorises the various Attribute in the graph.
      * This ontological element behaves similarly to Type when defining how it relates to other
      * types. It has two additional functions to be aware of:
-     * 1. It has a DataType constraining the data types of the values it's instances may take.
+     * 1. It has a ValueType constraining the data types of the values it's instances may take.
      * 2. Any of it's instances are unique to the type.
      * For example if you have an AttributeType modelling month throughout the year there can only be one January.
      *
@@ -83,7 +95,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * An ontological element which models and categorises the various Attribute in the graph.
      * This ontological element behaves similarly to Type when defining how it relates to other
      * types. It has two additional functions to be aware of:
-     * 1. It has a DataType constraining the data types of the values it's instances may take.
+     * 1. It has a ValueType constraining the data types of the values it's instances may take.
      * 2. Any of it's instances are unique to the type.
      * For example if you have an AttributeType modelling month throughout the year there can only be one January.
      *
@@ -242,11 +254,19 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         String regex();
 
         //------------------------------------- Other ---------------------------------
+        @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
-        default AttributeType.Remote<D> asAttributeType() {
-            return this;
+        default <T> AttributeType.Remote<T> asAttributeType() {
+            return (AttributeType.Remote<T>) this;
+        }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default <T> AttributeType.Remote<T> asAttributeType(ValueType<T> valueType) {
+            return (AttributeType.Remote<T>) AttributeType.super.asAttributeType(valueType);
         }
 
         @Deprecated
