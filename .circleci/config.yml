@@ -193,7 +193,8 @@ jobs:
       - install-bazel-linux-rbe
       - checkout
       - run: |
-          bazel run @graknlabs_build_tools//ci:release-validate-deps -- graknlabs_protocol
+          bazel run @graknlabs_build_tools//ci:release-validate-deps -- \
+          graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_tracing
 
   deploy-github:
     machine: true
@@ -315,37 +316,53 @@ workflows:
               only: master
           requires:
             - sync-dependencies-snapshot
+
   client-java-release:
     jobs:
       - release-validate:
           filters:
             branches:
-              only: client-java-release-branch
+              only:
+              - client-java-release-branch
+              - 1.7.2
       - deploy-github:
           filters:
             branches:
-              only: client-java-release-branch
+              only:
+                - client-java-release-branch
+                - 1.7.2
           requires:
             - release-validate
       - deploy-approval:
           type: approval
+          filters:
+            branches:
+              only:
+                - client-java-release-branch
+                - 1.7.2
           requires:
             - deploy-github
       - deploy-maven-release:
           filters:
             branches:
-              only: client-java-release-branch
+              only:
+                - client-java-release-branch
+                - 1.7.2
           requires:
             - deploy-approval
       - sync-dependencies-release:
           filters:
             branches:
-              only: client-java-release-branch
+              only:
+                - client-java-release-branch
+                - 1.7.2
           requires:
             - deploy-maven-release
       - release-cleanup:
           filters:
             branches:
-              only: client-java-release-branch
+              only:
+                - client-java-release-branch
+                - 1.7.2
           requires:
             - sync-dependencies-release
