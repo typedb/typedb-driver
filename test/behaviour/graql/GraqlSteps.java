@@ -187,85 +187,6 @@ public class GraqlSteps {
         }
     }
 
-    private interface UniquenessCheck {
-        boolean check(Concept<?> concept);
-    }
-
-    public static class LabelUniquenessCheck implements UniquenessCheck {
-
-        private final String label;
-
-        LabelUniquenessCheck(String label) {
-            this.label = label;
-        }
-
-        @Override
-        public boolean check(Concept concept) {
-            if (concept.isType()) {
-                return label.equals(concept.asType().label().toString());
-            } else if (concept.isRole()) {
-                return label.equals(concept.asRole().label().toString());
-            } else {
-                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
-            }
-        }
-    }
-
-    public static class AttributeUniquenessCheck {
-
-        protected final String type;
-        protected final String value;
-
-        AttributeUniquenessCheck(String typeAndValue) {
-            String[] s = typeAndValue.split(":");
-            assertEquals(
-                    String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s", typeAndValue),
-                    2, s.length
-            );
-            type = s[0];
-            value = s[1];
-        }
-    }
-
-    public static class ValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
-        ValueUniquenessCheck(String typeAndValue) {
-            super(typeAndValue);
-        }
-
-        public boolean check(Concept concept) {
-            return concept.isAttribute()
-            && type.equals(concept.asAttribute().type().label().toString())
-            && value.equals(concept.asAttribute().value().toString());
-        }
-    }
-
-    public static class KeyUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
-        KeyUniquenessCheck(String typeAndValue) {
-            super(typeAndValue);
-        }
-
-        /**
-         * Check that the given key is in the concept's keys
-         * @param concept to check
-         * @return whether the given key matches a key belonging to the concept
-         */
-        @Override
-        public boolean check(Concept<?> concept) {
-            if(!concept.isThing()) { return false; }
-
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).keys().collect(Collectors.toSet());
-
-            HashMap<String, String> keyMap = new HashMap<>();
-
-            for (Attribute<?> key : keys) {
-                keyMap.put(
-                        key.type().label().toString(),
-                        key.value().toString());
-            }
-            return value.equals(keyMap.get(type));
-        }
-    }
-
     @Then("uniquely identify answer concepts")
     public void uniquely_identify_answer_concepts(List<Map<String, String>> answersIdentifiers) {
         assertEquals(
@@ -275,18 +196,18 @@ public class GraqlSteps {
         );
 
         for (ConceptMap answer : answers) {
-            List<Map<String, String>> matchingIdentifiers1 = new ArrayList<>();
+            List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
 
             for (Map<String, String> answerIdentifiers : answersIdentifiers) {
 
                 if (matchAnswer(answerIdentifiers, answer)) {
-                    matchingIdentifiers1.add(answerIdentifiers);
+                    matchingIdentifiers.add(answerIdentifiers);
                 }
             }
             assertEquals(
                     String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s",
-                            matchingIdentifiers1.size(), answer.map().keySet().toString()),
-                    1, matchingIdentifiers1.size()
+                            matchingIdentifiers.size(), answer.map().keySet().toString()),
+                    1, matchingIdentifiers.size()
             );
         }
     }
@@ -435,6 +356,85 @@ public class GraqlSteps {
     private static class ScenarioDefinitionException extends RuntimeException {
         ScenarioDefinitionException(String message) {
             super(message);
+        }
+    }
+
+    private interface UniquenessCheck {
+        boolean check(Concept<?> concept);
+    }
+
+    public static class LabelUniquenessCheck implements UniquenessCheck {
+
+        private final String label;
+
+        LabelUniquenessCheck(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean check(Concept concept) {
+            if (concept.isType()) {
+                return label.equals(concept.asType().label().toString());
+            } else if (concept.isRole()) {
+                return label.equals(concept.asRole().label().toString());
+            } else {
+                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
+            }
+        }
+    }
+
+    public static class AttributeUniquenessCheck {
+
+        protected final String type;
+        protected final String value;
+
+        AttributeUniquenessCheck(String typeAndValue) {
+            String[] s = typeAndValue.split(":");
+            assertEquals(
+                    String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s", typeAndValue),
+                    2, s.length
+            );
+            type = s[0];
+            value = s[1];
+        }
+    }
+
+    public static class ValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
+        ValueUniquenessCheck(String typeAndValue) {
+            super(typeAndValue);
+        }
+
+        public boolean check(Concept concept) {
+            return concept.isAttribute()
+                    && type.equals(concept.asAttribute().type().label().toString())
+                    && value.equals(concept.asAttribute().value().toString());
+        }
+    }
+
+    public static class KeyUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
+        KeyUniquenessCheck(String typeAndValue) {
+            super(typeAndValue);
+        }
+
+        /**
+         * Check that the given key is in the concept's keys
+         * @param concept to check
+         * @return whether the given key matches a key belonging to the concept
+         */
+        @Override
+        public boolean check(Concept<?> concept) {
+            if(!concept.isThing()) { return false; }
+
+            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).keys().collect(Collectors.toSet());
+
+            HashMap<String, String> keyMap = new HashMap<>();
+
+            for (Attribute<?> key : keys) {
+                keyMap.put(
+                        key.type().label().toString(),
+                        key.value().toString());
+            }
+            return value.equals(keyMap.get(type));
         }
     }
 }

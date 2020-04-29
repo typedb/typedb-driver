@@ -61,7 +61,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
-  test-concept:
+  test-integration-concept:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -70,7 +70,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/integration/concept:concept-it --test_output=errors
 
-  test-answer:
+  test-integration-answer:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -79,7 +79,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/integration/answer:answer-it --test_output=errors
 
-  test-keyspace:
+  test-behaviour-keyspace:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -88,7 +88,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
 
-  test-session:
+  test-behaviour-session:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -97,7 +97,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
 
-  test-transaction:
+  test-behaviour-transaction:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -106,7 +106,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
 
-  test-graql-define:
+  test-behaviour-graql-language-define:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -115,7 +115,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
 
-  test-graql-undefine:
+  test-behaviour-graql-language-undefine:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -124,7 +124,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
 
-  test-graql-insert:
+  test-behaviour-graql-language-insert:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -133,7 +133,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
 
-  test-graql-match:
+  test-behaviour-graql-language-match:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -142,7 +142,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
 
-  test-graql-explanation:
+  test-behaviour-graql-reasoner-explanation:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -150,7 +150,6 @@ jobs:
       - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/reasoner/explanation:test-core --test_output=errors
-
 
   deploy-maven-snapshot:
     machine: true
@@ -258,43 +257,43 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-concept:
+      - test-integration-concept:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-answer:
+      - test-integration-answer:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-keyspace:
+      - test-behaviour-keyspace:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-session:
+      - test-behaviour-session:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-transaction:
+      - test-behaviour-transaction:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-graql-define:
+      - test-behaviour-graql-language-define:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-graql-define:
+      - test-behaviour-graql-language-undefine:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-graql-insert:
+      - test-behaviour-graql-language-insert:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-graql-match:
+      - test-behaviour-graql-language-match:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-graql-explanation:
+      - test-behaviour-graql-reasoner-explanation:
           filters:
             branches:
               ignore: client-java-release-branch
@@ -305,11 +304,16 @@ workflows:
           requires:
             - build
             - build-checkstyle
-            - test-concept
-            - test-answer
-            - test-keyspace
-            - test-session
-            - test-transaction
+            - test-integration-concept
+            - test-integration-answer
+            - test-behaviour-keyspace
+            - test-behaviour-session
+            - test-behaviour-transaction
+            - test-behaviour-graql-language-define
+            - test-behaviour-graql-language-undefine
+            - test-behaviour-graql-language-insert
+            - test-behaviour-graql-language-match
+            - test-behaviour-graql-reasoner-explanation
       - test-deployment-maven:
           filters:
             branches:
