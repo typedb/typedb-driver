@@ -290,8 +290,8 @@ workflows:
           filters:
             branches:
               only:
-				- master
-				- 1.7.2
+                - master
+                - 1.7.2
           requires:
             - build
             - build-checkstyle
@@ -304,24 +304,24 @@ workflows:
           filters:
             branches:
               only:
-				- master
-				- 1.7.2
+                - master
+                - 1.7.2
           requires:
             - deploy-maven-snapshot
       - sync-dependencies-snapshot:
           filters:
             branches:
               only:
-				- master
-				- 1.7.2
+                - master
+                - 1.7.2
           requires:
             - test-deployment-maven
       - release-approval:
           filters:
             branches:
               only:
-				- master
-				- 1.7.2
+                - master
+                - 1.7.2
           requires:
             - sync-dependencies-snapshot
 
