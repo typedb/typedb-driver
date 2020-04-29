@@ -106,7 +106,7 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
 
-  test-behaviour-graql-language-define:
+  test-behaviour-graql-language:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -114,35 +114,14 @@ jobs:
       - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
-
-  test-behaviour-graql-language-undefine:
-    machine: true
-    working_directory: ~/client-java
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
-
-  test-behaviour-graql-language-insert:
-    machine: true
-    working_directory: ~/client-java
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
-
-  test-behaviour-graql-language-match:
-    machine: true
-    working_directory: ~/client-java
-    steps:
-      - install-bazel-linux-rbe
-      - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
 
-  test-behaviour-graql-reasoner-explanation:
+  test-behaviour-graql-reasoner:
     machine: true
     working_directory: ~/client-java
     steps:
@@ -277,23 +256,11 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-behaviour-graql-language-define:
+      - test-behaviour-graql-language:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-behaviour-graql-language-undefine:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-language-insert:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-language-match:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-reasoner-explanation:
+      - test-behaviour-graql-reasoner:
           filters:
             branches:
               ignore: client-java-release-branch
@@ -309,11 +276,8 @@ workflows:
             - test-behaviour-keyspace
             - test-behaviour-session
             - test-behaviour-transaction
-            - test-behaviour-graql-language-define
-            - test-behaviour-graql-language-undefine
-            - test-behaviour-graql-language-insert
-            - test-behaviour-graql-language-match
-            - test-behaviour-graql-reasoner-explanation
+            - test-behaviour-graql-language
+            - test-behaviour-graql-reasoner
       - test-deployment-maven:
           filters:
             branches:
