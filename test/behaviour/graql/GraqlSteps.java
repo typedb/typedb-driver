@@ -377,8 +377,10 @@ public class GraqlSteps {
                 return label.equals(concept.asType().label().toString());
             } else if (concept.isRole()) {
                 return label.equals(concept.asRole().label().toString());
+            } else if (concept.isRule()) {
+                return label.equals(concept.asRule().label().toString());
             } else {
-                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a role nor a type.");
+                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a Role nor a Type nor a Rule.");
             }
         }
     }
