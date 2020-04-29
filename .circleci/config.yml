@@ -194,7 +194,7 @@ jobs:
       - checkout
       - run: |
           bazel run @graknlabs_build_tools//ci:release-validate-deps -- \
-          graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_tracing
+          graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_grabl_tracing
 
   deploy-github:
     machine: true
@@ -289,7 +289,9 @@ workflows:
       - deploy-maven-snapshot:
           filters:
             branches:
-              only: master
+              only:
+				- master
+				- 1.7.2
           requires:
             - build
             - build-checkstyle
@@ -301,19 +303,25 @@ workflows:
       - test-deployment-maven:
           filters:
             branches:
-              only: master
+              only:
+				- master
+				- 1.7.2
           requires:
             - deploy-maven-snapshot
       - sync-dependencies-snapshot:
           filters:
             branches:
-              only: master
+              only:
+				- master
+				- 1.7.2
           requires:
             - test-deployment-maven
       - release-approval:
           filters:
             branches:
-              only: master
+              only:
+				- master
+				- 1.7.2
           requires:
             - sync-dependencies-snapshot
 
@@ -322,47 +330,32 @@ workflows:
       - release-validate:
           filters:
             branches:
-              only:
-              - client-java-release-branch
-              - 1.7.2
+              only: client-java-release-branch
       - deploy-github:
           filters:
             branches:
-              only:
-                - client-java-release-branch
-                - 1.7.2
+              only: client-java-release-branch
           requires:
             - release-validate
       - deploy-approval:
           type: approval
-          filters:
-            branches:
-              only:
-                - client-java-release-branch
-                - 1.7.2
           requires:
             - deploy-github
       - deploy-maven-release:
           filters:
             branches:
-              only:
-                - client-java-release-branch
-                - 1.7.2
+              only: client-java-release-branch
           requires:
             - deploy-approval
       - sync-dependencies-release:
           filters:
             branches:
-              only:
-                - client-java-release-branch
-                - 1.7.2
+              only: client-java-release-branch
           requires:
             - deploy-maven-release
       - release-cleanup:
           filters:
             branches:
-              only:
-                - client-java-release-branch
-                - 1.7.2
+              only: client-java-release-branch
           requires:
             - sync-dependencies-release
