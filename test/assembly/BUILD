@@ -30,7 +30,6 @@ java_test(
     test_class = "grakn.client.ApplicationE2E",
     deps = [
         # Internal dependencies
-        "//common:common",
         "//:client-java",
         "//test/setup:grakn-setup",
         "//test/setup:grakn-properties",

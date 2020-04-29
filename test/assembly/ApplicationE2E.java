@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package grakn.core.client;
+package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
