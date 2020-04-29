@@ -610,7 +610,7 @@ public class ConceptIT {
 
         dylanAndEmily.unassign(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(emily));
+        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan));
     }
 
     @Test
