@@ -51,7 +51,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
 /**
- * Performs various queries with the client-java library:
+ * Performs various queries:
  * - define a schema with a rule
  * - match; get;
  * - match; get of an inferred relation
@@ -88,7 +88,6 @@ public class ApplicationE2E {
         graknClient.close();
         GraknSetup.shutdown();
     }
-
 
     @Before
     public void createClient() {

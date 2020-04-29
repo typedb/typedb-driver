@@ -20,14 +20,11 @@
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "assembly-e2e",
+    name = "application-e2e",
     srcs = [
         "ApplicationE2E.java",
-        "ServerAssertions.java",
     ],
-    classpath_resources = ["//test/setup:logback"],
-    data = ["@graknlabs_grakn_core//:assemble-mac-zip"],
-    test_class = "grakn.client.ApplicationE2E",
+    test_class = "grakn.client.test.assembly.ApplicationE2E",
     deps = [
         # Internal dependencies
         "//:client-java",
@@ -43,11 +40,17 @@ java_test(
         "//dependencies/maven/artifacts/org/zeroturnaround:zt-exec",
         "//dependencies/maven/artifacts/org/slf4j:slf4j-api",
     ],
+    data = ["@graknlabs_grakn_core//:assemble-linux-targz"],
+    args = [ # The order of the arguments matter
+        "grakn-core", # Keep at index 0, will be accessible at args[1]
+        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
+    ],
+    classpath_resources = ["//test/setup:logback"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":assembly-e2e",
+        ":application-e2e",
     ],
 )
