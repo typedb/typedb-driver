@@ -293,6 +293,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
+      - test-assembly:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - deploy-maven-snapshot:
           filters:
             branches:
@@ -305,6 +309,7 @@ workflows:
             - test-keyspace
             - test-session
             - test-transaction
+            - test-assembly
       - test-deployment-maven:
           filters:
             branches:
