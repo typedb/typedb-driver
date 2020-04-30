@@ -20,11 +20,11 @@
 load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
-    name = "test-assembly-queries",
+    name = "test-assembly-query",
     srcs = [
-        "QueriesTest.java",
+        "QueryTest.java",
     ],
-    test_class = "grakn.client.test.assembly.QueriesTest",
+    test_class = "grakn.client.test.assembly.QueryTest",
     deps = [
         # Internal dependencies
         "//:client-java",
@@ -51,6 +51,6 @@ java_test(
 checkstyle_test(
     name = "checkstyle",
     targets = [
-        ":test-assembly-queries",
+        ":test-assembly-query",
     ],
 )
