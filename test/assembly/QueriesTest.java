@@ -72,8 +72,8 @@ import static org.hamcrest.Matchers.hasSize;
  * that offspring is the child of the male and female partners which are involved in the mating act.
  */
 @SuppressWarnings("Duplicates")
-public class ApplicationE2E {
-    private static Logger LOG = LoggerFactory.getLogger(ApplicationE2E.class);
+public class QueriesTest {
+    private static Logger LOG = LoggerFactory.getLogger(QueriesTest.class);
     private static GraknClient graknClient;
 
     @BeforeClass
@@ -101,7 +101,7 @@ public class ApplicationE2E {
     }
 
     @Test
-    public void clientJavaE2E() {
+    public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
 
         localhostGraknTx(tx -> {
