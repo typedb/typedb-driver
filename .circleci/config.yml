@@ -127,6 +127,15 @@ jobs:
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
 
+  test-assembly-query:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/assembly:test-assembly-query --test_output=errors
+
   test-deployment-maven:
     machine: true
     working_directory: ~/client-java
@@ -242,6 +251,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
+      - test-assembly-query:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - deploy-maven-snapshot:
           filters:
             branches:
@@ -249,6 +262,7 @@ workflows:
           requires:
             - build
             - build-checkstyle
+            - test-assembly-query
             - test-integration-concept
             - test-integration-answer
             - test-behaviour-connection
