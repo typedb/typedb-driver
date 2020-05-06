@@ -23,64 +23,92 @@ const AnswerFactory = require("./AnswerFactory");
 /**
  * Factory of Iterators, bound to a specific transaction
  */
-function GrpcIteratorFactory(conceptFactory, txService) {
-  this.communicator = txService.communicator;
-  this.conceptFactory = conceptFactory;
-  this.answerFactory = new AnswerFactory(conceptFactory, txService);
+class GrpcIteratorFactory {
+  constructor(conceptFactory, respConverter, communicator, txService) {
+    this.communicator = communicator;
+    this.answerFactory = new AnswerFactory(conceptFactory, txService);
+    this.respConverter = respConverter;
+  }
+
+  // Query Iterator
+  async createQueryIterator(startIterRequest) {
+    const mapResponse = (response) => {
+      const answer = response.getQueryIterRes().getAnswer();
+      return this.answerFactory.createAnswer(answer);
+    };
+    const iterator = new Iterator(this.communicator, startIterRequest, mapResponse);
+    // Extend iterator with helper method collectConcepts()
+    iterator.collectConcepts = async function () { return (await this.collect()).map(a => Array.from(a.map().values())).reduce((a, c) => a.concat(c), []); };
+    await iterator._start();
+    return iterator;
+  }
+
+  // Concept Iterator
+  async createIterator(iterateReq, responseConverter) {
+    const iterator = new Iterator(this.communicator, iterateReq, responseConverter);
+    await iterator._start();
+    return iterator;
+  }
 }
 
-// Query Iterator
 
-GrpcIteratorFactory.prototype.createQueryIterator = function (iteratorId) {
-  const mapResponse = (response) => {
-    const iterRes = response.getIterateRes();
-    if (iterRes.getDone()) return null;
-    const answer = iterRes.getQueryIterRes().getAnswer();
-    return this.answerFactory.createAnswer(answer);
-  }
-  const iterator = new Iterator(this.conceptFactory, this.communicator, RequestBuilder.nextReq(iteratorId), mapResponse);
-  // Extend iterator with helper method collectConcepts()
-  iterator.collectConcepts = async function () { return (await this.collect()).map(a => Array.from(a.map().values())).reduce((a, c) => a.concat(c), []); };
-  return iterator;
-};
-
-//Concept Iterator
-GrpcIteratorFactory.prototype.createConceptIterator = function (iteratorId, getterMethod) {
-  const mapResponse = (response, conceptFactory) => {
-    const iterRes = response.getIterateRes();
-    if (iterRes.getDone()) return null;
-    const grpcConcept = getterMethod(iterRes);
-    return conceptFactory.createConcept(grpcConcept);
-  }
-  return new Iterator(this.conceptFactory, this.communicator, RequestBuilder.nextReq(iteratorId), mapResponse);
-};
-
-
-// Role player Iterator
-GrpcIteratorFactory.prototype.createRolePlayerIterator = function (iteratorId) {
-
-  const mapResponse = (response, conceptFactory) => {
-    const iterRes = response.getIterateRes();
-    if (iterRes.getDone()) return null;
-    const resContent = iterRes.getConceptmethodIterRes().getRelationRoleplayersmapIterRes();
-    return {
-      role: conceptFactory.createConcept(resContent.getRole()),
-      player: conceptFactory.createConcept(resContent.getPlayer())
-    };
-  }
-  return new Iterator(this.conceptFactory, this.communicator, RequestBuilder.nextReq(iteratorId), mapResponse);
-};
-
-//Iterator 
-
-function Iterator(conceptFactory, communicator, nextRequest, mapResponse) {
-  this.next = () => {
-    return communicator.send(nextRequest)
-      .then((resp) => mapResponse(resp, conceptFactory))
-      .catch(e => { throw e; });
+class Iterator {
+  constructor(communicator, startIterRequest, mapResponse) {
+    this._communicator = communicator;
+    this._mapResponse = mapResponse;
+    this._options = startIterRequest.getOptions();
+    this._startIterRequest = startIterRequest;
   }
 
-  this.collect = async () => {
+  async _start() {
+    await this._nextBatch(this._startIterRequest);
+    const response = await this._iterator.next(); // Fetch first response in anticipation of query errors
+    if (!response) {
+      throw new Error('Iterator did not end with a Done or Iteratorid response');
+    }
+
+    this._firstResponse = response
+  }
+
+  async _nextBatch(iterRequest) {
+    this._iterator = await this._communicator.iterateUntil(RequestBuilder.txIter(iterRequest), (res) => {
+      return res.getIterRes().getDone() == true;
+    });
+  }
+
+  async next() {
+    if (this._iterator === null) { // If next is called again after the last done
+      return null;
+    }
+
+    let response;
+    if (this._firstResponse) {
+      response = this._firstResponse;
+      this._firstResponse = null;
+    } else {
+      response = await this._iterator.next();
+    }
+
+    if (!response) {
+      throw new Error('Iterator did not end with a Done or Iteratorid response');
+    }
+
+    const iterRes = response.getIterRes();
+    if (iterRes.getDone()) {
+      this._iterator = null; // Reference no longer needed
+      return null;
+    }
+
+    const iterId = iterRes.getIteratorid();
+    if (iterId) {
+      await this._nextBatch(RequestBuilder.continueIter(iterId, this._options));
+      return this.next(); // Next batch messages are never returned, mapRepsonse will only see Done
+    }
+    
+    return this._mapResponse(iterRes);
+  }
+
+  async collect() {
     const results = [];
     let result = await this.next();
     while (result) {

@@ -88,7 +88,6 @@ describe("Transaction methods", () => {
         });
         hasExplanationCounter += 1;
       } else {
-        expect(pattern.length).toEqual(0);
         noExplanationCounter += 1;
       }
     }

@@ -38,7 +38,7 @@ afterEach(() => {
     tx.close();
 });
 
-describe("Relationsihp methods", () => {
+describe("Relation methods", () => {
 
     it("rolePlayersMap && rolePlayers with 2 roles with 1 player each", async () => {
         const relationType = await tx.putRelationType('parenthood');
@@ -89,7 +89,7 @@ describe("Relationsihp methods", () => {
         Array.from(map.keys()).forEach(key => { expect(key.isRole()).toBeTruthy(); });
         Array.from(map.values()).forEach(set => { expect(Array.from(set).length).toBe(1); });
         const rolePlayers = await (await relation.rolePlayers()).collect();
-        expect(rolePlayers.length).toBe(1);
+        expect(rolePlayers.length).toBe(2);
         expect(rolePlayers[0].isThing()).toBeTruthy();
     });
 

@@ -35,6 +35,28 @@ function RunConceptMethodRequest(conceptId, actionReq) {
   return transactionReq;
 }
 
+function RunConceptMethodIterRequest(conceptId, iterReq) {
+  const conceptMessage = new messages.Transaction.ConceptMethod.Iter.Req();
+  conceptMessage.setId(conceptId);
+  conceptMessage.setMethod(iterReq);
+
+  const iterMessage = new messages.Transaction.Iter.Req();
+  iterMessage.setOptions(IterOptions());
+  iterMessage.setConceptmethodIterReq(conceptMessage);
+
+  return iterMessage;
+}
+
+function IterOptions(batchSize = 50) {
+  const optionsMessage = new messages.Transaction.Iter.Req.Options();
+  if (batchSize > 0) {
+    optionsMessage.setNumber(batchSize);
+  } else {
+    optionsMessage.setAll(true);
+  }
+  return optionsMessage;
+}
+
 function convertBaseType(baseType) {
   switch (baseType) {
     case ConceptsBaseType.ATTRIBUTE: return messages.Concept.BASE_TYPE.ATTRIBUTE;
@@ -71,7 +93,7 @@ function setAttributeValueObject(valueObject, dataType, value) {
     case ProtoDataType.DATE: valueObject.setDate(value.getTime()); break; // Send epoch time in milliseconds to server
     default: throw new Error('DataType of attribute not recognised.');
   }
-};
+}
 
 const methods = {
   // Concept
@@ -106,17 +128,17 @@ const methods = {
   },
 
   subs: function (conceptId) {
-    const subsReq = new messages.SchemaConcept.Subs.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setSchemaconceptSubsReq(subsReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const subsReq = new messages.SchemaConcept.Subs.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setSchemaconceptSubsIterReq(subsReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   sups: function (conceptId) {
-    const supsReq = new messages.SchemaConcept.Sups.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setSchemaconceptSupsReq(supsReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const supsReq = new messages.SchemaConcept.Sups.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setSchemaconceptSupsIterReq(supsReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   getSup: function (conceptId) {
@@ -150,31 +172,31 @@ const methods = {
 
   // Role
   getRelationTypesThatRelateRole: function (conceptId) {
-    const relationsReq = new messages.Role.Relations.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setRoleRelationsReq(relationsReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const relationsReq = new messages.Role.Relations.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setRoleRelationsIterReq(relationsReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   getTypesThatPlayRole: function (conceptId) {
-    const playersReq = new messages.Role.Players.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setRolePlayersReq(playersReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const playersReq = new messages.Role.Players.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setRolePlayersIterReq(playersReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   // Type
   instances: function (conceptId) {
-    const instancesReq = new messages.Type.Instances.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setTypeInstancesReq(instancesReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const instancesReq = new messages.Type.Instances.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setTypeInstancesIterReq(instancesReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   getAttributeTypes: function (conceptId) {
-    const attributesReq = new messages.Type.Attributes.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setTypeAttributesReq(attributesReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const attributesReq = new messages.Type.Attributes.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setTypeAttributesIterReq(attributesReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setAttributeType: function (conceptId, type) {
     const hasReq = new messages.Type.Has.Req();
@@ -191,10 +213,10 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getKeyTypes: function (conceptId) {
-    const keysReq = new messages.Type.Keys.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setTypeKeysReq(keysReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const keysReq = new messages.Type.Keys.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setTypeKeysIterReq(keysReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setKeyType: function (conceptId, keyType) {
     const keyReq = new messages.Type.Key.Req();
@@ -224,10 +246,10 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getRolesPlayedByType: function (conceptId) {
-    const playingReq = new messages.Type.Playing.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setTypePlayingReq(playingReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const playingReq = new messages.Type.Playing.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setTypePlayingIterReq(playingReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setRolePlayedByType: function (conceptId, role) {
     const playsReq = new messages.Type.Plays.Req();
@@ -260,10 +282,10 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getRelatedRoles: function (conceptId) {
-    const roleReq = new messages.RelationType.Roles.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setRelationtypeRolesReq(roleReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const roleReq = new messages.RelationType.Roles.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setRelationtypeRolesIterReq(roleReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   setRelatedRole: function (conceptId, role) {
@@ -338,34 +360,34 @@ const methods = {
   },
 
   getRelationsByRoles: function (conceptId, roles) {
-    const relationsReq = new messages.Thing.Relations.Req();
-    const conceptMethodReq = new messages.Method.Req();
+    const relationsReq = new messages.Thing.Relations.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
     if (roles.length) relationsReq.setRolesList(roles.map(role => toGrpcConcept(role)));
-    conceptMethodReq.setThingRelationsReq(relationsReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    conceptMethodReq.setThingRelationsIterReq(relationsReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   getRolesPlayedByThing: function (conceptId) {
-    const rolesReq = new messages.Thing.Roles.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setThingRolesReq(rolesReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const rolesReq = new messages.Thing.Roles.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setThingRolesIterReq(rolesReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   getAttributesByTypes: function (conceptId, types) {
-    const attributesReq = new messages.Thing.Attributes.Req();
-    const conceptMethodReq = new messages.Method.Req();
+    const attributesReq = new messages.Thing.Attributes.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
     if (types.length) attributesReq.setAttributetypesList(types.map(type => toGrpcConcept(type)));
-    conceptMethodReq.setThingAttributesReq(attributesReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    conceptMethodReq.setThingAttributesIterReq(attributesReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   getKeysByTypes: function (conceptId, types) {
-    const keysReq = new messages.Thing.Keys.Req();
-    const conceptMethodReq = new messages.Method.Req();
+    const keysReq = new messages.Thing.Keys.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
     if (types.length) keysReq.setAttributetypesList(types.map(type => toGrpcConcept(type)));
-    conceptMethodReq.setThingKeysReq(keysReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    conceptMethodReq.setThingKeysIterReq(keysReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setAttribute: function (conceptId, attribute) {
     const thingHasReq = new messages.Thing.Relhas.Req();
@@ -384,17 +406,17 @@ const methods = {
 
   // Relation
   rolePlayersMap: function (conceptId) {
-    const rolePlayersMapReq = new messages.Relation.RolePlayersMap.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setRelationRoleplayersmapReq(rolePlayersMapReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const rolePlayersMapReq = new messages.Relation.RolePlayersMap.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setRelationRoleplayersmapIterReq(rolePlayersMapReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   rolePlayers: function (conceptId, roles) {
-    const rolePlayersReq = new messages.Relation.RolePlayers.Req();
+    const rolePlayersReq = new messages.Relation.RolePlayers.Iter.Req();
     if (roles.length) rolePlayersReq.setRolesList(roles.map(role => toGrpcConcept(role)))
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setRelationRoleplayersReq(rolePlayersReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setRelationRoleplayersIterReq(rolePlayersReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setRolePlayer: function (conceptId, role, thing) {
     const assignReq = new messages.Relation.Assign.Req();
@@ -421,10 +443,10 @@ const methods = {
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getOwners: function (conceptId) {
-    const attributeValueReq = new messages.Attribute.Owners.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setAttributeOwnersReq(attributeValueReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
+    const attributeValueReq = new messages.Attribute.Owners.Iter.Req();
+    const conceptMethodReq = new messages.Method.Iter.Req();
+    conceptMethodReq.setAttributeOwnersIterReq(attributeValueReq);
+    return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
 
   //Transaction methods
@@ -481,16 +503,6 @@ const methods = {
     txRequest.setPutattributetypeReq(putMessage);
     return txRequest;
   },
-  getAttributesByValue: function (value, dataType) {
-    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
-    const txRequest = new messages.Transaction.Req();
-    const valueObject = new messages.ValueObject();
-    const getAttributesReq = new messages.Transaction.GetAttributes.Req();
-    setAttributeValueObject(valueObject, dataType, value);
-    getAttributesReq.setValue(valueObject);
-    txRequest.setGetattributesReq(getAttributesReq);
-    return txRequest;
-  },
   openSession: function(keyspace, credentials) {
     const sessionRequest = new messages.Session.Open.Req();
     if (credentials) {
@@ -519,24 +531,43 @@ const methods = {
     txRequest.setCommitReq(commitMessage);
     return txRequest;
   },
-  executeQuery: function (query, options) {
+  iterOptions: function (batchSize) {
+    return IterOptions(batchSize)
+  },
+  txIter: function (iterReqMessage) {
     const txRequest = new messages.Transaction.Req();
-    const queryMessage = new messages.Transaction.Query.Req();
+    txRequest.setIterReq(iterReqMessage);
+    return txRequest;
+  },
+  continueIter: function (id, iterOptionsMessage) {
+    const iterMessage = new messages.Transaction.Iter.Req();
+    iterMessage.setOptions(iterOptionsMessage);
+    iterMessage.setIteratorid(id);
+    return iterMessage;
+  },
+  startQueryIter: function (query, options, iterOptionsMessage) {
+    const iterMessage = new messages.Transaction.Iter.Req();
+    iterMessage.setOptions(iterOptionsMessage);
+    const queryMessage = new messages.Transaction.Query.Iter.Req();
     queryMessage.setQuery(query);
     if (options) {
       if ('infer' in options) {
         queryMessage.setInfer(options.infer ? INFER_TRUE_MESSAGE : INFER_FALSE_MESSAGE);
       }
     }
-    txRequest.setQueryReq(queryMessage);
-    return txRequest;
+    iterMessage.setQueryIterReq(queryMessage);
+    return iterMessage;
   },
-  nextReq: function (iteratorId) {
-    const txRequest = new messages.Transaction.Req();
+  startGetAttributesByValueIter: function (value, dataType, iterOptionsMessage) {
+    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+    const valueObject = new messages.ValueObject();
+    const getAttributesReq = new messages.Transaction.GetAttributes.Iter.Req();
+    setAttributeValueObject(valueObject, dataType, value);
+    getAttributesReq.setValue(valueObject);
     const iterMessage = new messages.Transaction.Iter.Req();
-    iterMessage.setId(iteratorId);
-    txRequest.setIterateReq(iterMessage);
-    return txRequest;
+    iterMessage.setOptions(iterOptionsMessage);
+    iterMessage.setGetattributesIterReq(getAttributesReq);
+    return iterMessage;
   },
   explanation: function (grpcConceptMap) {
     const txRequest = new messages.Transaction.Req();
