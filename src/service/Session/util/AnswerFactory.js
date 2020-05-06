@@ -17,6 +17,8 @@
  * under the License.
  */
 
+ const ConceptFactory = require('../concept/ConceptFactory');
+
 /**
  * Factory for Answer and Explanation objects
  * @param {Object} conceptFactory
@@ -49,7 +51,7 @@ AnswerFactory.prototype.createConceptmap = function (answer) {
     const answerMap = new Map();
     
     answer.getMapMap().forEach((grpcConcept, key) => {
-        answerMap.set(key, this.conceptFactory.createConcept(grpcConcept));
+        answerMap.set(key, ConceptFactory.createLocalConcept(grpcConcept));
     });
 
 

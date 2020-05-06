@@ -29,32 +29,30 @@ const keyspaceServices = require("../grpc/nodejs/protocol/keyspace/Keyspace_grpc
  * It allows to:
  * - execute operations on keyspaces
  * - obtain a new Session bound to a specific keyspace
- * 
+ *
  * @param {String} uri String containing host address and gRPC port of a running Grakn instance, e.g. "localhost:48555"
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function GraknClient(uri, credentials) {
-    // Open grpc node clients. A grpc node client is composed of stub + channel. 
-    // When creating clients to the same uri, the channel will be automatically shared.
-    const sessionClient = new sessionServices.SessionServiceClient(uri, grpc.credentials.createInsecure());
-    const keyspaceClient = new keyspaceServices.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
-
-    const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
-
-    this.session = async (keyspace) => { 
-        const session = new Session(sessionClient);
-        await session.open(keyspace, credentials);
-        return session;
-    };
-
-    this.keyspaces = () => ({
-        delete: (keyspace) => keyspaceService.delete(keyspace),
-        retrieve: () => keyspaceService.retrieve()
-    });
-
-    this.close = () => {
-        grpc.closeClient(sessionClient);
-        grpc.closeClient(keyspaceClient);
+class GraknClient {
+    constructor(uri, credentials) {
+        // Open grpc node clients. A grpc node client is composed of stub + channel. 
+        // When creating clients to the same uri, the channel will be automatically shared.
+        const sessionClient = new sessionServices.SessionServiceClient(uri, grpc.credentials.createInsecure());
+        const keyspaceClient = new keyspaceServices.KeyspaceServiceClient(uri, grpc.credentials.createInsecure());
+        const keyspaceService = new KeyspaceService(keyspaceClient, credentials);
+        this.session = async (keyspace) => {
+            const session = new Session(sessionClient);
+            await session.open(keyspace, credentials);
+            return session;
+        };
+        this.keyspaces = () => ({
+            delete: (keyspace) => keyspaceService.delete(keyspace),
+            retrieve: () => keyspaceService.retrieve()
+        });
+        this.close = () => {
+            grpc.closeClient(sessionClient);
+            grpc.closeClient(keyspaceClient);
+        };
     }
 }
 

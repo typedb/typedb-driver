@@ -72,7 +72,8 @@ class Iterator {
 
   async _nextBatch(iterRequest) {
     this._iterator = await this._communicator.iterateUntil(RequestBuilder.txIter(iterRequest), (res) => {
-      return res.getIterRes().getDone() == true;
+      const iterRes = res.getIterRes();
+      return (iterRes.getDone() == true) || (iterRes.getIteratorid() > 0);
     });
   }
 

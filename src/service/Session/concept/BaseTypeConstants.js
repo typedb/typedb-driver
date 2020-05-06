@@ -17,6 +17,8 @@
  * under the License.
  */
 
+const ConceptGrpcMessages = require("../../../../grpc/nodejs/protocol/session/Concept_pb");
+
 const META_TYPE = "META_TYPE";
 const ATTRIBUTE_TYPE = "ATTRIBUTE_TYPE";
 const RELATION_TYPE = "RELATION_TYPE";
@@ -30,6 +32,21 @@ const RULE = "RULE";
 const SCHEMA_CONCEPTS = new Set([RULE, ROLE, ATTRIBUTE_TYPE, RELATION_TYPE, ENTITY_TYPE]);
 const TYPES = new Set([ATTRIBUTE_TYPE, RELATION_TYPE, ENTITY_TYPE]);
 const THINGS = new Set([ATTRIBUTE, RELATION, ATTRIBUTE, ENTITY]);
+
+function fromGrpcConcept(grpcConcept) {
+    switch (grpcConcept.getBasetype()) {
+        case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY: return ENTITY;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION: return RELATION;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE: return ATTRIBUTE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.ENTITY_TYPE: return ENTITY_TYPE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.RELATION_TYPE: return RELATION_TYPE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.ATTRIBUTE_TYPE: return ATTRIBUTE_TYPE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.ROLE: return ROLE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.RULE: return RULE;
+        case ConceptGrpcMessages.Concept.BASE_TYPE.META_TYPE: return META_TYPE;
+        default: throw "BaseType not recognised.";
+    }
+}
 
 module.exports = {
     baseType: {
@@ -45,5 +62,6 @@ module.exports = {
     },
     set: {
         SCHEMA_CONCEPTS, TYPES, THINGS
-    }
+    },
+    fromGrpcConcept
 };

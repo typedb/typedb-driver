@@ -46,7 +46,7 @@ describe("Role methods", () => {
         const concepts = (await result.collectConcepts());
         const role = concepts[0];
         expect(role.baseType).toBe('ROLE');
-        const rels = await (await role.relations()).collect();
+        const rels = await (await role.asRemote(tx).relations()).collect();
         expect(rels[0].baseType).toBe('RELATION_TYPE');
         expect(await rels[0].label()).toBe('parentship');
     });
@@ -58,7 +58,7 @@ describe("Role methods", () => {
         const concepts = (await result.collectConcepts());
         const role = concepts[0];
         expect(role.baseType).toBe('ROLE');
-        const types = await (await role.players()).collect();
+        const types = await (await role.asRemote(tx).players()).collect();
         expect(types[0].baseType).toBe('ENTITY_TYPE');
         expect(await types[0].label()).toBe('person');
     });

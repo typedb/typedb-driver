@@ -26,10 +26,11 @@ let tx;
 
 beforeAll(async () => {
   await env.startGraknServer();
-  session = await env.session();
+  session = await env.sessionForKeyspace('gene');
 }, env.beforeAllTimeout);
 
 afterAll(async () => {
+  await session.close();
   await env.tearDown();
 });
 
@@ -37,20 +38,40 @@ beforeEach(async () => {
   tx = await session.transaction().write();
 })
 
-afterEach(() => {
+afterEach(async () => {
+  await tx.query('match $x isa thing; delete $x;');
   tx.close();
 });
 
 describe("Query methods", () => {
   it("delete query response type should be Void", async () => {
-    const localSession = await env.sessionForKeyspace('gene');
-    let localTx = await localSession.transaction().write();
-    await localTx.query('insert $x isa person, has identifier "a";');
-    const iterator = await localTx.query('match $x isa person, has identifier "a"; delete $x;');
+    await tx.query('insert $x isa person, has identifier "a";');
+    const iterator = await tx.query('match $x isa person, has identifier "a"; delete $x;');
     const response = await iterator.next();
     expect(response.message()).toEqual("Delete successful.");
-    await localTx.close();
-    await localSession.close();
-    await env.graknClient.keyspaces().delete('gene');
   });
+
+  it("returned concepts should have local values", async () => {
+    await tx.query('insert $x isa person, has identifier "a";');
+    const iterator = await tx.query('match $y isa person, has identifier $x; get $x;');
+    const response = await iterator.next();
+    const id = response.get('x');
+    expect(id.value()).toEqual('a');
+    expect(id.dataType()).toEqual('String');
+    expect(id.type().label()).toEqual('identifier');
+    expect(id.isInferred()).toEqual(false);
+    expect(id.type().isImplicit()).toEqual(false);
+  })
+
+  it("works with a query greater than the batch size", async () => {
+    inserts = ['insert'];
+    for (let i = 1; i <= 128; ++i) {
+      inserts.push(`\$p${i} isa person, has identifier "${i}";`);
+    }
+    await tx.query(inserts.join(' '));
+
+    const iterator = await tx.query('match $x isa person; get $x;');
+    const results = await iterator.collect();
+    expect(results.length).toEqual(128);
+  })
 });

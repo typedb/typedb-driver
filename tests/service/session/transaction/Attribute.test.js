@@ -53,7 +53,7 @@ describe("Attribute methods", () => {
         const iterator = await tx.query("insert $x isa person, has birth-date 2018-08-06;");
         const concepts = (await iterator.collectConcepts());
         const person = concepts[0];
-        const attrs = await person.attributes();
+        const attrs = await person.asRemote(tx).attributes();
         const date = await attrs.next();
         const value = await date.value();
         expect(value instanceof Date).toBeTruthy();

@@ -32,46 +32,44 @@ const txType = {
 /**
  * Session object that can be used to:
  *  - create a new Transaction
- * 
+ *
  * @param {Object} grpcClient grpc node client (session stub + channel)
  * @param {Object} credentials Optional object containing user credentials - only used when connecting to a KGMS instance
  */
-function Session(grpcClient) {
-  this.sessionService = new SessionService(grpcClient);
-}
-
-/**
- * Open a new Session on the server side
- * @param {String} keyspace Grakn keyspace to which this sessions should be bound to
- */
-Session.prototype.open = function(keyspace, credentials){
-  return this.sessionService.open(keyspace, credentials);
-}
-
-/**
- * Create new Transaction, which is already open and ready to be used.
- * @param {Grakn.txType} txType Type of transaction to open READ, WRITE or BATCH
- * @returns {Transaction}
- */
-Session.prototype.transaction = function () {
-  return {
-    read: async () => {
-      const transactionService = await this.sessionService.transaction(txType.READ).catch(e => { throw e; });
-      return new Transaction(transactionService);
-    },
-    write: async () => {
-      const transactionService = await this.sessionService.transaction(txType.WRITE).catch(e => { throw e; });
-      return new Transaction(transactionService);
-    }
+class Session {
+  constructor(grpcClient) {
+    this.sessionService = new SessionService(grpcClient);
   }
-  
-}
-
-/**
- * Close stream connected to gRPC server
- */
-Session.prototype.close = function close() {
-  return this.sessionService.close();
+  /**
+   * Open a new Session on the server side
+   * @param {String} keyspace Grakn keyspace to which this sessions should be bound to
+   */
+  open(keyspace, credentials) {
+    return this.sessionService.open(keyspace, credentials);
+  }
+  /**
+   * Create new Transaction, which is already open and ready to be used.
+   * @param {Grakn.txType} txType Type of transaction to open READ, WRITE or BATCH
+   * @returns {Transaction}
+   */
+  transaction() {
+    return {
+      read: async () => {
+        const transactionService = await this.sessionService.transaction(txType.READ).catch(e => { throw e; });
+        return new Transaction(transactionService);
+      },
+      write: async () => {
+        const transactionService = await this.sessionService.transaction(txType.WRITE).catch(e => { throw e; });
+        return new Transaction(transactionService);
+      }
+    };
+  }
+  /**
+   * Close stream connected to gRPC server
+   */
+  close() {
+    return this.sessionService.close();
+  }
 }
 
 module.exports = Session;

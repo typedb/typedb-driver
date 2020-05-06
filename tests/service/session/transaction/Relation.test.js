@@ -53,7 +53,7 @@ describe("Relation methods", () => {
         const map = await relation.rolePlayersMap();
         expect(map.size).toBe(2);
         Array.from(map.keys()).forEach(key => { expect(key.isRole()).toBeTruthy(); });
-        Array.from(map.values()).forEach(set => { expect(Array.from(set).length).toBe(1); });
+        Array.from(map.values()).forEach(array => { expect(array.length).toBe(1); });
         const rolePlayers = await (await relation.rolePlayers()).collect();
         expect(rolePlayers.length).toBe(2);
     });
@@ -70,9 +70,26 @@ describe("Relation methods", () => {
         const map = await relation.rolePlayersMap();
         expect(map.size).toBe(1);
         Array.from(map.keys()).forEach(key => { expect(key.isRole()).toBeTruthy(); });
-        Array.from(map.values()).forEach(set => { expect(Array.from(set).length).toBe(2); });
+        Array.from(map.values()).forEach(array => { expect(array.length).toBe(2); });
         const rolePlayers = await (await relation.rolePlayers()).collect();
         expect(rolePlayers.length).toBe(2);
+    });
+
+    it("rolePlayersMap && rolePlayers with 1 duplicate role played", async () => {
+        const relationType = await tx.putRelationType('parenthood');
+        const relation = await relationType.create();
+        const parentRole = await tx.putRole('parent');
+        const personType = await tx.putEntityType('person');
+        const parent = await personType.create();
+        await relation.assign(parentRole, parent);
+        await relation.assign(parentRole, parent);
+        const map = await relation.rolePlayersMap();
+        expect(map.size).toBe(1);
+        Array.from(map.keys()).forEach(key => { expect(key.isRole()).toBeTruthy(); });
+        Array.from(map.values()).forEach(array => { expect(array.length).toBe(2); });
+        const rolePlayers = await (await relation.rolePlayers()).collect();
+        expect(rolePlayers.length).toBe(2);
+        expect((new Set(rolePlayers)).size == 1); // duplicate RP expected
     });
 
     it("rolePlayersMap && rolePlayers with 2 roles with the same player", async () => {
@@ -87,7 +104,7 @@ describe("Relation methods", () => {
         const map = await relation.rolePlayersMap();
         expect(map.size).toBe(2);
         Array.from(map.keys()).forEach(key => { expect(key.isRole()).toBeTruthy(); });
-        Array.from(map.values()).forEach(set => { expect(Array.from(set).length).toBe(1); });
+        Array.from(map.values()).forEach(array => { expect(array.length).toBe(1); });
         const rolePlayers = await (await relation.rolePlayers()).collect();
         expect(rolePlayers.length).toBe(2);
         expect(rolePlayers[0].isThing()).toBeTruthy();
