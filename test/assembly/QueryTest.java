@@ -81,16 +81,6 @@ public class QueryTest {
     private static GraknClient graknClient;
 
     @BeforeClass
-    public static void graknStart() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup(graknType, graknDistributionFile);
-    }
-
-    @AfterClass
-    public static void graknStop() throws InterruptedException, TimeoutException, IOException {
-        GraknSetup.shutdown(graknType);
-    }
-
-    @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
