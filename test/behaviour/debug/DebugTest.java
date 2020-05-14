@@ -26,6 +26,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -60,13 +61,17 @@ public class DebugTest {
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
+    private static final String[] args = System.getProperty("sun.java.command").split(" ");
+    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
+    private static final File graknDistributionFile = new File(args[2]);
+
     @BeforeClass
     public static void graknStart() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
+        GraknSetup.bootup(graknType, graknDistributionFile);
     }
 
     @AfterClass
     public static void graknStop() throws InterruptedException, TimeoutException, IOException {
-        GraknSetup.shutdown();
+        GraknSetup.shutdown(graknType);
     }
 }

@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -73,12 +74,25 @@ import static org.hamcrest.Matchers.hasSize;
  */
 @SuppressWarnings("Duplicates")
 public class QueryTest {
-    private static Logger LOG = LoggerFactory.getLogger(QueryTest.class);
+    private static final String[] args = System.getProperty("sun.java.command").split(" ");
+    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
+    private static final File graknDistributionFile = new File(args[2]);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknClient graknClient;
 
     @BeforeClass
+    public static void graknStart() throws InterruptedException, IOException, TimeoutException {
+        GraknSetup.bootup(graknType, graknDistributionFile);
+    }
+
+    @AfterClass
+    public static void graknStop() throws InterruptedException, TimeoutException, IOException {
+        GraknSetup.shutdown(graknType);
+    }
+
+    @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
+        GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         graknClient = new GraknClient(address);
     }
@@ -86,7 +100,7 @@ public class QueryTest {
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
-        GraknSetup.shutdown();
+        GraknSetup.shutdown(graknType);
     }
 
     @Before

@@ -19,29 +19,49 @@
 
 package grakn.client.test.setup;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.fail;
 
 public class GraknSetup {
-    private static final String[] args = System.getProperty("sun.java.command").split(" ");
-    private static final String graknType = args[1];
 
-    public static void bootup() throws InterruptedException, TimeoutException, IOException {
-        if (graknType.equals(GraknProperties.GRAKN_CORE)) {
-            String distributionFile = args[2];
+    public enum GraknType {
+        GRAKN_CORE("grakn-core"),
+        GRAKN_KGMS("grakn-kgms");
+
+        private final String name;
+
+        GraknType(String name) {
+            this.name = name;
+        }
+
+        public static GraknType of(String name) {
+            for (GraknType t : GraknType.values()) {
+                if (t.name.equals(name)) {
+                    return t;
+                }
+            }
+            throw new IllegalArgumentException("Unrecognised Grakn Type: " + name);
+        }
+    }
+    public static void bootup(GraknType type, File distributionFile) throws InterruptedException, TimeoutException, IOException {
+        if (type.equals(GraknType.GRAKN_CORE)) {
             GraknSetupCore.bootup(distributionFile);
-        } else if (graknType.equals(GraknProperties.GRAKN_KGMS)) {
+        } else if (type.equals(GraknType.GRAKN_KGMS)) {
             GraknSetupKGMS.setEnvironmentProperties();
         } else {
-            fail("Invalid Grakn Type argument provided: " + graknType);
+            fail("Invalid Grakn Type argument provided: " + type);
         }
     }
 
-    public static void shutdown() throws InterruptedException, IOException, TimeoutException {
-        if (graknType.equals(GraknProperties.GRAKN_CORE)) {
+    public static void shutdown(GraknType graknType) throws InterruptedException, IOException, TimeoutException {
+        if (graknType.equals(GraknType.GRAKN_CORE)) {
             GraknSetupCore.shutdown();
+        } else {
+            // TODO implement this for Grakn KGMS
+            throw new UnsupportedOperationException("GraknSetup.shutdown() does not yet support Grakn KGMS");
         }
     }
 }

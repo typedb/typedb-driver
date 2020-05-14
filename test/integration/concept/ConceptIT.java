@@ -44,6 +44,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,6 +71,9 @@ import static org.junit.Assert.fail;
  */
 public class ConceptIT {
 
+    private static final String[] args = System.getProperty("sun.java.command").split(" ");
+    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
+    private static final File graknDistributionFile = new File(args[2]);
     private static GraknClient client;
     private static GraknClient.Session session;
     private GraknClient.Transaction tx;
@@ -142,7 +146,7 @@ public class ConceptIT {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
+        GraknSetup.bootup(graknType, graknDistributionFile);
 
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
@@ -154,7 +158,7 @@ public class ConceptIT {
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         session.close();
         client.close();
-        GraknSetup.shutdown();
+        GraknSetup.shutdown(graknType);
     }
 
     @Before

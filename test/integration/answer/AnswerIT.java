@@ -30,6 +30,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -44,11 +45,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class AnswerIT {
 
+    private static final String[] args = System.getProperty("sun.java.command").split(" ");
+    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
+    private static final File graknDistributionFile = new File(args[2]);
     private static GraknClient client;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
+        GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         client = new GraknClient(address);
     }
@@ -56,7 +60,7 @@ public class AnswerIT {
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         client.close();
-        GraknSetup.shutdown();
+        GraknSetup.shutdown(graknType);
     }
 
 

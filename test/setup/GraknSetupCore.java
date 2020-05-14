@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.ProcessResult;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,19 +42,19 @@ public class GraknSetupCore {
     private static final String TAR = ".tar.gz";
     private static final String ZIP = ".zip";
     private static GraknSetupCore graknRunner;
-    private Path GRAKN_DISTRIBUTION_FILE;
+    private File GRAKN_DISTRIBUTION_FILE;
     private Path GRAKN_TARGET_DIRECTORY;
     private String GRAKN_DISTRIBUTION_FORMAT;
     private ProcessExecutor executor;
     private Properties properties;
 
-    private GraknSetupCore(String distributionFile) throws InterruptedException, TimeoutException, IOException {
+    private GraknSetupCore(File distributionFile) throws InterruptedException, TimeoutException, IOException {
         System.out.println("Constructing a Grakn Core runner");
 
         distributionFormat(distributionFile);
 
+        GRAKN_DISTRIBUTION_FILE = distributionFile;
         GRAKN_DISTRIBUTION_FORMAT = distributionFormat(distributionFile);
-        GRAKN_DISTRIBUTION_FILE = Paths.get(distributionFile);
         GRAKN_TARGET_DIRECTORY = distributionTarget(distributionFile);
 
         this.executor = new ProcessExecutor()
@@ -69,7 +70,7 @@ public class GraknSetupCore {
         System.out.println("Grakn Core runner constructed");
     }
 
-    public static void bootup(String distributionFile) throws InterruptedException, IOException, TimeoutException {
+    public static void bootup(File distributionFile) throws InterruptedException, IOException, TimeoutException {
         checkAndDeleteExistingDistribution(distributionFile);
         try {
             graknRunner = new GraknSetupCore(distributionFile);
@@ -95,10 +96,10 @@ public class GraknSetupCore {
         }
     }
 
-    private static String distributionFormat(String distributionFile) {
-        if (distributionFile.endsWith(TAR)) {
+    private static String distributionFormat(File distributionFile) {
+        if (distributionFile.toString().endsWith(TAR)) {
             return TAR;
-        } else if (distributionFile.endsWith(ZIP)) {
+        } else if (distributionFile.toString().endsWith(ZIP)) {
             return ZIP;
         } else {
             fail(String.format("Distribution file format should either be %s or %s", TAR, ZIP));
@@ -106,14 +107,14 @@ public class GraknSetupCore {
         return "";
     }
 
-    private static Path distributionTarget(String distributionFile) {
+    private static Path distributionTarget(File distributionFile) {
         String format = distributionFormat(distributionFile);
-        return Paths.get(distributionFile.replaceAll(
+        return Paths.get(distributionFile.toString().replaceAll(
                 format.replace(".", "\\."), ""
         ));
     }
 
-    private static void checkAndDeleteExistingDistribution(String distributionFile) throws IOException {
+    private static void checkAndDeleteExistingDistribution(File distributionFile) throws IOException {
         Path target = distributionTarget(distributionFile);
         System.out.println("Checking for existing Grakn distribution at " + target.toAbsolutePath().toString());
         if (target.toFile().exists()) {
