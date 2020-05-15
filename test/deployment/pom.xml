@@ -13,11 +13,6 @@
             <name>repo.grakn.ai</name>
             <url>http://repo.grakn.ai/repository/maven/</url>
         </repository>
-        <repository>
-            <id>repo.grakn.ai.snapshot</id>
-            <name>repo.grakn.ai</name>
-            <url>http://repo.grakn.ai/repository/maven-snapshot/</url>
-        </repository>
     </repositories>
     <dependencies>
         <dependency>
