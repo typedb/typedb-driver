@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
@@ -641,5 +642,11 @@ public class ConceptIT {
         } catch (GraknConceptException ignored) {
             assertTrue(true);
         }
+    }
+
+    @Test
+    public void subtypes() {
+        List<Concept<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs().collect(Collectors.toList());
+        subs.forEach(System.out::println);
     }
 }

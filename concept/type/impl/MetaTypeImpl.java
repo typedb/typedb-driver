@@ -60,8 +60,8 @@ public class MetaTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final MetaType.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other) {
-            return (MetaType.Remote<SomeRemoteType, SomeRemoteThing>) other.asMetaType();
+        protected final Type.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other) {
+            return (Type.Remote<SomeRemoteType, SomeRemoteThing>) other.asType();
         }
 
         @Override
