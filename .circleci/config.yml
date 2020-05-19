@@ -98,8 +98,8 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run-bazel-rbe:
-          command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
+#      - run-bazel-rbe:
+#          command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
       - run-bazel-rbe:
