@@ -79,6 +79,15 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/integration/answer:answer-it --test_output=errors
 
+  test-integration-tracing:
+    machine: true
+    working_directory: ~/client-java
+    steps:
+      - install-bazel-linux-rbe
+      - checkout
+      - run-bazel-rbe:
+          command: bazel test //test/integration/tracing:tracing-it --test_output=errors
+
   test-behaviour-connection:
     machine: true
     working_directory: ~/client-java
@@ -240,6 +249,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
+      - test-integration-tracing:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - test-behaviour-connection:
           filters:
             branches:
@@ -266,6 +279,7 @@ workflows:
             - test-assembly-query
             - test-integration-concept
             - test-integration-answer
+            - test-integration-tracing
             - test-behaviour-connection
             - test-behaviour-graql-language
             - test-behaviour-graql-reasoner
