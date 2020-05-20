@@ -72,7 +72,7 @@ public class TracingIT {
                             "name sub attribute, datatype string;\n" +
                             "person sub entity, has name;").asDefine());
 
-                    tx.execute(Graql.parse("insert $x isa person, has name \"bob\"").asInsert());
+                    tx.execute(Graql.parse("insert $x isa person, has name \"bob\";").asInsert());
 
                     Stream<ConceptMap> answers = tx.stream(Graql.parse("match $x isa person, has name \"bob\"; get $x;").asGet());
 
