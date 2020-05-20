@@ -32,7 +32,7 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.DataType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
@@ -801,12 +801,12 @@ public class GraknClient implements AutoCloseable {
             return Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType(), this).asEntityType();
         }
 
-        public <V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType) {
-            return putAttributeType(Label.of(label), valueType);
+        public <V> AttributeType.Remote<V> putAttributeType(String label, DataType<V> dataType) {
+            return putAttributeType(Label.of(label), dataType);
         }
         @SuppressWarnings("unchecked")
-        public <V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType) {
-            return (AttributeType.Remote<V>) Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
+        public <V> AttributeType.Remote<V> putAttributeType(Label label, DataType<V> dataType) {
+            return (AttributeType.Remote<V>) Concept.Remote.of(sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, dataType))
                     .getPutAttributeTypeRes().getAttributeType(), this).asAttributeType();
         }
 
