@@ -97,6 +97,23 @@ public class GraqlSteps {
         tx = session.transaction().write();
     }
 
+    @Given("graql define throws")
+    public void graql_define_throws(String defineQueryStatements) {
+        GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
+        boolean threw = false;
+        try {
+            tx.execute(graqlQuery);
+            tx.commit();
+        } catch (RuntimeException e) {
+            threw = true;
+        } finally {
+            tx.close();
+            tx = session.transaction().write();
+        }
+
+        assertTrue(threw);
+    }
+
     @Given("graql undefine")
     public void graql_undefine(String undefineQueryStatements) {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
