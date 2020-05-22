@@ -99,9 +99,9 @@ public class GraqlSteps {
 
     @Given("graql define throws")
     public void graql_define_throws(String defineQueryStatements) {
-        GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
         boolean threw = false;
         try {
+            GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
             tx.execute(graqlQuery);
             tx.commit();
         } catch (RuntimeException e) {
