@@ -32,18 +32,18 @@ import java.time.ZoneId;
  *
  * @param <D> The data type.
  */
-public class DataType<D> {
-    public static final DataType<Boolean> BOOLEAN = new DataType<>(Boolean.class);
-    public static final DataType<LocalDateTime> DATE = new DataType<>(LocalDateTime.class);
-    public static final DataType<Double> DOUBLE = new DataType<>(Double.class);
-    public static final DataType<Float> FLOAT = new DataType<>(Float.class);
-    public static final DataType<Integer> INTEGER = new DataType<>(Integer.class);
-    public static final DataType<Long> LONG = new DataType<>(Long.class);
-    public static final DataType<String> STRING = new DataType<>(String.class);
+public class ValueType<D> {
+    public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean.class);
+    public static final ValueType<LocalDateTime> DATE = new ValueType<>(LocalDateTime.class);
+    public static final ValueType<Double> DOUBLE = new ValueType<>(Double.class);
+    public static final ValueType<Float> FLOAT = new ValueType<>(Float.class);
+    public static final ValueType<Integer> INTEGER = new ValueType<>(Integer.class);
+    public static final ValueType<Long> LONG = new ValueType<>(Long.class);
+    public static final ValueType<String> STRING = new ValueType<>(String.class);
 
     private final Class<D> valueClass;
 
-    private DataType(Class<D> valueClass) {
+    private ValueType(Class<D> valueClass) {
         this.valueClass = valueClass;
     }
 
@@ -67,7 +67,7 @@ public class DataType<D> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DataType<?> that = (DataType<?>) o;
+        ValueType<?> that = (ValueType<?>) o;
 
         return (this.valueClass().equals(that.valueClass()));
     }

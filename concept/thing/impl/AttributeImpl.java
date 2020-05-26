@@ -22,7 +22,7 @@ package grakn.client.concept.thing.impl;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.DataType;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -30,7 +30,7 @@ import grakn.protocol.session.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.concept.DataType.staticCastValue;
+import static grakn.client.concept.ValueType.staticCastValue;
 
 public class AttributeImpl {
     /**
@@ -44,7 +44,7 @@ public class AttributeImpl {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
-            this.value = DataType.staticCastValue(concept.getValueRes().getValue());
+            this.value = ValueType.staticCastValue(concept.getValueRes().getValue());
         }
 
         @Override
@@ -53,7 +53,7 @@ public class AttributeImpl {
         }
 
         @Override
-        public final DataType<D> valueType() {
+        public final ValueType<D> valueType() {
             return type().valueType();
         }
     }
@@ -86,7 +86,7 @@ public class AttributeImpl {
         }
 
         @Override
-        public final DataType<D> valueType() {
+        public final ValueType<D> valueType() {
             return type().valueType();
         }
 
