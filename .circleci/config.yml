@@ -268,7 +268,7 @@ workflows:
             - test-integration-answer
             - test-behaviour-connection
             - test-behaviour-graql-language
-            - test-behaviour-graql-reasoner
+#            - test-behaviour-graql-reasoner
       - test-deployment-maven:
           filters:
             branches:
