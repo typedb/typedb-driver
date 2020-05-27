@@ -22,7 +22,7 @@ package grakn.client.concept.type.impl;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.DataType;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
@@ -42,17 +42,17 @@ public class AttributeTypeImpl {
      */
     public static class Local<D> extends TypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
 
-        private final DataType<D> dataType;
+        private final ValueType<D> valueType;
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
-            this.dataType = RequestBuilder.ConceptMessage.valueType(concept.getValueTypeRes().getValueType());
+            this.valueType = RequestBuilder.ConceptMessage.valueType(concept.getValueTypeRes().getValueType());
         }
 
         @Override
         @Nullable
-        public DataType<D> valueType() {
-            return dataType;
+        public ValueType<D> valueType() {
+            return valueType;
         }
     }
 
@@ -158,7 +158,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public final DataType<D> valueType() {
+        public final ValueType<D> valueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeValueTypeReq(ConceptProto.AttributeType.ValueType.Req.getDefaultInstance()).build();
 
