@@ -69,7 +69,7 @@ public class TracingIT {
             try (GraknClient.Session session = client.session("test_tracing")) {
                 try (GraknClient.Transaction tx = session.transaction().write()) {
                     tx.execute(Graql.parse("define\n" +
-                            "name sub attribute, datatype string;\n" +
+                            "name sub attribute, value string;\n" +
                             "person sub entity, has name;").asDefine());
 
                     tx.execute(Graql.parse("insert $x isa person, has name \"bob\";").asInsert());

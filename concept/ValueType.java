@@ -34,7 +34,7 @@ import java.time.ZoneId;
  */
 public class ValueType<D> {
     public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean.class);
-    public static final ValueType<LocalDateTime> DATE = new ValueType<>(LocalDateTime.class);
+    public static final ValueType<LocalDateTime> DATETIME = new ValueType<>(LocalDateTime.class);
     public static final ValueType<Double> DOUBLE = new ValueType<>(Double.class);
     public static final ValueType<Float> FLOAT = new ValueType<>(Float.class);
     public static final ValueType<Integer> INTEGER = new ValueType<>(Integer.class);

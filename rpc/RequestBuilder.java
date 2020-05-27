@@ -229,7 +229,7 @@ public class RequestBuilder {
                 case DOUBLE:
                     return (ValueType<D>) ValueType.DOUBLE;
                 case DATE:
-                    return (ValueType<D>) ValueType.DATE;
+                    return (ValueType<D>) ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + valueType);
@@ -249,8 +249,8 @@ public class RequestBuilder {
                 return ConceptProto.AttributeType.VALUE_TYPE.FLOAT;
             } else if (valueType.equals(ValueType.DOUBLE)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
-            } else if (valueType.equals(ValueType.DATE)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.DATE;
+            } else if (valueType.equals(ValueType.DATETIME)) {
+                return ConceptProto.AttributeType.VALUE_TYPE.DATE; // TODO update in protocol
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
             }
