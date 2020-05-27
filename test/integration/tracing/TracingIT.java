@@ -22,6 +22,8 @@ package grakn.client.test.integration.tracing;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadContext;
 import grakn.client.GraknClient;
+import grakn.client.Session;
+import grakn.client.Transaction;
 import grakn.client.answer.ConceptMap;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
@@ -53,7 +55,7 @@ public class TracingIT {
         openGlobalAnalysis("owner", "repo", "commit");
         GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        client = new GraknClient(address);
+        client = GraknClient.open(address);
     }
 
     @AfterClass
@@ -66,8 +68,8 @@ public class TracingIT {
     @Test
     public void testWithTracing() {
         try (ThreadContext ignored = contextOnThread("tracker", 1)) {
-            try (GraknClient.Session session = client.session("test_tracing")) {
-                try (GraknClient.Transaction tx = session.transaction().write()) {
+            try (Session session = client.session("test_tracing")) {
+                try (Transaction tx = session.transaction().write()) {
                     tx.execute(Graql.parse("define\n" +
                             "name sub attribute, datatype string;\n" +
                             "person sub entity, has name;").asDefine());

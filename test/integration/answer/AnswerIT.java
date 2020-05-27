@@ -20,6 +20,8 @@
 package grakn.client.test.integration.answer;
 
 import grakn.client.GraknClient;
+import grakn.client.Session;
+import grakn.client.Transaction;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
 import grakn.client.test.setup.GraknProperties;
@@ -54,7 +56,7 @@ public class AnswerIT {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        client = new GraknClient(address);
+        client = GraknClient.open(address);
     }
 
     @AfterClass
@@ -66,8 +68,8 @@ public class AnswerIT {
 
     @Test
     public void testExplanation() {
-        GraknClient.Session session = client.session("test_rules");
-        GraknClient.Transaction tx = session.transaction().write();
+        Session session = client.session("test_rules");
+        Transaction tx = session.transaction().write();
         tx.execute(Graql.parse(" define\n" +
                 "                    object sub entity, plays owned, plays owner;\n" +
                 "                    ownership sub relation, relates owned, relates owner;\n" +

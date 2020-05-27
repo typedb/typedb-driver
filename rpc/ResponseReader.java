@@ -19,7 +19,7 @@
 
 package grakn.client.rpc;
 
-import grakn.client.GraknClient;
+import grakn.client.Transaction;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
@@ -55,7 +55,7 @@ import static java.util.stream.Collectors.toSet;
 public class ResponseReader {
 
     @SuppressWarnings("unchecked")
-    public static <T extends Answer> T answer(AnswerProto.Answer res, GraknClient.Transaction tx) {
+    public static <T extends Answer> T answer(AnswerProto.Answer res, Transaction tx) {
         switch (res.getAnswerCase()) {
             case ANSWERGROUP:
                 return (T) answerGroup(res.getAnswerGroup(), tx);
@@ -77,7 +77,7 @@ public class ResponseReader {
         }
     }
 
-    public static Explanation explanation(AnswerProto.Explanation.Res res, GraknClient.Transaction tx) {
+    public static Explanation explanation(AnswerProto.Explanation.Res res, Transaction tx) {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
@@ -85,14 +85,14 @@ public class ResponseReader {
         return new Explanation(answers, rule);
     }
 
-    private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
+    private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, Transaction tx) {
         return new AnswerGroup<>(
                 Concept.Remote.of(res.getOwner(), tx),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
 
-    private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
+    private static ConceptMap conceptMap(AnswerProto.ConceptMap res, Transaction tx) {
         Map<Variable, Concept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(new Variable(resVar), Concept.Local.of(resConcept))

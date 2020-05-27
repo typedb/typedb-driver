@@ -20,7 +20,8 @@
 package grakn.client.test.behaviour.graql;
 
 import com.google.common.collect.Iterators;
-import grakn.client.GraknClient;
+import grakn.client.Session;
+import grakn.client.Transaction;
 import grakn.client.answer.Answer;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
@@ -44,7 +45,6 @@ import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,8 +63,8 @@ import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
-    private static GraknClient.Session session = null;
-    private static GraknClient.Transaction tx = null;
+    private static Session session = null;
+    private static Transaction tx = null;
 
     private static List<ConceptMap> answers;
     HashMap<String, UniquenessCheck> identifierChecks = new HashMap<>();

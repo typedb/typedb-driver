@@ -18,6 +18,8 @@
 package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
+import grakn.client.Session;
+import grakn.client.Transaction;
 import grakn.client.answer.ConceptMap;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
@@ -84,7 +86,7 @@ public class QueryTest {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         GraknSetup.bootup(graknType, graknDistributionFile);
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        graknClient = new GraknClient(address);
+        graknClient = GraknClient.open(address);
     }
 
     @AfterClass
@@ -96,7 +98,7 @@ public class QueryTest {
     @Before
     public void createClient() {
         String host = "localhost:48555";
-        graknClient = new GraknClient(host);
+        graknClient = GraknClient.open(host);
     }
 
     @After
@@ -259,10 +261,10 @@ public class QueryTest {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<GraknClient.Transaction> fn) {
+    private void localhostGraknTx(Consumer<Transaction> fn) {
         String keyspace = "grakn";
-        try (GraknClient.Session session = graknClient.session(keyspace)) {
-            try (GraknClient.Transaction transaction = session.transaction().write()) {
+        try (Session session = graknClient.session(keyspace)) {
+            try (Transaction transaction = session.transaction().write()) {
                 fn.accept(transaction);
             }
         }

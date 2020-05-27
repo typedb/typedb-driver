@@ -34,7 +34,7 @@ java_library(
         "exception/*.java",
         "rpc/*.java",
         "test/*.java",
-        "GraknClient.java"
+        "*.java"
     ]),
     deps = [
         # External dependencies from @graknlabs

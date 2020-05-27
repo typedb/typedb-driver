@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.GraknClient;
+import grakn.client.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.exception.GraknClientException;
@@ -44,10 +44,10 @@ public class ConceptMap implements Answer {
 
     private final Map<Variable, Concept<?>> map;
     private final boolean hasExplanation;
-    private GraknClient.Transaction tx;
+    private Transaction tx;
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<Variable, Concept<?>> map, Pattern queryPattern, boolean hasExplanation, GraknClient.Transaction tx) {
+    public ConceptMap(Map<Variable, Concept<?>> map, Pattern queryPattern, boolean hasExplanation, Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;

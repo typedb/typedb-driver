@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
+import grakn.client.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
@@ -65,7 +65,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
     }
 
     @Override
-    Remote<SomeThing, SomeType> asRemote(GraknClient.Transaction tx);
+    Remote<SomeThing, SomeType> asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
