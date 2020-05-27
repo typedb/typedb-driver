@@ -21,7 +21,7 @@ package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.DataType;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
@@ -43,7 +43,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      */
     @Nullable
     @CheckReturnValue
-    DataType<D> valueType();
+    ValueType<D> valueType();
 
     //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
@@ -58,9 +58,9 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
     @Deprecated
     @CheckReturnValue
     @Override
-    default <T> AttributeType<T> asAttributeType(DataType<T> dataType) {
-        if (!dataType.equals(valueType())) {
-            throw GraknConceptException.invalidCasting(this, dataType.getClass());
+    default <T> AttributeType<T> asAttributeType(ValueType<T> valueType) {
+        if (!valueType.equals(valueType())) {
+            throw GraknConceptException.invalidCasting(this, valueType.getClass());
         }
         return (AttributeType<T>) this;
     }
@@ -265,8 +265,8 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         @Deprecated
         @CheckReturnValue
         @Override
-        default <T> AttributeType.Remote<T> asAttributeType(DataType<T> dataType) {
-            return (AttributeType.Remote<T>) AttributeType.super.asAttributeType(dataType);
+        default <T> AttributeType.Remote<T> asAttributeType(ValueType<T> valueType) {
+            return (AttributeType.Remote<T>) AttributeType.super.asAttributeType(valueType);
         }
 
         @Deprecated
