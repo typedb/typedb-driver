@@ -114,7 +114,7 @@ public class QueryTest {
                     type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearer"),
                     type("parentship").sub("relation").relates("parent").relates("child"),
 
-                    type("name").sub("attribute").value(Graql.Token.ValueType.STRING),
+                    type("name").sub("attribute").datatype(Graql.Token.DataType.STRING),
                     type("lion").sub("entity").has("name").plays("male-partner").plays("female-partner").plays("offspring").plays("parent").plays("child")
             );
 
@@ -244,7 +244,7 @@ public class QueryTest {
 
         localhostGraknTx(tx -> {
             LOG.info("clientJavaE2E() - match delete...");
-            GraqlDelete deleteQuery = Graql.match(var("m").isa("mating")).delete(var("m").isa("mating"));
+            GraqlDelete deleteQuery = Graql.match(var("m").isa("mating")).delete("m");
             LOG.info("clientJavaE2E() - '" + deleteQuery + "'");
             tx.execute(deleteQuery);
             List<ConceptMap> matings = tx.execute(Graql.match(var("m").isa("mating")).get());

@@ -22,7 +22,7 @@ package grakn.client.concept.type.impl;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.DataType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
@@ -42,17 +42,17 @@ public class AttributeTypeImpl {
      */
     public static class Local<D> extends TypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
 
-        private final ValueType<D> valueType;
+        private final DataType<D> dataType;
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
-            this.valueType = RequestBuilder.ConceptMessage.valueType(concept.getValueTypeRes().getValueType());
+            this.dataType = RequestBuilder.ConceptMessage.valueType(concept.getDataTypeRes().getDataType());
         }
 
         @Override
         @Nullable
-        public ValueType<D> valueType() {
-            return valueType;
+        public DataType<D> valueType() {
+            return dataType;
         }
     }
 
@@ -158,16 +158,16 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public final ValueType<D> valueType() {
+        public final DataType<D> valueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeValueTypeReq(ConceptProto.AttributeType.ValueType.Req.getDefaultInstance()).build();
+                    .setAttributeTypeDataTypeReq(ConceptProto.AttributeType.DataType.Req.getDefaultInstance()).build();
 
-            ConceptProto.AttributeType.ValueType.Res response = runMethod(method).getAttributeTypeValueTypeRes();
+            ConceptProto.AttributeType.DataType.Res response = runMethod(method).getAttributeTypeDataTypeRes();
             switch (response.getResCase()) {
                 case NULL:
                     return null;
-                case VALUETYPE:
-                    return RequestBuilder.ConceptMessage.valueType(response.getValueType());
+                case DATATYPE:
+                    return RequestBuilder.ConceptMessage.valueType(response.getDataType());
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
