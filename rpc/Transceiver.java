@@ -19,6 +19,7 @@
 
 package grakn.client.rpc;
 
+import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.session.SessionProto;
@@ -116,22 +117,24 @@ public class Transceiver implements AutoCloseable {
     }
 
     public void sendAndReceiveAsync(Transaction.Req request, ResponseReceiver receiver) {
-        executorService.execute(() -> {
-            lock.lock();
-            try {
-                send(request);
-                while (true) {
-                    Response res = receive();
-                    if (!receiver.onResponse(res)) {
-                        break;
+        try (ThreadTrace parentTrace = GrablTracingThreadStatic.traceOnThread("asyncQueue")) {
+            executorService.execute(() -> {
+                lock.lock();
+                try (ThreadTrace ignored = parentTrace.traceOnThread("asyncExecute")) {
+                    send(request);
+                    while (true) {
+                        Response res = receive();
+                        if (!receiver.onResponse(res)) {
+                            break;
+                        }
                     }
+                } catch (Exception ex) {
+                    receiver.onResponse(Response.error(ex));
+                } finally {
+                    lock.unlock();
                 }
-            } catch (Exception ex) {
-                receiver.onResponse(Response.error(ex));
-            } finally {
-                lock.unlock();
-            }
-        });
+            });
+        }
     }
 
     public interface ResponseReceiver {
