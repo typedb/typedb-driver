@@ -40,6 +40,8 @@ java_test(
     runtime_deps = [
         "//test/behaviour/connection:steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/graql:steps",
+        "//test/behaviour/connection/session:steps",
     ],
     data = [
         ":debug.feature",
