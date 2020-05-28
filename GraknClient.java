@@ -750,28 +750,28 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public SchemaConcept<?> getMetaConcept() {
+        public SchemaConcept.Remote<?> getMetaConcept() {
             return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
         }
 
-        public MetaType.Remote<?, ?> getMetaRelationType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString())).asMetaType();
+        public RelationType.Remote getMetaRelationType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
         }
 
-        public MetaType.Remote<?, ?> getMetaRole() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString())).asMetaType();
+        public Role.Remote getMetaRole() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString())).asRole();
         }
 
-        public MetaType.Remote<?, ?> getMetaAttributeType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asMetaType();
+        public AttributeType.Remote<?> getMetaAttributeType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asAttributeType();
         }
 
-        public MetaType.Remote<?, ?> getMetaEntityType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString())).asMetaType();
+        public EntityType.Remote getMetaEntityType() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString())).asEntityType();
         }
 
-        public MetaType.Remote<?, ?> getMetaRule() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString())).asMetaType();
+        public Rule.Remote getMetaRule() {
+            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString())).asRule();
         }
 
         @Nullable
