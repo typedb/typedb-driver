@@ -595,79 +595,15 @@ public class GraknClient implements AutoCloseable {
             return !isOpen();
         }
 
-        private ReentrantLock lock = new ReentrantLock();
-
         private SessionProto.Transaction.Res sendAndReceiveOrThrow(SessionProto.Transaction.Req request) {
-            Transceiver.Response response;
-
             try {
-                response = transceiver.sendAndReceive(request);
+                return transceiver.sendAndReceive(request);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 // This is called from classes like Transaction, that impl methods which do not throw InterruptedException
                 // Therefore, we have to wrap it in a RuntimeException.
                 throw new RuntimeException(e);
             }
-
-            switch (response.type()) {
-                case OK:
-                    return response.ok();
-                case ERROR:
-                    // TODO: parse different GRPC errors into specific GraknClientException
-                    throw GraknClientException.create(response.error().getMessage(), response.error());
-                case COMPLETED:
-                    // This will occur when interrupting a running query/operation on the current transaction
-                    throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
-                default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
-            }
-        }
-
-        private static class TransactionIterator extends AbstractIterator<SessionProto.Transaction.Iter.Res> implements Transceiver.ResponseReceiver {
-            private final BlockingQueue<Transceiver.Response> queue = new LinkedBlockingQueue<>();
-
-            @Override
-            public boolean onResponse(Transceiver.Response response) {
-                queue.add(response);
-                if (response.type() == OK) {
-                    SessionProto.Transaction.Iter.Res iterRes = response.ok().getIterRes();
-                    switch (iterRes.getResCase()) {
-                        case DONE:
-                        case ITERATORID:
-                            return false;
-                        default:
-                            return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            protected SessionProto.Transaction.Iter.Res computeNext() {
-                Transceiver.Response response;
-                try {
-                    response = queue.take();
-                } catch (InterruptedException e) {
-                    throw GraknConceptException.create("Iteration Interrupted");
-                }
-
-                switch (response.type()) {
-                    case OK:
-                        return response.ok().getIterRes();
-                    case ERROR:
-                        throw GraknClientException.create(response.error().getMessage(), response.error());
-                    case COMPLETED:
-                        throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
-                    default:
-                        throw GraknClientException.unreachableStatement("Unexpected response " + response);
-                }
-            }
-        }
-
-        private Iterator<SessionProto.Transaction.Iter.Res> sendAndReceiveIter(SessionProto.Transaction.Iter.Req request) {
-            TransactionIterator iterator = new TransactionIterator();
-            transceiver.sendAndReceiveAsync(SessionProto.Transaction.Req.newBuilder().setIterReq(request).build(), iterator);
-            return iterator;
         }
 
         public void commit() {
@@ -888,54 +824,60 @@ public class GraknClient implements AutoCloseable {
          * @param <T> class type of objects being iterated
          */
         public class RPCIterator<T> extends AbstractIterator<T> {
-            private SessionProto.Transaction.Iter.Req request;
-            private SessionProto.Transaction.Iter.Req.Options requestOptions;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
-            private int iteratorId = 0;
+            private Batch currentBatch;
+            private SessionProto.Transaction.Iter.Req.Options options;
 
-            private Iterator<SessionProto.Transaction.Iter.Res> currentIterator = null;
-
-            private RPCIterator(SessionProto.Transaction.Iter.Req request, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-                this.request = request;
+            private RPCIterator(SessionProto.Transaction.Iter.Req req,
+                                Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
                 this.responseReader = responseReader;
-                this.requestOptions = request.getOptions();
+                options = req.getOptions();
+                sendRequest(req);
             }
 
-            private void startIterating() {
-                currentIterator = sendAndReceiveIter(request);
+            private void sendRequest(SessionProto.Transaction.Iter.Req req) {
+                currentBatch = new Batch();
+
+                SessionProto.Transaction.Req transactionReq = SessionProto.Transaction.Req.newBuilder()
+                        .setIterReq(req).build();
+
+                transceiver.sendAndReceiveMultipleAsync(transactionReq, currentBatch);
             }
 
-            private void requestBatch() {
-                currentIterator = sendAndReceiveIter(SessionProto.Transaction.Iter.Req.newBuilder()
-                                .setOptions(requestOptions)
-                                .setIteratorId(iteratorId).build());
+            private void nextBatch(int iteratorId) {
+                SessionProto.Transaction.Iter.Req iterReq = SessionProto.Transaction.Iter.Req.newBuilder()
+                        .setIteratorId(iteratorId)
+                        .setOptions(options)
+                        .build();
+
+                sendRequest(iterReq);
             }
 
-            private T processNext(SessionProto.Transaction.Iter.Res response) {
-                switch (response.getResCase()) {
-                    case DONE:
-                        return endOfData();
-                    case ITERATORID:
-                        iteratorId = response.getIteratorId();
-                        requestBatch();
-                        return computeNext();
-                    case RES_NOT_SET:
-                        throw GraknClientException.unreachableStatement("Unexpected " + response);
-                    default:
-                        return responseReader.apply(response);
+            private class Batch extends Transceiver.MultiResponseCollector {
+                @Override
+                protected boolean isLastResponse(SessionProto.Transaction.Res response) {
+                    SessionProto.Transaction.Iter.Res iterRes = response.getIterRes();
+                    return iterRes.getIteratorId() != 0 || iterRes.getDone();
                 }
             }
 
-            protected final T computeNext() {
-                if (currentIterator == null) {
-                    startIterating();
-                }
-
-                if (currentIterator.hasNext()) {
-                    return processNext(currentIterator.next());
+            @Override
+            protected T computeNext() {
+                if (currentBatch.hasNext()) {
+                    SessionProto.Transaction.Iter.Res res = currentBatch.next().getIterRes();
+                    switch (res.getResCase()) {
+                        case ITERATORID:
+                            nextBatch(res.getIteratorId());
+                            return computeNext();
+                        case DONE:
+                            return endOfData();
+                        case RES_NOT_SET:
+                            throw new IllegalStateException("Received an empty response");
+                        default:
+                            return responseReader.apply(res);
+                    }
                 } else {
-                    // processNext should handle the iteration end due to a done or batch done response
-                    throw GraknClientException.create("Unexpected end of iteration");
+                    throw new IllegalStateException("Batch ended without a terminating message");
                 }
             }
         }

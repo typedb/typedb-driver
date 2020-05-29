@@ -103,14 +103,12 @@ public class Transceiver implements AutoCloseable {
 
         @Override
         protected SessionProto.Transaction.Res computeNext() {
-            Object result = received.poll();
-            if (result == null) {
-                try {
-                    result = received.take();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("Iteration interrupted.", e);
-                }
+            Object result;
+            try {
+                result = received.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Iteration interrupted.", e);
             }
 
             if (result instanceof Response) {
