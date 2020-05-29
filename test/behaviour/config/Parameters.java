@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.config;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -41,15 +41,15 @@ public class Parameters {
     }
 
     @ParameterType("read|write")
-    public Transaction.Type transaction_type(String type){
-        return Transaction.Type.of(type);
+    public GraknClient.Transaction.Type transaction_type(String type){
+        return GraknClient.Transaction.Type.of(type);
     }
 
     @DataTableType
-    public List<Transaction.Type> transaction_types(List<String> values) {
-        List<Transaction.Type> typeList = new ArrayList<>();
+    public List<GraknClient.Transaction.Type> transaction_types(List<String> values) {
+        List<GraknClient.Transaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            Transaction.Type type = Transaction.Type.of(value);
+            GraknClient.Transaction.Type type = GraknClient.Transaction.Type.of(value);
             assertNotNull(type);
             typeList.add(type);
         }

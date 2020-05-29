@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
@@ -65,7 +65,7 @@ public class AttributeImpl {
      */
     public static class Remote<D> extends ThingImpl.Local.Remote<Attribute<D>, AttributeType<D>> implements Attribute.Remote<D> {
 
-        public Remote(Transaction tx, ConceptId id) {
+        public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
         }
 

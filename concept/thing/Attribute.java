@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
@@ -78,7 +78,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
 
     @CheckReturnValue
     @Override
-    default Remote<D> asRemote(Transaction tx) {
+    default Remote<D> asRemote(GraknClient.Transaction tx) {
         return Attribute.Remote.of(tx, id());
     }
 
@@ -112,7 +112,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      */
     interface Remote<D> extends Thing.Remote<Attribute<D>, AttributeType<D>>, Attribute<D> {
 
-        static <D> Attribute.Remote<D> of(Transaction tx, ConceptId id) {
+        static <D> Attribute.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
             return new AttributeImpl.Remote<>(tx, id);
         }
 

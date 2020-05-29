@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -52,7 +52,7 @@ public interface SchemaConcept<BaseType extends SchemaConcept<BaseType>> extends
     }
 
     @Override
-    Remote<BaseType> asRemote(Transaction tx);
+    Remote<BaseType> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue

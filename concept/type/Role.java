@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
@@ -44,7 +44,7 @@ public interface Role extends SchemaConcept<Role> {
     }
 
     @Override
-    default Remote asRemote(Transaction tx) {
+    default Remote asRemote(GraknClient.Transaction tx) {
         return Role.Remote.of(tx, id());
     }
 
@@ -65,7 +65,7 @@ public interface Role extends SchemaConcept<Role> {
      */
     interface Remote extends SchemaConcept.Remote<Role>, Role {
 
-        static Role.Remote of(Transaction tx, ConceptId id) {
+        static Role.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RoleImpl.Remote(tx, id);
         }
 

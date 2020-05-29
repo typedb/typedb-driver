@@ -18,8 +18,6 @@
 package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
-import grakn.client.Session;
-import grakn.client.Transaction;
 import grakn.client.answer.ConceptMap;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
@@ -261,10 +259,10 @@ public class QueryTest {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<Transaction> fn) {
+    private void localhostGraknTx(Consumer<GraknClient.Transaction> fn) {
         String keyspace = "grakn";
-        try (Session session = graknClient.session(keyspace)) {
-            try (Transaction transaction = session.transaction().write()) {
+        try (GraknClient.Session session = graknClient.session(keyspace)) {
+            try (GraknClient.Transaction transaction = session.transaction().write()) {
                 fn.accept(transaction);
             }
         }

@@ -144,7 +144,7 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
         return keyspaces;
     }
 
-    private static class Session implements grakn.client.Session {
+    private static class Session implements GraknClient.Session {
 
         protected ManagedChannel channel;
         private String username; // TODO: Do we need to save this? It's not used.
@@ -176,12 +176,12 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
         }
 
         @Override
-        public grakn.client.Transaction.Builder transaction() {
+        public GraknClient.Transaction.Builder transaction() {
             return new Transaction.Builder(channel, this, sessionId);
         }
 
         @Override
-        public grakn.client.Transaction transaction(grakn.client.Transaction.Type type) {
+        public GraknClient.Transaction transaction(GraknClient.Transaction.Type type) {
             return new Transaction(channel, this, sessionId, type);
         }
 
@@ -198,19 +198,19 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
         }
 
         @Override
-        public grakn.client.Keyspace keyspace() {
-            return grakn.client.Keyspace.of(keyspace);
+        public GraknClient.Keyspace keyspace() {
+            return GraknClient.Keyspace.of(keyspace);
         }
     }
 
-    private static class Transaction implements grakn.client.Transaction {
+    private static class Transaction implements GraknClient.Transaction {
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
 
         private int currentIteratorId = 1;
 
-        public static class Builder implements grakn.client.Transaction.Builder {
+        public static class Builder implements GraknClient.Transaction.Builder {
 
             private ManagedChannel channel;
             private Session session;
@@ -223,13 +223,13 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
             }
 
             @Override
-            public grakn.client.Transaction read() {
-                return new Transaction(channel, session, sessionId, grakn.client.Transaction.Type.READ);
+            public GraknClient.Transaction read() {
+                return new Transaction(channel, session, sessionId, GraknClient.Transaction.Type.READ);
             }
 
             @Override
-            public grakn.client.Transaction write() {
-                return new Transaction(channel, session, sessionId, grakn.client.Transaction.Type.WRITE);
+            public GraknClient.Transaction write() {
+                return new Transaction(channel, session, sessionId, GraknClient.Transaction.Type.WRITE);
             }
         }
 
@@ -253,7 +253,7 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
         }
 
         @Override
-        public grakn.client.Keyspace keyspace() {
+        public GraknClient.Keyspace keyspace() {
             return session.keyspace();
         }
 
@@ -1029,7 +1029,7 @@ class GraknClientImpl implements AutoCloseable, GraknClient {
     /**
      * An identifier for an isolated scope of a data in the database.
      */
-    static class Keyspace implements grakn.client.Keyspace {
+    static class Keyspace implements GraknClient.Keyspace {
 
         private static final long serialVersionUID = 2726154016735929123L;
 

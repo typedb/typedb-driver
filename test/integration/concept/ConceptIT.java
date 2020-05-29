@@ -20,8 +20,6 @@
 package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.Session;
-import grakn.client.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.DataType;
 import grakn.client.concept.GraknConceptException;
@@ -78,8 +76,8 @@ public class ConceptIT {
     private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
     private static final File graknDistributionFile = new File(args[2]);
     private static GraknClient client;
-    private static Session session;
-    private Transaction tx;
+    private static GraknClient.Session session;
+    private GraknClient.Transaction tx;
 
     private static int EMAIL_COUNTER = 0;
     // Attribute Type Labels

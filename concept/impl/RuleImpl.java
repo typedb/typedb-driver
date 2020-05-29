@@ -19,7 +19,7 @@
 
 package grakn.client.concept.impl;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
@@ -48,7 +48,7 @@ public class RuleImpl {
      */
     public static class Remote extends SchemaConceptImpl.Remote<Rule> implements Rule.Remote {
 
-        public Remote(Transaction tx, ConceptId id) {
+        public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
         }
 

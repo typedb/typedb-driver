@@ -19,7 +19,7 @@
 
 package grakn.client.rpc;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.DataType;
@@ -63,7 +63,7 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static SessionProto.Transaction.Req open(String sessionId, grakn.client.Transaction.Type txType) {
+        public static SessionProto.Transaction.Req open(String sessionId, GraknClient.Transaction.Type txType) {
             SessionProto.Transaction.Open.Req openRequest = SessionProto.Transaction.Open.Req.newBuilder()
                     .setSessionId(sessionId)
                     .setType(SessionProto.Transaction.Type.valueOf(txType.id()))

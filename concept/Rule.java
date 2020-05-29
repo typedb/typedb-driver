@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.concept.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
@@ -39,7 +39,7 @@ public interface Rule extends SchemaConcept<Rule> {
     }
 
     @Override
-    default Remote asRemote(Transaction tx) {
+    default Remote asRemote(GraknClient.Transaction tx) {
         return Remote.of(tx, id());
     }
 
@@ -58,7 +58,7 @@ public interface Rule extends SchemaConcept<Rule> {
      */
     interface Remote extends SchemaConcept.Remote<Rule>, Rule {
 
-        static Rule.Remote of(Transaction tx, ConceptId id) {
+        static Rule.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RuleImpl.Remote(tx, id);
         }
 
