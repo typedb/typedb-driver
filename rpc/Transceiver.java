@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
@@ -156,44 +158,35 @@ public class Transceiver implements AutoCloseable {
      * Advanced abstract multi-response collector. The {@link #isLastResponse(Transaction.Res)} method must be
      * overridden in a sub-class because the last response must be known by the GRPC response receiving thread in order
      * to keep it from blocking other collectors for later responses.
-     *
-     * This class is an Iterator over multiple SessionProto.Transaction.Res corresponding to a single request.
      */
-    public static abstract class MultiResponseCollector extends AbstractIterator<SessionProto.Transaction.Res>
-            implements ResponseCollector {
-        private final BlockingQueue<Object> received = new LinkedBlockingQueue<>();
-        private enum Done {
-            DONE;
-        }
+    public static abstract class MultiResponseCollector implements ResponseCollector {
+        private volatile boolean started;
+        private final BlockingQueue<Response> received = new LinkedBlockingQueue<>();
 
         @Override
         public boolean onResponse(Response response) {
-            System.out.println(response);
+            started = true;
             received.add(response);
             SessionProto.Transaction.Res nullableRes = response.nullableOk();
-            if (nullableRes != null && isLastResponse(nullableRes)) {
-                received.add(Done.DONE);
-                return true;
+            return nullableRes == null || isLastResponse(nullableRes);
+        }
+
+        public SessionProto.Transaction.Res take() throws InterruptedException {
+            return received.take().ok();
+        }
+
+        public SessionProto.Transaction.Res poll(long timeout, TimeUnit unit) throws InterruptedException,
+                TimeoutException {
+            Response response = received.poll(timeout, unit);
+            if (response == null) {
+                throw new TimeoutException();
             } else {
-                return false;
+                return response.ok();
             }
         }
 
-        @Override
-        protected SessionProto.Transaction.Res computeNext() {
-            Object result;
-            try {
-                result = received.take();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException("Iteration interrupted.", e);
-            }
-
-            if (result instanceof Response) {
-                return ((Response) result).ok();
-            } else {
-                return endOfData();
-            }
+        public boolean isStarted() {
+            return started;
         }
 
         /**

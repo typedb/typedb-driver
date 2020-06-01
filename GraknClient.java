@@ -21,6 +21,8 @@ package grakn.client;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.PeekingIterator;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
@@ -76,8 +78,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -283,24 +288,24 @@ public class GraknClient implements AutoCloseable {
             return session.keyspace();
         }
 
-        public List<ConceptMap> execute(GraqlDefine query) {
+        public Future<List<ConceptMap>> execute(GraqlDefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.define")) {
                 return executeInternal(query, true);
             }
         }
 
-        public List<ConceptMap> execute(GraqlUndefine query) {
+        public Future<List<ConceptMap>> execute(GraqlUndefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
                 return executeInternal(query, true);
             }
         }
 
-        public List<ConceptMap> execute(GraqlInsert query, boolean infer) {
+        public Future<List<ConceptMap>> execute(GraqlInsert query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
                 return executeInternal(query, infer);
             }
         }
-        public List<ConceptMap> execute(GraqlInsert query) {
+        public Future<List<ConceptMap>> execute(GraqlInsert query) {
             return execute(query, true);
         }
 
@@ -313,12 +318,12 @@ public class GraknClient implements AutoCloseable {
             return execute(query, true);
         }
 
-        public List<ConceptMap> execute(GraqlGet query, boolean infer) {
+        public Future<List<ConceptMap>> execute(GraqlGet query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
                 return executeInternal(query, infer);
             }
         }
-        public List<ConceptMap> execute(GraqlGet query) {
+        public Future<List<ConceptMap>> execute(GraqlGet query) {
             return execute(query, true);
         }
 
@@ -481,11 +486,11 @@ public class GraknClient implements AutoCloseable {
 
         // Generic queries
 
-        public List<? extends Answer> execute(GraqlQuery query) {
+        public Future<List<? extends Answer>> execute(GraqlQuery query) {
             return execute(query, true);
         }
 
-        public List<? extends Answer> execute(GraqlQuery query, boolean infer) {
+        public Future<List<? extends Answer>> execute(GraqlQuery query, boolean infer) {
             if (query instanceof GraqlDefine) {
                 return execute((GraqlDefine) query);
 
@@ -573,11 +578,11 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
+        private <T extends Answer> Future<List<T>> executeInternal(GraqlQuery query, boolean infer) {
             return this.<T>streamInternal(query, infer).collect(Collectors.toList());
         }
 
-        private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
+        private <T extends Answer> Future<Stream<T>> streamInternal(GraqlQuery query, boolean infer) {
             return iterate(RequestBuilder.Transaction.query(query.toString(), infer),
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
@@ -817,6 +822,39 @@ public class GraknClient implements AutoCloseable {
             return Objects.requireNonNull(StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false));
         }
 
+        private class QueryFuture<T> implements Future<Stream<T>> {
+            private RPCIterator<T> iterator;
+
+            private QueryFuture(RPCIterator<T> iterator) {
+                this.iterator = iterator;
+            }
+
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false; // Can't cancel
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false; // Can't cancel
+            }
+
+            @Override
+            public boolean isDone() {
+                return ;
+            }
+
+            @Override
+            public T get() throws InterruptedException, ExecutionException {
+                return null;
+            }
+
+            @Override
+            public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                return null;
+            }
+        }
+
         /**
          * A client-side iterator over gRPC messages. Will send SessionProto.Transaction.Iter.Req messages until
          * SessionProto.Transaction.Iter.Res returns done as a message.
@@ -826,6 +864,8 @@ public class GraknClient implements AutoCloseable {
         public class RPCIterator<T> extends AbstractIterator<T> {
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
             private Batch currentBatch;
+            private volatile boolean started;
+            private SessionProto.Transaction.Iter.Res first;
             private SessionProto.Transaction.Iter.Req.Options options;
 
             private RPCIterator(SessionProto.Transaction.Iter.Req req,
@@ -861,23 +901,30 @@ public class GraknClient implements AutoCloseable {
                 }
             }
 
+            public boolean isStarted() {
+                return started;
+            }
+
             @Override
             protected T computeNext() {
-                if (currentBatch.hasNext()) {
-                    SessionProto.Transaction.Iter.Res res = currentBatch.next().getIterRes();
-                    switch (res.getResCase()) {
-                        case ITERATORID:
-                            nextBatch(res.getIteratorId());
-                            return computeNext();
-                        case DONE:
-                            return endOfData();
-                        case RES_NOT_SET:
-                            throw new IllegalStateException("Received an empty response");
-                        default:
-                            return responseReader.apply(res);
-                    }
-                } else {
-                    throw new IllegalStateException("Batch ended without a terminating message");
+                SessionProto.Transaction.Iter.Res res;
+                try {
+                    res = currentBatch.take().getIterRes();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+                started = true;
+                switch (res.getResCase()) {
+                    case ITERATORID:
+                        nextBatch(res.getIteratorId());
+                        return computeNext();
+                    case DONE:
+                        return endOfData();
+                    case RES_NOT_SET:
+                        throw new IllegalStateException("Received an empty response");
+                    default:
+                        return responseReader.apply(res);
                 }
             }
         }
