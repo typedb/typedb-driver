@@ -61,66 +61,6 @@ public class Transceiver implements AutoCloseable {
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
 
-    interface ResponseCollector {
-        boolean onResponse(Response response);
-    }
-
-    private static class SingleResponseCollector implements ResponseCollector {
-        private volatile Response response;
-        private final CountDownLatch latch = new CountDownLatch(1);
-
-        @Override
-        public boolean onResponse(Response response) {
-            this.response = response;
-            latch.countDown();
-            return true;
-        }
-
-        public SessionProto.Transaction.Res receive() throws InterruptedException {
-            latch.await();
-            return response.ok();
-        }
-    }
-
-    public static abstract class MultiResponseCollector extends AbstractIterator<SessionProto.Transaction.Res>
-            implements ResponseCollector {
-        private final BlockingQueue<Object> received = new LinkedBlockingQueue<>();
-        private enum Done {
-            DONE;
-        }
-
-        @Override
-        public boolean onResponse(Response response) {
-            received.add(response);
-            SessionProto.Transaction.Res nullableRes = response.nullableOk();
-            if (nullableRes != null && isLastResponse(nullableRes)) {
-                received.add(Done.DONE);
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        protected SessionProto.Transaction.Res computeNext() {
-            Object result;
-            try {
-                result = received.take();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException("Iteration interrupted.", e);
-            }
-
-            if (result instanceof Response) {
-                return ((Response) result).ok();
-            } else {
-                return endOfData();
-            }
-        }
-
-        protected abstract boolean isLastResponse(SessionProto.Transaction.Res response);
-    }
-
     private Transceiver(StreamObserver<Transaction.Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
         this.responseListener = responseListener;
@@ -143,8 +83,8 @@ public class Transceiver implements AutoCloseable {
         LOG.trace("send:{}", request);
 
         synchronized (this) {
-            requestSender.onNext(request);
             responseListener.addCollector(collector);
+            requestSender.onNext(request);
         }
     }
 
@@ -181,6 +121,92 @@ public class Transceiver implements AutoCloseable {
     }
 
     /**
+     * Interface for collecting responses from a specific request
+     */
+    interface ResponseCollector {
+        /**
+         * Collect a response.
+         * @param response the next response for this collector to collect.
+         * @return true if this is the last response, false if more responses are expected.
+         */
+        boolean onResponse(Response response);
+    }
+
+    /**
+     * Simple response collector for when a single result is expected.
+     */
+    private static class SingleResponseCollector implements ResponseCollector {
+        private volatile Response response;
+        private final CountDownLatch latch = new CountDownLatch(1);
+
+        @Override
+        public boolean onResponse(Response response) {
+            this.response = response;
+            latch.countDown();
+            return true;
+        }
+
+        public SessionProto.Transaction.Res receive() throws InterruptedException {
+            latch.await();
+            return response.ok();
+        }
+    }
+
+    /**
+     * Advanced abstract multi-response collector. The {@link #isLastResponse(Transaction.Res)} method must be
+     * overridden in a sub-class because the last response must be known by the GRPC response receiving thread in order
+     * to keep it from blocking other collectors for later responses.
+     *
+     * This class is an Iterator over multiple SessionProto.Transaction.Res corresponding to a single request.
+     */
+    public static abstract class MultiResponseCollector extends AbstractIterator<SessionProto.Transaction.Res>
+            implements ResponseCollector {
+        private final BlockingQueue<Object> received = new LinkedBlockingQueue<>();
+        private enum Done {
+            DONE;
+        }
+
+        @Override
+        public boolean onResponse(Response response) {
+            System.out.println(response);
+            received.add(response);
+            SessionProto.Transaction.Res nullableRes = response.nullableOk();
+            if (nullableRes != null && isLastResponse(nullableRes)) {
+                received.add(Done.DONE);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected SessionProto.Transaction.Res computeNext() {
+            Object result;
+            try {
+                result = received.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Iteration interrupted.", e);
+            }
+
+            if (result instanceof Response) {
+                return ((Response) result).ok();
+            } else {
+                return endOfData();
+            }
+        }
+
+        /**
+         * Implement to inform the GRPC thread when it has received the last response.
+         * This is called from the GRPC thread, not the main client thread.
+         *
+         * @param response The next response.
+         * @return true if this is the last response, false if more responses are expected.
+         */
+        protected abstract boolean isLastResponse(SessionProto.Transaction.Res response);
+    }
+
+    /**
      * A StreamObserver that stores all responses in a blocking queue.
          * A response can be polled with the #poll() method.
      */
@@ -200,9 +226,8 @@ public class Transceiver implements AutoCloseable {
                     currentCollector = collectorQueue.take();
                 } catch (InterruptedException e) {
                     terminated.set(true);
-                    // Horrendous failure
-                    // TODO figure out how to properly terminate everthing
-                    throw new IllegalStateException("Interrupted whilst waiting for a result collector, should never happen");
+                    throw new IllegalStateException("Interrupted whilst waiting for a result collector, " +
+                            "should never happen since response collectors are queued before send.");
                 }
             }
 
@@ -220,13 +245,21 @@ public class Transceiver implements AutoCloseable {
         public void onError(Throwable throwable) {
             terminated.set(true);
             assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
-            dispatchResponse(Response.error((Exception) throwable));
+
+            // Exhaust the queue
+            while (currentCollector != null || collectorQueue.peek() != null) {
+                dispatchResponse(Response.completed());
+            }
         }
 
         @Override
         public void onCompleted() {
             terminated.set(true);
-            dispatchResponse(Response.completed());
+
+            // Exhaust the queue
+            while (currentCollector != null || collectorQueue.peek() != null) {
+                dispatchResponse(Response.completed());
+            }
         }
     }
 
