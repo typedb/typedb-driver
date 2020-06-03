@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.graql.language.undefine;
+package grakn.client.test.behaviour.graql.language.delete;
 
 import grakn.client.test.setup.GraknSetup;
 import io.cucumber.junit.Cucumber;
@@ -35,17 +35,17 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/graql/language/undefine.feature",
+        features = "external/graknlabs_verification/behaviour/graql/language/delete.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
-public class UndefineTest {
+public class DeleteTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test UndefineTest'
+    // 3) Select 'Bazel test DeleteTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
