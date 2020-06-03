@@ -88,7 +88,7 @@ public class AnswerIT {
 
         tx = session.transaction().write();
 
-        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet());
+        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet()).get();
 
         int hasExplanation = 0;
         int noExplanation = 0;

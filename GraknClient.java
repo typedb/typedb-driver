@@ -819,7 +819,7 @@ public class GraknClient implements AutoCloseable {
             return Objects.requireNonNull(StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false));
         }
 
-        private abstract class QueryFuture<T> implements Future<T> {
+        public abstract class QueryFuture<T> implements Future<T> {
             @Override
             public boolean cancel(boolean mayInterruptIfRunning) {
                 return false; // Can't cancel
