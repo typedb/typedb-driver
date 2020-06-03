@@ -110,11 +110,15 @@ jobs:
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
       - run-bazel-rbe:
-          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
+          command: bazel test //test/behaviour/graql/language/delete:test-core --test_output=errors
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/graql/language/mutate:test-core --test_output=errors
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
 
   test-behaviour-graql-reasoner:
     machine: true
@@ -261,10 +265,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-#      - test-behaviour-graql-reasoner:
-#          filters:
-#            branches:
-#              ignore: client-java-release-branch
+      - test-behaviour-graql-reasoner:
+          filters:
+            branches:
+              ignore: client-java-release-branch
       - test-assembly-query:
           filters:
             branches:
