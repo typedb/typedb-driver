@@ -170,6 +170,30 @@ public class GraqlSteps {
         assertTrue(threw);
     }
 
+    @Given("graql delete")
+    public void graql_delete(String deleteQueryStatements) {
+        GraqlQuery graqlQuery = Graql.parse(String.join("\n", deleteQueryStatements));
+        tx.execute(graqlQuery);
+        tx.commit();
+        tx = session.transaction().write();
+    }
+
+    @Given("graql delete throws")
+    public void graql_delete_throws(String deleteQueryStatements) {
+        boolean threw = false;
+        try {
+            GraqlQuery graqlQuery = Graql.parse(String.join("\n", deleteQueryStatements));
+            tx.execute(graqlQuery);
+            tx.commit();
+        } catch (RuntimeException e) {
+            threw = true;
+        } finally {
+            tx.close();
+            tx = session.transaction().write();
+        }
+        assertTrue(threw);
+    }
+
     @When("get answers of graql query")
     public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
