@@ -136,6 +136,10 @@ jobs:
       - checkout
       - run-bazel-rbe:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/graql/language/mutate:test-core --test_output=errors
+      - run-bazel-rbe:
+          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
 
   test-behaviour-graql-mutate:
     machine: true
