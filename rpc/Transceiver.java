@@ -84,8 +84,9 @@ public class Transceiver implements AutoCloseable {
         }
         LOG.trace("send:{}", request);
 
+        // We must add the response collectors in exact the same order we send the requests
         synchronized (this) {
-            responseListener.addCollector(collector);
+            responseListener.addCollector(collector); // Must add collector first to be watertight
             requestSender.onNext(request);
         }
     }
@@ -200,8 +201,7 @@ public class Transceiver implements AutoCloseable {
     }
 
     /**
-     * A StreamObserver that stores all responses in a blocking queue.
-         * A response can be polled with the #poll() method.
+     * A StreamObserver that pushes received responses to the corresponding collector.
      */
     private static class ResponseListener implements StreamObserver<Transaction.Res> {
 
