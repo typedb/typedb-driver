@@ -21,10 +21,12 @@ package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
+import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
+import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -54,6 +56,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
@@ -629,7 +632,17 @@ public class ConceptIT {
 
     @Test
     public void subtypes() {
-        List<Concept<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs().collect(Collectors.toList());
-        subs.forEach(System.out::println);
+        Stream<? extends Concept.Remote<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs();
+        assertTrue(subs.count() > 0);
+    }
+
+    @Test
+    public void metatypes() {
+        SchemaConcept.Remote<?> concept = tx.getMetaConcept();
+        AttributeType.Remote<?> attributeType = tx.getMetaAttributeType();
+        RelationType.Remote relationType = tx.getMetaRelationType();
+        EntityType.Remote entityType = tx.getMetaEntityType();
+        Rule.Remote rule = tx.getMetaRule();
+        Role.Remote role = tx.getMetaRole();
     }
 }
