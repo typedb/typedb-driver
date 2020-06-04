@@ -22,6 +22,7 @@ package grakn.client.test.integration.answer;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
+import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.MetaType;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
@@ -63,20 +64,6 @@ public class AnswerIT {
         client.close();
         GraknSetup.shutdown(graknType);
     }
-
-    @Test
-    public void testMeta() {
-        GraknClient.Session testing = client.session("testing");
-        GraknClient.Transaction tx = testing.transaction().write();
-        tx.execute(Graql.parse("define person sub entity;").asDefine());
-
-        MetaType.Remote<?, ?> metaEntityType = tx.getMetaEntityType();
-
-        metaEntityType.subs().forEach(System.out::println);
-
-
-    }
-
 
     @Test
     public void testExplanation() {
