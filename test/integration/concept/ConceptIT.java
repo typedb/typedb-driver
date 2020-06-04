@@ -242,13 +242,6 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingIsicit_GetTheExpectedResult() {
-        email.playing().forEach(role -> assertTrue(role.isImplicit()));
-        name.playing().forEach(role -> assertTrue(role.isImplicit()));
-        age.playing().forEach(role -> assertTrue(role.isImplicit()));
-    }
-
-    @Test
     public void whenCallingIsAbstract_GetTheExpectedResult() {
         assertTrue(livingThing.isAbstract());
     }
@@ -393,7 +386,7 @@ public class ConceptIT {
 
     @Test
     public void whenCallingPlays_GetTheExpectedResult() {
-        assertThat(person.playing().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, husband));
+        assertThat(person.playing().collect(toSet()), containsInAnyOrder(wife, husband));
     }
 
     @Test
@@ -407,14 +400,14 @@ public class ConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
-        assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
+        assertThat(alice.roles().collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
+        assertThat(bob.roles().collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
-        assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
+        assertThat(alice.relations().collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
+        assertThat(bob.relations().collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
     @Test
@@ -582,16 +575,6 @@ public class ConceptIT {
 
         email.regex(EMAIL_REGEX);
         assertEquals(EMAIL_REGEX, email.regex());
-    }
-
-    @Test
-    public void whenCallingAddAttributeRelationOnThing_RelationIsicit() {
-        assertTrue(alice.relhas(emailAlice).type().isImplicit());
-        assertTrue(alice.relhas(nameAlice).type().isImplicit());
-        assertTrue(alice.relhas(age20).type().isImplicit());
-        assertTrue(bob.relhas(emailBob).type().isImplicit());
-        assertTrue(bob.relhas(nameBob).type().isImplicit());
-        assertTrue(bob.relhas(age20).type().isImplicit());
     }
 
     @Test

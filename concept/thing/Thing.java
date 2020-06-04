@@ -133,15 +133,6 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
         Thing.Remote<SomeRemoteThing, SomeRemoteType> has(Attribute<?> attribute);
 
         /**
-         * Creates a Relation from this instance to the provided Attribute.
-         * This has the same effect as #has(Attribute), but returns the new Relation.
-         *
-         * @param attribute The Attribute to which a Relation is created
-         * @return The Relation connecting the Thing and the Attribute
-         */
-        Relation.Remote relhas(Attribute<?> attribute);
-
-        /**
          * Retrieves a collection of Attribute attached to this Thing
          *
          * @param attributeTypes AttributeTypes of the Attributes attached to this entity

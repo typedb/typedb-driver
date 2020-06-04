@@ -109,15 +109,6 @@ public interface SchemaConcept<BaseType extends SchemaConcept<BaseType>> extends
         @CheckReturnValue
         Stream<? extends SchemaConcept.Remote<BaseType>> subs();
 
-        /**
-         * Return whether the SchemaConcept was created implicitly.
-         * By default, SchemaConcept are not implicit.
-         *
-         * @return returns true if the type was created implicitly through the Attribute syntax
-         */
-        @CheckReturnValue
-        Boolean isImplicit();
-
 
         //------------------------------------- Other ---------------------------------
         @Deprecated
