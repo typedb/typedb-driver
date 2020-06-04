@@ -21,10 +21,12 @@ package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
+import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
+import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -54,6 +56,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
@@ -239,13 +242,6 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingIsicit_GetTheExpectedResult() {
-        email.playing().forEach(role -> assertTrue(role.isImplicit()));
-        name.playing().forEach(role -> assertTrue(role.isImplicit()));
-        age.playing().forEach(role -> assertTrue(role.isImplicit()));
-    }
-
-    @Test
     public void whenCallingIsAbstract_GetTheExpectedResult() {
         assertTrue(livingThing.isAbstract());
     }
@@ -390,7 +386,7 @@ public class ConceptIT {
 
     @Test
     public void whenCallingPlays_GetTheExpectedResult() {
-        assertThat(person.playing().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, husband));
+        assertThat(person.playing().collect(toSet()), containsInAnyOrder(wife, husband));
     }
 
     @Test
@@ -404,14 +400,14 @@ public class ConceptIT {
 
     @Test
     public void whenCallingThingPlays_GetTheExpectedResult() {
-        assertThat(alice.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
-        assertThat(bob.roles().filter(r -> !r.isImplicit()).collect(toSet()), containsInAnyOrder(husband));
+        assertThat(alice.roles().collect(toSet()), containsInAnyOrder(wife, employee, employer, friend));
+        assertThat(bob.roles().collect(toSet()), containsInAnyOrder(husband));
     }
 
     @Test
     public void whenCallingRelationsWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
-        assertThat(bob.relations().filter(rel -> !rel.type().isImplicit()).collect(toSet()), containsInAnyOrder(aliceAndBob));
+        assertThat(alice.relations().collect(toSet()), containsInAnyOrder(aliceAndBob, selfEmployment, selfFriendship));
+        assertThat(bob.relations().collect(toSet()), containsInAnyOrder(aliceAndBob));
     }
 
     @Test
@@ -582,16 +578,6 @@ public class ConceptIT {
     }
 
     @Test
-    public void whenCallingAddAttributeRelationOnThing_RelationIsicit() {
-        assertTrue(alice.relhas(emailAlice).type().isImplicit());
-        assertTrue(alice.relhas(nameAlice).type().isImplicit());
-        assertTrue(alice.relhas(age20).type().isImplicit());
-        assertTrue(bob.relhas(emailBob).type().isImplicit());
-        assertTrue(bob.relhas(nameBob).type().isImplicit());
-        assertTrue(bob.relhas(age20).type().isImplicit());
-    }
-
-    @Test
     public void whenCallingDeleteAttribute_ExecuteAConceptMethod() {
         Entity.Remote charlie = person.create();
         Attribute.Remote<String> nameCharlie = name.create("Charlie");
@@ -646,7 +632,17 @@ public class ConceptIT {
 
     @Test
     public void subtypes() {
-        List<Concept<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs().collect(Collectors.toList());
-        subs.forEach(System.out::println);
+        Stream<? extends Concept.Remote<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs();
+        assertTrue(subs.count() > 0);
+    }
+
+    @Test
+    public void metatypes() {
+        SchemaConcept.Remote<?> concept = tx.getMetaConcept();
+        AttributeType.Remote<?> attributeType = tx.getMetaAttributeType();
+        RelationType.Remote relationType = tx.getMetaRelationType();
+        EntityType.Remote entityType = tx.getMetaEntityType();
+        Rule.Remote rule = tx.getMetaRule();
+        Role.Remote role = tx.getMetaRole();
     }
 }
