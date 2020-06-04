@@ -141,7 +141,7 @@ public class QueryTest {
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
                     .map(answer -> answer.get("t").asType().label().getValue()).collect(Collectors.toList());
             String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
-                    "lion", "mating", "parentship", "child-bearing", "@has-name", "name" };
+                    "lion", "mating", "parentship", "child-bearing", "name" };
             assertThat(definedSchema, hasItems(correctSchema));
             LOG.info("clientJavaE2E() - done.");
         });

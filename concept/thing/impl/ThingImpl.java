@@ -159,19 +159,13 @@ public abstract class ThingImpl {
 
             @Override
             public Thing.Remote<SomeRemoteThing, SomeRemoteType> has(Attribute<?> attribute) {
-                relhas(attribute);
-                return this;
-            }
-
-            @Deprecated
-            public final Relation.Remote relhas(Attribute<?> attribute) {
                 // TODO: replace usage of this method as a getter, with relations(Attribute attribute)
                 // TODO: then remove this method altogether and just use has(Attribute attribute)
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setThingRelhasReq(ConceptProto.Thing.Relhas.Req.newBuilder()
+                        .setThingHasReq(ConceptProto.Thing.Has.Req.newBuilder()
                                                    .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
-
-                return Concept.Remote.of(runMethod(method).getThingRelhasRes().getRelation(), tx()).asRelation();
+                runMethod(method);
+                return this;
             }
 
             @Override

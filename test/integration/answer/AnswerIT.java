@@ -22,6 +22,8 @@ package grakn.client.test.integration.answer;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.MetaType;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.Graql;
@@ -63,7 +65,6 @@ public class AnswerIT {
         GraknSetup.shutdown(graknType);
     }
 
-
     @Test
     public void testExplanation() {
         GraknClient.Session session = client.session("test_rules");
@@ -85,7 +86,6 @@ public class AnswerIT {
                 "                    (owned: $d, owner: $e) isa ownership;").asInsert());
 
         tx.commit();
-
         tx = session.transaction().write();
 
         List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet()).get();

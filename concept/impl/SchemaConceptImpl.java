@@ -78,14 +78,6 @@ public abstract class SchemaConceptImpl {
         }
 
         @Override
-        public final Boolean isImplicit() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptIsImplicitReq(ConceptProto.SchemaConcept.IsImplicit.Req.getDefaultInstance()).build();
-
-            return runMethod(method).getSchemaConceptIsImplicitRes().getImplicit();
-        }
-
-        @Override
         public SchemaConcept.Remote<BaseType> label(Label label) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setSchemaConceptSetLabelReq(ConceptProto.SchemaConcept.SetLabel.Req.newBuilder()
