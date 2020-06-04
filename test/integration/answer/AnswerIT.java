@@ -86,7 +86,6 @@ public class AnswerIT {
                 "                    (owned: $d, owner: $e) isa ownership;").asInsert());
 
         tx.commit();
-        applicationTest
         tx = session.transaction().write();
 
         List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet());
