@@ -22,6 +22,7 @@ package grakn.client.test.integration.answer;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.MetaType;
 import grakn.client.test.setup.GraknProperties;
@@ -37,6 +38,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
+import static graql.lang.Graql.Token.ValueType.STRING;
+import static graql.lang.Graql.define;
+import static graql.lang.Graql.insert;
+import static graql.lang.Graql.match;
+import static graql.lang.Graql.type;
+import static graql.lang.Graql.var;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -117,5 +124,35 @@ public class AnswerIT {
 
         assertEquals(4, noExplanation);
         assertEquals(6, hasExplanation);
+    }
+
+    @Test
+    public void asynchronousWriteQueriesAreCompletedWhenTxCommit() {
+        try (GraknClient.Session session = client.session("test_async")) {
+            try (GraknClient.Transaction tx = session.transaction().write()) {
+                tx.execute(define(
+                        type("name").sub("attribute").value(STRING),
+                        type("person").sub("entity").has("name")
+                ));
+
+                tx.execute(insert(
+                        var("x").isa("person").has("name", "alice")
+                ));
+
+                tx.execute(insert(
+                        var("x").isa("person").has("name", "bob")
+                ));
+
+                tx.commit();
+            }
+
+            try (GraknClient.Transaction tx = session.transaction().write()) {
+                List<ConceptMap> answers = tx.execute(match(
+                        var("x").isa("person").has("name", var("y"))
+                ).get()).get();
+
+                assertEquals(answers.size(), 2);
+            }
+        }
     }
 }
