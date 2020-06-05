@@ -23,9 +23,9 @@ load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
 java_test(
     name = "test-core",
     srcs = [
-        "UndefineTest.java",
+        "DeleteTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.language.undefine.UndefineTest",
+    test_class = "grakn.client.test.behaviour.graql.language.delete.DeleteTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -40,7 +40,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:undefine.feature",
+        "@graknlabs_verification//behaviour/graql/language:delete.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -48,7 +48,7 @@ java_test(
         "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
-    size = "medium",
+    size = "large",
     visibility = ["//visibility:public"]
 )
 
@@ -59,9 +59,9 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "UndefineTest.java",
+        "DeleteTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.language.undefine.UndefineTest",
+    test_class = "grakn.client.test.behaviour.graql.language.delete.DeleteTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -76,7 +76,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:undefine.feature"
+        "@graknlabs_verification//behaviour/graql/language:delete.feature"
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
@@ -91,6 +91,7 @@ checkstyle_test(
     targets = [
         ":test-core",
         ":test-kgms",
+
     ],
     license_type = "apache"
 )
