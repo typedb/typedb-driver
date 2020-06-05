@@ -74,7 +74,7 @@ public class TracingIT {
 
                     tx.execute(Graql.parse("insert $x isa person, has name \"bob\";").asInsert());
 
-                    Stream<ConceptMap> answers = tx.stream(Graql.parse("match $x isa person, has name \"bob\"; get $x;").asGet());
+                    Stream<ConceptMap> answers = tx.stream(Graql.parse("match $x isa person, has name \"bob\"; get $x;").asGet()).get();
 
                     assertEquals(1, answers.count());
                 }

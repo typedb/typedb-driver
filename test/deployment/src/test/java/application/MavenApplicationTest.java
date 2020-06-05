@@ -16,7 +16,7 @@ public class MavenApplicationTest {
         GraknClient client = new GraknClient("localhost:48555");
         GraknClient.Session session = client.session("grakn");
         GraknClient.Transaction tx = session.transaction().write();
-        List<ConceptMap> answers = tx.execute(Graql.match(var("t").sub("thing")).get());
+        List<ConceptMap> answers = tx.execute(Graql.match(var("t").sub("thing")).get()).get();
         tx.close();
         session.close();
         assertEquals(4, answers.size());
