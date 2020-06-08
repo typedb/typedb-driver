@@ -33,7 +33,6 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ValueType;
-import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
@@ -69,23 +68,22 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
-import static grakn.client.rpc.Transceiver.Response.Type.OK;
 
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
@@ -283,101 +281,101 @@ public class GraknClient implements AutoCloseable {
             return session.keyspace();
         }
 
-        public List<ConceptMap> execute(GraqlDefine query) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlDefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.define")) {
                 return executeInternal(query, true);
             }
         }
 
-        public List<ConceptMap> execute(GraqlUndefine query) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlUndefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
                 return executeInternal(query, true);
             }
         }
 
-        public List<ConceptMap> execute(GraqlInsert query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
                 return executeInternal(query, infer);
             }
         }
-        public List<ConceptMap> execute(GraqlInsert query) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query) {
             return execute(query, true);
         }
 
-        public List<Void> execute(GraqlDelete query, boolean infer) {
+        public QueryFuture<List<Void>> execute(GraqlDelete query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.delete")) {
                 return executeInternal(query, infer);
             }
         }
-        public List<Void> execute(GraqlDelete query) {
+        public QueryFuture<List<Void>> execute(GraqlDelete query) {
             return execute(query, true);
         }
 
-        public List<ConceptMap> execute(GraqlGet query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
                 return executeInternal(query, infer);
             }
         }
-        public List<ConceptMap> execute(GraqlGet query) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query) {
             return execute(query, true);
         }
 
-        public Stream<ConceptMap> stream(GraqlDefine query) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.define")) {
                 return streamInternal(query, true);
             }
         }
 
-        public Stream<ConceptMap> stream(GraqlUndefine query) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.undefine")) {
                 return streamInternal(query, true);
             }
         }
 
-        public Stream<ConceptMap> stream(GraqlInsert query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.insert")) {
                 return streamInternal(query, infer);
             }
         }
-        public Stream<ConceptMap> stream(GraqlInsert query) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query) {
             return stream(query, true);
         }
 
-        public Stream<Void> stream(GraqlDelete query, boolean infer) {
+        public QueryFuture<Stream<Void>> stream(GraqlDelete query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.delete")) {
                 return streamInternal(query, infer);
             }
         }
-        public Stream<Void> stream(GraqlDelete query) {
+        public QueryFuture<Stream<Void>> stream(GraqlDelete query) {
             return stream(query, true);
         }
 
-        public Stream<ConceptMap> stream(GraqlGet query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get")) {
                 return streamInternal(query, infer);
             }
         }
-        public Stream<ConceptMap> stream(GraqlGet query) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query) {
             return stream(query, true);
         }
 
         // Aggregate Query
 
-        public List<Numeric> execute(GraqlGet.Aggregate query) {
+        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query) {
             return execute(query, true);
         }
 
-        public List<Numeric> execute(GraqlGet.Aggregate query, boolean infer) {
+        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
                 return executeInternal(query, infer);
             }
         }
 
-        public Stream<Numeric> stream(GraqlGet.Aggregate query) {
+        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query) {
             return stream(query, true);
         }
 
-        public Stream<Numeric> stream(GraqlGet.Aggregate query, boolean infer) {
+        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
                 return streamInternal(query, infer);
             }
@@ -385,21 +383,21 @@ public class GraknClient implements AutoCloseable {
 
         // Group Query
 
-        public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query) {
+        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query) {
             return execute(query, true);
         }
 
-        public List<AnswerGroup<ConceptMap>> execute(GraqlGet.Group query, boolean infer) {
+        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
                 return executeInternal(query, infer);
             }
         }
 
-        public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query) {
+        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query) {
             return stream(query, true);
         }
 
-        public Stream<AnswerGroup<ConceptMap>> stream(GraqlGet.Group query, boolean infer) {
+        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
                 return streamInternal(query, infer);
             }
@@ -408,22 +406,22 @@ public class GraknClient implements AutoCloseable {
 
         // Group Aggregate Query
 
-        public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query) {
+        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query) {
             return execute(query, true);
         }
 
-        public List<AnswerGroup<Numeric>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
+        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
                 return executeInternal(query, infer);
             }
         }
 
 
-        public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query) {
+        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query) {
             return stream(query, true);
         }
 
-        public Stream<AnswerGroup<Numeric>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
+        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
                 return streamInternal(query, infer);
             }
@@ -431,49 +429,49 @@ public class GraknClient implements AutoCloseable {
 
         // Compute Query
 
-        public List<Numeric> execute(GraqlCompute.Statistics query) {
+        public QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.statistics")) {
                 return executeInternal(query, false);
             }
         }
 
-        public Stream<Numeric> stream(GraqlCompute.Statistics query) {
+        public QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.statistics")) {
                 return streamInternal(query, false);
             }
         }
 
-        public List<ConceptList> execute(GraqlCompute.Path query) {
+        public QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.path")) {
                 return executeInternal(query, false);
             }
         }
 
-        public Stream<ConceptList> stream(GraqlCompute.Path query) {
+        public QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.path")) {
                 return streamInternal(query, false);
             }
         }
 
-        public List<ConceptSetMeasure> execute(GraqlCompute.Centrality query) {
+        public QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.centrality")) {
                 return executeInternal(query, false);
             }
         }
 
-        public Stream<ConceptSetMeasure> stream(GraqlCompute.Centrality query) {
+        public QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.centrality")) {
                 return streamInternal(query, false);
             }
         }
 
-        public List<ConceptSet> execute(GraqlCompute.Cluster query) {
+        public QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.cluster")) {
                 return executeInternal(query, false);
             }
         }
 
-        public Stream<ConceptSet> stream(GraqlCompute.Cluster query) {
+        public QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.cluster")) {
                 return streamInternal(query, false);
             }
@@ -481,11 +479,11 @@ public class GraknClient implements AutoCloseable {
 
         // Generic queries
 
-        public List<? extends Answer> execute(GraqlQuery query) {
+        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query) {
             return execute(query, true);
         }
 
-        public List<? extends Answer> execute(GraqlQuery query, boolean infer) {
+        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, boolean infer) {
             if (query instanceof GraqlDefine) {
                 return execute((GraqlDefine) query);
 
@@ -527,11 +525,11 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public Stream<? extends Answer> stream(GraqlQuery query) {
+        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query) {
             return stream(query, true);
         }
 
-        public Stream<? extends Answer> stream(GraqlQuery query, boolean infer) {
+        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, boolean infer) {
             if (query instanceof GraqlDefine) {
                 return stream((GraqlDefine) query);
 
@@ -573,13 +571,17 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private <T extends Answer> List<T> executeInternal(GraqlQuery query, boolean infer) {
-            return this.<T>streamInternal(query, infer).collect(Collectors.toList());
+        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer) {
+            return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), infer),
+                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
-        private <T extends Answer> Stream<T> streamInternal(GraqlQuery query, boolean infer) {
-            return iterate(RequestBuilder.Transaction.query(query.toString(), infer),
-                    response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer) {
+            return new QueryExecuteFuture<>(getQueryIterator(query, infer));
+        }
+
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer) {
+            return new QueryStreamFuture<>(getQueryIterator(query, infer));
         }
 
         public void close() {
@@ -595,79 +597,15 @@ public class GraknClient implements AutoCloseable {
             return !isOpen();
         }
 
-        private ReentrantLock lock = new ReentrantLock();
-
         private SessionProto.Transaction.Res sendAndReceiveOrThrow(SessionProto.Transaction.Req request) {
-            Transceiver.Response response;
-
             try {
-                response = transceiver.sendAndReceive(request);
+                return transceiver.sendAndReceive(request);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 // This is called from classes like Transaction, that impl methods which do not throw InterruptedException
                 // Therefore, we have to wrap it in a RuntimeException.
                 throw new RuntimeException(e);
             }
-
-            switch (response.type()) {
-                case OK:
-                    return response.ok();
-                case ERROR:
-                    // TODO: parse different GRPC errors into specific GraknClientException
-                    throw GraknClientException.create(response.error().getMessage(), response.error());
-                case COMPLETED:
-                    // This will occur when interrupting a running query/operation on the current transaction
-                    throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
-                default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
-            }
-        }
-
-        private static class TransactionIterator extends AbstractIterator<SessionProto.Transaction.Iter.Res> implements Transceiver.ResponseReceiver {
-            private final BlockingQueue<Transceiver.Response> queue = new LinkedBlockingQueue<>();
-
-            @Override
-            public boolean onResponse(Transceiver.Response response) {
-                queue.add(response);
-                if (response.type() == OK) {
-                    SessionProto.Transaction.Iter.Res iterRes = response.ok().getIterRes();
-                    switch (iterRes.getResCase()) {
-                        case DONE:
-                        case ITERATORID:
-                            return false;
-                        default:
-                            return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            protected SessionProto.Transaction.Iter.Res computeNext() {
-                Transceiver.Response response;
-                try {
-                    response = queue.take();
-                } catch (InterruptedException e) {
-                    throw GraknConceptException.create("Iteration Interrupted");
-                }
-
-                switch (response.type()) {
-                    case OK:
-                        return response.ok().getIterRes();
-                    case ERROR:
-                        throw GraknClientException.create(response.error().getMessage(), response.error());
-                    case COMPLETED:
-                        throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
-                    default:
-                        throw GraknClientException.unreachableStatement("Unexpected response " + response);
-                }
-            }
-        }
-
-        private Iterator<SessionProto.Transaction.Iter.Res> sendAndReceiveIter(SessionProto.Transaction.Iter.Req request) {
-            TransactionIterator iterator = new TransactionIterator();
-            transceiver.sendAndReceiveAsync(SessionProto.Transaction.Req.newBuilder().setIterReq(request).build(), iterator);
-            return iterator;
         }
 
         public void commit() {
@@ -881,6 +819,86 @@ public class GraknClient implements AutoCloseable {
             return Objects.requireNonNull(StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false));
         }
 
+        public abstract class QueryFuture<T> implements Future<T> {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false; // Can't cancel
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false; // Can't cancel
+            }
+
+            @Override
+            public boolean isDone() {
+                return getIterator().isStarted();
+            }
+
+            @Override
+            public T get() {
+                try {
+                    getIterator().waitForStart();
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                return getInternal();
+            }
+
+            @Override
+            public T get(long timeout, TimeUnit unit) throws TimeoutException {
+                try {
+                    getIterator().waitForStart(timeout, unit);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
+                return getInternal();
+            }
+
+            protected abstract RPCIterator<?> getIterator();
+            protected abstract T getInternal();
+        }
+
+        private class QueryStreamFuture<T> extends QueryFuture<Stream<T>> {
+            private RPCIterator<T> iterator;
+
+            protected QueryStreamFuture(RPCIterator<T> iterator) {
+                this.iterator = iterator;
+            }
+
+            @Override
+            protected RPCIterator<?> getIterator() {
+                return iterator;
+            }
+
+            @Override
+            protected Stream<T> getInternal() {
+                return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
+            }
+        }
+
+        private class QueryExecuteFuture<T> extends QueryFuture<List<T>> {
+            private RPCIterator<T> iterator;
+
+            protected QueryExecuteFuture(RPCIterator<T> iterator) {
+                this.iterator = iterator;
+            }
+
+            @Override
+            protected RPCIterator<?> getIterator() {
+                return iterator;
+            }
+
+            @Override
+            protected List<T> getInternal() {
+                List<T> result = new ArrayList<>();
+                iterator.forEachRemaining(result::add);
+                return result;
+            }
+        }
+
         /**
          * A client-side iterator over gRPC messages. Will send SessionProto.Transaction.Iter.Req messages until
          * SessionProto.Transaction.Iter.Res returns done as a message.
@@ -888,54 +906,87 @@ public class GraknClient implements AutoCloseable {
          * @param <T> class type of objects being iterated
          */
         public class RPCIterator<T> extends AbstractIterator<T> {
-            private SessionProto.Transaction.Iter.Req request;
-            private SessionProto.Transaction.Iter.Req.Options requestOptions;
             private Function<SessionProto.Transaction.Iter.Res, T> responseReader;
-            private int iteratorId = 0;
+            private Batch currentBatch;
+            private volatile boolean started;
+            private SessionProto.Transaction.Iter.Res first;
+            private SessionProto.Transaction.Iter.Req.Options options;
 
-            private Iterator<SessionProto.Transaction.Iter.Res> currentIterator = null;
-
-            private RPCIterator(SessionProto.Transaction.Iter.Req request, Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
-                this.request = request;
+            private RPCIterator(SessionProto.Transaction.Iter.Req req,
+                                Function<SessionProto.Transaction.Iter.Res, T> responseReader) {
                 this.responseReader = responseReader;
-                this.requestOptions = request.getOptions();
+                options = req.getOptions();
+                sendRequest(req);
             }
 
-            private void startIterating() {
-                currentIterator = sendAndReceiveIter(request);
+            private void sendRequest(SessionProto.Transaction.Iter.Req req) {
+                currentBatch = new Batch();
+
+                SessionProto.Transaction.Req transactionReq = SessionProto.Transaction.Req.newBuilder()
+                        .setIterReq(req).build();
+
+                transceiver.sendAndReceiveMultipleAsync(transactionReq, currentBatch);
             }
 
-            private void requestBatch() {
-                currentIterator = sendAndReceiveIter(SessionProto.Transaction.Iter.Req.newBuilder()
-                                .setOptions(requestOptions)
-                                .setIteratorId(iteratorId).build());
+            private void nextBatch(int iteratorId) {
+                SessionProto.Transaction.Iter.Req iterReq = SessionProto.Transaction.Iter.Req.newBuilder()
+                        .setIteratorId(iteratorId)
+                        .setOptions(options)
+                        .build();
+
+                sendRequest(iterReq);
             }
 
-            private T processNext(SessionProto.Transaction.Iter.Res response) {
-                switch (response.getResCase()) {
+            private class Batch extends Transceiver.MultiResponseCollector {
+                @Override
+                protected boolean isLastResponse(SessionProto.Transaction.Res response) {
+                    SessionProto.Transaction.Iter.Res iterRes = response.getIterRes();
+                    return iterRes.getIteratorId() != 0 || iterRes.getDone();
+                }
+            }
+
+            public boolean isStarted() {
+                return started;
+            }
+
+            public void waitForStart(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+                if (first != null) {
+                    throw new IllegalStateException("Should not poll RPCIterator multiple times");
+                }
+
+                first = currentBatch.poll(timeout, unit).getIterRes();
+            }
+
+            public void waitForStart() throws InterruptedException {
+
+            }
+
+            @Override
+            protected T computeNext() {
+                if (first != null) {
+                    SessionProto.Transaction.Iter.Res iterRes = first;
+                    first = null;
+                    return responseReader.apply(iterRes);
+                }
+
+                SessionProto.Transaction.Iter.Res res;
+                try {
+                    res = currentBatch.take().getIterRes();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+                started = true;
+                switch (res.getResCase()) {
+                    case ITERATORID:
+                        nextBatch(res.getIteratorId());
+                        return computeNext();
                     case DONE:
                         return endOfData();
-                    case ITERATORID:
-                        iteratorId = response.getIteratorId();
-                        requestBatch();
-                        return computeNext();
                     case RES_NOT_SET:
-                        throw GraknClientException.unreachableStatement("Unexpected " + response);
+                        throw new IllegalStateException("Received an empty response");
                     default:
-                        return responseReader.apply(response);
-                }
-            }
-
-            protected final T computeNext() {
-                if (currentIterator == null) {
-                    startIterating();
-                }
-
-                if (currentIterator.hasNext()) {
-                    return processNext(currentIterator.next());
-                } else {
-                    // processNext should handle the iteration end due to a done or batch done response
-                    throw GraknClientException.create("Unexpected end of iteration");
+                        return responseReader.apply(res);
                 }
             }
         }

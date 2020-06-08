@@ -198,9 +198,9 @@ public class GraqlSteps {
     public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         if (graqlQuery instanceof GraqlGet) {
-            answers = tx.execute(graqlQuery.asGet());
+            answers = tx.execute(graqlQuery.asGet()).get();
         } else if (graqlQuery instanceof GraqlInsert) {
-            answers = tx.execute(graqlQuery.asInsert());
+            answers = tx.execute(graqlQuery.asInsert()).get();
         } else {
             throw new ScenarioDefinitionException("Only match-get and inserted supported for now");
         }
@@ -358,7 +358,7 @@ public class GraqlSteps {
         for (ConceptMap answer : answers) {
             String query = applyQueryTemplate(templatedQuery, answer);
             GraqlQuery graqlQuery = Graql.parse(query);
-            List<? extends Answer> answers = tx.execute(graqlQuery);
+            List<? extends Answer> answers = tx.execute(graqlQuery).get();
             assertEquals(1, answers.size());
         }
     }
