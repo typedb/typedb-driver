@@ -241,7 +241,7 @@ public class Transceiver implements AutoCloseable {
 
             // Exhaust the queue
             while (currentCollector != null || collectorQueue.peek() != null) {
-                dispatchResponse(Response.completed());
+                dispatchResponse(Response.error((Exception) throwable));
             }
         }
 

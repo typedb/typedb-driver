@@ -22,9 +22,8 @@ package grakn.client.test.integration.answer;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
-import grakn.client.concept.ValueType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.MetaType;
+import grakn.client.concept.GraknConceptException;
+import grakn.client.exception.GraknClientException;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.Graql;
@@ -46,8 +45,8 @@ import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Integration Tests for Answers and Explanations
@@ -152,6 +151,21 @@ public class AnswerIT {
                 ).get()).get();
 
                 assertEquals(answers.size(), 2);
+            }
+        }
+    }
+
+    @Test
+    public void writingInAReadTransactionThrows() {
+        try (GraknClient.Session session = client.session("test")) {
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+                tx.execute(Graql.parse("define newentity sub entity;").asDefine());
+                tx.commit();
+                fail();
+            } catch (Exception ex) {
+                if (!ex.getMessage().contains("is read only")) {
+                    fail();
+                }
             }
         }
     }
