@@ -205,7 +205,7 @@ public class RequestBuilder {
             } else if (value instanceof Double) {
                 builder.setDouble((double) value);
             } else if (value instanceof LocalDateTime) {
-                builder.setDate(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
+                builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + value);
             }
@@ -228,7 +228,7 @@ public class RequestBuilder {
                     return (ValueType<D>) ValueType.FLOAT;
                 case DOUBLE:
                     return (ValueType<D>) ValueType.DOUBLE;
-                case DATE:
+                case DATETIME:
                     return (ValueType<D>) ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
@@ -250,7 +250,7 @@ public class RequestBuilder {
             } else if (valueType.equals(ValueType.DOUBLE)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
             } else if (valueType.equals(ValueType.DATETIME)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.DATE; // TODO update in protocol
+                return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
             }
