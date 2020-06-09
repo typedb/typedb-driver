@@ -162,12 +162,10 @@ public class AnswerIT {
                 tx.execute(Graql.parse("define newentity sub entity;").asDefine());
                 tx.commit();
                 fail();
-            } catch (GraknConceptException ex) {
+            } catch (Exception ex) {
                 if (!ex.getMessage().contains("is read only")) {
                     fail();
                 }
-            } catch (Exception ex) {
-                fail();
             }
         }
     }
