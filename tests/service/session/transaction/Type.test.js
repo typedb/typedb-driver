@@ -68,7 +68,7 @@ describe("Type methods", () => {
 
     it("get/set/delete attributes", async () => {
         const type = await tx.putEntityType('person');
-        const nameType = await tx.putAttributeType('name', env.dataType().STRING);
+        const nameType = await tx.putAttributeType('name', env.valueType().STRING);
         const attrs = await (await type.attributes()).collect();
         expect(attrs.length).toBe(0);
         await type.has(nameType);
@@ -91,7 +91,7 @@ describe("Type methods", () => {
 
     it("Get/set/delete key", async () => {
         const type = await tx.putEntityType('person');
-        const nameType = await tx.putAttributeType('name', env.dataType().STRING);
+        const nameType = await tx.putAttributeType('name', env.valueType().STRING);
         const keys = await (await type.keys()).collect();
         expect(keys.length).toBe(0);
         await type.key(nameType);

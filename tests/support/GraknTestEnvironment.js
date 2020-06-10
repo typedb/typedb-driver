@@ -89,7 +89,7 @@ module.exports = {
         execGraknCommand(getServerCommand('stop'));
         fs.removeSync(tempRootDir);
     },
-    dataType: () => GraknClient.dataType,
+    valueType: () => GraknClient.valueType,
     graknClient,
     buildParentship: async (localTx) => {
         const relationType = await localTx.putRelationType('parentship');

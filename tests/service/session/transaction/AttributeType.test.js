@@ -41,33 +41,33 @@ afterEach(() => {
 describe("Attribute type methods", () => {
 
     it("create", async () => {
-        const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
+        const attributeType = await tx.putAttributeType("firstname", env.valueType().STRING);
         const attribute = await attributeType.create('Marco');
         expect(attribute.isAttribute()).toBeTruthy();
         expect(await attribute.value()).toBe('Marco');
 
-        const boolAttributeType = await tx.putAttributeType("employed", env.dataType().BOOLEAN);
+        const boolAttributeType = await tx.putAttributeType("employed", env.valueType().BOOLEAN);
         const boolAttribute = await boolAttributeType.create(false);
         expect(await boolAttribute.value()).toBe(false);
 
-        const doubleAttributeType = await tx.putAttributeType("length", env.dataType().DOUBLE);
+        const doubleAttributeType = await tx.putAttributeType("length", env.valueType().DOUBLE);
         const doubleAttribute = await doubleAttributeType.create(11.58);
         expect(await doubleAttribute.value()).toBe(11.58);
     });
 
-    it('dataType', async () => {
-        const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
-        expect(await attributeType.dataType()).toBe('String');
+    it('valueType', async () => {
+        const attributeType = await tx.putAttributeType("firstname", env.valueType().STRING);
+        expect(await attributeType.valueType()).toBe('String');
 
-        const boolAttributeType = await tx.putAttributeType("employed", env.dataType().BOOLEAN);
-        expect(await boolAttributeType.dataType()).toBe('Boolean');
+        const boolAttributeType = await tx.putAttributeType("employed", env.valueType().BOOLEAN);
+        expect(await boolAttributeType.valueType()).toBe('Boolean');
 
-        const doubleAttributeType = await tx.putAttributeType("length", env.dataType().DOUBLE);
-        expect(await doubleAttributeType.dataType()).toBe('Double');
+        const doubleAttributeType = await tx.putAttributeType("length", env.valueType().DOUBLE);
+        expect(await doubleAttributeType.valueType()).toBe('Double');
     });
 
     it('attribute', async () => {
-        const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
+        const attributeType = await tx.putAttributeType("firstname", env.valueType().STRING);
         await attributeType.create('Marco');
         const attribute = await attributeType.attribute('Marco');
         expect(attribute.isAttribute()).toBeTruthy();
@@ -76,7 +76,7 @@ describe("Attribute type methods", () => {
     });
 
     it('set/get regex', async () => {
-        const attributeType = await tx.putAttributeType("id", env.dataType().STRING);
+        const attributeType = await tx.putAttributeType("id", env.valueType().STRING);
         const emptyRegex = await attributeType.regex();
         expect(emptyRegex.length).toBe(0);
 

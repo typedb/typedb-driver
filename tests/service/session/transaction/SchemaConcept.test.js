@@ -52,15 +52,6 @@ describe("Schema concept methods", () => {
         expect(nullSchemaConcept).toBeNull();
     });
 
-    it("isImplicit", async () => {
-        await tx.query('define person sub entity;')
-        const personSchemaConcept = await tx.getSchemaConcept('person');
-        expect(await personSchemaConcept.isImplicit()).toBe(false);
-        await tx.query('define person has name; name sub attribute, datatype string;');
-        const implicitSchemaConcept = await tx.getSchemaConcept('@has-name');
-        expect(await implicitSchemaConcept.isImplicit()).toBe(true);
-    });
-
     it("Get sups and subs", async () => {
         await tx.query('define person sub entity;')
         const personSchemaConcept = await tx.getSchemaConcept('person');

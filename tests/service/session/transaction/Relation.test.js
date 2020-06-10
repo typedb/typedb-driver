@@ -124,8 +124,7 @@ describe("Relation methods", () => {
         expect(rolePlayers[0].isThing()).toBeTruthy();
         expect(rolePlayers[0].id).toBe(person.id);
         await relation.unassign(parentRole, person);
-        const rolePlayersRemoved = await (await relation.rolePlayers()).collect();
-        expect(rolePlayersRemoved.length).toBe(0);
+        expect(await relation.isDeleted()).toBeTruthy();
 
     });
 

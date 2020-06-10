@@ -41,13 +41,13 @@ afterEach(() => {
 describe("Attribute methods", () => {
 
     it("value", async () => {
-        const doubleAttributeType = await tx.putAttributeType("length", env.dataType().DOUBLE);
+        const doubleAttributeType = await tx.putAttributeType("length", env.valueType().DOUBLE);
         const doubleAttribute = await doubleAttributeType.create(11.58);
         expect(await doubleAttribute.value()).toBe(11.58);
     });
 
-    it("get value Date", async () => {
-        const dateType = await tx.putAttributeType("birth-date", env.dataType().DATE);
+    it("get value Datetime", async () => {
+        const dateType = await tx.putAttributeType("birth-date", env.valueType().DATETIME);
         const personType = await tx.putEntityType('person');
         await personType.has(dateType);
         const iterator = await tx.query("insert $x isa person, has birth-date 2018-08-06;");
@@ -59,8 +59,8 @@ describe("Attribute methods", () => {
         expect(value instanceof Date).toBeTruthy();
     });
 
-    it("set value Date", async () => {
-        const dateType = await tx.putAttributeType("birth-date", env.dataType().DATE);
+    it("set value Relation methods assig", async () => {
+        const dateType = await tx.putAttributeType("birth-date", env.valueType().DATETIME);
         const testDate = new Date('2018-08-06');
         const date = await dateType.create(testDate);
         const value = await date.value();
@@ -71,7 +71,7 @@ describe("Attribute methods", () => {
     it("owners", async () => {
         const personType = await tx.putEntityType('person');
         const animalType = await tx.putEntityType('animal');
-        const nameType = await tx.putAttributeType("name", env.dataType().STRING);
+        const nameType = await tx.putAttributeType("name", env.valueType().STRING);
         await personType.has(nameType);
         await animalType.has(nameType);
         const person = await personType.create();

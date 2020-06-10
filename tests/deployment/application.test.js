@@ -22,7 +22,7 @@ afterEach(async () => {
 describe("Basic GraknClient Tests", () => {
 
     test("define", async () => {
-        const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
+        const defined = await tx.query("define person sub entity, has name; name sub attribute, value string;");
         await tx.commit();
     });
 
@@ -32,7 +32,7 @@ describe("Basic GraknClient Tests", () => {
     });
 
     test("insert", async () => {
-        const defined = await tx.query("define person sub entity, has name; name sub attribute, datatype string;");
+        const defined = await tx.query("define person sub entity, has name; name sub attribute, value string;");
         const inserted = await tx.query("insert $x isa person, has name \"john\";");
         await tx.commit();
     });

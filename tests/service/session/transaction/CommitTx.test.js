@@ -81,8 +81,11 @@ describe('Integration test', () => {
         const iterator = await tx.query("match $x isa cousins; get;");
         const answer = await iterator.next();
         expect(answer.map().size).toBe(1);
-        expect((await answer.explanation()).getAnswers().length).toEqual(3);
+        expect((await answer.explanation()).getAnswers().length).toEqual(1);
         expect(answer.queryPattern().includes("$x isa cousins;")).toBeTruthy();
+
+        explanationAnswer = (await answer.explanation()).getAnswers()[0];
+        expect((await explanationAnswer.explanation()).getAnswers().length).toEqual(3);
         await tx.close();
         await localSession.close();
     });

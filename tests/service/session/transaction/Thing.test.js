@@ -108,7 +108,7 @@ describe("Thing methods", () => {
 
     it("has/unhas/get attributes", async () => {
         const personType = await tx.putEntityType('person');
-        const attrType = await tx.putAttributeType('name', env.dataType().STRING);
+        const attrType = await tx.putAttributeType('name', env.valueType().STRING);
         await personType.has(attrType);
         const person = await personType.create();
         const name = await attrType.create('Marco');
@@ -123,9 +123,9 @@ describe("Thing methods", () => {
 
     it("attributes(...AttributeType)", async () => {
         const personType = await tx.putEntityType('person');
-        const attrType = await tx.putAttributeType('name', env.dataType().STRING);
-        const attrMarriedType = await tx.putAttributeType('married', env.dataType().BOOLEAN);
-        const whateverType = await tx.putAttributeType('whatever', env.dataType().FLOAT);
+        const attrType = await tx.putAttributeType('name', env.valueType().STRING);
+        const attrMarriedType = await tx.putAttributeType('married', env.valueType().BOOLEAN);
+        const whateverType = await tx.putAttributeType('whatever', env.valueType().FLOAT);
         await personType.has(attrType);
         await personType.has(attrMarriedType);
         const person = await personType.create();
@@ -144,8 +144,8 @@ describe("Thing methods", () => {
 
     it('keys(...AttributeType)', async () => {
         const personType = await tx.putEntityType('person');
-        const nameType = await tx.putAttributeType('name', env.dataType().STRING);
-        const surnameType = await tx.putAttributeType('surname', env.dataType().STRING);
+        const nameType = await tx.putAttributeType('name', env.valueType().STRING);
+        const surnameType = await tx.putAttributeType('surname', env.valueType().STRING);
 
         await personType.key(nameType);
         await personType.has(surnameType);

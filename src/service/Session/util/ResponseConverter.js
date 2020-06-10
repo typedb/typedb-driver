@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
 /**
  * This is used to parse gRPC responses and build type of Concepts or Iterators
@@ -29,9 +29,6 @@ class ResponseConverter {
     // SchemaConcept
     getLabel(resp) {
         return resp.getConceptmethodRes().getResponse().getSchemaconceptGetlabelRes().getLabel();
-    }
-    isImplicit(resp) {
-        return resp.getConceptmethodRes().getResponse().getSchemaconceptIsimplicitRes().getImplicit();
     }
     subs(resp) {
         const grpcConcept = resp.getConceptmethodIterRes().getResponse().getSchemaconceptSubsIterRes().getSchemaconcept();
@@ -81,16 +78,16 @@ class ResponseConverter {
         const grpcConcept = resp.getConceptmethodRes().getResponse().getAttributetypeCreateRes().getAttribute();
         return this.conceptFactory.createConcept(grpcConcept);
     }
-    getDataTypeOfType(resp) {
-        const dataType = resp.getConceptmethodRes().getResponse().getAttributetypeDatatypeRes().getDatatype();
-        switch (dataType) {
-            case ProtoDataType.STRING: return "String";
-            case ProtoDataType.BOOLEAN: return "Boolean";
-            case ProtoDataType.INTEGER: return "Integer";
-            case ProtoDataType.LONG: return "Long";
-            case ProtoDataType.FLOAT: return "Float";
-            case ProtoDataType.DOUBLE: return "Double";
-            case ProtoDataType.DATE: return "Date";
+    getValueTypeOfType(resp) {
+        const valueType = resp.getConceptmethodRes().getResponse().getAttributetypeValuetypeRes().getValuetype();
+        switch (valueType) {
+            case ProtoValueType.STRING: return "String";
+            case ProtoValueType.BOOLEAN: return "Boolean";
+            case ProtoValueType.INTEGER: return "Integer";
+            case ProtoValueType.LONG: return "Long";
+            case ProtoValueType.FLOAT: return "Float";
+            case ProtoValueType.DOUBLE: return "Double";
+            case ProtoValueType.DATETIME: return "Datetime";
         }
     }
     getRegex(resp) {
@@ -144,8 +141,8 @@ class ResponseConverter {
             return attrValue.getFloat();
         if (attrValue.hasDouble())
             return attrValue.getDouble();
-        if (attrValue.hasDate())
-            return new Date(attrValue.getDate());
+        if (attrValue.hasDatetime())
+            return new Date(attrValue.getDatetime());
     }
     getOwners(resp) {
         const grpcConcept = resp.getConceptmethodIterRes().getResponse().getAttributeOwnersIterRes().getThing();

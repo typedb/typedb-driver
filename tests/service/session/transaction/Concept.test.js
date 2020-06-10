@@ -79,7 +79,7 @@ describe("Concept methods", () => {
         expect(marriage.isRelation()).toBeTruthy();
         expect(marriage.isAttribute()).toBeFalsy();
 
-        const attributeType = await tx.putAttributeType('employed', env.dataType().BOOLEAN);
+        const attributeType = await tx.putAttributeType('employed', env.valueType().BOOLEAN);
         const employed = await attributeType.create(true);
         expect(employed.isEntity()).toBeFalsy();
         expect(employed.isRelation()).toBeFalsy();
@@ -174,7 +174,7 @@ describe("Concept methods", () => {
     });
 
     it("putAttributeType", async () => {
-        const attributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
+        const attributeType = await tx.putAttributeType("firstname", env.valueType().STRING);
         expect(attributeType.isAttributeType()).toBeTruthy();
     });
 
@@ -194,11 +194,11 @@ describe("Concept methods", () => {
     });
 
     it("getAttributesByValue", async () => {
-        const firstNameAttributeType = await tx.putAttributeType("firstname", env.dataType().STRING);
-        const middleNameAttributeType = await tx.putAttributeType("middlename", env.dataType().STRING);
+        const firstNameAttributeType = await tx.putAttributeType("firstname", env.valueType().STRING);
+        const middleNameAttributeType = await tx.putAttributeType("middlename", env.valueType().STRING);
         const a1 = await firstNameAttributeType.create('James');
         const a2 = await middleNameAttributeType.create('James');
-        const attributes = await (await tx.getAttributesByValue('James', env.dataType().STRING)).collect();
+        const attributes = await (await tx.getAttributesByValue('James', env.valueType().STRING)).collect();
         expect(attributes.length).toBe(2);
         expect(attributes.filter(a => a.id === a1.id).length).toBe(1);
         expect(attributes.filter(a => a.id === a2.id).length).toBe(1);
@@ -206,7 +206,7 @@ describe("Concept methods", () => {
             expect(attr.isAttribute()).toBeTruthy();
             expect(await attr.value()).toBe('James');
         });
-        const bondAttributes = await (await tx.getAttributesByValue('Bond', env.dataType().STRING)).collect();
+        const bondAttributes = await (await tx.getAttributesByValue('Bond', env.valueType().STRING)).collect();
         expect(bondAttributes.length).toBe(0);
     });
 
@@ -219,7 +219,7 @@ describe("Concept methods", () => {
         expect(await personOne.isDeleted()).toEqual(true);
 
         const personTwo = await personType.create();
-        await tx.query("match $x isa person; delete $x;");
+        await tx.query("match $x isa person; delete $x isa person;");
         expect(await personTwo.isDeleted()).toEqual(true);
     });
 });

@@ -66,11 +66,6 @@ TransactionService.prototype.setLabel = function (id, label) {
     const txRequest = RequestBuilder.setLabel(id, label);
     return this.communicator.send(txRequest);
 };
-TransactionService.prototype.isImplicit = function (id) {
-    const txRequest = RequestBuilder.isImplicit(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.isImplicit(resp));
-}
 TransactionService.prototype.subs = function (id) {
     const iterRequest = RequestBuilder.subs(id);
     return this.iteratorFactory.createIterator(iterRequest,
@@ -199,25 +194,25 @@ TransactionService.prototype.unsetRelatedRole = function (id, role) {
 
 // Attribute type
 TransactionService.prototype.putAttribute = async function (id, value) {
-    const dataTypeTxRequest = RequestBuilder.getDataTypeOfType(id);
-    const resp = await this.communicator.send(dataTypeTxRequest);
-    const dataType = resp.getConceptmethodRes().getResponse().getAttributetypeDatatypeRes().getDatatype();
-    const txRequest = RequestBuilder.putAttribute(id, dataType, value);
+    const valueTypeTxRequest = RequestBuilder.getValueTypeOfType(id);
+    const resp = await this.communicator.send(valueTypeTxRequest);
+    const valueType = resp.getConceptmethodRes().getResponse().getAttributetypeValuetypeRes().getValuetype();
+    const txRequest = RequestBuilder.putAttribute(id, valueType, value);
     return this.communicator.send(txRequest)
         .then(resp => this.respConverter.putAttribute(resp));
 };
 TransactionService.prototype.getAttribute = async function (id, value) {
-    const dataTypeTxRequest = RequestBuilder.getDataTypeOfType(id);
-    const resp = await this.communicator.send(dataTypeTxRequest);
-    const dataType = resp.getConceptmethodRes().getResponse().getAttributetypeDatatypeRes().getDatatype();
-    const txRequest = RequestBuilder.getAttribute(id, dataType, value);
+    const valueTypeTxRequest = RequestBuilder.getValueTypeOfType(id);
+    const resp = await this.communicator.send(valueTypeTxRequest);
+    const valueType = resp.getConceptmethodRes().getResponse().getAttributetypeValuetypeRes().getValuetype();
+    const txRequest = RequestBuilder.getAttribute(id, valueType, value);
     return this.communicator.send(txRequest)
         .then(resp => this.respConverter.getAttribute(resp));
 };
-TransactionService.prototype.getDataTypeOfType = function (id) {
-    const txRequest = RequestBuilder.getDataTypeOfType(id);
+TransactionService.prototype.getValueTypeOfType = function (id) {
+    const txRequest = RequestBuilder.getValueTypeOfType(id);
     return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getDataTypeOfType(resp));
+        .then(resp => this.respConverter.getValueTypeOfType(resp));
 };
 TransactionService.prototype.getRegex = function (id) {
     const txRequest = RequestBuilder.getRegex(id);
@@ -339,14 +334,14 @@ TransactionService.prototype.putRule = function (label, when, then) {
         .then(response => this.respConverter.putRule(response));
 }
 
-TransactionService.prototype.putAttributeType = function (label, dataType) {
-    const txRequest = RequestBuilder.putAttributeType(label, dataType);
+TransactionService.prototype.putAttributeType = function (label, valueType) {
+    const txRequest = RequestBuilder.putAttributeType(label, valueType);
     return this.communicator.send(txRequest)
         .then(response => this.respConverter.putAttributeType(response));
 }
 
-TransactionService.prototype.getAttributesByValue = function (value, dataType) {
-    const iterRequest = RequestBuilder.startGetAttributesByValueIter(value, dataType);
+TransactionService.prototype.getAttributesByValue = function (value, valueType) {
+    const iterRequest = RequestBuilder.startGetAttributesByValueIter(value, valueType);
     return this.iteratorFactory.createIterator(iterRequest,
         (response) => this.respConverter.getAttributesByValue(response));
 }

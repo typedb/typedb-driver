@@ -22,18 +22,18 @@ module.exports = {} // Fix circular dependency
 const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const ConceptFactory = require('./ConceptFactory');
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 
-function convertDataType(dataTypeRes) {
-    if (dataTypeRes.hasNull()) return null;
-    switch (dataTypeRes.getDatatype()) {
-        case ProtoDataType.STRING: return "String";
-        case ProtoDataType.BOOLEAN: return "Boolean";
-        case ProtoDataType.INTEGER: return "Integer";
-        case ProtoDataType.LONG: return "Long";
-        case ProtoDataType.FLOAT: return "Float";
-        case ProtoDataType.DOUBLE: return "Double";
-        case ProtoDataType.DATE: return "Date";
+function convertValueType(valueTypeRes) {
+    if (valueTypeRes.hasNull()) return null;
+    switch (valueTypeRes.getValuetype()) {
+        case ProtoValueType.STRING: return "String";
+        case ProtoValueType.BOOLEAN: return "Boolean";
+        case ProtoValueType.INTEGER: return "Integer";
+        case ProtoValueType.LONG: return "Long";
+        case ProtoValueType.FLOAT: return "Float";
+        case ProtoValueType.DOUBLE: return "Double";
+        case ProtoValueType.DATETIME: return "Datetime";
     }
 }
 
@@ -50,8 +50,8 @@ function convertValue(attrValue) {
         return attrValue.getFloat();
     if (attrValue.hasDouble())
         return attrValue.getDouble();
-    if (attrValue.hasDate())
-        return new Date(attrValue.getDate());
+    if (attrValue.hasDatetime())
+        return new Date(attrValue.getDatetime());
 }
 
 class Concept {
@@ -80,11 +80,9 @@ class Concept {
 class SchemaConcept extends Concept {
     constructor(grpcConcept) {
         super(grpcConcept)
-        this._implicit = grpcConcept.getIsimplicitRes().getImplicit();
         this._label = grpcConcept.getLabelRes().getLabel();
     }
 
-    isImplicit() { return this._implicit; }
     label() { return this._label; }
 }
 
@@ -106,10 +104,10 @@ class Attribute extends Thing {
     constructor(grpcConcept) {
         super(grpcConcept);
         this._value = convertValue(grpcConcept.getValueRes().getValue());
-        this._dataType = convertDataType(grpcConcept.getDatatypeRes());
+        this._valueType = convertValueType(grpcConcept.getValuetypeRes());
     }
 
-    dataType() { return this._dataType; }
+    valueType() { return this._valueType; }
     value() { return this._value; }
 }
 

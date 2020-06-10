@@ -20,7 +20,7 @@
 const messages = require("../../../../grpc/nodejs/protocol/session/Session_pb");
 const answerMessages = require("../../../../grpc/nodejs/protocol/session/Answer_pb");
 const ConceptsBaseType = require("../concept/BaseTypeConstants").baseType;
-const ProtoDataType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.DATA_TYPE;
+const ProtoValueType = require("../../../../grpc/nodejs/protocol/session/Concept_pb").AttributeType.VALUE_TYPE;
 const INFER_TRUE_MESSAGE = messages.Transaction.Query.INFER.TRUE;
 const INFER_FALSE_MESSAGE = messages.Transaction.Query.INFER.FALSE;
 
@@ -82,16 +82,16 @@ function toGrpcConcept(conceptObject) {
 }
 
 function setAttributeValueObject(valueObject, dataType, value) {
-  if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  if (dataType == null) throw new Error('Valuetype of AttributeType not specified.');
   switch (dataType) {
-    case ProtoDataType.STRING: valueObject.setString(value); break;
-    case ProtoDataType.BOOLEAN: valueObject.setBoolean(value); break;
-    case ProtoDataType.INTEGER: valueObject.setInteger(value); break;
-    case ProtoDataType.LONG: valueObject.setLong(value); break;
-    case ProtoDataType.FLOAT: valueObject.setFloat(value); break;
-    case ProtoDataType.DOUBLE: valueObject.setDouble(value); break;
-    case ProtoDataType.DATE: valueObject.setDate(value.getTime()); break; // Send epoch time in milliseconds to server
-    default: throw new Error('DataType of attribute not recognised.');
+    case ProtoValueType.STRING: valueObject.setString(value); break;
+    case ProtoValueType.BOOLEAN: valueObject.setBoolean(value); break;
+    case ProtoValueType.INTEGER: valueObject.setInteger(value); break;
+    case ProtoValueType.LONG: valueObject.setLong(value); break;
+    case ProtoValueType.FLOAT: valueObject.setFloat(value); break;
+    case ProtoValueType.DOUBLE: valueObject.setDouble(value); break;
+    case ProtoValueType.DATETIME: valueObject.setDatetime(value.getTime()); break; // Send epoch time in milliseconds to server
+    default: throw new Error('ValueType of attribute not recognised.');
   }
 }
 
@@ -117,13 +117,6 @@ const methods = {
     setLabelReq.setLabel(label);
     const conceptMethodReq = new messages.Method.Req();
     conceptMethodReq.setSchemaconceptSetlabelReq(setLabelReq);
-    return RunConceptMethodRequest(conceptId, conceptMethodReq);
-  },
-
-  isImplicit: function (conceptId) {
-    const isImplicitReq = new messages.SchemaConcept.IsImplicit.Req();
-    const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setSchemaconceptIsimplicitReq(isImplicitReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
 
@@ -323,10 +316,10 @@ const methods = {
     conceptMethodReq.setAttributetypeAttributeReq(attributeReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
-  getDataTypeOfType: function (conceptId) {
-    const attributeTypeDataTypeReq = new messages.AttributeType.DataType.Req();
+  getValueTypeOfType: function (conceptId) {
+    const attributeTypeValueTypeReq = new messages.AttributeType.ValueType.Req();
     const conceptMethodReq = new messages.Method.Req();
-    conceptMethodReq.setAttributetypeDatatypeReq(attributeTypeDataTypeReq);
+    conceptMethodReq.setAttributetypeValuetypeReq(attributeTypeValueTypeReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   getRegex: function (conceptId) {
@@ -390,10 +383,10 @@ const methods = {
     return RunConceptMethodIterRequest(conceptId, conceptMethodReq);
   },
   setAttribute: function (conceptId, attribute) {
-    const thingHasReq = new messages.Thing.Relhas.Req();
+    const thingHasReq = new messages.Thing.Has.Req();
     const conceptMethodReq = new messages.Method.Req();
     thingHasReq.setAttribute(toGrpcConcept(attribute));
-    conceptMethodReq.setThingRelhasReq(thingHasReq);
+    conceptMethodReq.setThingHasReq(thingHasReq);
     return RunConceptMethodRequest(conceptId, conceptMethodReq);
   },
   unsetAttribute: function (conceptId, attribute) {
@@ -494,12 +487,12 @@ const methods = {
     txRequest.setPutruleReq(putMessage);
     return txRequest;
   },
-  putAttributeType: function (label, dataType) {
-    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  putAttributeType: function (label, valueType) {
+    if (valueType == null) throw new Error('Valuetype of AttributeType not specified.');
     const txRequest = new messages.Transaction.Req();
     const putMessage = new messages.Transaction.PutAttributeType.Req();
     putMessage.setLabel(label);
-    putMessage.setDatatype(dataType);
+    putMessage.setValuetype(valueType);
     txRequest.setPutattributetypeReq(putMessage);
     return txRequest;
   },
@@ -558,11 +551,11 @@ const methods = {
     iterMessage.setQueryIterReq(queryMessage);
     return iterMessage;
   },
-  startGetAttributesByValueIter: function (value, dataType, iterOptionsMessage) {
-    if (dataType == null) throw new Error('Datatype of AttributeType not specified.');
+  startGetAttributesByValueIter: function (value, valueType, iterOptionsMessage) {
+    if (valueType == null) throw new Error('Valuetype of AttributeType not specified.');
     const valueObject = new messages.ValueObject();
     const getAttributesReq = new messages.Transaction.GetAttributes.Iter.Req();
-    setAttributeValueObject(valueObject, dataType, value);
+    setAttributeValueObject(valueObject, valueType, value);
     getAttributesReq.setValue(valueObject);
     const iterMessage = new messages.Transaction.Iter.Req();
     iterMessage.setOptions(iterOptionsMessage);

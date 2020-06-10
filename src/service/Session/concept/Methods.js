@@ -21,14 +21,14 @@ const Constant = require('./BaseTypeConstants');
 const BaseType = Constant.baseType;
 const methods = {
     attribute: {
-        dataType: function () { return this.txService.getDataTypeOfAttribute(this.id); },
+        valueType: function () { return this.txService.getValueTypeOfAttribute(this.id); },
         value: function () { return this.txService.getValue(this.id); },
         owners: function () { return this.txService.getOwners(this.id); }
     },
     attributeType: {
         create: function (value) { return this.txService.putAttribute(this.id, value); },
         attribute: function (value) { return this.txService.getAttribute(this.id, value); },
-        dataType: function () { return this.txService.getDataTypeOfType(this.id); },
+        valueType: function () { return this.txService.getValueTypeOfType(this.id); },
         regex: function (regex) {
             if (regex) return this.txService.setRegex(this.id, regex);
             else return this.txService.getRegex(this.id);
@@ -80,7 +80,6 @@ const methods = {
             if (label) return this.txService.setLabel(this.id, label);
             else return this.txService.getLabel(this.id);
         },
-        isImplicit: function () { return this.txService.isImplicit(this.id); },
         subs: function () { return this.txService.subs(this.id); },
         sups: function () { return this.txService.sups(this.id); },
         sup: function (type) {

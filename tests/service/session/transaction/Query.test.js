@@ -39,16 +39,16 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await tx.query('match $x isa thing; delete $x;');
+  await tx.query('match $x isa thing; delete $x isa thing;');
   tx.close();
 });
 
 describe("Query methods", () => {
   it("delete query response type should be Void", async () => {
     await tx.query('insert $x isa person, has identifier "a";');
-    const iterator = await tx.query('match $x isa person, has identifier "a"; delete $x;');
+    const iterator = await tx.query('match $x isa person, has identifier "a"; delete $x isa person;');
     const response = await iterator.next();
-    expect(response.message()).toEqual("Delete successful.");
+    expect(response.message().includes("Deleted facts")).toEqual(true);
   });
 
   it("returned concepts should have local values", async () => {
@@ -57,10 +57,9 @@ describe("Query methods", () => {
     const response = await iterator.next();
     const id = response.get('x');
     expect(id.value()).toEqual('a');
-    expect(id.dataType()).toEqual('String');
+    expect(id.valueType()).toEqual('String');
     expect(id.type().label()).toEqual('identifier');
     expect(id.isInferred()).toEqual(false);
-    expect(id.type().isImplicit()).toEqual(false);
   })
 
   it("works with a query greater than the batch size", async () => {
