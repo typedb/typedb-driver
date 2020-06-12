@@ -91,8 +91,8 @@ public class ValueType<D> {
     public static <D> D staticCastValue(ConceptProto.ValueObject value) {
         try {
             switch (value.getValueCase()) {
-                case DATE:
-                    return (D) LocalDateTime.ofInstant(Instant.ofEpochMilli(value.getDate()), ZoneId.of("Z"));
+                case DATETIME:
+                    return (D) LocalDateTime.ofInstant(Instant.ofEpochMilli(value.getDatetime()), ZoneId.of("Z"));
                 case STRING:
                     return (D) value.getString();
                 case BOOLEAN:

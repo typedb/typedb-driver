@@ -19,6 +19,7 @@
 
 package grakn.client.rpc;
 
+import com.google.common.collect.AbstractIterator;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.exception.GraknClientException;
@@ -32,12 +33,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
@@ -60,12 +60,8 @@ public class Transceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
 
-    private final Lock lock = new ReentrantLock();
-
     private final StreamObserver<Transaction.Req> requestSender;
     private final ResponseListener responseListener;
-
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Transceiver(StreamObserver<Transaction.Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
@@ -82,69 +78,36 @@ public class Transceiver implements AutoCloseable {
      * Send a request and return immediately.
          * This method is non-blocking - it returns immediately.
      */
-    private void send(Transaction.Req request) {
-        try (ThreadTrace trace = traceOnThread("request")) {
-            if (responseListener.terminated.get()) {
-                throw GraknClientException.connectionClosed();
-            }
-            LOG.trace("send:{}", request);
+    private void send(Transaction.Req request, ResponseCollector collector) {
+        if (responseListener.terminated.get()) {
+            throw GraknClientException.connectionClosed();
+        }
+        LOG.trace("send:{}", request);
+
+        // We must add the response collectors in exact the same order we send the requests
+        synchronized (this) {
+            responseListener.addCollector(collector); // Must add collector first to be watertight
             requestSender.onNext(request);
         }
     }
 
-    /**
-     * Block until a response is returned.
-     */
-    private Response receive() throws InterruptedException {
-        try (ThreadTrace trace = traceOnThread("receive")) {
-            Response response = responseListener.poll();
-            LOG.trace("receive:{}", response);
-            if (response.type() != Response.Type.OK) {
-                close();
-            }
-            return response;
+    public Transaction.Res sendAndReceive(Transaction.Req request) throws InterruptedException {
+        try (ThreadTrace trace = traceOnThread("sendAndReceive")) {
+            SingleResponseCollector collector = new SingleResponseCollector();
+            send(request, collector);
+            return collector.receive();
         }
     }
 
-    public Response sendAndReceive(Transaction.Req request) throws InterruptedException {
-        try {
-            lock.lock();
-            send(request);
-            return receive();
-        } finally {
-            lock.unlock();
+    public void sendAndReceiveMultipleAsync(Transaction.Req request, MultiResponseCollector collector) {
+        try (ThreadTrace trace = GrablTracingThreadStatic.traceOnThread("sendAndReceiveMultipleAsync")) {
+            send(request, collector);
         }
-    }
-
-    public void sendAndReceiveAsync(Transaction.Req request, ResponseReceiver receiver) {
-        try (ThreadTrace parentTrace = GrablTracingThreadStatic.traceOnThread("asyncQueue")) {
-            executorService.execute(() -> {
-                lock.lock();
-                try (ThreadTrace ignored = parentTrace.traceOnThread("asyncExecute")) {
-                    send(request);
-                    while (true) {
-                        Response res = receive();
-                        if (!receiver.onResponse(res)) {
-                            break;
-                        }
-                    }
-                } catch (Exception ex) {
-                    receiver.onResponse(Response.error(ex));
-                } finally {
-                    lock.unlock();
-                }
-            });
-        }
-    }
-
-    public interface ResponseReceiver {
-        boolean onResponse(Response response);
     }
 
     @Override
     public void close() {
         try {
-            executorService.shutdownNow();
             requestSender.onCompleted();
             responseListener.onCompleted();
         } catch (IllegalStateException e) {
@@ -161,48 +124,135 @@ public class Transceiver implements AutoCloseable {
     }
 
     /**
-     * A StreamObserver that stores all responses in a blocking queue.
-         * A response can be polled with the #poll() method.
+     * Interface for collecting responses from a specific request
+     */
+    interface ResponseCollector {
+        /**
+         * Collect a response.
+         * @param response the next response for this collector to collect.
+         * @return true if this is the last response, false if more responses are expected.
+         */
+        boolean onResponse(Response response);
+    }
+
+    /**
+     * Simple response collector for when a single result is expected.
+     */
+    private static class SingleResponseCollector implements ResponseCollector {
+        private volatile Response response;
+        private final CountDownLatch latch = new CountDownLatch(1);
+
+        @Override
+        public boolean onResponse(Response response) {
+            this.response = response;
+            latch.countDown();
+            return true;
+        }
+
+        public SessionProto.Transaction.Res receive() throws InterruptedException {
+            latch.await();
+            return response.ok();
+        }
+    }
+
+    /**
+     * Advanced abstract multi-response collector. The {@link #isLastResponse(Transaction.Res)} method must be
+     * overridden in a sub-class because the last response must be known by the GRPC response receiving thread in order
+     * to keep it from blocking other collectors for later responses.
+     */
+    public static abstract class MultiResponseCollector implements ResponseCollector {
+        private volatile boolean started;
+        private final BlockingQueue<Response> received = new LinkedBlockingQueue<>();
+
+        @Override
+        public boolean onResponse(Response response) {
+            started = true;
+            received.add(response);
+            SessionProto.Transaction.Res nullableRes = response.nullableOk();
+            return nullableRes == null || isLastResponse(nullableRes);
+        }
+
+        public SessionProto.Transaction.Res take() throws InterruptedException {
+            return received.take().ok();
+        }
+
+        public SessionProto.Transaction.Res poll(long timeout, TimeUnit unit) throws InterruptedException,
+                TimeoutException {
+            Response response = received.poll(timeout, unit);
+            if (response == null) {
+                throw new TimeoutException();
+            } else {
+                return response.ok();
+            }
+        }
+
+        public boolean isStarted() {
+            return started;
+        }
+
+        /**
+         * Implement to inform the GRPC thread when it has received the last response.
+         * This is called from the GRPC thread, not the main client thread.
+         *
+         * @param response The next response.
+         * @return true if this is the last response, false if more responses are expected.
+         */
+        protected abstract boolean isLastResponse(SessionProto.Transaction.Res response);
+    }
+
+    /**
+     * A StreamObserver that pushes received responses to the corresponding collector.
      */
     private static class ResponseListener implements StreamObserver<Transaction.Res> {
 
-        private final BlockingQueue<Response> queue = new LinkedBlockingDeque<>();
+        private ResponseCollector currentCollector;
+        private final BlockingQueue<ResponseCollector> collectorQueue = new LinkedBlockingQueue<>();
         private final AtomicBoolean terminated = new AtomicBoolean(false);
+
+        void addCollector(ResponseCollector collector) {
+            collectorQueue.add(collector);
+        }
+
+        private void dispatchResponse(Response res) {
+            if (currentCollector == null) {
+                try {
+                    currentCollector = collectorQueue.take();
+                } catch (InterruptedException e) {
+                    terminated.set(true);
+                    throw new IllegalStateException("Interrupted whilst waiting for a result collector, " +
+                            "should never happen since response collectors are queued before send.");
+                }
+            }
+
+            if (currentCollector.onResponse(res)) {
+                currentCollector = null;
+            }
+        }
 
         @Override
         public void onNext(Transaction.Res value) {
-            queue.add(Response.ok(value));
+            dispatchResponse(Response.ok(value));
         }
 
         @Override
         public void onError(Throwable throwable) {
             terminated.set(true);
             assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
-            queue.add(Response.error((StatusRuntimeException) throwable));
+
+            // Exhaust the queue
+            while (currentCollector != null || collectorQueue.peek() != null) {
+                dispatchResponse(Response.error((Exception) throwable));
+            }
         }
 
         @Override
         public void onCompleted() {
             terminated.set(true);
-            queue.add(Response.completed());
-        }
 
-        Response poll() throws InterruptedException {
-            // First check for a response without blocking
-            Response response = queue.poll();
-
-            if (response != null) {
-                return response;
+            // Exhaust the queue
+            while (currentCollector != null || collectorQueue.peek() != null) {
+                dispatchResponse(Response.completed());
             }
-
-            // Only after checking for existing messages, we check if the connection was already terminated, so we don't
-            // block for a response forever
-            if (terminated.get()) {
-                throw GraknClientException.connectionClosed();
-            }
-
-            // Block for a response (because we are confident there are no responses and the connection has not closed)
-            return queue.take();
         }
     }
 
@@ -265,11 +315,13 @@ public class Transceiver implements AutoCloseable {
          * @throws IllegalStateException if this is not a successful response
          */
         public final Transaction.Res ok() {
-            Transaction.Res response = nullableOk();
-            if (response == null) {
-                throw new IllegalStateException("Expected successful response not found: " + toString());
+            if (nullableOk != null) {
+                return nullableOk;
+            } else if (nullableError != null) {
+                // TODO: parse different GRPC errors into specific GraknClientException
+                throw GraknClientException.create(nullableError.getMessage(), nullableError);
             } else {
-                return response;
+                throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
             }
         }
 
