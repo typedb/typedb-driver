@@ -90,19 +90,19 @@ dependencies:
 
   io.netty:
     netty-all:
-      version: "4.1.38.Final"
+      version: "4.1.48.Final"
       lang: java
     netty-codec-http2:
-      version: "4.1.38.Final"
+      version: "4.1.48.Final"
       lang: java
     netty-handler:
-      version: "4.1.38.Final"
+      version: "4.1.48.Final"
       lang: java
     netty-handler-proxy:
-      version: "4.1.38.Final"
+      version: "4.1.48.Final"
       lang: java
     netty-tcnative-boringssl-static:
-      version: "2.0.25.Final"
+      version: "2.0.30.Final"
       lang: java
 
   junit:
