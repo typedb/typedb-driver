@@ -20,6 +20,7 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
+import grakn.client.GraknClient.OptionFlag;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.ValueType;
@@ -79,13 +80,15 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer, boolean explain) {
+        public static SessionProto.Transaction.Iter.Req query(String queryString, GraknClient.OptionsBuilder options) {
+            SessionProto.Transaction.Query.Options.Builder builder = SessionProto.Transaction.Query.Options.newBuilder();
+            options.ifSet(OptionFlag.INFER, builder::setInferFlag);
+            options.ifSet(OptionFlag.EXPLAIN, builder::setExplainFlag);
+
             return SessionProto.Transaction.Iter.Req.newBuilder()
                     .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
-                            .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
-                            .setExplain(explain)
-                            .build()).build();
+                            .setOptions(builder)).build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
