@@ -170,16 +170,10 @@ workflows:
             branches:
               ignore: client-nodejs-release-branch
       - deploy-npm-snapshot:
-          filters:
-            branches:
-              only: master
           requires:
             - build
             - test
       - test-deployment:
-          filters:
-            branches:
-              only: master
           requires:
             - deploy-npm-snapshot
       - sync-dependencies-snapshot:
