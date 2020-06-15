@@ -167,4 +167,36 @@ public class AnswerIT {
             }
         }
     }
+
+    @Test
+    public void readingWithInferOff() {
+        try (GraknClient.Session session = client.session("test")) {
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+                tx.execute(Graql.parse("define newentity sub entity; " +
+                        "name sub attribute, value string; " +
+                        "myrule sub rule, when {" +
+                        "  $x isa newentity;" +
+                        "  $y isa name;" +
+                        "}," +
+                        "then {" +
+                        "  $x has name $y;" +
+                        "};").asDefine());
+                tx.execute(Graql.insert(var("x").isa("newentity")));
+                tx.execute(Graql.insert(var("x").val("bob").isa("name")));
+                tx.commit();
+            }
+
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+                assertEquals(1, tx.execute(Graql.match(var("y")
+                        .isa("newentity")
+                        .has("name", var("z"))
+                ).get(), GraknClient.Options.infer(true)).get().size());
+
+                assertEquals(0, tx.execute(Graql.match(var("y")
+                        .isa("newentity")
+                        .has("name", var("z"))
+                ).get(), GraknClient.Options.infer(false)).get().size());
+            }
+        }
+    }
 }
