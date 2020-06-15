@@ -571,17 +571,17 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer) {
-            return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), infer),
+        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer, boolean explain) {
+            return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), infer, explain),
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
-        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer) {
-            return new QueryExecuteFuture<>(getQueryIterator(query, infer));
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer, boolean explain) {
+            return new QueryExecuteFuture<>(getQueryIterator(query, infer, explain));
         }
 
-        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer) {
-            return new QueryStreamFuture<>(getQueryIterator(query, infer));
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer, boolean explain) {
+            return new QueryStreamFuture<>(getQueryIterator(query, infer, explain));
         }
 
         public void close() {

@@ -79,11 +79,12 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer) {
+        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer, boolean explain) {
             return SessionProto.Transaction.Iter.Req.newBuilder()
                     .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
                             .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
+                            .setExplain(explain)
                             .build()).build();
         }
 
