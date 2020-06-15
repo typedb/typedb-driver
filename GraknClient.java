@@ -293,10 +293,13 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, boolean infer, boolean explain) {
             try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, infer, explain);
             }
+        }
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, boolean infer) {
+            return execute(query, infer, false);
         }
         public QueryFuture<List<ConceptMap>> execute(GraqlInsert query) {
             return execute(query, true);
@@ -311,10 +314,13 @@ public class GraknClient implements AutoCloseable {
             return execute(query, true);
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, boolean infer, boolean explain) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, infer, explain);
             }
+        }
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, boolean infer) {
+            return execute(query, infer, false);
         }
         public QueryFuture<List<ConceptMap>> execute(GraqlGet query) {
             return execute(query, true);
@@ -332,10 +338,13 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, boolean infer, boolean explain) {
             try (ThreadTrace trace = traceOnThread("tx.stream.insert")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, infer, explain);
             }
+        }
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, boolean infer) {
+            return stream(query, infer, false);
         }
         public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query) {
             return stream(query, true);
@@ -350,10 +359,13 @@ public class GraknClient implements AutoCloseable {
             return stream(query, true);
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, boolean infer, boolean explain) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, infer, explain);
             }
+        }
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, boolean infer) {
+            return stream(query, infer, false);
         }
         public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query) {
             return stream(query, true);
@@ -571,13 +583,25 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
+        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer) {
+            return getQueryIterator(query, infer, false);
+        }
+
         private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer, boolean explain) {
             return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), infer, explain),
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer) {
+            return executeInternal(query, infer, false);
+        }
+
         private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer, boolean explain) {
             return new QueryExecuteFuture<>(getQueryIterator(query, infer, explain));
+        }
+
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer) {
+            return streamInternal(query, infer, false);
         }
 
         private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer, boolean explain) {
