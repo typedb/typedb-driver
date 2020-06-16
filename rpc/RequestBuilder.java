@@ -90,7 +90,7 @@ public class RequestBuilder {
                             .setQuery(queryString)
                             .setOptions(builder));
 
-            options.whenSet(GraknClient.Transaction.IterOption.BATCH_SIZE, req::setOptions);
+            options.whenSet(GraknClient.Transaction.BatchOption.BATCH_SIZE, req::setOptions);
 
             return req.build();
         }

@@ -71,7 +71,6 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1009,7 +1008,7 @@ public class GraknClient implements AutoCloseable {
             EXPLAIN;
         }
 
-        public enum IterOption implements Option<SessionProto.Transaction.Iter.Req.Options> {
+        public enum BatchOption implements Option<SessionProto.Transaction.Iter.Req.Options> {
             BATCH_SIZE;
         }
 
@@ -1060,13 +1059,13 @@ public class GraknClient implements AutoCloseable {
                 if (size < 1) {
                     throw new IllegalArgumentException("Batch size cannot be less that 1, was: " + size);
                 }
-                return set(IterOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(size).build());
+                return set(BatchOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(size).build());
             }
 
             @Override
             public QueryOptions batchSize(BatchSize batchSize) {
                 if (batchSize == BatchSize.ALL) {
-                    return set(IterOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build());
+                    return set(BatchOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build());
                 }
                 throw new IllegalArgumentException("Invalid batch size mode: " + batchSize);
             }
