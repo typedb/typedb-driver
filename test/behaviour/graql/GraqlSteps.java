@@ -161,9 +161,9 @@ public class GraqlSteps {
 
     @Given("graql insert throws")
     public void graql_insert_throws(String insertQueryStatements) {
-        GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         boolean threw = false;
         try {
+            GraqlQuery graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
             tx.execute(graqlQuery);
             tx.commit();
         } catch (RuntimeException e) {
