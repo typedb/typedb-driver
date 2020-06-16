@@ -55,11 +55,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GraqlSteps {
 
@@ -260,6 +256,24 @@ public class GraqlSteps {
                     String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s",
                             matchingIdentifiers.size(), answer.map().keySet().toString()),
                     1, matchingIdentifiers.size()
+            );
+        }
+    }
+
+    @Then("order of answer concepts is")
+    public void order_of_answer_concepts_is(List<Map<String, String>> answersIdentifiers) {
+        assertEquals(
+                String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers",
+                        answersIdentifiers.size(), answers.size()),
+                answersIdentifiers.size(), answers.size()
+        );
+
+        for (int i = 0; i < answers.size(); i++) {
+            final ConceptMap answer = answers.get(i);
+            final Map<String, String> answerIdentifiers = answersIdentifiers.get(i);
+            assertTrue(
+                    String.format("The answer at index %d does not match the identifier entry (row) at index %d", i, i),
+                    matchAnswer(answerIdentifiers, answer)
             );
         }
     }
