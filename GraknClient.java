@@ -532,10 +532,10 @@ public class GraknClient implements AutoCloseable {
 
         public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options) {
             if (query instanceof GraqlDefine) {
-                return stream((GraqlDefine) query, options);
+                return stream((GraqlDefine) query);
 
             } else if (query instanceof GraqlUndefine) {
-                return stream((GraqlUndefine) query, options);
+                return stream((GraqlUndefine) query);
 
             } else if (query instanceof GraqlInsert) {
                 return stream((GraqlInsert) query, options);
@@ -556,16 +556,16 @@ public class GraknClient implements AutoCloseable {
                 return stream((GraqlGet.Group) query, options);
 
             } else if (query instanceof GraqlCompute.Statistics) {
-                return stream((GraqlCompute.Statistics) query, options);
+                return stream((GraqlCompute.Statistics) query);
 
             } else if (query instanceof GraqlCompute.Path) {
-                return stream((GraqlCompute.Path) query, options);
+                return stream((GraqlCompute.Path) query);
 
             } else if (query instanceof GraqlCompute.Centrality) {
-                return stream((GraqlCompute.Centrality) query, options);
+                return stream((GraqlCompute.Centrality) query);
 
             } else if (query instanceof GraqlCompute.Cluster) {
-                return stream((GraqlCompute.Cluster) query, options);
+                return stream((GraqlCompute.Cluster) query);
 
             } else {
                 throw new IllegalArgumentException("Unrecognised Query object");

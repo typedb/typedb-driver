@@ -42,7 +42,9 @@ import static graql.lang.Graql.match;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -167,36 +169,110 @@ public class AnswerIT {
             }
         }
     }
+//
+//    @Test
+//    public void readingWithInferOff() {
+//        try (GraknClient.Session session = client.session("test")) {
+//            try (GraknClient.Transaction tx = session.transaction().read()) {
+//                tx.execute(Graql.parse("define newentity sub entity; " +
+//                        "name sub attribute, value string; " +
+//                        "myrule sub rule, when {" +
+//                        "  $x isa newentity;" +
+//                        "  $y isa name;" +
+//                        "}," +
+//                        "then {" +
+//                        "  $x has name $y;" +
+//                        "};").asDefine());
+//                tx.execute(Graql.insert(var("x").isa("newentity")));
+//                tx.execute(Graql.insert(var("x").val("bob").isa("name")));
+//                tx.commit();
+//            }
+//
+//            try (GraknClient.Transaction tx = session.transaction().read()) {
+//                assertEquals(1, tx.execute(Graql.match(var("y")
+//                        .isa("newentity")
+//                        .has("name", var("z"))
+//                ).get(), GraknClient.Transaction.Options.infer(true)).get().size());
+//
+//                assertEquals(0, tx.execute(Graql.match(var("y")
+//                        .isa("newentity")
+//                        .has("name", var("z"))
+//                ).get(), GraknClient.Transaction.Options.infer(false)).get().size());
+//            }
+//        }
+//    }
 
     @Test
-    public void readingWithInferOff() {
+    public void whenQueryingWithExplainFlag_explanationExist() {
         try (GraknClient.Session session = client.session("test")) {
-            try (GraknClient.Transaction tx = session.transaction().read()) {
-                tx.execute(Graql.parse("define newentity sub entity; " +
-                        "name sub attribute, value string; " +
-                        "myrule sub rule, when {" +
-                        "  $x isa newentity;" +
-                        "  $y isa name;" +
-                        "}," +
-                        "then {" +
-                        "  $x has name $y;" +
-                        "};").asDefine());
-                tx.execute(Graql.insert(var("x").isa("newentity")));
-                tx.execute(Graql.insert(var("x").val("bob").isa("name")));
-                tx.commit();
-            }
+            setupInferredRelations(session);
 
             try (GraknClient.Transaction tx = session.transaction().read()) {
-                assertEquals(1, tx.execute(Graql.match(var("y")
-                        .isa("newentity")
-                        .has("name", var("z"))
-                ).get(), GraknClient.Transaction.Options.infer(true)).get().size());
 
-                assertEquals(0, tx.execute(Graql.match(var("y")
-                        .isa("newentity")
-                        .has("name", var("z"))
-                ).get(), GraknClient.Transaction.Options.infer(false)).get().size());
+                List<ConceptMap> answers = tx.execute(Graql.parse("match $x isa family; get;").asGet(),
+                        GraknClient.Transaction.Options.infer(true).explain(true)).get();
+
+                assertEquals(1, answers.size());
+                assertTrue(answers.get(0).hasExplanation());
+                assertNotNull(answers.get(0).explanation());
             }
+        }
+    }
+
+    @Test
+    public void whenQueryingWithNoExplain_explanationDoesNotExist() {
+        try (GraknClient.Session session = client.session("test")) {
+            setupInferredRelations(session);
+
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+
+                List<ConceptMap> answers = tx.execute(Graql.parse("match $x isa family; get;").asGet(),
+                        GraknClient.Transaction.Options.infer(true).explain(false)).get();
+
+                assertEquals(1, answers.size());
+                assertFalse(answers.get(0).hasExplanation());
+                assertNull(answers.get(0).explanation());
+            }
+        }
+    }
+
+    @Test
+    public void whenRequestingSubExplanationViaTransaction_subExplanationsExist() {
+        try (GraknClient.Session session = client.session("test")) {
+            setupInferredRelations(session);
+
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+
+                List<ConceptMap> answers = tx.execute(Graql.parse("match $x isa family, has family-name $n; get;").asGet(),
+                        GraknClient.Transaction.Options.infer(true).explain(true)).get();
+
+                assertEquals(1, answers.size());
+                assertTrue(answers.get(0).hasExplanation());
+
+                Explanation explanation = answers.get(0).explanation();
+
+                assertNotNull(explanation);
+                assertEquals(1, explanation.getAnswers().size());
+                assertTrue(explanation.getAnswers().get(0).hasExplanation());
+                assertNotNull(explanation.getAnswers().get(0).explanation());
+            }
+        }
+    }
+
+    private void setupInferredRelations(GraknClient.Session session) {
+        try (GraknClient.Transaction tx = session.transaction().write()) {
+            tx.execute(Graql.parse("define family-name sub attribute, value string;" +
+                    "family sub relation, relates member, has family-name;" +
+                    "person sub entity, has family-name, plays member;" +
+                    "family-has-same-name sub rule," +
+                    "when { $a has family-name $f; $b has family-name $f; }," +
+                    "then { (member: $a, member: $b) isa family; };" +
+                    "family-has-family-name sub rule," +
+                    "when { $f (member: $a, member: $b) isa family; $a has family-name $n; }," +
+                    "then { $f has family-name $n; };").asDefine());
+            tx.execute(Graql.parse("insert $a isa person, has family-name \"bobson\";" +
+                    "$b isa person, has family-name \"bobson\";").asInsert());
+            tx.commit();
         }
     }
 }
