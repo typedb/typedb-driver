@@ -22,6 +22,7 @@ package grakn.client.test.integration.answer;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
+import grakn.client.exception.GraknClientException;
 import grakn.client.test.setup.GraknProperties;
 import grakn.client.test.setup.GraknSetup;
 import graql.lang.Graql;
@@ -94,7 +95,7 @@ public class AnswerIT {
         tx.commit();
         tx = session.transaction().write();
 
-        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet()).get();
+        List<ConceptMap> answers = tx.execute(Graql.parse("match (owner: $x, owned: $y) isa ownership; get;").asGet(), GraknClient.Transaction.Options.explain(true)).get();
 
         int hasExplanation = 0;
         int noExplanation = 0;
@@ -169,42 +170,10 @@ public class AnswerIT {
             }
         }
     }
-//
-//    @Test
-//    public void readingWithInferOff() {
-//        try (GraknClient.Session session = client.session("test")) {
-//            try (GraknClient.Transaction tx = session.transaction().read()) {
-//                tx.execute(Graql.parse("define newentity sub entity; " +
-//                        "name sub attribute, value string; " +
-//                        "myrule sub rule, when {" +
-//                        "  $x isa newentity;" +
-//                        "  $y isa name;" +
-//                        "}," +
-//                        "then {" +
-//                        "  $x has name $y;" +
-//                        "};").asDefine());
-//                tx.execute(Graql.insert(var("x").isa("newentity")));
-//                tx.execute(Graql.insert(var("x").val("bob").isa("name")));
-//                tx.commit();
-//            }
-//
-//            try (GraknClient.Transaction tx = session.transaction().read()) {
-//                assertEquals(1, tx.execute(Graql.match(var("y")
-//                        .isa("newentity")
-//                        .has("name", var("z"))
-//                ).get(), GraknClient.Transaction.Options.infer(true)).get().size());
-//
-//                assertEquals(0, tx.execute(Graql.match(var("y")
-//                        .isa("newentity")
-//                        .has("name", var("z"))
-//                ).get(), GraknClient.Transaction.Options.infer(false)).get().size());
-//            }
-//        }
-//    }
 
     @Test
     public void whenQueryingWithExplainFlag_explanationExist() {
-        try (GraknClient.Session session = client.session("test")) {
+        try (GraknClient.Session session = client.session("explain_on")) {
             setupInferredRelations(session);
 
             try (GraknClient.Transaction tx = session.transaction().read()) {
@@ -221,7 +190,7 @@ public class AnswerIT {
 
     @Test
     public void whenQueryingWithNoExplain_explanationDoesNotExist() {
-        try (GraknClient.Session session = client.session("test")) {
+        try (GraknClient.Session session = client.session("explain_off")) {
             setupInferredRelations(session);
 
             try (GraknClient.Transaction tx = session.transaction().read()) {
@@ -231,14 +200,19 @@ public class AnswerIT {
 
                 assertEquals(1, answers.size());
                 assertFalse(answers.get(0).hasExplanation());
-                assertNull(answers.get(0).explanation());
+
+                try {
+                    answers.get(0).explanation();
+                    fail();
+                } catch (GraknClientException ex) {
+                }
             }
         }
     }
 
     @Test
     public void whenRequestingSubExplanationViaTransaction_subExplanationsExist() {
-        try (GraknClient.Session session = client.session("test")) {
+        try (GraknClient.Session session = client.session("sub_explanations")) {
             setupInferredRelations(session);
 
             try (GraknClient.Transaction tx = session.transaction().read()) {
@@ -252,7 +226,7 @@ public class AnswerIT {
                 Explanation explanation = answers.get(0).explanation();
 
                 assertNotNull(explanation);
-                assertEquals(1, explanation.getAnswers().size());
+                assertEquals(2, explanation.getAnswers().size());
                 assertTrue(explanation.getAnswers().get(0).hasExplanation());
                 assertNotNull(explanation.getAnswers().get(0).explanation());
             }
@@ -265,7 +239,7 @@ public class AnswerIT {
                     "family sub relation, relates member, has family-name;" +
                     "person sub entity, has family-name, plays member;" +
                     "family-has-same-name sub rule," +
-                    "when { $a has family-name $f; $b has family-name $f; }," +
+                    "when { $a isa person, has family-name $f; $b isa person, has family-name $f; $a != $b; }," +
                     "then { (member: $a, member: $b) isa family; };" +
                     "family-has-family-name sub rule," +
                     "when { $f (member: $a, member: $b) isa family; $a has family-name $n; }," +
