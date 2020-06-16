@@ -72,7 +72,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -293,7 +295,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, OptionsBuilder options) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
                 return executeInternal(query, options);
             }
@@ -302,7 +304,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<Void>> execute(GraqlDelete query, OptionsBuilder options) {
+        public QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.delete")) {
                 return executeInternal(query, options);
             }
@@ -311,7 +313,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, OptionsBuilder options) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
                 return executeInternal(query, options);
             }
@@ -332,7 +334,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, OptionsBuilder options) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.insert")) {
                 return streamInternal(query, options);
             }
@@ -341,7 +343,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<Void>> stream(GraqlDelete query, OptionsBuilder options) {
+        public QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.delete")) {
                 return streamInternal(query, options);
             }
@@ -350,7 +352,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, OptionsBuilder options) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get")) {
                 return streamInternal(query, options);
             }
@@ -365,7 +367,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, OptionsBuilder options) {
+        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
                 return executeInternal(query, options);
             }
@@ -375,7 +377,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, OptionsBuilder options) {
+        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
                 return streamInternal(query, options);
             }
@@ -387,7 +389,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, OptionsBuilder options) {
+        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
                 return executeInternal(query, options);
             }
@@ -397,7 +399,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, OptionsBuilder options) {
+        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
                 return streamInternal(query, options);
             }
@@ -410,7 +412,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, OptionsBuilder options) {
+        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
                 return executeInternal(query, options);
             }
@@ -421,7 +423,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, OptionsBuilder options) {
+        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
                 return streamInternal(query, options);
             }
@@ -483,7 +485,7 @@ public class GraknClient implements AutoCloseable {
             return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, OptionsBuilder options) {
+        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options) {
             if (query instanceof GraqlDefine) {
                 return execute((GraqlDefine) query, options);
 
@@ -529,7 +531,7 @@ public class GraknClient implements AutoCloseable {
             return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, OptionsBuilder options) {
+        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options) {
             if (query instanceof GraqlDefine) {
                 return stream((GraqlDefine) query, options);
 
@@ -571,7 +573,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, OptionsBuilder options) {
+        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, QueryOptions options) {
             return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), options),
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
@@ -580,7 +582,7 @@ public class GraknClient implements AutoCloseable {
             return executeInternal(query, Options.DEFAULT);
         }
 
-        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, OptionsBuilder options) {
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, QueryOptions options) {
             return new QueryExecuteFuture<>(getQueryIterator(query, options));
         }
 
@@ -588,7 +590,7 @@ public class GraknClient implements AutoCloseable {
             return streamInternal(query, Options.DEFAULT);
         }
 
-        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, OptionsBuilder options) {
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, QueryOptions options) {
             return new QueryStreamFuture<>(getQueryIterator(query, options));
         }
 
@@ -998,6 +1000,107 @@ public class GraknClient implements AutoCloseable {
                 }
             }
         }
+
+        interface Option<T> {
+        }
+
+        public enum BooleanOption implements Option<Boolean> {
+            INFER,
+            EXPLAIN;
+        }
+
+        public enum IterOption implements Option<SessionProto.Transaction.Iter.Req.Options> {
+            BATCH_SIZE;
+        }
+
+        public enum BatchSize {
+            ALL;
+        }
+
+        private static class QueryOptionsImpl implements QueryOptions {
+            private Map<Option<?>, Object> options;
+
+            private QueryOptionsImpl() {
+                options = new HashMap<>();
+            }
+
+            private QueryOptionsImpl(Map<Option<?>, Object> options) {
+                this.options = options;
+            }
+
+            @Override
+            public <T> QueryOptions set(Option<T> option, T value) {
+                Map<Option<?>, Object> cloned = new HashMap<>(options);
+                cloned.put(option, value);
+                return new QueryOptionsImpl(cloned);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer) {
+                T value = (T) options.get(option);
+                if (value != null) {
+                    consumer.accept(value);
+                }
+                return this;
+            }
+
+            @Override
+            public QueryOptions infer(boolean infer) {
+                return set(BooleanOption.INFER, infer);
+            }
+
+            @Override
+            public QueryOptions explain(boolean explain) {
+                return set(BooleanOption.EXPLAIN, explain);
+            }
+
+            @Override
+            public QueryOptions batchSize(int size) {
+                if (size < 1) {
+                    throw new IllegalArgumentException("Batch size cannot be less that 1, was: " + size);
+                }
+                return set(IterOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(size).build());
+            }
+
+            @Override
+            public QueryOptions batchSize(BatchSize batchSize) {
+                if (batchSize == BatchSize.ALL) {
+                    return set(IterOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build());
+                }
+                throw new IllegalArgumentException("Invalid batch size mode: " + batchSize);
+            }
+        }
+
+        public interface QueryOptions {
+            QueryOptions infer(boolean infer);
+            QueryOptions explain(boolean explain);
+            QueryOptions batchSize(int size);
+            QueryOptions batchSize(BatchSize batchSize);
+
+            <T> QueryOptions set(Option<T> flag, T value);
+            <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer);
+        }
+
+        public interface Options {
+            QueryOptions DEFAULT = new QueryOptionsImpl();
+
+            static QueryOptions infer(boolean infer) {
+                return DEFAULT.infer(infer);
+            }
+
+            static QueryOptions explain(boolean explain) {
+                return DEFAULT.explain(explain);
+            }
+
+            static QueryOptions batchSize(int size) {
+                return DEFAULT.batchSize(size);
+            }
+
+            static QueryOptions batchSize(BatchSize batchSize) {
+                return DEFAULT.batchSize(batchSize);
+            }
+        }
     }
 
     /**
@@ -1079,74 +1182,6 @@ public class GraknClient implements AutoCloseable {
             h *= 1000003;
             h ^= this.name.hashCode();
             return h;
-        }
-    }
-
-    public enum OptionFlag {
-        INFER,
-        EXPLAIN;
-    }
-
-    private static class OptionsImpl implements OptionsBuilder {
-        private EnumMap<OptionFlag, Boolean> options;
-
-        private OptionsImpl() {
-            options = new EnumMap<>(OptionFlag.class);
-        }
-
-        private OptionsImpl(EnumMap<OptionFlag, Boolean> options) {
-            this.options = options;
-        }
-
-        public OptionsBuilder set(OptionFlag flag, boolean value) {
-            EnumMap<OptionFlag, Boolean> cloned = options.clone();
-            cloned.put(flag, value);
-            return new OptionsImpl(cloned);
-        }
-
-        @Override
-        public OptionsBuilder infer(boolean infer) {
-            return set(OptionFlag.INFER, infer);
-        }
-
-        @Override
-        public OptionsBuilder explain(boolean explain) {
-            return set(OptionFlag.EXPLAIN, explain);
-        }
-
-        @Override
-        public void ifSet(OptionFlag option, FlagConsumer consumer) {
-            Boolean flag = options.get(option);
-            if (flag != null) {
-                consumer.accept(flag);
-            }
-        }
-    }
-
-    public interface OptionsBuilder {
-        OptionsBuilder infer(boolean infer);
-        OptionsBuilder explain(boolean explain);
-
-        OptionsBuilder set(OptionFlag flag, boolean value);
-        void ifSet(OptionFlag option, FlagConsumer consumer);
-
-        @FunctionalInterface
-        interface FlagConsumer {
-            void accept(boolean flag);
-        }
-    }
-
-    public interface Options {
-        OptionsBuilder DEFAULT = new OptionsImpl();
-        OptionsBuilder NO_INFER = DEFAULT.infer(false);
-        OptionsBuilder EXPLAIN = DEFAULT.explain(true);
-
-        static OptionsBuilder infer(boolean infer) {
-            return infer ? DEFAULT.infer(true) : NO_INFER;
-        }
-
-        static OptionsBuilder explain(boolean explain) {
-            return explain ? EXPLAIN : DEFAULT.explain(false);
         }
     }
 }

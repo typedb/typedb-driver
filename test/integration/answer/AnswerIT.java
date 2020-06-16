@@ -190,12 +190,12 @@ public class AnswerIT {
                 assertEquals(1, tx.execute(Graql.match(var("y")
                         .isa("newentity")
                         .has("name", var("z"))
-                ).get(), GraknClient.Options.infer(true)).get().size());
+                ).get(), GraknClient.Transaction.Options.infer(true)).get().size());
 
                 assertEquals(0, tx.execute(Graql.match(var("y")
                         .isa("newentity")
                         .has("name", var("z"))
-                ).get(), GraknClient.Options.infer(false)).get().size());
+                ).get(), GraknClient.Transaction.Options.infer(false)).get().size());
             }
         }
     }

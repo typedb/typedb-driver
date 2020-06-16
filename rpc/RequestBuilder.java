@@ -20,7 +20,6 @@
 package grakn.client.rpc;
 
 import grakn.client.GraknClient;
-import grakn.client.GraknClient.OptionFlag;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.ValueType;
@@ -80,15 +79,20 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Iter.Req query(String queryString, GraknClient.OptionsBuilder options) {
+        public static SessionProto.Transaction.Iter.Req query(String queryString, GraknClient.Transaction.QueryOptions options) {
             SessionProto.Transaction.Query.Options.Builder builder = SessionProto.Transaction.Query.Options.newBuilder();
-            options.ifSet(OptionFlag.INFER, builder::setInferFlag);
-            options.ifSet(OptionFlag.EXPLAIN, builder::setExplainFlag);
+            options
+                    .whenSet(GraknClient.Transaction.BooleanOption.INFER, builder::setInferFlag)
+                    .whenSet(GraknClient.Transaction.BooleanOption.EXPLAIN, builder::setExplainFlag);
 
-            return SessionProto.Transaction.Iter.Req.newBuilder()
+            SessionProto.Transaction.Iter.Req.Builder req = SessionProto.Transaction.Iter.Req.newBuilder()
                     .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
-                            .setOptions(builder)).build();
+                            .setOptions(builder));
+
+            options.whenSet(GraknClient.Transaction.IterOption.BATCH_SIZE, req::setOptions);
+
+            return req.build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
