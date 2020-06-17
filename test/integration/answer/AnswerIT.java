@@ -205,6 +205,7 @@ public class AnswerIT {
                     answers.get(0).explanation();
                     fail();
                 } catch (GraknClientException ex) {
+                    // Expected
                 }
             }
         }
