@@ -41,7 +41,6 @@ import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
@@ -68,16 +67,18 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -283,123 +284,123 @@ public class GraknClient implements AutoCloseable {
 
         public QueryFuture<List<ConceptMap>> execute(GraqlDefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.define")) {
-                return executeInternal(query, true);
+                return executeInternal(query, Options.DEFAULT);
             }
         }
 
         public QueryFuture<List<ConceptMap>> execute(GraqlUndefine query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
-                return executeInternal(query, true);
+                return executeInternal(query, Options.DEFAULT);
             }
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.insert")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
         public QueryFuture<List<ConceptMap>> execute(GraqlInsert query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<Void>> execute(GraqlDelete query, boolean infer) {
+        public QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.delete")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
         public QueryFuture<List<Void>> execute(GraqlDelete query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, boolean infer) {
+        public QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
         public QueryFuture<List<ConceptMap>> execute(GraqlGet query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
         public QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.define")) {
-                return streamInternal(query, true);
+                return streamInternal(query, Options.DEFAULT);
             }
         }
 
         public QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.undefine")) {
-                return streamInternal(query, true);
+                return streamInternal(query, Options.DEFAULT);
             }
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.insert")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
         public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<Void>> stream(GraqlDelete query, boolean infer) {
+        public QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.delete")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
         public QueryFuture<Stream<Void>> stream(GraqlDelete query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, boolean infer) {
+        public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
         public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
         // Aggregate Query
 
         public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, boolean infer) {
+        public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
 
         public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, boolean infer) {
+        public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
 
         // Group Query
 
         public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, boolean infer) {
+        public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
 
         public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, boolean infer) {
+        public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
 
@@ -407,23 +408,23 @@ public class GraknClient implements AutoCloseable {
         // Group Aggregate Query
 
         public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, boolean infer) {
+        public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
-                return executeInternal(query, infer);
+                return executeInternal(query, options);
             }
         }
 
 
         public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, boolean infer) {
+        public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options) {
             try (ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
-                return streamInternal(query, infer);
+                return streamInternal(query, options);
             }
         }
 
@@ -431,94 +432,94 @@ public class GraknClient implements AutoCloseable {
 
         public QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.statistics")) {
-                return executeInternal(query, false);
+                return executeInternal(query);
             }
         }
 
         public QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.statistics")) {
-                return streamInternal(query, false);
+                return streamInternal(query);
             }
         }
 
         public QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.path")) {
-                return executeInternal(query, false);
+                return executeInternal(query);
             }
         }
 
         public QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.path")) {
-                return streamInternal(query, false);
+                return streamInternal(query);
             }
         }
 
         public QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.centrality")) {
-                return executeInternal(query, false);
+                return executeInternal(query);
             }
         }
 
         public QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.centrality")) {
-                return streamInternal(query, false);
+                return streamInternal(query);
             }
         }
 
         public QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query) {
             try (ThreadTrace trace = traceOnThread("tx.execute.compute.cluster")) {
-                return executeInternal(query, false);
+                return executeInternal(query);
             }
         }
 
         public QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query) {
             try (ThreadTrace trace = traceOnThread("tx.stream.compute.cluster")) {
-                return streamInternal(query, false);
+                return streamInternal(query);
             }
         }
 
         // Generic queries
 
         public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query) {
-            return execute(query, true);
+            return execute(query, Options.DEFAULT);
         }
 
-        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, boolean infer) {
+        public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options) {
             if (query instanceof GraqlDefine) {
-                return execute((GraqlDefine) query);
+                return execute((GraqlDefine) query, options);
 
             } else if (query instanceof GraqlUndefine) {
-                return execute((GraqlUndefine) query);
+                return execute((GraqlUndefine) query, options);
 
             } else if (query instanceof GraqlInsert) {
-                return execute((GraqlInsert) query, infer);
+                return execute((GraqlInsert) query, options);
 
             } else if (query instanceof GraqlDelete) {
-                return execute((GraqlDelete) query, infer);
+                return execute((GraqlDelete) query, options);
 
             } else if (query instanceof GraqlGet) {
-                return execute((GraqlGet) query, infer);
+                return execute((GraqlGet) query, options);
 
             } else if (query instanceof GraqlGet.Aggregate) {
-                return execute((GraqlGet.Aggregate) query, infer);
+                return execute((GraqlGet.Aggregate) query, options);
 
             } else if (query instanceof GraqlGet.Group.Aggregate) {
-                return execute((GraqlGet.Group.Aggregate) query, infer);
+                return execute((GraqlGet.Group.Aggregate) query, options);
 
             } else if (query instanceof GraqlGet.Group) {
-                return execute((GraqlGet.Group) query, infer);
+                return execute((GraqlGet.Group) query, options);
 
             } else if (query instanceof GraqlCompute.Statistics) {
-                return execute((GraqlCompute.Statistics) query);
+                return execute((GraqlCompute.Statistics) query, options);
 
             } else if (query instanceof GraqlCompute.Path) {
-                return execute((GraqlCompute.Path) query);
+                return execute((GraqlCompute.Path) query, options);
 
             } else if (query instanceof GraqlCompute.Centrality) {
-                return execute((GraqlCompute.Centrality) query);
+                return execute((GraqlCompute.Centrality) query, options);
 
             } else if (query instanceof GraqlCompute.Cluster) {
-                return execute((GraqlCompute.Cluster) query);
+                return execute((GraqlCompute.Cluster) query, options);
 
             } else {
                 throw new IllegalArgumentException("Unrecognised Query object");
@@ -526,10 +527,10 @@ public class GraknClient implements AutoCloseable {
         }
 
         public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query) {
-            return stream(query, true);
+            return stream(query, Options.DEFAULT);
         }
 
-        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, boolean infer) {
+        public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options) {
             if (query instanceof GraqlDefine) {
                 return stream((GraqlDefine) query);
 
@@ -537,22 +538,22 @@ public class GraknClient implements AutoCloseable {
                 return stream((GraqlUndefine) query);
 
             } else if (query instanceof GraqlInsert) {
-                return stream((GraqlInsert) query, infer);
+                return stream((GraqlInsert) query, options);
 
             } else if (query instanceof GraqlDelete) {
-                return stream((GraqlDelete) query, infer);
+                return stream((GraqlDelete) query, options);
 
             } else if (query instanceof GraqlGet) {
-                return stream((GraqlGet) query, infer);
+                return stream((GraqlGet) query, options);
 
             } else if (query instanceof GraqlGet.Aggregate) {
-                return stream((GraqlGet.Aggregate) query, infer);
+                return stream((GraqlGet.Aggregate) query, options);
 
             } else if (query instanceof GraqlGet.Group.Aggregate) {
-                return stream((GraqlGet.Group.Aggregate) query, infer);
+                return stream((GraqlGet.Group.Aggregate) query, options);
 
             } else if (query instanceof GraqlGet.Group) {
-                return stream((GraqlGet.Group) query, infer);
+                return stream((GraqlGet.Group) query, options);
 
             } else if (query instanceof GraqlCompute.Statistics) {
                 return stream((GraqlCompute.Statistics) query);
@@ -571,17 +572,25 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, boolean infer) {
-            return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), infer),
+        private <T> RPCIterator<T> getQueryIterator(GraqlQuery query, QueryOptions options) {
+            return new RPCIterator<>(RequestBuilder.Transaction.query(query.toString(), options),
                     response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
         }
 
-        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, boolean infer) {
-            return new QueryExecuteFuture<>(getQueryIterator(query, infer));
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query) {
+            return executeInternal(query, Options.DEFAULT);
         }
 
-        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, boolean infer) {
-            return new QueryStreamFuture<>(getQueryIterator(query, infer));
+        private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, QueryOptions options) {
+            return new QueryExecuteFuture<>(getQueryIterator(query, options));
+        }
+
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query) {
+            return streamInternal(query, Options.DEFAULT);
+        }
+
+        private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, QueryOptions options) {
+            return new QueryStreamFuture<>(getQueryIterator(query, options));
         }
 
         public void close() {
@@ -988,6 +997,107 @@ public class GraknClient implements AutoCloseable {
                     default:
                         return responseReader.apply(res);
                 }
+            }
+        }
+
+        interface Option<T> {
+        }
+
+        public enum BooleanOption implements Option<Boolean> {
+            INFER,
+            EXPLAIN;
+        }
+
+        public enum BatchOption implements Option<SessionProto.Transaction.Iter.Req.Options> {
+            BATCH_SIZE;
+        }
+
+        public enum BatchSize {
+            ALL;
+        }
+
+        private static class QueryOptionsImpl implements QueryOptions {
+            private Map<Option<?>, Object> options;
+
+            private QueryOptionsImpl() {
+                options = new HashMap<>();
+            }
+
+            private QueryOptionsImpl(Map<Option<?>, Object> options) {
+                this.options = options;
+            }
+
+            @Override
+            public <T> QueryOptions set(Option<T> option, T value) {
+                Map<Option<?>, Object> cloned = new HashMap<>(options);
+                cloned.put(option, value);
+                return new QueryOptionsImpl(cloned);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer) {
+                T value = (T) options.get(option);
+                if (value != null) {
+                    consumer.accept(value);
+                }
+                return this;
+            }
+
+            @Override
+            public QueryOptions infer(boolean infer) {
+                return set(BooleanOption.INFER, infer);
+            }
+
+            @Override
+            public QueryOptions explain(boolean explain) {
+                return set(BooleanOption.EXPLAIN, explain);
+            }
+
+            @Override
+            public QueryOptions batchSize(int size) {
+                if (size < 1) {
+                    throw new IllegalArgumentException("Batch size cannot be less that 1, was: " + size);
+                }
+                return set(BatchOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(size).build());
+            }
+
+            @Override
+            public QueryOptions batchSize(BatchSize batchSize) {
+                if (batchSize == BatchSize.ALL) {
+                    return set(BatchOption.BATCH_SIZE, SessionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build());
+                }
+                throw new IllegalArgumentException("Invalid batch size mode: " + batchSize);
+            }
+        }
+
+        public interface QueryOptions {
+            QueryOptions infer(boolean infer);
+            QueryOptions explain(boolean explain);
+            QueryOptions batchSize(int size);
+            QueryOptions batchSize(BatchSize batchSize);
+
+            <T> QueryOptions set(Option<T> flag, T value);
+            <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer);
+        }
+
+        public interface Options {
+            QueryOptions DEFAULT = new QueryOptionsImpl();
+
+            static QueryOptions infer(boolean infer) {
+                return DEFAULT.infer(infer);
+            }
+
+            static QueryOptions explain(boolean explain) {
+                return DEFAULT.explain(explain);
+            }
+
+            static QueryOptions batchSize(int size) {
+                return DEFAULT.batchSize(size);
+            }
+
+            static QueryOptions batchSize(BatchSize batchSize) {
+                return DEFAULT.batchSize(batchSize);
             }
         }
     }
