@@ -22,11 +22,10 @@ workspace(name = "graknlabs_client_nodejs")
 # Grakn Labs dependencies #
 ###########################
 
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core", "graknlabs_build_tools", "graknlabs_protocol", "graknlabs_console")
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core", "graknlabs_build_tools", "graknlabs_protocol")
 graknlabs_grakn_core()
 graknlabs_build_tools()
 graknlabs_protocol()
-graknlabs_console()
 
 load("@graknlabs_build_tools//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
@@ -41,15 +40,14 @@ bazel_common()
 bazel_toolchain()
 bazel_rules_python()
 
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
 
-# Python dependencies for @graknlabs_build_tools and @graknlabs_bazel_distribution
-
-pip_import(
+pip3_import(
     name = "graknlabs_build_tools_ci_pip",
     requirements = "@graknlabs_build_tools//ci:requirements.txt",
 )
+
 load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
 graknlabs_build_tools_ci_pip_install = "pip_install")
 graknlabs_build_tools_ci_pip_install()
@@ -94,7 +92,7 @@ node_grpc_compile()
 ################################
 
 load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
-     "graknlabs_graql", "graknlabs_common", "graknlabs_client_java", "graknlabs_grabl_tracing")
+     "graknlabs_graql", "graknlabs_common", "graknlabs_client_java", "graknlabs_grabl_tracing", "graknlabs_console")
 graknlabs_graql()
 graknlabs_common()
 graknlabs_client_java()

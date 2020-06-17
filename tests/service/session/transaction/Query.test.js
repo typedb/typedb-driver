@@ -73,4 +73,8 @@ describe("Query methods", () => {
     const results = await iterator.collect();
     expect(results.length).toEqual(128);
   })
+
+  it("accepts valid options", async () => {
+    await tx.query('insert $x isa person, has identifier "a";', { infer: false, explain: false, batchSize: "all" });
+  })
 });

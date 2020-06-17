@@ -66,7 +66,7 @@ describe('Integration test', () => {
         await newTx.close();
     });
 
-    it("explanation and default of infer is true", async () => {
+    it("explanation is true", async () => {
         const localSession = await graknClient.session("gene");
         let tx = await localSession.transaction().write();
         await tx.query(`
@@ -78,7 +78,7 @@ describe('Integration test', () => {
         await tx.commit();
 
         tx = await localSession.transaction().write();
-        const iterator = await tx.query("match $x isa cousins; get;");
+        const iterator = await tx.query("match $x isa cousins; get;", {explain: true});
         const answer = await iterator.next();
         expect(answer.map().size).toBe(1);
         expect((await answer.explanation()).getAnswers().length).toEqual(1);

@@ -72,7 +72,7 @@ describe("Transaction methods", () => {
     await localTx.commit()
 
     localTx = await localSession.transaction().write();
-    const answers = await (await localTx.query("match (owner: $x, owned: $y) isa ownership; get;")).collect();
+    const answers = await (await localTx.query("match (owner: $x, owned: $y) isa ownership; get;", { explain: true })).collect();
 
     let hasExplanationCounter = 0;
     let noExplanationCounter = 0;

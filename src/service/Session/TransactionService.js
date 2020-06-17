@@ -57,10 +57,10 @@ TransactionService.prototype.deleteConcept = function (id) {
 };
 
 // Schema concept
-TransactionService.prototype.getLabel = function (id) {
+TransactionService.prototype.getLabel = async function (id) {
     const txRequest = RequestBuilder.getLabel(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getLabel(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getLabel(resp);
 };
 TransactionService.prototype.setLabel = function (id, label) {
     const txRequest = RequestBuilder.setLabel(id, label);
@@ -76,10 +76,10 @@ TransactionService.prototype.sups = function (id) {
     return this.iteratorFactory.createIterator(iterRequest,
         (resp) => this.respConverter.sups(resp));
 };
-TransactionService.prototype.getSup = function (id) {
+TransactionService.prototype.getSup = async function (id) {
     const txRequest = RequestBuilder.getSup(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getSup(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getSup(resp);
 };
 TransactionService.prototype.setSup = function (id, superConcept) {
     const txRequest = RequestBuilder.setSup(id, superConcept);
@@ -87,15 +87,15 @@ TransactionService.prototype.setSup = function (id, superConcept) {
 };
 
 // Rule 
-TransactionService.prototype.getWhen = function (id) {
+TransactionService.prototype.getWhen = async function (id) {
     const txRequest = RequestBuilder.getWhen(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getWhen(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getWhen(resp);
 };
-TransactionService.prototype.getThen = function (id) {
+TransactionService.prototype.getThen = async function (id) {
     const txRequest = RequestBuilder.getThen(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getThen(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getThen(resp);
 };
 
 // Role
@@ -142,10 +142,10 @@ TransactionService.prototype.unsetKeyType = function (id, keyType) {
     const txRequest = RequestBuilder.unsetKeyType(id, keyType);
     return this.communicator.send(txRequest);
 };
-TransactionService.prototype.isAbstract = function (id) {
+TransactionService.prototype.isAbstract = async function (id) {
     const txRequest = RequestBuilder.isAbstract(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.isAbstract(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.isAbstract(resp);
 };
 TransactionService.prototype.setAbstract = function (id, bool) {
     const txRequest = RequestBuilder.setAbstract(id, bool);
@@ -166,17 +166,17 @@ TransactionService.prototype.unsetRolePlayedByType = function (id, role) {
 };
 
 // Entity type
-TransactionService.prototype.addEntity = function (id) {
+TransactionService.prototype.addEntity = async function (id) {
     const txRequest = RequestBuilder.addEntity(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.addEntity(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.addEntity(resp);
 };
 
 // Relation Type
-TransactionService.prototype.addRelation = function (id) {
+TransactionService.prototype.addRelation = async function (id) {
     const txRequest = RequestBuilder.addRelation(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.addRelation(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.addRelation(resp);
 };
 TransactionService.prototype.getRelatedRoles = function (id) {
     const iterRequest = RequestBuilder.getRelatedRoles(id);
@@ -209,15 +209,15 @@ TransactionService.prototype.getAttribute = async function (id, value) {
     return this.communicator.send(txRequest)
         .then(resp => this.respConverter.getAttribute(resp));
 };
-TransactionService.prototype.getValueTypeOfType = function (id) {
+TransactionService.prototype.getValueTypeOfType = async function (id) {
     const txRequest = RequestBuilder.getValueTypeOfType(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getValueTypeOfType(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getValueTypeOfType(resp);
 };
-TransactionService.prototype.getRegex = function (id) {
+TransactionService.prototype.getRegex = async function (id) {
     const txRequest = RequestBuilder.getRegex(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.getRegex(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.getRegex(resp);
 };
 TransactionService.prototype.setRegex = function (id, regex) {
     const txRequest = RequestBuilder.setRegex(id, regex);
@@ -225,15 +225,15 @@ TransactionService.prototype.setRegex = function (id, regex) {
 };
 
 //Thing
-TransactionService.prototype.isInferred = function (id) {
+TransactionService.prototype.isInferred = async function (id) {
     const txRequest = RequestBuilder.isInferred(id);
-    return this.communicator.send(txRequest)
-        .then(resp => this.respConverter.isInferred(resp));
+    const resp = await this.communicator.send(txRequest);
+    return this.respConverter.isInferred(resp);
 };
-TransactionService.prototype.getDirectType = function (id) {
+TransactionService.prototype.getDirectType = async function (id) {
     const txRequest = RequestBuilder.getDirectType(id);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.getDirectType(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.getDirectType(response);
 };
 TransactionService.prototype.getRelationsByRoles = function (id, roles) {
     const iterRequest = RequestBuilder.getRelationsByRoles(id, roles);
@@ -285,10 +285,10 @@ TransactionService.prototype.unsetRolePlayer = function (id, role, thing) {
     return this.communicator.send(txRequest);
 };
 // Attribute
-TransactionService.prototype.getValue = function (id) {
+TransactionService.prototype.getValue = async function (id) {
     const txRequest = RequestBuilder.getValue(id);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.getValue(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.getValue(response);
 };
 TransactionService.prototype.getOwners = function (id) {
     const iterRequest = RequestBuilder.getOwners(id);
@@ -298,46 +298,46 @@ TransactionService.prototype.getOwners = function (id) {
 
 // ======================= Grakn transaction methods ========================= //
 
-TransactionService.prototype.getConcept = function (conceptId) {
+TransactionService.prototype.getConcept = async function (conceptId) {
     const txRequest = RequestBuilder.getConcept(conceptId);
-    return this.communicator.send(txRequest)
-        .then((response) => this.respConverter.getConcept(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.getConcept(response);
 }
 
-TransactionService.prototype.getSchemaConcept = function (label) {
+TransactionService.prototype.getSchemaConcept = async function (label) {
     const txRequest = RequestBuilder.getSchemaConcept(label);
-    return this.communicator.send(txRequest)
-        .then((response) => this.respConverter.getSchemaConcept(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.getSchemaConcept(response);
 }
 
-TransactionService.prototype.putEntityType = function (label) {
+TransactionService.prototype.putEntityType = async function (label) {
     const txRequest = RequestBuilder.putEntityType(label);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putEntityType(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.putEntityType(response);
 }
 
-TransactionService.prototype.putRelationType = function (label) {
+TransactionService.prototype.putRelationType = async function (label) {
     const txRequest = RequestBuilder.putRelationType(label);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putRelationType(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.putRelationType(response);
 }
 
-TransactionService.prototype.putRole = function (label) {
+TransactionService.prototype.putRole = async function (label) {
     const txRequest = RequestBuilder.putRole(label);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putRole(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.putRole(response);
 }
 
-TransactionService.prototype.putRule = function (label, when, then) {
+TransactionService.prototype.putRule = async function (label, when, then) {
     const txRequest = RequestBuilder.putRule(label, when, then);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putRule(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.putRule(response);
 }
 
-TransactionService.prototype.putAttributeType = function (label, valueType) {
+TransactionService.prototype.putAttributeType = async function (label, valueType) {
     const txRequest = RequestBuilder.putAttributeType(label, valueType);
-    return this.communicator.send(txRequest)
-        .then(response => this.respConverter.putAttributeType(response));
+    const response = await this.communicator.send(txRequest);
+    return this.respConverter.putAttributeType(response);
 }
 
 TransactionService.prototype.getAttributesByValue = function (value, valueType) {
@@ -356,8 +356,8 @@ TransactionService.prototype.commit = function () {
     return this.communicator.send(txRequest);
 }
 
-TransactionService.prototype.query = function (query, options, batchSize = 50) {
-    const queryIter = RequestBuilder.startQueryIter(query, options, RequestBuilder.iterOptions(batchSize));
+TransactionService.prototype.query = function (query, options) {
+    const queryIter = RequestBuilder.startQueryIter(query, options, RequestBuilder.iterOptions(options ? options.batchSize : undefined));
     return this.iteratorFactory.createQueryIterator(queryIter);
 };
 
