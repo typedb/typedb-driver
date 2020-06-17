@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import static grakn.client.GraknClient.Transaction.BatchSize.ALL;
-import static grakn.client.GraknClient.Transaction.Options.*;
+import static grakn.client.GraknClient.Transaction.Options.batchSize;
+import static grakn.client.GraknClient.Transaction.Options.infer;
 import static graql.lang.Graql.Token.ValueType.STRING;
 import static graql.lang.Graql.define;
 import static graql.lang.Graql.insert;
