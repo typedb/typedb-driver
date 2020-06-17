@@ -23,86 +23,91 @@
  * Factory for Answer and Explanation objects
  * @param {Object} conceptFactory
  */
-function AnswerFactory(conceptFactory, txService) {
-    this.conceptFactory = conceptFactory;
-    this.txService = txService;
-}
-
-AnswerFactory.prototype.createAnswer = function (grpcAnswer) {
-    if (grpcAnswer.hasConceptmap()) return this.createConceptmap(grpcAnswer.getConceptmap());
-    if (grpcAnswer.hasAnswergroup()) return this.createAnswergroup(grpcAnswer.getAnswergroup());
-    if (grpcAnswer.hasConceptlist()) return this.createConceptlist(grpcAnswer.getConceptlist());
-    if (grpcAnswer.hasConceptset()) return this.createConceptset(grpcAnswer.getConceptset());
-    if (grpcAnswer.hasConceptsetmeasure()) return this.createConceptsetmeasure(grpcAnswer.getConceptsetmeasure());
-    if (grpcAnswer.hasValue()) return this.createValue(grpcAnswer.getValue());
-    if (grpcAnswer.hasVoid()) return this.createVoid(grpcAnswer.getVoid());
-}
-
-AnswerFactory.prototype.buildExplanation = function (grpcExplanation) {
-    const grpcListOfConceptMaps = grpcExplanation.getExplanationRes().getExplanationList();
-    const nativeListOfConceptMaps = grpcListOfConceptMaps.map((grpcConceptMap) => this.createConceptmap(grpcConceptMap));
-
-    return {
-        getAnswers: () => nativeListOfConceptMaps,
+class AnswerFactory {
+    constructor(conceptFactory, txService) {
+        this.conceptFactory = conceptFactory;
+        this.txService = txService;
     }
-}
-
-AnswerFactory.prototype.createConceptmap = function (answer) {
-    const answerMap = new Map();
-    
-    answer.getMapMap().forEach((grpcConcept, key) => {
-        answerMap.set(key, ConceptFactory.createLocalConcept(grpcConcept));
-    });
-
-
-    return {
-        map: () => answerMap,
-        get: (v) => answerMap.get(v),
-        hasExplanation: () => answer.getHasexplanation(),
-        queryPattern: () => answer.getPattern(),
-        explanation: async () => {
-            if (answer.getHasexplanation()) {
-                const grpcExplanation = await this.txService.explanation(answer);
-                return this.buildExplanation(grpcExplanation);
-            } else {
-                throw "Explanation not available on concept map";
-            }
-        },
-    };
-}
-AnswerFactory.prototype.createValue = function(answer){
-    return {
-        number: () => Number(answer.getNumber().getValue()),
+    createAnswer(grpcAnswer) {
+        if (grpcAnswer.hasConceptmap())
+            return this.createConceptmap(grpcAnswer.getConceptmap());
+        if (grpcAnswer.hasAnswergroup())
+            return this.createAnswergroup(grpcAnswer.getAnswergroup());
+        if (grpcAnswer.hasConceptlist())
+            return this.createConceptlist(grpcAnswer.getConceptlist());
+        if (grpcAnswer.hasConceptset())
+            return this.createConceptset(grpcAnswer.getConceptset());
+        if (grpcAnswer.hasConceptsetmeasure())
+            return this.createConceptsetmeasure(grpcAnswer.getConceptsetmeasure());
+        if (grpcAnswer.hasValue())
+            return this.createValue(grpcAnswer.getValue());
+        if (grpcAnswer.hasVoid())
+            return this.createVoid(grpcAnswer.getVoid());
     }
-}
-AnswerFactory.prototype.createConceptlist = function(answer){
-    const list = answer.getList();
-    return {
-        list: () => list.getIdsList(),
+    buildExplanation(grpcExplanation) {
+        const res = grpcExplanation.getExplanationRes()
+        const grpcListOfConceptMaps = res.getExplanationList();
+        const rule = res.hasRule() ? this.conceptFactory.createConcept(res.getRule()) : null;
+        const nativeListOfConceptMaps = grpcListOfConceptMaps.map((grpcConceptMap) => this.createConceptmap(grpcConceptMap));
+        return {
+            getAnswers: () => nativeListOfConceptMaps,
+            getRule: () => rule
+        };
     }
-}
-AnswerFactory.prototype.createConceptset = function(answer){
-    const set = answer.getSet();
-    return {
-        set: () => new Set(set.getIdsList()),
+    createConceptmap(answer) {
+        const answerMap = new Map();
+        answer.getMapMap().forEach((grpcConcept, key) => {
+            answerMap.set(key, ConceptFactory.createLocalConcept(grpcConcept));
+        });
+        return {
+            map: () => answerMap,
+            get: (v) => answerMap.get(v),
+            hasExplanation: () => answer.getHasexplanation(),
+            queryPattern: () => answer.getPattern(),
+            explanation: async () => {
+                if (answer.getHasexplanation()) {
+                    const grpcExplanation = await this.txService.explanation(answer);
+                    return this.buildExplanation(grpcExplanation);
+                }
+                else {
+                    throw "Explanation not available on concept map";
+                }
+            },
+        };
     }
-}
-AnswerFactory.prototype.createConceptsetmeasure = function(answer){
-    return {
-        measurement: () => Number(answer.getMeasurement().getValue()),
-        set: () => new Set(answer.getSet().getIdsList()),
+    createValue(answer) {
+        return {
+            number: () => Number(answer.getNumber().getValue()),
+        };
     }
-}
-AnswerFactory.prototype.createAnswergroup = function(answer){
-    return {
-        owner: () => this.conceptFactory.createConcept(answer.getOwner()),
-        answers: () => answer.getAnswersList().map(a => this.createAnswer(a)),
+    createConceptlist(answer) {
+        const list = answer.getList();
+        return {
+            list: () => list.getIdsList(),
+        };
     }
-}
-
-AnswerFactory.prototype.createVoid = function(answer){
-    return {
-        message: () => answer.getMessage()
+    createConceptset(answer) {
+        const set = answer.getSet();
+        return {
+            set: () => new Set(set.getIdsList()),
+        };
+    }
+    createConceptsetmeasure(answer) {
+        return {
+            measurement: () => Number(answer.getMeasurement().getValue()),
+            set: () => new Set(answer.getSet().getIdsList()),
+        };
+    }
+    createAnswergroup(answer) {
+        return {
+            owner: () => this.conceptFactory.createConcept(answer.getOwner()),
+            answers: () => answer.getAnswersList().map(a => this.createAnswer(a)),
+        };
+    }
+    createVoid(answer) {
+        return {
+            message: () => answer.getMessage()
+        };
     }
 }
 
