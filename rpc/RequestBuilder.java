@@ -79,12 +79,20 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static SessionProto.Transaction.Iter.Req query(String queryString, boolean infer) {
-            return SessionProto.Transaction.Iter.Req.newBuilder()
+        public static SessionProto.Transaction.Iter.Req query(String queryString, GraknClient.Transaction.QueryOptions options) {
+            SessionProto.Transaction.Query.Options.Builder builder = SessionProto.Transaction.Query.Options.newBuilder();
+            options
+                    .whenSet(GraknClient.Transaction.BooleanOption.INFER, builder::setInferFlag)
+                    .whenSet(GraknClient.Transaction.BooleanOption.EXPLAIN, builder::setExplainFlag);
+
+            SessionProto.Transaction.Iter.Req.Builder req = SessionProto.Transaction.Iter.Req.newBuilder()
                     .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
-                            .setInfer(infer ? SessionProto.Transaction.Query.INFER.TRUE : SessionProto.Transaction.Query.INFER.FALSE)
-                            .build()).build();
+                            .setOptions(builder));
+
+            options.whenSet(GraknClient.Transaction.BatchOption.BATCH_SIZE, req::setOptions);
+
+            return req.build();
         }
 
         public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
