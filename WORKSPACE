@@ -45,10 +45,11 @@ unused_deps_dependencies()
 # Load Bazel dependencies #
 ###########################
 
-load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
+load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain", "bazel_rules_python")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
+bazel_rules_python()
 
 
 #################################
@@ -57,9 +58,6 @@ bazel_toolchain()
 
 load("@graknlabs_build_tools//checkstyle:dependencies.bzl", "checkstyle_dependencies")
 checkstyle_dependencies()
-
-load("@graknlabs_build_tools//bazel:dependencies.bzl", "bazel_rules_python")
-bazel_rules_python()
 
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
