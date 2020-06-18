@@ -25,7 +25,7 @@ java_test(
     srcs = [
         "GetTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.language.match.GetTest",
+    test_class = "grakn.client.test.behaviour.graql.language.get.GetTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
