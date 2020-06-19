@@ -208,6 +208,18 @@ public class GraqlSteps {
         assertTrue(threw);
     }
 
+    @When("get answers of graql insert")
+    public void get_answers_of_graql_insert(String graqlQueryStatements) {
+        GraqlInsert graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements)).asInsert();
+        // Erase answers from previous steps to avoid polluting the result space
+        answers = null;
+        numericAnswers = null;
+        answerGroups = null;
+        numericAnswerGroups = null;
+
+        answers = tx.execute(graqlQuery).get();
+    }
+
     @When("get answers of graql query")
     public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
@@ -219,7 +231,7 @@ public class GraqlSteps {
         if (graqlQuery instanceof GraqlGet) {
             answers = tx.execute(graqlQuery.asGet()).get();
         } else if (graqlQuery instanceof GraqlInsert) {
-            answers = tx.execute(graqlQuery.asInsert()).get();
+            throw new ScenarioDefinitionException("Insert is not supported; use `get answers of graql insert` instead");
         } else if (graqlQuery instanceof GraqlGet.Aggregate) {
             numericAnswers = tx.execute(graqlQuery.asGetAggregate()).get();
         } else if (graqlQuery instanceof GraqlGet.Group) {
