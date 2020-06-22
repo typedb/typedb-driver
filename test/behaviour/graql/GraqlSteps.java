@@ -219,6 +219,7 @@ public class GraqlSteps {
 
         answers = tx.execute(graqlQuery).get();
         tx.commit();
+        tx = session.transaction().write();
     }
 
     @When("get answers of graql query")
