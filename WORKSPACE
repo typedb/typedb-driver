@@ -136,6 +136,9 @@ graknlabs_common()
 ############################
 # Load @graknlabs_protocol #
 ############################
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_protocol")
+graknlabs_protocol()
+
 load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 
@@ -145,6 +148,51 @@ com_github_grpc_grpc_deps()
 
 load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()
+
+#################################
+# Load @graknlabs_grabl_tracing #
+#################################
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grabl_tracing")
+graknlabs_grabl_tracing()
+
+##############################
+# Load @graknlabs_grakn_core #
+##############################
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core")
+graknlabs_grakn_core()
+
+load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl",
+"graknlabs_common", "graknlabs_console")
+graknlabs_common()
+graknlabs_console()
+
+load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
+graknlabs_grakn_core_maven_dependencies = "maven_dependencies")
+graknlabs_grakn_core_maven_dependencies()
+
+load("@graknlabs_dependencies//bazel:dependencies.bzl", "bazel_rules_docker")
+bazel_rules_docker()
+
+################################
+# Load @graknlabs_verification #
+################################
+load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_verification")
+graknlabs_verification()
+
+########################
+# Load Maven Artifacts #
+########################
+load("@graknlabs_dependencies//library/maven:rules.bzl", "maven")
+load("//dependencies/maven:artifacts.bzl", "artifacts")
+maven(artifacts)
+
+#########################
+# Create Workspace Refs #
+#########################
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(
+    name = "graknlabs_client_java_workspace_refs"
+)
 
 # ###########################
 # # Grakn Labs dependencies #
