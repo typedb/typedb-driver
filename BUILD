@@ -20,8 +20,8 @@
 package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_build_tools//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
+load("@graknlabs_dependencies//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 
 exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.properties"])

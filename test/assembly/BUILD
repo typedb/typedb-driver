@@ -17,7 +17,7 @@
 # under the License.
 #
 
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
     name = "test-assembly-query",

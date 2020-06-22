@@ -25,7 +25,7 @@
 CLIENT_JAVA_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
 pushd "$CLIENT_JAVA_HOME" > /dev/null
 
-bazel run @graknlabs_build_tools//bazel:bazel-deps -- generate -r $CLIENT_JAVA_HOME -s dependencies/maven/dependencies.bzl -d dependencies/maven/dependencies.yaml
+bazel run @graknlabs_dependencies//bazel:bazel-deps -- generate -r $CLIENT_JAVA_HOME -s dependencies/maven/dependencies.bzl -d dependencies/maven/dependencies.yaml
 
 # Fix formatting for Bazel source code
 #bazel run //tools/formatter -- --path $(pwd)/third_party --build &>/dev/null
