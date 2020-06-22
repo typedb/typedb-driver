@@ -170,9 +170,6 @@ load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
 graknlabs_grakn_core_maven_dependencies = "maven_dependencies")
 graknlabs_grakn_core_maven_dependencies()
 
-load("@graknlabs_dependencies//bazel:dependencies.bzl", "bazel_rules_docker")
-bazel_rules_docker()
-
 ################################
 # Load @graknlabs_verification #
 ################################
@@ -182,9 +179,11 @@ graknlabs_verification()
 ########################
 # Load Maven Artifacts #
 ########################
-load("@graknlabs_dependencies//library/maven:rules.bzl", "maven")
-load("//dependencies/maven:artifacts.bzl", "artifacts")
-maven(artifacts)
+# load("@graknlabs_dependencies//library/maven:rules.bzl", "maven")
+# load("//dependencies/maven:artifacts.bzl", "artifacts")
+# maven(artifacts)
+load("//dependencies/maven:dependencies.bzl", "maven_dependencies")
+maven_dependencies()
 
 #########################
 # Create Workspace Refs #
