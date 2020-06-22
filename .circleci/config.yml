@@ -40,7 +40,8 @@ commands:
 
 jobs:
   build:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -49,7 +50,8 @@ jobs:
           command: bazel build //...
 
   test:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -58,7 +60,8 @@ jobs:
           command: bazel test //:test-integration --test_output=streamed
 
   deploy-npm-snapshot:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -72,7 +75,8 @@ jobs:
           bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
 
   test-deployment:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -89,7 +93,8 @@ jobs:
           jest --detectOpenHandles application.test.js
 
   sync-dependencies-snapshot:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -101,7 +106,8 @@ jobs:
           --targets grakn-kgms:master workbase:master
 
   release-approval:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -112,7 +118,8 @@ jobs:
           bazel run @graknlabs_build_tools//ci:release-approval
 
   deploy-github:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -126,7 +133,8 @@ jobs:
           bazel run --define version=$(cat VERSION) //:deploy-github -- $CIRCLE_SHA1
 
   deploy-npm-release:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -140,7 +148,8 @@ jobs:
           bazel run --define version=$(cat VERSION) //:deploy-npm -- release
 
   sync-dependencies-release:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - install-bazel-linux-rbe
@@ -152,7 +161,8 @@ jobs:
           --targets grakn-kgms:master workbase:master docs:master examples:master
 
   release-cleanup:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
       - checkout
