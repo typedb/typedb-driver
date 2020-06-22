@@ -59,7 +59,7 @@ jobs:
     steps:
       - install-bazel-linux-rbe
       - checkout
-      - run: bazel run @graknlabs_dependencies//checkstyle:test-coverage
+      - run: bazel run @graknlabs_dependencies//tools/checkstyle:test-coverage
       - run-bazel-rbe:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
