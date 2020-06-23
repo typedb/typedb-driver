@@ -137,6 +137,12 @@ public class GraqlSteps {
         tx = session.transaction().write();
     }
 
+    @Given("graql undefine without commit")
+    public void graql_undefine_without_commit(String undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        tx.execute(graqlQuery);
+    }
+
     @Given("graql undefine throws")
     public void graql_undefine_throws(String undefineQueryStatements) {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
