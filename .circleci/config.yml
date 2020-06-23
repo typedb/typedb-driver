@@ -54,7 +54,7 @@ jobs:
       - checkout
       - bazel-run-rbe:
           command: bazel build //...
-      - run: bazel run @graknlabs_dependencies//unused_deps -- list
+      - run: bazel run @graknlabs_dependencies//tools/unuseddeps:unused-deps -- list
 
   build-checkstyle:
     machine: 
