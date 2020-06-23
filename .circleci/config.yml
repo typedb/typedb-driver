@@ -38,6 +38,12 @@ commands:
     steps:
       - run: bazel run @graknlabs_dependencies//tools/bazelrun:rbe -- << parameters.command >>
 
+  grakn-run:
+    steps:
+      - run-bazel-rbe:
+          command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
+      - run: mkdir dist && tar -xvzf bazel-bin/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
+      - run: nohup ./dist/grakn-core-all-linux/grakn server start
 jobs:
   build:
     machine: 
@@ -204,7 +210,7 @@ jobs:
     steps:
       - checkout
       - bazel-install
-      - run-grakn-server
+      - grakn-run
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
       - run: cd test/deployment && mvn test
