@@ -36,7 +36,7 @@ commands:
       command:
         type: string
     steps:
-      - run: bazel run @graknlabs_dependencies//tools/bazelrun:rbe -- << parameters.command >>
+      - run: bazel run @graknlabs_dependencies//tool/bazelrun:rbe -- << parameters.command >>
 
   grakn-run:
     steps:
@@ -54,7 +54,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel build //...
-      - run: bazel run @graknlabs_dependencies//tools/unuseddeps:unused-deps -- list
+      - run: bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
 
   build-checkstyle:
     machine: 
@@ -63,7 +63,7 @@ jobs:
     steps:
       - install-bazel
       - checkout
-      - run: bazel run @graknlabs_dependencies//tools/checkstyle:test-coverage
+      - run: bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
       - run-bazel:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
