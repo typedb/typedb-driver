@@ -19,26 +19,24 @@
 
 version: 2.1
 commands:
-  install-bazel-linux-rbe:
+  bazel-install:
     steps:
-      - run: curl -OL https://raw.githubusercontent.com/graknlabs/build-tools/master/ci/install-bazel-linux.sh
-      - run: bash ./install-bazel-linux.sh && rm ./install-bazel-linux.sh
-      - run: curl -OL https://raw.githubusercontent.com/graknlabs/build-tools/master/ci/install-bazel-rbe.sh
-      - run: bash ./install-bazel-rbe.sh && rm ./install-bazel-rbe.sh
+      - run: |
+          mkdir install
+          cd install
+          curl -OL https://raw.githubusercontent.com/lolski/build-tools/refactor/tools/bazelinstall/linux.sh
+          bash ./linux.sh
+          curl -OL https://raw.githubusercontent.com/lolski/build-tools/refactor/tools/bazelinstall/rbe.sh
+          bash ./rbe.sh
+          cd ..
+          rm -rf install
 
-  run-bazel-rbe:
+  bazel-run-rbe:
     parameters:
       command:
         type: string
     steps:
-      - run: bazel run @graknlabs_dependencies//ci:run-bazel-rbe -- << parameters.command >>
-
-  run-grakn-server:
-    steps:
-      - run-bazel-rbe:
-          command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
-      - run: mkdir dist && tar -xvzf bazel-bin/external/graknlabs_grakn_core/grakn-core-all-linux.tar.gz -C ./dist/
-      - run: nohup ./dist/grakn-core-all-linux/grakn server start
+      - run: bazel run @graknlabs_dependencies//tools/bazelrun:rbe -- << parameters.command >>
 
 jobs:
   build:
@@ -46,9 +44,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel build //...
       - run: bazel run @graknlabs_dependencies//unused_deps -- list
 
@@ -57,10 +55,10 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: bazel run @graknlabs_dependencies//tools/checkstyle:test-coverage
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
   test-integration-concept:
@@ -68,9 +66,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/integration/concept:concept-it --test_output=errors
 
   test-integration-answer:
@@ -78,9 +76,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/integration/answer:answer-it --test_output=errors
 
   test-integration-tracing:
@@ -88,9 +86,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/integration/tracing:tracing-it --test_output=errors
 
   test-behaviour-connection:
@@ -98,13 +96,13 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
 
   test-behaviour-graql-define:
@@ -112,9 +110,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
 
   test-behaviour-graql-delete:
@@ -122,9 +120,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/delete:test-core --test_output=errors
 
   test-behaviour-graql-get:
@@ -132,9 +130,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/get:test-core --test_output=errors
 
   test-behaviour-graql-insert:
@@ -142,9 +140,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
 
   test-behaviour-graql-match:
@@ -152,9 +150,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
 
   test-behaviour-graql-undefine:
@@ -162,9 +160,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
 
   test-behaviour-graql-reasoner:
@@ -172,9 +170,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/behaviour/graql/reasoner/explanation:test-core --test_output=errors
 
   deploy-maven-snapshot:
@@ -183,7 +181,7 @@ jobs:
     working_directory: ~/client-java
     steps:
       - checkout
-      - install-bazel-linux-rbe
+      - bazel-install
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
@@ -194,9 +192,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
-      - run-bazel-rbe:
+      - bazel-run-rbe:
           command: bazel test //test/assembly:test-assembly-query --test_output=errors
 
   test-deployment-maven:
@@ -205,7 +203,7 @@ jobs:
     working_directory: ~/client-java
     steps:
       - checkout
-      - install-bazel-linux-rbe
+      - bazel-install
       - run-grakn-server
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
@@ -216,7 +214,7 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
@@ -228,7 +226,7 @@ jobs:
     machine: 
       image: ubuntu-1604:201903-01
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
@@ -239,7 +237,7 @@ jobs:
     machine: 
       image: ubuntu-1604:201903-01
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           bazel run @graknlabs_dependencies//ci:release-validate-deps -- \
@@ -250,7 +248,7 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           pip install certifi
@@ -265,7 +263,7 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
@@ -277,7 +275,7 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel-linux-rbe
+      - bazel-install
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
