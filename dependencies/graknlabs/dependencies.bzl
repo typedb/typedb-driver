@@ -70,8 +70,12 @@ def graknlabs_verification():
     # )
 
 def graknlabs_grabl_tracing():
-    git_repository(
+    native.local_repository(
         name = "graknlabs_grabl_tracing",
-        remote = "https://github.com/lolski/grabl-tracing",
-        commit = "0031b39eebea2e2844a37d82800f456547deff3d"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grabl_tracing
+        path = "/Users/lolski/grakn.ai/graknlabs/grabl-tracing"
     )
+    # git_repository(
+    #     name = "graknlabs_grabl_tracing",
+    #     remote = "https://github.com/lolski/grabl-tracing",
+    #     commit = "0031b39eebea2e2844a37d82800f456547deff3d"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grabl_tracing
+    # )
