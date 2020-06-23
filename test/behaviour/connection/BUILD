@@ -31,8 +31,8 @@ java_library(
         "//test/setup:grakn-properties",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 

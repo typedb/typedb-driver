@@ -44,19 +44,19 @@ java_library(
         "@graknlabs_grabl_tracing//client",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/com/google/code/findbugs:jsr305",
-        "//dependencies/maven/artifacts/com/google/guava:guava",
-        "//dependencies/maven/artifacts/io/grpc:grpc-core",
-        "//dependencies/maven/artifacts/io/grpc:grpc-stub",
-        "//dependencies/maven/artifacts/io/grpc:grpc-api",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api" # TODO: Do we still need this?
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:io_grpc_grpc_core",
+        "@maven//:io_grpc_grpc_stub",
+        "@maven//:io_grpc_grpc_api",
+        "@maven//:org_slf4j_slf4j_api" # TODO: Do we still need this?
     ],
     runtime_deps = [
-        "//dependencies/maven/artifacts/ch/qos/logback:logback-classic",
-        "//dependencies/maven/artifacts/ch/qos/logback:logback-core",
-        "//dependencies/maven/artifacts/io/grpc:grpc-netty",
-        "//dependencies/maven/artifacts/io/netty:netty-all",
-        "//dependencies/maven/artifacts/io/netty:netty-tcnative-boringssl-static",
+        "@maven//:ch_qos_logback_logback_classic",
+        "@maven//:ch_qos_logback_logback_core",
+        "@maven//:io_grpc_grpc_netty",
+        "@maven//:io_netty_netty_all",
+        "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
     resources = ["LICENSE"],
     tags = ["maven_coordinates=io.grakn.client:grakn-client:{pom_version}"],

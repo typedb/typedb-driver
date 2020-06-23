@@ -39,8 +39,8 @@ java_test(
         "@graknlabs_grabl_tracing//client",
 
         # Maven External dependencies
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api", # TODO: Do we still need this?
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_slf4j_slf4j_api", # TODO: Do we still need this?
     ],
     classpath_resources = [
         "//test/setup:logback",

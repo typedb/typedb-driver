@@ -176,15 +176,15 @@ graknlabs_verification()
 ###############################
 # Load @graknlabs_client_java #
 ###############################
-# load("//dependencies/maven:artifacts.bzl", "artifacts")
-load("//dependencies/maven:dependencies.bzl", "maven_dependencies")
+load("@graknlabs_client_java//dependencies/maven:artifacts.bzl", graknlabs_client_java_artifacts = "artifacts")
 
 ########################
 # Load Maven Artifacts #
 ########################
-maven_dependencies()
 maven(
-    graknlabs_graql_artifacts + graknlabs_grabl_tracing_artifacts
+    graknlabs_graql_artifacts +
+    graknlabs_grabl_tracing_artifacts +
+    graknlabs_client_java_artifacts
 )
 
 #########################

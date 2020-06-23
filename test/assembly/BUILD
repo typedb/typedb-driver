@@ -35,10 +35,10 @@ java_test(
         "@graknlabs_graql//java:graql",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/commons-io",
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
-        "//dependencies/maven/artifacts/org/zeroturnaround:zt-exec",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api",
+        "@maven//:commons_io_commons_io",
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_zeroturnaround_zt_exec",
+        "@maven//:org_slf4j_slf4j_api",
     ],
     data = ["@graknlabs_grakn_core//:assemble-linux-targz"],
     args = [ # The order of the arguments matter
