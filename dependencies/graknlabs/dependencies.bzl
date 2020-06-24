@@ -41,15 +41,15 @@ def graknlabs_dependencies():
     )
 
 def graknlabs_grakn_core():
-    native.local_repository(
-        name = "graknlabs_grakn_core",
-        path = "/Users/lolski/grakn.ai/graknlabs/grakn"
-    )
-    # git_repository(
+    # native.local_repository(
     #     name = "graknlabs_grakn_core",
-    #     remote = "https://github.com/lolski/grakn",
-    #     commit = "71f07031bfcee2c344ee31be66a0fdb124b2fd5e", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+    #     path = "/Users/lolski/grakn.ai/graknlabs/grakn"
     # )
+    git_repository(
+        name = "graknlabs_grakn_core",
+        remote = "https://github.com/lolski/grakn",
+        commit = "83a2cdaefe5b3470833c81d4255c4dcc9026be90", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grakn_core
+    )
 
 def graknlabs_protocol():
     git_repository(
