@@ -38,7 +38,7 @@ commands:
     steps:
       - run: bazel run @graknlabs_dependencies//tool/bazelrun:rbe -- << parameters.command >>
 
-  grakn-run:
+  run-grakn:
     steps:
       - run-bazel:
           command: bazel build @graknlabs_grakn_core//:assemble-linux-targz
@@ -210,7 +210,7 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - grakn-run
+      - run-grakn
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
       - run: cd test/deployment && mvn test
