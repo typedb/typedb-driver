@@ -18,7 +18,7 @@
 #
 
 package(default_visibility = ["//visibility:__subpackages__"])
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
     name = "test-core",
@@ -31,7 +31,7 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+        "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//test/behaviour/graql:steps",
@@ -67,7 +67,7 @@ java_test(
         "//test/setup:grakn-setup",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+        "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//test/behaviour/graql:steps",
