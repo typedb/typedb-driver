@@ -22,8 +22,8 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def graknlabs_graql():
     git_repository(
         name = "graknlabs_graql",
-        remote = "https://github.com/lolski/graql",
-        commit = "f82aba9fabfd2393a566ac98c21c6d9ea84fe223" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
+        remote = "https://github.com/graknlabs/graql",
+        commit = "4269a114607933b3dcacca73be0c71fb5359a6ea" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
     )
 
 def graknlabs_common():
