@@ -23,9 +23,9 @@ load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 java_test(
     name = "test-core",
     srcs = [
-        "ExplanationTest.java",
+        "ReasonerTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.reasoner.explanation.ExplanationTest",
+    test_class = "grakn.client.test.behaviour.graql.explanation.reasoner.ReasonerTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -40,7 +40,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/reasoner:explanation.feature",
+        "@graknlabs_verification//behaviour/graql/explanation:reasoner.feature",
         "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
@@ -59,9 +59,9 @@ java_test(
 java_test(
     name = "test-kgms",
     srcs = [
-        "ExplanationTest.java",
+        "ReasonerTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.graql.reasoner.explanation.ExplanationTest",
+    test_class = "grakn.client.test.behaviour.graql.explanation.reasoner.ReasonerTest",
     deps = [
         # Package dependencies
         "//test/setup:grakn-setup",
@@ -76,7 +76,7 @@ java_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/reasoner:explanation.feature"
+        "@graknlabs_verification//behaviour/graql/explanation:reasoner.feature"
     ],
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
