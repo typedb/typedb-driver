@@ -232,7 +232,7 @@ jobs:
       - run: |
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//ci:release-approval
+          bazel run @graknlabs_dependencies//tool/release:approval
 
   release-validate:
     machine: 
@@ -241,7 +241,7 @@ jobs:
       - install-bazel
       - checkout
       - run: |
-          bazel run @graknlabs_dependencies//ci:release-validate-deps -- \
+          bazel run @graknlabs_dependencies//tool/release:validate-deps -- \
           graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_grabl_tracing
 
   deploy-github:
@@ -254,7 +254,7 @@ jobs:
       - run: |
           pip install certifi
           export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//ci:release-notes -- client-java $(cat VERSION) ./RELEASE_TEMPLATE.md
+          bazel run @graknlabs_dependencies//tool/release:create-notes -- client-java $(cat VERSION) ./RELEASE_TEMPLATE.md
       - run: |
           export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
           bazel run --define version=$(cat VERSION) //:deploy-github -- $CIRCLE_SHA1
