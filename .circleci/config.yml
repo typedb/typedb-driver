@@ -219,7 +219,7 @@ jobs:
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//ci:sync-dependencies -- \
+          bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
           --source client-java@$CIRCLE_SHA1 \
           --targets console:master grakn-kgms:master
 
@@ -280,7 +280,7 @@ jobs:
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//ci:sync-dependencies -- \
+          bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
           --source client-java@$(cat VERSION) \
           --targets console:master grakn-kgms:master docs:master examples:master
 
