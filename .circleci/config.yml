@@ -101,7 +101,7 @@ jobs:
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//tools/sync:dependencies -- \
+          bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
           --source client-nodejs@$CIRCLE_SHA1 \
           --targets grakn-kgms:master workbase:master
 
@@ -115,7 +115,7 @@ jobs:
       - run: |
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//tools/release:approval
+          bazel run @graknlabs_dependencies//tool/release:approval
 
   deploy-github:
     machine: 
@@ -127,7 +127,7 @@ jobs:
       - run: |
           pip install certifi
           export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//tools/release:create-notes -- client-nodejs $(cat VERSION) ./RELEASE_TEMPLATE.md
+          bazel run @graknlabs_dependencies//tool/release:create-notes -- client-nodejs $(cat VERSION) ./RELEASE_TEMPLATE.md
       - run: |
           export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
           bazel run --define version=$(cat VERSION) //:deploy-github -- $CIRCLE_SHA1
@@ -156,7 +156,7 @@ jobs:
       - checkout
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @graknlabs_dependencies//tools/sync:dependencies -- \
+          bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
           --source client-nodejs@$(cat VERSION) \
           --targets grakn-kgms:master workbase:master docs:master examples:master
 
