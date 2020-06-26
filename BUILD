@@ -61,7 +61,7 @@ assemble_npm(
 deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
-    deployment_properties = "@graknlabs_build_tools//:deployment.properties",
+    deployment_properties = "@graknlabs_dependencies//distribution:deployment.properties",
 )
 
 
