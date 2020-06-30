@@ -18,7 +18,7 @@
 #
 
 package(default_visibility = ["//visibility:__subpackages__"])
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
     name = "test",
@@ -34,8 +34,8 @@ java_test(
         # e.g. "//test/behaviour/connection/steps:connection-keyspace",
 
         # External dependencies from Maven
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-java",
-        "//dependencies/maven/artifacts/io/cucumber:cucumber-junit",
+        "@maven//:io_cucumber_cucumber_java",
+        "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//test/behaviour/connection:steps",

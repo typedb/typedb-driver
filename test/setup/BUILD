@@ -18,7 +18,7 @@
 #
 
 package(default_visibility = ["//test:__subpackages__"])
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "grakn-setup",
@@ -29,10 +29,10 @@ java_library(
     ],
     deps = [
         ":grakn-properties",
-        "//dependencies/maven/artifacts/commons-io:commons-io",
-        "//dependencies/maven/artifacts/junit:junit",
-        "//dependencies/maven/artifacts/org/zeroturnaround:zt-exec",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api"
+        "@maven//:commons_io_commons_io",
+        "@maven//:junit_junit",
+        "@maven//:org_zeroturnaround_zt_exec",
+        "@maven//:org_slf4j_slf4j_api"
     ],
 )
 

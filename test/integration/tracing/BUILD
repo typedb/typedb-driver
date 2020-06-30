@@ -22,7 +22,7 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 
-load("@graknlabs_build_tools//checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_test(
     name = "tracing-it",
@@ -39,8 +39,8 @@ java_test(
         "@graknlabs_grabl_tracing//client",
 
         # Maven External dependencies
-        "//dependencies/maven/artifacts/org/hamcrest:hamcrest-library",
-        "//dependencies/maven/artifacts/org/slf4j:slf4j-api", # TODO: Do we still need this?
+        "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_slf4j_slf4j_api", # TODO: Do we still need this?
     ],
     classpath_resources = [
         "//test/setup:logback",
