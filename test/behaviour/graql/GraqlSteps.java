@@ -137,6 +137,12 @@ public class GraqlSteps {
         tx = session.transaction().write();
     }
 
+    @Given("graql undefine without commit")
+    public void graql_undefine_without_commit(String undefineQueryStatements) {
+        GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        tx.execute(graqlQuery);
+    }
+
     @Given("graql undefine throws")
     public void graql_undefine_throws(String undefineQueryStatements) {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
@@ -208,6 +214,20 @@ public class GraqlSteps {
         assertTrue(threw);
     }
 
+    @When("get answers of graql insert")
+    public void get_answers_of_graql_insert(String graqlQueryStatements) {
+        GraqlInsert graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements)).asInsert();
+        // Erase answers from previous steps to avoid polluting the result space
+        answers = null;
+        numericAnswers = null;
+        answerGroups = null;
+        numericAnswerGroups = null;
+
+        answers = tx.execute(graqlQuery).get();
+        tx.commit();
+        tx = session.transaction().write();
+    }
+
     @When("get answers of graql query")
     public void graql_query(String graqlQueryStatements) {
         GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
@@ -219,7 +239,7 @@ public class GraqlSteps {
         if (graqlQuery instanceof GraqlGet) {
             answers = tx.execute(graqlQuery.asGet()).get();
         } else if (graqlQuery instanceof GraqlInsert) {
-            answers = tx.execute(graqlQuery.asInsert()).get();
+            throw new ScenarioDefinitionException("Insert is not supported; use `get answers of graql insert` instead");
         } else if (graqlQuery instanceof GraqlGet.Aggregate) {
             numericAnswers = tx.execute(graqlQuery.asGetAggregate()).get();
         } else if (graqlQuery instanceof GraqlGet.Group) {
@@ -259,7 +279,9 @@ public class GraqlSteps {
 
     @Then("answer size is: {number}")
     public void answer_quantity_assertion(int expectedAnswers) {
-        assertEquals(expectedAnswers, answers.size());
+        assertEquals(
+                String.format("Expected [%d] answers, but got [%d]", expectedAnswers, answers.size()),
+                expectedAnswers, answers.size());
     }
 
     @Then("concept identifiers are")
