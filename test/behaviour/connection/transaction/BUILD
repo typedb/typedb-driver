@@ -29,6 +29,7 @@ java_library(
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
+        "//test/behaviour/util:util",
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
