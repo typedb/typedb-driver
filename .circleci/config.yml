@@ -49,6 +49,11 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel build //...
+      - run:
+          name: Verify dependencies/maven/snapshot.json
+          command: |
+            dependencies/maven/update.sh
+            git diff --exit-code dependencies/maven/artifacts.snapshot
       - run: bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
 
   build-checkstyle:
