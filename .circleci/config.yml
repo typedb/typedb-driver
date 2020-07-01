@@ -50,7 +50,7 @@ jobs:
       - run-bazel:
           command: bazel build //...
       - run:
-          name: Verify dependencies/maven/snapshot.json
+          name: name: Verify dependencies/maven/artifacts.snapshot
           command: |
             dependencies/maven/update.sh
             git diff --exit-code dependencies/maven/artifacts.snapshot
