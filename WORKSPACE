@@ -175,17 +175,10 @@ graknlabs_grabl_tracing()
 load("@graknlabs_grabl_tracing//dependencies/maven:artifacts.bzl", graknlabs_grabl_tracing_artifacts = "artifacts")
 
 ##############################
-# Load @graknlabs_grakn_core #
+# Load @graknlabs_grakn_core_artifact #
 ##############################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grakn_core")
-graknlabs_grakn_core()
-
-load("@graknlabs_grakn_core//dependencies/graknlabs:dependencies.bzl", "graknlabs_console")
-graknlabs_console()
-
-load("@graknlabs_grakn_core//dependencies/maven:dependencies.bzl",
-graknlabs_grakn_core_maven_dependencies = "maven_dependencies")
-graknlabs_grakn_core_maven_dependencies()
+load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
+graknlabs_grakn_core_artifact()
 
 ################################
 # Load @graknlabs_verification #

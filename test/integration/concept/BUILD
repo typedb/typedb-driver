@@ -46,11 +46,11 @@ java_test(
         "//test/setup:logback",
     ],
     data = [
-        "@graknlabs_grakn_core//:assemble-linux-targz", # Make sure to pass the path in args below
+        "@graknlabs_grakn_core_artifact//file", # Make sure to pass the path in args below
     ],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
+        "$(locations @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
     ],
 )
 

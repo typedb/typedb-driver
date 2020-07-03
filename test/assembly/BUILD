@@ -40,10 +40,10 @@ java_test(
         "@maven//:org_zeroturnaround_zt_exec",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    data = ["@graknlabs_grakn_core//:assemble-linux-targz"],
+    data = ["@graknlabs_grakn_core_artifact//file"],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core//:assemble-linux-targz)", # Keep at index 1, will be accessible at args[2]
+        "$(locations @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
 )
