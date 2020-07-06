@@ -23,6 +23,6 @@ def graknlabs_grakn_core_artifact():
     artifact_file(
         name = "graknlabs_grakn_core_artifact",
         group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-all-linux.tar.gz",
-        commit = "787079dbcca5bc28e7bd030aa5229d136cf3a04d",
+        artifact_name = "grakn-core-all-linux-{version}.tar.gz",
+        commit = "f909b777efd515e5154daff836484e19de709b0d",
     )
