@@ -6,5 +6,6 @@ bazel-*
 .idea
 *.iml
 
-# Maven files #
+# Output directories
 target
+dist

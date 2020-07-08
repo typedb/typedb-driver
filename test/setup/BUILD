@@ -19,6 +19,12 @@
 
 package(default_visibility = ["//test:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
+
+artifact_extractor(
+    name = "grakn-extractor",
+    target = "@graknlabs_grakn_core_artifact//file",
+)
 
 java_library(
     name = "grakn-setup",
