@@ -95,7 +95,7 @@ public class TransactionSteps {
     }
 
     @Then("for each session, transaction(s) commit(s); throws exception")
-    public void for_each_session_transactions_commits_throws_exception(boolean successfully) {
+    public void for_each_session_transactions_commits_throws_exception() {
         for (GraknClient.Session session : sessions) {
             for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
                 assertThrows(transaction::commit);
