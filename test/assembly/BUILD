@@ -43,7 +43,7 @@ java_test(
     data = ["@graknlabs_grakn_core_artifact//file"],
     args = [ # The order of the arguments matter
         "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(locations @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
+        "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
     ],
     classpath_resources = ["//test/setup:logback"],
 )
