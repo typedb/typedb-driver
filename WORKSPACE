@@ -22,7 +22,7 @@ workspace(name = "graknlabs_client_java")
 ################################
 # Load @graknlabs_dependencies #
 ################################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_dependencies")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_dependencies")
 graknlabs_dependencies()
 
 # Load Antlr
@@ -140,13 +140,13 @@ rules_pkg_dependencies()
 ##########################
 # Load @graknlabs_common #
 ##########################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_common")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
 graknlabs_common()
 
 #########################
 # Load @graknlabs_graql #
 #########################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_graql")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_graql")
 graknlabs_graql()
 
 load("@graknlabs_graql//dependencies/maven:artifacts.bzl", graknlabs_graql_artifacts = "artifacts")
@@ -154,7 +154,7 @@ load("@graknlabs_graql//dependencies/maven:artifacts.bzl", graknlabs_graql_artif
 ############################
 # Load @graknlabs_protocol #
 ############################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_protocol")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
 graknlabs_protocol()
 
 load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
@@ -170,7 +170,7 @@ java_grpc_compile()
 #################################
 # Load @graknlabs_grabl_tracing #
 #################################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_grabl_tracing")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_grabl_tracing")
 graknlabs_grabl_tracing()
 load("@graknlabs_grabl_tracing//dependencies/maven:artifacts.bzl", graknlabs_grabl_tracing_artifacts = "artifacts")
 
@@ -183,7 +183,7 @@ graknlabs_grakn_core_artifact()
 ################################
 # Load @graknlabs_verification #
 ################################
-load("//dependencies/graknlabs:dependencies.bzl", "graknlabs_verification")
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_verification")
 graknlabs_verification()
 
 ###############################

@@ -51,8 +51,6 @@ public class GraknSetupCore {
     private GraknSetupCore(File distributionFile) throws InterruptedException, TimeoutException, IOException {
         System.out.println("Constructing a Grakn Core runner");
 
-        distributionFormat(distributionFile);
-
         GRAKN_DISTRIBUTION_FILE = distributionFile;
         GRAKN_DISTRIBUTION_FORMAT = distributionFormat(distributionFile);
         GRAKN_TARGET_DIRECTORY = distributionTarget(distributionFile);

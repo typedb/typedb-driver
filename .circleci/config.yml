@@ -106,10 +106,13 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
       - run-bazel:
           command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
       - run-bazel:
           command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-define:
     machine: 
@@ -120,6 +123,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-delete:
     machine: 
@@ -130,6 +134,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/delete:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-get:
     machine: 
@@ -140,6 +145,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/get:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-insert:
     machine: 
@@ -150,6 +156,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-match:
     machine: 
@@ -160,6 +167,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-undefine:
     machine: 
@@ -170,6 +178,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   test-behaviour-graql-reasoner:
     machine: 
@@ -180,6 +189,7 @@ jobs:
       - checkout
       - run-bazel:
           command: bazel test //test/behaviour/graql/reasoner/explanation:test-core --test_output=errors
+          no_output_timeout: 120m # TODO: remove in grabl.yml
 
   deploy-maven-snapshot:
     machine: 
