@@ -53,7 +53,7 @@ grakn_test(
         ":steps"
     ],
     data = [
-        "@graknlabs_grakn_core_artifact//file", # Make sure to pass the path in args below
+        "@graknlabs_verification//behaviour/connection:keyspace.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",
