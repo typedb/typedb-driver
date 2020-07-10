@@ -48,7 +48,7 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/setup:grakn-setup",
+        "@graknlabs_common//test/server:grakn-setup",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
@@ -67,7 +67,7 @@ java_test(
         "grakn-core", # Keep at index 0, will be accessible at args[1]
         "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
     ],
-    classpath_resources = ["//test/setup:logback"],
+    classpath_resources = ["@graknlabs_common//test/server:logback"],
     size = "large",
 )
 
@@ -83,7 +83,7 @@ java_test(
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
         # Package dependencies
-        "//test/setup:grakn-setup",
+        "@graknlabs_common//test/server:grakn-setup",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
@@ -100,7 +100,7 @@ java_test(
     args = [ # The order of the arguments matter
         "grakn-kgms", # Keep at index 0, will be accessible at args[1]
     ],
-    classpath_resources = ["//test/setup:logback"],
+    classpath_resources = ["@graknlabs_common//test/server:logback"],
     size = "large",
 )
 

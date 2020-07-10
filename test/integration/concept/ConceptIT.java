@@ -36,8 +36,8 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.Type;
-import grakn.client.test.setup.GraknProperties;
-import grakn.client.test.setup.GraknSetup;
+import grakn.common.test.server.GraknProperties;
+import grakn.common.test.server.GraknSetup;
 import graql.lang.pattern.Pattern;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -75,9 +75,6 @@ import static org.junit.Assert.fail;
  */
 public class ConceptIT {
 
-    private static final String[] args = System.getProperty("sun.java.command").split(" ");
-    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
-    private static final File graknDistributionFile = new File(args[2]);
     private static GraknClient client;
     private static GraknClient.Session session;
     private GraknClient.Transaction tx;
@@ -150,7 +147,7 @@ public class ConceptIT {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup(graknType, graknDistributionFile);
+        GraknSetup.bootup();
 
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
@@ -162,7 +159,7 @@ public class ConceptIT {
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         session.close();
         client.close();
-        GraknSetup.shutdown(graknType);
+        GraknSetup.shutdown();
     }
 
     @Before

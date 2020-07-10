@@ -23,8 +23,8 @@ import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadContext;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.client.test.setup.GraknProperties;
-import grakn.client.test.setup.GraknSetup;
+import grakn.common.test.server.GraknProperties;
+import grakn.common.test.server.GraknSetup;
 import graql.lang.Graql;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,16 +42,13 @@ import static grabl.tracing.client.GrablTracingThreadStatic.setGlobalTracingClie
 import static org.junit.Assert.assertEquals;
 
 public class TracingIT {
-    private static final String[] args = System.getProperty("sun.java.command").split(" ");
-    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
-    private static final File graknDistributionFile = new File(args[2]);
     private static GraknClient client;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         setGlobalTracingClient(tracingNoOp());
         openGlobalAnalysis("owner", "repo", "commit");
-        GraknSetup.bootup(graknType, graknDistributionFile);
+        GraknSetup.bootup();
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         client = new GraknClient(address);
     }
@@ -59,7 +56,7 @@ public class TracingIT {
     @AfterClass
     public static void closeSession() throws Exception {
         client.close();
-        GraknSetup.shutdown(graknType);
+        GraknSetup.shutdown();
         GrablTracingThreadStatic.getGrablTracing().close();
     }
 

@@ -23,39 +23,28 @@
 package(default_visibility = ["//visibility:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
-java_test(
+grakn_test(
     name = "answer-it",
     srcs = ["AnswerIT.java"],
     test_class = "grakn.client.test.integration.answer.AnswerIT",
     deps = [
         # Grakn Core dependencies
         "//:client-java",
-        "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
 
         # Grakn Labs dependencies
         "@graknlabs_graql//java:graql",
 
         # Maven External dependencies
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_slf4j_slf4j_api", # TODO: Do we still need this?
     ],
-    classpath_resources = [
-        "//test/setup:logback",
-    ],
-    data = [
-        "@graknlabs_grakn_core_artifact//file", # Make sure to pass the path in args below
-    ],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
-    ],
+    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
 )
 
 
 checkstyle_test(
     name = "checkstyle",
     targets = [":answer-it"],
-    license_type = "apache"
+    license_type = "apache",
 )

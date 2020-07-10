@@ -19,8 +19,8 @@ package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.client.test.setup.GraknProperties;
-import grakn.client.test.setup.GraknSetup;
+import grakn.common.test.server.GraknProperties;
+import grakn.common.test.server.GraknSetup;
 import graql.lang.Graql;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
@@ -74,15 +74,12 @@ import static org.hamcrest.Matchers.hasSize;
  */
 @SuppressWarnings("Duplicates")
 public class QueryTest {
-    private static final String[] args = System.getProperty("sun.java.command").split(" ");
-    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
-    private static final File graknDistributionFile = new File(args[2]);
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknClient graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup(graknType, graknDistributionFile);
+        GraknSetup.bootup();
         String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
         graknClient = new GraknClient(address);
     }
@@ -90,7 +87,7 @@ public class QueryTest {
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
-        GraknSetup.shutdown(graknType);
+        GraknSetup.shutdown();
     }
 
     @Before

@@ -18,8 +18,9 @@
 #
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
-java_test(
+grakn_test(
     name = "test-assembly-query",
     srcs = [
         "QueryTest.java",
@@ -28,24 +29,14 @@ java_test(
     deps = [
         # Internal dependencies
         "//:client-java",
-        "//test/setup:grakn-setup",
-        "//test/setup:grakn-properties",
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
 
         # External dependencies from Maven
-        "@maven//:commons_io_commons_io",
         "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_zeroturnaround_zt_exec",
-        "@maven//:org_slf4j_slf4j_api",
     ],
-    data = ["@graknlabs_grakn_core_artifact//file"],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
-    ],
-    classpath_resources = ["//test/setup:logback"],
+    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
 )
 
 checkstyle_test(
