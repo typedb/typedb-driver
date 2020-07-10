@@ -30,7 +30,7 @@ def graknlabs_common():
     git_repository(
         name = "graknlabs_common",
         remote = "https://github.com/adammitchelldev/common",
-        commit = "0774dfa1e4b1f5918099600bf26ed101045354eb" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        commit = "7d323e8c395ffbc9d03db0a781ce952a425ac653" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
     )
 
 def graknlabs_dependencies():

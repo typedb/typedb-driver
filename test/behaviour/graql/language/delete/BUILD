@@ -68,7 +68,7 @@ grakn_test(
     data = [
         "@graknlabs_verification//behaviour/graql/language:delete.feature"
     ],
-    type = ["grakn-kgms"],
+    type = "grakn-kgms",
     size = "large",
 )
 

@@ -35,6 +35,7 @@ grakn_test(
 
         # External dependencies from Maven
         "@maven//:org_hamcrest_hamcrest_library",
+        "@maven//:org_slf4j_slf4j_api",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
 )
