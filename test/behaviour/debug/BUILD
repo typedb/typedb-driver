@@ -19,17 +19,15 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
-java_test(
+grakn_test(
     name = "test",
     srcs = [
         "DebugTest.java",
     ],
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
-        # Package dependencies
-        "//test/setup:grakn-setup",
-
         # TODO: Add your addition debugging dependencies here
         # e.g. "//test/behaviour/connection/steps:connection-keyspace",
 
@@ -45,13 +43,8 @@ java_test(
     ],
     data = [
         ":debug.feature",
-        "@graknlabs_grakn_core_artifact//file", # Make sure to pass the path in args below
     ],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
-    ],
-    classpath_resources = ["//test/setup:logback"],
+    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",
 )
 

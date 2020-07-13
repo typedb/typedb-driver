@@ -38,9 +38,10 @@ commands:
   run-grakn:
     steps:
       - run-bazel:
-          command: bazel build //test/setup:grakn-extractor
-      - run: bazel-bin/test/setup/grakn-extractor.sh dist/grakn-core-all-linux
+          command: bazel build //test:grakn-extractor
+      - run: bazel-bin/test/grakn-extractor.sh dist/grakn-core-all-linux
       - run: nohup ./dist/grakn-core-all-linux/grakn server start
+
 jobs:
   build:
     machine: 

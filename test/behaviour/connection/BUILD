@@ -28,7 +28,7 @@ java_library(
     deps = [
         # Package dependencies
         "//:client-java",
-        "//test/setup:grakn-properties",
+        "@graknlabs_common//test/server:grakn-setup",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

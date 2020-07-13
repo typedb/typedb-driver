@@ -20,7 +20,7 @@
 package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
-import grakn.client.test.setup.GraknProperties;
+import grakn.common.test.server.GraknProperties;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 

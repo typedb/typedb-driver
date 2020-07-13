@@ -143,6 +143,8 @@ rules_pkg_dependencies()
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
 graknlabs_common()
 
+load("@graknlabs_common//dependencies/maven:artifacts.bzl", graknlabs_common_artifacts = "artifacts")
+
 #########################
 # Load @graknlabs_graql #
 #########################
@@ -195,6 +197,7 @@ load("@graknlabs_client_java//dependencies/maven:artifacts.bzl", graknlabs_clien
 # Load @maven #
 ###############
 maven(
+    graknlabs_common_artifacts +
     graknlabs_graql_artifacts +
     graknlabs_grabl_tracing_artifacts +
     graknlabs_client_java_artifacts

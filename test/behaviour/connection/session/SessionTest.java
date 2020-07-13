@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.connection.session;
 
-import grakn.client.test.setup.GraknSetup;
+import grakn.common.test.server.GraknSetup;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
@@ -62,17 +62,13 @@ public class SessionTest {
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
-    private static final String[] args = System.getProperty("sun.java.command").split(" ");
-    private static final GraknSetup.GraknType graknType = GraknSetup.GraknType.of(args[1]);
-    private static final File graknDistributionFile = new File(args[2]);
-
     @BeforeClass
     public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
-        GraknSetup.bootup(graknType, graknDistributionFile);
+        GraknSetup.bootup();
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.shutdown(graknType);
+        GraknSetup.shutdown();
     }
 }

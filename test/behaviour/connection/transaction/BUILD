@@ -19,6 +19,7 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
 java_library(
     name = "steps",
@@ -40,16 +41,13 @@ java_library(
     ]
 )
 
-java_test(
+grakn_test(
     name = "test-core",
     srcs = [
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
-        # Package dependencies
-        "//test/setup:grakn-setup",
-
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
@@ -61,13 +59,8 @@ java_test(
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:transaction.feature",
-        "@graknlabs_grakn_core_artifact//file", # Make sure to pass the path in args below
     ],
-    args = [ # The order of the arguments matter
-        "grakn-core", # Keep at index 0, will be accessible at args[1]
-        "$(location @graknlabs_grakn_core_artifact//file)", # Keep at index 1, will be accessible at args[2]
-    ],
-    classpath_resources = ["//test/setup:logback"],
+    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",
 )
 
@@ -75,16 +68,13 @@ java_test(
 # --test_env GRAKN_KGMS_ADDRESS=***
 # --test_env GRAKN_KGMS_USERNAME=****
 # --test_env GRAKN_KGMS_PASSWORD=****
-java_test(
+grakn_test(
     name = "test-kgms",
     srcs = [
         "TransactionTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
-        # Package dependencies
-        "//test/setup:grakn-setup",
-
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
@@ -97,10 +87,7 @@ java_test(
     data = [
         "@graknlabs_verification//behaviour/connection:transaction.feature",
     ],
-    args = [ # The order of the arguments matter
-        "grakn-kgms", # Keep at index 0, will be accessible at args[1]
-    ],
-    classpath_resources = ["//test/setup:logback"],
+    type = "grakn-kgms",
     size = "large",
 )
 

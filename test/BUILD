@@ -17,47 +17,9 @@
 # under the License.
 #
 
-package(default_visibility = ["//test:__subpackages__"])
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
 
 artifact_extractor(
     name = "grakn-extractor",
     target = "@graknlabs_grakn_core_artifact//file",
-)
-
-java_library(
-    name = "grakn-setup",
-    srcs = [
-        "GraknSetup.java",
-        "GraknSetupCore.java",
-        "GraknSetupKGMS.java",
-    ],
-    deps = [
-        ":grakn-properties",
-        "@maven//:commons_io_commons_io",
-        "@maven//:junit_junit",
-        "@maven//:org_zeroturnaround_zt_exec",
-        "@maven//:org_slf4j_slf4j_api"
-    ],
-)
-
-java_library(
-    name = "grakn-properties",
-    srcs = ["GraknProperties.java"],
-)
-
-filegroup(
-    name = "logback",
-    srcs = ["logback.xml"],
-    visibility = ["//visibility:public"]
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    targets = [
-        ":grakn-setup",
-        ":grakn-properties",
-    ],
-    license_type = "apache"
 )
