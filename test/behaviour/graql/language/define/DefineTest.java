@@ -62,6 +62,7 @@ public class DefineTest {
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
+    @BeforeClass
     public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
         GraknSetup.bootup();
     }
