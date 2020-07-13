@@ -66,7 +66,7 @@ grakn_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:define.feature"
+        "@graknlabs_verification//behaviour/graql/language:define.feature",
     ],
     type = "grakn-kgms",
     size = "large",
@@ -78,7 +78,6 @@ checkstyle_test(
     targets = [
         ":test-core",
         ":test-kgms",
-
     ],
     license_type = "apache",
 )
