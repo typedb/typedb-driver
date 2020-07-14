@@ -17,9 +17,9 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "extract_artifact")
+load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
 
-extract_artifact(
-    name = "extract-grakn-core",
+artifact_extractor(
+    name = "grakn-extractor",
     artifact = "@graknlabs_grakn_core_artifact//file",
 )
