@@ -17,7 +17,6 @@ artifacts = [
   "io.netty:netty-codec-http2",
   "io.netty:netty-handler",
   "io.netty:netty-handler-proxy",
-  "io.netty:netty-tcnative-boringssl-static",
   "javax.annotation:javax.annotation-api",
   "junit:junit",
   "org.hamcrest:hamcrest-all",
