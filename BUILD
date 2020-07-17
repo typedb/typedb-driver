@@ -27,6 +27,7 @@ load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
 load("@npm_bazel_jasmine//:index.bzl", "jasmine_node_test")
 load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
 
 
 npm_package(
@@ -79,26 +80,32 @@ NODEJS_TEST_DEPENDENCIES = [
     "@npm//google-protobuf",
     "@npm//grpc",
     "@npm//tmp",
-    "@npm//unzipper",
     "@npm//properties-reader",
-    "@npm//jasmine-reporters"
+    "@npm//jasmine-reporters",
 ]
 
+genrule(
+    name = "grakn-artifact-path",
+    srcs = ["@graknlabs_grakn_core_artifact//file"],
+    outs = ["grakn-artifact-path.txt"],
+    cmd = "echo $(location @graknlabs_grakn_core_artifact//file) > \"$@\"",
+)
+
 NODEJS_TEST_DATA = [
-    "@graknlabs_grakn_core//:assemble-mac-zip",
-    "tests/support/basic-genealogy.gql"
+    ":grakn-artifact-path",
+    "@graknlabs_grakn_core_artifact//file",
+    "tests/support/basic-genealogy.gql",
 ]
 
 jasmine_node_test(
     name = "keyspace-test",
     srcs = [
         "tests/support/GraknTestEnvironment.js",
-        "tests/service/keyspace/Keyspace.test.js"
+        "tests/service/keyspace/Keyspace.test.js",
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
     data = NODEJS_TEST_DATA,
 )
-
 
 jasmine_node_test(
     name = "concept-test",
@@ -177,7 +184,7 @@ jasmine_node_test(
         "tests/service/session/transaction/GraknTx.test.js",
     ],
     deps = NODEJS_TEST_DEPENDENCIES,
-    data = NODEJS_TEST_DATA
+    data = NODEJS_TEST_DATA,
 )
 
 jasmine_node_test(
@@ -259,4 +266,9 @@ test_suite(
         ":committx-test",
         ":query-test",
     ]
+)
+
+artifact_extractor(
+    name = "grakn-extractor",
+    artifact = "@graknlabs_grakn_core_artifact//file",
 )

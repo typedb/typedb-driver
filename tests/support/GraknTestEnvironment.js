@@ -21,11 +21,13 @@ const DEFAULT_URI = "localhost:48555";
 const INTEGRATION_TESTS_TIMEOUT = 70000;
 const TEST_KEYSPACE = 'testkeyspace';
 
+const GRAKN_ARTIFACT_PATH_FILE_PATH = 'grakn-artifact-path.txt';
+const GRAKN_DIRECTORY_NAME = 'grakn-core-all-linux'
+
 const childProcess = require('child_process');
 const fs = require('fs-extra');
 const path = require('path');
 const tmp = require('tmp');
-const unzipper = require('unzipper');
 const propertiesReader = require('properties-reader');
 
 
@@ -35,36 +37,25 @@ const graknClient = new GraknClient(DEFAULT_URI);
 
 let session;
 let tempRootDir;
-let graknRootDir;
 let graknExecutablePath;
-
+let graknRootDir;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = INTEGRATION_TESTS_TIMEOUT;
 
-const unzipArchive = function(zipFile, extractPath) {
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(zipFile)
-            .pipe(unzipper.Extract({ path: extractPath }))
-            .once('close', () => {
-                resolve();
-            });
-    });
-};
-
 const execGraknCommand = (command) => {
     try {
-        childProcess.execSync(command, { cwd: graknRootDir, stdio: 'inherit' });
+        childProcess.execSync(`${graknExecutablePath} ${command}`, { stdio: 'inherit' });
     } catch (error) {
         throw new Error(`There was a problem when running ${command}`)
     }
 }
 
-const getServerCommand = (cmd) =>  `${graknExecutablePath} server ${cmd}`
+const getServerCommand = (cmd) =>  `server ${cmd}`
 
-const getLoadGraqlCommand = (filePath, keyspace) => `${graknExecutablePath} console -f ${filePath} -k ${keyspace}`;
+const getLoadGraqlCommand = (filePath, keyspace) => `console -f ${filePath} -k ${keyspace}`;
 
 const isGraknRunning = () => {
-    const graknProperties = propertiesReader(tempRootDir + '/grakn-core-all-mac/server/conf/grakn.properties');
+    const graknProperties = propertiesReader(`${graknRootDir}/server/conf/grakn.properties`);
     const SERVER_HOST_NAME = 'server.host';
     const GRPC_PORT = 'grpc.port';
     const uri = `${graknProperties.get(SERVER_HOST_NAME)}:${graknProperties.get(GRPC_PORT)}`;
@@ -113,11 +104,14 @@ module.exports = {
         tempRootDir = tmpobj.name;
         tmpobj.removeCallback(); // disable automatic cleanup
 
-        await unzipArchive('external/graknlabs_grakn_core/grakn-core-all-mac.zip', tempRootDir);
+        graknArchivePath = fs.readFileSync(path.resolve('.', GRAKN_ARTIFACT_PATH_FILE_PATH), 'utf8').trim();
+        graknRootDir = path.join('.', GRAKN_DIRECTORY_NAME);
+        fs.mkdirsSync(graknRootDir);
 
-        graknRootDir = path.join(tempRootDir, 'grakn-core-all-mac');
+        childProcess.execSync(`tar -xzf ${graknArchivePath} -C ${graknRootDir} --strip-components=2`, { stdio: 'inherit' });
+
         graknExecutablePath = path.join(graknRootDir, 'grakn');
-        
+
         // fix permissions to not get EACCES
         fs.chmodSync(graknExecutablePath, 0o755);
         // make `/tmp` writable as running console commands creates a file in there

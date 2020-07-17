@@ -20,7 +20,6 @@
     "grpc-tools": "^1.6.6",
     "jasmine-reporters": "^2.3.2",
     "properties-reader": "^0.3.1",
-    "tmp": "0.1.0",
-    "unzipper": "0.9.11"
+    "tmp": "0.1.0"
   }
 }
