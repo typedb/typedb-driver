@@ -24,16 +24,8 @@ workspace(name = "graknlabs_client_nodejs")
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_dependencies")
 graknlabs_dependencies()
 
-# Load Antlr
-load("@graknlabs_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps")
-antlr_deps()
-load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
-antlr_dependencies()
-
 # Load Bazel
-load("@graknlabs_dependencies//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
-bazel_common()
-bazel_deps()
+load("@graknlabs_dependencies//builder/bazel:deps.bzl", "bazel_toolchain")
 bazel_toolchain()
 
 # Load gRPC
@@ -42,8 +34,6 @@ grpc_deps()
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
 com_github_grpc_grpc_deps = "grpc_deps")
 com_github_grpc_grpc_deps()
-load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
-java_grpc_compile()
 load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
 node_grpc_compile()
 
@@ -69,35 +59,12 @@ load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
 graknlabs_dependencies_ci_pip_install = "pip_install")
 graknlabs_dependencies_ci_pip_install()
 
-# Load Docker
-load("@graknlabs_dependencies//distribution/docker:deps.bzl", docker_deps = "deps")
-docker_deps()
-
-# Load Checkstyle
-load("@graknlabs_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
-checkstyle_deps()
-
-# Load Sonarcloud
-load("@graknlabs_dependencies//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
-sonarcloud_dependencies()
-
-# Load Unused Deps
-load("@graknlabs_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
-unuseddeps_deps()
 
 #####################################################################
 # Load @graknlabs_bazel_distribution (from @graknlabs_dependencies) #
 #####################################################################
 load("@graknlabs_dependencies//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
-
-pip3_import(
-    name = "graknlabs_bazel_distribution_pip",
-    requirements = "@graknlabs_bazel_distribution//pip:requirements.txt",
-)
-load("@graknlabs_bazel_distribution_pip//:requirements.bzl",
-graknlabs_bazel_distribution_pip_install = "pip_install")
-graknlabs_bazel_distribution_pip_install()
 
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
@@ -133,15 +100,6 @@ rules_pkg_dependencies()
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
 graknlabs_protocol()
 
-load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
-grpc_deps()
-
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
-com_github_grpc_grpc_deps = "grpc_deps")
-com_github_grpc_grpc_deps()
-
-load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
-java_grpc_compile()
 
 #######################################
 # Load @graknlabs_grakn_core_artifact #
