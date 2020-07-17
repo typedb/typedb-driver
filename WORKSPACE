@@ -196,11 +196,23 @@ load("@graknlabs_client_java//dependencies/maven:artifacts.bzl", graknlabs_clien
 ###############
 # Load @maven #
 ###############
+
+# Override libraries conflicting with versions defined in @graknlabs_dependencies
+OVERRIDES = {
+    # @graknlabs_client_java overrides
+   "io.netty:netty-all": "4.1.38.Final",
+   "io.netty:netty-codec-http2": "4.1.38.Final",
+    # @graknlabs_grabl_tracing overrides
+   "io.netty:netty-handler": "4.1.38.Final",
+   "io.netty:netty-handler-proxy": "4.1.38.Final",
+}
+
 maven(
     graknlabs_common_artifacts +
     graknlabs_graql_artifacts +
     graknlabs_grabl_tracing_artifacts +
-    graknlabs_client_java_artifacts
+    graknlabs_client_java_artifacts,
+    OVERRIDES
 )
 
 ################################################
