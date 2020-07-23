@@ -29,7 +29,7 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Role;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -134,7 +134,7 @@ public class AttributeTypeImpl {
                     .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            return (Attribute.Remote<D>) Concept.Remote.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx()).asAttribute();
+            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypeCreateRes().getAttribute()).asAttribute();
         }
 
         @SuppressWarnings("unchecked")
@@ -150,7 +150,7 @@ public class AttributeTypeImpl {
                 case NULL:
                     return null;
                 case ATTRIBUTE:
-                    return (Attribute.Remote<D>) Concept.Remote.of(response.getAttribute(), tx()).asAttribute();
+                    return (Attribute.Remote<D>) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }

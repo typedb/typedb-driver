@@ -22,7 +22,7 @@ package grakn.client.concept.impl;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -142,7 +142,7 @@ public abstract class ConceptImpl {
         @SuppressWarnings("unchecked")
         protected  <R extends Remote<BaseType>> Stream<R> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-            return tx.iterateConceptMethod(id, request, response -> Concept.Remote.of(conceptGetter.apply(response), tx));
+            return tx.iterateConceptMethod(id, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {

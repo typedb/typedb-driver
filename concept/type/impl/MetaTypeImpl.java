@@ -25,7 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.Type;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 public class MetaTypeImpl {
     public static class Local<

@@ -28,7 +28,7 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,8 +82,8 @@ public class RelationImpl {
 
             Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                Role.Remote role = Concept.Remote.of(rolePlayer.getRole(), tx()).asRole();
-                Thing.Remote<?, ?> player = Concept.Remote.of(rolePlayer.getPlayer(), tx()).asThing();
+                Role.Remote role = Concept.Remote.of(tx(), rolePlayer.getRole()).asRole();
+                Thing.Remote<?, ?> player = Concept.Remote.of(tx(), rolePlayer.getPlayer()).asThing();
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {

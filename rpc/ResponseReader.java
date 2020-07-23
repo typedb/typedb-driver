@@ -24,8 +24,8 @@ import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Rule;
-import grakn.protocol.session.AnswerProto;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.AnswerProto;
+import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
@@ -81,13 +81,13 @@ public class ResponseReader {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
-        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(ruleProto, tx).asRule() : null;
+        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(tx, ruleProto).asRule() : null;
         return new Explanation(answers, rule);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                Concept.Remote.of(res.getOwner(), tx),
+                Concept.Remote.of(tx, res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }

@@ -26,7 +26,7 @@ import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -99,7 +99,7 @@ public abstract class SchemaConceptImpl {
                 case NULL:
                     return null;
                 case SCHEMACONCEPT:
-                    return (SchemaConcept.Remote<BaseType>) Concept.Remote.of(response.getSchemaConcept(), tx()).asSchemaConcept();
+                    return (SchemaConcept.Remote<BaseType>) Concept.Remote.of(tx(), response.getSchemaConcept()).asSchemaConcept();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }

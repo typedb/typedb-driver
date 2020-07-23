@@ -28,7 +28,7 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.Role;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
@@ -117,7 +117,7 @@ public class RelationTypeImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(runMethod(method).getRelationTypeCreateRes().getRelation(), tx());
+            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeCreateRes().getRelation());
         }
 
         @Override

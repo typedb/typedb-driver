@@ -29,7 +29,7 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 

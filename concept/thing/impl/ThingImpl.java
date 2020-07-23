@@ -30,7 +30,7 @@ import grakn.client.concept.type.Role;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -89,7 +89,7 @@ public abstract class ThingImpl {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
-                return Concept.Remote.of(runMethod(method).getThingTypeRes().getType(), tx());
+                return Concept.Remote.of(tx(), runMethod(method).getThingTypeRes().getType());
             }
 
             @Override

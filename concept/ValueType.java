@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import java.time.Instant;

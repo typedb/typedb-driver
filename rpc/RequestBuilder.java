@@ -19,15 +19,18 @@
 
 package grakn.client.rpc;
 
+import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.keyspace.KeyspaceProto;
-import grakn.protocol.session.ConceptProto;
-import grakn.protocol.session.SessionProto;
+import grakn.protocol.DatabaseProto;
+import grakn.protocol.ConceptProto;
+import grakn.protocol.OptionsProto;
+import grakn.protocol.SessionProto;
+import grakn.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
 
 import java.time.LocalDateTime;
@@ -49,12 +52,12 @@ public class RequestBuilder {
 
     public static class Session {
 
-        public static SessionProto.Session.Open.Req open(String keyspace) {
-            return SessionProto.Session.Open.Req.newBuilder().putAllMetadata(getTracingData()).setKeyspace(keyspace).build();
+        public static SessionProto.Session.Open.Req open(String database) {
+            return SessionProto.Session.Open.Req.newBuilder().setDatabase(database).build();
         }
 
-        public static SessionProto.Session.Close.Req close(String sessionId) {
-            return SessionProto.Session.Close.Req.newBuilder().putAllMetadata(getTracingData()).setSessionId(sessionId).build();
+        public static SessionProto.Session.Close.Req close(ByteString sessionId) {
+            return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build();
         }
     }
 
@@ -63,30 +66,30 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static SessionProto.Transaction.Req open(String sessionId, GraknClient.Transaction.Type txType) {
-            SessionProto.Transaction.Open.Req openRequest = SessionProto.Transaction.Open.Req.newBuilder()
+        public static TransactionProto.Transaction.Req open(ByteString sessionId, GraknClient.Transaction.Type txType) {
+            TransactionProto.Transaction.Open.Req openRequest = TransactionProto.Transaction.Open.Req.newBuilder()
                     .setSessionId(sessionId)
-                    .setType(SessionProto.Transaction.Type.valueOf(txType.id()))
+                    .setType(TransactionProto.Transaction.Type.valueOf(txType.id()))
                     .build();
 
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setOpenReq(openRequest).build();
+            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setOpenReq(openRequest).build();
         }
 
-        public static SessionProto.Transaction.Req commit() {
-            return SessionProto.Transaction.Req.newBuilder()
+        public static TransactionProto.Transaction.Req commit() {
+            return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setCommitReq(SessionProto.Transaction.Commit.Req.getDefaultInstance())
+                    .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance())
                     .build();
         }
 
-        public static SessionProto.Transaction.Iter.Req query(String queryString, GraknClient.Transaction.QueryOptions options) {
-            SessionProto.Transaction.Query.Options.Builder builder = SessionProto.Transaction.Query.Options.newBuilder();
+        public static TransactionProto.Transaction.Iter.Req query(String queryString, GraknClient.Transaction.QueryOptions options) {
+            OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
             options
-                    .whenSet(GraknClient.Transaction.BooleanOption.INFER, builder::setInferFlag)
-                    .whenSet(GraknClient.Transaction.BooleanOption.EXPLAIN, builder::setExplainFlag);
+                    .whenSet(GraknClient.Transaction.BooleanOption.INFER, builder::setInfer)
+                    .whenSet(GraknClient.Transaction.BooleanOption.EXPLAIN, builder::setExplain);
 
-            SessionProto.Transaction.Iter.Req.Builder req = SessionProto.Transaction.Iter.Req.newBuilder()
-                    .setQueryIterReq(SessionProto.Transaction.Query.Iter.Req.newBuilder()
+            TransactionProto.Transaction.Iter.Req.Builder req = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setQueryIterReq(TransactionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
                             .setOptions(builder));
 
@@ -95,64 +98,77 @@ public class RequestBuilder {
             return req.build();
         }
 
-        public static SessionProto.Transaction.Req getSchemaConcept(Label label) {
-            return SessionProto.Transaction.Req.newBuilder()
+        public static TransactionProto.Transaction.Req getSchemaConcept(Label label) {
+            throw new UnsupportedOperationException();
+//            return TransactionProto.Transaction.Req.newBuilder()
+//                    .putAllMetadata(getTracingData())
+//                    .setGetSchemaConceptReq(TransactionProto.Transaction.GetSchemaConcept.Req.newBuilder().setLabel(label.getValue()))
+//                    .build();
+        }
+
+        public static TransactionProto.Transaction.Req getConcept(ConceptId id) {
+            throw new UnsupportedOperationException();
+//            return TransactionProto.Transaction.Req.newBuilder()
+//                    .putAllMetadata(getTracingData())
+//                    .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
+//                    .build();
+        }
+
+        public static TransactionProto.Transaction.Iter.Req getAttributes(Object value) {
+            throw new UnsupportedOperationException();
+//            return TransactionProto.Transaction.Iter.Req.newBuilder()
+//                            .setGetAttributesIterReq(TransactionProto.Transaction.GetAttributes.Iter.Req.newBuilder()
+//                                                 .setValue(ConceptMessage.attributeValue(value))).build();
+        }
+
+        public static TransactionProto.Transaction.Req putEntityType(Label label) {
+            return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setGetSchemaConceptReq(SessionProto.Transaction.GetSchemaConcept.Req.newBuilder().setLabel(label.getValue()))
+                    .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder().setLabel(label.getValue()))
                     .build();
         }
 
-        public static SessionProto.Transaction.Req getConcept(ConceptId id) {
-            return SessionProto.Transaction.Req.newBuilder()
+        public static TransactionProto.Transaction.Req getEntityType(Label label) {
+            return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setGetConceptReq(SessionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
+                    .setGetEntityTypeReq(TransactionProto.Transaction.GetEntityType.Req.newBuilder().setLabel(label.getValue()))
                     .build();
         }
 
-
-        public static SessionProto.Transaction.Iter.Req getAttributes(Object value) {
-            return SessionProto.Transaction.Iter.Req.newBuilder()
-                            .setGetAttributesIterReq(SessionProto.Transaction.GetAttributes.Iter.Req.newBuilder()
-                                                 .setValue(ConceptMessage.attributeValue(value))).build();
+        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType<?> valueType) {
+            throw new UnsupportedOperationException();
+//            TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
+//                    .setLabel(label.getValue())
+//                    .setValueType(ConceptMessage.setValueType(valueType))
+//                    .build();
+//
+//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
         }
 
-        public static SessionProto.Transaction.Req putEntityType(Label label) {
-            return SessionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setPutEntityTypeReq(SessionProto.Transaction.PutEntityType.Req.newBuilder().setLabel(label.getValue()))
-                    .build();
+        public static TransactionProto.Transaction.Req putRelationType(Label label) {
+            throw new UnsupportedOperationException();
+//            TransactionProto.Transaction.PutRelationType.Req request = TransactionProto.Transaction.PutRelationType.Req.newBuilder()
+//                    .setLabel(label.getValue())
+//                    .build();
+//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
         }
 
-        public static SessionProto.Transaction.Req putAttributeType(Label label, ValueType<?> valueType) {
-            SessionProto.Transaction.PutAttributeType.Req request = SessionProto.Transaction.PutAttributeType.Req.newBuilder()
-                    .setLabel(label.getValue())
-                    .setValueType(ConceptMessage.setValueType(valueType))
-                    .build();
-
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
+        public static TransactionProto.Transaction.Req putRole(Label label) {
+            throw new UnsupportedOperationException();
+//            TransactionProto.Transaction.PutRole.Req request = TransactionProto.Transaction.PutRole.Req.newBuilder()
+//                    .setLabel(label.getValue())
+//                    .build();
+//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRoleReq(request).build();
         }
 
-        public static SessionProto.Transaction.Req putRelationType(Label label) {
-            SessionProto.Transaction.PutRelationType.Req request = SessionProto.Transaction.PutRelationType.Req.newBuilder()
-                    .setLabel(label.getValue())
-                    .build();
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
-        }
-
-        public static SessionProto.Transaction.Req putRole(Label label) {
-            SessionProto.Transaction.PutRole.Req request = SessionProto.Transaction.PutRole.Req.newBuilder()
-                    .setLabel(label.getValue())
-                    .build();
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRoleReq(request).build();
-        }
-
-        public static SessionProto.Transaction.Req putRule(Label label, Pattern when, Pattern then) {
-            SessionProto.Transaction.PutRule.Req request = SessionProto.Transaction.PutRule.Req.newBuilder()
-                    .setLabel(label.getValue())
-                    .setWhen(when.toString())
-                    .setThen(then.toString())
-                    .build();
-            return SessionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRuleReq(request).build();
+        public static TransactionProto.Transaction.Req putRule(Label label, Pattern when, Pattern then) {
+            throw new UnsupportedOperationException();
+//            TransactionProto.Transaction.PutRule.Req request = TransactionProto.Transaction.PutRule.Req.newBuilder()
+//                    .setLabel(label.getValue())
+//                    .setWhen(when.toString())
+//                    .setThen(then.toString())
+//                    .build();
+//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRuleReq(request).build();
         }
     }
 
@@ -228,12 +244,8 @@ public class RequestBuilder {
                     return (ValueType<D>) ValueType.STRING;
                 case BOOLEAN:
                     return (ValueType<D>) ValueType.BOOLEAN;
-                case INTEGER:
-                    return (ValueType<D>) ValueType.INTEGER;
                 case LONG:
                     return (ValueType<D>) ValueType.LONG;
-                case FLOAT:
-                    return (ValueType<D>) ValueType.FLOAT;
                 case DOUBLE:
                     return (ValueType<D>) ValueType.DOUBLE;
                 case DATETIME:
@@ -249,12 +261,8 @@ public class RequestBuilder {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             } else if (valueType.equals(ValueType.BOOLEAN)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
-            } else if (valueType.equals(ValueType.INTEGER)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.INTEGER;
             } else if (valueType.equals(ValueType.LONG)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.LONG;
-            } else if (valueType.equals(ValueType.FLOAT)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.FLOAT;
             } else if (valueType.equals(ValueType.DOUBLE)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
             } else if (valueType.equals(ValueType.DATETIME)) {
@@ -268,27 +276,33 @@ public class RequestBuilder {
     /**
      * An RPC Request Builder class for Keyspace Service
      */
-    public static class KeyspaceMessage {
+    public static class DatabaseMessage {
 
-        public static KeyspaceProto.Keyspace.Delete.Req delete(String name, String username, String password) {
-            KeyspaceProto.Keyspace.Delete.Req.Builder builder = KeyspaceProto.Keyspace.Delete.Req.newBuilder();
-            if (username != null) {
-                builder.setUsername(username);
-            }
-            if (password != null) {
-                builder.setPassword(password);
-            }
+        public static DatabaseProto.Database.Create.Req create(String name, String username, String password) {
+            DatabaseProto.Database.Create.Req.Builder builder = DatabaseProto.Database.Create.Req.newBuilder();
+            builder.setName(name);
+            return builder.build();
+        }
+
+        public static DatabaseProto.Database.Delete.Req delete(String name, String username, String password) {
+            DatabaseProto.Database.Delete.Req.Builder builder = DatabaseProto.Database.Delete.Req.newBuilder();
+//            if (username != null) {
+//                builder.setUsername(username);
+//            }
+//            if (password != null) {
+//                builder.setPassword(password);
+//            }
             return builder.setName(name).build();
         }
 
-        public static KeyspaceProto.Keyspace.Retrieve.Req retrieve(String username, String password) {
-            KeyspaceProto.Keyspace.Retrieve.Req.Builder builder = KeyspaceProto.Keyspace.Retrieve.Req.newBuilder();
-            if (username != null) {
-                builder.setUsername(username);
-            }
-            if (password != null) {
-                builder.setPassword(password);
-            }
+        public static DatabaseProto.Database.All.Req all(String username, String password) {
+            DatabaseProto.Database.All.Req.Builder builder = DatabaseProto.Database.All.Req.newBuilder();
+//            if (username != null) {
+//                builder.setUsername(username);
+//            }
+//            if (password != null) {
+//                builder.setPassword(password);
+//            }
             return builder.build();
         }
     }

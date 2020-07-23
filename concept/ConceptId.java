@@ -18,6 +18,8 @@
  */
 package grakn.client.concept;
 
+import com.google.protobuf.ByteString;
+
 import javax.annotation.CheckReturnValue;
 import java.io.Serializable;
 
@@ -25,10 +27,11 @@ import java.io.Serializable;
  * A class which represents an id of any Concept.
  * Also contains a static method for producing concept IDs from Strings.
  */
-public class ConceptId implements Comparable<ConceptId>, Serializable {
+public class ConceptId implements Serializable {
 
     private static final long serialVersionUID = -1723590529071614152L;
-    private final String value;
+    private final ByteString value;
+    private String toStringCached;
 
     /**
      * A non-argument constructor for ConceptID, for serialisation of OLAP queries dependencies
@@ -42,7 +45,7 @@ public class ConceptId implements Comparable<ConceptId>, Serializable {
      *
      * @param value String representation of the Concept ID
      */
-    ConceptId(String value) {
+    ConceptId(ByteString value) {
         if (value == null) throw new NullPointerException("Provided ConceptId is NULL");
 
         this.value = value;
@@ -53,7 +56,7 @@ public class ConceptId implements Comparable<ConceptId>, Serializable {
      * @return The matching concept ID
      */
     @CheckReturnValue
-    public static ConceptId of(String value) {
+    public static ConceptId of(ByteString value) {
         return new ConceptId(value);
     }
 
@@ -61,18 +64,16 @@ public class ConceptId implements Comparable<ConceptId>, Serializable {
      * @return Used for indexing purposes and for graql traversals
      */
     @CheckReturnValue
-    public String getValue() {
+    public ByteString getValue() {
         return value;
-    }
-
-    @Override
-    public int compareTo(ConceptId o) {
-        return getValue().compareTo(o.getValue());
     }
 
     @Override
     public final String toString() {
-        return value;
+        if (toStringCached == null) {
+            toStringCached = value != null ? bytesToHex(value) : "null";
+        }
+        return toStringCached;
     }
 
     @Override
@@ -88,5 +89,17 @@ public class ConceptId implements Comparable<ConceptId>, Serializable {
     public int hashCode() {
         int result = 31 * this.value.hashCode();
         return result;
+    }
+
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    private static String bytesToHex(ByteString bytes) {
+        final int bytesLength = bytes.size();
+        char[] hexChars = new char[bytesLength * 2];
+        for (int j = 0; j < bytesLength; j++) {
+            int v = bytes.byteAt(j) & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 }

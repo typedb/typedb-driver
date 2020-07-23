@@ -39,7 +39,7 @@ import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.type.impl.RoleImpl;
 import grakn.client.concept.type.Type;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
@@ -383,7 +383,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
 
         @SuppressWarnings("unchecked")
         static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
-        RemoteType of(ConceptProto.Concept concept, GraknClient.Transaction tx) {
+        RemoteType of(GraknClient.Transaction tx, ConceptProto.Concept concept) {
             ConceptId id = ConceptId.of(concept.getId());
             switch (concept.getBaseType()) {
                 case ENTITY:

@@ -25,7 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 public class EntityImpl {
     /**

@@ -23,3 +23,11 @@ artifact_extractor(
     name = "grakn-extractor",
     artifact = "@graknlabs_grakn_core_artifact//file",
 )
+
+java_test(
+    name = "grakn2test",
+    srcs = ["Grakn2Test.java"],
+    test_class = "grakn.client.test.Grakn2Test",
+    deps = ["//:client-java"],
+    classpath_resources = ["@graknlabs_common//test/server:logback"],
+)

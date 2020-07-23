@@ -27,7 +27,7 @@ import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.Role;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
@@ -115,7 +115,7 @@ public class EntityTypeImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity());
         }
 
         @Override

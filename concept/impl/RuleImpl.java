@@ -25,7 +25,7 @@ import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
