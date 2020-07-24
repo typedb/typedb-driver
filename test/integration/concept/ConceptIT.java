@@ -26,7 +26,6 @@ import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
-import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.Role;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -46,7 +45,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,7 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
@@ -218,8 +215,7 @@ public class ConceptIT {
         selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
         selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
 
-        metaType = tx.getType(Label.of("thing"));
-
+        metaType = tx.getThingType(Label.of("thing"));
     }
 
     @After
@@ -629,7 +625,7 @@ public class ConceptIT {
 
     @Test
     public void subtypes() {
-        Stream<? extends Concept.Remote<?>> subs = tx.getSchemaConcept(Label.of("thing")).subs();
+        Stream<? extends Concept.Remote<?>> subs = tx.getType(Label.of("thing")).subs();
         assertTrue(subs.count() > 0);
     }
 

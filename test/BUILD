@@ -25,7 +25,7 @@ artifact_extractor(
 )
 
 java_test(
-    name = "grakn2test",
+    name = "performance",
     srcs = ["Grakn2Test.java"],
     test_class = "grakn.client.test.Grakn2Test",
     deps = ["//:client-java"],

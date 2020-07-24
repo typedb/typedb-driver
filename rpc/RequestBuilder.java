@@ -98,12 +98,11 @@ public class RequestBuilder {
             return req.build();
         }
 
-        public static TransactionProto.Transaction.Req getSchemaConcept(Label label) {
-            throw new UnsupportedOperationException();
-//            return TransactionProto.Transaction.Req.newBuilder()
-//                    .putAllMetadata(getTracingData())
-//                    .setGetSchemaConceptReq(TransactionProto.Transaction.GetSchemaConcept.Req.newBuilder().setLabel(label.getValue()))
-//                    .build();
+        public static TransactionProto.Transaction.Req getType(Label label) {
+            return TransactionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
+                    .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label.getValue()))
+                    .build();
         }
 
         public static TransactionProto.Transaction.Req getConcept(ConceptId id) {
@@ -128,21 +127,13 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req getEntityType(Label label) {
-            return TransactionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(getTracingData())
-                    .setGetEntityTypeReq(TransactionProto.Transaction.GetEntityType.Req.newBuilder().setLabel(label.getValue()))
-                    .build();
-        }
-
         public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType<?> valueType) {
-            throw new UnsupportedOperationException();
-//            TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
-//                    .setLabel(label.getValue())
-//                    .setValueType(ConceptMessage.setValueType(valueType))
-//                    .build();
-//
-//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
+            TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
+                    .setLabel(label.getValue())
+                    .setValueType(ConceptMessage.setValueType(valueType))
+                    .build();
+
+            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
         }
 
         public static TransactionProto.Transaction.Req putRelationType(Label label) {
@@ -278,32 +269,20 @@ public class RequestBuilder {
      */
     public static class DatabaseMessage {
 
-        public static DatabaseProto.Database.Create.Req create(String name, String username, String password) {
-            DatabaseProto.Database.Create.Req.Builder builder = DatabaseProto.Database.Create.Req.newBuilder();
-            builder.setName(name);
-            return builder.build();
+        public static DatabaseProto.Database.Contains.Req contains(String name) {
+            return DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build();
         }
 
-        public static DatabaseProto.Database.Delete.Req delete(String name, String username, String password) {
-            DatabaseProto.Database.Delete.Req.Builder builder = DatabaseProto.Database.Delete.Req.newBuilder();
-//            if (username != null) {
-//                builder.setUsername(username);
-//            }
-//            if (password != null) {
-//                builder.setPassword(password);
-//            }
-            return builder.setName(name).build();
+        public static DatabaseProto.Database.Create.Req create(String name) {
+            return DatabaseProto.Database.Create.Req.newBuilder().setName(name).build();
         }
 
-        public static DatabaseProto.Database.All.Req all(String username, String password) {
-            DatabaseProto.Database.All.Req.Builder builder = DatabaseProto.Database.All.Req.newBuilder();
-//            if (username != null) {
-//                builder.setUsername(username);
-//            }
-//            if (password != null) {
-//                builder.setPassword(password);
-//            }
-            return builder.build();
+        public static DatabaseProto.Database.Delete.Req delete(String name) {
+            return DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build();
+        }
+
+        public static DatabaseProto.Database.All.Req all() {
+            return DatabaseProto.Database.All.Req.getDefaultInstance();
         }
     }
 

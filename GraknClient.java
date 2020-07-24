@@ -47,7 +47,6 @@ import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
 import grakn.client.rpc.Transceiver;
-import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.GraknGrpc.GraknBlockingStub;
 import grakn.protocol.AnswerProto;
@@ -95,9 +94,9 @@ public class GraknClient implements AutoCloseable {
     public static final String DEFAULT_URI = "localhost:48555";
 
     private ManagedChannel channel;
-    private String username;
-    private String password;
-    private Databases databases;
+    private final String username;
+    private final String password;
+    private final Databases databases;
 
     public GraknClient() {
         this(DEFAULT_URI);
@@ -112,14 +111,13 @@ public class GraknClient implements AutoCloseable {
                 .usePlaintext().build();
         this.username = username;
         this.password = password;
-        databases = new Databases(channel, this.username, this.password);
+        databases = new Databases(channel);
     }
 
     public GraknClient overrideChannel(ManagedChannel channel) {
         this.channel = channel;
         return this;
     }
-
 
     public void close() {
         channel.shutdown();
@@ -177,12 +175,6 @@ public class GraknClient implements AutoCloseable {
             this.sessionStub = GraknGrpc.newBlockingStub(channel);
 
             SessionProto.Session.Open.Req.Builder open = RequestBuilder.Session.open(keyspace).newBuilderForType();
-//            if (username != null) {
-//                open = open.setUsername(username);
-//            }
-//            if (password != null) {
-//                open = open.setPassword(password);
-//            }
             open.setDatabase(keyspace);
 
             switch (type) {
@@ -228,8 +220,6 @@ public class GraknClient implements AutoCloseable {
         private final Session session;
         private final Type type;
         private final Transceiver transceiver;
-
-        private int currentIteratorId = 1;
 
         public static class Builder {
 
@@ -648,8 +638,8 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public grakn.client.concept.type.Type.Remote<?, ?> getType(Label label) {
-            SchemaConcept.Remote<?> concept = getSchemaConcept(label);
+        public grakn.client.concept.type.Type.Remote<?, ?> getThingType(Label label) {
+            SchemaConcept.Remote<?> concept = getType(label);
             if (concept instanceof grakn.client.concept.type.Type.Remote) {
                 return (grakn.client.concept.type.Type.Remote<?, ?>) concept;
             } else {
@@ -659,20 +649,17 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public EntityType.Remote getEntityType(String label) {
-            TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getEntityType(Label.of(label)));
-            switch (response.getGetEntityTypeRes().getResCase()) {
-                case NULL:
-                    return null;
-                case ENTITYTYPE:
-                    return EntityType.Remote.of(this, ConceptId.of(response.getGetEntityTypeRes().getEntityType().getId()));
-                default:
-                    throw GraknClientException.resultNotPresent();
+            SchemaConcept.Remote<?> concept = getType(Label.of(label));
+            if (concept instanceof grakn.client.concept.type.Type.Remote) {
+                return (grakn.client.concept.type.EntityType.Remote) concept;
+            } else {
+                return null;
             }
         }
 
         @Nullable
         public RelationType.Remote getRelationType(String label) {
-            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            SchemaConcept.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof RelationType.Remote) {
                 return (RelationType.Remote) concept;
             } else {
@@ -683,7 +670,7 @@ public class GraknClient implements AutoCloseable {
         @SuppressWarnings("unchecked")
         @Nullable
         public <V> AttributeType.Remote<V> getAttributeType(String label) {
-            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            SchemaConcept.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof AttributeType.Remote) {
                 return (AttributeType.Remote<V>) concept;
             } else {
@@ -693,7 +680,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public Role.Remote getRole(String label) {
-            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            SchemaConcept.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof Role.Remote) {
                 return (Role.Remote) concept;
             } else {
@@ -703,7 +690,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public Rule.Remote getRule(String label) {
-            SchemaConcept.Remote<?> concept = getSchemaConcept(Label.of(label));
+            SchemaConcept.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof Rule.Remote) {
                 return (Rule.Remote) concept;
             } else {
@@ -713,40 +700,40 @@ public class GraknClient implements AutoCloseable {
 
         @SuppressWarnings("unchecked")
         @Nullable
-        public SchemaConcept.Remote<?> getSchemaConcept(Label label) {
-            TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getSchemaConcept(label));
-            switch (response.getGetSchemaConceptRes().getResCase()) {
+        public SchemaConcept.Remote<?> getType(Label label) {
+            TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getType(label));
+            switch (response.getGetTypeRes().getResCase()) {
                 case NULL:
                     return null;
-                case SCHEMACONCEPT:
-                    return Concept.Remote.of(this, response.getGetSchemaConceptRes().getSchemaConcept()).asSchemaConcept();
+                case TYPE:
+                    return Concept.Remote.of(this, response.getGetTypeRes().getType()).asSchemaConcept();
                 default:
                     throw GraknClientException.resultNotPresent();
             }
         }
 
         public SchemaConcept.Remote<?> getMetaConcept() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.THING.toString()));
+            return getType(Label.of(Graql.Token.Type.THING.toString()));
         }
 
         public RelationType.Remote getMetaRelationType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
+            return getType(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
         }
 
         public Role.Remote getMetaRole() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ROLE.toString())).asRole();
+            return getType(Label.of(Graql.Token.Type.ROLE.toString())).asRole();
         }
 
         public AttributeType.Remote<?> getMetaAttributeType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asAttributeType();
+            return getType(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asAttributeType();
         }
 
         public EntityType.Remote getMetaEntityType() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.ENTITY.toString())).asEntityType();
+            return getType(Label.of(Graql.Token.Type.ENTITY.toString())).asEntityType();
         }
 
         public Rule.Remote getMetaRule() {
-            return getSchemaConcept(Label.of(Graql.Token.Type.RULE.toString())).asRule();
+            return getType(Label.of(Graql.Token.Type.RULE.toString())).asRule();
         }
 
         @Nullable
@@ -1135,21 +1122,23 @@ public class GraknClient implements AutoCloseable {
      */
 
     public static final class Databases {
-        private String username;
-        private String password;
-
         private GraknGrpc.GraknBlockingStub blockingStub;
 
-        Databases(ManagedChannel channel, String username, String password) {
+        Databases(ManagedChannel channel) {
             blockingStub = GraknGrpc.newBlockingStub(channel);
-            this.username = username;
-            this.password = password;
+        }
+
+        public boolean contains(String name) {
+            try {
+                return blockingStub.databaseContains(RequestBuilder.DatabaseMessage.contains(name)).getContains();
+            } catch (StatusRuntimeException e) {
+                throw GraknClientException.create(e.getMessage(), e);
+            }
         }
 
         public void create(String name) {
             try {
-                DatabaseProto.Database.Create.Req request = RequestBuilder.DatabaseMessage.create(name, this.username, this.password);
-                blockingStub.databaseCreate(request);
+                blockingStub.databaseCreate(RequestBuilder.DatabaseMessage.create(name));
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.create(e.getMessage(), e);
             }
@@ -1157,17 +1146,15 @@ public class GraknClient implements AutoCloseable {
 
         public void delete(String name) {
             try {
-                DatabaseProto.Database.Delete.Req request = RequestBuilder.DatabaseMessage.delete(name, this.username, this.password);
-                blockingStub.databaseDelete(request);
+                blockingStub.databaseDelete(RequestBuilder.DatabaseMessage.delete(name));
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.create(e.getMessage(), e);
             }
         }
 
-        public List<String> retrieve() {
+        public List<String> all() {
             try {
-                DatabaseProto.Database.All.Req request = RequestBuilder.DatabaseMessage.all(this.username, this.password);
-                return ImmutableList.copyOf(blockingStub.databaseAll(request).getNamesList().iterator());
+                return ImmutableList.copyOf(blockingStub.databaseAll(RequestBuilder.DatabaseMessage.all()).getNamesList().iterator());
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.create(e.getMessage(), e);
             }

@@ -103,14 +103,14 @@ public class ConnectionSteps {
 
     @Given("connection delete all keyspaces")
     public void connection_delete_all_keyspaces() {
-        for (String keyspace : client.databases().retrieve()) {
+        for (String keyspace : client.databases().all()) {
             client.databases().delete(keyspace);
         }
     }
 
     @Given("connection does not have any keyspace")
     public void connection_does_not_have_any_keyspace() {
-        assertTrue(client.databases().retrieve().isEmpty());
+        assertTrue(client.databases().all().isEmpty());
     }
 
     @After

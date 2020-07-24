@@ -89,12 +89,12 @@ public class KeyspaceSteps {
 
     @Then("connection has keyspace(s):")
     public void connection_has_keyspaces(List<String> names) {
-        assertEquals(set(names), set(client.databases().retrieve()));
+        assertEquals(set(names), set(client.databases().all()));
     }
 
     @Then("connection does not have keyspace(s):")
     public void connection_does_not_have_keyspaces(List<String> names) {
-        Set<String> keyspaces = set(client.databases().retrieve());
+        Set<String> keyspaces = set(client.databases().all());
         for (String keyspaceName : names) {
             assertFalse(keyspaces.contains(keyspaceName));
         }
