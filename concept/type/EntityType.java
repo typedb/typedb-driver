@@ -117,15 +117,6 @@ public interface EntityType extends Type<EntityType, Entity> {
         EntityType.Remote unhas(AttributeType<?> attributeType);
 
         /**
-         * Removes AttributeType as a key to this EntityType
-         *
-         * @param attributeType the AttributeType which this EntityType can no longer have as a key
-         * @return The EntityType itself.
-         */
-        @Override
-        EntityType.Remote unkey(AttributeType<?> attributeType);
-
-        /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
          *
          * @return a new empty entity.
@@ -142,15 +133,6 @@ public interface EntityType extends Type<EntityType, Entity> {
         EntityType.Remote sup(EntityType superEntityType);
 
         /**
-         * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        EntityType.Remote key(AttributeType<?> attributeType);
-
-        /**
          * Creates a RelationType which allows this type and a resource type to be linked.
          *
          * @param attributeType The resource type which instances of this type should be allowed to play.
@@ -158,6 +140,12 @@ public interface EntityType extends Type<EntityType, Entity> {
          */
         @Override
         EntityType.Remote has(AttributeType<?> attributeType);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, boolean isKey);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 

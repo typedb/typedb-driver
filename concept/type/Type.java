@@ -22,6 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.Label;
 import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.thing.Thing;
 
 import javax.annotation.CheckReturnValue;
@@ -93,21 +94,23 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          */
         Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role role);
 
-        /**
-         * Creates a RelationType which allows this type and a AttributeType to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The AttributeType which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> key(AttributeType<?> attributeType);
 
         /**
-         * Creates a RelationType which allows this type and a AttributeType  to be linked.
+         * Creates a connection which allows this type and a AttributeType to be linked.
          *
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
          * @return The Type itself.
          */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType);
+        Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> otherType, boolean isKey);
+        default Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return has(attributeType, overriddenType, false);
+        }
+        default Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, boolean isKey) {
+            return has(attributeType, null, isKey);
+        }
+        default Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType) {
+            return has(attributeType, false);
+        }
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -117,16 +120,23 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
         Stream<Role.Remote> playing();
 
         /**
-         * @return The AttributeTypes which this Type is linked with.
+         * @return The AttributeTypes which this Type is linked with, optionally only keys.
+         * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        Stream<? extends AttributeType.Remote<?>> attributes();
-
-        /**
-         * @return The AttributeTypes which this Type is linked with as a key.
-         */
+        <D> Stream<? extends AttributeType.Remote<D>> attributes(ValueType<D> valueType, boolean keysOnly);
         @CheckReturnValue
-        Stream<? extends AttributeType.Remote<?>> keys();
+        default <D> Stream<? extends AttributeType.Remote<D>> attributes(ValueType<D> valueType) {
+            return attributes(valueType, false);
+        }
+        @CheckReturnValue
+        default Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return attributes(null, keysOnly);
+        }
+        @CheckReturnValue
+        default Stream<? extends AttributeType.Remote<?>> attributes() {
+            return attributes(false);
+        }
 
         /**
          * @return All the the super-types of this Type
@@ -179,14 +189,6 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @return The Type itself.
          */
         Type.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType);
-
-        /**
-         * Removes AttributeType as a key to this Type
-         *
-         * @param attributeType the AttributeType which this Type can no longer have as a key
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> unkey(AttributeType<?> attributeType);
 
         @Deprecated
         @CheckReturnValue

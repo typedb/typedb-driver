@@ -54,7 +54,7 @@ public abstract class ThingImpl {
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
-            this.type = Concept.Local.of(concept.getTypeRes().getType());
+            this.type = Concept.Local.of(concept.getTypeRes().getThingType());
             this.inferred = concept.getInferredRes().getInferred();
         }
 
@@ -89,7 +89,7 @@ public abstract class ThingImpl {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
-                return Concept.Remote.of(tx(), runMethod(method).getThingTypeRes().getType());
+                return Concept.Remote.of(tx(), runMethod(method).getThingTypeRes().getThingType());
             }
 
             @Override
@@ -98,26 +98,6 @@ public abstract class ThingImpl {
                         .setThingIsInferredReq(ConceptProto.Thing.IsInferred.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getThingIsInferredRes().getInferred();
-            }
-
-            @Override
-            public final Stream<Attribute.Remote<?>> keys(AttributeType<?>... attributeTypes) {
-                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingKeysIterReq(ConceptProto.Thing.Keys.Iter.Req.newBuilder()
-                                                 .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
-
-                return conceptStream(method, res -> res.getThingKeysIterRes().getAttribute()).map(Concept.Remote::asAttribute);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public final <T> Stream<Attribute.Remote<T>> keys(AttributeType<T> attributeType) {
-                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingKeysIterReq(ConceptProto.Thing.Keys.Iter.Req.newBuilder()
-                                .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
-
-                return conceptStream(method, res -> res.getThingKeysIterRes().getAttribute()).map(Concept.Remote::asAttribute)
-                        .map(a -> (Attribute.Remote<T>) a);
             }
 
             @Override
@@ -138,6 +118,13 @@ public abstract class ThingImpl {
 
                 return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute)
                         .map(a -> (Attribute.Remote<T>) a);
+            }
+
+            @Override
+            public final Stream<Attribute.Remote<?>> attributes(boolean keysOnly) {
+                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                        .setThingAttributesIterReq(ConceptProto.Thing.Attributes.Iter.Req.newBuilder().setKeysOnly(keysOnly)).build();
+                return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute);
             }
 
             @Override

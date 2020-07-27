@@ -97,16 +97,16 @@ public class RelationImpl {
         @Override
         public final Stream<Thing.Remote<?, ?>> rolePlayers(Role... roles) {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationRolePlayersIterReq(ConceptProto.Relation.RolePlayers.Iter.Req.newBuilder()
+                    .setRelationPlayersIterReq(ConceptProto.Relation.Players.Iter.Req.newBuilder()
                             .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
 
-            return conceptStream(method, res -> res.getRelationRolePlayersIterRes().getThing()).map(Concept.Remote::asThing);
+            return conceptStream(method, res -> res.getRelationPlayersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
         public final Relation.Remote assign(Role role, Thing<?, ?> player) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationAssignReq(ConceptProto.Relation.Assign.Req.newBuilder()
+                    .setRelationRelateReq(ConceptProto.Relation.Relate.Req.newBuilder()
                             .setRole(RequestBuilder.ConceptMessage.from(role))
                             .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
 
@@ -117,7 +117,7 @@ public class RelationImpl {
         @Override
         public final void unassign(Role role, Thing<?, ?> player) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationUnassignReq(ConceptProto.Relation.Unassign.Req.newBuilder()
+                    .setRelationUnrelateReq(ConceptProto.Relation.Unrelate.Req.newBuilder()
                             .setRole(RequestBuilder.ConceptMessage.from(role))
                             .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
 

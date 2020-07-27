@@ -82,7 +82,7 @@ public class RoleImpl {
         public final Stream<Type.Remote<?, ?>> players() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRolePlayersIterReq(ConceptProto.Role.Players.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRolePlayersIterRes().getType()).map(Concept.Remote::asType);
+            return conceptStream(method, res -> res.getRolePlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 
         @Override

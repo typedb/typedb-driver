@@ -106,18 +106,10 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req getConcept(ConceptId id) {
-            throw new UnsupportedOperationException();
-//            return TransactionProto.Transaction.Req.newBuilder()
-//                    .putAllMetadata(getTracingData())
-//                    .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
-//                    .build();
-        }
-
-        public static TransactionProto.Transaction.Iter.Req getAttributes(Object value) {
-            throw new UnsupportedOperationException();
-//            return TransactionProto.Transaction.Iter.Req.newBuilder()
-//                            .setGetAttributesIterReq(TransactionProto.Transaction.GetAttributes.Iter.Req.newBuilder()
-//                                                 .setValue(ConceptMessage.attributeValue(value))).build();
+            return TransactionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(getTracingData())
+                    .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
+                    .build();
         }
 
         public static TransactionProto.Transaction.Req putEntityType(Label label) {
@@ -137,19 +129,10 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req putRelationType(Label label) {
-            throw new UnsupportedOperationException();
-//            TransactionProto.Transaction.PutRelationType.Req request = TransactionProto.Transaction.PutRelationType.Req.newBuilder()
-//                    .setLabel(label.getValue())
-//                    .build();
-//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
-        }
-
-        public static TransactionProto.Transaction.Req putRole(Label label) {
-            throw new UnsupportedOperationException();
-//            TransactionProto.Transaction.PutRole.Req request = TransactionProto.Transaction.PutRole.Req.newBuilder()
-//                    .setLabel(label.getValue())
-//                    .build();
-//            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRoleReq(request).build();
+            TransactionProto.Transaction.PutRelationType.Req request = TransactionProto.Transaction.PutRelationType.Req.newBuilder()
+                    .setLabel(label.getValue())
+                    .build();
+            return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
         }
 
         public static TransactionProto.Transaction.Req putRule(Label label, Pattern when, Pattern then) {
@@ -211,12 +194,8 @@ public class RequestBuilder {
                 builder.setString((String) value);
             } else if (value instanceof Boolean) {
                 builder.setBoolean((boolean) value);
-            } else if (value instanceof Integer) {
-                builder.setInteger((int) value);
             } else if (value instanceof Long) {
                 builder.setLong((long) value);
-            } else if (value instanceof Float) {
-                builder.setFloat((float) value);
             } else if (value instanceof Double) {
                 builder.setDouble((double) value);
             } else if (value instanceof LocalDateTime) {
@@ -247,7 +226,7 @@ public class RequestBuilder {
             }
         }
 
-        static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType<?> valueType) {
+        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType<?> valueType) {
             if (valueType.equals(ValueType.STRING)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             } else if (valueType.equals(ValueType.BOOLEAN)) {

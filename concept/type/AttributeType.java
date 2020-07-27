@@ -163,15 +163,6 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         AttributeType.Remote<D> unhas(AttributeType<?> attributeType);
 
         /**
-         * Removes AttributeType as a key to this AttributeType
-         *
-         * @param attributeType the AttributeType which this AttributeType can no longer have as a key
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote<D> unkey(AttributeType<?> attributeType);
-
-        /**
          * Set the regular expression that instances of the AttributeType must conform to.
          *
          * @param regex The regular expression that instances of this AttributeType must conform to.
@@ -188,15 +179,6 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         Attribute.Remote<D> create(D value);
 
         /**
-         * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        AttributeType.Remote<D> key(AttributeType<?> attributeType);
-
-        /**
          * Creates a RelationType which allows this type and a resource type to be linked.
          *
          * @param attributeType The resource type which instances of this type should be allowed to play.
@@ -204,6 +186,12 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          */
         @Override
         AttributeType.Remote<D> has(AttributeType<?> attributeType);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ---------------------------------
 

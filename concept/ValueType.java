@@ -36,8 +36,6 @@ public class ValueType<D> {
     public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean.class);
     public static final ValueType<LocalDateTime> DATETIME = new ValueType<>(LocalDateTime.class);
     public static final ValueType<Double> DOUBLE = new ValueType<>(Double.class);
-    public static final ValueType<Float> FLOAT = new ValueType<>(Float.class);
-    public static final ValueType<Integer> INTEGER = new ValueType<>(Integer.class);
     public static final ValueType<Long> LONG = new ValueType<>(Long.class);
     public static final ValueType<String> STRING = new ValueType<>(String.class);
 
@@ -97,12 +95,8 @@ public class ValueType<D> {
                     return (D) value.getString();
                 case BOOLEAN:
                     return (D) (Boolean) value.getBoolean();
-                case INTEGER:
-                    return (D) (Integer) value.getInteger();
                 case LONG:
                     return (D) (Long) value.getLong();
-                case FLOAT:
-                    return (D) (Float) value.getFloat();
                 case DOUBLE:
                     return (D) (Double) value.getDouble();
                 case VALUE_NOT_SET:

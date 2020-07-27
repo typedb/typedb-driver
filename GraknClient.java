@@ -39,7 +39,6 @@ import grakn.client.concept.Rule;
 import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
@@ -70,7 +69,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +78,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -679,16 +676,6 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public Role.Remote getRole(String label) {
-            SchemaConcept.Remote<?> concept = getType(Label.of(label));
-            if (concept instanceof Role.Remote) {
-                return (Role.Remote) concept;
-            } else {
-                return null;
-            }
-        }
-
-        @Nullable
         public Rule.Remote getRule(String label) {
             SchemaConcept.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof Rule.Remote) {
@@ -749,12 +736,6 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        @SuppressWarnings("unchecked")
-        public <V> Collection<Attribute.Remote<V>> getAttributesByValue(V value) {
-            return iterate(RequestBuilder.Transaction.getAttributes(value),
-                    response -> (Attribute.Remote<V>) Concept.Remote.of(this, response.getGetAttributesIterRes().getAttribute()).asAttribute()).collect(Collectors.toSet());
-        }
-
         public EntityType.Remote putEntityType(String label) {
             return putEntityType(Label.of(label));
         }
@@ -780,14 +761,6 @@ public class GraknClient implements AutoCloseable {
                     .getPutRelationTypeRes().getRelationType()).asRelationType();
         }
 
-        public Role.Remote putRole(String label) {
-            return putRole(Label.of(label));
-        }
-        public Role.Remote putRole(Label label) {
-            return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRole(label))
-                    .getPutRoleRes().getRole()).asRole();
-        }
-
         public Rule.Remote putRule(String label, Pattern when, Pattern then) {
             return putRule(Label.of(label), when, then);
         }
@@ -796,12 +769,12 @@ public class GraknClient implements AutoCloseable {
                     .getPutRuleRes().getRule()).asRule();
         }
 
-        public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> schemaConcept) {
+        public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> type) {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setSchemaConceptSupsIterReq(ConceptProto.SchemaConcept.Sups.Iter.Req.getDefaultInstance()).build();
+                    .setTypeSubsIterReq(ConceptProto.Type.Sups.Iter.Req.getDefaultInstance()).build();
 
-            return iterateConceptMethod(schemaConcept.id(), method,
-                    res -> Concept.Remote.of(this, res.getSchemaConceptSupsIterRes().getSchemaConcept()).asSchemaConcept());
+            return iterateConceptMethod(type.id(), method,
+                    res -> Concept.Remote.of(this, res.getTypeSupsIterRes().getType()).asSchemaConcept());
         }
 
         public TransactionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {
@@ -1122,7 +1095,7 @@ public class GraknClient implements AutoCloseable {
      */
 
     public static final class Databases {
-        private GraknGrpc.GraknBlockingStub blockingStub;
+        private final GraknGrpc.GraknBlockingStub blockingStub;
 
         Databases(ManagedChannel channel) {
             blockingStub = GraknGrpc.newBlockingStub(channel);

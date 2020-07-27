@@ -136,27 +136,27 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * Retrieves a collection of Attribute attached to this Thing
          *
          * @param attributeTypes AttributeTypes of the Attributes attached to this entity
-         * @return A collection of AttributeTypes attached to this Thing.
+         * @return A collection of Attributes attached to this Thing.
          * @see Attribute.Remote
          */
         @CheckReturnValue
         Stream<Attribute.Remote<?>> attributes(AttributeType<?>... attributeTypes);
-
         @CheckReturnValue
         <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType);
 
         /**
-         * Retrieves a collection of Attribute attached to this Thing as a key
+         * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
          *
-         * @param attributeTypes AttributeTypes of the Attributes attached to this entity
-         * @return A collection of AttributeTypes attached to this Thing.
+         * @param keysOnly If true, only fetch attributes which are keys.
+         * @return A collection of Attributes attached to this Thing.
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> keys(AttributeType<?>... attributeTypes);
-
+        Stream<Attribute.Remote<?>> attributes(boolean keysOnly);
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> keys(AttributeType<T> attributeType);
+        default Stream<Attribute.Remote<?>> attributes() {
+            return attributes(false);
+        }
 
         /**
          * Removes the provided Attribute from this Thing

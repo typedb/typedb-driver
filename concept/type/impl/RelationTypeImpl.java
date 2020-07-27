@@ -53,23 +53,33 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote key(AttributeType<?> attributeType) {
-            return (RelationType.Remote) super.key(attributeType);
-        }
-
-        @Override
         public final RelationType.Remote has(AttributeType<?> attributeType) {
             return (RelationType.Remote) super.has(attributeType);
         }
 
         @Override
-        public final RelationType.Remote plays(Role role) {
-            return (RelationType.Remote) super.plays(role);
+        public final RelationType.Remote has(AttributeType<?> attributeType, boolean isKey) {
+            return (RelationType.Remote) super.has(attributeType, isKey);
         }
 
         @Override
-        public final RelationType.Remote unkey(AttributeType<?> attributeType) {
-            return (RelationType.Remote) super.unkey(attributeType);
+        public final RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (RelationType.Remote) super.has(attributeType, overriddenType);
+        }
+
+        @Override
+        public final RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (RelationType.Remote) super.has(attributeType, overriddenType, isKey);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return super.attributes(keysOnly);
+        }
+
+        @Override
+        public final RelationType.Remote plays(Role role) {
+            return (RelationType.Remote) super.plays(role);
         }
 
         @Override
@@ -121,6 +131,14 @@ public class RelationTypeImpl {
         }
 
         @Override
+        public final Role.Remote role(Label role) {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setRelationTypeRoleReq(ConceptProto.RelationType.Role.Req.newBuilder().setLabel(role.getValue())).build();
+
+            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeRoleRes().getRole());
+        }
+
+        @Override
         public final Stream<Role.Remote> roles() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationTypeRolesIterReq(ConceptProto.RelationType.Roles.Iter.Req.getDefaultInstance()).build();
@@ -129,23 +147,13 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote relates(Role role) {
+        public final Role.Remote relates(Label role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
-                                                       .setRole(RequestBuilder.ConceptMessage.from(role))).build();
+                                                       .setLabel(role.getValue())).build();
 
             runMethod(method);
-            return this;
-        }
-
-        @Override
-        public final RelationType.Remote unrelate(Role role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationTypeUnrelateReq(ConceptProto.RelationType.Unrelate.Req.newBuilder()
-                                                        .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
-            runMethod(method);
-            return this;
+            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeRelatesRes().getRole());
         }
 
         @Override

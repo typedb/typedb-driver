@@ -62,8 +62,8 @@ public abstract class SchemaConceptImpl {
 
         public final SchemaConcept.Remote<BaseType> sup(SchemaConcept<?> type) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptSetSupReq(ConceptProto.SchemaConcept.SetSup.Req.newBuilder()
-                                                       .setSchemaConcept(RequestBuilder.ConceptMessage.from(type))).build();
+                    .setTypeSetSupReq(ConceptProto.Type.SetSup.Req.newBuilder()
+                                                       .setType(RequestBuilder.ConceptMessage.from(type))).build();
 
             runMethod(method);
             return this;
@@ -72,15 +72,15 @@ public abstract class SchemaConceptImpl {
         @Override
         public final Label label() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptGetLabelReq(ConceptProto.SchemaConcept.GetLabel.Req.getDefaultInstance()).build();
+                    .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();
 
-            return Label.of(runMethod(method).getSchemaConceptGetLabelRes().getLabel());
+            return Label.of(runMethod(method).getTypeGetLabelRes().getLabel());
         }
 
         @Override
         public SchemaConcept.Remote<BaseType> label(Label label) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptSetLabelReq(ConceptProto.SchemaConcept.SetLabel.Req.newBuilder()
+                    .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                                                          .setLabel(label.getValue())).build();
 
             runMethod(method);
@@ -91,15 +91,15 @@ public abstract class SchemaConceptImpl {
         @Nullable
         public SchemaConcept.Remote<BaseType> sup() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setSchemaConceptGetSupReq(ConceptProto.SchemaConcept.GetSup.Req.getDefaultInstance()).build();
+                    .setTypeGetSupReq(ConceptProto.Type.GetSup.Req.getDefaultInstance()).build();
 
-            ConceptProto.SchemaConcept.GetSup.Res response = runMethod(method).getSchemaConceptGetSupRes();
+            ConceptProto.Type.GetSup.Res response = runMethod(method).getTypeGetSupRes();
 
             switch (response.getResCase()) {
                 case NULL:
                     return null;
-                case SCHEMACONCEPT:
-                    return (SchemaConcept.Remote<BaseType>) Concept.Remote.of(tx(), response.getSchemaConcept()).asSchemaConcept();
+                case TYPE:
+                    return (SchemaConcept.Remote<BaseType>) Concept.Remote.of(tx(), response.getType()).asSchemaConcept();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -114,9 +114,9 @@ public abstract class SchemaConceptImpl {
         @Override
         public Stream<? extends SchemaConcept.Remote<BaseType>> subs() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setSchemaConceptSubsIterReq(ConceptProto.SchemaConcept.Subs.Iter.Req.getDefaultInstance()).build();
+                    .setTypeSubsIterReq(ConceptProto.Type.Subs.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getSchemaConceptSubsIterRes().getSchemaConcept()).map(this::asCurrentBaseType);
+            return conceptStream(method, res -> res.getTypeSubsIterRes().getType()).map(this::asCurrentBaseType);
         }
 
         @Override

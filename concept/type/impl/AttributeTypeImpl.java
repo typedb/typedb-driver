@@ -68,23 +68,33 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> key(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.key(attributeType);
-        }
-
-        @Override
         public final AttributeType.Remote<D> has(AttributeType<?> attributeType) {
             return (AttributeType.Remote<D>) super.has(attributeType);
         }
 
         @Override
-        public final AttributeType.Remote<D> plays(Role role) {
-            return (AttributeType.Remote<D>) super.plays(role);
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey) {
+            return (AttributeType.Remote<D>) super.has(attributeType, isKey);
         }
 
         @Override
-        public final AttributeType.Remote<D> unkey(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.unkey(attributeType);
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType);
+        }
+
+        @Override
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType, isKey);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return super.attributes(keysOnly);
+        }
+
+        @Override
+        public final AttributeType.Remote<D> plays(Role role) {
+            return (AttributeType.Remote<D>) super.plays(role);
         }
 
         @Override
@@ -131,10 +141,10 @@ public class AttributeTypeImpl {
         @Override
         public final Attribute.Remote<D> create(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
+                    .setAttributeTypePutReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypeCreateRes().getAttribute()).asAttribute();
+            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @SuppressWarnings("unchecked")
@@ -142,10 +152,10 @@ public class AttributeTypeImpl {
         @Nullable
         public final Attribute.Remote<D> attribute(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
+                    .setAttributeTypeGetReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeAttributeRes();
+            ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case NULL:
                     return null;

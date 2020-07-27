@@ -110,9 +110,9 @@ public class ConceptIT {
     private String ALICE_EMAIL = "alice@email.com";
     private String BOB = "Bob";
     private String BOB_EMAIL = "bob@email.com";
-    private Integer TWENTY = 20;
+    private Long TWENTY = 20L;
 
-    private AttributeType.Remote<Integer> age;
+    private AttributeType.Remote<Long> age;
     private AttributeType.Remote<String> name;
     private AttributeType.Remote<String> email;
     private EntityType.Remote livingThing;
@@ -122,8 +122,8 @@ public class ConceptIT {
     private Role.Remote husband;
     private Role.Remote wife;
     private RelationType.Remote marriage;
-    private Role.Remote friend;
     private RelationType.Remote friendship;
+    private Role.Remote friend;
     private Role.Remote employer;
     private Role.Remote employee;
     private RelationType.Remote employment;
@@ -133,7 +133,7 @@ public class ConceptIT {
 
     private Attribute.Remote<String> emailAlice;
     private Attribute.Remote<String> emailBob;
-    private Attribute.Remote<Integer> age20;
+    private Attribute.Remote<Long> age20;
     private Attribute.Remote<String> nameAlice;
     private Attribute.Remote<String> nameBob;
     private Entity.Remote alice;
@@ -166,13 +166,13 @@ public class ConceptIT {
         // Attribute Types
         email = tx.putAttributeType(EMAIL, ValueType.STRING).regex(EMAIL_REGEX);
         name = tx.putAttributeType(NAME, ValueType.STRING);
-        age = tx.putAttributeType(AGE, ValueType.INTEGER);
+        age = tx.putAttributeType(AGE, ValueType.LONG);
 
         // Entity Types
         livingThing = tx.putEntityType(LIVING_THING).isAbstract(true);
         person = tx.putEntityType(PERSON);
         person.sup(livingThing);
-        person.key(email);
+        person.has(email, true);
         person.has(name);
         person.has(age);
 
@@ -180,16 +180,16 @@ public class ConceptIT {
         boy = tx.putEntityType(BOY);
 
         // Relation Types
-        husband = tx.putRole(HUSBAND);
-        wife = tx.putRole(WIFE);
-        marriage = tx.putRelationType(MARRIAGE).relates(wife).relates(husband);
+        marriage = tx.putRelationType(MARRIAGE);
+        husband = marriage.relates(HUSBAND);
+        wife = marriage.relates(WIFE);
 
-        employer = tx.putRole(EMPLOYER);
-        employee = tx.putRole(EMPLOYEE);
-        employment = tx.putRelationType(EMPLOYMENT).relates(employee).relates(employer);
+        employment = tx.putRelationType(EMPLOYMENT);
+        employee = employment.relates(EMPLOYEE);
+        employer = employment.relates(EMPLOYER);
 
-        friend = tx.putRole(FRIEND);
         friendship = tx.putRelationType(FRIENDSHIP);
+        friend = friendship.relates(FRIEND);
 
         person.plays(wife).plays(husband);
 
@@ -252,7 +252,7 @@ public class ConceptIT {
     public void whenCallingGetValueTypeOnAttributeType_GetTheExpectedResult() {
         assertEquals(ValueType.STRING, email.valueType());
         assertEquals(ValueType.STRING, name.valueType());
-        assertEquals(ValueType.INTEGER, age.valueType());
+        assertEquals(ValueType.LONG, age.valueType());
     }
 
     @Test
@@ -261,7 +261,7 @@ public class ConceptIT {
         assertEquals(ValueType.STRING, emailBob.valueType());
         assertEquals(ValueType.STRING, nameAlice.valueType());
         assertEquals(ValueType.STRING, nameBob.valueType());
-        assertEquals(ValueType.INTEGER, age20.valueType());
+        assertEquals(ValueType.LONG, age20.valueType());
     }
 
     @Test
@@ -282,7 +282,7 @@ public class ConceptIT {
     public void whenCallingGetAttributeWhenThereIsNoResult_ReturnNull() {
         assertNull(email.attribute("x@x.com"));
         assertNull(name.attribute("random"));
-        assertNull(age.attribute(-1));
+        assertNull(age.attribute(-1L));
     }
 
     @Test
@@ -367,14 +367,14 @@ public class ConceptIT {
 
     @Test
     public void whenCallingKeysWithNoArguments_GetTheExpectedResult() {
-        assertThat(alice.keys().collect(toSet()), contains(emailAlice));
-        assertThat(bob.keys().collect(toSet()), contains(emailBob));
+        assertThat(alice.attributes(true).collect(toSet()), contains(emailAlice));
+        assertThat(bob.attributes(true).collect(toSet()), contains(emailBob));
     }
 
     @Test
     public void whenCallingKeysWithArguments_GetTheExpectedResult() {
-        assertThat(alice.keys(email).collect(toSet()), contains(emailAlice));
-        assertThat(bob.keys(email).collect(toSet()), contains(emailBob));
+        assertThat(alice.attributes(email).collect(toSet()), contains(emailAlice));
+        assertThat(bob.attributes(email).collect(toSet()), contains(emailBob));
     }
 
     @Test
@@ -476,7 +476,7 @@ public class ConceptIT {
 
     @Test
     public void whenCallingKeyTypes_GetTheExpectedResult() {
-        assertThat(person.keys().collect(toSet()), containsInAnyOrder(email));
+        assertThat(person.attributes(true).collect(toSet()), containsInAnyOrder(email));
     }
 
     @Test
@@ -498,10 +498,9 @@ public class ConceptIT {
 
     @Test
     public void whenSettingAndDeletingRelationRelatesRole_RoleInRelationIsSetAndDeleted() {
-        friendship.relates(friend);
         assertTrue(friendship.roles().anyMatch(c -> c.equals(friend)));
 
-        friendship.unrelate(friend);
+        friend.delete();
         assertFalse(friendship.roles().anyMatch(c -> c.equals(friend)));
     }
 
@@ -536,11 +535,11 @@ public class ConceptIT {
     @Test
     public void whenSettingAndDeletingKeyToType_KeyIsSetAndDeleted() {
         AttributeType.Remote<String> username = tx.putAttributeType(Label.of("username"), ValueType.STRING);
-        person.key(username);
-        assertTrue(person.keys().anyMatch(c -> c.equals(username)));
+        person.has(username, true);
+        assertTrue(person.attributes(true).anyMatch(c -> c.equals(username)));
 
-        person.unkey(username);
-        assertFalse(person.keys().anyMatch(c -> c.equals(username)));
+        person.has(username, false);
+        assertFalse(person.attributes(true).anyMatch(c -> c.equals(username)));
     }
 
     @Test
@@ -600,9 +599,9 @@ public class ConceptIT {
     @Test
     public void whenCastingAttributeWithCorrectValueType_castsWithoutError() {
         Concept<?> untypedAgeType = age;
-        AttributeType<Integer> typedAgeType = untypedAgeType.asAttributeType(ValueType.INTEGER);
+        AttributeType<Long> typedAgeType = untypedAgeType.asAttributeType(ValueType.LONG);
         Concept<?> untypedAgeAttr = age20;
-        Attribute<Integer> typedAgeAttr = untypedAgeAttr.asAttribute(ValueType.INTEGER);
+        Attribute<Long> typedAgeAttr = untypedAgeAttr.asAttribute(ValueType.LONG);
     }
 
     @Test

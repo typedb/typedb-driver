@@ -41,10 +41,14 @@ def graknlabs_dependencies():
     )
 
 def graknlabs_protocol():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_protocol",
+#        remote = "https://github.com/adammitchelldev/protocol",
+#        commit = "98c816971764f4dfffd54119cc210225b4a3e075", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+#    )
+    native.local_repository(
         name = "graknlabs_protocol",
-        remote = "https://github.com/adammitchelldev/protocol",
-        commit = "98c816971764f4dfffd54119cc210225b4a3e075", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        path = "../protocol",
     )
 
 def graknlabs_verification():

@@ -26,6 +26,7 @@ import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.Role;
 import grakn.protocol.ConceptProto;
 
@@ -56,23 +57,33 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote key(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.key(attributeType);
-        }
-
-        @Override
         public final EntityType.Remote has(AttributeType<?> attributeType) {
             return (EntityType.Remote) super.has(attributeType);
         }
 
         @Override
-        public final EntityType.Remote plays(Role role) {
-            return (EntityType.Remote) super.plays(role);
+        public final EntityType.Remote has(AttributeType<?> attributeType, boolean isKey) {
+            return (EntityType.Remote) super.has(attributeType, isKey);
         }
 
         @Override
-        public final EntityType.Remote unkey(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.unkey(attributeType);
+        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (EntityType.Remote) super.has(attributeType, overriddenType);
+        }
+
+        @Override
+        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (EntityType.Remote) super.has(attributeType, overriddenType, isKey);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return super.attributes(keysOnly);
+        }
+
+        @Override
+        public final EntityType.Remote plays(Role role) {
+            return (EntityType.Remote) super.plays(role);
         }
 
         @Override

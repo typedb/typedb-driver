@@ -687,7 +687,7 @@ public class GraqlSteps {
         public boolean check(Concept<?> concept) {
             if(!concept.isThing()) { return false; }
 
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).keys().collect(Collectors.toSet());
+            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).attributes(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 
