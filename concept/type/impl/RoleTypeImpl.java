@@ -30,7 +30,7 @@ import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-public class RoleImpl {
+public class RoleTypeImpl {
     /**
      * Client implementation of Role
      */
@@ -73,14 +73,14 @@ public class RoleImpl {
         @Override
         public final Stream<RelationType.Remote> relations() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRoleRelationsIterReq(ConceptProto.Role.Relations.Iter.Req.getDefaultInstance()).build();
+                    .setRoleRelationsIterReq(ConceptProto.RoleType.Relations.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept.Remote::asRelationType);
         }
 
         @Override
         public final Stream<ThingType.Remote<?, ?>> players() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRolePlayersIterReq(ConceptProto.Role.Players.Iter.Req.getDefaultInstance()).build();
+                    .setRolePlayersIterReq(ConceptProto.RoleType.Players.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getRolePlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 

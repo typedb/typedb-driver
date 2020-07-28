@@ -771,7 +771,7 @@ public class GraknClient implements AutoCloseable {
 
         public TransactionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {
             TransactionProto.Transaction.ConceptMethod.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Req.newBuilder()
-                    .setId(id.getValue()).setMethod(method).build();
+                    .setIid(id.getValue()).setMethod(method).build();
             TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodReq(conceptMethod).build();
 
             return sendAndReceiveOrThrow(request);
@@ -779,7 +779,7 @@ public class GraknClient implements AutoCloseable {
 
         public <T> Stream<T> iterateConceptMethod(ConceptId id, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
             TransactionProto.Transaction.ConceptMethod.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Iter.Req.newBuilder()
-                    .setId(id.getValue()).setMethod(method).build();
+                    .setIid(id.getValue()).setMethod(method).build();
             TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodIterReq(conceptIterMethod).build();
 
             return iterate(request, res -> responseReader.apply(res.getConceptMethodIterRes().getResponse()));

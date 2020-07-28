@@ -39,7 +39,7 @@ import grakn.client.concept.type.impl.MetaTypeImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.impl.RoleImpl;
+import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
@@ -363,7 +363,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                 case ATTRIBUTE_TYPE:
                     return (BaseType) new AttributeTypeImpl.Local<>(concept);
                 case ROLE:
-                    return (BaseType) new RoleImpl.Local(concept);
+                    return (BaseType) new RoleTypeImpl.Local(concept);
                 case RULE:
                     return (BaseType) new RuleImpl.Local(concept);
                 case META_TYPE:
@@ -386,7 +386,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         @SuppressWarnings("unchecked")
         static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
         RemoteType of(GraknClient.Transaction tx, ConceptProto.Concept concept) {
-            ConceptId id = ConceptId.of(concept.getId());
+            ConceptId id = ConceptId.of(concept.getIid());
             switch (concept.getBaseType()) {
                 case ENTITY:
                     return (RemoteType) new EntityImpl.Remote(tx, id);
@@ -401,7 +401,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                 case ATTRIBUTE_TYPE:
                     return (RemoteType) new AttributeTypeImpl.Remote<>(tx, id);
                 case ROLE:
-                    return (RemoteType) new RoleImpl.Remote(tx, id);
+                    return (RemoteType) new RoleTypeImpl.Remote(tx, id);
                 case RULE:
                     return (RemoteType) new RuleImpl.Remote(tx, id);
                 case META_TYPE:

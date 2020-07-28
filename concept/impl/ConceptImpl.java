@@ -40,7 +40,7 @@ public abstract class ConceptImpl {
         private final ConceptId id;
 
         protected Local(ConceptProto.Concept concept) {
-            this.id = ConceptId.of(concept.getId());
+            this.id = ConceptId.of(concept.getIid());
         }
 
         @Override

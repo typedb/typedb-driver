@@ -153,7 +153,7 @@ public class RequestBuilder {
 
         public static ConceptProto.Concept from(Concept<?> concept) {
             return ConceptProto.Concept.newBuilder()
-                    .setId(concept.id().getValue())
+                    .setIid(concept.id().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }

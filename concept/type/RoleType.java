@@ -22,7 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.type.impl.RoleImpl;
+import grakn.client.concept.type.impl.RoleTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -65,7 +65,7 @@ public interface RoleType extends Type<RoleType> {
     interface Remote extends Type.Remote<RoleType>, RoleType {
 
         static RoleType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RoleImpl.Remote(tx, id);
+            return new RoleTypeImpl.Remote(tx, id);
         }
 
         //------------------------------------- Modifiers ----------------------------------

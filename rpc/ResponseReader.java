@@ -103,16 +103,16 @@ public class ResponseReader {
     }
 
     private static ConceptList conceptList(AnswerProto.ConceptList res) {
-        return new ConceptList(res.getList().getIdsList().stream().map(ConceptId::of).collect(toList()));
+        return new ConceptList(res.getList().getIidsList().stream().map(ConceptId::of).collect(toList()));
     }
 
     private static ConceptSet conceptSet(AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getSet().getIdsList().stream().map(ConceptId::of).collect(toSet()));
+        return new ConceptSet(res.getSet().getIidsList().stream().map(ConceptId::of).collect(toSet()));
     }
 
     private static ConceptSetMeasure conceptSetMeasure(AnswerProto.ConceptSetMeasure res) {
         return new ConceptSetMeasure(
-                res.getSet().getIdsList().stream().map(ConceptId::of).collect(toSet()),
+                res.getSet().getIidsList().stream().map(ConceptId::of).collect(toSet()),
                 number(res.getMeasurement())
         );
     }
