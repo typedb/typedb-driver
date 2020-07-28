@@ -769,14 +769,6 @@ public class GraknClient implements AutoCloseable {
                     .getPutRuleRes().getRule()).asRule();
         }
 
-        public Stream<SchemaConcept.Remote<?>> sups(SchemaConcept.Remote<?> type) {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setTypeSubsIterReq(ConceptProto.Type.Sups.Iter.Req.getDefaultInstance()).build();
-
-            return iterateConceptMethod(type.id(), method,
-                    res -> Concept.Remote.of(this, res.getTypeSupsIterRes().getType()).asSchemaConcept());
-        }
-
         public TransactionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {
             TransactionProto.Transaction.ConceptMethod.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Req.newBuilder()
                     .setId(id.getValue()).setMethod(method).build();
