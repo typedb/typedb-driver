@@ -40,7 +40,7 @@ public abstract class ConceptImpl {
         private final ConceptIID iid;
 
         protected Local(ConceptProto.Concept concept) {
-            this.id = ConceptIID.of(concept.getIid());
+            this.iid = ConceptIID.of(concept.getIid());
         }
 
         @Override
@@ -85,7 +85,7 @@ public abstract class ConceptImpl {
 
         protected Remote(GraknClient.Transaction tx, ConceptIID iid) {
             this.tx = requireNonNull(tx, "Null tx");
-            this.id = requireNonNull(id, "Null iid");
+            this.iid = requireNonNull(iid, "Null iid");
         }
 
         @Override
@@ -104,7 +104,7 @@ public abstract class ConceptImpl {
 
         @Override
         public final boolean isDeleted() {
-            return tx().getConcept(id()) == null;
+            return tx().getConcept(iid()) == null;
         }
 
         @Override
@@ -142,7 +142,7 @@ public abstract class ConceptImpl {
         @SuppressWarnings("unchecked")
         protected  <R extends Remote<BaseType>> Stream<R> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-            return tx.iterateConceptMethod(id, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
+            return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
@@ -150,7 +150,7 @@ public abstract class ConceptImpl {
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptIID iid, ConceptProto.Method.Req method) {
-            return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
+            return tx().runConceptMethod(iid, method).getConceptMethodRes().getResponse();
         }
 
     }

@@ -57,7 +57,7 @@ public class RequestBuilder {
         }
 
         public static SessionProto.Session.Close.Req close(ByteString sessionId) {
-            return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build();
+            return SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build();
         }
     }
 
@@ -66,9 +66,9 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static TransactionProto.Transaction.Req open(ByteString sessionId, GraknClient.Transaction.Type txType) {
+        public static TransactionProto.Transaction.Req open(ByteString sessionID, GraknClient.Transaction.Type txType) {
             TransactionProto.Transaction.Open.Req openRequest = TransactionProto.Transaction.Open.Req.newBuilder()
-                    .setSessionId(sessionId)
+                    .setSessionID(sessionID)
                     .setType(TransactionProto.Transaction.Type.valueOf(txType.iid()))
                     .build();
 
@@ -108,7 +108,7 @@ public class RequestBuilder {
         public static TransactionProto.Transaction.Req getConcept(ConceptIID iid) {
             return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
+                    .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(iid.getValue()))
                     .build();
         }
 

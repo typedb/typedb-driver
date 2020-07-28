@@ -105,7 +105,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
     interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
         static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
-            return new AttributeTypeImpl.Remote<>(tx, id);
+            return new AttributeTypeImpl.Remote<>(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------

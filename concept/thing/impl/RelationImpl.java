@@ -78,7 +78,7 @@ public class RelationImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationPlayersMapIterReq(ConceptProto.Relation.PlayersMap.Iter.Req.getDefaultInstance()).build();
 
-            Stream<ConceptProto.Relation.PlayersMap.Iter.Res> stream = tx().iterateConceptMethod(id(), method, ConceptProto.Method.Iter.Res::getRelationPlayersMapIterRes);
+            Stream<ConceptProto.Relation.PlayersMap.Iter.Res> stream = tx().iterateConceptMethod(iid(), method, ConceptProto.Method.Iter.Res::getRelationPlayersMapIterRes);
 
             Map<RoleType.Remote, List<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {

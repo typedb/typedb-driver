@@ -389,23 +389,23 @@ public interface Concept<BaseType extends Concept<BaseType>> {
             ConceptIID iid = ConceptIID.of(concept.getIid());
             switch (concept.getBaseType()) {
                 case ENTITY:
-                    return (RemoteType) new EntityImpl.Remote(tx, id);
+                    return (RemoteType) new EntityImpl.Remote(tx, iid);
                 case RELATION:
-                    return (RemoteType) new RelationImpl.Remote(tx, id);
+                    return (RemoteType) new RelationImpl.Remote(tx, iid);
                 case ATTRIBUTE:
-                    return (RemoteType) new AttributeImpl.Remote<>(tx, id);
+                    return (RemoteType) new AttributeImpl.Remote<>(tx, iid);
                 case ENTITY_TYPE:
-                    return (RemoteType) new EntityTypeImpl.Remote(tx, id);
+                    return (RemoteType) new EntityTypeImpl.Remote(tx, iid);
                 case RELATION_TYPE:
-                    return (RemoteType) new RelationTypeImpl.Remote(tx, id);
+                    return (RemoteType) new RelationTypeImpl.Remote(tx, iid);
                 case ATTRIBUTE_TYPE:
-                    return (RemoteType) new AttributeTypeImpl.Remote<>(tx, id);
+                    return (RemoteType) new AttributeTypeImpl.Remote<>(tx, iid);
                 case ROLE:
-                    return (RemoteType) new RoleTypeImpl.Remote(tx, id);
+                    return (RemoteType) new RoleTypeImpl.Remote(tx, iid);
                 case RULE:
-                    return (RemoteType) new RuleImpl.Remote(tx, id);
+                    return (RemoteType) new RuleImpl.Remote(tx, iid);
                 case META_TYPE:
-                    return (RemoteType) new MetaTypeImpl.Remote<>(tx, id);
+                    return (RemoteType) new MetaTypeImpl.Remote<>(tx, iid);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
