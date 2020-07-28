@@ -23,168 +23,109 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueType;
-import grakn.client.concept.impl.SchemaConceptImpl;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.type.Type;
+import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public abstract class TypeImpl {
-    /**
-     * Client implementation of Type
-     *
-     * @param <SomeType>  The exact type of this class
-     */
+
     public abstract static class Local<
-            SomeType extends Type<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends SchemaConceptImpl.Local<SomeType>
-            implements Type.Local<SomeType, SomeThing> {
+            SomeSchemaConcept extends Type<SomeSchemaConcept>>
+            extends ConceptImpl.Local<SomeSchemaConcept>
+            implements Type.Local<SomeSchemaConcept> {
+
+        private final Label label;
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
+            this.label = Label.of(concept.getLabelRes().getLabel());
+        }
+
+        @Override
+        public final Label label() {
+            return label;
         }
     }
 
-    /**
-     * Client implementation of Type
-     *
-     * @param <SomeRemoteType>  The exact type of this class
-     * @param <SomeRemoteThing> the exact type of instances of this class
-     */
     public abstract static class Remote<
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends SchemaConceptImpl.Remote<SomeRemoteType>
-            implements Type.Remote<SomeRemoteType, SomeRemoteThing> {
+            BaseType extends Type<BaseType>>
+            extends ConceptImpl.Remote<BaseType>
+            implements Type.Remote<BaseType> {
 
-        protected Remote(GraknClient.Transaction tx, ConceptId id) {
+        public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
         }
 
-        @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> label(Label label) {
-            return (Type.Remote<SomeRemoteType, SomeRemoteThing>) super.label(label);
-        }
-
-        @Override
-        public Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> sups() {
-            return super.sups().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> subs() {
-            return super.subs().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> instances() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setThingTypeInstancesIterReq(ConceptProto.ThingType.Instances.Iter.Req.getDefaultInstance()).build();
-
-            return conceptStream(method, res -> res.getThingTypeInstancesIterRes().getThing()).map(this::asInstance);
-        }
-
-        @Override
-        public final Boolean isAbstract() {
+        public final Type.Remote<BaseType> sup(Type<?> type) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeIsAbstractReq(ConceptProto.ThingType.IsAbstract.Req.getDefaultInstance()).build();
-
-            return runMethod(method).getThingTypeIsAbstractRes().getAbstract();
-        }
-
-        @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.newBuilder()
-                                                   .setAbstract(isAbstract)).build();
+                    .setTypeSetSupReq(ConceptProto.Type.SetSup.Req.newBuilder()
+                                                       .setType(RequestBuilder.ConceptMessage.from(type))).build();
 
             runMethod(method);
             return this;
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote<D>> attributes(ValueType<D> valueType, boolean keysOnly) {
-            ConceptProto.ThingType.Attributes.Iter.Req.Builder req = ConceptProto.ThingType.Attributes.Iter.Req.newBuilder()
-                            .setKeysOnly(keysOnly);
+        public final Label label() {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();
 
-            if (valueType != null) {
-                req.setValueType(RequestBuilder.ConceptMessage.setValueType(valueType));
-            } else {
-                req.setNULL(ConceptProto.Null.getDefaultInstance());
+            return Label.of(runMethod(method).getTypeGetLabelRes().getLabel());
+        }
+
+        @Override
+        public Type.Remote<BaseType> label(Label label) {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
+                                                         .setLabel(label.getValue())).build();
+
+            runMethod(method);
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Nullable
+        public Type.Remote<BaseType> sup() {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setTypeGetSupReq(ConceptProto.Type.GetSup.Req.getDefaultInstance()).build();
+
+            ConceptProto.Type.GetSup.Res response = runMethod(method).getTypeGetSupRes();
+
+            switch (response.getResCase()) {
+                case NULL:
+                    return null;
+                case TYPE:
+                    return (Type.Remote<BaseType>) Concept.Remote.of(tx(), response.getType()).asSchemaConcept();
+                default:
+                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
 
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder().setThingTypeAttributesIterReq(req).build();
-
-            return conceptStream(method, res -> res.getThingTypeAttributesIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
         }
 
         @Override
-        public final Stream<Role.Remote> playing() {
+        public Stream<? extends Type.Remote<BaseType>> sups() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setThingTypePlayingIterReq(ConceptProto.ThingType.Playing.Iter.Req.getDefaultInstance()).build();
+                    .setTypeSupsIterReq(ConceptProto.Type.Sups.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypePlayingIterRes().getRole()).map(Concept.Remote::asRole);
+            return conceptStream(method, res -> res.getTypeSubsIterRes().getType())
+                    .filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
         }
 
         @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            ConceptProto.ThingType.Has.Req.Builder req = ConceptProto.ThingType.Has.Req.newBuilder()
-                    .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))
-                    .setIsKey(isKey);
+        public Stream<? extends Type.Remote<BaseType>> subs() {
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                    .setTypeSubsIterReq(ConceptProto.Type.Subs.Iter.Req.getDefaultInstance()).build();
 
-            if (overriddenType != null) {
-                req.setOverriddenType(RequestBuilder.ConceptMessage.from(overriddenType));
-            } else {
-                req.setNULL(ConceptProto.Null.getDefaultInstance());
-            }
-
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeHasReq(req).build();
-
-            runMethod(method);
-            return this;
+            return conceptStream(method, res -> res.getTypeSubsIterRes().getType()).map(this::asCurrentBaseType);
         }
 
         @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypePlaysReq(ConceptProto.ThingType.Plays.Req.newBuilder()
-                                             .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
-            runMethod(method);
-            return this;
-        }
-
-        @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeUnhasReq(ConceptProto.ThingType.Unhas.Req.newBuilder()
-                                             .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
-
-            runMethod(method);
-            return this;
-        }
-
-        @Override
-        public Type.Remote<SomeRemoteType, SomeRemoteThing> unplay(Role role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeUnplayReq(ConceptProto.ThingType.Unplay.Req.newBuilder()
-                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
-            runMethod(method);
-            return this;
-        }
-
-        protected abstract Thing.Remote<SomeRemoteThing, SomeRemoteType> asInstance(Concept.Remote<?> concept);
-
-        @Override
-        protected abstract Type.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other);
+        protected abstract Type.Remote<BaseType> asCurrentBaseType(Concept.Remote<?> other);
 
         protected abstract boolean equalsCurrentBaseType(Concept.Remote<?> other);
     }

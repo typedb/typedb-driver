@@ -22,7 +22,6 @@ package grakn.client.concept.type;
 import grakn.client.GraknClient;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 
@@ -34,7 +33,7 @@ import java.util.stream.Stream;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType extends Type<RelationType, Relation> {
+public interface RelationType extends ThingType<RelationType, Relation> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
@@ -55,7 +54,7 @@ public interface RelationType extends Type<RelationType, Relation> {
         return true;
     }
 
-    interface Local extends Type.Local<RelationType, Relation>, RelationType {
+    interface Local extends ThingType.Local<RelationType, Relation>, RelationType {
     }
 
     /**
@@ -63,7 +62,7 @@ public interface RelationType extends Type<RelationType, Relation> {
      * A RelationType defines how Type may relate to one another.
      * They are used to model and categorise n-ary Relations.
      */
-    interface Remote extends Type.Remote<RelationType, Relation>, RelationType {
+    interface Remote extends ThingType.Remote<RelationType, Relation>, RelationType {
 
         static RelationType.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RelationTypeImpl.Remote(tx, id);
@@ -117,19 +116,19 @@ public interface RelationType extends Type<RelationType, Relation> {
          *
          *
          */
-        default Role.Remote role(String role) {
+        default RoleType.Remote role(String role) {
             return role(Label.of(role));
         }
-        Role.Remote role(Label role);
+        RoleType.Remote role(Label role);
 
         /**
          * Retrieves a list of the RoleTypes that make up this RelationType.
          *
          * @return A list of the RoleTypes which make up this RelationType.
-         * @see Role.Remote
+         * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<Role.Remote> roles();
+        Stream<RoleType.Remote> roles();
 
         //------------------------------------- Edge Handling ----------------------------------
 
@@ -138,12 +137,12 @@ public interface RelationType extends Type<RelationType, Relation> {
          *
          * @param role A new role which is part of this relation.
          * @return The Role itself.
-         * @see Role.Remote
+         * @see RoleType.Remote
          */
-        default Role.Remote relates(String role) {
+        default RoleType.Remote relates(String role) {
             return relates(Label.of(role));
         }
-        Role.Remote relates(Label role);
+        RoleType.Remote relates(Label role);
 
         //---- Inherited Methods
 
@@ -179,7 +178,7 @@ public interface RelationType extends Type<RelationType, Relation> {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote plays(Role role);
+        RelationType.Remote plays(RoleType role);
 
         /**
          * Removes the ability of this RelationType to play a specific Role
@@ -188,7 +187,7 @@ public interface RelationType extends Type<RelationType, Relation> {
          * @return The Rule itself.
          */
         @Override
-        RelationType.Remote unplay(Role role);
+        RelationType.Remote unplay(RoleType role);
 
         /**
          * Removes the ability for Things of this RelationType to have Attributes of type AttributeType

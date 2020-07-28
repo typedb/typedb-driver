@@ -20,10 +20,12 @@
 package grakn.client.concept;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.impl.RuleImpl;
+import grakn.client.concept.type.impl.RuleImpl;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.thing.Attribute;
@@ -36,9 +38,9 @@ import grakn.client.concept.type.MetaType;
 import grakn.client.concept.type.impl.MetaTypeImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.impl.RelationTypeImpl;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.impl.RoleImpl;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -72,8 +74,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    default SchemaConcept<?> asSchemaConcept() {
-        throw GraknConceptException.invalidCasting(this, SchemaConcept.class);
+    default Type<?> asSchemaConcept() {
+        throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
     /**
@@ -82,8 +84,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default Type<?, ?> asType() {
-        throw GraknConceptException.invalidCasting(this, Type.class);
+    default ThingType<?, ?> asType() {
+        throw GraknConceptException.invalidCasting(this, ThingType.class);
     }
 
     /**
@@ -112,8 +114,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Role if the Concept is a Role
      */
     @CheckReturnValue
-    default Role asRole() {
-        throw GraknConceptException.invalidCasting(this, Role.class);
+    default RoleType asRole() {
+        throw GraknConceptException.invalidCasting(this, RoleType.class);
     }
 
     /**
@@ -419,8 +421,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default SchemaConcept.Remote<?> asSchemaConcept() {
-            throw GraknConceptException.invalidCasting(this, SchemaConcept.Remote.class);
+        default Type.Remote<?> asSchemaConcept() {
+            throw GraknConceptException.invalidCasting(this, Type.Remote.class);
         }
 
         /**
@@ -430,8 +432,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default Type.Remote<?, ?> asType() {
-            throw GraknConceptException.invalidCasting(this, Type.Remote.class);
+        default ThingType.Remote<?, ?> asType() {
+            throw GraknConceptException.invalidCasting(this, ThingType.Remote.class);
         }
 
         /**
@@ -463,8 +465,8 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default Role.Remote asRole() {
-            throw GraknConceptException.invalidCasting(this, Role.Remote.class);
+        default RoleType.Remote asRole() {
+            throw GraknConceptException.invalidCasting(this, RoleType.Remote.class);
         }
 
         /**

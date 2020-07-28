@@ -34,14 +34,14 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ValueType;
-import grakn.client.concept.type.Role;
-import grakn.client.concept.Rule;
-import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.Rule;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.ThingType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -259,14 +259,14 @@ public class GraknClient implements AutoCloseable {
             }
 
             public static Type of(int value) {
-                for (Type t : Type.values()) {
+                for (Type t : Transaction.Type.values()) {
                     if (t.type == value) return t;
                 }
                 return null;
             }
 
             public static Type of(String value) {
-                for (Type t : Type.values()) {
+                for (Type t : Transaction.Type.values()) {
                     if (t.name().equalsIgnoreCase(value)) return t;
                 }
                 return null;
@@ -274,7 +274,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         private Transaction(ManagedChannel channel, Session session, ByteString sessionId, Type type) {
-            try (ThreadTrace trace = traceOnThread(type == Type.WRITE ? "tx.write" : "tx.read")) {
+            try (ThreadTrace trace = traceOnThread(type == Transaction.Type.WRITE ? "tx.write" : "tx.read")) {
                 this.transceiver = Transceiver.create(GraknGrpc.newStub(channel));
                 this.session = session;
                 this.type = type;
@@ -635,10 +635,10 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public grakn.client.concept.type.Type.Remote<?, ?> getThingType(Label label) {
-            SchemaConcept.Remote<?> concept = getType(label);
-            if (concept instanceof grakn.client.concept.type.Type.Remote) {
-                return (grakn.client.concept.type.Type.Remote<?, ?>) concept;
+        public ThingType.Remote<?, ?> getThingType(Label label) {
+            grakn.client.concept.type.Type.Remote<?> concept = getType(label);
+            if (concept instanceof ThingType.Remote) {
+                return (ThingType.Remote<?, ?>) concept;
             } else {
                 return null;
             }
@@ -646,8 +646,8 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public EntityType.Remote getEntityType(String label) {
-            SchemaConcept.Remote<?> concept = getType(Label.of(label));
-            if (concept instanceof grakn.client.concept.type.Type.Remote) {
+            grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
+            if (concept instanceof ThingType.Remote) {
                 return (grakn.client.concept.type.EntityType.Remote) concept;
             } else {
                 return null;
@@ -656,7 +656,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public RelationType.Remote getRelationType(String label) {
-            SchemaConcept.Remote<?> concept = getType(Label.of(label));
+            grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof RelationType.Remote) {
                 return (RelationType.Remote) concept;
             } else {
@@ -667,7 +667,7 @@ public class GraknClient implements AutoCloseable {
         @SuppressWarnings("unchecked")
         @Nullable
         public <V> AttributeType.Remote<V> getAttributeType(String label) {
-            SchemaConcept.Remote<?> concept = getType(Label.of(label));
+            grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof AttributeType.Remote) {
                 return (AttributeType.Remote<V>) concept;
             } else {
@@ -677,7 +677,7 @@ public class GraknClient implements AutoCloseable {
 
         @Nullable
         public Rule.Remote getRule(String label) {
-            SchemaConcept.Remote<?> concept = getType(Label.of(label));
+            grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof Rule.Remote) {
                 return (Rule.Remote) concept;
             } else {
@@ -687,7 +687,7 @@ public class GraknClient implements AutoCloseable {
 
         @SuppressWarnings("unchecked")
         @Nullable
-        public SchemaConcept.Remote<?> getType(Label label) {
+        public grakn.client.concept.type.Type.Remote<?> getType(Label label) {
             TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getType(label));
             switch (response.getGetTypeRes().getResCase()) {
                 case NULL:
@@ -699,7 +699,7 @@ public class GraknClient implements AutoCloseable {
             }
         }
 
-        public SchemaConcept.Remote<?> getMetaConcept() {
+        public grakn.client.concept.type.Type.Remote<?> getMetaConcept() {
             return getType(Label.of(Graql.Token.Type.THING.toString()));
         }
 
@@ -707,7 +707,7 @@ public class GraknClient implements AutoCloseable {
             return getType(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
         }
 
-        public Role.Remote getMetaRole() {
+        public RoleType.Remote getMetaRole() {
             return getType(Label.of(Graql.Token.Type.ROLE.toString())).asRole();
         }
 

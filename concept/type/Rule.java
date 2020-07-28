@@ -17,10 +17,12 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.impl.RuleImpl;
+import grakn.client.concept.ConceptId;
+import grakn.client.concept.Label;
+import grakn.client.concept.type.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -30,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface Rule extends SchemaConcept<Rule> {
+public interface Rule extends Type<Rule> {
     @Deprecated
     @CheckReturnValue
     @Override
@@ -50,13 +52,13 @@ public interface Rule extends SchemaConcept<Rule> {
         return true;
     }
 
-    interface Local extends SchemaConcept.Local<Rule>, Rule {
+    interface Local extends Type.Local<Rule>, Rule {
     }
 
     /**
      * A SchemaConcept used to model and categorise Rules.
      */
-    interface Remote extends SchemaConcept.Remote<Rule>, Rule {
+    interface Remote extends Type.Remote<Rule>, Rule {
 
         static Rule.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new RuleImpl.Remote(tx, id);

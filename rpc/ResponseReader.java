@@ -23,7 +23,7 @@ import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
-import grakn.client.concept.Rule;
+import grakn.client.concept.type.Rule;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;

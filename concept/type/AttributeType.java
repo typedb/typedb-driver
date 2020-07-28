@@ -31,7 +31,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
+public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<D>> {
 
 
 
@@ -88,7 +88,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Local<D> extends Type.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
+    interface Local<D> extends ThingType.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
     }
 
     /**
@@ -102,7 +102,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Remote<D> extends Type.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
+    interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
         static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
             return new AttributeTypeImpl.Remote<>(tx, id);
@@ -142,7 +142,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> plays(Role role);
+        AttributeType.Remote<D> plays(RoleType role);
 
         /**
          * Removes the ability of this AttributeType to play a specific Role
@@ -151,7 +151,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unplay(Role role);
+        AttributeType.Remote<D> unplay(RoleType role);
 
         /**
          * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType

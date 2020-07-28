@@ -21,12 +21,12 @@ package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.type.Type;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
-import grakn.client.concept.Rule;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -34,7 +34,7 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.ThingType;
 import grakn.common.test.server.GraknProperties;
 import grakn.common.test.server.GraknSetup;
 import graql.lang.pattern.Pattern;
@@ -119,17 +119,17 @@ public class ConceptIT {
     private EntityType.Remote person;
     private EntityType.Remote man;
     private EntityType.Remote boy;
-    private Role.Remote husband;
-    private Role.Remote wife;
+    private RoleType.Remote husband;
+    private RoleType.Remote wife;
     private RelationType.Remote marriage;
     private RelationType.Remote friendship;
-    private Role.Remote friend;
-    private Role.Remote employer;
-    private Role.Remote employee;
+    private RoleType.Remote friend;
+    private RoleType.Remote employer;
+    private RoleType.Remote employee;
     private RelationType.Remote employment;
     private Rule.Remote metaRule;
     private Rule.Remote testRule;
-    private Type.Remote<?, ?> metaType;
+    private ThingType.Remote<?, ?> metaType;
 
     private Attribute.Remote<String> emailAlice;
     private Attribute.Remote<String> emailBob;
@@ -211,9 +211,9 @@ public class ConceptIT {
         bob = person.create().has(emailBob).has(nameBob).has(age20);
 
         // Relations
-        aliceAndBob = marriage.create().assign(wife, alice).assign(husband, bob);
-        selfEmployment = employment.create().assign(employer, alice).assign(employee, alice);
-        selfFriendship = friendship.create().assign(friend, alice).assign(friend, alice);
+        aliceAndBob = marriage.create().relate(wife, alice).relate(husband, bob);
+        selfEmployment = employment.create().relate(employer, alice).relate(employee, alice);
+        selfFriendship = friendship.create().relate(friend, alice).relate(friend, alice);
 
         metaType = tx.getThingType(Label.of("thing"));
     }
@@ -428,36 +428,36 @@ public class ConceptIT {
 
     @Test
     public void whenCallingAllRolePlayers_GetTheExpectedResult() {
-        Map<Role.Remote, List<Thing.Remote<?, ?>>> expected = new HashMap<>();
+        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> expected = new HashMap<>();
         expected.put(wife, Collections.singletonList(alice));
         expected.put(husband, Collections.singletonList(bob));
 
-        assertEquals(expected, aliceAndBob.rolePlayersMap());
+        assertEquals(expected, aliceAndBob.playersMap());
     }
 
     @Test
     public void whenCallingAllRolePlayers_GetExpectedDuplicates() {
-        Map<Role, List<Thing<?, ?>>> expected = new HashMap<>();
+        Map<RoleType, List<Thing<?, ?>>> expected = new HashMap<>();
         expected.put(friend, Arrays.asList(alice, alice));
-        assertEquals(expected, selfFriendship.rolePlayersMap());
+        assertEquals(expected, selfFriendship.playersMap());
     }
 
     @Test
     public void whenCallingRolePlayersWithNoArguments_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers().collect(toList()), containsInAnyOrder(alice, bob));
+        assertThat(aliceAndBob.players().collect(toList()), containsInAnyOrder(alice, bob));
     }
 
     @Test
     public void whenCallingRolePlayersWithNoArgumentsOnReflexiveRelation_GetExpectedResult() {
-        List<Thing.Remote<?, ?>> list = selfEmployment.rolePlayers().collect(toList());
+        List<Thing.Remote<?, ?>> list = selfEmployment.players().collect(toList());
         assertEquals(2, list.size());
         assertThat(list, containsInAnyOrder(alice, alice));
     }
 
     @Test
     public void whenCallingRolePlayersWithRoles_GetTheExpectedResult() {
-        assertThat(aliceAndBob.rolePlayers(wife).collect(toList()), containsInAnyOrder(alice));
-        assertThat(aliceAndBob.rolePlayers(husband).collect(toList()), containsInAnyOrder(bob));
+        assertThat(aliceAndBob.players(wife).collect(toList()), containsInAnyOrder(alice));
+        assertThat(aliceAndBob.players(husband).collect(toList()), containsInAnyOrder(bob));
     }
 
     @Test
@@ -586,14 +586,14 @@ public class ConceptIT {
         Entity.Remote emily = person.create();
 
         Relation.Remote dylanAndEmily = friendship.create()
-                .assign(friend, dylan)
-                .assign(friend, emily);
+                .relate(friend, dylan)
+                .relate(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan, emily));
+        assertThat(dylanAndEmily.players().collect(toList()), containsInAnyOrder(dylan, emily));
 
-        dylanAndEmily.unassign(friend, emily);
+        dylanAndEmily.unrelate(friend, emily);
 
-        assertThat(dylanAndEmily.rolePlayers().collect(toList()), containsInAnyOrder(dylan));
+        assertThat(dylanAndEmily.players().collect(toList()), containsInAnyOrder(dylan));
     }
 
     @Test
@@ -630,11 +630,11 @@ public class ConceptIT {
 
     @Test
     public void metatypes() {
-        SchemaConcept.Remote<?> concept = tx.getMetaConcept();
+        Type.Remote<?> concept = tx.getMetaConcept();
         AttributeType.Remote<?> attributeType = tx.getMetaAttributeType();
         RelationType.Remote relationType = tx.getMetaRelationType();
         EntityType.Remote entityType = tx.getMetaEntityType();
         Rule.Remote rule = tx.getMetaRule();
-        Role.Remote role = tx.getMetaRole();
+        RoleType.Remote role = tx.getMetaRole();
     }
 }

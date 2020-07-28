@@ -26,7 +26,7 @@ import grakn.client.concept.ValueType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
@@ -40,7 +40,7 @@ public class AttributeTypeImpl {
      *
      * @param <D> The data type of this attribute type
      */
-    public static class Local<D> extends TypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
+    public static class Local<D> extends ThingTypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
 
         private final ValueType<D> valueType;
 
@@ -61,7 +61,7 @@ public class AttributeTypeImpl {
      *
      * @param <D> The data type of this attribute type
      */
-    public static class Remote<D> extends TypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
+    public static class Remote<D> extends ThingTypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
 
         public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
@@ -93,7 +93,7 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> plays(Role role) {
+        public final AttributeType.Remote<D> plays(RoleType role) {
             return (AttributeType.Remote<D>) super.plays(role);
         }
 
@@ -103,7 +103,7 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> unplay(Role role) {
+        public final AttributeType.Remote<D> unplay(RoleType role) {
             return (AttributeType.Remote<D>) super.unplay(role);
         }
 

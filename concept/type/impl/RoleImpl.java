@@ -23,10 +23,9 @@ import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptId;
 import grakn.client.concept.Label;
-import grakn.client.concept.impl.SchemaConceptImpl;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.Role;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -35,7 +34,7 @@ public class RoleImpl {
     /**
      * Client implementation of Role
      */
-    public static class Local extends SchemaConceptImpl.Local<Role> implements Role.Local {
+    public static class Local extends TypeImpl.Local<RoleType> implements RoleType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -45,30 +44,30 @@ public class RoleImpl {
     /**
      * Client implementation of Role
      */
-    public static class Remote extends SchemaConceptImpl.Remote<Role> implements Role.Remote {
+    public static class Remote extends TypeImpl.Remote<RoleType> implements RoleType.Remote {
 
         public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
         }
 
         @Override
-        public final Stream<Role.Remote> sups() {
+        public final Stream<RoleType.Remote> sups() {
             return super.sups().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<Role.Remote> subs() {
+        public final Stream<RoleType.Remote> subs() {
             return super.subs().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Role.Remote label(Label label) {
-            return (Role.Remote) super.label(label);
+        public final RoleType.Remote label(Label label) {
+            return (RoleType.Remote) super.label(label);
         }
 
         @Override
-        public Role.Remote sup(Role superRole) {
-            return (Role.Remote) super.sup(superRole);
+        public RoleType.Remote sup(RoleType superRole) {
+            return (RoleType.Remote) super.sup(superRole);
         }
 
         @Override
@@ -79,14 +78,14 @@ public class RoleImpl {
         }
 
         @Override
-        public final Stream<Type.Remote<?, ?>> players() {
+        public final Stream<ThingType.Remote<?, ?>> players() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRolePlayersIterReq(ConceptProto.Role.Players.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getRolePlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 
         @Override
-        protected final Role.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final RoleType.Remote asCurrentBaseType(Concept.Remote<?> other) {
             return other.asRole();
         }
 

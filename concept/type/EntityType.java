@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType extends Type<EntityType, Entity> {
+public interface EntityType extends ThingType<EntityType, Entity> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -56,7 +56,7 @@ public interface EntityType extends Type<EntityType, Entity> {
         return true;
     }
 
-    interface Local extends Type.Local<EntityType, Entity>, EntityType {
+    interface Local extends ThingType.Local<EntityType, Entity>, EntityType {
     }
 
     /**
@@ -64,7 +64,7 @@ public interface EntityType extends Type<EntityType, Entity> {
      * An ontological element which represents categories instances can fall within.
      * Any instance of a Entity Type is called an Entity.
      */
-    interface Remote extends Type.Remote<EntityType, Entity>, EntityType {
+    interface Remote extends ThingType.Remote<EntityType, Entity>, EntityType {
 
         static EntityType.Remote of(GraknClient.Transaction tx, ConceptId id) {
             return new EntityTypeImpl.Remote(tx, id);
@@ -96,7 +96,7 @@ public interface EntityType extends Type<EntityType, Entity> {
          * @return The EntityType itself
          */
         @Override
-        EntityType.Remote plays(Role role);
+        EntityType.Remote plays(RoleType role);
 
         /**
          * Removes the ability of this EntityType to play a specific Role
@@ -105,7 +105,7 @@ public interface EntityType extends Type<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unplay(Role role);
+        EntityType.Remote unplay(RoleType role);
 
         /**
          * Removes the ability for Things of this EntityType to have Attributes of type AttributeType

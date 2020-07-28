@@ -26,9 +26,9 @@ import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.ThingType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
@@ -45,7 +45,7 @@ public abstract class ThingImpl {
      */
     public abstract static class Local<
             SomeThing extends Thing<SomeThing, SomeType>,
-            SomeType extends Type<SomeType, SomeThing>>
+            SomeType extends ThingType<SomeType, SomeThing>>
             extends ConceptImpl.Local<SomeThing>
             implements Thing.Local<SomeThing, SomeType> {
 
@@ -76,7 +76,7 @@ public abstract class ThingImpl {
          */
         public abstract static class Remote<
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
-                SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>>
+                SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
                 extends ConceptImpl.Remote<SomeRemoteThing>
                 implements Thing.Remote<SomeRemoteThing, SomeRemoteType> {
 
@@ -85,7 +85,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public Type.Remote<SomeRemoteType, SomeRemoteThing> type() {
+            public ThingType.Remote<SomeRemoteType, SomeRemoteThing> type() {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
@@ -128,7 +128,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Relation.Remote> relations(Role... roles) {
+            public final Stream<Relation.Remote> relations(RoleType... roles) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRelationsIterReq(ConceptProto.Thing.Relations.Iter.Req.newBuilder()
                                                       .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
@@ -137,7 +137,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Role.Remote> roles() {
+            public final Stream<RoleType.Remote> roles() {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRolesIterReq(ConceptProto.Thing.Roles.Iter.Req.getDefaultInstance()).build();
 

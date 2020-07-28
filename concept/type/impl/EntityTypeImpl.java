@@ -26,8 +26,7 @@ import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -38,7 +37,7 @@ public class EntityTypeImpl {
      * TODO: This class is not defined in Concept API, and at server side implementation.
      * TODO: we should remove this class, or implement properly on server side.
      */
-    public static class Local extends TypeImpl.Local<EntityType, Entity> implements EntityType.Local {
+    public static class Local extends ThingTypeImpl.Local<EntityType, Entity> implements EntityType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -50,7 +49,7 @@ public class EntityTypeImpl {
      * TODO: This class is not defined in Concept API, and at server side implementation.
      * TODO: we should remove this class, or implement properly on server side.
      */
-    public static class Remote extends TypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
 
         public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
@@ -82,7 +81,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote plays(Role role) {
+        public final EntityType.Remote plays(RoleType role) {
             return (EntityType.Remote) super.plays(role);
         }
 
@@ -92,7 +91,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote unplay(Role role) {
+        public final EntityType.Remote unplay(RoleType role) {
             return (EntityType.Remote) super.unplay(role);
         }
 

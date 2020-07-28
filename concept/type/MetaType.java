@@ -27,9 +27,9 @@ import grakn.client.concept.type.impl.MetaTypeImpl;
 import javax.annotation.CheckReturnValue;
 
 public interface MetaType<
-        SomeType extends Type<SomeType, SomeThing>,
+        SomeType extends ThingType<SomeType, SomeThing>,
         SomeThing extends Thing<SomeThing, SomeType>>
-        extends Type<SomeType, SomeThing> {
+        extends ThingType<SomeType, SomeThing> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
@@ -51,21 +51,21 @@ public interface MetaType<
     }
 
     interface Local<
-            SomeType extends Type<SomeType, SomeThing>,
+            SomeType extends ThingType<SomeType, SomeThing>,
             SomeThing extends Thing<SomeThing, SomeType>>
-            extends Type.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
+            extends ThingType.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
     }
 
     /**
      * Type Class of a MetaType
      */
     interface Remote<
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         extends MetaType<SomeRemoteType, SomeRemoteThing>,
-            Type.Remote<SomeRemoteType, SomeRemoteThing> {
+            ThingType.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        static <SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+        static <SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptId id) {
             return new MetaTypeImpl.Remote<>(tx, id);

@@ -26,8 +26,7 @@ import grakn.client.concept.Label;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.Role;
-import grakn.client.rpc.RequestBuilder;
+import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -36,7 +35,7 @@ public class RelationTypeImpl {
     /**
      * Client implementation of RelationType
      */
-    public static class Local extends TypeImpl.Local<RelationType, Relation> implements RelationType.Local {
+    public static class Local extends ThingTypeImpl.Local<RelationType, Relation> implements RelationType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -46,7 +45,7 @@ public class RelationTypeImpl {
     /**
      * Client implementation of RelationType
      */
-    public static class Remote extends TypeImpl.Remote<RelationType, Relation> implements RelationType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote<RelationType, Relation> implements RelationType.Remote {
 
         public Remote(GraknClient.Transaction tx, ConceptId id) {
             super(tx, id);
@@ -78,7 +77,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote plays(Role role) {
+        public final RelationType.Remote plays(RoleType role) {
             return (RelationType.Remote) super.plays(role);
         }
 
@@ -88,7 +87,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote unplay(Role role) {
+        public final RelationType.Remote unplay(RoleType role) {
             return (RelationType.Remote) super.unplay(role);
         }
 
@@ -131,7 +130,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Role.Remote role(Label role) {
+        public final RoleType.Remote role(Label role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationTypeRoleReq(ConceptProto.RelationType.Role.Req.newBuilder().setLabel(role.getValue())).build();
 
@@ -139,7 +138,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Stream<Role.Remote> roles() {
+        public final Stream<RoleType.Remote> roles() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationTypeRolesIterReq(ConceptProto.RelationType.Roles.Iter.Req.getDefaultInstance()).build();
 
@@ -147,7 +146,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Role.Remote relates(Label role) {
+        public final RoleType.Remote relates(Label role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
                                                        .setLabel(role.getValue())).build();
