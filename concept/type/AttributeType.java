@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
@@ -67,7 +67,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
 
     @Override
     default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
-        return AttributeType.Remote.of(tx, id());
+        return AttributeType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -104,7 +104,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
      */
     interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
-        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
+        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
             return new AttributeTypeImpl.Remote<>(tx, id);
         }
 

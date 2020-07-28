@@ -18,7 +18,7 @@
  */
 package grakn.client.answer;
 
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 
 import java.util.Collections;
 import java.util.Set;
@@ -29,9 +29,9 @@ import java.util.Set;
 public class ConceptSet implements Answer {
 
     // TODO: change to store Set<Concept> once we are able to construct Concept without a database look up
-    private final Set<ConceptId> set;
+    private final Set<ConceptIID> set;
 
-    public ConceptSet(Set<ConceptId> set) {
+    public ConceptSet(Set<ConceptIID> set) {
         this.set = Collections.unmodifiableSet(set);
     }
 
@@ -40,7 +40,7 @@ public class ConceptSet implements Answer {
         return false;
     }
 
-    public Set<ConceptId> set() {
+    public Set<ConceptIID> set() {
         return set;
     }
 

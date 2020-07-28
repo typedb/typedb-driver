@@ -22,7 +22,7 @@ package grakn.client.rpc;
 import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.Label;
 import grakn.client.exception.GraknClientException;
@@ -69,7 +69,7 @@ public class RequestBuilder {
         public static TransactionProto.Transaction.Req open(ByteString sessionId, GraknClient.Transaction.Type txType) {
             TransactionProto.Transaction.Open.Req openRequest = TransactionProto.Transaction.Open.Req.newBuilder()
                     .setSessionId(sessionId)
-                    .setType(TransactionProto.Transaction.Type.valueOf(txType.id()))
+                    .setType(TransactionProto.Transaction.Type.valueOf(txType.iid()))
                     .build();
 
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setOpenReq(openRequest).build();
@@ -105,7 +105,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req getConcept(ConceptId id) {
+        public static TransactionProto.Transaction.Req getConcept(ConceptIID iid) {
             return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
                     .setGetConceptReq(TransactionProto.Transaction.GetConcept.Req.newBuilder().setId(id.getValue()))
@@ -153,7 +153,7 @@ public class RequestBuilder {
 
         public static ConceptProto.Concept from(Concept<?> concept) {
             return ConceptProto.Concept.newBuilder()
-                    .setIid(concept.id().getValue())
+                    .setIid(concept.iid().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
@@ -244,7 +244,7 @@ public class RequestBuilder {
     }
 
     /**
-     * An RPC Request Builder class for Keyspace Service
+     * An RPC Request Builder class for Database Service
      */
     public static class DatabaseMessage {
 

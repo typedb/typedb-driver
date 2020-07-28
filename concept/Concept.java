@@ -59,12 +59,12 @@ public interface Concept<BaseType extends Concept<BaseType>> {
     //------------------------------------- Accessors ----------------------------------
 
     /**
-     * Get the unique ID associated with the Concept.
+     * Get the unique IID associated with the Concept.
      *
-     * @return A value the concept's unique id.
+     * @return A value the concept's unique iid.
      */
     @CheckReturnValue
-    ConceptId id();
+    ConceptIID iid();
 
     //------------------------------------- Other ---------------------------------
 
@@ -386,7 +386,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         @SuppressWarnings("unchecked")
         static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
         RemoteType of(GraknClient.Transaction tx, ConceptProto.Concept concept) {
-            ConceptId id = ConceptId.of(concept.getIid());
+            ConceptIID iid = ConceptIID.of(concept.getIid());
             switch (concept.getBaseType()) {
                 case ENTITY:
                     return (RemoteType) new EntityImpl.Remote(tx, id);

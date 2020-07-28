@@ -21,7 +21,7 @@ package grakn.client.concept.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.protocol.ConceptProto;
 
 import java.util.function.Function;
@@ -37,20 +37,20 @@ public abstract class ConceptImpl {
      */
     public abstract static class Local<SomeConcept extends Concept<SomeConcept>> implements Concept.Local<SomeConcept> {
 
-        private final ConceptId id;
+        private final ConceptIID iid;
 
         protected Local(ConceptProto.Concept concept) {
-            this.id = ConceptId.of(concept.getIid());
+            this.id = ConceptIID.of(concept.getIid());
         }
 
         @Override
-        public ConceptId id() {
-            return id;
+        public ConceptIID iid() {
+            return iid;
         }
 
         @Override
         public String toString() {
-            return this.getClass().getSimpleName() + "{id=" + id + "}";
+            return this.getClass().getSimpleName() + "{id=" + iid + "}";
         }
 
         @Override
@@ -60,14 +60,14 @@ public abstract class ConceptImpl {
 
             ConceptImpl.Local<?> that = (ConceptImpl.Local<?>) o;
 
-            return id.equals(that.id());
+            return iid.equals(that.iid());
         }
 
         @Override
         public int hashCode() {
             int h = 1;
             h *= 1000003;
-            h ^= id.hashCode();
+            h ^= iid.hashCode();
             return h;
         }
     }
@@ -81,16 +81,16 @@ public abstract class ConceptImpl {
             implements Concept.Remote<BaseType> {
 
         private final GraknClient.Transaction tx;
-        private final ConceptId id;
+        private final ConceptIID iid;
 
-        protected Remote(GraknClient.Transaction tx, ConceptId id) {
+        protected Remote(GraknClient.Transaction tx, ConceptIID iid) {
             this.tx = requireNonNull(tx, "Null tx");
-            this.id = requireNonNull(id, "Null id");
+            this.id = requireNonNull(id, "Null iid");
         }
 
         @Override
-        public ConceptId id() {
-            return id;
+        public ConceptIID iid() {
+            return iid;
         }
 
         @Override
@@ -109,7 +109,7 @@ public abstract class ConceptImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{tx=" + tx + ", id=" + id + "}";
+            return this.getClass().getCanonicalName() + "{tx=" + tx + ", iid=" + iid + "}";
         }
 
         @Override
@@ -120,7 +120,7 @@ public abstract class ConceptImpl {
             ConceptImpl.Remote<?> that = (ConceptImpl.Remote<?>) o;
 
             return (tx.equals(that.tx())) &&
-                    id.equals(that.id());
+                    iid.equals(that.iid());
         }
 
         @Override
@@ -129,7 +129,7 @@ public abstract class ConceptImpl {
             h *= 1000003;
             h ^= tx.hashCode();
             h *= 1000003;
-            h ^= id.hashCode();
+            h ^= iid.hashCode();
             return h;
         }
 
@@ -146,10 +146,10 @@ public abstract class ConceptImpl {
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-            return runMethod(id(), method);
+            return runMethod(iid(), method);
         }
 
-        protected final ConceptProto.Method.Res runMethod(ConceptId id, ConceptProto.Method.Req method) {
+        protected final ConceptProto.Method.Res runMethod(ConceptIID iid, ConceptProto.Method.Req method) {
             return tx().runConceptMethod(id, method).getConceptMethodRes().getResponse();
         }
 

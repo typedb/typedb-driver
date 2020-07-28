@@ -589,7 +589,7 @@ public class GraqlSteps {
             if (templateFiller.map().containsKey(new Variable(requiredVariable))) {
 
                 Concept concept = templateFiller.get(requiredVariable);
-                String conceptId = concept.id().toString();
+                String conceptId = concept.iid().toString();
                 builder.append(conceptId);
 
             } else {

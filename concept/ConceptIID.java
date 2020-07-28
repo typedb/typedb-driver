@@ -24,10 +24,10 @@ import javax.annotation.CheckReturnValue;
 import java.io.Serializable;
 
 /**
- * A class which represents an id of any Concept.
- * Also contains a static method for producing concept IDs from Strings.
+ * A class which represents an iid of any Concept.
+ * Also contains a static method for producing concept iids from Strings.
  */
-public class ConceptId implements Serializable {
+public class ConceptIID implements Serializable {
 
     private static final long serialVersionUID = -1723590529071614152L;
     private final ByteString value;
@@ -36,16 +36,16 @@ public class ConceptId implements Serializable {
     /**
      * A non-argument constructor for ConceptID, for serialisation of OLAP queries dependencies
      */
-    ConceptId() {
+    ConceptIID() {
         this.value = null;
     }
 
     /**
      * The default constructor for ConceptID, which requires String value provided
      *
-     * @param value String representation of the Concept ID
+     * @param value String representation of the Concept IID
      */
-    ConceptId(ByteString value) {
+    ConceptIID(ByteString value) {
         if (value == null) throw new NullPointerException("Provided ConceptId is NULL");
 
         this.value = value;
@@ -53,11 +53,11 @@ public class ConceptId implements Serializable {
 
     /**
      * @param value The string which potentially represents a Concept
-     * @return The matching concept ID
+     * @return The matching concept IID
      */
     @CheckReturnValue
-    public static ConceptId of(ByteString value) {
-        return new ConceptId(value);
+    public static ConceptIID of(ByteString value) {
+        return new ConceptIID(value);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ConceptId implements Serializable {
         if (o == this) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
 
-        ConceptId that = (ConceptId) o;
+        ConceptIID that = (ConceptIID) o;
         return (this.value.equals(that.getValue()));
     }
 

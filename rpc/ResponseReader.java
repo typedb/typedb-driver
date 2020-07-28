@@ -22,7 +22,7 @@ package grakn.client.rpc;
 import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.type.Rule;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
@@ -103,16 +103,16 @@ public class ResponseReader {
     }
 
     private static ConceptList conceptList(AnswerProto.ConceptList res) {
-        return new ConceptList(res.getList().getIidsList().stream().map(ConceptId::of).collect(toList()));
+        return new ConceptList(res.getList().getIidsList().stream().map(ConceptIID::of).collect(toList()));
     }
 
     private static ConceptSet conceptSet(AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getSet().getIidsList().stream().map(ConceptId::of).collect(toSet()));
+        return new ConceptSet(res.getSet().getIidsList().stream().map(ConceptIID::of).collect(toSet()));
     }
 
     private static ConceptSetMeasure conceptSetMeasure(AnswerProto.ConceptSetMeasure res) {
         return new ConceptSetMeasure(
-                res.getSet().getIidsList().stream().map(ConceptId::of).collect(toSet()),
+                res.getSet().getIidsList().stream().map(ConceptIID::of).collect(toSet()),
                 number(res.getMeasurement())
         );
     }

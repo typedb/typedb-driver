@@ -21,7 +21,7 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.type.Type;
@@ -57,8 +57,8 @@ public abstract class TypeImpl {
             extends ConceptImpl.Remote<BaseType>
             implements Type.Remote<BaseType> {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         public final Type.Remote<BaseType> sup(Type<?> type) {

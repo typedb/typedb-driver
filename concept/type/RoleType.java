@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 
@@ -44,7 +44,7 @@ public interface RoleType extends Type<RoleType> {
 
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return RoleType.Remote.of(tx, id());
+        return RoleType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -64,8 +64,8 @@ public interface RoleType extends Type<RoleType> {
      */
     interface Remote extends Type.Remote<RoleType>, RoleType {
 
-        static RoleType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RoleTypeImpl.Remote(tx, id);
+        static RoleType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new RoleTypeImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------

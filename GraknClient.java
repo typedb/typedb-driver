@@ -36,7 +36,7 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
@@ -159,20 +159,20 @@ public class GraknClient implements AutoCloseable {
         protected ManagedChannel channel;
         private String username; // TODO: Do we need to save this? It's not used.
         private String password; // TODO: Do we need to save this? It's not used.
-        protected String keyspace;
+        protected String database;
         protected GraknBlockingStub sessionStub;
         protected ByteString sessionId;
         protected boolean isOpen;
 
-        private Session(ManagedChannel channel, String username, String password, String keyspace, SessionType type) {
+        private Session(ManagedChannel channel, String username, String password, String database, SessionType type) {
             this.username = username;
             this.password = password;
-            this.keyspace = keyspace;
+            this.database = database;
             this.channel = channel;
             this.sessionStub = GraknGrpc.newBlockingStub(channel);
 
-            SessionProto.Session.Open.Req.Builder open = RequestBuilder.Session.open(keyspace).newBuilderForType();
-            open.setDatabase(keyspace);
+            SessionProto.Session.Open.Req.Builder open = RequestBuilder.Session.open(database).newBuilderForType();
+            open.setDatabase(database);
 
             switch (type) {
                 case DATA:
@@ -186,7 +186,7 @@ public class GraknClient implements AutoCloseable {
             }
 
             SessionProto.Session.Open.Res response = sessionStub.sessionOpen(open.build());
-            sessionId = response.getSessionId();
+            sessionId = response.getSessionIid();
             isOpen = true;
         }
 
@@ -208,8 +208,8 @@ public class GraknClient implements AutoCloseable {
             isOpen = false;
         }
 
-        public Database keyspace() {
-            return Database.of(keyspace);
+        public Database database() {
+            return Database.of(database);
         }
     }
 
@@ -249,7 +249,7 @@ public class GraknClient implements AutoCloseable {
                 this.type = type;
             }
 
-            public int id() {
+            public int iid() {
                 return type;
             }
 
@@ -290,8 +290,8 @@ public class GraknClient implements AutoCloseable {
             return session;
         }
 
-        public Database keyspace() {
-            return session.keyspace();
+        public Database database() {
+            return session.database();
         }
 
         public QueryFuture<List<ConceptMap>> execute(GraqlDefine query) {
@@ -724,7 +724,7 @@ public class GraknClient implements AutoCloseable {
         }
 
         @Nullable
-        public Concept.Remote<?> getConcept(ConceptId id) {
+        public Concept.Remote<?> getConcept(ConceptIID iid) {
             TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getConcept(id));
             switch (response.getGetConceptRes().getResCase()) {
                 case NULL:
@@ -769,7 +769,7 @@ public class GraknClient implements AutoCloseable {
                     .getPutRuleRes().getRule()).asRule();
         }
 
-        public TransactionProto.Transaction.Res runConceptMethod(ConceptId id, ConceptProto.Method.Req method) {
+        public TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method) {
             TransactionProto.Transaction.ConceptMethod.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Req.newBuilder()
                     .setIid(id.getValue()).setMethod(method).build();
             TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodReq(conceptMethod).build();
@@ -777,7 +777,7 @@ public class GraknClient implements AutoCloseable {
             return sendAndReceiveOrThrow(request);
         }
 
-        public <T> Stream<T> iterateConceptMethod(ConceptId id, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
+        public <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
             TransactionProto.Transaction.ConceptMethod.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Iter.Req.newBuilder()
                     .setIid(id.getValue()).setMethod(method).build();
             TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodIterReq(conceptIterMethod).build();
@@ -1083,7 +1083,7 @@ public class GraknClient implements AutoCloseable {
     }
 
     /**
-     * Internal class used to handle keyspace related operations
+     * Internal class used to handle database related operations
      */
 
     public static final class Databases {

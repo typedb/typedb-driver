@@ -21,7 +21,7 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
@@ -51,8 +51,8 @@ public class EntityTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override

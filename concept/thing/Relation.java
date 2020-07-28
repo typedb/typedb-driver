@@ -20,7 +20,7 @@
 package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
@@ -58,7 +58,7 @@ public interface Relation extends Thing<Relation, RelationType> {
 
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return Relation.Remote.of(tx, id());
+        return Relation.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -79,8 +79,8 @@ public interface Relation extends Thing<Relation, RelationType> {
      */
     interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
 
-        static Relation.Remote of (GraknClient.Transaction tx, ConceptId id) {
-            return new RelationImpl.Remote(tx, id);
+        static Relation.Remote of (GraknClient.Transaction tx, ConceptIID iid) {
+            return new RelationImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------

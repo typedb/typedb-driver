@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.impl.EntityTypeImpl;
@@ -46,7 +46,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
     @CheckReturnValue
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return EntityType.Remote.of(tx, id());
+        return EntityType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -66,8 +66,8 @@ public interface EntityType extends ThingType<EntityType, Entity> {
      */
     interface Remote extends ThingType.Remote<EntityType, Entity>, EntityType {
 
-        static EntityType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new EntityTypeImpl.Remote(tx, id);
+        static EntityType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new EntityTypeImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
