@@ -21,13 +21,13 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.Role;
-import grakn.protocol.session.ConceptProto;
+import grakn.client.concept.type.RoleType;
+import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
@@ -37,7 +37,7 @@ public class EntityTypeImpl {
      * TODO: This class is not defined in Concept API, and at server side implementation.
      * TODO: we should remove this class, or implement properly on server side.
      */
-    public static class Local extends TypeImpl.Local<EntityType, Entity> implements EntityType.Local {
+    public static class Local extends ThingTypeImpl.Local<EntityType, Entity> implements EntityType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -49,15 +49,10 @@ public class EntityTypeImpl {
      * TODO: This class is not defined in Concept API, and at server side implementation.
      * TODO: we should remove this class, or implement properly on server side.
      */
-    public static class Remote extends TypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
-        }
-
-        @Override
-        public final EntityType.Remote key(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.key(attributeType);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override
@@ -66,13 +61,28 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote plays(Role role) {
-            return (EntityType.Remote) super.plays(role);
+        public final EntityType.Remote has(AttributeType<?> attributeType, boolean isKey) {
+            return (EntityType.Remote) super.has(attributeType, isKey);
         }
 
         @Override
-        public final EntityType.Remote unkey(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.unkey(attributeType);
+        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (EntityType.Remote) super.has(attributeType, overriddenType);
+        }
+
+        @Override
+        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (EntityType.Remote) super.has(attributeType, overriddenType, isKey);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return super.attributes(keysOnly);
+        }
+
+        @Override
+        public final EntityType.Remote plays(RoleType role) {
+            return (EntityType.Remote) super.plays(role);
         }
 
         @Override
@@ -81,7 +91,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote unplay(Role role) {
+        public final EntityType.Remote unplay(RoleType role) {
             return (EntityType.Remote) super.unplay(role);
         }
 
@@ -115,7 +125,7 @@ public class EntityTypeImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(runMethod(method).getEntityTypeCreateRes().getEntity(), tx());
+            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity());
         }
 
         @Override

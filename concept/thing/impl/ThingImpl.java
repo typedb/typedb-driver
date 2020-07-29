@@ -21,16 +21,16 @@ package grakn.client.concept.thing.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.ThingType;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public abstract class ThingImpl {
      */
     public abstract static class Local<
             SomeThing extends Thing<SomeThing, SomeType>,
-            SomeType extends Type<SomeType, SomeThing>>
+            SomeType extends ThingType<SomeType, SomeThing>>
             extends ConceptImpl.Local<SomeThing>
             implements Thing.Local<SomeThing, SomeType> {
 
@@ -54,7 +54,7 @@ public abstract class ThingImpl {
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
-            this.type = Concept.Local.of(concept.getTypeRes().getType());
+            this.type = Concept.Local.of(concept.getTypeRes().getThingType());
             this.inferred = concept.getInferredRes().getInferred();
         }
 
@@ -76,20 +76,20 @@ public abstract class ThingImpl {
          */
         public abstract static class Remote<
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
-                SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>>
+                SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
                 extends ConceptImpl.Remote<SomeRemoteThing>
                 implements Thing.Remote<SomeRemoteThing, SomeRemoteType> {
 
-            public Remote(GraknClient.Transaction tx, ConceptId id) {
-                super(tx, id);
+            public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+                super(tx, iid);
             }
 
             @Override
-            public Type.Remote<SomeRemoteType, SomeRemoteThing> type() {
+            public ThingType.Remote<SomeRemoteType, SomeRemoteThing> type() {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
 
-                return Concept.Remote.of(runMethod(method).getThingTypeRes().getType(), tx());
+                return Concept.Remote.of(tx(), runMethod(method).getThingTypeRes().getThingType());
             }
 
             @Override
@@ -98,26 +98,6 @@ public abstract class ThingImpl {
                         .setThingIsInferredReq(ConceptProto.Thing.IsInferred.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getThingIsInferredRes().getInferred();
-            }
-
-            @Override
-            public final Stream<Attribute.Remote<?>> keys(AttributeType<?>... attributeTypes) {
-                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingKeysIterReq(ConceptProto.Thing.Keys.Iter.Req.newBuilder()
-                                                 .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
-
-                return conceptStream(method, res -> res.getThingKeysIterRes().getAttribute()).map(Concept.Remote::asAttribute);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public final <T> Stream<Attribute.Remote<T>> keys(AttributeType<T> attributeType) {
-                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingKeysIterReq(ConceptProto.Thing.Keys.Iter.Req.newBuilder()
-                                .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
-
-                return conceptStream(method, res -> res.getThingKeysIterRes().getAttribute()).map(Concept.Remote::asAttribute)
-                        .map(a -> (Attribute.Remote<T>) a);
             }
 
             @Override
@@ -141,7 +121,14 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Relation.Remote> relations(Role... roles) {
+            public final Stream<Attribute.Remote<?>> attributes(boolean keysOnly) {
+                ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                        .setThingAttributesIterReq(ConceptProto.Thing.Attributes.Iter.Req.newBuilder().setKeysOnly(keysOnly)).build();
+                return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute);
+            }
+
+            @Override
+            public final Stream<Relation.Remote> relations(RoleType... roles) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRelationsIterReq(ConceptProto.Thing.Relations.Iter.Req.newBuilder()
                                                       .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
@@ -150,7 +137,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Role.Remote> roles() {
+            public final Stream<RoleType.Remote> roles() {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRolesIterReq(ConceptProto.Thing.Roles.Iter.Req.getDefaultInstance()).build();
 

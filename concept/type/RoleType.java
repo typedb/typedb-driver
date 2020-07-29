@@ -20,10 +20,9 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.type.impl.RoleImpl;
+import grakn.client.concept.type.impl.RoleTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -33,19 +32,19 @@ import java.util.stream.Stream;
  * This ontological element defines the Role which make up a RelationType.
  * It behaves similarly to SchemaConcept when relating to other types.
  */
-public interface Role extends SchemaConcept<Role> {
+public interface RoleType extends Type<RoleType> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Role asRole() {
+    default RoleType asRole() {
         return this;
     }
 
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return Role.Remote.of(tx, id());
+        return RoleType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -55,7 +54,7 @@ public interface Role extends SchemaConcept<Role> {
         return true;
     }
 
-    interface Local extends SchemaConcept.Local<Role>, Role {
+    interface Local extends Type.Local<RoleType>, RoleType {
     }
 
     /**
@@ -63,10 +62,10 @@ public interface Role extends SchemaConcept<Role> {
      * This ontological element defines the Role which make up a RelationType.
      * It behaves similarly to SchemaConcept when relating to other types.
      */
-    interface Remote extends SchemaConcept.Remote<Role>, Role {
+    interface Remote extends Type.Remote<RoleType>, RoleType {
 
-        static Role.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new RoleImpl.Remote(tx, id);
+        static RoleType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new RoleTypeImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
@@ -77,7 +76,7 @@ public interface Role extends SchemaConcept<Role> {
          * @param label The new Label.
          * @return The Concept itself
          */
-        Role.Remote label(Label label);
+        RoleType.Remote label(Label label);
 
         /**
          * Sets the super of this Role.
@@ -85,7 +84,7 @@ public interface Role extends SchemaConcept<Role> {
          * @param type The super of this Role
          * @return The Role itself
          */
-        Role.Remote sup(Role type);
+        RoleType.Remote sup(RoleType type);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -93,7 +92,7 @@ public interface Role extends SchemaConcept<Role> {
          * @return All the super-types of this this Role
          */
         @Override
-        Stream<Role.Remote> sups();
+        Stream<RoleType.Remote> sups();
 
         /**
          * Returns the sub of this Role.
@@ -101,7 +100,7 @@ public interface Role extends SchemaConcept<Role> {
          * @return The sub of this Role
          */
         @Override
-        Stream<Role.Remote> subs();
+        Stream<RoleType.Remote> subs();
 
         /**
          * Returns the RelationTypes that this Role takes part in.
@@ -116,16 +115,16 @@ public interface Role extends SchemaConcept<Role> {
          * Returns a collection of the Types that can play this Role.
          *
          * @return A list of all the Types which can play this Role.
-         * @see Type.Remote
+         * @see ThingType.Remote
          */
         @CheckReturnValue
-        Stream<Type.Remote<?, ?>> players();
+        Stream<ThingType.Remote<?, ?>> players();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override
-        default Role.Remote asRole() {
+        default RoleType.Remote asRole() {
             return this;
         }
 

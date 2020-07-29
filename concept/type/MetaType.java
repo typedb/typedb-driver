@@ -20,16 +20,16 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.impl.MetaTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 
 public interface MetaType<
-        SomeType extends Type<SomeType, SomeThing>,
+        SomeType extends ThingType<SomeType, SomeThing>,
         SomeThing extends Thing<SomeThing, SomeType>>
-        extends Type<SomeType, SomeThing> {
+        extends ThingType<SomeType, SomeThing> {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
@@ -40,7 +40,7 @@ public interface MetaType<
 
     @Override
     default MetaType.Remote<SomeType, SomeThing> asRemote(GraknClient.Transaction tx) {
-        return MetaType.Remote.of(tx, id());
+        return MetaType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -51,24 +51,24 @@ public interface MetaType<
     }
 
     interface Local<
-            SomeType extends Type<SomeType, SomeThing>,
+            SomeType extends ThingType<SomeType, SomeThing>,
             SomeThing extends Thing<SomeThing, SomeType>>
-            extends Type.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
+            extends ThingType.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
     }
 
     /**
      * Type Class of a MetaType
      */
     interface Remote<
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
         extends MetaType<SomeRemoteType, SomeRemoteThing>,
-            Type.Remote<SomeRemoteType, SomeRemoteThing> {
+            ThingType.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        static <SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+        static <SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-        MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptId id) {
-            return new MetaTypeImpl.Remote<>(tx, id);
+        MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new MetaTypeImpl.Remote<>(tx, iid);
         }
 
         @Override

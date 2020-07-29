@@ -67,7 +67,7 @@ public class KeyspaceSteps {
     @When("connection delete keyspace(s):")
     public void connection_delete_keyspaces(List<String> names) {
         for (String keyspaceName : names) {
-            client.keyspaces().delete(keyspaceName);
+            client.databases().delete(keyspaceName);
         }
     }
 
@@ -80,7 +80,7 @@ public class KeyspaceSteps {
         int i = 0;
         for (String name : names) {
             deletions[i++] = CompletableFuture.supplyAsync(
-                    () -> { client.keyspaces().delete(name); return null; }, threadPool
+                    () -> { client.databases().delete(name); return null; }, threadPool
             );
         }
 
@@ -89,12 +89,12 @@ public class KeyspaceSteps {
 
     @Then("connection has keyspace(s):")
     public void connection_has_keyspaces(List<String> names) {
-        assertEquals(set(names), set(client.keyspaces().retrieve()));
+        assertEquals(set(names), set(client.databases().all()));
     }
 
     @Then("connection does not have keyspace(s):")
     public void connection_does_not_have_keyspaces(List<String> names) {
-        Set<String> keyspaces = set(client.keyspaces().retrieve());
+        Set<String> keyspaces = set(client.databases().all());
         for (String keyspaceName : names) {
             assertFalse(keyspaces.contains(keyspaceName));
         }

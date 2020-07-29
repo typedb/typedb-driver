@@ -22,10 +22,10 @@ package grakn.client.rpc;
 import grakn.client.GraknClient;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
-import grakn.client.concept.Rule;
-import grakn.protocol.session.AnswerProto;
-import grakn.protocol.session.ConceptProto;
+import grakn.client.concept.ConceptIID;
+import grakn.client.concept.type.Rule;
+import grakn.protocol.AnswerProto;
+import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 import graql.lang.statement.Variable;
@@ -81,13 +81,13 @@ public class ResponseReader {
         List<ConceptMap> answers = new ArrayList<>();
         res.getExplanationList().forEach(explanationMap -> answers.add(conceptMap(explanationMap, tx)));
         ConceptProto.Concept ruleProto = res.getRule();
-        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(ruleProto, tx).asRule() : null;
+        Rule.Remote rule = res.hasRule() ? Concept.Remote.of(tx, ruleProto).asRule() : null;
         return new Explanation(answers, rule);
     }
 
     private static AnswerGroup<?> answerGroup(AnswerProto.AnswerGroup res, GraknClient.Transaction tx) {
         return new AnswerGroup<>(
-                Concept.Remote.of(res.getOwner(), tx),
+                Concept.Remote.of(tx, res.getOwner()),
                 res.getAnswersList().stream().map(answer -> answer(answer, tx)).collect(toList())
         );
     }
@@ -103,16 +103,16 @@ public class ResponseReader {
     }
 
     private static ConceptList conceptList(AnswerProto.ConceptList res) {
-        return new ConceptList(res.getList().getIdsList().stream().map(ConceptId::of).collect(toList()));
+        return new ConceptList(res.getIidsList().stream().map(ConceptIID::of).collect(toList()));
     }
 
     private static ConceptSet conceptSet(AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getSet().getIdsList().stream().map(ConceptId::of).collect(toSet()));
+        return new ConceptSet(res.getIidsList().stream().map(ConceptIID::of).collect(toSet()));
     }
 
     private static ConceptSetMeasure conceptSetMeasure(AnswerProto.ConceptSetMeasure res) {
         return new ConceptSetMeasure(
-                res.getSet().getIdsList().stream().map(ConceptId::of).collect(toSet()),
+                res.getIidsList().stream().map(ConceptIID::of).collect(toSet()),
                 number(res.getMeasurement())
         );
     }

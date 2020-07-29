@@ -21,10 +21,10 @@ package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.type.Role;
-import grakn.client.concept.Rule;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.ThingType;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * Instances can relate to one another via Relation
  */
 public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
-                       SomeType extends Type<SomeType, SomeThing>>
+                       SomeType extends ThingType<SomeType, SomeThing>>
         extends Concept<SomeThing> {
     //------------------------------------- Accessors ----------------------------------
 
@@ -46,7 +46,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    Type<SomeType, SomeThing> type();
+    ThingType<SomeType, SomeThing> type();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -76,7 +76,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
 
     interface Local<
             SomeThing extends Thing<SomeThing, SomeType>,
-            SomeType extends Type<SomeType, SomeThing>>
+            SomeType extends ThingType<SomeType, SomeThing>>
             extends Concept.Local<SomeThing>, Thing<SomeThing, SomeType> {
     }
 
@@ -88,7 +88,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      */
     interface Remote<
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>>
+            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
             extends Concept.Remote<SomeRemoteThing>, Thing<SomeRemoteThing, SomeRemoteType> {
         //------------------------------------- Accessors ----------------------------------
 
@@ -99,7 +99,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         @Override
         @CheckReturnValue
-        Type.Remote<SomeRemoteType, SomeRemoteThing> type();
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> type();
 
         /**
          * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
@@ -107,20 +107,20 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          *
          * @param roles An optional parameter which allows you to specify the role of the relations you wish to retrieve.
          * @return A set of Relations which the concept instance takes part in, optionally constrained by the Role Type.
-         * @see Role.Remote
+         * @see RoleType.Remote
          * @see Relation.Remote
          */
         @CheckReturnValue
-        Stream<Relation.Remote> relations(Role... roles);
+        Stream<Relation.Remote> relations(RoleType... roles);
 
         /**
          * Determine the Roles that this Thing is currently playing.
          *
          * @return A set of all the Roles which this Thing is currently playing.
-         * @see Role.Remote
+         * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<Role.Remote> roles();
+        Stream<RoleType.Remote> roles();
 
         /**
          * Creates a Relation from this Thing to the provided Attribute.
@@ -136,27 +136,27 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * Retrieves a collection of Attribute attached to this Thing
          *
          * @param attributeTypes AttributeTypes of the Attributes attached to this entity
-         * @return A collection of AttributeTypes attached to this Thing.
+         * @return A collection of Attributes attached to this Thing.
          * @see Attribute.Remote
          */
         @CheckReturnValue
         Stream<Attribute.Remote<?>> attributes(AttributeType<?>... attributeTypes);
-
         @CheckReturnValue
         <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType);
 
         /**
-         * Retrieves a collection of Attribute attached to this Thing as a key
+         * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
          *
-         * @param attributeTypes AttributeTypes of the Attributes attached to this entity
-         * @return A collection of AttributeTypes attached to this Thing.
+         * @param keysOnly If true, only fetch attributes which are keys.
+         * @return A collection of Attributes attached to this Thing.
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> keys(AttributeType<?>... attributeTypes);
-
+        Stream<Attribute.Remote<?>> attributes(boolean keysOnly);
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> keys(AttributeType<T> attributeType);
+        default Stream<Attribute.Remote<?>> attributes() {
+            return attributes(false);
+        }
 
         /**
          * Removes the provided Attribute from this Thing
