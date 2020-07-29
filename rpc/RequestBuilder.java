@@ -158,25 +158,25 @@ public class RequestBuilder {
                     .build();
         }
 
-        private static ConceptProto.Concept.BASE_TYPE getBaseType(Concept<?> concept) {
+        private static ConceptProto.Concept.SCHEMA getBaseType(Concept<?> concept) {
             if (concept.isEntityType()) {
-                return ConceptProto.Concept.BASE_TYPE.ENTITY_TYPE;
+                return ConceptProto.Concept.SCHEMA.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
-                return ConceptProto.Concept.BASE_TYPE.RELATION_TYPE;
+                return ConceptProto.Concept.SCHEMA.RELATION_TYPE;
             } else if (concept.isAttributeType()) {
-                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE_TYPE;
+                return ConceptProto.Concept.SCHEMA.ATTRIBUTE_TYPE;
             } else if (concept.isEntity()) {
-                return ConceptProto.Concept.BASE_TYPE.ENTITY;
+                return ConceptProto.Concept.SCHEMA.ENTITY;
             } else if (concept.isRelation()) {
-                return ConceptProto.Concept.BASE_TYPE.RELATION;
+                return ConceptProto.Concept.SCHEMA.RELATION;
             } else if (concept.isAttribute()) {
-                return ConceptProto.Concept.BASE_TYPE.ATTRIBUTE;
+                return ConceptProto.Concept.SCHEMA.ATTRIBUTE;
             } else if (concept.isRole()) {
-                return ConceptProto.Concept.BASE_TYPE.ROLE;
+                return ConceptProto.Concept.SCHEMA.ROLE;
             } else if (concept.isRule()) {
-                return ConceptProto.Concept.BASE_TYPE.RULE;
+                return ConceptProto.Concept.SCHEMA.RULE;
             } else if (concept.isType()) {
-                return ConceptProto.Concept.BASE_TYPE.META_TYPE;
+                return ConceptProto.Concept.SCHEMA.META_TYPE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised concept " + concept);
             }
