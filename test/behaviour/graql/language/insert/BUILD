@@ -73,6 +73,7 @@ grakn_test(
     ],
     type = "grakn-kgms",
     size = "enormous",
+    tags = ["manual"]
 )
 
 
