@@ -86,6 +86,7 @@ grakn_test(
     ],
     type = "grakn-kgms",
     size = "medium",
+    tags = ["manual"]
 )
 
 checkstyle_test(

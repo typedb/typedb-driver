@@ -46,6 +46,7 @@ grakn_test(
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",
+    tags = ["manual"]
 )
 
 checkstyle_test(

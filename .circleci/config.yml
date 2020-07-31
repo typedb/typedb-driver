@@ -69,7 +69,7 @@ jobs:
       - run-bazel:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
-  test-integration-concept:
+  test-integration:
     machine: 
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
@@ -77,9 +77,9 @@ jobs:
       - install-bazel
       - checkout
       - run-bazel:
-          command: bazel test //test/integration/concept:concept-it --test_output=errors
+          command: bazel test //test/integration/... --test_output=errors
 
-  test-integration-answer:
+  test-behaviour:
     machine: 
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
@@ -87,101 +87,7 @@ jobs:
       - install-bazel
       - checkout
       - run-bazel:
-          command: bazel test //test/integration/answer:answer-it --test_output=errors
-
-  test-integration-tracing:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/integration/tracing:tracing-it --test_output=errors
-
-  test-behaviour-connection:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
-
-  test-behaviour-graql-define:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
-
-  test-behaviour-graql-delete:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/delete:test-core --test_output=errors
-
-  test-behaviour-graql-get:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/get:test-core --test_output=errors
-
-  test-behaviour-graql-insert:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
-
-  test-behaviour-graql-match:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
-
-  test-behaviour-graql-undefine:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
-
-  test-behaviour-graql-reasoner:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/reasoner/explanation:test-core --test_output=errors
+          command: bazel test //test/behaviour/... --test_output=errors
 
   deploy-maven-snapshot:
     machine: 
@@ -309,50 +215,14 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-concept:
+      - test-integration:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-answer:
+      - test-behaviour:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-tracing:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-connection:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-define:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-delete:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-get:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-insert:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-match:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-undefine:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-#      - test-behaviour-graql-reasoner:
-#          filters:
-#            branches:
-#              ignore: client-java-release-branch
       - test-assembly-query:
           filters:
             branches:
@@ -365,17 +235,8 @@ workflows:
             - build
             - build-checkstyle
             - test-assembly-query
-            - test-integration-concept
-            - test-integration-answer
-            - test-integration-tracing
-            - test-behaviour-connection
-            - test-behaviour-graql-define
-            - test-behaviour-graql-delete
-            - test-behaviour-graql-get
-            - test-behaviour-graql-insert
-            - test-behaviour-graql-match
-            - test-behaviour-graql-undefine
-#            - test-behaviour-graql-reasoner
+            - test-integration
+            - test-behaviour
       - test-deployment-maven:
           filters:
             branches:

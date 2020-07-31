@@ -70,6 +70,7 @@ grakn_test(
     ],
     type = "grakn-kgms",
     size = "large",
+    tags = ["manual"]
 )
 
 
