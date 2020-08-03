@@ -54,7 +54,7 @@ grakn_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection/keyspace:steps",
+        "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
     ],
     data = [
@@ -64,39 +64,11 @@ grakn_test(
     size = "large",
 )
 
-# To run this test, you need to provide environment variables:
-# --test_env GRAKN_KGMS_ADDRESS=***
-# --test_env GRAKN_KGMS_USERNAME=****
-# --test_env GRAKN_KGMS_PASSWORD=****
-grakn_test(
-    name = "test-kgms",
-    srcs = [
-        "TransactionTest.java",
-    ],
-    test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
-    deps = [
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        ":steps",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/connection/keyspace:steps",
-        "//test/behaviour/connection/session:steps",
-    ],
-    data = [
-        "@graknlabs_verification//behaviour/connection:transaction.feature",
-    ],
-    type = "grakn-kgms",
-    size = "large",
-)
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":steps",
         ":test-core",
-        ":test-kgms",
-    ],
+],
     license_type = "apache"
 )

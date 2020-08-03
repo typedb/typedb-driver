@@ -1,5 +1,4 @@
 #
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,34 +16,54 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-#
 
-
-package(default_visibility = ["//visibility:__subpackages__"])
-
+package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
-grakn_test(
-    name = "answer-it",
-    srcs = ["AnswerIT.java"],
-    test_class = "grakn.client.test.integration.answer.AnswerIT",
-    deps = [
-        # Grakn Core dependencies
-        "//:client-java",
-
-        # Grakn Labs dependencies
-        "@graknlabs_graql//java:graql",
-
-        # Maven External dependencies
-        "@maven//:org_hamcrest_hamcrest_library",
+java_library(
+    name = "steps",
+    srcs = [
+        "DatabaseSteps.java"
     ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    deps = [
+        # Internal Package Dependencies
+        "//test/behaviour/connection:steps",
+
+        # Internal Repository Dependencies
+        "@graknlabs_common//:common",
+
+        # External Maven Dependencies
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ]
 )
 
+grakn_test(
+    name = "test-core",
+    srcs = [
+        "DatabaseTest.java"
+    ],
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
+    deps = [
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
+    ],
+    runtime_deps = [
+        ":steps"
+    ],
+    data = [
+        "@graknlabs_verification//behaviour/connection:database.feature",
+    ],
+    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    size = "large",
+)
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":answer-it"],
-    license_type = "apache",
+    targets = [
+        ":steps",
+        ":test-core",
+    ],
+    license_type = "apache"
 )

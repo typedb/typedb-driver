@@ -7,7 +7,7 @@
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-graql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/graql)
 
 ## Client Architecture
-To learn about the mechanism that a Grakn Client uses to set up communication with keyspaces running on the Grakn Server, refer to [Grakn > Client API > Overview](http://dev.grakn.ai/docs/client-api/overview).
+To learn about the mechanism that a Grakn Client uses to set up communication with databases running on the Grakn Server, refer to [Grakn > Client API > Overview](http://dev.grakn.ai/docs/client-api/overview).
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using Client Java, refer to [Grakn > Client API > Java > API Reference](http://dev.grakn.ai/docs/client-api/java#api-reference).

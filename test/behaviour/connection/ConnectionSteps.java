@@ -20,7 +20,7 @@
 package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
-import grakn.common.test.server.GraknProperties;
+import grakn.common.test.server.GraknSetup;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 
@@ -36,7 +36,6 @@ import java.util.concurrent.Executors;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ConnectionSteps {
 
@@ -50,45 +49,24 @@ public class ConnectionSteps {
     public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
     public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
-    private static GraknClient connect_to_grakn_core() {
-        System.out.println("Establishing Connection to Grakn Core");
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        assertNotNull(address);
-
-        System.out.println("Connection to Grakn Core established");
-        return new GraknClient(address);
-    }
-
-    private static GraknClient connect_to_grakn_kgms() {
-        System.out.println("Establishing Connection to Grakn");
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        String username = System.getProperty(GraknProperties.GRAKN_USERNAME);
-        String password = System.getProperty(GraknProperties.GRAKN_PASSWORD);
-        assertNotNull(address);
-        assertNotNull(username);
-        assertNotNull(password);
-
-        System.out.println("Connection to Grakn KGMS established");
-        return new GraknClient(address, username, password);
-    }
-
     private static synchronized void connect_to_grakn() {
         if (!isNull(client)) return;
 
         System.out.println("Connecting to Grakn ...");
 
-        String graknType = System.getProperty(GraknProperties.GRAKN_TYPE);
-        assertNotNull(graknType);
+        System.out.println("Establishing Connection to Grakn Core");
+        String address = GraknSetup.instance().address();
+        assertNotNull(address);
 
-        if (graknType.equals(GraknProperties.GRAKN_CORE)) {
-            client = connect_to_grakn_core();
-        } else if (graknType.equals(GraknProperties.GRAKN_KGMS)) {
-            client = connect_to_grakn_kgms();
-        } else {
-            fail("Invalid type of Grakn database: ");
-        }
+        client = new GraknClient(address);
+
+        System.out.println("Connection to Grakn Core established");
 
         assertNotNull(client);
+    }
+
+    public static GraknClient.Transaction tx() {
+        return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
     @Given("connection has been opened")
@@ -101,15 +79,15 @@ public class ConnectionSteps {
         assertTrue(client.isOpen());
     }
 
-    @Given("connection delete all keyspaces")
-    public void connection_delete_all_keyspaces() {
-        for (String keyspace : client.databases().all()) {
-            client.databases().delete(keyspace);
+    @Given("connection delete all databases")
+    public void connection_delete_all_databases() {
+        for (String database : client.databases().all()) {
+            client.databases().delete(database);
         }
     }
 
-    @Given("connection does not have any keyspace")
-    public void connection_does_not_have_any_keyspace() {
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
         assertTrue(client.databases().all().isEmpty());
     }
 

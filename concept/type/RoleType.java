@@ -89,6 +89,13 @@ public interface RoleType extends Type<RoleType> {
         //------------------------------------- Accessors ----------------------------------
 
         /**
+         * Get the label of this role scoped to its relation.
+         *
+         * @return The scoped label
+         */
+        Label scopedLabel();
+
+        /**
          * @return All the super-types of this this Role
          */
         @Override

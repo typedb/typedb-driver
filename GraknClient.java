@@ -634,6 +634,15 @@ public class GraknClient implements AutoCloseable {
             close();
         }
 
+        public ThingType.Remote<?, ?> getRootType() {
+            grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of("thing")); // TODO do this properly
+            if (concept instanceof ThingType.Remote) {
+                return (ThingType.Remote<?, ?>) concept;
+            } else {
+                return null;
+            }
+        }
+
         @Nullable
         public ThingType.Remote<?, ?> getThingType(Label label) {
             grakn.client.concept.type.Type.Remote<?> concept = getType(label);
@@ -666,10 +675,10 @@ public class GraknClient implements AutoCloseable {
 
         @SuppressWarnings("unchecked")
         @Nullable
-        public <V> AttributeType.Remote<V> getAttributeType(String label) {
+        public AttributeType.Remote<?> getAttributeType(String label) {
             grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
             if (concept instanceof AttributeType.Remote) {
-                return (AttributeType.Remote<V>) concept;
+                return (AttributeType.Remote<?>) concept;
             } else {
                 return null;
             }

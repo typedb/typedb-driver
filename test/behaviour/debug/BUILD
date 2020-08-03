@@ -29,7 +29,7 @@ grakn_test(
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
         # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
+        # e.g. "//test/behaviour/connection/steps:connection-database",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_java",
@@ -46,6 +46,7 @@ grakn_test(
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",
+    tags = ["manual"]
 )
 
 checkstyle_test(

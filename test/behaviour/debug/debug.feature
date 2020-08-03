@@ -2,7 +2,7 @@ Feature: Debugging Space
 
   Background:
     Given connection has been opened
-    Given connection delete all keyspaces
+    Given connection delete all databases
     Given the integrity is validated
 
   # Paste any scenarios below for debugging.

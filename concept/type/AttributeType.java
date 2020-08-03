@@ -29,6 +29,7 @@ import grakn.client.concept.type.impl.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<D>> {
@@ -176,7 +177,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @param value A value for the Attribute which is unique to its type
          * @return new or existing Attribute of this type with the provided value.
          */
-        Attribute.Remote<D> create(D value);
+        Attribute.Remote<D> put(D value);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -204,7 +205,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          */
         @CheckReturnValue
         @Nullable
-        Attribute.Remote<D> attribute(D value);
+        Attribute.Remote<D> get(D value);
 
         /**
          * Returns a collection of super-types of this AttributeType.

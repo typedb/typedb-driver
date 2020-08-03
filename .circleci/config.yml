@@ -24,7 +24,11 @@ commands:
       - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/master/tool/bazelinstall/linux.sh
       - run: bash ./linux.sh && rm ./linux.sh
       - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/master/tool/bazelinstall/rbe.sh
-      - run: bash ./rbe.sh && rm ./rbe.sh          
+      - run: bash ./rbe.sh && rm ./rbe.sh
+
+  install-artifact-credentials:
+    steps:
+      - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
 
   run-bazel:
     parameters:
@@ -47,8 +51,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run-bazel:
           command: bazel build //...
       - run:
@@ -63,125 +68,34 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
       - run-bazel:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
-  test-integration-concept:
+  test-integration:
     machine: 
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run-bazel:
-          command: bazel test //test/integration/concept:concept-it --test_output=errors
+          command: bazel test //test/integration/... --test_output=errors
 
-  test-integration-answer:
+  test-behaviour:
     machine: 
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
-      - run-bazel:
-          command: bazel test //test/integration/answer:answer-it --test_output=errors
-
-  test-integration-tracing:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
       - install-bazel
-      - checkout
+      - install-artifact-credentials
       - run-bazel:
-          command: bazel test //test/integration/tracing:tracing-it --test_output=errors
-
-  test-behaviour-connection:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/keyspace:test-core --test_output=errors
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/session:test-core --test_output=errors
-      - run-bazel:
-          command: bazel test //test/behaviour/connection/transaction:test-core --test_output=errors
-
-  test-behaviour-graql-define:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/define:test-core --test_output=errors
-
-  test-behaviour-graql-delete:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/delete:test-core --test_output=errors
-
-  test-behaviour-graql-get:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/get:test-core --test_output=errors
-
-  test-behaviour-graql-insert:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/insert:test-core --test_output=errors
-
-  test-behaviour-graql-match:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/match:test-core --test_output=errors
-
-  test-behaviour-graql-undefine:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/language/undefine:test-core --test_output=errors
-
-  test-behaviour-graql-reasoner:
-    machine: 
-      image: ubuntu-1604:201903-01
-    working_directory: ~/client-java
-    steps:
-      - install-bazel
-      - checkout
-      - run-bazel:
-          command: bazel test //test/behaviour/graql/reasoner/explanation:test-core --test_output=errors
+          command: bazel test //test/behaviour/... --test_output=errors
 
   deploy-maven-snapshot:
     machine: 
@@ -190,6 +104,7 @@ jobs:
     steps:
       - checkout
       - install-bazel
+      - install-artifact-credentials
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
@@ -200,8 +115,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run-bazel:
           command: bazel test //test/assembly:test-assembly-query --test_output=errors
 
@@ -212,6 +128,7 @@ jobs:
     steps:
       - checkout
       - install-bazel
+      - install-artifact-credentials
       - run-grakn
       - run: sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" test/deployment/pom.xml
       - run: cat test/deployment/pom.xml
@@ -222,8 +139,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
@@ -234,8 +152,9 @@ jobs:
     machine: 
       image: ubuntu-1604:201903-01
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
@@ -245,8 +164,9 @@ jobs:
     machine: 
       image: ubuntu-1604:201903-01
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           bazel run @graknlabs_dependencies//tool/release:validate-deps -- \
           graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_grabl_tracing
@@ -256,8 +176,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           pip install certifi
           export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
@@ -271,8 +192,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
@@ -283,8 +205,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_dependencies//tool/sync:dependencies -- \
@@ -309,50 +232,14 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-concept:
+      - test-integration:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-answer:
+      - test-behaviour:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration-tracing:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-connection:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-define:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-delete:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-get:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-insert:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-match:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-      - test-behaviour-graql-undefine:
-          filters:
-            branches:
-              ignore: client-java-release-branch
-#      - test-behaviour-graql-reasoner:
-#          filters:
-#            branches:
-#              ignore: client-java-release-branch
       - test-assembly-query:
           filters:
             branches:
@@ -365,17 +252,8 @@ workflows:
             - build
             - build-checkstyle
             - test-assembly-query
-            - test-integration-concept
-            - test-integration-answer
-            - test-integration-tracing
-            - test-behaviour-connection
-            - test-behaviour-graql-define
-            - test-behaviour-graql-delete
-            - test-behaviour-graql-get
-            - test-behaviour-graql-insert
-            - test-behaviour-graql-match
-            - test-behaviour-graql-undefine
-#            - test-behaviour-graql-reasoner
+            - test-integration
+            - test-behaviour
       - test-deployment-maven:
           filters:
             branches:
