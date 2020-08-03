@@ -25,15 +25,6 @@ java_library(
         "EntityTypeSteps.java"
     ],
     deps = [
-        # Internal Package Dependencies
-        # "//test/behaviour/connection:steps",
-
-        # Internal Repository Dependencies
-        # "@graknlabs_common//:common",
-
-        # External Maven Dependencies
-        # "@maven//:junit_junit",
-        # "@maven//:io_cucumber_cucumber_java",
     ]
 )
 

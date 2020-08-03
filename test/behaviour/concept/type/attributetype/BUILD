@@ -29,8 +29,6 @@ java_library(
         "//:client-java",
         "//test/behaviour/connection:steps",
 
-        # Internal Repository Dependencies
-        # "@graknlabs_common//:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
