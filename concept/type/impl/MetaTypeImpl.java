@@ -21,17 +21,17 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.MetaType;
-import grakn.client.concept.type.Type;
-import grakn.protocol.session.ConceptProto;
+import grakn.client.concept.type.ThingType;
+import grakn.protocol.ConceptProto;
 
 public class MetaTypeImpl {
     public static class Local<
-            SomeType extends Type<SomeType, SomeThing>,
+            SomeType extends ThingType<SomeType, SomeThing>,
             SomeThing extends Thing<SomeThing, SomeType>>
-            extends TypeImpl.Local<SomeType, SomeThing>
+            extends ThingTypeImpl.Local<SomeType, SomeThing>
             implements MetaType.Local<SomeType, SomeThing> {
 
         public Local(ConceptProto.Concept concept) {
@@ -43,13 +43,13 @@ public class MetaTypeImpl {
      * Client implementation of Type
      */
     public static class Remote<
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
+            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends TypeImpl.Remote<SomeRemoteType, SomeRemoteThing>
+            extends ThingTypeImpl.Remote<SomeRemoteType, SomeRemoteThing>
             implements MetaType.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @SuppressWarnings("unchecked")
@@ -60,8 +60,8 @@ public class MetaTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final Type.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other) {
-            return (Type.Remote<SomeRemoteType, SomeRemoteThing>) other.asType();
+        protected final ThingType.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other) {
+            return (ThingType.Remote<SomeRemoteType, SomeRemoteThing>) other.asType();
         }
 
         @Override

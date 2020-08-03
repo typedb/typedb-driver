@@ -27,10 +27,8 @@ import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.concept.Concept;
-import grakn.client.concept.Rule;
-import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.type.Rule;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Thing;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -591,7 +589,7 @@ public class GraqlSteps {
             if (templateFiller.map().containsKey(new Variable(requiredVariable))) {
 
                 Concept concept = templateFiller.get(requiredVariable);
-                String conceptId = concept.id().toString();
+                String conceptId = concept.iid().toString();
                 builder.append(conceptId);
 
             } else {
@@ -687,7 +685,7 @@ public class GraqlSteps {
         public boolean check(Concept<?> concept) {
             if(!concept.isThing()) { return false; }
 
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).keys().collect(Collectors.toSet());
+            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).attributes(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 

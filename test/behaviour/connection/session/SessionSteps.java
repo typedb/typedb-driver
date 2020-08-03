@@ -139,7 +139,7 @@ public class SessionSteps {
         Iterator<GraknClient.Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().keyspace().name());
+            assertEquals(name, sessionIter.next().database().name());
         }
     }
 
@@ -152,7 +152,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.keyspace().name()); return null;
+                assertEquals(name, session.database().name()); return null;
             });
         }
 

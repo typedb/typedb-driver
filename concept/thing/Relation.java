@@ -20,9 +20,9 @@
 package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.RelationImpl;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
 
 import javax.annotation.CheckReturnValue;
@@ -58,7 +58,7 @@ public interface Relation extends Thing<Relation, RelationType> {
 
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return Relation.Remote.of(tx, id());
+        return Relation.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -79,8 +79,8 @@ public interface Relation extends Thing<Relation, RelationType> {
      */
     interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
 
-        static Relation.Remote of (GraknClient.Transaction tx, ConceptId id) {
-            return new RelationImpl.Remote(tx, id);
+        static Relation.Remote of (GraknClient.Transaction tx, ConceptIID iid) {
+            return new RelationImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
@@ -109,10 +109,10 @@ public interface Relation extends Thing<Relation, RelationType> {
          * Retrieve a list of all Instances involved in the Relation, and the Role they play.
          *
          * @return A list of all the role types and the instances playing them in this Relation.
-         * @see Role.Remote
+         * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayersMap();
+        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersMap();
 
         /**
          * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
@@ -122,7 +122,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return a list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> rolePlayers(Role... roles);
+        Stream<Thing.Remote<?, ?>> players(RoleType... roles);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
@@ -131,7 +131,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param player The new role player.
          * @return The Relation itself.
          */
-        Relation.Remote assign(Role role, Thing<?, ?> player);
+        Relation.Remote relate(RoleType role, Thing<?, ?> player);
 
         /**
          * Removes the provided Attribute from this Relation
@@ -149,7 +149,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param role   The Role being played by the Thing
          * @param player The Thing playing the Role in this Relation
          */
-        void unassign(Role role, Thing<?, ?> player);
+        void unrelate(RoleType role, Thing<?, ?> player);
 
         //------------------------------------- Other ---------------------------------
         @Deprecated
