@@ -19,7 +19,6 @@ package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.common.test.server.GraknProperties;
 import grakn.common.test.server.GraknSetup;
 import graql.lang.Graql;
 import graql.lang.query.GraqlCompute;
@@ -31,11 +30,11 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -75,19 +74,19 @@ import static org.hamcrest.Matchers.hasSize;
 @SuppressWarnings("Duplicates")
 public class QueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
+    private static GraknSetup grakn;
     private static GraknClient graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        graknClient = new GraknClient(address);
+        grakn = GraknSetup.bootup();
+        graknClient = new GraknClient(grakn.address());
     }
 
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
-        GraknSetup.shutdown();
+        grakn.shutdown();
     }
 
     @Before
@@ -101,6 +100,7 @@ public class QueryTest {
         graknClient.close();
     }
 
+    @Ignore
     @Test
     public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
@@ -257,8 +257,8 @@ public class QueryTest {
     }
 
     private void localhostGraknTx(Consumer<GraknClient.Transaction> fn) {
-        String keyspace = "grakn";
-        try (GraknClient.Session session = graknClient.session(keyspace)) {
+        String database = "grakn";
+        try (GraknClient.Session session = graknClient.session(database)) {
             try (GraknClient.Transaction transaction = session.transaction().write()) {
                 fn.accept(transaction);
             }

@@ -29,7 +29,7 @@ grakn_test(
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
         # TODO: Add your addition debugging dependencies here
-        # e.g. "//test/behaviour/connection/steps:connection-keyspace",
+        # e.g. "//test/behaviour/connection/steps:connection-database",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_java",

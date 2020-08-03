@@ -48,7 +48,7 @@ public class TransactionSteps {
     // sequential sessions, sequential transactions //
     // =============================================//
 
-    @When("session open transaction of type: {transaction_type}")
+    @When("session open(s) transaction of type: {transaction_type}")
     public void session_opens_transaction_of_type(GraknClient.Transaction.Type type) {
         for_each_session_open_transactions_of_type(list(type));
     }

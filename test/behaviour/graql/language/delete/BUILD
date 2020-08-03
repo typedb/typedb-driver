@@ -78,7 +78,6 @@ checkstyle_test(
     name = "checkstyle",
     targets = [
         ":test-core",
-        ":test-kgms",
-    ],
+],
     license_type = "apache",
 )

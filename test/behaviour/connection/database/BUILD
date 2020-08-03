@@ -24,7 +24,7 @@ load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 java_library(
     name = "steps",
     srcs = [
-        "KeyspaceSteps.java"
+        "DatabaseSteps.java"
     ],
     deps = [
         # Internal Package Dependencies
@@ -42,9 +42,9 @@ java_library(
 grakn_test(
     name = "test-core",
     srcs = [
-        "KeyspaceTest.java"
+        "DatabaseTest.java"
     ],
-    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
     deps = [
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
@@ -53,36 +53,10 @@ grakn_test(
         ":steps"
     ],
     data = [
-        "@graknlabs_verification//behaviour/connection:keyspace.feature",
+        "@graknlabs_verification//behaviour/connection:database.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",
-)
-
-# To run this test, you need to provide environment variables:
-# --test_env GRAKN_KGMS_ADDRESS=***
-# --test_env GRAKN_KGMS_USERNAME=****
-# --test_env GRAKN_KGMS_PASSWORD=****
-grakn_test(
-    name = "test-kgms",
-    srcs = [
-        "KeyspaceTest.java"
-    ],
-    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
-    deps = [
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        ":steps"
-    ],
-    data = [
-        "@graknlabs_verification//behaviour/connection:keyspace.feature",
-    ],
-    type = "grakn-kgms",
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "large",
-    tags = ["manual"]
 )
 
 checkstyle_test(
@@ -90,7 +64,6 @@ checkstyle_test(
     targets = [
         ":steps",
         ":test-core",
-        ":test-kgms",
     ],
     license_type = "apache"
 )

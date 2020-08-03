@@ -72,6 +72,11 @@ public class RoleImpl {
         }
 
         @Override
+        public Label scopedLabel() {
+            return Label.of("unknown:" + label().getValue()); // TODO fix
+        }
+
+        @Override
         public final Stream<RelationType.Remote> relations() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleRelationsIterReq(ConceptProto.Role.Relations.Iter.Req.getDefaultInstance()).build();

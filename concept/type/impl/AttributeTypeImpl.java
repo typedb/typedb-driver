@@ -129,7 +129,7 @@ public class AttributeTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        public final Attribute.Remote<D> create(D value) {
+        public final Attribute.Remote<D> put(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
@@ -140,7 +140,7 @@ public class AttributeTypeImpl {
         @SuppressWarnings("unchecked")
         @Override
         @Nullable
-        public final Attribute.Remote<D> attribute(D value) {
+        public final Attribute.Remote<D> get(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
