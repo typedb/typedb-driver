@@ -20,6 +20,7 @@
 package grakn.client.test.behaviour.connection.transaction;
 
 import grakn.client.GraknClient;
+import graql.lang.Graql;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -41,6 +42,7 @@ import static grakn.common.util.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TransactionSteps {
 
@@ -222,4 +224,24 @@ public class TransactionSteps {
         }
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
     }
+
+
+    // ===================================//
+    // transaction behaviour with queries //
+    // ===================================//
+
+    @Then("for each transaction, execute define; throws exception")
+    public void for_each_transaction_execute_define_throws_exception(String defineQueryStatements) {
+        for (GraknClient.Session session : sessions) {
+            for (GraknClient.Transaction transaction :  sessionsToTransactions.get(session)) {
+                try {
+                    transaction.execute(Graql.parse(defineQueryStatements).asDefine());
+                    fail();
+                } catch (Exception e) {
+                    assertTrue(true);
+                }
+            }
+        }
+    }
+
 }
