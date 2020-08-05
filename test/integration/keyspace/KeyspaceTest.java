@@ -58,27 +58,6 @@ public class KeyspaceTest {
         GraknSetup.shutdown();
     }
 
-    @Test
-    public void retrievingExistingKeyspaces_createdSessionKeyspaceVisible() {
-        String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-        client.session(randomKeyspace);
-        List<String> keyspaces = client.keyspaces().retrieve();
-        assertTrue(keyspaces.contains(randomKeyspace));
-    }
-
-    @Test
-    public void whenDeletingKeyspace_notListedInExistingKeyspaces() {
-        String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-        client.session(randomKeyspace);
-        List<String> keyspaces = client.keyspaces().retrieve();
-
-        assertTrue(keyspaces.contains(randomKeyspace));
-
-        client.keyspaces().delete(randomKeyspace);
-        List<String> keyspacesUpdated = client.keyspaces().retrieve();
-
-        assertFalse(keyspacesUpdated.contains(randomKeyspace));
-    }
 
     @Test
     public void whenDeletingKeyspace_OpenSessionFails() {
@@ -110,27 +89,6 @@ public class KeyspaceTest {
 
         // try to operate on an open tx
         tx.getEntityType("entity");
-    }
-
-    @Test
-    public void testDeletingAKeyspace_TheKeyspaceIsRecreatedInNewSession() {
-        String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-        GraknClient.Session remoteSession = client.session(randomKeyspace);
-
-        try (GraknClient.Transaction tx = remoteSession.transaction().write()) {
-            tx.putEntityType("easter");
-            tx.commit();
-        }
-        remoteSession.close();
-        client.keyspaces().delete(randomKeyspace);
-
-        GraknClient.Session renewedSession = client.session(randomKeyspace);
-        try (GraknClient.Transaction tx = renewedSession.transaction().write()) {
-            assertNull(tx.getEntityType("easter"));
-            assertNotNull(tx.getEntityType("entity"));
-        }
-
-        renewedSession.close();
     }
 
     @Test
