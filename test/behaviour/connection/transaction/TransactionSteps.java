@@ -250,7 +250,7 @@ public class TransactionSteps {
     // ===================================//
 
     @Then("for each transaction, define query; throws exception containing {string}")
-    public void for_each_transaction_execute_define_throws_exception(String defineQueryStatements, String expectedException) {
+    public void for_each_transaction_execute_define_throws_exception(String expectedException, String defineQueryStatements) {
         for (GraknClient.Session session : sessions) {
             for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
