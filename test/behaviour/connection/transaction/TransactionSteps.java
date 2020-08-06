@@ -254,7 +254,7 @@ public class TransactionSteps {
         for (GraknClient.Session session : sessions) {
             for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
-                    transaction.execute(Graql.parse(defineQueryStatements).asDefine());
+                    transaction.execute(Graql.parse(defineQueryStatements).asDefine()).get();
                     fail();
                 } catch (Exception e) {
                     assertThat(e.getMessage(), Matchers.containsString(expectedException));
@@ -262,5 +262,4 @@ public class TransactionSteps {
             }
         }
     }
-
 }
