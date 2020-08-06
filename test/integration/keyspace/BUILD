@@ -33,9 +33,6 @@ grakn_test(
         # Grakn Core dependencies
         "//:client-java",
 
-        # Grakn Labs dependencies
-        "@graknlabs_graql//java:graql",
-
         # Maven External dependencies
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api", # TODO: Do we still need this?
