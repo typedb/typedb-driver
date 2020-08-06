@@ -28,6 +28,7 @@ java_library(
     ],
     deps = [
         # Internal Package Dependencies
+        "//test/behaviour/config:parameters",
         "//test/behaviour/connection:steps",
 
         # Internal Repository Dependencies

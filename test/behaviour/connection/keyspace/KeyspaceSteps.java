@@ -47,7 +47,7 @@ public class KeyspaceSteps {
     public void connection_create_keyspaces(List<String> names) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
         for (String name : names) {
-            client.session(name);
+            client.session(name).close();
         }
     }
 
