@@ -23,6 +23,7 @@ import grakn.client.GraknClient;
 import graql.lang.Graql;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.hamcrest.Matchers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,6 +42,7 @@ import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static grakn.common.util.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -64,6 +66,20 @@ public class TransactionSteps {
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);
+        }
+    }
+
+    @Then("for each session, open transaction(s) of type; throws exception")
+    public void for_each_session_open_transactions_of_type_throws_exception(List<GraknClient.Transaction.Type> types) {
+        for (GraknClient.Session session : sessions) {
+            for (GraknClient.Transaction.Type type : types) {
+                try {
+                    GraknClient.Transaction transaction = session.transaction(type);
+                    fail();
+                } catch (Exception e) {
+                    // successfully threw
+                }
+            }
         }
     }
 
@@ -168,7 +184,10 @@ public class TransactionSteps {
             for (CompletableFuture<GraknClient.Transaction> futureTransaction :
                     sessionsToTransactionsParallel.get(session)) {
 
-                assertions.add(futureTransaction.thenApply(transaction -> { assertion.accept(transaction); return null; }));
+                assertions.add(futureTransaction.thenApply(transaction -> {
+                    assertion.accept(transaction);
+                    return null;
+                }));
             }
         }
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
@@ -230,15 +249,15 @@ public class TransactionSteps {
     // transaction behaviour with queries //
     // ===================================//
 
-    @Then("for each transaction, define query; throws exception")
-    public void for_each_transaction_execute_define_throws_exception(String defineQueryStatements) {
+    @Then("for each transaction, define query; throws exception containing {string}")
+    public void for_each_transaction_execute_define_throws_exception(String defineQueryStatements, String expectedException) {
         for (GraknClient.Session session : sessions) {
-            for (GraknClient.Transaction transaction :  sessionsToTransactions.get(session)) {
+            for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
                     transaction.execute(Graql.parse(defineQueryStatements).asDefine());
                     fail();
                 } catch (Exception e) {
-                    assertTrue(true);
+                    assertThat(e.getMessage(), Matchers.containsString(expectedException));
                 }
             }
         }

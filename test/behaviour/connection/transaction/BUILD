@@ -32,12 +32,14 @@ java_library(
         "//test/behaviour/connection:steps",
         "//test/behaviour/util:util",
 
+
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
         "@graknlabs_graql//java:graql",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
+        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:io_cucumber_cucumber_java",
     ]
 )

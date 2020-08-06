@@ -89,7 +89,7 @@ public class GraqlSteps {
         assertTrue(tx.isOpen());
     }
 
-    @Given("transaction is reopened without commit")
+    @Given("transaction is closed and opened without commit")
     public void transaction_is_reopened_without_commit() {
         tx.close();
         assertFalse(tx.isOpen());
