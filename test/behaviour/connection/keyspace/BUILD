@@ -30,6 +30,7 @@ java_library(
         # Internal Package Dependencies
         "//test/behaviour/config:parameters",
         "//test/behaviour/connection:steps",
+        "//test/behaviour/connection/transaction:steps",
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
