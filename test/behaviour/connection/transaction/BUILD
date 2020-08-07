@@ -32,7 +32,6 @@ java_library(
         "//test/behaviour/connection:steps",
         "//test/behaviour/util:util",
 
-
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
         "@graknlabs_graql//java:graql",
