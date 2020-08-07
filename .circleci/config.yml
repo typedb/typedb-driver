@@ -76,7 +76,7 @@ jobs:
           command: bazel test $(bazel query 'kind(checkstyle_test, //...)')
 
   test-integration:
-    machine: 
+    machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
@@ -232,10 +232,10 @@ workflows:
           filters:
             branches:
               ignore: client-java-release-branch
-      - test-integration:
-          filters:
-            branches:
-              ignore: client-java-release-branch
+#      - test-integration:
+#          filters:
+#            branches:
+#              ignore: client-java-release-branch
       - test-behaviour:
           filters:
             branches:
@@ -252,7 +252,7 @@ workflows:
             - build
             - build-checkstyle
             - test-assembly-query
-            - test-integration
+#            - test-integration
             - test-behaviour
       - test-deployment-maven:
           filters:
