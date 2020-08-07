@@ -182,7 +182,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?>> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<? extends Concept<?>> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 

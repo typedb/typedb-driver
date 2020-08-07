@@ -115,14 +115,22 @@ public interface Relation extends Thing<Relation, RelationType> {
         Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersMap();
 
         /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
+         * Retrieves a list of every Thing involved in the Relation.
          *
-         * @param roles used to filter the returned instances only to ones that play any of the role types.
-         *              If blank, returns all role players.
          * @return a list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> players(RoleType... roles);
+        Stream<Thing.Remote<?, ?>> players();
+
+        /**
+         * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
+         *
+         * @param roles used to filter the returned instances only to ones that play any of the role types.
+         *
+         * @return a list of every Thing involved in the Relation, filtered by Role played.
+         */
+        @CheckReturnValue
+        Stream<Thing.Remote<?, ?>> players(List<RoleType> roles);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.

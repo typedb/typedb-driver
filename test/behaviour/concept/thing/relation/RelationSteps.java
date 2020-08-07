@@ -26,6 +26,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -169,11 +170,15 @@ public class RelationSteps {
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation().players(get(var1).asRelation().type().role(roleTypeLabel)).anyMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation()
+                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation().players(get(var1).asRelation().type().role(roleTypeLabel)).noneMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation()
+                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .noneMatch(p -> p.equals(get(var2))));
     }
 }
