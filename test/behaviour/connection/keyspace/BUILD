@@ -53,6 +53,7 @@ grakn_test(
         ":steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:keyspace.feature",
