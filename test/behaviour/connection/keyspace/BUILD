@@ -50,7 +50,10 @@ grakn_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        ":steps"
+        ":steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/config:parameters",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:keyspace.feature",

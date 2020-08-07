@@ -28,9 +28,7 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Rule;
-import grakn.client.concept.SchemaConcept;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Thing;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -89,6 +87,13 @@ public class GraqlSteps {
         session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
         tx = session.transaction().write();
         assertTrue(tx.isOpen());
+    }
+
+    @Given("transaction is closed and opened without commit")
+    public void transaction_is_reopened_without_commit() {
+        tx.close();
+        assertFalse(tx.isOpen());
+        tx = session.transaction().write();
     }
 
     @Given("the integrity is validated")

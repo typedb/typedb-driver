@@ -26,21 +26,22 @@ import grakn.client.exception.GraknClientException;
 import grakn.common.test.server.GraknProperties;
 import grakn.common.test.server.GraknSetup;
 import graql.lang.Graql;
+import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.statement.Variable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import static grakn.client.GraknClient.Transaction.BatchSize.ALL;
 import static grakn.client.GraknClient.Transaction.Options.batchSize;
-import static grakn.client.GraknClient.Transaction.Options.infer;
 import static grakn.client.GraknClient.Transaction.Options.explain;
+import static grakn.client.GraknClient.Transaction.Options.infer;
 import static graql.lang.Graql.Token.ValueType.STRING;
 import static graql.lang.Graql.define;
 import static graql.lang.Graql.insert;
@@ -153,21 +154,6 @@ public class AnswerIT {
                 ).get()).get();
 
                 assertEquals(answers.size(), 2);
-            }
-        }
-    }
-
-    @Test
-    public void writingInAReadTransactionThrows() {
-        try (GraknClient.Session session = client.session("test")) {
-            try (GraknClient.Transaction tx = session.transaction().read()) {
-                tx.execute(Graql.parse("define newentity sub entity;").asDefine());
-                tx.commit();
-                fail();
-            } catch (Exception ex) {
-                if (!ex.getMessage().contains("is read only")) {
-                    fail();
-                }
             }
         }
     }
@@ -315,6 +301,23 @@ public class AnswerIT {
                 assertEquals(999, tx.execute(Graql.match(var("p").isa("person")).get(), batchSize(20)).get().size());
                 assertEquals(999, tx.execute(Graql.match(var("p").isa("person")).get(), batchSize(10000)).get().size());
                 assertEquals(999, tx.execute(Graql.match(var("p").isa("person")).get(), batchSize(1)).get().size());
+            }
+        }
+    }
+
+    @Test
+    public void concurrentReadQueriesReturnResultsConcurrently() {
+        try (GraknClient.Session session = client.session("concurrent_read")) {
+            try (GraknClient.Transaction tx = session.transaction().read()) {
+                GraqlGet query = Graql.match(var("x").sub("thing")).get();
+
+                Iterator<ConceptMap> iterator1 = tx.stream(query).get().iterator();
+                Iterator<ConceptMap> iterator2 = tx.stream(query).get().iterator();
+
+                while (iterator1.hasNext() || iterator2.hasNext()) {
+                    assertEquals(iterator1.next(), iterator2.next());
+                    assertEquals(iterator1.hasNext(), iterator2.hasNext());
+                }
             }
         }
     }

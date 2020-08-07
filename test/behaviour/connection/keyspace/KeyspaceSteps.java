@@ -34,6 +34,7 @@ import static grakn.common.util.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class KeyspaceSteps {
 
@@ -46,7 +47,7 @@ public class KeyspaceSteps {
     public void connection_create_keyspaces(List<String> names) {
         // TODO: This step should be rewritten once we can create keypsaces without opening sessions
         for (String name : names) {
-            client.session(name);
+            client.session(name).close();
         }
     }
 
@@ -68,6 +69,18 @@ public class KeyspaceSteps {
     public void connection_delete_keyspaces(List<String> names) {
         for (String keyspaceName : names) {
             client.keyspaces().delete(keyspaceName);
+        }
+    }
+
+    @Then("connection delete keyspace(s); throws exception")
+    public void connection_delete_keyspaces_throws_exception(List<String> names) {
+        for (String keyspaceName : names) {
+            try {
+                client.keyspaces().delete(keyspaceName);
+                fail();
+            } catch (Exception e) {
+                // successfully failed
+            }
         }
     }
 
