@@ -123,6 +123,7 @@ rules_pkg_dependencies()
 load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
 graknlabs_common()
 
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
 load("@graknlabs_common//dependencies/maven:artifacts.bzl", graknlabs_common_artifacts = "artifacts")
 
 #########################
