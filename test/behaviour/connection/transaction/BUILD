@@ -38,7 +38,8 @@ java_library(
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
-    ]
+    ],
+    visibility = ["//visibility:public"],
 )
 
 grakn_test(

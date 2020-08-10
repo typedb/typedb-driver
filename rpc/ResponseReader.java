@@ -28,7 +28,6 @@ import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
-import graql.lang.statement.Variable;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
 import grakn.client.answer.ConceptList;
@@ -93,9 +92,9 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, GraknClient.Transaction tx) {
-        Map<Variable, Concept<?>> variableMap = new HashMap<>();
+        Map<String, Concept<?>> variableMap = new HashMap<>();
         res.getMapMap().forEach(
-                (resVar, resConcept) -> variableMap.put(new Variable(resVar), Concept.Local.of(resConcept))
+                (resVar, resConcept) -> variableMap.put(resVar, Concept.Local.of(resConcept))
         );
         boolean hasExplanation = res.getHasExplanation();
         Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());

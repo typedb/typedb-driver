@@ -34,6 +34,7 @@ java_library(
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(

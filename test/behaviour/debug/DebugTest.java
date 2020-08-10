@@ -19,7 +19,8 @@
 
 package grakn.client.test.behaviour.debug;
 
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknSingleton;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
