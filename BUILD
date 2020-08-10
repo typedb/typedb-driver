@@ -39,6 +39,9 @@ java_library(
     deps = [
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
+        "@graknlabs_graql//java/common",
+        "@graknlabs_graql//java/pattern",
+        "@graknlabs_graql//java/query",
         "@graknlabs_protocol//grpc/java:protocol",
 
         "@graknlabs_grabl_tracing//client",
