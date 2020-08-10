@@ -96,18 +96,18 @@ public class RelationImpl {
         @Override
         public Stream<Thing.Remote<?, ?>> players() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationPlayersIterReqAll(ConceptProto.Relation.Players.Iter.Req.All.newBuilder()).build();
+                    .setRelationAllPlayersIterReq(ConceptProto.Relation.AllPlayers.Iter.Req.newBuilder()).build();
 
-            return conceptStream(method, res -> res.getRelationPlayersIterRes().getThing()).map(Concept.Remote::asThing);
+            return conceptStream(method, res -> res.getRelationAllPlayersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
         public final Stream<Thing.Remote<?, ?>> players(final List<RoleType> roles) {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationPlayersIterReqForRoles(ConceptProto.Relation.Players.Iter.Req.ForRoles.newBuilder()
+                    .setRelationPlayersForRolesIterReq(ConceptProto.Relation.PlayersForRoles.Iter.Req.newBuilder()
                             .addAllRoles(RequestBuilder.ConceptMessage.concepts(roles))).build();
 
-            return conceptStream(method, res -> res.getRelationPlayersIterRes().getThing()).map(Concept.Remote::asThing);
+            return conceptStream(method, res -> res.getRelationPlayersForRolesIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
