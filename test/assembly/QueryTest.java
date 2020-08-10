@@ -43,6 +43,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static graql.lang.Graql.and;
+import static graql.lang.Graql.rel;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -119,11 +120,11 @@ public class QueryTest {
 
             GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
                     .when(and(
-                            var().rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
                     ))
                     .then(and(
-                            var().rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
+                            rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
                     )));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
@@ -165,7 +166,7 @@ public class QueryTest {
             GraqlInsert insertMatingQuery = Graql.match(
                     var("lion").isa("lion").has("name", familyMembers[0]),
                     var("lioness").isa("lion").has("name", familyMembers[1]))
-                    .insert(var().rel("male-partner", "lion").rel("female-partner", var("lioness")).isa("mating"));
+                    .insert(rel("male-partner", "lion").rel("female-partner", var("lioness")).isa("mating"));
             LOG.info("clientJavaE2E() - '" + insertMatingQuery + "'");
             List<ConceptMap> insertedMating = tx.execute(insertMatingQuery).get();
 
