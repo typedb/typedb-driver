@@ -25,7 +25,8 @@ java_library(
         "EntityTypeSteps.java"
     ],
     deps = [
-    ]
+    ],
+    visibility = ["//visibility:public"],
 )
 
 grakn_test(
