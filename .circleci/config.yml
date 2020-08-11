@@ -195,18 +195,12 @@ workflows:
               only: master
           requires:
             - deploy-npm-snapshot
-      - sync-dependencies-snapshot:
-          filters:
-            branches:
-              only: master
-          requires:
-            - test-deployment
       - release-approval:
           filters:
             branches:
               only: master
           requires:
-            - sync-dependencies-snapshot
+            - test-deployment
 
   client-nodejs-release:
     jobs:
@@ -227,15 +221,9 @@ workflows:
           filters:
             branches:
               only: client-nodejs-release-branch
-      - sync-dependencies-release:
-          filters:
-            branches:
-              only: client-nodejs-release-branch
-          requires:
-            - deploy-npm-release
       - release-cleanup:
           filters:
             branches:
               only: client-nodejs-release-branch
           requires:
-            - sync-dependencies-release
+            - deploy-npm-release
