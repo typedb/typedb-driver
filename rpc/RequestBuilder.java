@@ -171,7 +171,7 @@ public class RequestBuilder {
                 return ConceptProto.Concept.SCHEMA.RELATION;
             } else if (concept.isAttribute()) {
                 return ConceptProto.Concept.SCHEMA.ATTRIBUTE;
-            } else if (concept.isRole()) {
+            } else if (concept.isRoleType()) {
                 return ConceptProto.Concept.SCHEMA.ROLE;
             } else if (concept.isRule()) {
                 return ConceptProto.Concept.SCHEMA.RULE;
@@ -182,7 +182,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<Concept<?>> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<? extends Concept<?>> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 

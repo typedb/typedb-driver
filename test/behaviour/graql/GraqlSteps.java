@@ -632,8 +632,8 @@ public class GraqlSteps {
         public boolean check(Concept concept) {
             if (concept.isType()) {
                 return label.equals(concept.asType().label().toString());
-            } else if (concept.isRole()) {
-                return label.equals(concept.asRole().label().toString());
+            } else if (concept.isRoleType()) {
+                return label.equals(concept.asRoleType().label().toString());
             } else if (concept.isRule()) {
                 return label.equals(concept.asRule().label().toString());
             } else {

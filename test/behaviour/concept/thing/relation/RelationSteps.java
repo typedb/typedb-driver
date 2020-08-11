@@ -26,6 +26,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -143,7 +144,7 @@ public class RelationSteps {
     @Then("relation {var} get players contain:")
     public void relation_get_players_contain(String var, Map<String, String> players) {
         Relation.Remote relation = get(var).asRelation();
-        players.forEach((rt, var2) -> assertTrue(relation.playersMap().get(relation.type().role(rt)).contains(get(var2.substring(1)))));
+        players.forEach((rt, var2) -> assertTrue(relation.playersByRoleType().get(relation.type().role(rt)).contains(get(var2.substring(1)))));
     }
 
     @Then("relation {var} get players do not contain:")
@@ -151,7 +152,7 @@ public class RelationSteps {
         Relation.Remote relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
             List<? extends Thing.Remote<?, ?>> p;
-            if ((p = relation.playersMap().get(relation.type().role(rt))) != null) {
+            if ((p = relation.playersByRoleType().get(relation.type().role(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }
         });
@@ -169,11 +170,15 @@ public class RelationSteps {
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation().players(get(var1).asRelation().type().role(roleTypeLabel)).anyMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation()
+                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation().players(get(var1).asRelation().type().role(roleTypeLabel)).noneMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation()
+                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .noneMatch(p -> p.equals(get(var2))));
     }
 }
