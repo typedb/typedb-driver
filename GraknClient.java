@@ -716,8 +716,8 @@ public class GraknClient implements AutoCloseable {
             return getType(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
         }
 
-        public RoleType.Remote getMetaRole() {
-            return getType(Label.of(Graql.Token.Type.ROLE.toString())).asRole();
+        public RoleType.Remote getMetaRoleType() {
+            return getType(Label.of(Graql.Token.Type.ROLE.toString())).asRoleType();
         }
 
         public AttributeType.Remote<?> getMetaAttributeType() {

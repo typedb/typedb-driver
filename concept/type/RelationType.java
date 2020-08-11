@@ -112,7 +112,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
         //------------------------------------- Accessors ----------------------------------
 
         /**
-         * Retrieve a specific role.
+         * Retrieve a specific RoleType.
          *
          *
          */
@@ -133,10 +133,10 @@ public interface RelationType extends ThingType<RelationType, Relation> {
         //------------------------------------- Edge Handling ----------------------------------
 
         /**
-         * Creates a new Role for this RelationType.
+         * Creates a new RoleType for this RelationType.
          *
-         * @param role A new role which is part of this relation.
-         * @return The Role itself.
+         * @param role A new RoleType which is part of this RelationType.
+         * @return The RoleType itself.
          * @see RoleType.Remote
          */
         default RoleType.Remote relates(String role) {
@@ -172,27 +172,27 @@ public interface RelationType extends ThingType<RelationType, Relation> {
         Stream<RelationType.Remote> subs();
 
         /**
-         * Sets the Role which instances of this RelationType may play.
+         * Sets the RoleType which instances of this RelationType may play.
          *
-         * @param role The Role which the instances of this Type are allowed to play.
+         * @param role The RoleType which the instances of this RelationType are allowed to play.
          * @return The RelationType itself.
          */
         @Override
         RelationType.Remote plays(RoleType role);
 
         /**
-         * Removes the ability of this RelationType to play a specific Role
+         * Removes the ability of this RelationType to play a specific RoleType.
          *
-         * @param role The Role which the Things of this Rule should no longer be allowed to play.
-         * @return The Rule itself.
+         * @param role The RoleType which the instances of this RelationType should no longer be allowed to play.
+         * @return The RoleType itself.
          */
         @Override
         RelationType.Remote unplay(RoleType role);
 
         /**
-         * Removes the ability for Things of this RelationType to have Attributes of type AttributeType
+         * Removes the ability for instances of this RelationType to have Attributes of a specific AttributeType.
          *
-         * @param attributeType the AttributeType which this RelationType can no longer have
+         * @param attributeType The AttributeType which this RelationType can no longer have
          * @return The RelationType itself.
          */
         @Override

@@ -171,7 +171,7 @@ public class RequestBuilder {
                 return ConceptProto.Concept.SCHEMA.RELATION;
             } else if (concept.isAttribute()) {
                 return ConceptProto.Concept.SCHEMA.ATTRIBUTE;
-            } else if (concept.isRole()) {
+            } else if (concept.isRoleType()) {
                 return ConceptProto.Concept.SCHEMA.ROLE;
             } else if (concept.isRule()) {
                 return ConceptProto.Concept.SCHEMA.RULE;

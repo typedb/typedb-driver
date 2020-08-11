@@ -142,7 +142,7 @@ public class RelationTypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationTypeRolesIterReq(ConceptProto.RelationType.Roles.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept.Remote::asRole);
+            return conceptStream(method, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept.Remote::asRoleType);
         }
 
         @Override
