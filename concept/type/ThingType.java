@@ -88,7 +88,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
         ThingType.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract);
 
         /**
-         * @param role The Role Type which the instances of this Type are allowed to play.
+         * @param role The RoleType which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
         ThingType.Remote<SomeRemoteType, SomeRemoteThing> plays(RoleType role);
@@ -114,7 +114,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
         //------------------------------------- Accessors ---------------------------------
 
         /**
-         * @return A list of Role Types which instances of this Type can indirectly play.
+         * @return A list of RoleTypes which instances of this Type can indirectly play.
          */
         Stream<RoleType.Remote> playing();
 
@@ -174,9 +174,9 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
         //------------------------------------- Other ----------------------------------
 
         /**
-         * Removes the ability of this Type to play a specific Role
+         * Removes the ability of this Type to play a specific RoleType.
          *
-         * @param role The Role which the Things of this Type should no longer be allowed to play.
+         * @param role The RoleType which the Things of this Type should no longer be allowed to play.
          * @return The Type itself.
          */
         ThingType.Remote<SomeRemoteType, SomeRemoteThing> unplay(RoleType role);

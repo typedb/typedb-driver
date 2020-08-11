@@ -128,20 +128,20 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Relation.Remote> relations(RoleType... roles) {
+            public final Stream<Relation.Remote> relations(RoleType... roleTypes) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRelationsIterReq(ConceptProto.Thing.Relations.Iter.Req.newBuilder()
-                                                      .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roles)))).build();
+                                                      .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
 
                 return conceptStream(method, res -> res.getThingRelationsIterRes().getRelation()).map(Concept.Remote::asRelation);
             }
 
             @Override
-            public final Stream<RoleType.Remote> roles() {
+            public final Stream<RoleType.Remote> roleTypes() {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingRolesIterReq(ConceptProto.Thing.Roles.Iter.Req.getDefaultInstance()).build();
 
-                return conceptStream(method, res -> res.getThingRolesIterRes().getRole()).map(Concept.Remote::asRole);
+                return conceptStream(method, res -> res.getThingRolesIterRes().getRole()).map(Concept.Remote::asRoleType);
             }
 
             @Override

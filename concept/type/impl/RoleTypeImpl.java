@@ -91,12 +91,12 @@ public class RoleTypeImpl {
 
         @Override
         protected final RoleType.Remote asCurrentBaseType(Concept.Remote<?> other) {
-            return other.asRole();
+            return other.asRoleType();
         }
 
         @Override
         protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
-            return other.isRole();
+            return other.isRoleType();
         }
 
     }

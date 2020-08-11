@@ -137,18 +137,18 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
         AttributeType.Remote<D> sup(AttributeType<D> type);
 
         /**
-         * Sets the Role which instances of this AttributeType may play.
+         * Sets the RoleType which instances of this AttributeType may play.
          *
-         * @param role The Role Type which the instances of this AttributeType are allowed to play.
+         * @param role The RoleType which the instances of this AttributeType are allowed to play.
          * @return The AttributeType itself.
          */
         @Override
         AttributeType.Remote<D> plays(RoleType role);
 
         /**
-         * Removes the ability of this AttributeType to play a specific Role
+         * Removes the ability of this AttributeType to play a specific RoleType
          *
-         * @param role The Role which the Things of this AttributeType should no longer be allowed to play.
+         * @param role The RoleType which the Things of this AttributeType should no longer be allowed to play.
          * @return The AttributeType itself.
          */
         @Override
