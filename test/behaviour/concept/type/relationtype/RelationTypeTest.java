@@ -18,7 +18,8 @@
 
 package grakn.client.test.behaviour.concept.type.relationtype;
 
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknSingleton;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.AfterClass;
@@ -58,13 +59,17 @@ public class RelationTypeTest {
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 
+    private static GraknCoreRunner runner;
+
     @BeforeClass
-    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
-        GraknSetup.bootup();
+    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
+        runner = new GraknCoreRunner();
+        runner.start();
+        GraknSingleton.setGraknRunner(runner);
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.shutdown();
+        runner.stop();
     }
 }

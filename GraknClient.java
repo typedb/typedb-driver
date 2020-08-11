@@ -52,7 +52,7 @@ import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.SessionProto;
 import grakn.protocol.TransactionProto;
-import graql.lang.Graql;
+import graql.lang.common.GraqlToken;
 import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
@@ -709,27 +709,27 @@ public class GraknClient implements AutoCloseable {
         }
 
         public grakn.client.concept.type.Type.Remote<?> getMetaConcept() {
-            return getType(Label.of(Graql.Token.Type.THING.toString()));
+            return getType(Label.of(GraqlToken.Type.THING.toString()));
         }
 
         public RelationType.Remote getMetaRelationType() {
-            return getType(Label.of(Graql.Token.Type.RELATION.toString())).asRelationType();
+            return getType(Label.of(GraqlToken.Type.RELATION.toString())).asRelationType();
         }
 
         public RoleType.Remote getMetaRoleType() {
-            return getType(Label.of(Graql.Token.Type.ROLE.toString())).asRoleType();
+            return getType(Label.of(GraqlToken.Type.ROLE.toString())).asRoleType();
         }
 
         public AttributeType.Remote<?> getMetaAttributeType() {
-            return getType(Label.of(Graql.Token.Type.ATTRIBUTE.toString())).asAttributeType();
+            return getType(Label.of(GraqlToken.Type.ATTRIBUTE.toString())).asAttributeType();
         }
 
         public EntityType.Remote getMetaEntityType() {
-            return getType(Label.of(Graql.Token.Type.ENTITY.toString())).asEntityType();
+            return getType(Label.of(GraqlToken.Type.ENTITY.toString())).asEntityType();
         }
 
         public Rule.Remote getMetaRule() {
-            return getType(Label.of(Graql.Token.Type.RULE.toString())).asRule();
+            return getType(Label.of(GraqlToken.Type.RULE.toString())).asRule();
         }
 
         @Nullable
@@ -806,7 +806,7 @@ public class GraknClient implements AutoCloseable {
             AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
             conceptMap.map().forEach((var, concept) -> {
                 ConceptProto.Concept conceptProto = RequestBuilder.ConceptMessage.from(concept);
-                conceptMapProto.putMap(var.name(), conceptProto);
+                conceptMapProto.putMap(var, conceptProto);
             });
             conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
             conceptMapProto.setPattern(conceptMap.queryPattern().toString());

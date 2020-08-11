@@ -32,6 +32,8 @@ java_library(
 
         # Grakn Labs dependencies
         "@graknlabs_graql//java:graql",
+        "@graknlabs_graql//java/pattern",
+        "@graknlabs_graql//java/query",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
