@@ -51,7 +51,7 @@ import javax.annotation.CheckReturnValue;
  * A concept which can every object in the graph.
  * This class forms the basis of assuring the graph follows the Grakn object model.
  * It provides methods to retrieve information about the Concept, and determine if it is a Type
- * (EntityType, Role, RelationType, Rule or AttributeType)
+ * (EntityType, RoleType, RelationType, Rule or AttributeType)
  * or an Thing (Entity, Relation , Attribute).
  */
 public interface Concept<BaseType extends Concept<BaseType>> {
@@ -109,12 +109,12 @@ public interface Concept<BaseType extends Concept<BaseType>> {
     }
 
     /**
-     * Return as a Role if the Concept is a Role.
+     * Return as a RoleType if the Concept is a RoleType.
      *
-     * @return A Role if the Concept is a Role
+     * @return A RoleType if the Concept is a RoleType
      */
     @CheckReturnValue
-    default RoleType asRole() {
+    default RoleType asRoleType() {
         throw GraknConceptException.invalidCasting(this, RoleType.class);
     }
 
@@ -257,12 +257,12 @@ public interface Concept<BaseType extends Concept<BaseType>> {
     }
 
     /**
-     * Determine if the Concept is a Role.
+     * Determine if the Concept is a RoleType.
      *
-     * @return true if the Concept is a Role
+     * @return true if the Concept is a RoleType.
      */
     @CheckReturnValue
-    default boolean isRole() {
+    default boolean isRoleType() {
         return false;
     }
 
@@ -459,13 +459,13 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         }
 
         /**
-         * Return as a Role if the Concept is a Role.
+         * Return as a RoleType if the Concept is a RoleType.
          *
-         * @return A Role if the Concept is a Role
+         * @return A RoleType if the Concept is a RoleType
          */
         @Override
         @CheckReturnValue
-        default RoleType.Remote asRole() {
+        default RoleType.Remote asRoleType() {
             throw GraknConceptException.invalidCasting(this, RoleType.Remote.class);
         }
 

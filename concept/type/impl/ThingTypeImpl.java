@@ -128,7 +128,7 @@ public abstract class ThingTypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setThingTypePlayingIterReq(ConceptProto.ThingType.Playing.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypePlayingIterRes().getRole()).map(Concept.Remote::asRole);
+            return conceptStream(method, res -> res.getThingTypePlayingIterRes().getRole()).map(Concept.Remote::asRoleType);
         }
 
         @Override

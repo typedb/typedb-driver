@@ -103,24 +103,24 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
 
         /**
          * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
-         * according to the Role you are interested in.
+         * according to the RoleType you are interested in.
          *
-         * @param roles An optional parameter which allows you to specify the role of the relations you wish to retrieve.
-         * @return A set of Relations which the concept instance takes part in, optionally constrained by the Role Type.
+         * @param roleTypes An optional parameter which allows you to specify the role type of the relations you wish to retrieve.
+         * @return A set of Relations which the concept instance takes part in, optionally constrained by the RoleType.
          * @see RoleType.Remote
          * @see Relation.Remote
          */
         @CheckReturnValue
-        Stream<Relation.Remote> relations(RoleType... roles);
+        Stream<Relation.Remote> relations(RoleType... roleTypes);
 
         /**
-         * Determine the Roles that this Thing is currently playing.
+         * Determine the RoleTypes that this Thing is currently playing.
          *
-         * @return A set of all the Roles which this Thing is currently playing.
+         * @return A set of all the RoleTypes which this Thing is currently playing.
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<RoleType.Remote> roles();
+        Stream<RoleType.Remote> roleTypes();
 
         /**
          * Creates a Relation from this Thing to the provided Attribute.

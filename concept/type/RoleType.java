@@ -28,8 +28,8 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
- * An SchemaConcept which defines a role which can be played in a RelationType
- * This ontological element defines the Role which make up a RelationType.
+ * A SchemaConcept which defines a role which can be played in a RelationType.
+ * This ontological element defines the RoleTypes which make up a RelationType.
  * It behaves similarly to SchemaConcept when relating to other types.
  */
 public interface RoleType extends Type<RoleType> {
@@ -38,7 +38,7 @@ public interface RoleType extends Type<RoleType> {
     @Deprecated
     @CheckReturnValue
     @Override
-    default RoleType asRole() {
+    default RoleType asRoleType() {
         return this;
     }
 
@@ -50,7 +50,7 @@ public interface RoleType extends Type<RoleType> {
     @Deprecated
     @CheckReturnValue
     @Override
-    default boolean isRole() {
+    default boolean isRoleType() {
         return true;
     }
 
@@ -58,8 +58,8 @@ public interface RoleType extends Type<RoleType> {
     }
 
     /**
-     * An SchemaConcept which defines a role which can be played in a RelationType
-     * This ontological element defines the Role which make up a RelationType.
+     * A SchemaConcept which defines a role which can be played in a RelationType.
+     * This ontological element defines the RoleTypes which make up a RelationType.
      * It behaves similarly to SchemaConcept when relating to other types.
      */
     interface Remote extends Type.Remote<RoleType>, RoleType {
@@ -79,49 +79,49 @@ public interface RoleType extends Type<RoleType> {
         RoleType.Remote label(Label label);
 
         /**
-         * Sets the super of this Role.
+         * Sets the supertype of this RoleType.
          *
-         * @param type The super of this Role
-         * @return The Role itself
+         * @param type The supertype of this RoleType.
+         * @return The RoleType itself.
          */
         RoleType.Remote sup(RoleType type);
 
         //------------------------------------- Accessors ----------------------------------
 
         /**
-         * Get the label of this role scoped to its relation.
+         * Get the label of this RoleType scoped to its relation.
          *
          * @return The scoped label
          */
         Label scopedLabel();
 
         /**
-         * @return All the super-types of this this Role
+         * @return All the supertypes of this RoleType.
          */
         @Override
         Stream<RoleType.Remote> sups();
 
         /**
-         * Returns the sub of this Role.
+         * Returns the subtype of this RoleType.
          *
-         * @return The sub of this Role
+         * @return The subtype of this RoleType.
          */
         @Override
         Stream<RoleType.Remote> subs();
 
         /**
-         * Returns the RelationTypes that this Role takes part in.
+         * Returns the RelationTypes that this RoleType takes part in.
          *
-         * @return The RelationType which this Role takes part in.
+         * @return The RelationType which this RoleType takes part in.
          * @see RelationType.Remote
          */
         @CheckReturnValue
         Stream<RelationType.Remote> relations();
 
         /**
-         * Returns a collection of the Types that can play this Role.
+         * Returns a collection of the Types that can play this RoleType.
          *
-         * @return A list of all the Types which can play this Role.
+         * @return A list of all the Types which can play this RoleType.
          * @see ThingType.Remote
          */
         @CheckReturnValue
@@ -131,14 +131,14 @@ public interface RoleType extends Type<RoleType> {
         @Deprecated
         @CheckReturnValue
         @Override
-        default RoleType.Remote asRole() {
+        default RoleType.Remote asRoleType() {
             return this;
         }
 
         @Deprecated
         @CheckReturnValue
         @Override
-        default boolean isRole() {
+        default boolean isRoleType() {
             return true;
         }
     }

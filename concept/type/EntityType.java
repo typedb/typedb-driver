@@ -90,27 +90,27 @@ public interface EntityType extends ThingType<EntityType, Entity> {
         EntityType.Remote isAbstract(Boolean isAbstract);
 
         /**
-         * Sets the Role which instances of this EntityType may play.
+         * Sets a RoleType which instances of this EntityType may play.
          *
-         * @param role The Role Type which the instances of this EntityType are allowed to play.
-         * @return The EntityType itself
+         * @param role The RoleType which the instances of this EntityType are allowed to play.
+         * @return The EntityType itself.
          */
         @Override
         EntityType.Remote plays(RoleType role);
 
         /**
-         * Removes the ability of this EntityType to play a specific Role
+         * Removes the ability of this EntityType to play a specific RoleType.
          *
-         * @param role The Role which the Things of this EntityType should no longer be allowed to play.
+         * @param role The RoleType which the Things of this EntityType should no longer be allowed to play.
          * @return The EntityType itself.
          */
         @Override
         EntityType.Remote unplay(RoleType role);
 
         /**
-         * Removes the ability for Things of this EntityType to have Attributes of type AttributeType
+         * Removes the ability for Things of this EntityType to have Attributes of type AttributeType.
          *
-         * @param attributeType the AttributeType which this EntityType can no longer have
+         * @param attributeType The AttributeType which this EntityType can no longer have.
          * @return The EntityType itself.
          */
         @Override

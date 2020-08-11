@@ -30,7 +30,8 @@ java_library(
 
         # External Maven Dependencies
         "@maven//:junit_junit",
-    ]
+    ],
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(

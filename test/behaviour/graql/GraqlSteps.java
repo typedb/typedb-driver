@@ -38,7 +38,6 @@ import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
-import graql.lang.statement.Variable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -472,7 +471,7 @@ public class GraqlSteps {
 
     private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
 
-        if (!(answerIdentifiers).keySet().equals(answer.map().keySet().stream().map(Variable::name).collect(Collectors.toSet()))) {
+        if (!(answerIdentifiers).keySet().equals(answer.map().keySet().stream().collect(Collectors.toSet()))) {
             return false;
         }
 
@@ -585,10 +584,10 @@ public class GraqlSteps {
             String matched = matcher.group(0);
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
 
-            builder.append(template.substring(i, matcher.start()));
-            if (templateFiller.map().containsKey(new Variable(requiredVariable))) {
+            builder.append(template, i, matcher.start());
+            if (templateFiller.map().containsKey(requiredVariable)) {
 
-                Concept concept = templateFiller.get(requiredVariable);
+                Concept<?> concept = templateFiller.get(requiredVariable);
                 String conceptId = concept.iid().toString();
                 builder.append(conceptId);
 
@@ -633,8 +632,8 @@ public class GraqlSteps {
         public boolean check(Concept concept) {
             if (concept.isType()) {
                 return label.equals(concept.asType().label().toString());
-            } else if (concept.isRole()) {
-                return label.equals(concept.asRole().label().toString());
+            } else if (concept.isRoleType()) {
+                return label.equals(concept.asRoleType().label().toString());
             } else if (concept.isRule()) {
                 return label.equals(concept.asRule().label().toString());
             } else {
