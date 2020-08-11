@@ -144,7 +144,7 @@ public class RelationSteps {
     @Then("relation {var} get players contain:")
     public void relation_get_players_contain(String var, Map<String, String> players) {
         Relation.Remote relation = get(var).asRelation();
-        players.forEach((rt, var2) -> assertTrue(relation.playersMap().get(relation.type().role(rt)).contains(get(var2.substring(1)))));
+        players.forEach((rt, var2) -> assertTrue(relation.playersByRole().get(relation.type().role(rt)).contains(get(var2.substring(1)))));
     }
 
     @Then("relation {var} get players do not contain:")
@@ -152,7 +152,7 @@ public class RelationSteps {
         Relation.Remote relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
             List<? extends Thing.Remote<?, ?>> p;
-            if ((p = relation.playersMap().get(relation.type().role(rt))) != null) {
+            if ((p = relation.playersByRole().get(relation.type().role(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }
         });

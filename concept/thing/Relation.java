@@ -112,7 +112,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersMap();
+        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersByRole();
 
         /**
          * Retrieves a list of every Thing involved in the Relation.

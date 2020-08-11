@@ -73,11 +73,11 @@ public class RelationImpl {
         }
 
         @Override
-        public final Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersMap() {
+        public final Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersByRole() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationPlayersMapIterReq(ConceptProto.Relation.PlayersMap.Iter.Req.getDefaultInstance()).build();
+                    .setRelationPlayersByRoleIterReq(ConceptProto.Relation.PlayersByRole.Iter.Req.getDefaultInstance()).build();
 
-            Stream<ConceptProto.Relation.PlayersMap.Iter.Res> stream = tx().iterateConceptMethod(iid(), method, ConceptProto.Method.Iter.Res::getRelationPlayersMapIterRes);
+            Stream<ConceptProto.Relation.PlayersByRole.Iter.Res> stream = tx().iterateConceptMethod(iid(), method, ConceptProto.Method.Iter.Res::getRelationPlayersByRoleIterRes);
 
             Map<RoleType.Remote, List<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
@@ -96,9 +96,9 @@ public class RelationImpl {
         @Override
         public Stream<Thing.Remote<?, ?>> players() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationAllPlayersIterReq(ConceptProto.Relation.AllPlayers.Iter.Req.newBuilder()).build();
+                    .setRelationPlayersIterReq(ConceptProto.Relation.Players.Iter.Req.newBuilder()).build();
 
-            return conceptStream(method, res -> res.getRelationAllPlayersIterRes().getThing()).map(Concept.Remote::asThing);
+            return conceptStream(method, res -> res.getRelationPlayersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
