@@ -112,7 +112,7 @@ public abstract class TypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setTypeSupsIterReq(ConceptProto.Type.Sups.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeSubsIterRes().getType())
+            return conceptStream(method, res -> res.getTypeSupsIterRes().getType())
                     .filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
         }
 
