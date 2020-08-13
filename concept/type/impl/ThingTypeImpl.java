@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -62,31 +62,31 @@ public abstract class ThingTypeImpl {
             extends TypeImpl.Remote<SomeRemoteType>
             implements ThingType.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        protected Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        protected Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> label(Label label) {
-            return (ThingType.Remote<SomeRemoteType, SomeRemoteThing>) super.label(label);
+        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setLabel(Label label) {
+            return (ThingType.Remote<SomeRemoteType, SomeRemoteThing>) super.setLabel(label);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSupertypes() {
+            return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> subs() {
-            return super.subs().map(this::asCurrentBaseType);
+        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSubtypes() {
+            return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> instances() {
+        public Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> getInstances() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setThingTypeInstancesIterReq(ConceptProto.ThingType.Instances.Iter.Req.getDefaultInstance()).build();
+                    .setThingTypeGetInstancesIterReq(ConceptProto.ThingType.GetInstances.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypeInstancesIterRes().getThing()).map(this::asInstance);
+            return conceptStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing()).map(this::asInstance);
         }
 
         @Override
@@ -108,8 +108,8 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote<D>> attributes(ValueType<D> valueType, boolean keysOnly) {
-            ConceptProto.ThingType.Attributes.Iter.Req.Builder req = ConceptProto.ThingType.Attributes.Iter.Req.newBuilder()
+        public final <D> Stream<AttributeType.Remote<D>> getOwns(ValueType<D> valueType, boolean keysOnly) {
+            ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
             if (valueType != null) {
@@ -118,22 +118,22 @@ public abstract class ThingTypeImpl {
                 req.setNULL(ConceptProto.Null.getDefaultInstance());
             }
 
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder().setThingTypeAttributesIterReq(req).build();
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
 
-            return conceptStream(method, res -> res.getThingTypeAttributesIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
+            return conceptStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
         }
 
         @Override
-        public final Stream<RoleType.Remote> playing() {
+        public final Stream<RoleType.Remote> getPlays() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setThingTypePlayingIterReq(ConceptProto.ThingType.Playing.Iter.Req.getDefaultInstance()).build();
+                    .setThingTypeGetPlaysIterReq(ConceptProto.ThingType.GetPlays.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypePlayingIterRes().getRole()).map(Concept.Remote::asRoleType);
+            return conceptStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(Concept.Remote::asRoleType);
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            ConceptProto.ThingType.Has.Req.Builder req = ConceptProto.ThingType.Has.Req.newBuilder()
+        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))
                     .setIsKey(isKey);
 
@@ -144,16 +144,16 @@ public abstract class ThingTypeImpl {
             }
 
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeHasReq(req).build();
+                    .setThingTypeSetOwnsReq(req).build();
 
             runMethod(method);
             return this;
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> plays(RoleType role) {
+        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypePlaysReq(ConceptProto.ThingType.Plays.Req.newBuilder()
+                    .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
             runMethod(method);
@@ -161,9 +161,9 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType) {
+        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetOwns(AttributeType<?> attributeType) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeUnhasReq(ConceptProto.ThingType.Unhas.Req.newBuilder()
+                    .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
                                              .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
 
             runMethod(method);
@@ -171,9 +171,9 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unplay(RoleType role) {
+        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeUnplayReq(ConceptProto.ThingType.Unplay.Req.newBuilder()
+                    .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                                               .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
             runMethod(method);

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Label;
 
@@ -43,7 +43,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
      * @return The unique label of this type
      */
     @CheckReturnValue
-    Label label();
+    Label getLabel();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -54,7 +54,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
     }
 
     @Override
-    Remote<BaseType> asRemote(GraknClient.Transaction tx);
+    Remote<BaseType> asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -84,23 +84,23 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
          * @param label The new Label.
          * @return The Concept itself
          */
-        Type.Remote<BaseType> label(Label label);
+        Type.Remote<BaseType> setLabel(Label label);
 
         //------------------------------------- Accessors ---------------------------------
 
         /**
-         * @return The direct super of this concept
+         * @return The direct supertype of this concept
          */
         @CheckReturnValue
         @Nullable
-        Type.Remote<BaseType> sup();
+        Type.Remote<BaseType> getSupertype();
 
         /**
          * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
          * Schema.MetaSchema#THING.
          * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
          */
-        Stream<? extends Type.Remote<BaseType>> sups();
+        Stream<? extends Type.Remote<BaseType>> getSupertypes();
 
         /**
          * Get all indirect subs of this concept.
@@ -109,7 +109,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
          * @return All the indirect sub-types of this SchemaConcept
          */
         @CheckReturnValue
-        Stream<? extends Type.Remote<BaseType>> subs();
+        Stream<? extends Type.Remote<BaseType>> getSubtypes();
 
 
         //------------------------------------- Other ---------------------------------

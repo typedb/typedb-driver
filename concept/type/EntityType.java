@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
@@ -45,7 +45,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return EntityType.Remote.of(tx, iid());
     }
 
@@ -66,7 +66,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
      */
     interface Remote extends ThingType.Remote<EntityType, Entity>, EntityType {
 
-        static EntityType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+        static EntityType.Remote of(Transaction tx, ConceptIID iid) {
             return new EntityTypeImpl.Remote(tx, iid);
         }
 
@@ -78,7 +78,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @param label The new Label.
          * @return The Concept itself
          */
-        EntityType.Remote label(Label label);
+        EntityType.Remote setLabel(Label label);
 
         /**
          * Sets the EntityType to be abstract - which prevents it from having any instances.
@@ -96,7 +96,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote plays(RoleType role);
+        EntityType.Remote setPlays(RoleType role);
 
         /**
          * Removes the ability of this EntityType to play a specific RoleType.
@@ -105,7 +105,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unplay(RoleType role);
+        EntityType.Remote unsetPlays(RoleType role);
 
         /**
          * Removes the ability for Things of this EntityType to have Attributes of type AttributeType.
@@ -114,7 +114,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unhas(AttributeType<?> attributeType);
+        EntityType.Remote unsetOwns(AttributeType<?> attributeType);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -130,7 +130,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return the new super type.
          * @see Entity.Remote This concept itself.
          */
-        EntityType.Remote sup(EntityType superEntityType);
+        EntityType.Remote setSupertype(EntityType superEntityType);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -139,13 +139,13 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The Type itself.
          */
         @Override
-        EntityType.Remote has(AttributeType<?> attributeType);
+        EntityType.Remote setOwns(AttributeType<?> attributeType);
         @Override
-        EntityType.Remote has(AttributeType<?> attributeType, boolean isKey);
+        EntityType.Remote setOwns(AttributeType<?> attributeType, boolean isKey);
         @Override
-        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType);
         @Override
-        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
+        EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -155,7 +155,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return All the super classes of this EntityType
          */
         @Override
-        Stream<EntityType.Remote> sups();
+        Stream<EntityType.Remote> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this EntityType.
@@ -163,7 +163,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return All the sub classes of this EntityType
          */
         @Override
-        Stream<EntityType.Remote> subs();
+        Stream<EntityType.Remote> getSubtypes();
 
         /**
          * Returns a collection of all Entity instances for this EntityType.
@@ -172,7 +172,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @see Entity.Remote
          */
         @Override
-        Stream<Entity.Remote> instances();
+        Stream<Entity.Remote> getInstances();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
@@ -30,7 +30,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
-    //------------------------------------- Accessors ----------------------------------
 
     /**
      * Retrieves the value of the Attribute.
@@ -38,7 +37,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * @return The value itself
      */
     @CheckReturnValue
-    D value();
+    D getValue();
 
     /**
      * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is an Thing.
@@ -54,9 +53,8 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * @return The data type of this Attribute's type.
      */
     @CheckReturnValue
-    ValueType<D> valueType();
+    ValueType<D> getValueType();
 
-    //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
@@ -70,7 +68,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
     @CheckReturnValue
     @Override
     default <T> Attribute<T> asAttribute(ValueType<T> valueType) {
-        if (!valueType().equals(valueType)) {
+        if (!getValueType().equals(valueType)) {
             throw GraknConceptException.invalidCasting(this, valueType.getClass());
         }
         return (Attribute<T>) this;
@@ -78,7 +76,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
 
     @CheckReturnValue
     @Override
-    default Remote<D> asRemote(GraknClient.Transaction tx) {
+    default Remote<D> asRemote(Transaction tx) {
         return Attribute.Remote.of(tx, iid());
     }
 
@@ -112,11 +110,9 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      */
     interface Remote<D> extends Thing.Remote<Attribute<D>, AttributeType<D>>, Attribute<D> {
 
-        static <D> Attribute.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
+        static <D> Attribute.Remote<D> of(Transaction tx, ConceptIID iid) {
             return new AttributeImpl.Remote<>(tx, iid);
         }
-
-        //------------------------------------- Accessors ----------------------------------
 
         /**
          * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is an Thing.
@@ -132,7 +128,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The list of all Instances that possess this Attribute.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> owners();
+        Stream<Thing.Remote<?, ?>> getOwners();
 
         /**
          * Creates a relation from this instance to the provided Attribute.
@@ -141,7 +137,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The instance itself
          */
         @Override
-        Attribute.Remote<D> has(Attribute<?> attribute);
+        Attribute.Remote<D> setHas(Attribute<?> attribute);
 
         /**
          * Removes the provided Attribute from this Attribute
@@ -150,9 +146,8 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The Attribute itself
          */
         @Override
-        Attribute.Remote<D> unhas(Attribute<?> attribute);
+        Attribute.Remote<D> unsetHas(Attribute<?> attribute);
 
-        //------------------------------------- Other ---------------------------------
         @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue

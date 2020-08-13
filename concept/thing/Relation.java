@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.type.RoleType;
@@ -57,7 +57,7 @@ public interface Relation extends Thing<Relation, RelationType> {
     }
 
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return Relation.Remote.of(tx, iid());
     }
 
@@ -79,11 +79,9 @@ public interface Relation extends Thing<Relation, RelationType> {
      */
     interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
 
-        static Relation.Remote of (GraknClient.Transaction tx, ConceptIID iid) {
+        static Relation.Remote of(Transaction tx, ConceptIID iid) {
             return new RelationImpl.Remote(tx, iid);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
 
         /**
          * Creates a relation from this instance to the provided Attribute.
@@ -92,9 +90,16 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return The instance itself
          */
         @Override
-        Relation.Remote has(Attribute<?> attribute);
+        Relation.Remote setHas(Attribute<?> attribute);
 
-        //------------------------------------- Accessors ----------------------------------
+        /**
+         * Removes the provided Attribute from this Relation
+         *
+         * @param attribute the Attribute to be removed
+         * @return The Relation itself
+         */
+        @Override
+        Relation.Remote unsetHas(Attribute<?> attribute);
 
         /**
          * Retrieve the associated RelationType for this Relation.
@@ -112,7 +117,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersByRoleType();
+        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> getPlayersByRoleType();
 
         /**
          * Retrieves a list of every Thing involved in the Relation.
@@ -120,7 +125,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return A list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> players();
+        Stream<Thing.Remote<?, ?>> getPlayers();
 
         /**
          * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
@@ -130,7 +135,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return A list of every Thing involved in the Relation, filtered by RoleType played.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> players(List<RoleType> roleTypes);
+        Stream<Thing.Remote<?, ?>> getPlayers(List<RoleType> roleTypes);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
@@ -139,16 +144,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param player The new role player.
          * @return The Relation itself.
          */
-        Relation.Remote relate(RoleType roleType, Thing<?, ?> player);
-
-        /**
-         * Removes the provided Attribute from this Relation
-         *
-         * @param attribute the Attribute to be removed
-         * @return The Relation itself
-         */
-        @Override
-        Relation.Remote unhas(Attribute<?> attribute);
+        void addPlayer(RoleType roleType, Thing<?, ?> player);
 
         /**
          * Removes the Thing which is playing a RoleType in this Relation.
@@ -157,9 +153,8 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param roleType The RoleType being played by the Thing
          * @param player The Thing playing the Role in this Relation
          */
-        void unrelate(RoleType roleType, Thing<?, ?> player);
+        void removePlayer(RoleType roleType, Thing<?, ?> player);
 
-        //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -48,28 +48,28 @@ public class RuleImpl {
      */
     public static class Remote extends TypeImpl.Remote<Rule> implements Rule.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final Stream<Rule.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public final Stream<Rule.Remote> getSupertypes() {
+            return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<Rule.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
+        public final Stream<Rule.Remote> getSubtypes() {
+            return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Rule.Remote label(Label label) {
-            return (Rule.Remote) super.label(label);
+        public final Rule.Remote setLabel(Label label) {
+            return (Rule.Remote) super.setLabel(label);
         }
 
         @Override
-        public Rule.Remote sup(Rule superRule) {
-            return (Rule.Remote) super.sup(superRule);
+        public Rule.Remote setSupertype(Rule superRule) {
+            return (Rule.Remote) super.setSupertype(superRule);
         }
 
         @Override

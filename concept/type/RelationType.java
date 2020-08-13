@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Relation;
@@ -43,7 +43,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
     }
 
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return RelationType.Remote.of(tx, iid());
     }
 
@@ -64,7 +64,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
      */
     interface Remote extends ThingType.Remote<RelationType, Relation>, RelationType {
 
-        static RelationType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+        static RelationType.Remote of(Transaction tx, ConceptIID iid) {
             return new RelationTypeImpl.Remote(tx, iid);
         }
 
@@ -83,7 +83,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @param superRelationType The super type to set.
          * @return This concept itself.
          */
-        RelationType.Remote sup(RelationType superRelationType);
+        RelationType.Remote setSupertype(RelationType superRelationType);
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -92,7 +92,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The Concept itself
          */
         @Override
-        RelationType.Remote label(Label label);
+        RelationType.Remote setLabel(Label label);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -101,13 +101,13 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The Type itself.
          */
         @Override
-        RelationType.Remote has(AttributeType<?> attributeType);
+        RelationType.Remote setOwns(AttributeType<?> attributeType);
         @Override
-        RelationType.Remote has(AttributeType<?> attributeType, boolean isKey);
+        RelationType.Remote setOwns(AttributeType<?> attributeType, boolean isKey);
         @Override
-        RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType);
         @Override
-        RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
+        RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -116,10 +116,11 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          *
          *
          */
-        default RoleType.Remote role(String role) {
-            return role(Label.of(role));
+        default RoleType.Remote getRelates(String role) {
+            return getRelates(Label.of(role));
         }
-        RoleType.Remote role(Label role);
+
+        RoleType.Remote getRelates(Label role);
 
         /**
          * Retrieves a list of the RoleTypes that make up this RelationType.
@@ -128,7 +129,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<RoleType.Remote> roles();
+        Stream<RoleType.Remote> getRelates();
 
         //------------------------------------- Edge Handling ----------------------------------
 
@@ -139,10 +140,11 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The RoleType itself.
          * @see RoleType.Remote
          */
-        default RoleType.Remote relates(String role) {
-            return relates(Label.of(role));
+        default RoleType.Remote setRelates(String role) {
+            return setRelates(Label.of(role));
         }
-        RoleType.Remote relates(Label role);
+
+        RoleType.Remote setRelates(Label role);
 
         //---- Inherited Methods
 
@@ -161,7 +163,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return All the supertypes of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> sups();
+        Stream<RelationType.Remote> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this RelationType.
@@ -169,7 +171,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return All the sub types of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> subs();
+        Stream<RelationType.Remote> getSubtypes();
 
         /**
          * Sets the RoleType which instances of this RelationType may play.
@@ -178,7 +180,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote plays(RoleType role);
+        RelationType.Remote setPlays(RoleType role);
 
         /**
          * Removes the ability of this RelationType to play a specific RoleType.
@@ -187,7 +189,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The RoleType itself.
          */
         @Override
-        RelationType.Remote unplay(RoleType role);
+        RelationType.Remote unsetPlays(RoleType role);
 
         /**
          * Removes the ability for instances of this RelationType to have Attributes of a specific AttributeType.
@@ -196,7 +198,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote unhas(AttributeType<?> attributeType);
+        RelationType.Remote unsetOwns(AttributeType<?> attributeType);
 
         /**
          * Retrieve all the Relation instances of this RelationType
@@ -205,7 +207,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @see Relation.Remote
          */
         @Override
-        Stream<Relation.Remote> instances();
+        Stream<Relation.Remote> getInstances();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

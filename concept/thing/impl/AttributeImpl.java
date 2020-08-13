@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
@@ -48,13 +48,13 @@ public class AttributeImpl {
         }
 
         @Override
-        public final D value() {
+        public final D getValue() {
             return value;
         }
 
         @Override
-        public final ValueType<D> valueType() {
-            return getType().valueType();
+        public final ValueType<D> getValueType() {
+            return getType().getValueType();
         }
     }
 
@@ -65,29 +65,29 @@ public class AttributeImpl {
      */
     public static class Remote<D> extends ThingImpl.Local.Remote<Attribute<D>, AttributeType<D>> implements Attribute.Remote<D> {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final D value() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeValueReq(ConceptProto.Attribute.Value.Req.getDefaultInstance()).build();
+        public final D getValue() {
+            final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-            ConceptProto.ValueObject value = runMethod(method).getAttributeValueRes().getValue();
+            final ConceptProto.ValueObject value = runMethod(method).getAttributeGetValueRes().getValue();
             return staticCastValue(value);
         }
 
         @Override
-        public final Stream<Thing.Remote<?, ?>> owners() {
+        public final Stream<Thing.Remote<?, ?>> getOwners() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setAttributeOwnersIterReq(ConceptProto.Attribute.Owners.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getAttributeOwnersIterRes().getThing()).map(Concept.Remote::asThing);
+                    .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
-        public final ValueType<D> valueType() {
-            return getType().valueType();
+        public final ValueType<D> getValueType() {
+            return getType().getValueType();
         }
 
         @Override
@@ -96,13 +96,13 @@ public class AttributeImpl {
         }
 
         @Override
-        public Attribute.Remote<D> has(Attribute<?> attribute) {
-            return (Attribute.Remote<D>) super.has(attribute);
+        public Attribute.Remote<D> setHas(Attribute<?> attribute) {
+            return (Attribute.Remote<D>) super.setHas(attribute);
         }
 
         @Override
-        public Attribute.Remote<D> unhas(Attribute<?> attribute) {
-            return (Attribute.Remote<D>) super.unhas(attribute);
+        public Attribute.Remote<D> unsetHas(Attribute<?> attribute) {
+            return (Attribute.Remote<D>) super.unsetHas(attribute);
         }
 
         @SuppressWarnings("unchecked")

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.type.EntityType;
@@ -33,7 +33,6 @@ import javax.annotation.CheckReturnValue;
  * other entities via Relation
  */
 public interface Entity extends Thing<Entity, EntityType> {
-    //------------------------------------- Accessors ----------------------------------
 
     /**
      * @return The EntityType of this Entity
@@ -42,7 +41,6 @@ public interface Entity extends Thing<Entity, EntityType> {
     @Override
     EntityType getType();
 
-    //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
@@ -52,7 +50,7 @@ public interface Entity extends Thing<Entity, EntityType> {
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return Entity.Remote.of(tx, iid());
     }
 
@@ -74,11 +72,9 @@ public interface Entity extends Thing<Entity, EntityType> {
      */
     interface Remote extends Thing.Remote<Entity, EntityType>, Entity {
 
-        static Entity.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+        static Entity.Remote of(Transaction tx, ConceptIID iid) {
             return new EntityImpl.Remote(tx, iid);
         }
-
-        //------------------------------------- Accessors ----------------------------------
 
         /**
          * @return The EntityType of this Entity
@@ -94,7 +90,7 @@ public interface Entity extends Thing<Entity, EntityType> {
          * @return The instance itself
          */
         @Override
-        Entity.Remote has(Attribute<?> attribute);
+        Entity.Remote setHas(Attribute<?> attribute);
 
         /**
          * Removes the provided Attribute from this Entity
@@ -103,9 +99,8 @@ public interface Entity extends Thing<Entity, EntityType> {
          * @return The Entity itself
          */
         @Override
-        Entity.Remote unhas(Attribute<?> attribute);
+        Entity.Remote unsetHas(Attribute<?> attribute);
 
-        //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override

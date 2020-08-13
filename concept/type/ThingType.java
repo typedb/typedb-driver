@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Label;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.thing.Thing;
@@ -44,7 +44,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
     }
 
     @Override
-    Remote<SomeType, SomeThing> asRemote(GraknClient.Transaction tx);
+    Remote<SomeType, SomeThing> asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -77,7 +77,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param label The new Label.
          * @return The Concept itself
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> label(Label label);
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setLabel(Label label);
 
         /**
          * Sets the Type to be abstract - which prevents it from having any instances.
@@ -91,7 +91,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param role The RoleType which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> plays(RoleType role);
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setPlays(RoleType role);
 
 
         /**
@@ -100,15 +100,18 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> otherType, boolean isKey);
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return has(attributeType, overriddenType, false);
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> otherType, boolean isKey);
+
+        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return setOwns(attributeType, overriddenType, false);
         }
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType, boolean isKey) {
-            return has(attributeType, null, isKey);
+
+        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, boolean isKey) {
+            return setOwns(attributeType, null, isKey);
         }
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType) {
-            return has(attributeType, false);
+
+        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType) {
+            return setOwns(attributeType, false);
         }
 
         //------------------------------------- Accessors ---------------------------------
@@ -116,32 +119,32 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
         /**
          * @return A list of RoleTypes which instances of this Type can indirectly play.
          */
-        Stream<RoleType.Remote> playing();
+        Stream<RoleType.Remote> getPlays();
 
         /**
          * @return The AttributeTypes which this Type is linked with, optionally only keys.
          * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        <D> Stream<? extends AttributeType.Remote<D>> attributes(ValueType<D> valueType, boolean keysOnly);
+        <D> Stream<? extends AttributeType.Remote<D>> getOwns(ValueType<D> valueType, boolean keysOnly);
         @CheckReturnValue
         default <D> Stream<? extends AttributeType.Remote<D>> attributes(ValueType<D> valueType) {
-            return attributes(valueType, false);
+            return getOwns(valueType, false);
         }
         @CheckReturnValue
-        default Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
-            return attributes(null, keysOnly);
+        default Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+            return getOwns(null, keysOnly);
         }
         @CheckReturnValue
         default Stream<? extends AttributeType.Remote<?>> attributes() {
-            return attributes(false);
+            return getOwns(false);
         }
 
         /**
          * @return All the the super-types of this Type
          */
         @Override
-        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> sups();
+        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSupertypes();
 
         /**
          * Get all indirect sub-types of this type.
@@ -151,7 +154,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          */
         @Override
         @CheckReturnValue
-        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> subs();
+        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSubtypes();
 
         /**
          * Get all indirect instances of this type.
@@ -160,7 +163,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @return All the indirect instances of this type.
          */
         @CheckReturnValue
-        Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> instances();
+        Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> getInstances();
 
         /**
          * Return if the type is set to abstract.
@@ -179,7 +182,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param role The RoleType which the Things of this Type should no longer be allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unplay(RoleType role);
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetPlays(RoleType role);
 
         /**
          * Removes the ability for Things of this Type to have Attributes of type AttributeType
@@ -187,7 +190,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param attributeType the AttributeType which this Type can no longer have
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType);
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetOwns(AttributeType<?> attributeType);
 
         @Deprecated
         @CheckReturnValue

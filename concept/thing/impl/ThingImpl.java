@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.impl.ConceptImpl;
@@ -80,7 +80,7 @@ public abstract class ThingImpl {
                 extends ConceptImpl.Remote<SomeRemoteThing>
                 implements Thing.Remote<SomeRemoteThing, SomeRemoteType> {
 
-            public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, ConceptIID iid) {
                 super(tx, iid);
             }
 
@@ -111,54 +111,54 @@ public abstract class ThingImpl {
 
             @SuppressWarnings("unchecked")
             @Override
-            public final <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType) {
+            public final <T> Stream<Attribute.Remote<T>> getHas(AttributeType<T> attributeType) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingAttributesIterReq(ConceptProto.Thing.Attributes.Iter.Req.newBuilder()
+                        .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
                                 .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
 
-                return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute)
+                return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute)
                         .map(a -> (Attribute.Remote<T>) a);
             }
 
             @Override
-            public final Stream<Attribute.Remote<?>> attributes(boolean keysOnly) {
+            public final Stream<Attribute.Remote<?>> getHas(boolean keysOnly) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingAttributesIterReq(ConceptProto.Thing.Attributes.Iter.Req.newBuilder().setKeysOnly(keysOnly)).build();
-                return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute);
+                        .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder().setKeysOnly(keysOnly)).build();
+                return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute);
             }
 
             @Override
-            public final Stream<Relation.Remote> relations(RoleType... roleTypes) {
+            public final Stream<Relation.Remote> getRelations(RoleType... roleTypes) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingRelationsIterReq(ConceptProto.Thing.Relations.Iter.Req.newBuilder()
-                                                      .addAllRoles(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
+                        .setThingGetRelationsIterReq(ConceptProto.Thing.GetRelations.Iter.Req.newBuilder()
+                                                      .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
 
-                return conceptStream(method, res -> res.getThingRelationsIterRes().getRelation()).map(Concept.Remote::asRelation);
+                return conceptStream(method, res -> res.getThingGetRelationsIterRes().getRelation()).map(Concept.Remote::asRelation);
             }
 
             @Override
-            public final Stream<RoleType.Remote> roleTypes() {
+            public final Stream<RoleType.Remote> getPlays() {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingRolesIterReq(ConceptProto.Thing.Roles.Iter.Req.getDefaultInstance()).build();
+                        .setThingGetPlaysIterReq(ConceptProto.Thing.GetPlays.Iter.Req.getDefaultInstance()).build();
 
-                return conceptStream(method, res -> res.getThingRolesIterRes().getRole()).map(Concept.Remote::asRoleType);
+                return conceptStream(method, res -> res.getThingGetPlaysIterRes().getRoleType()).map(Concept.Remote::asRoleType);
             }
 
             @Override
-            public Thing.Remote<SomeRemoteThing, SomeRemoteType> has(Attribute<?> attribute) {
+            public Thing.Remote<SomeRemoteThing, SomeRemoteType> setHas(Attribute<?> attribute) {
                 // TODO: replace usage of this method as a getter, with relations(Attribute attribute)
                 // TODO: then remove this method altogether and just use has(Attribute attribute)
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setThingHasReq(ConceptProto.Thing.Has.Req.newBuilder()
+                        .setThingSetHasReq(ConceptProto.Thing.SetHas.Req.newBuilder()
                                                    .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
                 runMethod(method);
                 return this;
             }
 
             @Override
-            public Thing.Remote<SomeRemoteThing, SomeRemoteType> unhas(Attribute<?> attribute) {
+            public Thing.Remote<SomeRemoteThing, SomeRemoteType> unsetHas(Attribute<?> attribute) {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setThingUnhasReq(ConceptProto.Thing.Unhas.Req.newBuilder()
+                        .setThingUnsetHasReq(ConceptProto.Thing.UnsetHas.Req.newBuilder()
                                                   .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
 
                 runMethod(method);

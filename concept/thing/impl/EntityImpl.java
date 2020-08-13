@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
@@ -43,7 +43,7 @@ public class EntityImpl {
      */
     public static class Remote extends ThingImpl.Local.Remote<Entity, EntityType> implements Entity.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
@@ -53,13 +53,13 @@ public class EntityImpl {
         }
 
         @Override
-        public Entity.Remote has(Attribute<?> attribute) {
-            return (Entity.Remote) super.has(attribute);
+        public Entity.Remote setHas(Attribute<?> attribute) {
+            return (Entity.Remote) super.setHas(attribute);
         }
 
         @Override
-        public Entity.Remote unhas(Attribute<?> attribute) {
-            return (Entity.Remote) super.unhas(attribute);
+        public Entity.Remote unsetHas(Attribute<?> attribute) {
+            return (Entity.Remote) super.unsetHas(attribute);
         }
 
         @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
@@ -48,7 +48,7 @@ public class MetaTypeImpl {
             extends ThingTypeImpl.Remote<SomeRemoteType, SomeRemoteThing>
             implements MetaType.Remote<SomeRemoteType, SomeRemoteThing> {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 

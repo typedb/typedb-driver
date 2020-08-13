@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -47,7 +47,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final Label label() {
+        public final Label getLabel() {
             return label;
         }
     }
@@ -57,13 +57,13 @@ public abstract class TypeImpl {
             extends ConceptImpl.Remote<BaseType>
             implements Type.Remote<BaseType> {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
-        public final Type.Remote<BaseType> sup(Type<?> type) {
+        public final Type.Remote<BaseType> setSupertype(Type<?> type) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setTypeSetSupReq(ConceptProto.Type.SetSup.Req.newBuilder()
+                    .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
                                                        .setType(RequestBuilder.ConceptMessage.from(type))).build();
 
             runMethod(method);
@@ -71,7 +71,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final Label label() {
+        public final Label getLabel() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();
 
@@ -79,7 +79,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public Type.Remote<BaseType> label(Label label) {
+        public Type.Remote<BaseType> setLabel(Label label) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                                                          .setLabel(label.getValue())).build();
@@ -90,11 +90,11 @@ public abstract class TypeImpl {
 
         @SuppressWarnings("unchecked")
         @Nullable
-        public Type.Remote<BaseType> sup() {
+        public Type.Remote<BaseType> getSupertype() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setTypeGetSupReq(ConceptProto.Type.GetSup.Req.getDefaultInstance()).build();
+                    .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
-            ConceptProto.Type.GetSup.Res response = runMethod(method).getTypeGetSupRes();
+            ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
 
             switch (response.getResCase()) {
                 case NULL:
@@ -108,20 +108,20 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public Stream<? extends Type.Remote<BaseType>> sups() {
+        public Stream<? extends Type.Remote<BaseType>> getSupertypes() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setTypeSupsIterReq(ConceptProto.Type.Sups.Iter.Req.getDefaultInstance()).build();
+                    .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeSubsIterRes().getType())
+            return conceptStream(method, res -> res.getTypeGetSupertypesIterRes().getType())
                     .filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
         }
 
         @Override
-        public Stream<? extends Type.Remote<BaseType>> subs() {
+        public Stream<? extends Type.Remote<BaseType>> getSubtypes() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setTypeSubsIterReq(ConceptProto.Type.Subs.Iter.Req.getDefaultInstance()).build();
+                    .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeSubsIterRes().getType()).map(this::asCurrentBaseType);
+            return conceptStream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(this::asCurrentBaseType);
         }
 
         @Override

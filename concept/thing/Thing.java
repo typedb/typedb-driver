@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
                        SomeType extends ThingType<SomeType, SomeThing>>
         extends Concept<SomeThing> {
-    //------------------------------------- Accessors ----------------------------------
 
     /**
      * Return the Type of the Concept.
@@ -56,7 +55,6 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      */
     boolean isInferred();
 
-    //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
@@ -65,7 +63,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
     }
 
     @Override
-    Remote<SomeThing, SomeType> asRemote(GraknClient.Transaction tx);
+    Remote<SomeThing, SomeType> asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -90,7 +88,6 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
             SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
             SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
             extends Concept.Remote<SomeRemoteThing>, Thing<SomeRemoteThing, SomeRemoteType> {
-        //------------------------------------- Accessors ----------------------------------
 
         /**
          * Return the Type of the Concept.
@@ -102,7 +99,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
         ThingType.Remote<SomeRemoteType, SomeRemoteThing> getType();
 
         /**
-         * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
+         * Retrieves the Relations which the Thing takes part in, which may optionally be narrowed to a particular set
          * according to the RoleType you are interested in.
          *
          * @param roleTypes An optional parameter which allows you to specify the role type of the relations you wish to retrieve.
@@ -111,7 +108,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Relation.Remote
          */
         @CheckReturnValue
-        Stream<Relation.Remote> relations(RoleType... roleTypes);
+        Stream<Relation.Remote> getRelations(RoleType... roleTypes);
 
         /**
          * Determine the RoleTypes that this Thing is currently playing.
@@ -120,7 +117,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<RoleType.Remote> roleTypes();
+        Stream<RoleType.Remote> getPlays();
 
         /**
          * Creates a Relation from this Thing to the provided Attribute.
@@ -130,7 +127,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute The Attribute to which a Relation is created
          * @return The instance itself
          */
-        Thing.Remote<SomeRemoteThing, SomeRemoteType> has(Attribute<?> attribute);
+        Thing.Remote<SomeRemoteThing, SomeRemoteType> setHas(Attribute<?> attribute);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing
@@ -141,8 +138,9 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         @CheckReturnValue
         Stream<Attribute.Remote<?>> getHas(AttributeType<?>... attributeTypes);
+
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType);
+        <T> Stream<Attribute.Remote<T>> getHas(AttributeType<T> attributeType);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
@@ -152,10 +150,11 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> attributes(boolean keysOnly);
+        Stream<Attribute.Remote<?>> getHas(boolean keysOnly);
+
         @CheckReturnValue
-        default Stream<Attribute.Remote<?>> attributes() {
-            return attributes(false);
+        default Stream<Attribute.Remote<?>> getHas() {
+            return getHas(false);
         }
 
         /**
@@ -164,7 +163,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute the Attribute to be removed
          * @return The Thing itself
          */
-        Thing.Remote<SomeRemoteThing, SomeRemoteType> unhas(Attribute<?> attribute);
+        Thing.Remote<SomeRemoteThing, SomeRemoteType> unsetHas(Attribute<?> attribute);
 
         /**
          * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -174,7 +173,6 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         boolean isInferred();
 
-        //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override

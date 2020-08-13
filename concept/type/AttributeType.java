@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
@@ -29,7 +29,6 @@ import grakn.client.concept.type.impl.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<D>> {
@@ -44,7 +43,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
      */
     @Nullable
     @CheckReturnValue
-    ValueType<D> valueType();
+    ValueType<D> getValueType();
 
     //------------------------------------- Other ---------------------------------
     @SuppressWarnings("unchecked")
@@ -60,14 +59,14 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
     @CheckReturnValue
     @Override
     default <T> AttributeType<T> asAttributeType(ValueType<T> valueType) {
-        if (!valueType.equals(valueType())) {
+        if (!valueType.equals(getValueType())) {
             throw GraknConceptException.invalidCasting(this, valueType.getClass());
         }
         return (AttributeType<T>) this;
     }
 
     @Override
-    default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
+    default AttributeType.Remote<D> asRemote(Transaction tx) {
         return AttributeType.Remote.of(tx, iid());
     }
 
@@ -105,7 +104,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
      */
     interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
-        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
+        static <D> AttributeType.Remote<D> of(Transaction tx, ConceptIID iid) {
             return new AttributeTypeImpl.Remote<>(tx, iid);
         }
 
@@ -117,7 +116,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @param label The new Label.
          * @return The Concept itself
          */
-        AttributeType.Remote<D> label(Label label);
+        AttributeType.Remote<D> setLabel(Label label);
 
         /**
          * Sets the AttributeType to be abstract - which prevents it from having any instances.
@@ -134,7 +133,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @param type The super type of this AttributeType.
          * @return The AttributeType itself.
          */
-        AttributeType.Remote<D> sup(AttributeType<D> type);
+        AttributeType.Remote<D> setSupertype(AttributeType<D> type);
 
         /**
          * Sets the RoleType which instances of this AttributeType may play.
@@ -143,7 +142,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> plays(RoleType role);
+        AttributeType.Remote<D> setPlays(RoleType role);
 
         /**
          * Removes the ability of this AttributeType to play a specific RoleType
@@ -152,7 +151,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unplay(RoleType role);
+        AttributeType.Remote<D> unsetPlays(RoleType role);
 
         /**
          * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType
@@ -161,7 +160,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unhas(AttributeType<?> attributeType);
+        AttributeType.Remote<D> unsetOwns(AttributeType<?> attributeType);
 
         /**
          * Set the regular expression that instances of the AttributeType must conform to.
@@ -169,7 +168,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @param regex The regular expression that instances of this AttributeType must conform to.
          * @return The AttributeType itself.
          */
-        AttributeType.Remote<D> regex(String regex);
+        AttributeType.Remote<D> setRegex(String regex);
 
         /**
          * Set the value for the Attribute, unique to its type.
@@ -186,13 +185,13 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The Type itself.
          */
         @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType);
+        AttributeType.Remote<D> setOwns(AttributeType<?> attributeType);
         @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey);
+        AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, boolean isKey);
         @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType);
         @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
+        AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -213,7 +212,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The super-types of this AttributeType
          */
         @Override
-        Stream<AttributeType.Remote<D>> sups();
+        Stream<AttributeType.Remote<D>> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this AttributeType.
@@ -221,7 +220,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The subtypes of this AttributeType
          */
         @Override
-        Stream<AttributeType.Remote<D>> subs();
+        Stream<AttributeType.Remote<D>> getSubtypes();
 
         /**
          * Returns a collection of all Attribute of this AttributeType.
@@ -229,7 +228,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          * @return The resource instances of this AttributeType
          */
         @Override
-        Stream<Attribute.Remote<D>> instances();
+        Stream<Attribute.Remote<D>> getInstances();
 
         /**
          * Retrieve the regular expression to which instances of this AttributeType must conform, or {@code null} if no
@@ -240,7 +239,7 @@ public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<
          */
         @CheckReturnValue
         @Nullable
-        String regex();
+        String getRegex();
 
         //------------------------------------- Other ---------------------------------
         @SuppressWarnings("unchecked")

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -51,48 +51,48 @@ public class EntityTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.has(attributeType);
+        public final EntityType.Remote setOwns(AttributeType<?> attributeType) {
+            return (EntityType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, boolean isKey) {
-            return (EntityType.Remote) super.has(attributeType, isKey);
+        public final EntityType.Remote setOwns(AttributeType<?> attributeType, boolean isKey) {
+            return (EntityType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return (EntityType.Remote) super.has(attributeType, overriddenType);
+        public final EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (EntityType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            return (EntityType.Remote) super.has(attributeType, overriddenType, isKey);
+        public final EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (EntityType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
-            return super.attributes(keysOnly);
+        public Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+            return super.getOwns(keysOnly);
         }
 
         @Override
-        public final EntityType.Remote plays(RoleType role) {
-            return (EntityType.Remote) super.plays(role);
+        public final EntityType.Remote setPlays(RoleType role) {
+            return (EntityType.Remote) super.setPlays(role);
         }
 
         @Override
-        public final EntityType.Remote unhas(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.unhas(attributeType);
+        public final EntityType.Remote unsetOwns(AttributeType<?> attributeType) {
+            return (EntityType.Remote) super.unsetOwns(attributeType);
         }
 
         @Override
-        public final EntityType.Remote unplay(RoleType role) {
-            return (EntityType.Remote) super.unplay(role);
+        public final EntityType.Remote unsetPlays(RoleType role) {
+            return (EntityType.Remote) super.unsetPlays(role);
         }
 
         @Override
@@ -101,23 +101,23 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final Stream<Entity.Remote> instances() {
-            return super.instances().map(this::asInstance);
+        public final Stream<Entity.Remote> getInstances() {
+            return super.getInstances().map(this::asInstance);
         }
 
         @Override
-        public final Stream<EntityType.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public final Stream<EntityType.Remote> getSupertypes() {
+            return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<EntityType.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
+        public final Stream<EntityType.Remote> getSubtypes() {
+            return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final EntityType.Remote label(Label label) {
-            return (EntityType.Remote) super.label(label);
+        public final EntityType.Remote setLabel(Label label) {
+            return (EntityType.Remote) super.setLabel(label);
         }
 
         @Override
@@ -129,8 +129,8 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote sup(EntityType superEntityType) {
-            return (EntityType.Remote) super.sup(superEntityType);
+        public final EntityType.Remote setSupertype(EntityType superEntityType) {
+            return (EntityType.Remote) super.setSupertype(superEntityType);
         }
 
         @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -47,48 +47,48 @@ public class RelationTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote<RelationType, Relation> implements RelationType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final RelationType.Remote has(AttributeType<?> attributeType) {
-            return (RelationType.Remote) super.has(attributeType);
+        public final RelationType.Remote setOwns(AttributeType<?> attributeType) {
+            return (RelationType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final RelationType.Remote has(AttributeType<?> attributeType, boolean isKey) {
-            return (RelationType.Remote) super.has(attributeType, isKey);
+        public final RelationType.Remote setOwns(AttributeType<?> attributeType, boolean isKey) {
+            return (RelationType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return (RelationType.Remote) super.has(attributeType, overriddenType);
+        public final RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (RelationType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            return (RelationType.Remote) super.has(attributeType, overriddenType, isKey);
+        public final RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (RelationType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
-            return super.attributes(keysOnly);
+        public Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+            return super.getOwns(keysOnly);
         }
 
         @Override
-        public final RelationType.Remote plays(RoleType role) {
-            return (RelationType.Remote) super.plays(role);
+        public final RelationType.Remote setPlays(RoleType role) {
+            return (RelationType.Remote) super.setPlays(role);
         }
 
         @Override
-        public final RelationType.Remote unhas(AttributeType<?> attributeType) {
-            return (RelationType.Remote) super.unhas(attributeType);
+        public final RelationType.Remote unsetOwns(AttributeType<?> attributeType) {
+            return (RelationType.Remote) super.unsetOwns(attributeType);
         }
 
         @Override
-        public final RelationType.Remote unplay(RoleType role) {
-            return (RelationType.Remote) super.unplay(role);
+        public final RelationType.Remote unsetPlays(RoleType role) {
+            return (RelationType.Remote) super.unsetPlays(role);
         }
 
         @Override
@@ -97,28 +97,28 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Stream<Relation.Remote> instances() {
-            return super.instances().map(this::asInstance);
+        public final Stream<Relation.Remote> getInstances() {
+            return super.getInstances().map(this::asInstance);
         }
 
         @Override
-        public final Stream<RelationType.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public final Stream<RelationType.Remote> getSupertypes() {
+            return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<RelationType.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
+        public final Stream<RelationType.Remote> getSubtypes() {
+            return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final RelationType.Remote label(Label label) {
-            return (RelationType.Remote) super.label(label);
+        public final RelationType.Remote setLabel(Label label) {
+            return (RelationType.Remote) super.setLabel(label);
         }
 
         @Override
-        public final RelationType.Remote sup(RelationType type) {
-            return (RelationType.Remote) super.sup(type);
+        public final RelationType.Remote setSupertype(RelationType type) {
+            return (RelationType.Remote) super.setSupertype(type);
         }
 
         @Override
@@ -130,29 +130,29 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RoleType.Remote role(Label role) {
+        public final RoleType.Remote getRelates(Label role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationTypeRoleReq(ConceptProto.RelationType.Role.Req.newBuilder().setLabel(role.getValue())).build();
+                    .setRelationTypeGetRelatesForRoleLabelReq(ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(role.getValue())).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeRoleRes().getRole());
+            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeGetRelatesForRoleLabelRes().getRole());
         }
 
         @Override
-        public final Stream<RoleType.Remote> roles() {
+        public final Stream<RoleType.Remote> getRelates() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationTypeRolesIterReq(ConceptProto.RelationType.Roles.Iter.Req.getDefaultInstance()).build();
+                    .setRelationTypeGetRelatesIterReq(ConceptProto.RelationType.GetRelates.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getRelationTypeRolesIterRes().getRole()).map(Concept.Remote::asRoleType);
+            return conceptStream(method, res -> res.getRelationTypeGetRelatesIterRes().getRole()).map(Concept.Remote::asRoleType);
         }
 
         @Override
-        public final RoleType.Remote relates(Label role) {
+        public final RoleType.Remote setRelates(Label role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationTypeRelatesReq(ConceptProto.RelationType.Relates.Req.newBuilder()
+                    .setRelationTypeSetRelatesReq(ConceptProto.RelationType.SetRelates.Req.newBuilder()
                                                        .setLabel(role.getValue())).build();
 
             runMethod(method);
-            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeRelatesRes().getRole());
+            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeSetRelatesRes().getRole());
         }
 
         @Override

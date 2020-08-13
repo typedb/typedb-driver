@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
@@ -46,47 +46,47 @@ public class RoleTypeImpl {
      */
     public static class Remote extends TypeImpl.Remote<RoleType> implements RoleType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final Stream<RoleType.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public final Stream<RoleType.Remote> getSupertypes() {
+            return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<RoleType.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
+        public final Stream<RoleType.Remote> getSubtypes() {
+            return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final RoleType.Remote label(Label label) {
-            return (RoleType.Remote) super.label(label);
+        public final RoleType.Remote setLabel(Label label) {
+            return (RoleType.Remote) super.setLabel(label);
         }
 
         @Override
-        public RoleType.Remote sup(RoleType superRole) {
-            return (RoleType.Remote) super.sup(superRole);
+        public RoleType.Remote setSupertype(RoleType superRole) {
+            return (RoleType.Remote) super.setSupertype(superRole);
         }
 
         @Override
-        public Label scopedLabel() {
-            return Label.of("unknown:" + label().getValue()); // TODO fix
+        public Label getScopedLabel() {
+            return Label.of("unknown:" + getLabel().getValue()); // TODO fix
         }
 
         @Override
-        public final Stream<RelationType.Remote> relations() {
+        public final Stream<RelationType.Remote> getRelations() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRoleRelationsIterReq(ConceptProto.RoleType.Relations.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept.Remote::asRelationType);
+                    .setRoleTypeGetRelationsIterReq(ConceptProto.RoleType.GetRelations.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getRoleTypeGetRelationsIterRes().getRelationType()).map(Concept.Remote::asRelationType);
         }
 
         @Override
-        public final Stream<ThingType.Remote<?, ?>> players() {
+        public final Stream<ThingType.Remote<?, ?>> getPlayers() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRolePlayersIterReq(ConceptProto.RoleType.Players.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRolePlayersIterRes().getThingType()).map(Concept.Remote::asType);
+                    .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 
         @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RoleTypeImpl;
@@ -43,7 +43,7 @@ public interface RoleType extends Type<RoleType> {
     }
 
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return RoleType.Remote.of(tx, iid());
     }
 
@@ -64,7 +64,7 @@ public interface RoleType extends Type<RoleType> {
      */
     interface Remote extends Type.Remote<RoleType>, RoleType {
 
-        static RoleType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+        static RoleType.Remote of(Transaction tx, ConceptIID iid) {
             return new RoleTypeImpl.Remote(tx, iid);
         }
 
@@ -76,7 +76,7 @@ public interface RoleType extends Type<RoleType> {
          * @param label The new Label.
          * @return The Concept itself
          */
-        RoleType.Remote label(Label label);
+        RoleType.Remote setLabel(Label label);
 
         /**
          * Sets the supertype of this RoleType.
@@ -84,7 +84,7 @@ public interface RoleType extends Type<RoleType> {
          * @param type The supertype of this RoleType.
          * @return The RoleType itself.
          */
-        RoleType.Remote sup(RoleType type);
+        RoleType.Remote setSupertype(RoleType type);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -93,13 +93,13 @@ public interface RoleType extends Type<RoleType> {
          *
          * @return The scoped label
          */
-        Label scopedLabel();
+        Label getScopedLabel();
 
         /**
          * @return All the supertypes of this RoleType.
          */
         @Override
-        Stream<RoleType.Remote> sups();
+        Stream<RoleType.Remote> getSupertypes();
 
         /**
          * Returns the subtype of this RoleType.
@@ -107,7 +107,7 @@ public interface RoleType extends Type<RoleType> {
          * @return The subtype of this RoleType.
          */
         @Override
-        Stream<RoleType.Remote> subs();
+        Stream<RoleType.Remote> getSubtypes();
 
         /**
          * Returns the RelationTypes that this RoleType takes part in.
@@ -116,7 +116,7 @@ public interface RoleType extends Type<RoleType> {
          * @see RelationType.Remote
          */
         @CheckReturnValue
-        Stream<RelationType.Remote> relations();
+        Stream<RelationType.Remote> getRelations();
 
         /**
          * Returns a collection of the Types that can play this RoleType.
@@ -125,7 +125,7 @@ public interface RoleType extends Type<RoleType> {
          * @see ThingType.Remote
          */
         @CheckReturnValue
-        Stream<ThingType.Remote<?, ?>> players();
+        Stream<ThingType.Remote<?, ?>> getPlayers();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

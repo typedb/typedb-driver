@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RuleImpl;
@@ -41,7 +41,7 @@ public interface Rule extends Type<Rule> {
     }
 
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return Remote.of(tx, iid());
     }
 
@@ -60,7 +60,7 @@ public interface Rule extends Type<Rule> {
      */
     interface Remote extends Type.Remote<Rule>, Rule {
 
-        static Rule.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+        static Rule.Remote of(Transaction tx, ConceptIID iid) {
             return new RuleImpl.Remote(tx, iid);
         }
 
@@ -94,26 +94,26 @@ public interface Rule extends Type<Rule> {
          * @param label The new Label.
          * @return The Concept itself
          */
-        Rule.Remote label(Label label);
+        Rule.Remote setLabel(Label label);
 
 
         /**
          * @param superRule The super of this Rule
          * @return The Rule itself
          */
-        Rule.Remote sup(Rule superRule);
+        Rule.Remote setSupertype(Rule superRule);
 
         /**
          * @return All the super-types of this this Rule
          */
         @Override
-        Stream<Rule.Remote> sups();
+        Stream<Rule.Remote> getSupertypes();
 
         /**
          * @return All the sub of this Rule
          */
         @Override
-        Stream<Rule.Remote> subs();
+        Stream<Rule.Remote> getSubtypes();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

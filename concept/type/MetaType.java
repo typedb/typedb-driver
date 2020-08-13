@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.impl.MetaTypeImpl;
@@ -39,7 +39,7 @@ public interface MetaType<
     }
 
     @Override
-    default MetaType.Remote<SomeType, SomeThing> asRemote(GraknClient.Transaction tx) {
+    default MetaType.Remote<SomeType, SomeThing> asRemote(Transaction tx) {
         return MetaType.Remote.of(tx, iid());
     }
 
@@ -67,7 +67,7 @@ public interface MetaType<
 
         static <SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
                 SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-        MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(GraknClient.Transaction tx, ConceptIID iid) {
+        MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(Transaction tx, ConceptIID iid) {
             return new MetaTypeImpl.Remote<>(tx, iid);
         }
 
