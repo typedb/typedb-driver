@@ -19,6 +19,8 @@
 
 package grakn.client.test.behaviour.connection.transaction;
 
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -54,7 +56,7 @@ public class TransactionSteps {
 
     @When("for each session, open transaction(s) of type:")
     public void for_each_session_open_transactions_of_type(List<Transaction.Type> types) {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             List<Transaction> transactions = new ArrayList<>();
             for (Transaction.Type type : types) {
                 Transaction transaction = session.transaction(type);
@@ -86,7 +88,7 @@ public class TransactionSteps {
 
     @Then("for each session, transaction(s) commit(s)")
     public void for_each_session_transactions_commit() {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 transaction.commit();
             }
@@ -95,7 +97,7 @@ public class TransactionSteps {
 
     @Then("for each session, transaction(s) commit(s); throws exception")
     public void for_each_session_transactions_commits_throws_exception() {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 assertThrows(transaction::commit);
             }
@@ -104,7 +106,7 @@ public class TransactionSteps {
 
     @Then("for each session, transaction close(s)")
     public void for_each_session_transaction_closes() {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 transaction.close();
             }
@@ -112,7 +114,7 @@ public class TransactionSteps {
     }
 
     private void for_each_session_transactions_are(Consumer<Transaction> assertion) {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 assertion.accept(transaction);
             }
@@ -121,7 +123,7 @@ public class TransactionSteps {
 
     @Then("for each session, transaction(s) has/have type:")
     public void for_each_session_transactions_have_type(List<Transaction.Type> types) {
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             List<Transaction> transactions = sessionsToTransactions.get(session);
             assertEquals(types.size(), transactions.size());
 
@@ -140,7 +142,7 @@ public class TransactionSteps {
     @When("for each session, open transaction(s) in parallel of type:")
     public void for_each_session_open_transactions_in_parallel_of_type(List<Transaction.Type> types) {
         assertTrue(THREAD_POOL_SIZE >= types.size());
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
             for (Transaction.Type type : types) {
                 transactionsParallel.add(CompletableFuture.supplyAsync(() -> session.transaction(type), threadPool));
@@ -161,7 +163,7 @@ public class TransactionSteps {
 
     private void for_each_session_transactions_in_parallel_are(Consumer<Transaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             for (CompletableFuture<Transaction> futureTransaction :
                     sessionsToTransactionsParallel.get(session)) {
 
@@ -174,7 +176,7 @@ public class TransactionSteps {
     @Then("for each session, transactions in parallel have type:")
     public void for_each_session_transactions_in_parallel_have_type(List<Transaction.Type> types) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (GraknClientOld.Session session : sessions) {
+        for (Session session : sessions) {
             List<CompletableFuture<Transaction>> futureTxs =
                     sessionsToTransactionsParallel.get(session);
 
@@ -211,7 +213,7 @@ public class TransactionSteps {
 
     private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<Transaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (CompletableFuture<GraknClientOld.Session> futureSession : sessionsParallel) {
+        for (CompletableFuture<Session> futureSession : sessionsParallel) {
             for (CompletableFuture<Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
                 assertions.add(futureTransaction.thenApply(transaction -> {
                     assertion.accept(transaction);

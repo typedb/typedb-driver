@@ -19,6 +19,8 @@
 
 package grakn.client.test.behaviour.graql;
 
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
 import com.google.common.collect.Iterators;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
@@ -64,7 +66,7 @@ import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
-    private static GraknClientOld.Session session = null;
+    private static Session session = null;
     private static Transaction tx = null;
 
     private static List<ConceptMap> answers;

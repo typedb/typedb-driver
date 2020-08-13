@@ -17,6 +17,10 @@
 
 package grakn.client.test.assembly;
 
+import grakn.client.Grakn;
+import grakn.client.Grakn.Client;
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
 import grakn.client.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
@@ -76,29 +80,28 @@ import static org.hamcrest.Matchers.hasSize;
 public class QueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknCoreRunner grakn;
-    private static GraknClientOld graknClient;
+    private static Client graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
-        graknClient = new GraknClientOld(grakn.address());
+        graknClient = Grakn.client(grakn.address());
     }
 
     @AfterClass
-    public static void closeSession() throws InterruptedException, TimeoutException, IOException {
+    public static void closeSession() throws Exception {
         graknClient.close();
         grakn.stop();
     }
 
     @Before
     public void createClient() {
-        String host = "localhost:48555";
-        graknClient = new GraknClientOld(host);
+        graknClient = Grakn.client();
     }
 
     @After
-    public void closeClient(){
+    public void closeClient() throws Exception {
         graknClient.close();
     }
 
@@ -138,7 +141,7 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - assert if schema defined...");
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
-                    .map(answer -> answer.get("t").asType().label().getValue()).collect(Collectors.toList());
+                    .map(answer -> answer.get("t").asType().getLabel().getValue()).collect(Collectors.toList());
             String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
                     "lion", "mating", "parentship", "child-bearing", "name" };
             assertThat(definedSchema, hasItems(correctSchema));
@@ -260,7 +263,7 @@ public class QueryTest {
 
     private void localhostGraknTx(Consumer<Transaction> fn) {
         String database = "grakn";
-        try (GraknClientOld.Session session = graknClient.session(database)) {
+        try (Session session = graknClient.session(database)) {
             try (Transaction transaction = session.transaction().write()) {
                 fn.accept(transaction);
             }

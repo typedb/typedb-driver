@@ -65,6 +65,8 @@ public final class Grakn {
 
 		boolean isOpen();
 
+		void close();
+
 		Session session(String databaseName);
 
 		Session schemaSession(String databaseName);
@@ -85,6 +87,8 @@ public final class Grakn {
 		Transaction transaction(Transaction.Type type);
 
 		boolean isOpen();
+
+		void close();
 
 		Database database();
 
@@ -121,85 +125,87 @@ public final class Grakn {
 
 		Database database();
 
-		Future<List<ConceptMap>> execute(GraqlDefine query);
+		void close();
 
-		Future<List<ConceptMap>> execute(GraqlUndefine query);
+		QueryFuture<List<ConceptMap>> execute(GraqlDefine query);
 
-		Future<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
+		QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
 
-		Future<List<ConceptMap>> execute(GraqlInsert query);
+		QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
 
-		Future<List<Void>> execute(GraqlDelete query, QueryOptions options);
+		QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
 
-		Future<List<Void>> execute(GraqlDelete query);
+		QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
 
-		Future<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
+		QueryFuture<List<Void>> execute(GraqlDelete query);
 
-		Future<List<ConceptMap>> execute(GraqlGet query);
+		QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
 
-		Future<Stream<ConceptMap>> stream(GraqlDefine query);
+		QueryFuture<List<ConceptMap>> execute(GraqlGet query);
 
-		Future<Stream<ConceptMap>> stream(GraqlUndefine query);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query);
 
-		Future<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
 
-		Future<Stream<ConceptMap>> stream(GraqlInsert query);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
 
-		Future<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
 
-		Future<Stream<Void>> stream(GraqlDelete query);
+		QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
 
-		Future<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
+		QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-		Future<Stream<ConceptMap>> stream(GraqlGet query);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
 
-		Future<List<Numeric>> execute(GraqlGet.Aggregate query);
+		QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
 
-		Future<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
+		QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
 
-		Future<Stream<Numeric>> stream(GraqlGet.Aggregate query);
+		QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
 
-		Future<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
+		QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
 
-		Future<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
+		QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
 
-		Future<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
+		QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
 
-		Future<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
+		QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
 
-		Future<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
+		QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
 
-		Future<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
+		QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
 
-		Future<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
+		QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
 
-		Future<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
+		QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
 
-		Future<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
+		QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
 
-		Future<List<Numeric>> execute(GraqlCompute.Statistics query);
+		QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
 
-		Future<Stream<Numeric>> stream(GraqlCompute.Statistics query);
+		QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 
-		Future<List<ConceptList>> execute(GraqlCompute.Path query);
+		QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query);
 
-		Future<Stream<ConceptList>> stream(GraqlCompute.Path query);
+		QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query);
 
-		Future<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query);
+		QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query);
 
-		Future<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query);
+		QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query);
 
-		Future<List<ConceptSet>> execute(GraqlCompute.Cluster query);
+		QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query);
 
-		Future<Stream<ConceptSet>> stream(GraqlCompute.Cluster query);
+		QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query);
 
-		Future<? extends List<? extends Answer>> execute(GraqlQuery query);
+		QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query);
 
-		Future<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
+		QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
 
-		Future<? extends Stream<? extends Answer>> stream(GraqlQuery query);
+		QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
 
-		Future<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
+		QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
+
+		QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
 
 		boolean isOpen();
 
@@ -276,6 +282,17 @@ public final class Grakn {
 			 */
 			Transaction write();
 		}
+
+		/**
+		 * An extension of @code Future that catches @code InterruptedException and @code ExecutionException.
+		 */
+		interface QueryFuture<T> extends Future<T> {
+			@Override
+	        T get();
+
+			@Override
+	        T get(long timeout, TimeUnit unit) throws TimeoutException;
+	    }
 
 		interface Option<T> {
         }
