@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package grakn.client;
 
 import grakn.client.answer.Answer;
@@ -47,11 +66,11 @@ import java.util.stream.Stream;
 
 public final class Grakn {
 
-	public static Client client() {
-		return new GraknClient();
-	}
+    public static Client client() {
+        return new GraknClient();
+    }
 
-	public static Client client(String address) {
+    public static Client client(String address) {
         return new GraknClient(address, null, null);
     }
 
@@ -59,40 +78,40 @@ public final class Grakn {
         return new GraknClient(address, username, password);
     }
 
-	public interface Client extends AutoCloseable {
+    public interface Client extends AutoCloseable {
 
-		GraknClient overrideChannel(ManagedChannel channel);
+        GraknClient overrideChannel(ManagedChannel channel);
 
-		boolean isOpen();
+        boolean isOpen();
 
-		void close();
+        void close();
 
-		Session session(String databaseName);
+        Session session(String databaseName);
 
-		Session schemaSession(String databaseName);
+        Session schemaSession(String databaseName);
 
-		Session session(String databaseName, Session.Type type);
+        Session session(String databaseName, Session.Type type);
 
-		DatabaseManager databases();
-	}
+        DatabaseManager databases();
+    }
 
-	/**
-	 * @see Transaction
-	 * @see Client
-	 */
-	public interface Session extends AutoCloseable {
+    /**
+     * @see Transaction
+     * @see Client
+     */
+    public interface Session extends AutoCloseable {
 
-		Transaction.Builder transaction();
+        Transaction.Builder transaction();
 
-		Transaction transaction(Transaction.Type type);
+        Transaction transaction(Transaction.Type type);
 
-		boolean isOpen();
+        boolean isOpen();
 
-		void close();
+        void close();
 
-		Database database();
+        Database database();
 
-		enum Type {
+        enum Type {
             DATA(0),
             SCHEMA(1);
 
@@ -115,302 +134,302 @@ public final class Grakn {
 
             public boolean isSchema() { return isSchema; }
         }
-	}
+    }
 
-	public interface Transaction extends AutoCloseable {
+    public interface Transaction extends AutoCloseable {
 
-		Type type();
+        Type type();
 
-		Session session();
+        Session session();
 
-		Database database();
+        Database database();
 
-		void close();
+        void close();
 
-		QueryFuture<List<ConceptMap>> execute(GraqlDefine query);
+        QueryFuture<List<ConceptMap>> execute(GraqlDefine query);
 
-		QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
+        QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
 
-		QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
 
-		QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
+        QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
 
-		QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
+        QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
 
-		QueryFuture<List<Void>> execute(GraqlDelete query);
+        QueryFuture<List<Void>> execute(GraqlDelete query);
 
-		QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
 
-		QueryFuture<List<ConceptMap>> execute(GraqlGet query);
+        QueryFuture<List<ConceptMap>> execute(GraqlGet query);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
 
-		QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
+        QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
 
-		QueryFuture<Stream<Void>> stream(GraqlDelete query);
+        QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
 
-		QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
 
-		QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
+        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
 
-		QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
 
-		QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
+        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
 
-		QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
 
-		QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
 
-		QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
 
-		QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
 
-		QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
 
-		QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
 
-		QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
 
-		QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
 
-		QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
 
-		QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
+        QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 
-		QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query);
+        QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query);
 
-		QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query);
+        QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query);
 
-		QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query);
+        QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query);
 
-		QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query);
+        QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query);
 
-		QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query);
+        QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query);
 
-		QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query);
+        QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query);
 
-		QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query);
+        QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query);
 
-		QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
+        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
 
-		QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
 
-		QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
+        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
 
-		QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
 
-		boolean isOpen();
+        boolean isOpen();
 
-		void commit();
+        void commit();
 
-		ThingType.Remote<?, ?> getRootType();
+        ThingType.Remote<?, ?> getRootType();
 
-		@Nullable
-		ThingType.Remote<?, ?> getThingType(Label label);
+        @Nullable
+        ThingType.Remote<?, ?> getThingType(Label label);
 
-		@Nullable
-		EntityType.Remote getEntityType(String label);
+        @Nullable
+        EntityType.Remote getEntityType(String label);
 
-		@Nullable
-		RelationType.Remote getRelationType(String label);
+        @Nullable
+        RelationType.Remote getRelationType(String label);
 
-		@Nullable
-		AttributeType.Remote<?> getAttributeType(String label);
+        @Nullable
+        AttributeType.Remote<?> getAttributeType(String label);
 
-		@Nullable
-		Rule.Remote getRule(String label);
+        @Nullable
+        Rule.Remote getRule(String label);
 
-		@Nullable
-		grakn.client.concept.type.Type.Remote<?> getType(Label label);
+        @Nullable
+        grakn.client.concept.type.Type.Remote<?> getType(Label label);
 
-		grakn.client.concept.type.Type.Remote<?> getMetaConcept();
+        grakn.client.concept.type.Type.Remote<?> getMetaConcept();
 
-		RelationType.Remote getMetaRelationType();
+        RelationType.Remote getMetaRelationType();
 
-		RoleType.Remote getMetaRoleType();
+        RoleType.Remote getMetaRoleType();
 
-		AttributeType.Remote<?> getMetaAttributeType();
+        AttributeType.Remote<?> getMetaAttributeType();
 
-		EntityType.Remote getMetaEntityType();
+        EntityType.Remote getMetaEntityType();
 
-		Rule.Remote getMetaRule();
+        Rule.Remote getMetaRule();
 
-		@Nullable
-		Concept.Remote<?> getConcept(ConceptIID iid);
+        @Nullable
+        Concept.Remote<?> getConcept(ConceptIID iid);
 
-		EntityType.Remote putEntityType(String label);
+        EntityType.Remote putEntityType(String label);
 
-		EntityType.Remote putEntityType(Label label);
+        EntityType.Remote putEntityType(Label label);
 
-		<V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType);
+        <V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType);
 
-		<V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType);
+        <V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType);
 
-		RelationType.Remote putRelationType(String label);
+        RelationType.Remote putRelationType(String label);
 
-		RelationType.Remote putRelationType(Label label);
+        RelationType.Remote putRelationType(Label label);
 
-		Rule.Remote putRule(String label, Pattern when, Pattern then);
+        Rule.Remote putRule(String label, Pattern when, Pattern then);
 
-		Rule.Remote putRule(Label label, Pattern when, Pattern then);
+        Rule.Remote putRule(Label label, Pattern when, Pattern then);
 
-		TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method);
+        TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method);
 
-		<T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader);
+        <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader);
 
-		Explanation getExplanation(ConceptMap explainable);
+        Explanation getExplanation(ConceptMap explainable);
 
-		<T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader);
+        <T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader);
 
-		interface Builder {
+        interface Builder {
 
-			/**
-			 * Read-only transaction, where database mutation is prohibited
-			 */
-			Transaction read();
+            /**
+             * Read-only transaction, where database mutation is prohibited
+             */
+            Transaction read();
 
-			/**
-			 * Write transaction, where database mutation is allowed
-			 */
-			Transaction write();
-		}
-
-		/**
-		 * An extension of @code Future that catches @code InterruptedException and @code ExecutionException.
-		 */
-		interface QueryFuture<T> extends Future<T> {
-			@Override
-	        T get();
-
-			@Override
-	        T get(long timeout, TimeUnit unit) throws TimeoutException;
-	    }
-
-		interface Option<T> {
+            /**
+             * Write transaction, where database mutation is allowed
+             */
+            Transaction write();
         }
 
-		interface QueryOptions {
+        /**
+         * An extension of @code Future that catches @code InterruptedException and @code ExecutionException.
+         */
+        interface QueryFuture<T> extends Future<T> {
+            @Override
+            T get();
 
-	        QueryOptions infer(boolean infer);
+            @Override
+            T get(long timeout, TimeUnit unit) throws TimeoutException;
+        }
 
-	        QueryOptions explain(boolean explain);
+        interface Option<T> {
+        }
 
-	        QueryOptions batchSize(int size);
+        interface QueryOptions {
 
-	        QueryOptions batchSize(BatchSize batchSize);
+            QueryOptions infer(boolean infer);
 
-	        <T> QueryOptions set(Option<T> flag, T value);
+            QueryOptions explain(boolean explain);
 
-	        <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer);
-	    }
+            QueryOptions batchSize(int size);
 
-	    // TODO: align this tremendously awkward interface with core
-	    interface Options {
-	        QueryOptions DEFAULT = new GraknTransaction.QueryOptionsImpl();
+            QueryOptions batchSize(BatchSize batchSize);
 
-	        static QueryOptions infer(boolean infer) {
-	            return DEFAULT.infer(infer);
-	        }
+            <T> QueryOptions set(Option<T> flag, T value);
 
-	        static QueryOptions explain(boolean explain) {
-	            return DEFAULT.explain(explain);
-	        }
+            <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer);
+        }
 
-	        static QueryOptions batchSize(int size) {
-	            return DEFAULT.batchSize(size);
-	        }
+        // TODO: align this tremendously awkward interface with core
+        interface Options {
+            QueryOptions DEFAULT = new GraknTransaction.QueryOptionsImpl();
 
-	        static QueryOptions batchSize(BatchSize batchSize) {
-	            return DEFAULT.batchSize(batchSize);
-	        }
-	    }
+            static QueryOptions infer(boolean infer) {
+                return DEFAULT.infer(infer);
+            }
 
-		enum Type {
+            static QueryOptions explain(boolean explain) {
+                return DEFAULT.explain(explain);
+            }
 
-			/**
-			 * Read-only transaction, where database mutation is prohibited
-			 */
-	        READ(0),
+            static QueryOptions batchSize(int size) {
+                return DEFAULT.batchSize(size);
+            }
 
-			/**
-			 * Write transaction, where database mutation is allowed
-			 */
-			WRITE(1);
+            static QueryOptions batchSize(BatchSize batchSize) {
+                return DEFAULT.batchSize(batchSize);
+            }
+        }
 
-	        private final int type;
+        enum Type {
 
-	        Type(int type) {
-	            this.type = type;
-	        }
+            /**
+             * Read-only transaction, where database mutation is prohibited
+             */
+            READ(0),
 
-	        public int iid() {
-	            return type;
-	        }
+            /**
+             * Write transaction, where database mutation is allowed
+             */
+            WRITE(1);
 
-	        @Override
-	        public String toString() {
-	            return this.name();
-	        }
+            private final int type;
 
-	        public static Type of(int value) {
-	            for (Type t : Transaction.Type.values()) {
-	                if (t.type == value) return t;
-	            }
-	            return null;
-	        }
+            Type(int type) {
+                this.type = type;
+            }
 
-	        public static Type of(String value) {
-	            for (Type t : Transaction.Type.values()) {
-	                if (t.name().equalsIgnoreCase(value)) return t;
-	            }
-	            return null;
-	        }
-	    }
+            public int iid() {
+                return type;
+            }
 
-	    enum BooleanOption implements Option<Boolean> {
-	        INFER,
-	        EXPLAIN
-	    }
+            @Override
+            public String toString() {
+                return this.name();
+            }
 
-	    enum BatchOption implements Option<TransactionProto.Transaction.Iter.Req.Options> {
-	        BATCH_SIZE
-	    }
+            public static Type of(int value) {
+                for (Type t : Transaction.Type.values()) {
+                    if (t.type == value) return t;
+                }
+                return null;
+            }
 
-	    enum BatchSize {
-	        ALL
-	    }
-	}
+            public static Type of(String value) {
+                for (Type t : Transaction.Type.values()) {
+                    if (t.name().equalsIgnoreCase(value)) return t;
+                }
+                return null;
+            }
+        }
 
-	/**
-	 * Manages a collection of Grakn databases.
-	 */
-	public interface DatabaseManager {
+        enum BooleanOption implements Option<Boolean> {
+            INFER,
+            EXPLAIN
+        }
 
-		boolean contains(String name);
+        enum BatchOption implements Option<TransactionProto.Transaction.Iter.Req.Options> {
+            BATCH_SIZE
+        }
 
-		void create(String name);
+        enum BatchSize {
+            ALL
+        }
+    }
 
-		void delete(String name);
+    /**
+     * Manages a collection of Grakn databases.
+     */
+    public interface DatabaseManager {
 
-		List<String> all();
-	}
+        boolean contains(String name);
 
-	public interface Database extends Serializable {
+        void create(String name);
 
-		@CheckReturnValue
-		static Database of(String name) {
-		    return new GraknDatabase(name);
-		}
+        void delete(String name);
 
-		@CheckReturnValue
-		String name();
-	}
+        List<String> all();
+    }
+
+    public interface Database extends Serializable {
+
+        @CheckReturnValue
+        static Database of(String name) {
+            return new GraknDatabase(name);
+        }
+
+        @CheckReturnValue
+        String name();
+    }
 }
