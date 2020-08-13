@@ -362,7 +362,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                     return (BaseType) new RelationTypeImpl.Local(concept);
                 case ATTRIBUTE_TYPE:
                     return (BaseType) new AttributeTypeImpl.Local<>(concept);
-                case ROLE:
+                case ROLE_TYPE:
                     return (BaseType) new RoleTypeImpl.Local(concept);
                 case RULE:
                     return (BaseType) new RuleImpl.Local(concept);
@@ -400,7 +400,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                     return (RemoteType) new RelationTypeImpl.Remote(tx, iid);
                 case ATTRIBUTE_TYPE:
                     return (RemoteType) new AttributeTypeImpl.Remote<>(tx, iid);
-                case ROLE:
+                case ROLE_TYPE:
                     return (RemoteType) new RoleTypeImpl.Remote(tx, iid);
                 case RULE:
                     return (RemoteType) new RuleImpl.Remote(tx, iid);

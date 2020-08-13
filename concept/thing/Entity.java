@@ -40,7 +40,7 @@ public interface Entity extends Thing<Entity, EntityType> {
      * @see EntityType
      */
     @Override
-    EntityType type();
+    EntityType getType();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -85,7 +85,7 @@ public interface Entity extends Thing<Entity, EntityType> {
          * @see EntityType.Remote
          */
         @Override
-        EntityType.Remote type();
+        EntityType.Remote getType();
 
         /**
          * Creates a relation from this instance to the provided Attribute.

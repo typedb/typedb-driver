@@ -46,7 +46,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    ThingType<SomeType, SomeThing> type();
+    ThingType<SomeType, SomeThing> getType();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -99,7 +99,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         @Override
         @CheckReturnValue
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> type();
+        ThingType.Remote<SomeRemoteType, SomeRemoteThing> getType();
 
         /**
          * Retrieves a Relations which the Thing takes part in, which may optionally be narrowed to a particular set
@@ -140,7 +140,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> attributes(AttributeType<?>... attributeTypes);
+        Stream<Attribute.Remote<?>> getHas(AttributeType<?>... attributeTypes);
         @CheckReturnValue
         <T> Stream<Attribute.Remote<T>> attributes(AttributeType<T> attributeType);
 

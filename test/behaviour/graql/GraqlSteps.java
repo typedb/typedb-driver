@@ -665,7 +665,7 @@ public class GraqlSteps {
 
         public boolean check(Concept concept) {
             return concept.isAttribute()
-                    && type.equals(concept.asAttribute().type().label().toString())
+                    && type.equals(concept.asAttribute().getType().label().toString())
                     && value.equals(concept.asAttribute().value().toString());
         }
     }
@@ -690,7 +690,7 @@ public class GraqlSteps {
 
             for (Attribute<?> key : keys) {
                 keyMap.put(
-                        key.type().label().toString(),
+                        key.getType().label().toString(),
                         key.value().toString());
             }
             return value.equals(keyMap.get(type));

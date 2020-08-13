@@ -59,7 +59,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final SomeType type() {
+        public final SomeType getType() {
             return type;
         }
 
@@ -85,11 +85,11 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public ThingType.Remote<SomeRemoteType, SomeRemoteThing> type() {
+            public ThingType.Remote<SomeRemoteType, SomeRemoteThing> getType() {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setThingTypeReq(ConceptProto.Thing.Type.Req.getDefaultInstance()).build();
+                        .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
-                return Concept.Remote.of(tx(), runMethod(method).getThingTypeRes().getThingType());
+                return Concept.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType());
             }
 
             @Override
@@ -101,12 +101,12 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Attribute.Remote<?>> attributes(AttributeType<?>... attributeTypes) {
+            public final Stream<Attribute.Remote<?>> getHas(AttributeType<?>... attributeTypes) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                        .setThingAttributesIterReq(ConceptProto.Thing.Attributes.Iter.Req.newBuilder()
+                        .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
                                                        .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
 
-                return conceptStream(method, res -> res.getThingAttributesIterRes().getAttribute()).map(Concept.Remote::asAttribute);
+                return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute);
             }
 
             @SuppressWarnings("unchecked")

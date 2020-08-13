@@ -58,8 +58,8 @@ public class RelationImpl {
         }
 
         @Override
-        public final RelationType.Remote type() {
-            return (RelationType.Remote) super.type();
+        public final RelationType.Remote getType() {
+            return (RelationType.Remote) super.getType();
         }
 
         @Override

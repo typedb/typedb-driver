@@ -46,7 +46,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * @return The AttributeType of which this resource is an Thing.
      */
     @Override
-    AttributeType<D> type();
+    AttributeType<D> getType();
 
     /**
      * Retrieves the data type of this Attribute's AttributeType.
@@ -124,7 +124,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The AttributeType of which this resource is an Thing.
          */
         @Override
-        AttributeType.Remote<D> type();
+        AttributeType.Remote<D> getType();
 
         /**
          * Retrieves the set of all Instances that possess this Attribute.

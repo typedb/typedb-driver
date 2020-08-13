@@ -77,35 +77,35 @@ public class EntitySteps {
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {bool}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, boolean keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getEntityType(type)))
+                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getEntityType(type)))
+                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {double}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, double keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getEntityType(type)))
+                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getEntityType(type)))
+                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getEntityType(type)))
+                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 

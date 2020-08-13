@@ -54,7 +54,7 @@ public class AttributeImpl {
 
         @Override
         public final ValueType<D> valueType() {
-            return type().valueType();
+            return getType().valueType();
         }
     }
 
@@ -87,12 +87,12 @@ public class AttributeImpl {
 
         @Override
         public final ValueType<D> valueType() {
-            return type().valueType();
+            return getType().valueType();
         }
 
         @Override
-        public AttributeType.Remote<D> type() {
-            return (AttributeType.Remote<D>) super.type();
+        public AttributeType.Remote<D> getType() {
+            return (AttributeType.Remote<D>) super.getType();
         }
 
         @Override

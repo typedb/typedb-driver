@@ -83,21 +83,21 @@ public class RelationSteps {
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {bool}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, boolean keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getRelationType(type)))
+                .filter(owner -> owner.getType().equals(tx().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getRelationType(type)))
+                .filter(owner -> owner.getType().equals(tx().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {double}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, double keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getRelationType(type)))
+                .filter(owner -> owner.getType().equals(tx().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
@@ -105,14 +105,14 @@ public class RelationSteps {
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getRelationType(type)))
+                .filter(owner -> owner.getType().equals(tx().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
         put(var1, tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).get(keyValue).owners()
-                .filter(owner -> owner.type().equals(tx().getRelationType(type)))
+                .filter(owner -> owner.getType().equals(tx().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
@@ -133,18 +133,18 @@ public class RelationSteps {
 
     @When("relation {var} set player for role\\( ?{type_label} ?): {var}")
     public void relation_set_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().relate(get(var1).asRelation().type().role(roleTypeLabel), get(var2));
+        get(var1).asRelation().relate(get(var1).asRelation().getType().role(roleTypeLabel), get(var2));
     }
 
     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().unrelate(get(var1).asRelation().type().role(roleTypeLabel), get(var2));
+        get(var1).asRelation().unrelate(get(var1).asRelation().getType().role(roleTypeLabel), get(var2));
     }
 
     @Then("relation {var} get players contain:")
     public void relation_get_players_contain(String var, Map<String, String> players) {
         Relation.Remote relation = get(var).asRelation();
-        players.forEach((rt, var2) -> assertTrue(relation.playersByRoleType().get(relation.type().role(rt)).contains(get(var2.substring(1)))));
+        players.forEach((rt, var2) -> assertTrue(relation.playersByRoleType().get(relation.getType().role(rt)).contains(get(var2.substring(1)))));
     }
 
     @Then("relation {var} get players do not contain:")
@@ -152,7 +152,7 @@ public class RelationSteps {
         Relation.Remote relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
             List<? extends Thing.Remote<?, ?>> p;
-            if ((p = relation.playersByRoleType().get(relation.type().role(rt))) != null) {
+            if ((p = relation.playersByRoleType().get(relation.getType().role(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }
         });
@@ -171,14 +171,14 @@ public class RelationSteps {
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .players(Collections.singletonList(get(var1).asRelation().getType().role(roleTypeLabel)))
                 .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .players(Collections.singletonList(get(var1).asRelation().type().role(roleTypeLabel)))
+                .players(Collections.singletonList(get(var1).asRelation().getType().role(roleTypeLabel)))
                 .noneMatch(p -> p.equals(get(var2))));
     }
 }

@@ -66,7 +66,7 @@ public class ThingSteps {
     @Then("{root_label} {var} has type: {type_label}")
     public void thing_has_type(RootLabel rootLabel, String var, String typeLabel) {
         ThingType.Remote<?, ?> type = get_thing_type(rootLabel, typeLabel);
-        assertEquals(type, get(var).type());
+        assertEquals(type, get(var).getType());
     }
 
     @When("delete entity:/attribute:/relation: {var}")

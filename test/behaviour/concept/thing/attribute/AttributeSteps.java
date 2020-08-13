@@ -50,7 +50,7 @@ public class AttributeSteps {
 
     @Then("attribute {var} has value type: {value_type}")
     public void attribute_has_value_type(String var, ValueType valueType) {
-        assertEquals(valueType, get(var).asAttribute().type().valueType());
+        assertEquals(valueType, get(var).asAttribute().getType().valueType());
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")

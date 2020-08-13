@@ -48,8 +48,8 @@ public class EntityImpl {
         }
 
         @Override
-        public final EntityType.Remote type() {
-            return (EntityType.Remote) super.type();
+        public final EntityType.Remote getType() {
+            return (EntityType.Remote) super.getType();
         }
 
         @Override

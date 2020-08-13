@@ -46,7 +46,7 @@ public interface Relation extends Thing<Relation, RelationType> {
      * @see RelationType
      */
     @Override
-    RelationType type();
+    RelationType getType();
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -103,7 +103,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RelationType.Remote
          */
         @Override
-        RelationType.Remote type();
+        RelationType.Remote getType();
 
         /**
          * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
