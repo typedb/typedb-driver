@@ -81,7 +81,7 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 
 public class GraknTransaction implements Transaction {
 
-	private final Session session;
+    private final Session session;
     private final Type type;
     private final Transceiver transceiver;
 

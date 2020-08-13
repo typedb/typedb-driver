@@ -22,7 +22,7 @@ package grakn.client.connection;
 import grakn.client.Grakn.Database;
 
 public class GraknDatabase implements Database {
-	private static final long serialVersionUID = 2726154016735929123L;
+    private static final long serialVersionUID = 2726154016735929123L;
     public static final String DEFAULT = "grakn";
 
     private final String name;
