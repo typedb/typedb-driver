@@ -23,8 +23,8 @@ def graknlabs_grakn_core_artifact():
     artifact_file(
         name = "graknlabs_grakn_core_artifact",
         group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-all-linux-{version}.tar.gz",
-        commit = "1b9f8db1f5915ec6b6c4056a1a61276156109fdc",
+        artifact_name = "grakn-core-server-linux-{version}.tar.gz",
+        commit = "fa7d459906bbb85c4e9298a67c5170159d4de11c",
         release_repository_url = "https://repo.grakn.ai/repository/private-artifact",
         snapshot_repository_url = "https://repo.grakn.ai/repository/private-artifact-snapshot",
     )
