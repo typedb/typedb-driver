@@ -20,6 +20,8 @@
 package grakn.client.concept.impl;
 
 import grakn.client.Grakn.Transaction;
+import com.google.common.base.Strings;
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.protocol.ConceptProto;
@@ -85,7 +87,10 @@ public abstract class ConceptImpl {
 
         protected Remote(Transaction tx, ConceptIID iid) {
             this.tx = requireNonNull(tx, "Null tx");
-            this.iid = requireNonNull(iid, "Null iid");
+            if (iid == null || iid.getValue().isEmpty()) {
+                throw new IllegalArgumentException("Null or empty iid");
+            }
+            this.iid = iid;
         }
 
         @Override
