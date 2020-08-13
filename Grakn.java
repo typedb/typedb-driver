@@ -64,21 +64,21 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public final class Grakn {
+public interface Grakn {
 
-    public static Client client() {
+    static Client client() {
         return new GraknClient();
     }
 
-    public static Client client(String address) {
+    static Client client(String address) {
         return new GraknClient(address, null, null);
     }
 
-    public static Client client(String address, String username, String password) {
+    static Client client(String address, String username, String password) {
         return new GraknClient(address, username, password);
     }
 
-    public interface Client extends AutoCloseable {
+    interface Client extends AutoCloseable {
 
         GraknClient overrideChannel(ManagedChannel channel);
 
@@ -96,10 +96,35 @@ public final class Grakn {
     }
 
     /**
+     * Manages a collection of Grakn databases.
+     */
+    interface DatabaseManager {
+
+        boolean contains(String name);
+
+        void create(String name);
+
+        void delete(String name);
+
+        List<String> all();
+    }
+
+    interface Database extends Serializable {
+
+        @CheckReturnValue
+        static Database of(String name) {
+            return new GraknDatabase(name);
+        }
+
+        @CheckReturnValue
+        String name();
+    }
+
+    /**
      * @see Transaction
      * @see Client
      */
-    public interface Session extends AutoCloseable {
+    interface Session extends AutoCloseable {
 
         Transaction.Builder transaction();
 
@@ -136,7 +161,7 @@ public final class Grakn {
         }
     }
 
-    public interface Transaction extends AutoCloseable {
+    interface Transaction extends AutoCloseable {
 
         Type type();
 
@@ -406,30 +431,5 @@ public final class Grakn {
         enum BatchSize {
             ALL
         }
-    }
-
-    /**
-     * Manages a collection of Grakn databases.
-     */
-    public interface DatabaseManager {
-
-        boolean contains(String name);
-
-        void create(String name);
-
-        void delete(String name);
-
-        List<String> all();
-    }
-
-    public interface Database extends Serializable {
-
-        @CheckReturnValue
-        static Database of(String name) {
-            return new GraknDatabase(name);
-        }
-
-        @CheckReturnValue
-        String name();
     }
 }
