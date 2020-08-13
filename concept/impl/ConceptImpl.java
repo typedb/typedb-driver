@@ -20,8 +20,6 @@
 package grakn.client.concept.impl;
 
 import grakn.client.Grakn.Transaction;
-import com.google.common.base.Strings;
-import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.protocol.ConceptProto;
