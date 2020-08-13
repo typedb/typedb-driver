@@ -118,33 +118,33 @@ public class RelationSteps {
 
     @Then("relation\\( ?{type_label} ?) get instances contain: {var}")
     public void relation_type_get_instances_contain(String typeLabel, String var) {
-        assertTrue(tx().getRelationType(typeLabel).instances().anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().getRelationType(typeLabel).getInstances().anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("relation\\( ?{type_label} ?) get instances do not contain: {var}")
     public void relation_type_get_instances_do_not_contain(String typeLabel, String var) {
-        assertTrue(tx().getRelationType(typeLabel).instances().noneMatch(i -> i.equals(get(var))));
+        assertTrue(tx().getRelationType(typeLabel).getInstances().noneMatch(i -> i.equals(get(var))));
     }
 
     @Then("relation\\( ?{type_label} ?) get instances is empty")
     public void relation_type_get_instances_is_empty(String typeLabel) {
-        assertEquals(0, tx().getRelationType(typeLabel).instances().count());
+        assertEquals(0, tx().getRelationType(typeLabel).getInstances().count());
     }
 
     @When("relation {var} set player for role\\( ?{type_label} ?): {var}")
     public void relation_set_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().relate(get(var1).asRelation().getType().role(roleTypeLabel), get(var2));
+        get(var1).asRelation().addPlayer(get(var1).asRelation().getType().getRelates(roleTypeLabel), get(var2));
     }
 
     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().unrelate(get(var1).asRelation().getType().role(roleTypeLabel), get(var2));
+        get(var1).asRelation().removePlayer(get(var1).asRelation().getType().getRelates(roleTypeLabel), get(var2));
     }
 
     @Then("relation {var} get players contain:")
     public void relation_get_players_contain(String var, Map<String, String> players) {
         Relation.Remote relation = get(var).asRelation();
-        players.forEach((rt, var2) -> assertTrue(relation.playersByRoleType().get(relation.getType().role(rt)).contains(get(var2.substring(1)))));
+        players.forEach((rt, var2) -> assertTrue(relation.getPlayersByRoleType().get(relation.getType().getRelates(rt)).contains(get(var2.substring(1)))));
     }
 
     @Then("relation {var} get players do not contain:")
@@ -152,7 +152,7 @@ public class RelationSteps {
         Relation.Remote relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
             List<? extends Thing.Remote<?, ?>> p;
-            if ((p = relation.playersByRoleType().get(relation.getType().role(rt))) != null) {
+            if ((p = relation.getPlayersByRoleType().get(relation.getType().getRelates(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }
         });
@@ -160,25 +160,25 @@ public class RelationSteps {
 
     @Then("relation {var} get players contain: {var}")
     public void relation_get_players_contain(String var1, String var2) {
-        assertTrue(get(var1).asRelation().players().anyMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation().getPlayers().anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players do not contain: {var}")
     public void relation_get_players_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRelation().players().noneMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation().getPlayers().noneMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .players(Collections.singletonList(get(var1).asRelation().getType().role(roleTypeLabel)))
+                .getPlayers(Collections.singletonList(get(var1).asRelation().getType().getRelates(roleTypeLabel)))
                 .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .players(Collections.singletonList(get(var1).asRelation().getType().role(roleTypeLabel)))
+                .getPlayers(Collections.singletonList(get(var1).asRelation().getType().getRelates(roleTypeLabel)))
                 .noneMatch(p -> p.equals(get(var2))));
     }
 }

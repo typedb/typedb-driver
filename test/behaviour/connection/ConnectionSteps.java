@@ -19,7 +19,10 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn;
+import grakn.client.Grakn.Client;
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
@@ -42,12 +45,12 @@ public class ConnectionSteps {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static GraknClient client;
-    public static List<GraknClient.Session> sessions = new ArrayList<>();
-    public static List<CompletableFuture<GraknClient.Session>> sessionsParallel = new ArrayList<>();
-    public static Map<GraknClient.Session, List<GraknClient.Transaction>> sessionsToTransactions = new HashMap<>();
-    public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
-    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
+    public static Client client;
+    public static List<Session> sessions = new ArrayList<>();
+    public static List<CompletableFuture<Session>> sessionsParallel = new ArrayList<>();
+    public static Map<Session, List<Transaction>> sessionsToTransactions = new HashMap<>();
+    public static Map<Session, List<CompletableFuture<Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
+    public static Map<CompletableFuture<Session>, List<CompletableFuture<Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
     private static synchronized void connect_to_grakn() {
         if (!isNull(client)) return;
@@ -58,14 +61,14 @@ public class ConnectionSteps {
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
-        client = new GraknClient(address);
+        client = Grakn.client(address);
 
         System.out.println("Connection to Grakn Core established");
 
         assertNotNull(client);
     }
 
-    public static GraknClient.Transaction tx() {
+    public static Transaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
@@ -92,19 +95,19 @@ public class ConnectionSteps {
     }
 
     @After
-    public void close_session_and_transactions() throws ExecutionException, InterruptedException {
+    public void close_session_and_transactions() throws Exception {
         System.out.println("ConnectionSteps.after");
         if (sessions != null) {
-            for (GraknClient.Session session : sessions) {
+            for (Session session : sessions) {
                 if (sessionsToTransactions.containsKey(session)) {
-                    for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+                    for (Transaction transaction : sessionsToTransactions.get(session)) {
                         transaction.close();
                     }
                     sessionsToTransactions.remove(session);
                 }
 
                 if (sessionsToTransactionsParallel.containsKey(session)) {
-                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
+                    for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
                         futureTransaction.get().close();
                     }
                     sessionsToTransactionsParallel.remove(session);
@@ -120,9 +123,9 @@ public class ConnectionSteps {
         }
 
         if (sessionsParallel != null) {
-            for (CompletableFuture<GraknClient.Session> futureSession : sessionsParallel) {
+            for (CompletableFuture<Session> futureSession : sessionsParallel) {
                 if (sessionsParallelToTransactionsParallel.containsKey(futureSession)) {
-                    for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
+                    for (CompletableFuture<Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
                         futureTransaction.get().close();
                     }
                     sessionsParallelToTransactionsParallel.remove(futureSession);

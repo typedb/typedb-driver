@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grakn.client.GraknClient;
+import grakn.client.Grakn;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
@@ -66,7 +66,7 @@ public class RequestBuilder {
      */
     public static class Transaction {
 
-        public static TransactionProto.Transaction.Req open(ByteString sessionID, GraknClient.Transaction.Type txType) {
+        public static TransactionProto.Transaction.Req open(ByteString sessionID, Grakn.Transaction.Type txType) {
             TransactionProto.Transaction.Open.Req openRequest = TransactionProto.Transaction.Open.Req.newBuilder()
                     .setSessionID(sessionID)
                     .setType(TransactionProto.Transaction.Type.valueOf(txType.iid()))
@@ -82,18 +82,18 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Iter.Req query(String queryString, GraknClient.Transaction.QueryOptions options) {
+        public static TransactionProto.Transaction.Iter.Req query(String queryString, Grakn.Transaction.QueryOptions options) {
             OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
             options
-                    .whenSet(GraknClient.Transaction.BooleanOption.INFER, builder::setInfer)
-                    .whenSet(GraknClient.Transaction.BooleanOption.EXPLAIN, builder::setExplain);
+                    .whenSet(Grakn.Transaction.BooleanOption.INFER, builder::setInfer)
+                    .whenSet(Grakn.Transaction.BooleanOption.EXPLAIN, builder::setExplain);
 
             TransactionProto.Transaction.Iter.Req.Builder req = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setQueryIterReq(TransactionProto.Transaction.Query.Iter.Req.newBuilder()
                             .setQuery(queryString)
                             .setOptions(builder));
 
-            options.whenSet(GraknClient.Transaction.BatchOption.BATCH_SIZE, req::setOptions);
+            options.whenSet(Grakn.Transaction.BatchOption.BATCH_SIZE, req::setOptions);
 
             return req.build();
         }
@@ -172,7 +172,7 @@ public class RequestBuilder {
             } else if (concept.isAttribute()) {
                 return ConceptProto.Concept.SCHEMA.ATTRIBUTE;
             } else if (concept.isRoleType()) {
-                return ConceptProto.Concept.SCHEMA.ROLE;
+                return ConceptProto.Concept.SCHEMA.ROLE_TYPE;
             } else if (concept.isRule()) {
                 return ConceptProto.Concept.SCHEMA.RULE;
             } else if (concept.isType()) {

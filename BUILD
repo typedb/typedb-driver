@@ -31,10 +31,11 @@ java_library(
     srcs = glob([
         "answer/*.java",
         "concept/**/*.java",
+        "connection/*.java",
         "exception/*.java",
         "rpc/*.java",
         "test/*.java",
-        "GraknClient.java"
+        "Grakn.java"
     ]),
     deps = [
         # External dependencies from @graknlabs

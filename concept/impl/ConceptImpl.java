@@ -19,7 +19,7 @@
 
 package grakn.client.concept.impl;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.protocol.ConceptProto;
@@ -80,10 +80,10 @@ public abstract class ConceptImpl {
     public abstract static class Remote<BaseType extends Concept<BaseType>>
             implements Concept.Remote<BaseType> {
 
-        private final GraknClient.Transaction tx;
+        private final Transaction tx;
         private final ConceptIID iid;
 
-        protected Remote(GraknClient.Transaction tx, ConceptIID iid) {
+        protected Remote(Transaction tx, ConceptIID iid) {
             this.tx = requireNonNull(tx, "Null tx");
             this.iid = requireNonNull(iid, "Null iid");
         }
@@ -133,7 +133,7 @@ public abstract class ConceptImpl {
             return h;
         }
 
-        protected GraknClient.Transaction tx() {
+        protected Transaction tx() {
             return tx;
         }
 

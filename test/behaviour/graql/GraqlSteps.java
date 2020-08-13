@@ -20,7 +20,6 @@
 package grakn.client.test.behaviour.graql;
 
 import com.google.common.collect.Iterators;
-import grakn.client.GraknClient;
 import grakn.client.answer.Answer;
 import grakn.client.answer.AnswerGroup;
 import grakn.client.answer.ConceptMap;
@@ -65,8 +64,8 @@ import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
-    private static GraknClient.Session session = null;
-    private static GraknClient.Transaction tx = null;
+    private static GraknClientOld.Session session = null;
+    private static Transaction tx = null;
 
     private static List<ConceptMap> answers;
     private static List<Numeric> numericAnswers;
@@ -545,7 +544,7 @@ public class GraqlSteps {
             } else {
                 // rule
                 Rule.Remote rule = explanation.getRule().asRemote(tx);
-                String ruleLabel = rule.label().toString();
+                String ruleLabel = rule.getLabel().toString();
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
@@ -631,11 +630,11 @@ public class GraqlSteps {
         @Override
         public boolean check(Concept concept) {
             if (concept.isType()) {
-                return label.equals(concept.asType().label().toString());
+                return label.equals(concept.asType().getLabel().toString());
             } else if (concept.isRoleType()) {
-                return label.equals(concept.asRoleType().label().toString());
+                return label.equals(concept.asRoleType().getLabel().toString());
             } else if (concept.isRule()) {
-                return label.equals(concept.asRule().label().toString());
+                return label.equals(concept.asRule().getLabel().toString());
             } else {
                 throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a Role nor a Type nor a Rule.");
             }
@@ -665,8 +664,8 @@ public class GraqlSteps {
 
         public boolean check(Concept concept) {
             return concept.isAttribute()
-                    && type.equals(concept.asAttribute().getType().label().toString())
-                    && value.equals(concept.asAttribute().value().toString());
+                    && type.equals(concept.asAttribute().getType().getLabel().toString())
+                    && value.equals(concept.asAttribute().getValue().toString());
         }
     }
 
@@ -684,14 +683,14 @@ public class GraqlSteps {
         public boolean check(Concept<?> concept) {
             if(!concept.isThing()) { return false; }
 
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).attributes(true).collect(Collectors.toSet());
+            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).getHas(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 
             for (Attribute<?> key : keys) {
                 keyMap.put(
-                        key.getType().label().toString(),
-                        key.value().toString());
+                        key.getType().getLabel().toString(),
+                        key.getValue().toString());
             }
             return value.equals(keyMap.get(type));
         }

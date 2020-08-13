@@ -50,13 +50,13 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) get value type: {value_type}")
     public void attribute_type_get_value_type(String typeLabel, ValueType valueType) {
-        assertEquals(valueType, tx().getAttributeType(typeLabel).valueType());
+        assertEquals(valueType, tx().getAttributeType(typeLabel).getValueType());
     }
 
     @Then("attribute\\( ?{type_label} ?) get supertype value type: {value_type}")
     public void attribute_type_get_supertype_value_type(String typeLabel, ValueType<?> valueType) {
-        Type.Remote<AttributeType<Object>> supertype = tx().getAttributeType(typeLabel).asAttributeType().sup();
-        assertEquals(valueType, supertype.asAttributeType().valueType());
+        Type.Remote<AttributeType<Object>> supertype = tx().getAttributeType(typeLabel).asAttributeType().getSupertype();
+        assertEquals(valueType, supertype.asAttributeType().getValueType());
     }
 
     private <D> AttributeType.Remote<D> attribute_type_as_value_type(String typeLabel, ValueType<D> valueType) {
@@ -66,14 +66,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
     public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType<?> valueType, List<String> subLabels) {
         AttributeType.Remote<?> attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.subs().map(ThingType::label).map(Label::getValue).collect(toSet());
+        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
     public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType<?> valueType, List<String> subLabels) {
         AttributeType.Remote<?> attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.subs().map(ThingType::label).map(Label::getValue).collect(toSet());
+        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -83,13 +83,13 @@ public class AttributeTypeSteps {
     public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType<?> valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote<?> attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        attributeType.asAttributeType(ValueType.STRING).regex(regex);
+        attributeType.asAttributeType(ValueType.STRING).setRegex(regex);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType<?> valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote<?> attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        assertEquals(regex, attributeType.asAttributeType(ValueType.STRING).regex());
+        assertEquals(regex, attributeType.asAttributeType(ValueType.STRING).getRegex());
     }
 }

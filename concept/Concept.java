@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.impl.RuleImpl;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.EntityImpl;
@@ -214,7 +214,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @param tx The transaction to use for the RPCs.
      * @return A remote concept using the given transaction to enable RPCs.
      */
-    Remote asRemote(GraknClient.Transaction tx);
+    Remote asRemote(Transaction tx);
 
     /**
      * Determine if the Concept is a SchemaConcept
@@ -385,7 +385,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
 
         @SuppressWarnings("unchecked")
         static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
-        RemoteType of(GraknClient.Transaction tx, ConceptProto.Concept concept) {
+        RemoteType of(Transaction tx, ConceptProto.Concept concept) {
             ConceptIID iid = ConceptIID.of(concept.getIid());
             switch (concept.getBaseType()) {
                 case ENTITY:

@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.config;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ValueType;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
@@ -106,20 +106,20 @@ public class Parameters {
     }
 
     @ParameterType("read|write")
-    public GraknClient.Transaction.Type transaction_type(String type) {
+    public Transaction.Type transaction_type(String type) {
         if (type.equals("read")) {
-            return GraknClient.Transaction.Type.READ;
+            return Transaction.Type.READ;
         } else if (type.equals("write")) {
-            return GraknClient.Transaction.Type.WRITE;
+            return Transaction.Type.WRITE;
         }
         return null;
     }
 
     @DataTableType
-    public List<GraknClient.Transaction.Type> transaction_types(List<String> values) {
-        List<GraknClient.Transaction.Type> typeList = new ArrayList<>();
+    public List<Transaction.Type> transaction_types(List<String> values) {
+        List<Transaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            GraknClient.Transaction.Type type = transaction_type(value);
+            Transaction.Type type = transaction_type(value);
             assertNotNull(type);
             typeList.add(type);
         }

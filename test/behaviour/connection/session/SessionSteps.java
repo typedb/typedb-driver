@@ -19,7 +19,6 @@
 
 package grakn.client.test.behaviour.connection.session;
 
-import grakn.client.GraknClient;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -78,16 +77,16 @@ public class SessionSteps {
 
     @When("connection close all sessions")
     public void connection_close_all_sessions() throws ExecutionException, InterruptedException {
-        for (GraknClient.Session session : sessions) {
+        for (GraknClientOld.Session session : sessions) {
             if (sessionsToTransactions.containsKey(session)) {
-                for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+                for (Transaction transaction : sessionsToTransactions.get(session)) {
                     transaction.close();
                 }
                 sessionsToTransactions.remove(session);
             }
 
             if (sessionsToTransactionsParallel.containsKey(session)) {
-                for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
+                for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
                     futureTransaction.get().close();
                 }
                 sessionsToTransactionsParallel.remove(session);
@@ -100,14 +99,14 @@ public class SessionSteps {
 
     @Then("session(s) is/are null: {bool}")
     public void sessions_are_null(Boolean isNull) {
-        for (GraknClient.Session session : sessions) {
+        for (GraknClientOld.Session session : sessions) {
             assertEquals(isNull, isNull(session));
         }
     }
 
     @Then("session(s) is/are open: {bool}")
     public void sessions_are_open(Boolean isOpen) {
-        for (GraknClient.Session session : sessions) {
+        for (GraknClientOld.Session session : sessions) {
             assertEquals(isOpen, session.isOpen());
         }
     }
@@ -136,7 +135,7 @@ public class SessionSteps {
     @Then("session(s) has/have database(s):")
     public void sessions_have_databases(List<String> names) {
         assertEquals(names.size(), sessions.size());
-        Iterator<GraknClient.Session> sessionIter = sessions.iterator();
+        Iterator<GraknClientOld.Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
             assertEquals(name, sessionIter.next().database().name());
@@ -146,7 +145,7 @@ public class SessionSteps {
     @Then("sessions in parallel have databases:")
     public void sessions_in_parallel_have_databases(List<String> names) {
         assertEquals(names.size(), sessionsParallel.size());
-        Iterator<CompletableFuture<GraknClient.Session>> futureSessionIter = sessionsParallel.iterator();
+        Iterator<CompletableFuture<GraknClientOld.Session>> futureSessionIter = sessionsParallel.iterator();
         CompletableFuture[] assertions = new CompletableFuture[names.size()];
 
         int i = 0;

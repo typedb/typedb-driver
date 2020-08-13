@@ -111,11 +111,11 @@ public class EntitySteps {
 
     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")
     public void entity_type_get_instances_contain(String typeLabel, String var) {
-        assertTrue(tx().getEntityType(typeLabel).instances().anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().getEntityType(typeLabel).getInstances().anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("entity\\( ?{type_label} ?) get instances is empty")
     public void entity_type_get_instances_is_empty(String typeLabel) {
-        assertEquals(0, tx().getEntityType(typeLabel).instances().count());
+        assertEquals(0, tx().getEntityType(typeLabel).getInstances().count());
     }
 }

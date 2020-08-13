@@ -17,7 +17,6 @@
 
 package grakn.client.test.assembly;
 
-import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
@@ -77,13 +76,13 @@ import static org.hamcrest.Matchers.hasSize;
 public class QueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknCoreRunner grakn;
-    private static GraknClient graknClient;
+    private static GraknClientOld graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
-        graknClient = new GraknClient(grakn.address());
+        graknClient = new GraknClientOld(grakn.address());
     }
 
     @AfterClass
@@ -95,7 +94,7 @@ public class QueryTest {
     @Before
     public void createClient() {
         String host = "localhost:48555";
-        graknClient = new GraknClient(host);
+        graknClient = new GraknClientOld(host);
     }
 
     @After
@@ -193,7 +192,7 @@ public class QueryTest {
             GraqlGet getLionQuery = Graql.match(var("p").isa("lion").has("name", var("n"))).get();
             LOG.info("clientJavaE2E() - '" + getLionQuery + "'");
             List<ConceptMap> insertedLions = tx.execute(getLionQuery).get();
-            List<String> insertedNames = insertedLions.stream().map(answer -> answer.get("n").asAttribute().value().toString()).collect(Collectors.toList());
+            List<String> insertedNames = insertedLions.stream().map(answer -> answer.get("n").asAttribute().getValue().toString()).collect(Collectors.toList());
             assertThat(insertedNames, containsInAnyOrder(lionNames()));
 
             LOG.info("clientJavaE2E() - execute match get on the mating relations...");
@@ -259,10 +258,10 @@ public class QueryTest {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<GraknClient.Transaction> fn) {
+    private void localhostGraknTx(Consumer<Transaction> fn) {
         String database = "grakn";
-        try (GraknClient.Session session = graknClient.session(database)) {
-            try (GraknClient.Transaction transaction = session.transaction().write()) {
+        try (GraknClientOld.Session session = graknClient.session(database)) {
+            try (Transaction transaction = session.transaction().write()) {
                 fn.accept(transaction);
             }
         }
