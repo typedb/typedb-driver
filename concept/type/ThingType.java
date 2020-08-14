@@ -21,7 +21,7 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.Thing;
 
 import javax.annotation.CheckReturnValue;
@@ -37,19 +37,12 @@ public interface ThingType extends Type {
     @Deprecated
     @CheckReturnValue
     @Override
-    default ThingType asType() {
+    default ThingType asThingType() {
         return this;
     }
 
     @Override
     Remote asRemote(Transaction tx);
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isType() {
-        return true;
-    }
 
     interface Local extends Type.Local, ThingType {
     }
@@ -118,9 +111,9 @@ public interface ThingType extends Type {
          * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        <D> Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
+        <D> Stream<? extends AttributeType.Remote> getOwns(ValueTypeOld valueType, boolean keysOnly);
         @CheckReturnValue
-        default <D> Stream<? extends AttributeType.Remote> attributes(ValueType valueType) {
+        default <D> Stream<? extends AttributeType.Remote> attributes(ValueTypeOld valueType) {
             return getOwns(valueType, false);
         }
         @CheckReturnValue
@@ -172,30 +165,20 @@ public interface ThingType extends Type {
          * Removes the ability of this Type to play a specific RoleType.
          *
          * @param role The RoleType which the Things of this Type should no longer be allowed to play.
-         * @return The Type itself.
          */
-        ThingType.Remote unsetPlays(RoleType role);
+        void unsetPlays(RoleType role);
 
         /**
          * Removes the ability for Things of this Type to have Attributes of type AttributeType
          *
          * @param attributeType the AttributeType which this Type can no longer have
-         * @return The Type itself.
          */
-        ThingType.Remote unsetOwns(AttributeType attributeType);
+        void unsetOwns(AttributeType attributeType);
 
-        @Deprecated
         @CheckReturnValue
         @Override
-        default ThingType.Remote asType() {
+        default ThingType.Remote asThingType() {
             return this;
-        }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isType() {
-            return true;
         }
     }
 }

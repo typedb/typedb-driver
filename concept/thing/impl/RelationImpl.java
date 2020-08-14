@@ -51,7 +51,7 @@ public class RelationImpl {
     /**
      * Client implementation of Relation
      */
-    public static class Remote extends ThingImpl.Local.Remote implements Relation.Remote {
+    public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -68,16 +68,11 @@ public class RelationImpl {
         }
 
         @Override
-        public Relation.Remote unsetHas(Attribute attribute) {
-            return (Relation.Remote) super.unsetHas(attribute);
-        }
-
-        @Override
         public Map<RoleType.Remote, List<Thing.Remote>> getPlayersByRoleType() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(iid(), method, ConceptProto.Method.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(getIID(), method, ConceptProto.Method.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
             final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {

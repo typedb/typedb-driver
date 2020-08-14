@@ -53,12 +53,8 @@ public class MetaTypeImpl {
         @SuppressWarnings("unchecked")
         @Override
         protected final ThingType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asType();
+            return other.asThingType();
         }
 
-        @Override
-        protected boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isMetaType();
-        }
     }
 }

@@ -49,19 +49,12 @@ public interface Type extends Concept {
     @Deprecated
     @CheckReturnValue
     @Override
-    default Type asSchemaConcept() {
+    default Type asType() {
         return this;
     }
 
     @Override
     Remote asRemote(Transaction tx);
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isSchemaConcept() {
-        return true;
-    }
 
     interface Local extends Type, Concept.Local {
     }
@@ -94,9 +87,8 @@ public interface Type extends Concept {
         Type.Remote getSupertype();
 
         /**
-         * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
-         * Schema.MetaSchema#THING.
-         * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
+         * @return All super-concepts of this SchemaConcept, including itself and excluding the meta type THING.
+         * If you want to include THING, use Transaction.sups().
          */
         Stream<? extends Type.Remote> getSupertypes();
 
@@ -114,15 +106,9 @@ public interface Type extends Concept {
         @Deprecated
         @CheckReturnValue
         @Override
-        default Type.Remote asSchemaConcept() {
+        default Type.Remote asType() {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isSchemaConcept() {
-            return true;
-        }
     }
 }

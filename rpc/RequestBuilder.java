@@ -23,8 +23,17 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.Label;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.thing.Relation;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.ThingType;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.DatabaseProto;
 import grakn.protocol.ConceptProto;
@@ -119,7 +128,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType valueType) {
+        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueTypeOld valueType) {
             TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setValueType(ConceptMessage.setValueType(valueType))
@@ -153,29 +162,29 @@ public class RequestBuilder {
 
         public static ConceptProto.Concept from(Concept concept) {
             return ConceptProto.Concept.newBuilder()
-                    .setIid(concept.iid().getValue())
+                    .setIid(concept.getIID().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
         private static ConceptProto.Concept.SCHEMA getBaseType(Concept concept) {
-            if (concept.isEntityType()) {
+            if (concept instanceof EntityType) {
                 return ConceptProto.Concept.SCHEMA.ENTITY_TYPE;
-            } else if (concept.isRelationType()) {
+            } else if (concept instanceof RelationType) {
                 return ConceptProto.Concept.SCHEMA.RELATION_TYPE;
-            } else if (concept.isAttributeType()) {
+            } else if (concept instanceof AttributeType) {
                 return ConceptProto.Concept.SCHEMA.ATTRIBUTE_TYPE;
-            } else if (concept.isEntity()) {
+            } else if (concept instanceof Entity) {
                 return ConceptProto.Concept.SCHEMA.ENTITY;
-            } else if (concept.isRelation()) {
+            } else if (concept instanceof Relation) {
                 return ConceptProto.Concept.SCHEMA.RELATION;
-            } else if (concept.isAttribute()) {
+            } else if (concept instanceof Attribute) {
                 return ConceptProto.Concept.SCHEMA.ATTRIBUTE;
-            } else if (concept.isRoleType()) {
+            } else if (concept instanceof RoleType) {
                 return ConceptProto.Concept.SCHEMA.ROLE_TYPE;
-            } else if (concept.isRule()) {
+            } else if (concept instanceof Rule) {
                 return ConceptProto.Concept.SCHEMA.RULE;
-            } else if (concept.isType()) {
+            } else if (concept instanceof ThingType) {
                 return ConceptProto.Concept.SCHEMA.META_TYPE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised concept " + concept);
@@ -208,34 +217,34 @@ public class RequestBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        public static <D> ValueType valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+        public static <D> ValueTypeOld valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
             switch (valueType) {
                 case STRING:
-                    return (ValueType) ValueType.STRING;
+                    return (ValueTypeOld) ValueTypeOld.STRING;
                 case BOOLEAN:
-                    return (ValueType) ValueType.BOOLEAN;
+                    return (ValueTypeOld) ValueTypeOld.BOOLEAN;
                 case LONG:
-                    return (ValueType) ValueType.LONG;
+                    return (ValueTypeOld) ValueTypeOld.LONG;
                 case DOUBLE:
-                    return (ValueType) ValueType.DOUBLE;
+                    return (ValueTypeOld) ValueTypeOld.DOUBLE;
                 case DATETIME:
-                    return (ValueType) ValueType.DATETIME;
+                    return (ValueTypeOld) ValueTypeOld.DATETIME;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + valueType);
             }
         }
 
-        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType valueType) {
-            if (valueType.equals(ValueType.STRING)) {
+        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueTypeOld valueType) {
+            if (valueType.equals(ValueTypeOld.STRING)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
-            } else if (valueType.equals(ValueType.BOOLEAN)) {
+            } else if (valueType.equals(ValueTypeOld.BOOLEAN)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
-            } else if (valueType.equals(ValueType.LONG)) {
+            } else if (valueType.equals(ValueTypeOld.LONG)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.LONG;
-            } else if (valueType.equals(ValueType.DOUBLE)) {
+            } else if (valueType.equals(ValueTypeOld.DOUBLE)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
-            } else if (valueType.equals(ValueType.DATETIME)) {
+            } else if (valueType.equals(ValueTypeOld.DATETIME)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised " + valueType);

@@ -42,7 +42,7 @@ public abstract class ConceptImpl {
         }
 
         @Override
-        public ConceptIID iid() {
+        public ConceptIID getIID() {
             return iid;
         }
 
@@ -58,7 +58,7 @@ public abstract class ConceptImpl {
 
             ConceptImpl.Local that = (ConceptImpl.Local) o;
 
-            return iid.equals(that.iid());
+            return iid.equals(that.getIID());
         }
 
         @Override
@@ -87,7 +87,7 @@ public abstract class ConceptImpl {
         }
 
         @Override
-        public ConceptIID iid() {
+        public ConceptIID getIID() {
             return iid;
         }
 
@@ -102,7 +102,7 @@ public abstract class ConceptImpl {
 
         @Override
         public final boolean isDeleted() {
-            return tx().getConcept(iid()) == null;
+            return tx().getConcept(getIID()) == null;
         }
 
         @Override
@@ -118,7 +118,7 @@ public abstract class ConceptImpl {
             ConceptImpl.Remote that = (ConceptImpl.Remote) o;
 
             return (tx.equals(that.tx())) &&
-                    iid.equals(that.iid());
+                    iid.equals(that.getIID());
         }
 
         @Override
@@ -143,7 +143,7 @@ public abstract class ConceptImpl {
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-            return runMethod(iid(), method);
+            return runMethod(getIID(), method);
         }
 
         protected final ConceptProto.Method.Res runMethod(ConceptIID iid, ConceptProto.Method.Req method) {

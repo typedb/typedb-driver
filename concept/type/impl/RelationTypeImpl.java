@@ -82,16 +82,6 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote unsetOwns(AttributeType attributeType) {
-            return (RelationType.Remote) super.unsetOwns(attributeType);
-        }
-
-        @Override
-        public final RelationType.Remote unsetPlays(RoleType role) {
-            return (RelationType.Remote) super.unsetPlays(role);
-        }
-
-        @Override
         public final RelationType.Remote isAbstract(Boolean isAbstract) {
             return (RelationType.Remote) super.isAbstract(isAbstract);
         }
@@ -163,11 +153,6 @@ public class RelationTypeImpl {
         @Override
         protected final RelationType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRelationType();
-        }
-
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isRelationType();
         }
 
     }

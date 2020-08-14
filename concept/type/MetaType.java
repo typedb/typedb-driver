@@ -23,27 +23,11 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.type.impl.MetaTypeImpl;
 
-import javax.annotation.CheckReturnValue;
-
 public interface MetaType extends ThingType {
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default MetaType asMetaType() {
-        return this;
-    }
 
     @Override
     default MetaType.Remote asRemote(Transaction tx) {
-        return MetaType.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isMetaType() {
-        return true;
+        return MetaType.Remote.of(tx, getIID());
     }
 
     interface Local extends ThingType.Local, MetaType {
@@ -58,9 +42,5 @@ public interface MetaType extends ThingType {
             return new MetaTypeImpl.Remote(tx, iid);
         }
 
-        @Override
-        default MetaType.Remote asMetaType() {
-            return this;
-        }
     }
 }

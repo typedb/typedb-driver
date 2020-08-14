@@ -23,7 +23,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
@@ -95,7 +95,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
+        public final <D> Stream<AttributeType.Remote> getOwns(ValueTypeOld valueType, boolean keysOnly) {
             ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
@@ -148,30 +148,24 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote unsetOwns(AttributeType attributeType) {
+        public void unsetOwns(AttributeType attributeType) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
                                              .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
-
             runMethod(method);
-            return this;
         }
 
         @Override
-        public ThingType.Remote unsetPlays(RoleType role) {
+        public void unsetPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                                               .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
             runMethod(method);
-            return this;
         }
 
         protected abstract Thing.Remote asInstance(Concept.Remote concept);
 
         @Override
         protected abstract ThingType.Remote asCurrentBaseType(Concept.Remote other);
-
-        protected abstract boolean equalsCurrentBaseType(Concept.Remote other);
     }
 }

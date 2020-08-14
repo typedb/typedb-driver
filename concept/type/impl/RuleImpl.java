@@ -113,10 +113,5 @@ public class RuleImpl {
             return other.asRule();
         }
 
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isRule();
-        }
-
     }
 }

@@ -63,13 +63,6 @@ public interface Thing extends Concept {
     @Override
     Remote asRemote(Transaction tx);
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isThing() {
-        return true;
-    }
-
     interface Local extends Concept.Local, Thing {
     }
 
@@ -153,9 +146,8 @@ public interface Thing extends Concept {
          * Removes the provided Attribute from this Thing
          *
          * @param attribute the Attribute to be removed
-         * @return The Thing itself
          */
-        Thing.Remote unsetHas(Attribute attribute);
+        void unsetHas(Attribute attribute);
 
         /**
          * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -172,11 +164,5 @@ public interface Thing extends Concept {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isThing() {
-            return true;
-        }
     }
 }

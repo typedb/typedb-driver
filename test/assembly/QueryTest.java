@@ -141,7 +141,7 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - assert if schema defined...");
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
-                    .map(answer -> answer.get("t").asType().getLabel().getValue()).collect(Collectors.toList());
+                    .map(answer -> answer.get("t").asThingType().getLabel().getValue()).collect(Collectors.toList());
             String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
                     "lion", "mating", "parentship", "child-bearing", "name" };
             assertThat(definedSchema, hasItems(correctSchema));

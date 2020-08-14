@@ -42,14 +42,7 @@ public interface Rule extends Type {
 
     @Override
     default Remote asRemote(Transaction tx) {
-        return Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRule() {
-        return true;
+        return Remote.of(tx, getIID());
     }
 
     interface Local extends Type.Local, Rule {
@@ -123,11 +116,5 @@ public interface Rule extends Type {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRule() {
-            return true;
-        }
     }
 }

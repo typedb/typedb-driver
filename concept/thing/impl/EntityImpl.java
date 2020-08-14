@@ -41,7 +41,7 @@ public class EntityImpl {
     /**
      * Client implementation of Entity
      */
-    public static class Remote extends ThingImpl.Local.Remote implements Entity.Remote {
+    public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -55,11 +55,6 @@ public class EntityImpl {
         @Override
         public Entity.Remote setHas(Attribute attribute) {
             return (Entity.Remote) super.setHas(attribute);
-        }
-
-        @Override
-        public Entity.Remote unsetHas(Attribute attribute) {
-            return (Entity.Remote) super.unsetHas(attribute);
         }
 
         @Override

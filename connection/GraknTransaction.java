@@ -37,7 +37,7 @@ import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
@@ -584,7 +584,7 @@ public class GraknTransaction implements Transaction {
             case NULL:
                 return null;
             case TYPE:
-                return Concept.Remote.of(this, response.getGetTypeRes().getType()).asSchemaConcept();
+                return Concept.Remote.of(this, response.getGetTypeRes().getType());
             default:
                 throw GraknClientException.resultNotPresent();
         }
@@ -645,13 +645,13 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public <V> AttributeType.Remote putAttributeType(String label, ValueType valueType) {
+    public <V> AttributeType.Remote putAttributeType(String label, ValueTypeOld valueType) {
         return putAttributeType(Label.of(label), valueType);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> AttributeType.Remote putAttributeType(Label label, ValueType valueType) {
+    public <V> AttributeType.Remote putAttributeType(Label label, ValueTypeOld valueType) {
         return (AttributeType.Remote) Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
                 .getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }

@@ -29,14 +29,12 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
- * SchemaConcept used to represent categories.
- * An ontological element which represents categories instances can fall within.
+ * Type used to represent entities.
+ * An ontological element which represents entity instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
 public interface EntityType extends ThingType {
 
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
     @CheckReturnValue
     @Override
     default EntityType asEntityType() {
@@ -46,22 +44,15 @@ public interface EntityType extends ThingType {
     @CheckReturnValue
     @Override
     default Remote asRemote(Transaction tx) {
-        return EntityType.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isEntityType() {
-        return true;
+        return EntityType.Remote.of(tx, getIID());
     }
 
     interface Local extends ThingType.Local, EntityType {
     }
 
     /**
-     * SchemaConcept used to represent categories.
-     * An ontological element which represents categories instances can fall within.
+     * Type used to represent entities.
+     * An ontological element which represents entity instances can fall within.
      * Any instance of a Entity Type is called an Entity.
      */
     interface Remote extends ThingType.Remote, EntityType {
@@ -97,24 +88,6 @@ public interface EntityType extends ThingType {
          */
         @Override
         EntityType.Remote setPlays(RoleType role);
-
-        /**
-         * Removes the ability of this EntityType to play a specific RoleType.
-         *
-         * @param role The RoleType which the Things of this EntityType should no longer be allowed to play.
-         * @return The EntityType itself.
-         */
-        @Override
-        EntityType.Remote unsetPlays(RoleType role);
-
-        /**
-         * Removes the ability for Things of this EntityType to have Attributes of type AttributeType.
-         *
-         * @param attributeType The AttributeType which this EntityType can no longer have.
-         * @return The EntityType itself.
-         */
-        @Override
-        EntityType.Remote unsetOwns(AttributeType attributeType);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -155,7 +128,7 @@ public interface EntityType extends ThingType {
          * @return All the super classes of this EntityType
          */
         @Override
-        Stream<EntityType.Remote> getSupertypes();
+        Stream<? extends EntityType.Remote> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this EntityType.
@@ -163,7 +136,7 @@ public interface EntityType extends ThingType {
          * @return All the sub classes of this EntityType
          */
         @Override
-        Stream<EntityType.Remote> getSubtypes();
+        Stream<? extends EntityType.Remote> getSubtypes();
 
         /**
          * Returns a collection of all Entity instances for this EntityType.
@@ -172,21 +145,13 @@ public interface EntityType extends ThingType {
          * @see Entity.Remote
          */
         @Override
-        Stream<Entity.Remote> getInstances();
+        Stream<? extends Entity.Remote> getInstances();
 
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default EntityType.Remote asEntityType() {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isEntityType() {
-            return true;
-        }
     }
 }

@@ -30,16 +30,16 @@ import java.time.ZoneId;
  * A class used to hold the supported data types of resources and any other concepts.
  * This is used tp constrain value data types to only those we explicitly support.
  */
-public class ValueType {
-    public static final ValueType BOOLEAN = new ValueType(Boolean.class);
-    public static final ValueType DATETIME = new ValueType(LocalDateTime.class);
-    public static final ValueType DOUBLE = new ValueType(Double.class);
-    public static final ValueType LONG = new ValueType(Long.class);
-    public static final ValueType STRING = new ValueType(String.class);
+public class ValueTypeOld {
+    public static final ValueTypeOld BOOLEAN = new ValueTypeOld(Boolean.class);
+    public static final ValueTypeOld DATETIME = new ValueTypeOld(LocalDateTime.class);
+    public static final ValueTypeOld DOUBLE = new ValueTypeOld(Double.class);
+    public static final ValueTypeOld LONG = new ValueTypeOld(Long.class);
+    public static final ValueTypeOld STRING = new ValueTypeOld(String.class);
 
     private final Class<?> valueClass;
 
-    private ValueType(Class<?> valueClass) {
+    private ValueTypeOld(Class<?> valueClass) {
         this.valueClass = valueClass;
     }
 
@@ -63,7 +63,7 @@ public class ValueType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ValueType that = (ValueType) o;
+        ValueTypeOld that = (ValueTypeOld) o;
 
         return (this.valueClass().equals(that.valueClass()));
     }
@@ -81,7 +81,7 @@ public class ValueType {
      *
      * @param value The value protocol object.
      * @return the value cast to D Java type.
-     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueType.
+     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueTypeOld.
      */
     @SuppressWarnings("unchecked")
     public static <D> D staticCastValue(ConceptProto.ValueObject value) {
@@ -103,18 +103,7 @@ public class ValueType {
                     throw new IllegalArgumentException("Unexpected value for attribute: " + value);
             }
         } catch (ClassCastException ex) {
-            throw new IllegalArgumentException("Value type did not match ValueType ", ex);
+            throw new IllegalArgumentException("Value type did not match ValueTypeOld ", ex);
         }
-    }
-
-    /**
-     * Obtains the value from the given value protocol and casts it to this ValueType's type D.
-     *
-     * @param value The value protocol object.
-     * @return the value cast to D Java type.
-     * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueType.
-     */
-    Object instanceCastValue(ConceptProto.ValueObject value) {
-        return staticCastValue(value);
     }
 }

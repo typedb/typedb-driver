@@ -22,52 +22,32 @@ package grakn.client.concept.thing;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.type.ThingType;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface Attribute extends Thing {
 
-    /**
-     * Retrieves the value of the Attribute.
-     *
-     * @return The value itself
-     */
-    @CheckReturnValue
-    D getValue();
-
-    /**
-     * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is an Thing.
-     *
-     * @return The AttributeType of which this resource is an Thing.
-     */
-    @Override
-    AttributeType getType();
-
-    /**
-     * Retrieves the data type of this Attribute's AttributeType.
-     *
-     * @return The data type of this Attribute's type.
-     */
-    @CheckReturnValue
-    ValueType getValueType();
-
-    @SuppressWarnings("unchecked")
-    @Deprecated
     @CheckReturnValue
     @Override
     default Attribute asAttribute() {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    @CheckReturnValue
+    /**
+     * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is a Thing.
+     *
+     * @return The AttributeType of which this resource is a Thing.
+     */
     @Override
-    default Attribute asAttribute(ValueType valueType) {
+    AttributeType getType();
+
+    @CheckReturnValue
+    default private Attribute asAttribute(ValueTypeOld valueType) {
         if (!getValueType().equals(valueType)) {
             throw GraknConceptException.invalidCasting(this, valueType.getClass());
         }
@@ -75,25 +55,43 @@ public interface Attribute extends Thing {
     }
 
     @CheckReturnValue
-    @Override
-    default Remote asRemote(Transaction tx) {
-        return Attribute.Remote.of(tx, iid());
-    }
+    Attribute.Boolean asBoolean();
 
-    @Deprecated
+    @CheckReturnValue
+    Attribute.Long asLong();
+
+    @CheckReturnValue
+    Attribute.Double asDouble();
+
+    @CheckReturnValue
+    Attribute.String asString();
+
+    @CheckReturnValue
+    Attribute.DateTime asDateTime();
+
     @CheckReturnValue
     @Override
-    default boolean isAttribute() {
-        return true;
+    default Remote asRemote(Transaction tx) {
+        return Attribute.Remote.of(tx, getIID());
     }
 
     /**
      * Represent a literal Attribute in the graph.
-     * Acts as an Thing when relating to other instances except it has the added functionality of:
-     * 1. It is unique to its AttributeType based on it's value.
+     * Acts as a Thing when relating to other instances except it has the added functionality of:
+     * 1. It is unique to its AttributeType based on its value.
      * 2. It has an AttributeType.ValueType associated with it which constrains the allowed values.
      */
     interface Local extends Thing.Local, Attribute {
+
+        Attribute.Boolean.Local asBoolean();
+
+        Attribute.Long.Local asLong();
+
+        Attribute.Double.Local asDouble();
+
+        Attribute.String.Local asString();
+
+        Attribute.DateTime.Local asDateTime();
     }
 
     /**
@@ -117,51 +115,132 @@ public interface Attribute extends Thing {
         AttributeType.Remote getType();
 
         /**
-         * Retrieves the set of all Instances that possess this Attribute.
+         * Creates an ownership from this instance to the provided Attribute.
          *
-         * @return The list of all Instances that possess this Attribute.
-         */
-        @CheckReturnValue
-        Stream<Thing.Remote> getOwners();
-
-        /**
-         * Creates a relation from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which a relation is created
+         * @param attribute The Attribute to which an ownership is created
          * @return The instance itself
          */
         @Override
         Attribute.Remote setHas(Attribute attribute);
 
         /**
-         * Removes the provided Attribute from this Attribute
+         * Retrieves the set of all Instances that possess this Attribute.
          *
-         * @param attribute the Attribute to be removed
-         * @return The Attribute itself
+         * @return The list of all Instances that possess this Attribute.
          */
-        @Override
-        Attribute.Remote unsetHas(Attribute attribute);
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getOwners();
 
-        @SuppressWarnings("unchecked")
-        @Deprecated
+        // TODO: this was in core, but not in client-java - how do we align it?
+        /**
+         * Retrieves the set of all Instances of the specified type that possess this Attribute.
+         *
+         * @return The list of all Instances of the specified type that possess this Attribute.
+         */
+        @CheckReturnValue
+        default Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
+            throw new UnsupportedOperationException();
+        }
+
         @CheckReturnValue
         @Override
         default Attribute.Remote asAttribute() {
             return this;
         }
 
-        @Deprecated
+        Attribute.Boolean.Remote asBoolean();
+
+        Attribute.Long.Remote asLong();
+
+        Attribute.Double.Remote asDouble();
+
+        Attribute.String.Remote asString();
+
+        Attribute.DateTime.Remote asDateTime();
+    }
+
+    interface Boolean extends Attribute {
+
+        /**
+         * Retrieves the value of the Attribute.
+         *
+         * @return The value itself
+         */
         @CheckReturnValue
-        @Override
-        default Attribute.Remote asAttribute(ValueType valueType) {
-            return (Attribute.Remote) Attribute.super.asAttribute(valueType);
+        java.lang.Boolean getValue();
+
+        interface Local extends Attribute.Boolean, Attribute.Local {
         }
 
-        @Deprecated
+        interface Remote extends Attribute.Boolean, Attribute.Remote {
+        }
+    }
+
+    interface Long extends Attribute {
+
+        /**
+         * Retrieves the value of the Attribute.
+         *
+         * @return The value itself
+         */
         @CheckReturnValue
-        @Override
-        default boolean isAttribute() {
-            return true;
+        java.lang.Long getValue();
+
+        interface Local extends Attribute.Long, Attribute.Local {
+        }
+
+        interface Remote extends Attribute.Long, Attribute.Remote {
+        }
+    }
+
+    interface Double extends Attribute {
+
+        /**
+         * Retrieves the value of the Attribute.
+         *
+         * @return The value itself
+         */
+        @CheckReturnValue
+        java.lang.Double getValue();
+
+        interface Local extends Attribute.Double, Attribute.Local {
+        }
+
+        interface Remote extends Attribute.Double, Attribute.Remote {
+        }
+    }
+
+    interface String extends Attribute {
+
+        /**
+         * Retrieves the value of the Attribute.
+         *
+         * @return The value itself
+         */
+        @CheckReturnValue
+        java.lang.String getValue();
+
+        interface Local extends Attribute.String, Attribute.Local {
+        }
+
+        interface Remote extends Attribute.String, Attribute.Remote {
+        }
+    }
+
+    interface DateTime extends Attribute {
+
+        /**
+         * Retrieves the value of the Attribute.
+         *
+         * @return The value itself
+         */
+        @CheckReturnValue
+        java.time.LocalDateTime getValue();
+
+        interface Local extends Attribute.DateTime, Attribute.Local {
+        }
+
+        interface Remote extends Attribute.DateTime, Attribute.Remote {
         }
     }
 }

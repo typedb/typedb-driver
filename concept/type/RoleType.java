@@ -28,14 +28,12 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
- * A SchemaConcept which defines a role which can be played in a RelationType.
+ * A Type which defines a role which can be played in a RelationType.
  * This ontological element defines the RoleTypes which make up a RelationType.
- * It behaves similarly to SchemaConcept when relating to other types.
+ * It behaves similarly to Type when relating to other types.
  */
 public interface RoleType extends Type {
 
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
     @CheckReturnValue
     @Override
     default RoleType asRoleType() {
@@ -44,31 +42,22 @@ public interface RoleType extends Type {
 
     @Override
     default Remote asRemote(Transaction tx) {
-        return RoleType.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRoleType() {
-        return true;
+        return RoleType.Remote.of(tx, getIID());
     }
 
     interface Local extends Type.Local, RoleType {
     }
 
     /**
-     * A SchemaConcept which defines a role which can be played in a RelationType.
+     * A Type which defines a role which can be played in a RelationType.
      * This ontological element defines the RoleTypes which make up a RelationType.
-     * It behaves similarly to SchemaConcept when relating to other types.
+     * It behaves similarly to Type when relating to other types.
      */
     interface Remote extends Type.Remote, RoleType {
 
         static RoleType.Remote of(Transaction tx, ConceptIID iid) {
             return new RoleTypeImpl.Remote(tx, iid);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -86,8 +75,6 @@ public interface RoleType extends Type {
          */
         RoleType.Remote setSupertype(RoleType type);
 
-        //------------------------------------- Accessors ----------------------------------
-
         /**
          * Get the label of this RoleType scoped to its relation.
          *
@@ -99,7 +86,7 @@ public interface RoleType extends Type {
          * @return All the supertypes of this RoleType.
          */
         @Override
-        Stream<RoleType.Remote> getSupertypes();
+        Stream<? extends RoleType.Remote> getSupertypes();
 
         /**
          * Returns the subtype of this RoleType.
@@ -107,7 +94,7 @@ public interface RoleType extends Type {
          * @return The subtype of this RoleType.
          */
         @Override
-        Stream<RoleType.Remote> getSubtypes();
+        Stream<? extends RoleType.Remote> getSubtypes();
 
         /**
          * Returns the RelationTypes that this RoleType takes part in.
@@ -116,7 +103,7 @@ public interface RoleType extends Type {
          * @see RelationType.Remote
          */
         @CheckReturnValue
-        Stream<RelationType.Remote> getRelations();
+        Stream<? extends RelationType.Remote> getRelations();
 
         /**
          * Returns a collection of the Types that can play this RoleType.
@@ -125,22 +112,13 @@ public interface RoleType extends Type {
          * @see ThingType.Remote
          */
         @CheckReturnValue
-        Stream<ThingType.Remote> getPlayers();
+        Stream<? extends ThingType.Remote> getPlayers();
 
         //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default RoleType.Remote asRoleType() {
             return this;
         }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRoleType() {
-            return true;
-        }
     }
 }
-

@@ -51,14 +51,7 @@ public interface Entity extends Thing {
     @CheckReturnValue
     @Override
     default Remote asRemote(Transaction tx) {
-        return Entity.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isEntity() {
-        return true;
+        return Entity.Remote.of(tx, getIID());
     }
 
     interface Local extends Thing.Local, Entity {
@@ -92,15 +85,6 @@ public interface Entity extends Thing {
         @Override
         Entity.Remote setHas(Attribute attribute);
 
-        /**
-         * Removes the provided Attribute from this Entity
-         *
-         * @param attribute the Attribute to be removed
-         * @return The Entity itself
-         */
-        @Override
-        Entity.Remote unsetHas(Attribute attribute);
-
         @Deprecated
         @CheckReturnValue
         @Override
@@ -108,11 +92,5 @@ public interface Entity extends Thing {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isEntity() {
-            return true;
-        }
     }
 }

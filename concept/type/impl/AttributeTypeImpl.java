@@ -22,7 +22,7 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
@@ -40,7 +40,7 @@ public class AttributeTypeImpl {
      */
     public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
-        private final ValueType valueType;
+        private final ValueTypeOld valueType;
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -49,7 +49,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public ValueType getValueType() {
+        public ValueTypeOld getValueType() {
             return valueType;
         }
     }
@@ -89,18 +89,8 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote unsetOwns(AttributeType attributeType) {
-            return (AttributeType.Remote) super.unsetOwns(attributeType);
-        }
-
-        @Override
         public final AttributeType.Remote setPlays(RoleType role) {
             return (AttributeType.Remote) super.setPlays(role);
-        }
-
-        @Override
-        public final AttributeType.Remote unsetPlays(RoleType role) {
-            return (AttributeType.Remote) super.unsetPlays(role);
         }
 
         @Override
@@ -164,7 +154,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public final ValueType getValueType() {
+        public final ValueTypeOld getValueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeGetValueTypeReq(ConceptProto.AttributeType.GetValueType.Req.getDefaultInstance()).build();
 
@@ -212,9 +202,5 @@ public class AttributeTypeImpl {
             return other.asAttributeType();
         }
 
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isAttributeType();
-        }
     }
 }

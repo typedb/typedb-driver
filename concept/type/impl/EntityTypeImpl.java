@@ -82,16 +82,6 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote unsetOwns(AttributeType attributeType) {
-            return (EntityType.Remote) super.unsetOwns(attributeType);
-        }
-
-        @Override
-        public final EntityType.Remote unsetPlays(RoleType role) {
-            return (EntityType.Remote) super.unsetPlays(role);
-        }
-
-        @Override
         public final EntityType.Remote isAbstract(Boolean isAbstract) {
             return (EntityType.Remote) super.isAbstract(isAbstract);
         }
@@ -132,11 +122,6 @@ public class EntityTypeImpl {
         @Override
         protected final EntityType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asEntityType();
-        }
-
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isEntityType();
         }
 
         @Override

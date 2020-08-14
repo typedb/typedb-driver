@@ -82,7 +82,6 @@ public abstract class TypeImpl {
             return this;
         }
 
-        @SuppressWarnings("unchecked")
         @Nullable
         public Type.Remote getSupertype() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -94,7 +93,7 @@ public abstract class TypeImpl {
                 case NULL:
                     return null;
                 case TYPE:
-                    return (Type.Remote) Concept.Remote.of(tx(), response.getType()).asSchemaConcept();
+                    return Concept.Remote.of(tx(), response.getType()).asType();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -106,8 +105,7 @@ public abstract class TypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeGetSupertypesIterRes().getType())
-                    .filter(this::equalsCurrentBaseType).map(this::asCurrentBaseType);
+            return conceptStream(method, res -> res.getTypeGetSupertypesIterRes().getType());
         }
 
         @Override
@@ -115,12 +113,10 @@ public abstract class TypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(this::asCurrentBaseType);
+            return conceptStream(method, res -> res.getTypeGetSubtypesIterRes().getType());
         }
 
         @Override
         protected abstract Type.Remote asCurrentBaseType(Concept.Remote other);
-
-        protected abstract boolean equalsCurrentBaseType(Concept.Remote other);
     }
 }

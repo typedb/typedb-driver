@@ -20,7 +20,7 @@
 package grakn.client.test.behaviour.config;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ValueType;
+import grakn.client.concept.ValueTypeOld;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -83,18 +83,18 @@ public class Parameters {
     }
 
     @ParameterType("long|double|string|boolean|datetime")
-    public ValueType value_type(String type) {
+    public ValueTypeOld value_type(String type) {
         switch (type) {
             case "long":
-                return ValueType.LONG;
+                return ValueTypeOld.LONG;
             case "double":
-                return ValueType.DOUBLE;
+                return ValueTypeOld.DOUBLE;
             case "string":
-                return ValueType.STRING;
+                return ValueTypeOld.STRING;
             case "boolean":
-                return ValueType.BOOLEAN;
+                return ValueTypeOld.BOOLEAN;
             case "datetime":
-                return ValueType.DATETIME;
+                return ValueTypeOld.DATETIME;
             default:
                 return null;
         }

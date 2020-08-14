@@ -35,7 +35,6 @@ import java.util.stream.Stream;
  */
 public interface RelationType extends ThingType {
     //------------------------------------- Other ---------------------------------
-    @Deprecated
     @CheckReturnValue
     @Override
     default RelationType asRelationType() {
@@ -44,14 +43,7 @@ public interface RelationType extends ThingType {
 
     @Override
     default Remote asRemote(Transaction tx) {
-        return RelationType.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRelationType() {
-        return true;
+        return RelationType.Remote.of(tx, getIID());
     }
 
     interface Local extends ThingType.Local, RelationType {
@@ -67,8 +59,6 @@ public interface RelationType extends ThingType {
         static RelationType.Remote of(Transaction tx, ConceptIID iid) {
             return new RelationTypeImpl.Remote(tx, iid);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
 
         /**
          * Create a relation of this relation type.
@@ -109,8 +99,6 @@ public interface RelationType extends ThingType {
         @Override
         RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
-        //------------------------------------- Accessors ----------------------------------
-
         /**
          * Retrieve a specific RoleType.
          *
@@ -130,8 +118,6 @@ public interface RelationType extends ThingType {
          */
         @CheckReturnValue
         Stream<RoleType.Remote> getRelates();
-
-        //------------------------------------- Edge Handling ----------------------------------
 
         /**
          * Creates a new RoleType for this RelationType.
@@ -163,7 +149,7 @@ public interface RelationType extends ThingType {
          * @return All the supertypes of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> getSupertypes();
+        Stream<? extends RelationType.Remote> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this RelationType.
@@ -171,7 +157,16 @@ public interface RelationType extends ThingType {
          * @return All the sub types of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> getSubtypes();
+        Stream<? extends RelationType.Remote> getSubtypes();
+
+        /**
+         * Retrieve all the Relation instances of this RelationType
+         *
+         * @return All the Relation instances of this RelationType
+         * @see Relation.Remote
+         */
+        @Override
+        Stream<? extends Relation.Remote> getInstances();
 
         /**
          * Sets the RoleType which instances of this RelationType may play.
@@ -182,46 +177,11 @@ public interface RelationType extends ThingType {
         @Override
         RelationType.Remote setPlays(RoleType role);
 
-        /**
-         * Removes the ability of this RelationType to play a specific RoleType.
-         *
-         * @param role The RoleType which the instances of this RelationType should no longer be allowed to play.
-         * @return The RoleType itself.
-         */
-        @Override
-        RelationType.Remote unsetPlays(RoleType role);
-
-        /**
-         * Removes the ability for instances of this RelationType to have Attributes of a specific AttributeType.
-         *
-         * @param attributeType The AttributeType which this RelationType can no longer have
-         * @return The RelationType itself.
-         */
-        @Override
-        RelationType.Remote unsetOwns(AttributeType attributeType);
-
-        /**
-         * Retrieve all the Relation instances of this RelationType
-         *
-         * @return All the Relation instances of this RelationType
-         * @see Relation.Remote
-         */
-        @Override
-        Stream<Relation.Remote> getInstances();
-
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default RelationType.Remote asRelationType() {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRelationType() {
-            return true;
-        }
     }
 }

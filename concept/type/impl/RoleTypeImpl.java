@@ -86,17 +86,12 @@ public class RoleTypeImpl {
         public final Stream<ThingType.Remote> getPlayers() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asType);
+            return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asThingType);
         }
 
         @Override
         protected final RoleType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRoleType();
-        }
-
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
-            return other.isRoleType();
         }
 
     }

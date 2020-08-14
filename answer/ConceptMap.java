@@ -110,7 +110,7 @@ public class ConceptMap implements Answer {
     public String toString() {
         return map.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .map(e -> "[" + e.getKey() + "/" + e.getValue().iid() + "]").collect(Collectors.joining());
+                .map(e -> "[" + e.getKey() + "/" + e.getValue().getIID() + "]").collect(Collectors.joining());
     }
 
     @Override

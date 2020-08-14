@@ -58,14 +58,7 @@ public interface Relation extends Thing {
 
     @Override
     default Remote asRemote(Transaction tx) {
-        return Relation.Remote.of(tx, iid());
-    }
-
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRelation() {
-        return true;
+        return Relation.Remote.of(tx, getIID());
     }
 
     interface Local extends Thing.Local, Relation {
@@ -91,15 +84,6 @@ public interface Relation extends Thing {
          */
         @Override
         Relation.Remote setHas(Attribute attribute);
-
-        /**
-         * Removes the provided Attribute from this Relation
-         *
-         * @param attribute the Attribute to be removed
-         * @return The Relation itself
-         */
-        @Override
-        Relation.Remote unsetHas(Attribute attribute);
 
         /**
          * Retrieve the associated RelationType for this Relation.
@@ -162,11 +146,5 @@ public interface Relation extends Thing {
             return this;
         }
 
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRelation() {
-            return true;
-        }
     }
 }
