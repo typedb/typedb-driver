@@ -21,25 +21,21 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.impl.MetaTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 
-public interface MetaType<
-        SomeType extends ThingType<SomeType, SomeThing>,
-        SomeThing extends Thing<SomeThing, SomeType>>
-        extends ThingType<SomeType, SomeThing> {
+public interface MetaType extends ThingType {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default MetaType<SomeType, SomeThing> asMetaType() {
+    default MetaType asMetaType() {
         return this;
     }
 
     @Override
-    default MetaType.Remote<SomeType, SomeThing> asRemote(Transaction tx) {
+    default MetaType.Remote asRemote(Transaction tx) {
         return MetaType.Remote.of(tx, iid());
     }
 
@@ -50,29 +46,20 @@ public interface MetaType<
         return true;
     }
 
-    interface Local<
-            SomeType extends ThingType<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends ThingType.Local<SomeType, SomeThing>, MetaType<SomeType, SomeThing> {
+    interface Local extends ThingType.Local, MetaType {
     }
 
     /**
      * Type Class of a MetaType
      */
-    interface Remote<
-            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-        extends MetaType<SomeRemoteType, SomeRemoteThing>,
-            ThingType.Remote<SomeRemoteType, SomeRemoteThing> {
+    interface Remote extends MetaType, ThingType.Remote {
 
-        static <SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
-                SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-        MetaType.Remote<SomeRemoteType, SomeRemoteThing> of(Transaction tx, ConceptIID iid) {
-            return new MetaTypeImpl.Remote<>(tx, iid);
+        static MetaType.Remote of(Transaction tx, ConceptIID iid) {
+            return new MetaTypeImpl.Remote(tx, iid);
         }
 
         @Override
-        default MetaType.Remote<SomeRemoteType, SomeRemoteThing> asMetaType() {
+        default MetaType.Remote asMetaType() {
             return this;
         }
     }

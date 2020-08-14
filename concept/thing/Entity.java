@@ -32,7 +32,7 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity extends Thing<Entity, EntityType> {
+public interface Entity extends Thing {
 
     /**
      * @return The EntityType of this Entity
@@ -61,7 +61,7 @@ public interface Entity extends Thing<Entity, EntityType> {
         return true;
     }
 
-    interface Local extends Thing.Local<Entity, EntityType>, Entity {
+    interface Local extends Thing.Local, Entity {
     }
 
     /**
@@ -70,7 +70,7 @@ public interface Entity extends Thing<Entity, EntityType> {
      * Entities are objects which are defined by their Attribute and their links to
      * other entities via Relation
      */
-    interface Remote extends Thing.Remote<Entity, EntityType>, Entity {
+    interface Remote extends Thing.Remote, Entity {
 
         static Entity.Remote of(Transaction tx, ConceptIID iid) {
             return new EntityImpl.Remote(tx, iid);
@@ -90,7 +90,7 @@ public interface Entity extends Thing<Entity, EntityType> {
          * @return The instance itself
          */
         @Override
-        Entity.Remote setHas(Attribute<?> attribute);
+        Entity.Remote setHas(Attribute attribute);
 
         /**
          * Removes the provided Attribute from this Entity
@@ -99,7 +99,7 @@ public interface Entity extends Thing<Entity, EntityType> {
          * @return The Entity itself
          */
         @Override
-        Entity.Remote unsetHas(Attribute<?> attribute);
+        Entity.Remote unsetHas(Attribute attribute);
 
         @Deprecated
         @CheckReturnValue

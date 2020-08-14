@@ -512,10 +512,10 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public ThingType.Remote<?, ?> getRootType() {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of("thing")); // TODO do this properly
+    public ThingType.Remote getRootType() {
+        grakn.client.concept.type.Type.Remote concept = getType(Label.of("thing")); // TODO do this properly
         if (concept instanceof ThingType.Remote) {
-            return (ThingType.Remote<?, ?>) concept;
+            return (ThingType.Remote) concept;
         } else {
             return null;
         }
@@ -523,10 +523,10 @@ public class GraknTransaction implements Transaction {
 
     @Override
     @Nullable
-    public ThingType.Remote<?, ?> getThingType(Label label) {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(label);
+    public ThingType.Remote getThingType(Label label) {
+        grakn.client.concept.type.Type.Remote concept = getType(label);
         if (concept instanceof ThingType.Remote) {
-            return (ThingType.Remote<?, ?>) concept;
+            return (ThingType.Remote) concept;
         } else {
             return null;
         }
@@ -535,7 +535,7 @@ public class GraknTransaction implements Transaction {
     @Override
     @Nullable
     public EntityType.Remote getEntityType(String label) {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
+        grakn.client.concept.type.Type.Remote concept = getType(Label.of(label));
         if (concept instanceof ThingType.Remote) {
             return (grakn.client.concept.type.EntityType.Remote) concept;
         } else {
@@ -546,7 +546,7 @@ public class GraknTransaction implements Transaction {
     @Override
     @Nullable
     public RelationType.Remote getRelationType(String label) {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
+        grakn.client.concept.type.Type.Remote concept = getType(Label.of(label));
         if (concept instanceof RelationType.Remote) {
             return (RelationType.Remote) concept;
         } else {
@@ -556,10 +556,10 @@ public class GraknTransaction implements Transaction {
 
     @Override
     @Nullable
-    public AttributeType.Remote<?> getAttributeType(String label) {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
+    public AttributeType.Remote getAttributeType(String label) {
+        grakn.client.concept.type.Type.Remote concept = getType(Label.of(label));
         if (concept instanceof AttributeType.Remote) {
-            return (AttributeType.Remote<?>) concept;
+            return (AttributeType.Remote) concept;
         } else {
             return null;
         }
@@ -568,7 +568,7 @@ public class GraknTransaction implements Transaction {
     @Override
     @Nullable
     public Rule.Remote getRule(String label) {
-        grakn.client.concept.type.Type.Remote<?> concept = getType(Label.of(label));
+        grakn.client.concept.type.Type.Remote concept = getType(Label.of(label));
         if (concept instanceof Rule.Remote) {
             return (Rule.Remote) concept;
         } else {
@@ -578,7 +578,7 @@ public class GraknTransaction implements Transaction {
 
     @Override
     @Nullable
-    public grakn.client.concept.type.Type.Remote<?> getType(Label label) {
+    public grakn.client.concept.type.Type.Remote getType(Label label) {
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getType(label));
         switch (response.getGetTypeRes().getResCase()) {
             case NULL:
@@ -591,7 +591,7 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public grakn.client.concept.type.Type.Remote<?> getMetaConcept() {
+    public grakn.client.concept.type.Type.Remote getMetaConcept() {
         return getType(Label.of(GraqlToken.Type.THING.toString()));
     }
 
@@ -606,7 +606,7 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public AttributeType.Remote<?> getMetaAttributeType() {
+    public AttributeType.Remote getMetaAttributeType() {
         return getType(Label.of(GraqlToken.Type.ATTRIBUTE.toString())).asAttributeType();
     }
 
@@ -622,7 +622,7 @@ public class GraknTransaction implements Transaction {
 
     @Override
     @Nullable
-    public Concept.Remote<?> getConcept(ConceptIID iid) {
+    public Concept.Remote getConcept(ConceptIID iid) {
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getConcept(iid));
         switch (response.getGetConceptRes().getResCase()) {
             case NULL:
@@ -645,14 +645,14 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public <V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType) {
+    public <V> AttributeType.Remote putAttributeType(String label, ValueType valueType) {
         return putAttributeType(Label.of(label), valueType);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType) {
-        return (AttributeType.Remote<V>) Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
+    public <V> AttributeType.Remote putAttributeType(Label label, ValueType valueType) {
+        return (AttributeType.Remote) Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
                 .getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }
 

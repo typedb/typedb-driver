@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType extends ThingType<RelationType, Relation> {
+public interface RelationType extends ThingType {
     //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
@@ -54,7 +54,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
         return true;
     }
 
-    interface Local extends ThingType.Local<RelationType, Relation>, RelationType {
+    interface Local extends ThingType.Local, RelationType {
     }
 
     /**
@@ -62,7 +62,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
      * A RelationType defines how Type may relate to one another.
      * They are used to model and categorise n-ary Relations.
      */
-    interface Remote extends ThingType.Remote<RelationType, Relation>, RelationType {
+    interface Remote extends ThingType.Remote, RelationType {
 
         static RelationType.Remote of(Transaction tx, ConceptIID iid) {
             return new RelationTypeImpl.Remote(tx, iid);
@@ -101,13 +101,13 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The Type itself.
          */
         @Override
-        RelationType.Remote setOwns(AttributeType<?> attributeType);
+        RelationType.Remote setOwns(AttributeType attributeType);
         @Override
-        RelationType.Remote setOwns(AttributeType<?> attributeType, boolean isKey);
+        RelationType.Remote setOwns(AttributeType attributeType, boolean isKey);
         @Override
-        RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
         @Override
-        RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
+        RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 
@@ -198,7 +198,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote unsetOwns(AttributeType<?> attributeType);
+        RelationType.Remote unsetOwns(AttributeType attributeType);
 
         /**
          * Retrieve all the Relation instances of this RelationType

@@ -33,11 +33,9 @@ import java.util.stream.Stream;
 
 public class EntityTypeImpl {
     /**
-     * Client implementation of a MetaType, a special type of Type
-     * TODO: This class is not defined in Concept API, and at server side implementation.
-     * TODO: we should remove this class, or implement properly on server side.
+     * Client implementation of EntityType
      */
-    public static class Local extends ThingTypeImpl.Local<EntityType, Entity> implements EntityType.Local {
+    public static class Local extends ThingTypeImpl.Local implements EntityType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -45,38 +43,36 @@ public class EntityTypeImpl {
     }
 
     /**
-     * Client implementation of a MetaType, a special type of Type
-     * TODO: This class is not defined in Concept API, and at server side implementation.
-     * TODO: we should remove this class, or implement properly on server side.
+     * Client implementation of EntityType
      */
-    public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType<?> attributeType) {
+        public final EntityType.Remote setOwns(AttributeType attributeType) {
             return (EntityType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType<?> attributeType, boolean isKey) {
+        public final EntityType.Remote setOwns(AttributeType attributeType, boolean isKey) {
             return (EntityType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+        public final EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
             return (EntityType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+        public final EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             return (EntityType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+        public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return super.getOwns(keysOnly);
         }
 
@@ -86,7 +82,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote unsetOwns(AttributeType<?> attributeType) {
+        public final EntityType.Remote unsetOwns(AttributeType attributeType) {
             return (EntityType.Remote) super.unsetOwns(attributeType);
         }
 
@@ -134,17 +130,17 @@ public class EntityTypeImpl {
         }
 
         @Override
-        protected final EntityType.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final EntityType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asEntityType();
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isEntityType();
         }
 
         @Override
-        protected final Entity.Remote asInstance(Concept.Remote<?> concept) {
+        protected final Entity.Remote asInstance(Concept.Remote concept) {
             return concept.asEntity();
         }
     }

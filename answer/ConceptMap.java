@@ -40,12 +40,12 @@ import java.util.stream.Collectors;
  */
 public class ConceptMap implements Answer {
 
-    private final Map<String, Concept<?>> map;
+    private final Map<String, Concept> map;
     private final boolean hasExplanation;
     private final Transaction tx;
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<String, Concept<?>> map, Pattern queryPattern, boolean hasExplanation, Transaction tx) {
+    public ConceptMap(Map<String, Concept> map, Pattern queryPattern, boolean hasExplanation, Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;
@@ -90,18 +90,18 @@ public class ConceptMap implements Answer {
     }
 
     @CheckReturnValue
-    public Map<String, Concept<?>> map() {
+    public Map<String, Concept> map() {
         return map;
     }
 
 
-    public Collection<Concept<?>> concepts() {
+    public Collection<Concept> concepts() {
         return map.values();
     }
 
     @CheckReturnValue
-    public Concept<?> get(String variable) {
-        Concept<?> Concept = map.get(variable);
+    public Concept get(String variable) {
+        Concept Concept = map.get(variable);
         if (Concept == null) throw GraknConceptException.variableDoesNotExist(variable);
         return Concept;
     }

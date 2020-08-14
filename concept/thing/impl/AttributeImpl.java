@@ -38,7 +38,7 @@ public class AttributeImpl {
      *
      * @param <D> The data type of this attribute
      */
-    public static class Local<D> extends ThingImpl.Local<Attribute<D>, AttributeType<D>> implements Attribute.Local<D> {
+    public static class Local<D> extends ThingImpl.Local implements Attribute.Local {
 
         private final D value;
 
@@ -53,7 +53,7 @@ public class AttributeImpl {
         }
 
         @Override
-        public final ValueType<D> getValueType() {
+        public final ValueType getValueType() {
             return getType().getValueType();
         }
     }
@@ -63,7 +63,7 @@ public class AttributeImpl {
      *
      * @param <D> The data type of this attribute
      */
-    public static class Remote<D> extends ThingImpl.Local.Remote<Attribute<D>, AttributeType<D>> implements Attribute.Remote<D> {
+    public static class Remote<D> extends ThingImpl.Local.Remote implements Attribute.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -79,36 +79,36 @@ public class AttributeImpl {
         }
 
         @Override
-        public final Stream<Thing.Remote<?, ?>> getOwners() {
+        public final Stream<Thing.Remote> getOwners() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override
-        public final ValueType<D> getValueType() {
+        public final ValueType getValueType() {
             return getType().getValueType();
         }
 
         @Override
-        public AttributeType.Remote<D> getType() {
-            return (AttributeType.Remote<D>) super.getType();
+        public AttributeType.Remote getType() {
+            return (AttributeType.Remote) super.getType();
         }
 
         @Override
-        public Attribute.Remote<D> setHas(Attribute<?> attribute) {
-            return (Attribute.Remote<D>) super.setHas(attribute);
+        public Attribute.Remote setHas(Attribute attribute) {
+            return (Attribute.Remote) super.setHas(attribute);
         }
 
         @Override
-        public Attribute.Remote<D> unsetHas(Attribute<?> attribute) {
-            return (Attribute.Remote<D>) super.unsetHas(attribute);
+        public Attribute.Remote unsetHas(Attribute attribute) {
+            return (Attribute.Remote) super.unsetHas(attribute);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final Attribute.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
-            return (Attribute.Remote<D>) other.asAttribute();
+        protected final Attribute.Remote asCurrentBaseType(Concept.Remote other) {
+            return other.asAttribute();
         }
     }
 }

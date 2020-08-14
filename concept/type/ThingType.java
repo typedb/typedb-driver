@@ -32,19 +32,17 @@ import java.util.stream.Stream;
  * Types are used to model the behaviour of Thing and how they relate to each other.
  * They also aid in categorising Thing to different types.
  */
-public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
-                      SomeThing extends Thing<SomeThing, SomeType>>
-        extends Type<SomeType> {
+public interface ThingType extends Type {
 
     @Deprecated
     @CheckReturnValue
     @Override
-    default ThingType<SomeType, SomeThing> asType() {
+    default ThingType asType() {
         return this;
     }
 
     @Override
-    Remote<SomeType, SomeThing> asRemote(Transaction tx);
+    Remote asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -53,10 +51,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
         return true;
     }
 
-    interface Local<
-            SomeType extends ThingType<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends Type.Local<SomeType>, ThingType<SomeType, SomeThing> {
+    interface Local extends Type.Local, ThingType {
     }
 
     /**
@@ -64,10 +59,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
      * Types are used to model the behaviour of Thing and how they relate to each other.
      * They also aid in categorising Thing to different types.
      */
-    interface Remote<
-            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends Type.Remote<SomeRemoteType>, ThingType<SomeRemoteType, SomeRemoteThing> {
+    interface Remote extends Type.Remote, ThingType {
 
         //------------------------------------- Modifiers ----------------------------------
 
@@ -77,7 +69,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param label The new Label.
          * @return The Concept itself
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setLabel(Label label);
+        ThingType.Remote setLabel(Label label);
 
         /**
          * Sets the Type to be abstract - which prevents it from having any instances.
@@ -85,13 +77,13 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
          * @return The concept itself
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract);
+        ThingType.Remote isAbstract(Boolean isAbstract);
 
         /**
          * @param role The RoleType which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setPlays(RoleType role);
+        ThingType.Remote setPlays(RoleType role);
 
 
         /**
@@ -100,17 +92,17 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> otherType, boolean isKey);
+        ThingType.Remote setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
 
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+        default ThingType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
             return setOwns(attributeType, overriddenType, false);
         }
 
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, boolean isKey) {
+        default ThingType.Remote setOwns(AttributeType attributeType, boolean isKey) {
             return setOwns(attributeType, null, isKey);
         }
 
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType) {
+        default ThingType.Remote setOwns(AttributeType attributeType) {
             return setOwns(attributeType, false);
         }
 
@@ -126,17 +118,17 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        <D> Stream<? extends AttributeType.Remote<D>> getOwns(ValueType<D> valueType, boolean keysOnly);
+        <D> Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
         @CheckReturnValue
-        default <D> Stream<? extends AttributeType.Remote<D>> attributes(ValueType<D> valueType) {
+        default <D> Stream<? extends AttributeType.Remote> attributes(ValueType valueType) {
             return getOwns(valueType, false);
         }
         @CheckReturnValue
-        default Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+        default Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return getOwns(null, keysOnly);
         }
         @CheckReturnValue
-        default Stream<? extends AttributeType.Remote<?>> attributes() {
+        default Stream<? extends AttributeType.Remote> attributes() {
             return getOwns(false);
         }
 
@@ -144,7 +136,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @return All the the super-types of this Type
          */
         @Override
-        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSupertypes();
+        Stream<? extends ThingType.Remote> getSupertypes();
 
         /**
          * Get all indirect sub-types of this type.
@@ -154,7 +146,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          */
         @Override
         @CheckReturnValue
-        Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSubtypes();
+        Stream<? extends ThingType.Remote> getSubtypes();
 
         /**
          * Get all indirect instances of this type.
@@ -163,7 +155,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @return All the indirect instances of this type.
          */
         @CheckReturnValue
-        Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> getInstances();
+        Stream<? extends Thing.Remote> getInstances();
 
         /**
          * Return if the type is set to abstract.
@@ -182,7 +174,7 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param role The RoleType which the Things of this Type should no longer be allowed to play.
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetPlays(RoleType role);
+        ThingType.Remote unsetPlays(RoleType role);
 
         /**
          * Removes the ability for Things of this Type to have Attributes of type AttributeType
@@ -190,12 +182,12 @@ public interface ThingType<SomeType extends ThingType<SomeType, SomeThing>,
          * @param attributeType the AttributeType which this Type can no longer have
          * @return The Type itself.
          */
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetOwns(AttributeType<?> attributeType);
+        ThingType.Remote unsetOwns(AttributeType attributeType);
 
         @Deprecated
         @CheckReturnValue
         @Override
-        default ThingType.Remote<SomeRemoteType, SomeRemoteThing> asType() {
+        default ThingType.Remote asType() {
             return this;
         }
 

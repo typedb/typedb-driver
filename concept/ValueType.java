@@ -29,24 +29,22 @@ import java.time.ZoneId;
 /**
  * A class used to hold the supported data types of resources and any other concepts.
  * This is used tp constrain value data types to only those we explicitly support.
- *
- * @param <D> The data type.
  */
-public class ValueType<D> {
-    public static final ValueType<Boolean> BOOLEAN = new ValueType<>(Boolean.class);
-    public static final ValueType<LocalDateTime> DATETIME = new ValueType<>(LocalDateTime.class);
-    public static final ValueType<Double> DOUBLE = new ValueType<>(Double.class);
-    public static final ValueType<Long> LONG = new ValueType<>(Long.class);
-    public static final ValueType<String> STRING = new ValueType<>(String.class);
+public class ValueType {
+    public static final ValueType BOOLEAN = new ValueType(Boolean.class);
+    public static final ValueType DATETIME = new ValueType(LocalDateTime.class);
+    public static final ValueType DOUBLE = new ValueType(Double.class);
+    public static final ValueType LONG = new ValueType(Long.class);
+    public static final ValueType STRING = new ValueType(String.class);
 
-    private final Class<D> valueClass;
+    private final Class<?> valueClass;
 
-    private ValueType(Class<D> valueClass) {
+    private ValueType(Class<?> valueClass) {
         this.valueClass = valueClass;
     }
 
     @CheckReturnValue
-    public Class<D> valueClass() {
+    public Class<?> valueClass() {
         return valueClass;
     }
 
@@ -65,7 +63,7 @@ public class ValueType<D> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ValueType<?> that = (ValueType<?>) o;
+        ValueType that = (ValueType) o;
 
         return (this.valueClass().equals(that.valueClass()));
     }
@@ -116,7 +114,7 @@ public class ValueType<D> {
      * @return the value cast to D Java type.
      * @throws IllegalArgumentException if the value type is not recognised or does not match the type of this ValueType.
      */
-    D instanceCastValue(ConceptProto.ValueObject value) {
+    Object instanceCastValue(ConceptProto.ValueObject value) {
         return staticCastValue(value);
     }
 }

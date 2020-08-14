@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * 1. They have a unique Label which identifies them
  * 2. You can link them together into a hierarchical structure
  */
-public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType> {
+public interface Type extends Concept {
     //------------------------------------- Accessors ---------------------------------
 
     /**
@@ -49,12 +49,12 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
     @Deprecated
     @CheckReturnValue
     @Override
-    default Type<BaseType> asSchemaConcept() {
+    default Type asSchemaConcept() {
         return this;
     }
 
     @Override
-    Remote<BaseType> asRemote(Transaction tx);
+    Remote asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -63,7 +63,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
         return true;
     }
 
-    interface Local<T extends Type<T>> extends Type<T>, Concept.Local<T> {
+    interface Local extends Type, Concept.Local {
     }
 
     /**
@@ -73,9 +73,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
      * 1. They have a unique Label which identifies them
      * 2. You can link them together into a hierarchical structure
      */
-    interface Remote<BaseType extends Type<BaseType>>
-            extends Type<BaseType>,
-            Concept.Remote<BaseType> {
+    interface Remote extends Type, Concept.Remote {
         //------------------------------------- Modifiers ----------------------------------
 
         /**
@@ -84,7 +82,7 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
          * @param label The new Label.
          * @return The Concept itself
          */
-        Type.Remote<BaseType> setLabel(Label label);
+        Type.Remote setLabel(Label label);
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -93,14 +91,14 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
          */
         @CheckReturnValue
         @Nullable
-        Type.Remote<BaseType> getSupertype();
+        Type.Remote getSupertype();
 
         /**
          * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
          * Schema.MetaSchema#THING.
          * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
          */
-        Stream<? extends Type.Remote<BaseType>> getSupertypes();
+        Stream<? extends Type.Remote> getSupertypes();
 
         /**
          * Get all indirect subs of this concept.
@@ -109,14 +107,14 @@ public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType>
          * @return All the indirect sub-types of this SchemaConcept
          */
         @CheckReturnValue
-        Stream<? extends Type.Remote<BaseType>> getSubtypes();
+        Stream<? extends Type.Remote> getSubtypes();
 
 
         //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override
-        default Type.Remote<BaseType> asSchemaConcept() {
+        default Type.Remote asSchemaConcept() {
             return this;
         }
 

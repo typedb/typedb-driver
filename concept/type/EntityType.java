@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType extends ThingType<EntityType, Entity> {
+public interface EntityType extends ThingType {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -56,7 +56,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
         return true;
     }
 
-    interface Local extends ThingType.Local<EntityType, Entity>, EntityType {
+    interface Local extends ThingType.Local, EntityType {
     }
 
     /**
@@ -64,7 +64,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
      * An ontological element which represents categories instances can fall within.
      * Any instance of a Entity Type is called an Entity.
      */
-    interface Remote extends ThingType.Remote<EntityType, Entity>, EntityType {
+    interface Remote extends ThingType.Remote, EntityType {
 
         static EntityType.Remote of(Transaction tx, ConceptIID iid) {
             return new EntityTypeImpl.Remote(tx, iid);
@@ -114,7 +114,7 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unsetOwns(AttributeType<?> attributeType);
+        EntityType.Remote unsetOwns(AttributeType attributeType);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -139,13 +139,13 @@ public interface EntityType extends ThingType<EntityType, Entity> {
          * @return The Type itself.
          */
         @Override
-        EntityType.Remote setOwns(AttributeType<?> attributeType);
+        EntityType.Remote setOwns(AttributeType attributeType);
         @Override
-        EntityType.Remote setOwns(AttributeType<?> attributeType, boolean isKey);
+        EntityType.Remote setOwns(AttributeType attributeType, boolean isKey);
         @Override
-        EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
         @Override
-        EntityType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
+        EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 

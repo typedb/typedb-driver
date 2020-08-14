@@ -28,11 +28,7 @@ import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 public class MetaTypeImpl {
-    public static class Local<
-            SomeType extends ThingType<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends ThingTypeImpl.Local<SomeType, SomeThing>
-            implements MetaType.Local<SomeType, SomeThing> {
+    public static class Local extends ThingTypeImpl.Local implements MetaType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -42,11 +38,7 @@ public class MetaTypeImpl {
     /**
      * Client implementation of Type
      */
-    public static class Remote<
-            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends ThingTypeImpl.Remote<SomeRemoteType, SomeRemoteThing>
-            implements MetaType.Remote<SomeRemoteType, SomeRemoteThing> {
+    public static class Remote extends ThingTypeImpl.Remote implements MetaType.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -54,19 +46,18 @@ public class MetaTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected Thing.Remote<SomeRemoteThing, SomeRemoteType> asInstance(Concept.Remote<?> concept) {
-            return (Thing.Remote<SomeRemoteThing, SomeRemoteType>) concept.asThing();
+        protected Thing.Remote asInstance(Concept.Remote concept) {
+            return concept.asThing();
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final ThingType.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other) {
-            return (ThingType.Remote<SomeRemoteType, SomeRemoteThing>) other.asType();
+        protected final ThingType.Remote asCurrentBaseType(Concept.Remote other) {
+            return other.asType();
         }
 
         @Override
-        protected boolean equalsCurrentBaseType(
-                Concept.Remote<?> other) {
+        protected boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isMetaType();
         }
     }

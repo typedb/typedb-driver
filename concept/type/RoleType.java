@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * This ontological element defines the RoleTypes which make up a RelationType.
  * It behaves similarly to SchemaConcept when relating to other types.
  */
-public interface RoleType extends Type<RoleType> {
+public interface RoleType extends Type {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -54,7 +54,7 @@ public interface RoleType extends Type<RoleType> {
         return true;
     }
 
-    interface Local extends Type.Local<RoleType>, RoleType {
+    interface Local extends Type.Local, RoleType {
     }
 
     /**
@@ -62,7 +62,7 @@ public interface RoleType extends Type<RoleType> {
      * This ontological element defines the RoleTypes which make up a RelationType.
      * It behaves similarly to SchemaConcept when relating to other types.
      */
-    interface Remote extends Type.Remote<RoleType>, RoleType {
+    interface Remote extends Type.Remote, RoleType {
 
         static RoleType.Remote of(Transaction tx, ConceptIID iid) {
             return new RoleTypeImpl.Remote(tx, iid);
@@ -125,7 +125,7 @@ public interface RoleType extends Type<RoleType> {
          * @see ThingType.Remote
          */
         @CheckReturnValue
-        Stream<ThingType.Remote<?, ?>> getPlayers();
+        Stream<ThingType.Remote> getPlayers();
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

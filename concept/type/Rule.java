@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface Rule extends Type<Rule> {
+public interface Rule extends Type {
     @Deprecated
     @CheckReturnValue
     @Override
@@ -52,13 +52,13 @@ public interface Rule extends Type<Rule> {
         return true;
     }
 
-    interface Local extends Type.Local<Rule>, Rule {
+    interface Local extends Type.Local, Rule {
     }
 
     /**
      * A SchemaConcept used to model and categorise Rules.
      */
-    interface Remote extends Type.Remote<Rule>, Rule {
+    interface Remote extends Type.Remote, Rule {
 
         static Rule.Remote of(Transaction tx, ConceptIID iid) {
             return new RuleImpl.Remote(tx, iid);

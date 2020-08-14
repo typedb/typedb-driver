@@ -35,7 +35,7 @@ public class RelationTypeImpl {
     /**
      * Client implementation of RelationType
      */
-    public static class Local extends ThingTypeImpl.Local<RelationType, Relation> implements RelationType.Local {
+    public static class Local extends ThingTypeImpl.Local implements RelationType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -45,34 +45,34 @@ public class RelationTypeImpl {
     /**
      * Client implementation of RelationType
      */
-    public static class Remote extends ThingTypeImpl.Remote<RelationType, Relation> implements RelationType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType<?> attributeType) {
+        public final RelationType.Remote setOwns(AttributeType attributeType) {
             return (RelationType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType<?> attributeType, boolean isKey) {
+        public final RelationType.Remote setOwns(AttributeType attributeType, boolean isKey) {
             return (RelationType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+        public final RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
             return (RelationType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+        public final RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             return (RelationType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+        public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return super.getOwns(keysOnly);
         }
 
@@ -82,7 +82,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote unsetOwns(AttributeType<?> attributeType) {
+        public final RelationType.Remote unsetOwns(AttributeType attributeType) {
             return (RelationType.Remote) super.unsetOwns(attributeType);
         }
 
@@ -156,17 +156,17 @@ public class RelationTypeImpl {
         }
 
         @Override
-        protected final Relation.Remote asInstance(Concept.Remote<?> concept) {
+        protected final Relation.Remote asInstance(Concept.Remote concept) {
             return concept.asRelation();
         }
 
         @Override
-        protected final RelationType.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final RelationType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRelationType();
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isRelationType();
         }
 

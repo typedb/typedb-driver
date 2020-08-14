@@ -255,10 +255,10 @@ public interface Grakn {
 
         void commit();
 
-        ThingType.Remote<?, ?> getRootType();
+        ThingType.Remote getRootType();
 
         @Nullable
-        ThingType.Remote<?, ?> getThingType(Label label);
+        ThingType.Remote getThingType(Label label);
 
         @Nullable
         EntityType.Remote getEntityType(String label);
@@ -267,36 +267,36 @@ public interface Grakn {
         RelationType.Remote getRelationType(String label);
 
         @Nullable
-        AttributeType.Remote<?> getAttributeType(String label);
+        AttributeType.Remote getAttributeType(String label);
 
         @Nullable
         Rule.Remote getRule(String label);
 
         @Nullable
-        grakn.client.concept.type.Type.Remote<?> getType(Label label);
+        grakn.client.concept.type.Type.Remote getType(Label label);
 
-        grakn.client.concept.type.Type.Remote<?> getMetaConcept();
+        grakn.client.concept.type.Type.Remote getMetaConcept();
 
         RelationType.Remote getMetaRelationType();
 
         RoleType.Remote getMetaRoleType();
 
-        AttributeType.Remote<?> getMetaAttributeType();
+        AttributeType.Remote getMetaAttributeType();
 
         EntityType.Remote getMetaEntityType();
 
         Rule.Remote getMetaRule();
 
         @Nullable
-        Concept.Remote<?> getConcept(ConceptIID iid);
+        Concept.Remote getConcept(ConceptIID iid);
 
         EntityType.Remote putEntityType(String label);
 
         EntityType.Remote putEntityType(Label label);
 
-        <V> AttributeType.Remote<V> putAttributeType(String label, ValueType<V> valueType);
+        <V> AttributeType.Remote putAttributeType(String label, ValueType valueType);
 
-        <V> AttributeType.Remote<V> putAttributeType(Label label, ValueType<V> valueType);
+        <V> AttributeType.Remote putAttributeType(Label label, ValueType valueType);
 
         RelationType.Remote putRelationType(String label);
 

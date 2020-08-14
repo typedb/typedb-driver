@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation extends Thing<Relation, RelationType> {
+public interface Relation extends Thing {
     //------------------------------------- Accessors ----------------------------------
 
     /**
@@ -68,7 +68,7 @@ public interface Relation extends Thing<Relation, RelationType> {
         return true;
     }
 
-    interface Local extends Thing.Local<Relation, RelationType>, Relation {
+    interface Local extends Thing.Local, Relation {
     }
 
     /**
@@ -77,7 +77,7 @@ public interface Relation extends Thing<Relation, RelationType> {
      * It represents how different entities relate to one another.
      * Relation are used to model n-ary relations between instances.
      */
-    interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
+    interface Remote extends Thing.Remote, Relation {
 
         static Relation.Remote of(Transaction tx, ConceptIID iid) {
             return new RelationImpl.Remote(tx, iid);
@@ -90,7 +90,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return The instance itself
          */
         @Override
-        Relation.Remote setHas(Attribute<?> attribute);
+        Relation.Remote setHas(Attribute attribute);
 
         /**
          * Removes the provided Attribute from this Relation
@@ -99,7 +99,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return The Relation itself
          */
         @Override
-        Relation.Remote unsetHas(Attribute<?> attribute);
+        Relation.Remote unsetHas(Attribute attribute);
 
         /**
          * Retrieve the associated RelationType for this Relation.
@@ -117,7 +117,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> getPlayersByRoleType();
+        Map<RoleType.Remote, List<Thing.Remote>> getPlayersByRoleType();
 
         /**
          * Retrieves a list of every Thing involved in the Relation.
@@ -125,7 +125,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return A list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> getPlayers();
+        Stream<Thing.Remote> getPlayers();
 
         /**
          * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
@@ -135,7 +135,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @return A list of every Thing involved in the Relation, filtered by RoleType played.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> getPlayers(List<RoleType> roleTypes);
+        Stream<Thing.Remote> getPlayers(List<RoleType> roleTypes);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
@@ -144,7 +144,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param player The new role player.
          * @return The Relation itself.
          */
-        void addPlayer(RoleType roleType, Thing<?, ?> player);
+        void addPlayer(RoleType roleType, Thing player);
 
         /**
          * Removes the Thing which is playing a RoleType in this Relation.
@@ -153,7 +153,7 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @param roleType The RoleType being played by the Thing
          * @param player The Thing playing the Role in this Relation
          */
-        void removePlayer(RoleType roleType, Thing<?, ?> player);
+        void removePlayer(RoleType roleType, Thing player);
 
         @Deprecated
         @CheckReturnValue

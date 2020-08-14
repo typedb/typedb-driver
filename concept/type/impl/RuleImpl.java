@@ -36,7 +36,7 @@ public class RuleImpl {
     /**
      * Client implementation of Rule
      */
-    public static class Local extends TypeImpl.Local<Rule> implements Rule.Local {
+    public static class Local extends TypeImpl.Local implements Rule.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -46,7 +46,7 @@ public class RuleImpl {
     /**
      * Client implementation of Rule
      */
-    public static class Remote extends TypeImpl.Remote<Rule> implements Rule.Remote {
+    public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -109,12 +109,12 @@ public class RuleImpl {
         }
 
         @Override
-        protected final Rule.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final Rule.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRule();
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isRule();
         }
 

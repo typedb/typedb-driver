@@ -119,7 +119,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType<?> valueType) {
+        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType valueType) {
             TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setValueType(ConceptMessage.setValueType(valueType))
@@ -151,14 +151,14 @@ public class RequestBuilder {
      */
     public static class ConceptMessage {
 
-        public static ConceptProto.Concept from(Concept<?> concept) {
+        public static ConceptProto.Concept from(Concept concept) {
             return ConceptProto.Concept.newBuilder()
                     .setIid(concept.iid().getValue())
                     .setBaseType(getBaseType(concept))
                     .build();
         }
 
-        private static ConceptProto.Concept.SCHEMA getBaseType(Concept<?> concept) {
+        private static ConceptProto.Concept.SCHEMA getBaseType(Concept concept) {
             if (concept.isEntityType()) {
                 return ConceptProto.Concept.SCHEMA.ENTITY_TYPE;
             } else if (concept.isRelationType()) {
@@ -182,7 +182,7 @@ public class RequestBuilder {
             }
         }
 
-        public static Collection<ConceptProto.Concept> concepts(Collection<? extends Concept<?>> concepts) {
+        public static Collection<ConceptProto.Concept> concepts(Collection<? extends Concept> concepts) {
             return concepts.stream().map(ConceptMessage::from).collect(toList());
         }
 
@@ -208,25 +208,25 @@ public class RequestBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        public static <D> ValueType<D> valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+        public static <D> ValueType valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
             switch (valueType) {
                 case STRING:
-                    return (ValueType<D>) ValueType.STRING;
+                    return (ValueType) ValueType.STRING;
                 case BOOLEAN:
-                    return (ValueType<D>) ValueType.BOOLEAN;
+                    return (ValueType) ValueType.BOOLEAN;
                 case LONG:
-                    return (ValueType<D>) ValueType.LONG;
+                    return (ValueType) ValueType.LONG;
                 case DOUBLE:
-                    return (ValueType<D>) ValueType.DOUBLE;
+                    return (ValueType) ValueType.DOUBLE;
                 case DATETIME:
-                    return (ValueType<D>) ValueType.DATETIME;
+                    return (ValueType) ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + valueType);
             }
         }
 
-        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType<?> valueType) {
+        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType valueType) {
             if (valueType.equals(ValueType.STRING)) {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             } else if (valueType.equals(ValueType.BOOLEAN)) {

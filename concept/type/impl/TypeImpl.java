@@ -34,10 +34,7 @@ import java.util.stream.Stream;
 
 public abstract class TypeImpl {
 
-    public abstract static class Local<
-            SomeSchemaConcept extends Type<SomeSchemaConcept>>
-            extends ConceptImpl.Local<SomeSchemaConcept>
-            implements Type.Local<SomeSchemaConcept> {
+    public abstract static class Local extends ConceptImpl.Local implements Type.Local {
 
         private final Label label;
 
@@ -52,16 +49,13 @@ public abstract class TypeImpl {
         }
     }
 
-    public abstract static class Remote<
-            BaseType extends Type<BaseType>>
-            extends ConceptImpl.Remote<BaseType>
-            implements Type.Remote<BaseType> {
+    public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
-        public final Type.Remote<BaseType> setSupertype(Type<?> type) {
+        public final Type.Remote setSupertype(Type type) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
                                                        .setType(RequestBuilder.ConceptMessage.from(type))).build();
@@ -79,7 +73,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public Type.Remote<BaseType> setLabel(Label label) {
+        public Type.Remote setLabel(Label label) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                                                          .setLabel(label.getValue())).build();
@@ -90,7 +84,7 @@ public abstract class TypeImpl {
 
         @SuppressWarnings("unchecked")
         @Nullable
-        public Type.Remote<BaseType> getSupertype() {
+        public Type.Remote getSupertype() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -100,7 +94,7 @@ public abstract class TypeImpl {
                 case NULL:
                     return null;
                 case TYPE:
-                    return (Type.Remote<BaseType>) Concept.Remote.of(tx(), response.getType()).asSchemaConcept();
+                    return (Type.Remote) Concept.Remote.of(tx(), response.getType()).asSchemaConcept();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -108,7 +102,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public Stream<? extends Type.Remote<BaseType>> getSupertypes() {
+        public Stream<? extends Type.Remote> getSupertypes() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
 
@@ -117,7 +111,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public Stream<? extends Type.Remote<BaseType>> getSubtypes() {
+        public Stream<? extends Type.Remote> getSubtypes() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
@@ -125,8 +119,8 @@ public abstract class TypeImpl {
         }
 
         @Override
-        protected abstract Type.Remote<BaseType> asCurrentBaseType(Concept.Remote<?> other);
+        protected abstract Type.Remote asCurrentBaseType(Concept.Remote other);
 
-        protected abstract boolean equalsCurrentBaseType(Concept.Remote<?> other);
+        protected abstract boolean equalsCurrentBaseType(Concept.Remote other);
     }
 }

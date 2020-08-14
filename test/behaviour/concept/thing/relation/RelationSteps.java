@@ -52,31 +52,31 @@ public class RelationSteps {
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {bool}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, boolean keyValue) {
-        Attribute.Remote<Boolean> key = tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).put(keyValue);
         put(var, tx().getRelationType(type).create().setHas(key));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute.Remote<Long> key = tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).put((long) keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).put((long) keyValue);
         put(var, tx().getRelationType(type).create().setHas(key));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {double}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, double keyValue) {
-        Attribute.Remote<Double> key = tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).put(keyValue);
         put(var, tx().getRelationType(type).create().setHas(key));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute.Remote<String> key = tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).put(keyValue);
         put(var, tx().getRelationType(type).create().setHas(key));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute.Remote<LocalDateTime> key = tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).put(keyValue);
         put(var, tx().getRelationType(type).create().setHas(key));
     }
 
@@ -151,7 +151,7 @@ public class RelationSteps {
     public void relation_get_players_do_not_contain(String var, Map<String, String> players) {
         Relation.Remote relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
-            List<? extends Thing.Remote<?, ?>> p;
+            List<? extends Thing.Remote> p;
             if ((p = relation.getPlayersByRoleType().get(relation.getType().getRelates(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }

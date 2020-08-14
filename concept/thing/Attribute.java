@@ -29,7 +29,7 @@ import grakn.client.concept.ValueType;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
+public interface Attribute extends Thing {
 
     /**
      * Retrieves the value of the Attribute.
@@ -45,7 +45,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * @return The AttributeType of which this resource is an Thing.
      */
     @Override
-    AttributeType<D> getType();
+    AttributeType getType();
 
     /**
      * Retrieves the data type of this Attribute's AttributeType.
@@ -53,30 +53,30 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * @return The data type of this Attribute's type.
      */
     @CheckReturnValue
-    ValueType<D> getValueType();
+    ValueType getValueType();
 
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default <T> Attribute<T> asAttribute() {
-        return (Attribute<T>) this;
+    default Attribute asAttribute() {
+        return this;
     }
 
     @SuppressWarnings("unchecked")
     @Deprecated
     @CheckReturnValue
     @Override
-    default <T> Attribute<T> asAttribute(ValueType<T> valueType) {
+    default Attribute asAttribute(ValueType valueType) {
         if (!getValueType().equals(valueType)) {
             throw GraknConceptException.invalidCasting(this, valueType.getClass());
         }
-        return (Attribute<T>) this;
+        return this;
     }
 
     @CheckReturnValue
     @Override
-    default Remote<D> asRemote(Transaction tx) {
+    default Remote asRemote(Transaction tx) {
         return Attribute.Remote.of(tx, iid());
     }
 
@@ -92,11 +92,8 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * Acts as an Thing when relating to other instances except it has the added functionality of:
      * 1. It is unique to its AttributeType based on it's value.
      * 2. It has an AttributeType.ValueType associated with it which constrains the allowed values.
-     *
-     * @param <D> The data type of this resource type.
-     *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Local<D> extends Thing.Local<Attribute<D>, AttributeType<D>>, Attribute<D> {
+    interface Local extends Thing.Local, Attribute {
     }
 
     /**
@@ -104,13 +101,10 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
      * Acts as an Thing when relating to other instances except it has the added functionality of:
      * 1. It is unique to its AttributeType based on it's value.
      * 2. It has an AttributeType.ValueType associated with it which constrains the allowed values.
-     *
-     * @param <D> The data type of this resource type.
-     *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Remote<D> extends Thing.Remote<Attribute<D>, AttributeType<D>>, Attribute<D> {
+    interface Remote extends Thing.Remote, Attribute {
 
-        static <D> Attribute.Remote<D> of(Transaction tx, ConceptIID iid) {
+        static Attribute.Remote of(Transaction tx, ConceptIID iid) {
             return new AttributeImpl.Remote<>(tx, iid);
         }
 
@@ -120,7 +114,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The AttributeType of which this resource is an Thing.
          */
         @Override
-        AttributeType.Remote<D> getType();
+        AttributeType.Remote getType();
 
         /**
          * Retrieves the set of all Instances that possess this Attribute.
@@ -128,7 +122,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The list of all Instances that possess this Attribute.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> getOwners();
+        Stream<Thing.Remote> getOwners();
 
         /**
          * Creates a relation from this instance to the provided Attribute.
@@ -137,7 +131,7 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The instance itself
          */
         @Override
-        Attribute.Remote<D> setHas(Attribute<?> attribute);
+        Attribute.Remote setHas(Attribute attribute);
 
         /**
          * Removes the provided Attribute from this Attribute
@@ -146,21 +140,21 @@ public interface Attribute<D> extends Thing<Attribute<D>, AttributeType<D>> {
          * @return The Attribute itself
          */
         @Override
-        Attribute.Remote<D> unsetHas(Attribute<?> attribute);
+        Attribute.Remote unsetHas(Attribute attribute);
 
         @SuppressWarnings("unchecked")
         @Deprecated
         @CheckReturnValue
         @Override
-        default <T> Attribute.Remote<T> asAttribute() {
-            return (Attribute.Remote<T>) this;
+        default Attribute.Remote asAttribute() {
+            return this;
         }
 
         @Deprecated
         @CheckReturnValue
         @Override
-        default <T> Attribute.Remote<T> asAttribute(ValueType<T> valueType) {
-            return (Attribute.Remote<T>) Attribute.super.asAttribute(valueType);
+        default Attribute.Remote asAttribute(ValueType valueType) {
+            return (Attribute.Remote) Attribute.super.asAttribute(valueType);
         }
 
         @Deprecated

@@ -34,7 +34,7 @@ public class RoleTypeImpl {
     /**
      * Client implementation of Role
      */
-    public static class Local extends TypeImpl.Local<RoleType> implements RoleType.Local {
+    public static class Local extends TypeImpl.Local implements RoleType.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -44,7 +44,7 @@ public class RoleTypeImpl {
     /**
      * Client implementation of Role
      */
-    public static class Remote extends TypeImpl.Remote<RoleType> implements RoleType.Remote {
+    public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -83,19 +83,19 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public final Stream<ThingType.Remote<?, ?>> getPlayers() {
+        public final Stream<ThingType.Remote> getPlayers() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 
         @Override
-        protected final RoleType.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final RoleType.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRoleType();
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isRoleType();
         }
 

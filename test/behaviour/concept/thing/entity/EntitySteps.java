@@ -46,31 +46,31 @@ public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {bool}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, boolean keyValue) {
-        Attribute.Remote<Boolean> key = tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.BOOLEAN).put(keyValue);
         put(var, tx().getEntityType(type).create().setHas(key));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute.Remote<Long> key = tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).put((long) keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.LONG).put((long) keyValue);
         put(var, tx().getEntityType(type).create().setHas(key));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {double}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, double keyValue) {
-        Attribute.Remote<Double> key = tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.DOUBLE).put(keyValue);
         put(var, tx().getEntityType(type).create().setHas(key));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute.Remote<String> key = tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.STRING).put(keyValue);
         put(var, tx().getEntityType(type).create().setHas(key));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute.Remote<LocalDateTime> key = tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).put(keyValue);
+        Attribute.Remote key = tx().getAttributeType(keyType).asAttributeType(ValueType.DATETIME).put(keyValue);
         put(var, tx().getEntityType(type).create().setHas(key));
     }
 

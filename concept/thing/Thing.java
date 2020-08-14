@@ -35,9 +35,7 @@ import java.util.stream.Stream;
  * Every instance belongs to a Type which serves as a way of categorising them.
  * Instances can relate to one another via Relation
  */
-public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
-                       SomeType extends ThingType<SomeType, SomeThing>>
-        extends Concept<SomeThing> {
+public interface Thing extends Concept {
 
     /**
      * Return the Type of the Concept.
@@ -45,7 +43,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * @return A Type which is the type of this concept. This concept is an instance of that type.
      */
     @CheckReturnValue
-    ThingType<SomeType, SomeThing> getType();
+    ThingType getType();
 
     /**
      * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -58,12 +56,12 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
     @Deprecated
     @CheckReturnValue
     @Override
-    default Thing<SomeThing, SomeType> asThing() {
+    default Thing asThing() {
         return this;
     }
 
     @Override
-    Remote<SomeThing, SomeType> asRemote(Transaction tx);
+    Remote asRemote(Transaction tx);
 
     @Deprecated
     @CheckReturnValue
@@ -72,10 +70,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
         return true;
     }
 
-    interface Local<
-            SomeThing extends Thing<SomeThing, SomeType>,
-            SomeType extends ThingType<SomeType, SomeThing>>
-            extends Concept.Local<SomeThing>, Thing<SomeThing, SomeType> {
+    interface Local extends Concept.Local, Thing {
     }
 
     /**
@@ -84,10 +79,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
      * Every instance belongs to a Type which serves as a way of categorising them.
      * Instances can relate to one another via Relation
      */
-    interface Remote<
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
-            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
-            extends Concept.Remote<SomeRemoteThing>, Thing<SomeRemoteThing, SomeRemoteType> {
+    interface Remote extends Concept.Remote, Thing {
 
         /**
          * Return the Type of the Concept.
@@ -96,7 +88,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          */
         @Override
         @CheckReturnValue
-        ThingType.Remote<SomeRemoteType, SomeRemoteThing> getType();
+        ThingType.Remote getType();
 
         /**
          * Retrieves the Relations which the Thing takes part in, which may optionally be narrowed to a particular set
@@ -127,7 +119,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute The Attribute to which a Relation is created
          * @return The instance itself
          */
-        Thing.Remote<SomeRemoteThing, SomeRemoteType> setHas(Attribute<?> attribute);
+        Thing.Remote setHas(Attribute attribute);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing
@@ -137,10 +129,10 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> getHas(AttributeType<?>... attributeTypes);
+        Stream<Attribute.Remote> getHas(AttributeType... attributeTypes);
 
         @CheckReturnValue
-        <T> Stream<Attribute.Remote<T>> getHas(AttributeType<T> attributeType);
+        <T> Stream<Attribute.Remote> getHas(AttributeType attributeType);
 
         /**
          * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
@@ -150,10 +142,10 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<Attribute.Remote<?>> getHas(boolean keysOnly);
+        Stream<Attribute.Remote> getHas(boolean keysOnly);
 
         @CheckReturnValue
-        default Stream<Attribute.Remote<?>> getHas() {
+        default Stream<Attribute.Remote> getHas() {
             return getHas(false);
         }
 
@@ -163,7 +155,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
          * @param attribute the Attribute to be removed
          * @return The Thing itself
          */
-        Thing.Remote<SomeRemoteThing, SomeRemoteType> unsetHas(Attribute<?> attribute);
+        Thing.Remote unsetHas(Attribute attribute);
 
         /**
          * Used to indicate if this Thing has been created as the result of a Rule inference.
@@ -176,7 +168,7 @@ public interface Thing<SomeThing extends Thing<SomeThing, SomeType>,
         @Deprecated
         @CheckReturnValue
         @Override
-        default Thing.Remote<SomeRemoteThing, SomeRemoteType> asThing() {
+        default Thing.Remote asThing() {
             return this;
         }
 

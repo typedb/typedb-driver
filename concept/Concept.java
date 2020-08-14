@@ -54,7 +54,7 @@ import javax.annotation.CheckReturnValue;
  * (EntityType, RoleType, RelationType, Rule or AttributeType)
  * or an Thing (Entity, Relation , Attribute).
  */
-public interface Concept<BaseType extends Concept<BaseType>> {
+public interface Concept {
 
     //------------------------------------- Accessors ----------------------------------
 
@@ -74,7 +74,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A SchemaConcept if the Concept is a SchemaConcept
      */
     @CheckReturnValue
-    default Type<?> asSchemaConcept() {
+    default Type asSchemaConcept() {
         throw GraknConceptException.invalidCasting(this, Type.class);
     }
 
@@ -84,7 +84,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default ThingType<?, ?> asType() {
+    default ThingType asType() {
         throw GraknConceptException.invalidCasting(this, ThingType.class);
     }
 
@@ -94,7 +94,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return An Thing if the Concept is an Thing
      */
     @CheckReturnValue
-    default Thing<?, ?> asThing() {
+    default Thing asThing() {
         throw GraknConceptException.invalidCasting(this, Thing.class);
     }
 
@@ -134,7 +134,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default <D> AttributeType<D> asAttributeType() {
+    default <D> AttributeType asAttributeType() {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -144,7 +144,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A AttributeType if the Concept is a AttributeType
      */
     @CheckReturnValue
-    default <D> AttributeType<D> asAttributeType(ValueType<D> valueType) {
+    default <D> AttributeType asAttributeType(ValueType valueType) {
         throw GraknConceptException.invalidCasting(this, AttributeType.class);
     }
 
@@ -184,7 +184,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default <D> Attribute<D> asAttribute() {
+    default <D> Attribute asAttribute() {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -194,7 +194,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default <D> Attribute<D> asAttribute(ValueType<D> valueType) {
+    default <D> Attribute asAttribute(ValueType valueType) {
         throw GraknConceptException.invalidCasting(this, Attribute.class);
     }
 
@@ -204,7 +204,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A MetaType if the Concept is a MetaType
      */
     @CheckReturnValue
-    default MetaType<?, ?> asMetaType() {
+    default MetaType asMetaType() {
         throw GraknConceptException.invalidCasting(this, MetaType.class);
     }
 
@@ -344,10 +344,10 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         return false;
     }
 
-    interface Local<BaseType extends Concept<BaseType>> extends Concept<BaseType> {
+    interface Local extends Concept {
 
         @SuppressWarnings("unchecked")
-        static <BaseType extends Concept<? extends BaseType>>
+        static <BaseType extends Concept>
         BaseType of(ConceptProto.Concept concept) {
             switch (concept.getBaseType()) {
                 case ENTITY:
@@ -361,13 +361,13 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                 case RELATION_TYPE:
                     return (BaseType) new RelationTypeImpl.Local(concept);
                 case ATTRIBUTE_TYPE:
-                    return (BaseType) new AttributeTypeImpl.Local<>(concept);
+                    return (BaseType) new AttributeTypeImpl.Local(concept);
                 case ROLE_TYPE:
                     return (BaseType) new RoleTypeImpl.Local(concept);
                 case RULE:
                     return (BaseType) new RuleImpl.Local(concept);
                 case META_TYPE:
-                    return (BaseType) new MetaTypeImpl.Local<>(concept);
+                    return (BaseType) new MetaTypeImpl.Local(concept);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
@@ -380,11 +380,10 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      *
      * Provides the basic RPCs to delete a concept and check if it is deleted.
      */
-    interface Remote<BaseType extends Concept<BaseType>>
-            extends Concept<BaseType> {
+    interface Remote extends Concept {
 
         @SuppressWarnings("unchecked")
-        static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
+        static <RemoteType extends Remote, BaseType extends Concept>
         RemoteType of(Transaction tx, ConceptProto.Concept concept) {
             ConceptIID iid = ConceptIID.of(concept.getIid());
             switch (concept.getBaseType()) {
@@ -399,13 +398,13 @@ public interface Concept<BaseType extends Concept<BaseType>> {
                 case RELATION_TYPE:
                     return (RemoteType) new RelationTypeImpl.Remote(tx, iid);
                 case ATTRIBUTE_TYPE:
-                    return (RemoteType) new AttributeTypeImpl.Remote<>(tx, iid);
+                    return (RemoteType) new AttributeTypeImpl.Remote(tx, iid);
                 case ROLE_TYPE:
                     return (RemoteType) new RoleTypeImpl.Remote(tx, iid);
                 case RULE:
                     return (RemoteType) new RuleImpl.Remote(tx, iid);
                 case META_TYPE:
-                    return (RemoteType) new MetaTypeImpl.Remote<>(tx, iid);
+                    return (RemoteType) new MetaTypeImpl.Remote(tx, iid);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
@@ -421,7 +420,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default Type.Remote<?> asSchemaConcept() {
+        default Type.Remote asSchemaConcept() {
             throw GraknConceptException.invalidCasting(this, Type.Remote.class);
         }
 
@@ -432,7 +431,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default ThingType.Remote<?, ?> asType() {
+        default ThingType.Remote asType() {
             throw GraknConceptException.invalidCasting(this, ThingType.Remote.class);
         }
 
@@ -443,7 +442,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default Thing.Remote<?, ?> asThing() {
+        default Thing.Remote asThing() {
             throw GraknConceptException.invalidCasting(this, Thing.Remote.class);
         }
 
@@ -487,7 +486,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default <D> AttributeType.Remote<D> asAttributeType() {
+        default <D> AttributeType.Remote asAttributeType() {
             throw GraknConceptException.invalidCasting(this, AttributeType.class);
         }
 
@@ -498,7 +497,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default <D> AttributeType.Remote<D> asAttributeType(ValueType<D> valueType) {
+        default <D> AttributeType.Remote asAttributeType(ValueType valueType) {
             throw GraknConceptException.invalidCasting(this, AttributeType.class);
         }
 
@@ -542,7 +541,7 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default <D> Attribute.Remote<D> asAttribute() {
+        default <D> Attribute.Remote asAttribute() {
             throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
         }
 
@@ -553,11 +552,11 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          */
         @Override
         @CheckReturnValue
-        default <D> Attribute.Remote<D> asAttribute(ValueType<D> valueType) {
+        default <D> Attribute.Remote asAttribute(ValueType valueType) {
             throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
         }
 
-        default MetaType.Remote<?, ?> asMetaType() {
+        default MetaType.Remote asMetaType() {
             throw GraknConceptException.invalidCasting(this, MetaType.Remote.class);
         }
 

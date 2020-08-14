@@ -48,7 +48,7 @@ public class ThingTypeSteps {
 
     private static final String UNRECOGNISED_VALUE = "Unrecognized value";
 
-    public static ThingType.Remote<?, ?> get_thing_type(RootLabel rootLabel, String typeLabel) {
+    public static ThingType.Remote get_thing_type(RootLabel rootLabel, String typeLabel) {
         switch (rootLabel) {
             case ENTITY:
                 return tx().getEntityType(typeLabel);

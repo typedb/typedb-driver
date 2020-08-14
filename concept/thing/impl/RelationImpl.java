@@ -41,7 +41,7 @@ public class RelationImpl {
     /**
      * Client implementation of Relation
      */
-    public static class Local extends ThingImpl.Local<Relation, RelationType> implements Relation.Local {
+    public static class Local extends ThingImpl.Local implements Relation.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -51,7 +51,7 @@ public class RelationImpl {
     /**
      * Client implementation of Relation
      */
-    public static class Remote extends ThingImpl.Local.Remote<Relation, RelationType> implements Relation.Remote {
+    public static class Remote extends ThingImpl.Local.Remote implements Relation.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -63,26 +63,26 @@ public class RelationImpl {
         }
 
         @Override
-        public Relation.Remote setHas(Attribute<?> attribute) {
+        public Relation.Remote setHas(Attribute attribute) {
             return (Relation.Remote) super.setHas(attribute);
         }
 
         @Override
-        public Relation.Remote unsetHas(Attribute<?> attribute) {
+        public Relation.Remote unsetHas(Attribute attribute) {
             return (Relation.Remote) super.unsetHas(attribute);
         }
 
         @Override
-        public Map<RoleType.Remote, List<Thing.Remote<?, ?>>> getPlayersByRoleType() {
+        public Map<RoleType.Remote, List<Thing.Remote>> getPlayersByRoleType() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
             final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(iid(), method, ConceptProto.Method.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
-            final Map<RoleType.Remote, List<Thing.Remote<?, ?>>> rolePlayerMap = new HashMap<>();
+            final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
                 final RoleType.Remote role = Concept.Remote.of(tx(), rolePlayer.getRoleType()).asRoleType();
-                final Thing.Remote<?, ?> player = Concept.Remote.of(tx(), rolePlayer.getPlayer()).asThing();
+                final Thing.Remote player = Concept.Remote.of(tx(), rolePlayer.getPlayer()).asThing();
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {
@@ -94,7 +94,7 @@ public class RelationImpl {
         }
 
         @Override
-        public Stream<Thing.Remote<?, ?>> getPlayers() {
+        public Stream<Thing.Remote> getPlayers() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationGetPlayersIterReq(ConceptProto.Relation.GetPlayers.Iter.Req.newBuilder()).build();
 
@@ -102,7 +102,7 @@ public class RelationImpl {
         }
 
         @Override
-        public Stream<Thing.Remote<?, ?>> getPlayers(final List<RoleType> roleTypes) {
+        public Stream<Thing.Remote> getPlayers(final List<RoleType> roleTypes) {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationGetPlayersForRoleTypesIterReq(ConceptProto.Relation.GetPlayersForRoleTypes.Iter.Req.newBuilder()
                             .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(roleTypes))).build();
@@ -111,7 +111,7 @@ public class RelationImpl {
         }
 
         @Override
-        public void addPlayer(RoleType roleType, Thing<?, ?> player) {
+        public void addPlayer(RoleType roleType, Thing player) {
             final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationAddPlayerReq(ConceptProto.Relation.AddPlayer.Req.newBuilder()
                             .setRoleType(RequestBuilder.ConceptMessage.from(roleType))
@@ -121,7 +121,7 @@ public class RelationImpl {
         }
 
         @Override
-        public void removePlayer(RoleType roleType, Thing<?, ?> player) {
+        public void removePlayer(RoleType roleType, Thing player) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationRemovePlayerReq(ConceptProto.Relation.RemovePlayer.Req.newBuilder()
                             .setRoleType(RequestBuilder.ConceptMessage.from(roleType))
@@ -131,7 +131,7 @@ public class RelationImpl {
         }
 
         @Override
-        protected Relation.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected Relation.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asRelation();
         }
 

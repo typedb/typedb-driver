@@ -92,7 +92,7 @@ public class ResponseReader {
     }
 
     private static ConceptMap conceptMap(AnswerProto.ConceptMap res, Transaction tx) {
-        Map<String, Concept<?>> variableMap = new HashMap<>();
+        Map<String, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach(
                 (resVar, resConcept) -> variableMap.put(resVar, Concept.Local.of(resConcept))
         );

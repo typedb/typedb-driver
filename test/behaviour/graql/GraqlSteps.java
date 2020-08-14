@@ -588,7 +588,7 @@ public class GraqlSteps {
             builder.append(template, i, matcher.start());
             if (templateFiller.map().containsKey(requiredVariable)) {
 
-                Concept<?> concept = templateFiller.get(requiredVariable);
+                Concept concept = templateFiller.get(requiredVariable);
                 String conceptId = concept.iid().toString();
                 builder.append(conceptId);
 
@@ -618,7 +618,7 @@ public class GraqlSteps {
     }
 
     private interface UniquenessCheck {
-        boolean check(Concept<?> concept);
+        boolean check(Concept concept);
     }
 
     public static class LabelUniquenessCheck implements UniquenessCheck {
@@ -682,14 +682,14 @@ public class GraqlSteps {
          * @return whether the given key matches a key belonging to the concept
          */
         @Override
-        public boolean check(Concept<?> concept) {
+        public boolean check(Concept concept) {
             if(!concept.isThing()) { return false; }
 
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).getHas(true).collect(Collectors.toSet());
+            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx).getHas(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 
-            for (Attribute<?> key : keys) {
+            for (Attribute key : keys) {
                 keyMap.put(
                         key.getType().getLabel().toString(),
                         key.getValue().toString());

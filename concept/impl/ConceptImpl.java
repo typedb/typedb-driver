@@ -32,10 +32,8 @@ import static java.util.Objects.requireNonNull;
 public abstract class ConceptImpl {
     /**
      * Client implementation of Concept
-     *
-     * @param <SomeConcept> represents the actual class of object to downcast to
      */
-    public abstract static class Local<SomeConcept extends Concept<SomeConcept>> implements Concept.Local<SomeConcept> {
+    public abstract static class Local implements Concept.Local {
 
         private final ConceptIID iid;
 
@@ -58,7 +56,7 @@ public abstract class ConceptImpl {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            ConceptImpl.Local<?> that = (ConceptImpl.Local<?>) o;
+            ConceptImpl.Local that = (ConceptImpl.Local) o;
 
             return iid.equals(that.iid());
         }
@@ -74,11 +72,8 @@ public abstract class ConceptImpl {
 
     /**
      * Client implementation of Concept
-     *
-     * @param <BaseType> represents the actual class of object to downcast to
      */
-    public abstract static class Remote<BaseType extends Concept<BaseType>>
-            implements Concept.Remote<BaseType> {
+    public abstract static class Remote implements Concept.Remote {
 
         private final Transaction tx;
         private final ConceptIID iid;
@@ -120,7 +115,7 @@ public abstract class ConceptImpl {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            ConceptImpl.Remote<?> that = (ConceptImpl.Remote<?>) o;
+            ConceptImpl.Remote that = (ConceptImpl.Remote) o;
 
             return (tx.equals(that.tx())) &&
                     iid.equals(that.iid());
@@ -140,10 +135,9 @@ public abstract class ConceptImpl {
             return tx;
         }
 
-        protected abstract Remote<BaseType> asCurrentBaseType(Remote<?> other);
+        protected abstract Remote asCurrentBaseType(Remote other);
 
-        @SuppressWarnings("unchecked")
-        protected  <R extends Remote<BaseType>> Stream<R> conceptStream
+        protected <R extends Remote> Stream<R> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
             return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
         }

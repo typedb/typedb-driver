@@ -35,15 +35,9 @@ import java.util.stream.Stream;
 
 public abstract class ThingTypeImpl {
     /**
-     * Client implementation of Type
-     *
-     * @param <SomeType>  The exact type of this class
+     * Client implementation of ThingType
      */
-    public abstract static class Local<
-            SomeType extends ThingType<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends TypeImpl.Local<SomeType>
-            implements ThingType.Local<SomeType, SomeThing> {
+    public abstract static class Local extends TypeImpl.Local implements ThingType.Local {
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
@@ -51,38 +45,31 @@ public abstract class ThingTypeImpl {
     }
 
     /**
-     * Client implementation of Type
-     *
-     * @param <SomeRemoteType>  The exact type of this class
-     * @param <SomeRemoteThing> the exact type of instances of this class
+     * Client implementation of ThingType
      */
-    public abstract static class Remote<
-            SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends TypeImpl.Remote<SomeRemoteType>
-            implements ThingType.Remote<SomeRemoteType, SomeRemoteThing> {
+    public abstract static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
         protected Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setLabel(Label label) {
-            return (ThingType.Remote<SomeRemoteType, SomeRemoteThing>) super.setLabel(label);
+        public ThingType.Remote setLabel(Label label) {
+            return (ThingType.Remote) super.setLabel(label);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSupertypes() {
+        public Stream<? extends ThingType.Remote> getSupertypes() {
             return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote<SomeRemoteType, SomeRemoteThing>> getSubtypes() {
+        public Stream<? extends ThingType.Remote> getSubtypes() {
             return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> getInstances() {
+        public Stream<? extends Thing.Remote> getInstances() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setThingTypeGetInstancesIterReq(ConceptProto.ThingType.GetInstances.Iter.Req.getDefaultInstance()).build();
 
@@ -98,7 +85,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract) {
+        public ThingType.Remote isAbstract(Boolean isAbstract) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.newBuilder()
                                                    .setAbstract(isAbstract)).build();
@@ -108,7 +95,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote<D>> getOwns(ValueType<D> valueType, boolean keysOnly) {
+        public final <D> Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
             ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
@@ -132,7 +119,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+        public ThingType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))
                     .setIsKey(isKey);
@@ -151,7 +138,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> setPlays(RoleType role) {
+        public ThingType.Remote setPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();
@@ -161,7 +148,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetOwns(AttributeType<?> attributeType) {
+        public ThingType.Remote unsetOwns(AttributeType attributeType) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
                                              .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
@@ -171,7 +158,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote<SomeRemoteType, SomeRemoteThing> unsetPlays(RoleType role) {
+        public ThingType.Remote unsetPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                                               .setRole(RequestBuilder.ConceptMessage.from(role))).build();
@@ -180,11 +167,11 @@ public abstract class ThingTypeImpl {
             return this;
         }
 
-        protected abstract Thing.Remote<SomeRemoteThing, SomeRemoteType> asInstance(Concept.Remote<?> concept);
+        protected abstract Thing.Remote asInstance(Concept.Remote concept);
 
         @Override
-        protected abstract ThingType.Remote<SomeRemoteType, SomeRemoteThing> asCurrentBaseType(Concept.Remote<?> other);
+        protected abstract ThingType.Remote asCurrentBaseType(Concept.Remote other);
 
-        protected abstract boolean equalsCurrentBaseType(Concept.Remote<?> other);
+        protected abstract boolean equalsCurrentBaseType(Concept.Remote other);
     }
 }

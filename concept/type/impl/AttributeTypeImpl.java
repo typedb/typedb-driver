@@ -37,12 +37,10 @@ import java.util.stream.Stream;
 public class AttributeTypeImpl {
     /**
      * Client implementation of AttributeType
-     *
-     * @param <D> The data type of this attribute type
      */
-    public static class Local<D> extends ThingTypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
+    public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
-        private final ValueType<D> valueType;
+        private final ValueType valueType;
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -51,106 +49,104 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public ValueType<D> getValueType() {
+        public ValueType getValueType() {
             return valueType;
         }
     }
 
     /**
      * Client implementation of AttributeType
-     *
-     * @param <D> The data type of this attribute type
      */
-    public static class Remote<D> extends ThingTypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
+    public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
         }
 
         @Override
-        public final AttributeType.Remote<D> setOwns(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.setOwns(attributeType);
+        public final AttributeType.Remote setOwns(AttributeType attributeType) {
+            return (AttributeType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, boolean isKey) {
-            return (AttributeType.Remote<D>) super.setOwns(attributeType, isKey);
+        public final AttributeType.Remote setOwns(AttributeType attributeType, boolean isKey) {
+            return (AttributeType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return (AttributeType.Remote<D>) super.setOwns(attributeType, overriddenType);
+        public final AttributeType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
+            return (AttributeType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final AttributeType.Remote<D> setOwns(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            return (AttributeType.Remote<D>) super.setOwns(attributeType, overriddenType, isKey);
+        public final AttributeType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+            return (AttributeType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote<?>> getOwns(boolean keysOnly) {
+        public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return super.getOwns(keysOnly);
         }
 
         @Override
-        public final AttributeType.Remote<D> unsetOwns(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.unsetOwns(attributeType);
+        public final AttributeType.Remote unsetOwns(AttributeType attributeType) {
+            return (AttributeType.Remote) super.unsetOwns(attributeType);
         }
 
         @Override
-        public final AttributeType.Remote<D> setPlays(RoleType role) {
-            return (AttributeType.Remote<D>) super.setPlays(role);
+        public final AttributeType.Remote setPlays(RoleType role) {
+            return (AttributeType.Remote) super.setPlays(role);
         }
 
         @Override
-        public final AttributeType.Remote<D> unsetPlays(RoleType role) {
-            return (AttributeType.Remote<D>) super.unsetPlays(role);
+        public final AttributeType.Remote unsetPlays(RoleType role) {
+            return (AttributeType.Remote) super.unsetPlays(role);
         }
 
         @Override
-        public final AttributeType.Remote<D> isAbstract(Boolean isAbstract) {
-            return (AttributeType.Remote<D>) super.isAbstract(isAbstract);
+        public final AttributeType.Remote isAbstract(Boolean isAbstract) {
+            return (AttributeType.Remote) super.isAbstract(isAbstract);
         }
 
         @Override
-        public final Stream<Attribute.Remote<D>> getInstances() {
+        public final Stream<Attribute.Remote> getInstances() {
             return super.getInstances().map(this::asInstance);
         }
 
         @Override
-        public final Stream<AttributeType.Remote<D>> getSupertypes() {
+        public final Stream<AttributeType.Remote> getSupertypes() {
             return super.getSupertypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final Stream<AttributeType.Remote<D>> getSubtypes() {
+        public final Stream<AttributeType.Remote> getSubtypes() {
             return super.getSubtypes().map(this::asCurrentBaseType);
         }
 
         @Override
-        public final AttributeType.Remote<D> setLabel(Label label) {
-            return (AttributeType.Remote<D>) super.setLabel(label);
+        public final AttributeType.Remote setLabel(Label label) {
+            return (AttributeType.Remote) super.setLabel(label);
         }
 
         @Override
-        public final AttributeType.Remote<D> setSupertype(AttributeType<D> type) {
-            return (AttributeType.Remote<D>) super.setSupertype(type);
+        public final AttributeType.Remote setSupertype(AttributeType type) {
+            return (AttributeType.Remote) super.setSupertype(type);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public final Attribute.Remote<D> put(D value) {
+        public final Attribute.Remote put(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            return (Attribute.Remote) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @SuppressWarnings("unchecked")
         @Override
         @Nullable
-        public final Attribute.Remote<D> get(D value) {
+        public final Attribute.Remote get(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
@@ -160,7 +156,7 @@ public class AttributeTypeImpl {
                 case NULL:
                     return null;
                 case ATTRIBUTE:
-                    return (Attribute.Remote<D>) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
+                    return (Attribute.Remote) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -168,7 +164,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public final ValueType<D> getValueType() {
+        public final ValueType getValueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeGetValueTypeReq(ConceptProto.AttributeType.GetValueType.Req.getDefaultInstance()).build();
 
@@ -194,7 +190,7 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> setRegex(String regex) {
+        public final AttributeType.Remote setRegex(String regex) {
             if (regex == null) regex = "";
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -206,18 +202,18 @@ public class AttributeTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final Attribute.Remote<D> asInstance(Concept.Remote<?> concept) {
-            return (Attribute.Remote<D>) concept.asAttribute();
+        protected final Attribute.Remote asInstance(Concept.Remote concept) {
+            return (Attribute.Remote) concept.asAttribute();
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        protected final AttributeType.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
-            return (AttributeType.Remote<D>) other.asAttributeType();
+        protected final AttributeType.Remote asCurrentBaseType(Concept.Remote other) {
+            return other.asAttributeType();
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+        protected final boolean equalsCurrentBaseType(Concept.Remote other) {
             return other.isAttributeType();
         }
     }

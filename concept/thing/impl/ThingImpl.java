@@ -29,6 +29,7 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
@@ -39,17 +40,10 @@ import java.util.stream.Stream;
 public abstract class ThingImpl {
     /**
      * Client implementation of Thing
-     *
-     * @param <SomeThing> The exact type of this class
-     * @param <SomeType>  the type of an instance of this class
      */
-    public abstract static class Local<
-            SomeThing extends Thing<SomeThing, SomeType>,
-            SomeType extends ThingType<SomeType, SomeThing>>
-            extends ConceptImpl.Local<SomeThing>
-            implements Thing.Local<SomeThing, SomeType> {
+    public abstract static class Local extends ConceptImpl.Local implements Thing.Local {
 
-        private final SomeType type;
+        private final ThingType type;
         private final boolean inferred;
 
         protected Local(ConceptProto.Concept concept) {
@@ -59,7 +53,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final SomeType getType() {
+        public final ThingType getType() {
             return type;
         }
 
@@ -70,22 +64,15 @@ public abstract class ThingImpl {
 
         /**
          * Client implementation of Thing
-         *
-         * @param <SomeRemoteThing> The exact type of this class
-         * @param <SomeRemoteType>  the type of an instance of this class
          */
-        public abstract static class Remote<
-                SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>,
-                SomeRemoteType extends ThingType<SomeRemoteType, SomeRemoteThing>>
-                extends ConceptImpl.Remote<SomeRemoteThing>
-                implements Thing.Remote<SomeRemoteThing, SomeRemoteType> {
+        public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 
             public Remote(Transaction tx, ConceptIID iid) {
                 super(tx, iid);
             }
 
             @Override
-            public ThingType.Remote<SomeRemoteType, SomeRemoteThing> getType() {
+            public ThingType.Remote getType() {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
@@ -101,7 +88,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public final Stream<Attribute.Remote<?>> getHas(AttributeType<?>... attributeTypes) {
+            public final Stream<Attribute.Remote> getHas(AttributeType... attributeTypes) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
                                                        .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
@@ -111,17 +98,17 @@ public abstract class ThingImpl {
 
             @SuppressWarnings("unchecked")
             @Override
-            public final <T> Stream<Attribute.Remote<T>> getHas(AttributeType<T> attributeType) {
+            public final <T> Stream<Attribute.Remote> getHas(AttributeType attributeType) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
                                 .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Collections.singleton(attributeType)))).build();
 
                 return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute)
-                        .map(a -> (Attribute.Remote<T>) a);
+                        .map(a -> a);
             }
 
             @Override
-            public final Stream<Attribute.Remote<?>> getHas(boolean keysOnly) {
+            public final Stream<Attribute.Remote> getHas(boolean keysOnly) {
                 ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                         .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder().setKeysOnly(keysOnly)).build();
                 return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute);
@@ -145,7 +132,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public Thing.Remote<SomeRemoteThing, SomeRemoteType> setHas(Attribute<?> attribute) {
+            public Thing.Remote setHas(Attribute attribute) {
                 // TODO: replace usage of this method as a getter, with relations(Attribute attribute)
                 // TODO: then remove this method altogether and just use has(Attribute attribute)
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -156,7 +143,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            public Thing.Remote<SomeRemoteThing, SomeRemoteType> unsetHas(Attribute<?> attribute) {
+            public Thing.Remote unsetHas(Attribute attribute) {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setThingUnsetHasReq(ConceptProto.Thing.UnsetHas.Req.newBuilder()
                                                   .setAttribute(RequestBuilder.ConceptMessage.from(attribute))).build();
@@ -166,7 +153,7 @@ public abstract class ThingImpl {
             }
 
             @Override
-            protected abstract Thing.Remote<SomeRemoteThing, SomeRemoteType> asCurrentBaseType(Concept.Remote<?> other);
+            protected abstract Thing.Remote asCurrentBaseType(Concept.Remote other);
         }
     }
 }

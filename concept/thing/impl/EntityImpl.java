@@ -31,7 +31,7 @@ public class EntityImpl {
     /**
      * Client implementation of Entity
      */
-    public static class Local extends ThingImpl.Local<Entity, EntityType> implements Entity.Local {
+    public static class Local extends ThingImpl.Local implements Entity.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -41,7 +41,7 @@ public class EntityImpl {
     /**
      * Client implementation of Entity
      */
-    public static class Remote extends ThingImpl.Local.Remote<Entity, EntityType> implements Entity.Remote {
+    public static class Remote extends ThingImpl.Local.Remote implements Entity.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -53,17 +53,17 @@ public class EntityImpl {
         }
 
         @Override
-        public Entity.Remote setHas(Attribute<?> attribute) {
+        public Entity.Remote setHas(Attribute attribute) {
             return (Entity.Remote) super.setHas(attribute);
         }
 
         @Override
-        public Entity.Remote unsetHas(Attribute<?> attribute) {
+        public Entity.Remote unsetHas(Attribute attribute) {
             return (Entity.Remote) super.unsetHas(attribute);
         }
 
         @Override
-        protected final Entity.Remote asCurrentBaseType(Concept.Remote<?> other) {
+        protected final Entity.Remote asCurrentBaseType(Concept.Remote other) {
             return other.asEntity();
         }
     }
