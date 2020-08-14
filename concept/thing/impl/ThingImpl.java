@@ -47,7 +47,7 @@ public abstract class ThingImpl {
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
-            this.type = Concept.Local.of(concept.getTypeRes().getThingType());
+            this.type = Concept.Local.of(concept.getTypeRes().getThingType()).asThingType();
             this.inferred = concept.getInferredRes().getInferred();
         }
 
@@ -76,7 +76,7 @@ public abstract class ThingImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType());
+            return Concept.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
         }
 
         @Override

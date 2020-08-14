@@ -60,6 +60,11 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
+        public ThingType.Remote getSupertype() {
+            return super.getSupertype().asThingType();
+        }
+
+        @Override
         public Stream<? extends ThingType.Remote> getSupertypes() {
             return super.getSupertypes().map(Type.Remote::asThingType);
         }
@@ -78,7 +83,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final Boolean isAbstract() {
+        public final boolean isAbstract() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeIsAbstractReq(ConceptProto.ThingType.IsAbstract.Req.getDefaultInstance()).build();
 

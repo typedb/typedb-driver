@@ -64,11 +64,6 @@ public interface AttributeType extends ThingType {
 
     AttributeType.DateTime asDateTime();
 
-    @Override
-    default AttributeType.Remote asRemote(Transaction tx) {
-        return AttributeType.Remote.of(tx, getIID());
-    }
-
     /**
      * A class used to hold the supported data types of attributes.
      * This is used tp constrain value data types to only those we explicitly support.
@@ -171,10 +166,6 @@ public interface AttributeType extends ThingType {
      */
     interface Remote extends ThingType.Remote, AttributeType {
 
-        static AttributeType.Remote of(Transaction tx, ConceptIID iid) {
-            return new AttributeTypeImpl.Remote(tx, iid);
-        }
-
         @CheckReturnValue
         @Override
         default AttributeType.Remote asAttributeType() {
@@ -205,124 +196,106 @@ public interface AttributeType extends ThingType {
         default AttributeType.DateTime.Remote asDateTime() {
             throw GraknConceptException.invalidCasting(this, LocalDateTime.class);
         }
-
-        /**
-         * @return The direct supertype of this concept
-         */
-        @Override
-        AttributeType.Remote getSupertype();
-
-        /**
-         * Returns a collection of super-types of this AttributeType.
-         *
-         * @return The super-types of this AttributeType
-         */
-        @Override
-        Stream<? extends AttributeType.Remote> getSupertypes();
-
-        /**
-         * Returns a collection of subtypes of this AttributeType.
-         *
-         * @return The subtypes of this AttributeType
-         */
-        @Override
-        Stream<? extends AttributeType.Remote> getSubtypes();
-
-        /**
-         * Returns a collection of all Attribute of this AttributeType.
-         *
-         * @return The resource instances of this AttributeType
-         */
-        @Override
-        Stream<? extends Attribute.Remote> getInstances();
-
-        /**
-         * Sets the supertype of the AttributeType to be the AttributeType specified.
-         *
-         * @param type The super type of this AttributeType.
-         * @return The AttributeType itself.
-         */
-        AttributeType.Remote setSupertype(AttributeType type);
-
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         * @return The Concept itself
-         */
-        AttributeType.Remote setLabel(Label label);
-
-        /**
-         * Sets the AttributeType to be abstract - which prevents it from having any instances.
-         *
-         * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote setAbstract(boolean isAbstract);
-
-        /**
-         * Sets the RoleType which instances of this AttributeType may play.
-         *
-         * @param role The RoleType which the instances of this AttributeType are allowed to play.
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote setPlays(RoleType role);
-
-        /**
-         * Set the regular expression that instances of the AttributeType must conform to.
-         *
-         * @param regex The regular expression that instances of this AttributeType must conform to.
-         * @return The AttributeType itself.
-         */
-        AttributeType.Remote setRegex(String regex);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        AttributeType.Remote setOwns(AttributeType attributeType);
-        @Override
-        AttributeType.Remote setOwns(AttributeType attributeType, boolean isKey);
-        @Override
-        AttributeType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
-        @Override
-        AttributeType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
-
-        /**
-         * Retrieve the regular expression to which instances of this AttributeType must conform, or {@code null} if no
-         * regular expression is set.
-         * By default, an AttributeType does not have a regular expression set.
-         *
-         * @return The regular expression to which instances of this AttributeType must conform.
-         */
-        @CheckReturnValue
-        @Nullable
-        String getRegex();
     }
 
     interface Boolean extends AttributeType {
+
+        @Override
+        default AttributeType.Boolean.Remote asRemote(Transaction tx) {
+            return AttributeType.Boolean.Remote.of(tx, getIID());
+        }
 
         interface Local extends AttributeType.Boolean, AttributeType.Local {
         }
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
+            static AttributeType.Boolean.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeTypeImpl.Boolean.Remote(tx, iid);
+            }
+
+            /**
+             * Allows this type and an attribute type to be linked.
+             *
+             * @param attributeType The attribute type which instances of this type should be allowed to play.
+             * @return The Type itself.
+             */
+            @Override
+            AttributeType.Boolean.Remote setOwns(AttributeType attributeType);
+
+            @Override
+            AttributeType.Boolean.Remote setOwns(AttributeType attributeType, boolean isKey);
+
+            @Override
+            AttributeType.Boolean.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+
+            @Override
+            AttributeType.Boolean.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+
+            /**
+             * Changes the Label of this Concept to a new one.
+             *
+             * @param label The new Label.
+             * @return The Concept itself
+             */
+            @Override
+            AttributeType.Boolean.Remote setLabel(Label label);
+
+            /**
+             * Sets the AttributeType to be abstract - which prevents it from having any instances.
+             *
+             * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Boolean.Remote setAbstract(boolean isAbstract);
+
+            /**
+             * Sets the RoleType which instances of this AttributeType may play.
+             *
+             * @param role The RoleType which the instances of this AttributeType are allowed to play.
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Boolean.Remote setPlays(RoleType role);
+
+            /**
+             * @return The direct supertype of this concept
+             */
             @Override
             AttributeType.Boolean.Remote getSupertype();
 
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Boolean.Remote> getSupertypes();
 
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Boolean.Remote> getSubtypes();
 
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
             @Override
             Stream<? extends Attribute.Boolean.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            AttributeType.Boolean.Remote setSupertype(AttributeType type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -347,22 +320,102 @@ public interface AttributeType extends ThingType {
 
     interface Long extends AttributeType {
 
+        @Override
+        default AttributeType.Long.Remote asRemote(Transaction tx) {
+            return AttributeType.Long.Remote.of(tx, getIID());
+        }
+
         interface Local extends AttributeType.Long, AttributeType.Local {
         }
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
+            static AttributeType.Long.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeTypeImpl.Long.Remote(tx, iid);
+            }
+
+            /**
+             * Allows this type and an attribute type to be linked.
+             *
+             * @param attributeType The attribute type which instances of this type should be allowed to play.
+             * @return The Type itself.
+             */
+            @Override
+            AttributeType.Long.Remote setOwns(AttributeType attributeType);
+
+            @Override
+            AttributeType.Long.Remote setOwns(AttributeType attributeType, boolean isKey);
+
+            @Override
+            AttributeType.Long.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+
+            @Override
+            AttributeType.Long.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+
+            /**
+             * Changes the Label of this Concept to a new one.
+             *
+             * @param label The new Label.
+             * @return The Concept itself
+             */
+            @Override
+            AttributeType.Long.Remote setLabel(Label label);
+
+            /**
+             * Sets the AttributeType to be abstract - which prevents it from having any instances.
+             *
+             * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Long.Remote setAbstract(boolean isAbstract);
+
+            /**
+             * Sets the RoleType which instances of this AttributeType may play.
+             *
+             * @param role The RoleType which the instances of this AttributeType are allowed to play.
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Long.Remote setPlays(RoleType role);
+
+            /**
+             * @return The direct supertype of this concept
+             */
             @Override
             AttributeType.Long.Remote getSupertype();
 
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Long.Remote> getSupertypes();
 
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Long.Remote> getSubtypes();
 
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
             @Override
             Stream<? extends Attribute.Long.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            AttributeType.Long.Remote setSupertype(AttributeType type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -387,22 +440,102 @@ public interface AttributeType extends ThingType {
 
     interface Double extends AttributeType {
 
+        @Override
+        default AttributeType.Double.Remote asRemote(Transaction tx) {
+            return AttributeType.Double.Remote.of(tx, getIID());
+        }
+
         interface Local extends AttributeType.Double, AttributeType.Local {
         }
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
+            static AttributeType.Double.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeTypeImpl.Double.Remote(tx, iid);
+            }
+
+            /**
+             * Allows this type and an attribute type to be linked.
+             *
+             * @param attributeType The attribute type which instances of this type should be allowed to play.
+             * @return The Type itself.
+             */
+            @Override
+            AttributeType.Double.Remote setOwns(AttributeType attributeType);
+
+            @Override
+            AttributeType.Double.Remote setOwns(AttributeType attributeType, boolean isKey);
+
+            @Override
+            AttributeType.Double.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+
+            @Override
+            AttributeType.Double.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+
+            /**
+             * Changes the Label of this Concept to a new one.
+             *
+             * @param label The new Label.
+             * @return The Concept itself
+             */
+            @Override
+            AttributeType.Double.Remote setLabel(Label label);
+
+            /**
+             * Sets the AttributeType to be abstract - which prevents it from having any instances.
+             *
+             * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Double.Remote setAbstract(boolean isAbstract);
+
+            /**
+             * Sets the RoleType which instances of this AttributeType may play.
+             *
+             * @param role The RoleType which the instances of this AttributeType are allowed to play.
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.Double.Remote setPlays(RoleType role);
+
+            /**
+             * @return The direct supertype of this concept
+             */
             @Override
             AttributeType.Double.Remote getSupertype();
 
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Double.Remote> getSupertypes();
 
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.Double.Remote> getSubtypes();
 
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
             @Override
             Stream<? extends Attribute.Double.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            AttributeType.Double.Remote setSupertype(AttributeType type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -427,22 +560,102 @@ public interface AttributeType extends ThingType {
 
     interface String extends AttributeType {
 
+        @Override
+        default AttributeType.String.Remote asRemote(Transaction tx) {
+            return AttributeType.String.Remote.of(tx, getIID());
+        }
+
         interface Local extends AttributeType.String, AttributeType.Local {
         }
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
+            static AttributeType.String.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeTypeImpl.String.Remote(tx, iid);
+            }
+
+            /**
+             * Allows this type and an attribute type to be linked.
+             *
+             * @param attributeType The attribute type which instances of this type should be allowed to play.
+             * @return The Type itself.
+             */
+            @Override
+            AttributeType.String.Remote setOwns(AttributeType attributeType);
+
+            @Override
+            AttributeType.String.Remote setOwns(AttributeType attributeType, boolean isKey);
+
+            @Override
+            AttributeType.String.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+
+            @Override
+            AttributeType.String.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+
+            /**
+             * Changes the Label of this Concept to a new one.
+             *
+             * @param label The new Label.
+             * @return The Concept itself
+             */
+            @Override
+            AttributeType.String.Remote setLabel(Label label);
+
+            /**
+             * Sets the AttributeType to be abstract - which prevents it from having any instances.
+             *
+             * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.String.Remote setAbstract(boolean isAbstract);
+
+            /**
+             * Sets the RoleType which instances of this AttributeType may play.
+             *
+             * @param role The RoleType which the instances of this AttributeType are allowed to play.
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.String.Remote setPlays(RoleType role);
+
+            /**
+             * @return The direct supertype of this concept
+             */
             @Override
             AttributeType.String.Remote getSupertype();
 
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.String.Remote> getSupertypes();
 
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.String.Remote> getSubtypes();
 
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
             @Override
             Stream<? extends Attribute.String.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            AttributeType.String.Remote setSupertype(AttributeType type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -467,22 +680,102 @@ public interface AttributeType extends ThingType {
 
     interface DateTime extends AttributeType {
 
+        @Override
+        default AttributeType.DateTime.Remote asRemote(Transaction tx) {
+            return AttributeType.DateTime.Remote.of(tx, getIID());
+        }
+
         interface Local extends AttributeType.DateTime, AttributeType.Local {
         }
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
+            static AttributeType.DateTime.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeTypeImpl.DateTime.Remote(tx, iid);
+            }
+
+            /**
+             * Allows this type and an attribute type to be linked.
+             *
+             * @param attributeType The attribute type which instances of this type should be allowed to play.
+             * @return The Type itself.
+             */
+            @Override
+            AttributeType.DateTime.Remote setOwns(AttributeType attributeType);
+
+            @Override
+            AttributeType.DateTime.Remote setOwns(AttributeType attributeType, boolean isKey);
+
+            @Override
+            AttributeType.DateTime.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+
+            @Override
+            AttributeType.DateTime.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+
+            /**
+             * Changes the Label of this Concept to a new one.
+             *
+             * @param label The new Label.
+             * @return The Concept itself
+             */
+            @Override
+            AttributeType.DateTime.Remote setLabel(Label label);
+
+            /**
+             * Sets the AttributeType to be abstract - which prevents it from having any instances.
+             *
+             * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.DateTime.Remote setAbstract(boolean isAbstract);
+
+            /**
+             * Sets the RoleType which instances of this AttributeType may play.
+             *
+             * @param role The RoleType which the instances of this AttributeType are allowed to play.
+             * @return The AttributeType itself.
+             */
+            @Override
+            AttributeType.DateTime.Remote setPlays(RoleType role);
+
+            /**
+             * @return The direct supertype of this concept
+             */
             @Override
             AttributeType.DateTime.Remote getSupertype();
 
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.DateTime.Remote> getSupertypes();
 
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
             @Override
             Stream<? extends AttributeType.DateTime.Remote> getSubtypes();
 
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
             @Override
             Stream<? extends Attribute.DateTime.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            AttributeType.DateTime.Remote setSupertype(AttributeType type);
 
             /**
              * Set the value for the Attribute, unique to its type.

@@ -27,6 +27,9 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.protocol.ConceptProto;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.stream.Stream;
 
 public class AttributeImpl {
@@ -44,7 +47,7 @@ public class AttributeImpl {
 
         @Override
         public AttributeType getType() {
-            return (AttributeType) super.getType();
+            return (AttributeType.Local) super.getType();
         }
 
         public abstract VALUE getValue();
@@ -77,6 +80,8 @@ public class AttributeImpl {
         public Attribute.Remote setHas(Attribute attribute) {
             return (Attribute.Remote) super.setHas(attribute);
         }
+
+        public abstract VALUE getValue();
 
     }
 
@@ -126,19 +131,252 @@ public class AttributeImpl {
                 return this;
             }
 
-            // TODO: Return AttributeType.Boolean.Remote
             @Override
-            public AttributeType.Remote getType() {
-                return (AttributeType.Remote) super.getType();
+            public AttributeType.Boolean.Remote getType() {
+                return super.getType().asBoolean();
             }
 
             @Override
             public Attribute.Boolean.Remote setHas(Attribute attribute) {
-                return (Attribute.Boolean.Remote) super.setHas(attribute);
+                return super.setHas(attribute).asBoolean();
             }
-
         }
     }
 
-    // TODO: Create Long, Double, String and DateTime
+    public abstract static class Long implements Attribute.Long {
+        /**
+         * Client implementation of Attribute.Long
+         */
+        public static class Local extends AttributeImpl.Local<java.lang.Long> implements Attribute.Long.Local {
+
+            private final long value;
+
+            public Local(ConceptProto.Concept concept) {
+                super(concept);
+                this.value = concept.getValueRes().getValue().getLong();
+            }
+
+            @Override
+            public final java.lang.Long getValue() {
+                return value;
+            }
+
+            @Override
+            public final AttributeImpl.Long.Local asLong() {
+                return this;
+            }
+        }
+
+        /**
+         * Client implementation of Attribute.Long
+         */
+        public static class Remote extends AttributeImpl.Remote<java.lang.Long> implements Attribute.Long.Remote {
+
+            public Remote(Transaction tx, ConceptIID iid) {
+                super(tx, iid);
+            }
+
+            @Override
+            public final java.lang.Long getValue() {
+                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                        .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
+
+                return runMethod(method).getAttributeGetValueRes().getValue().getLong();
+            }
+
+            @Override
+            public final AttributeImpl.Long.Remote asLong() {
+                return this;
+            }
+
+            @Override
+            public AttributeType.Long.Remote getType() {
+                return super.getType().asLong();
+            }
+
+            @Override
+            public Attribute.Long.Remote setHas(Attribute attribute) {
+                return super.setHas(attribute).asLong();
+            }
+        }
+    }
+
+    public abstract static class Double implements Attribute.Double {
+        /**
+         * Client implementation of Attribute.Double
+         */
+        public static class Local extends AttributeImpl.Local<java.lang.Double> implements Attribute.Double.Local {
+
+            private final double value;
+
+            public Local(ConceptProto.Concept concept) {
+                super(concept);
+                this.value = concept.getValueRes().getValue().getDouble();
+            }
+
+            @Override
+            public final java.lang.Double getValue() {
+                return value;
+            }
+
+            @Override
+            public final AttributeImpl.Double.Local asDouble() {
+                return this;
+            }
+        }
+
+        /**
+         * Client implementation of Attribute.Double
+         */
+        public static class Remote extends AttributeImpl.Remote<java.lang.Double> implements Attribute.Double.Remote {
+
+            public Remote(Transaction tx, ConceptIID iid) {
+                super(tx, iid);
+            }
+
+            @Override
+            public final java.lang.Double getValue() {
+                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                        .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
+
+                return runMethod(method).getAttributeGetValueRes().getValue().getDouble();
+            }
+
+            @Override
+            public final AttributeImpl.Double.Remote asDouble() {
+                return this;
+            }
+
+            @Override
+            public AttributeType.Double.Remote getType() {
+                return super.getType().asDouble();
+            }
+
+            @Override
+            public Attribute.Double.Remote setHas(Attribute attribute) {
+                return super.setHas(attribute).asDouble();
+            }
+        }
+    }
+
+    public abstract static class String implements Attribute.String {
+        /**
+         * Client implementation of Attribute.String
+         */
+        public static class Local extends AttributeImpl.Local<java.lang.String> implements Attribute.String.Local {
+
+            private final java.lang.String value;
+
+            public Local(ConceptProto.Concept concept) {
+                super(concept);
+                this.value = concept.getValueRes().getValue().getString();
+            }
+
+            @Override
+            public final java.lang.String getValue() {
+                return value;
+            }
+
+            @Override
+            public final AttributeImpl.String.Local asString() {
+                return this;
+            }
+        }
+
+        /**
+         * Client implementation of Attribute.String
+         */
+        public static class Remote extends AttributeImpl.Remote<java.lang.String> implements Attribute.String.Remote {
+
+            public Remote(Transaction tx, ConceptIID iid) {
+                super(tx, iid);
+            }
+
+            @Override
+            public final java.lang.String getValue() {
+                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                        .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
+
+                return runMethod(method).getAttributeGetValueRes().getValue().getString();
+            }
+
+            @Override
+            public final AttributeImpl.String.Remote asString() {
+                return this;
+            }
+
+            @Override
+            public AttributeType.String.Remote getType() {
+                return super.getType().asString();
+            }
+
+            @Override
+            public Attribute.String.Remote setHas(Attribute attribute) {
+                return super.setHas(attribute).asString();
+            }
+        }
+    }
+
+    public abstract static class DateTime implements Attribute.DateTime {
+
+        private static LocalDateTime toLocalDateTime(long rpcDatetime) {
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneId.of("Z"));
+        }
+
+        /**
+         * Client implementation of Attribute.DateTime
+         */
+        public static class Local extends AttributeImpl.Local<LocalDateTime> implements Attribute.DateTime.Local {
+
+            private final LocalDateTime value;
+
+            public Local(ConceptProto.Concept concept) {
+                super(concept);
+                this.value = toLocalDateTime(concept.getValueRes().getValue().getDatetime());
+            }
+
+            @Override
+            public final LocalDateTime getValue() {
+                return value;
+            }
+
+            @Override
+            public final AttributeImpl.DateTime.Local asDateTime() {
+                return this;
+            }
+        }
+
+        /**
+         * Client implementation of Attribute.DateTime
+         */
+        public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {
+
+            public Remote(Transaction tx, ConceptIID iid) {
+                super(tx, iid);
+            }
+
+            @Override
+            public final LocalDateTime getValue() {
+                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                        .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
+
+                return toLocalDateTime(runMethod(method).getAttributeGetValueRes().getValue().getDatetime());
+            }
+
+            @Override
+            public final AttributeImpl.DateTime.Remote asDateTime() {
+                return this;
+            }
+
+            @Override
+            public AttributeType.DateTime.Remote getType() {
+                return super.getType().asDateTime();
+            }
+
+            @Override
+            public Attribute.DateTime.Remote setHas(Attribute attribute) {
+                return super.setHas(attribute).asDateTime();
+            }
+        }
+    }
 }
