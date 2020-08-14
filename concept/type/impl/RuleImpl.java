@@ -20,10 +20,10 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
@@ -54,12 +54,12 @@ public class RuleImpl {
 
         @Override
         public final Stream<Rule.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(Type.Remote::asRule);
         }
 
         @Override
         public final Stream<Rule.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(Type.Remote::asRule);
         }
 
         @Override
@@ -106,11 +106,6 @@ public class RuleImpl {
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
-        }
-
-        @Override
-        protected final Rule.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asRule();
         }
 
     }

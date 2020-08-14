@@ -26,6 +26,7 @@ import grakn.client.concept.Label;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -52,12 +53,12 @@ public class RoleTypeImpl {
 
         @Override
         public final Stream<RoleType.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(Type.Remote::asRoleType);
         }
 
         @Override
         public final Stream<RoleType.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(Type.Remote::asRoleType);
         }
 
         @Override
@@ -87,11 +88,6 @@ public class RoleTypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
             return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asThingType);
-        }
-
-        @Override
-        protected final RoleType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asRoleType();
         }
 
     }

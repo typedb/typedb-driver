@@ -27,6 +27,7 @@ import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -82,8 +83,8 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote isAbstract(Boolean isAbstract) {
-            return (RelationType.Remote) super.isAbstract(isAbstract);
+        public final RelationType.Remote setAbstract(boolean isAbstract) {
+            return (RelationType.Remote) super.setAbstract(isAbstract);
         }
 
         @Override
@@ -93,12 +94,12 @@ public class RelationTypeImpl {
 
         @Override
         public final Stream<RelationType.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(ThingType.Remote::asRelationType);
         }
 
         @Override
         public final Stream<RelationType.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(ThingType.Remote::asRelationType);
         }
 
         @Override
@@ -148,11 +149,6 @@ public class RelationTypeImpl {
         @Override
         protected final Relation.Remote asInstance(Concept.Remote concept) {
             return concept.asRelation();
-        }
-
-        @Override
-        protected final RelationType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asRelationType();
         }
 
     }

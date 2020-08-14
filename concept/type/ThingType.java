@@ -20,8 +20,8 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.Thing;
 
 import javax.annotation.CheckReturnValue;
@@ -54,7 +54,36 @@ public interface ThingType extends Type {
      */
     interface Remote extends Type.Remote, ThingType {
 
-        //------------------------------------- Modifiers ----------------------------------
+        /**
+         * @return The direct supertype of this concept
+         */
+        @Override
+        ThingType.Remote getSupertype();
+
+        /**
+         * @return All the the super-types of this Type
+         */
+        @Override
+        Stream<? extends ThingType.Remote> getSupertypes();
+
+        /**
+         * Get all indirect sub-types of this type.
+         * The indirect sub-types are the type itself and all indirect sub-types of direct sub-types.
+         *
+         * @return All the indirect sub-types of this Type
+         */
+        @Override
+        @CheckReturnValue
+        Stream<? extends ThingType.Remote> getSubtypes();
+
+        /**
+         * Get all indirect instances of this type.
+         * The indirect instances are the direct instances and all indirect instances of direct sub-types.
+         *
+         * @return All the indirect instances of this type.
+         */
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getInstances();
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -70,14 +99,13 @@ public interface ThingType extends Type {
          * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
          * @return The concept itself
          */
-        ThingType.Remote isAbstract(Boolean isAbstract);
+        ThingType.Remote setAbstract(boolean isAbstract);
 
         /**
          * @param role The RoleType which the instances of this Type are allowed to play.
          * @return The Type itself.
          */
         ThingType.Remote setPlays(RoleType role);
-
 
         /**
          * Creates a connection which allows this type and a AttributeType to be linked.
@@ -111,9 +139,9 @@ public interface ThingType extends Type {
          * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        <D> Stream<? extends AttributeType.Remote> getOwns(ValueTypeOld valueType, boolean keysOnly);
+        <D> Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
         @CheckReturnValue
-        default <D> Stream<? extends AttributeType.Remote> attributes(ValueTypeOld valueType) {
+        default <D> Stream<? extends AttributeType.Remote> attributes(ValueType valueType) {
             return getOwns(valueType, false);
         }
         @CheckReturnValue
@@ -124,40 +152,6 @@ public interface ThingType extends Type {
         default Stream<? extends AttributeType.Remote> attributes() {
             return getOwns(false);
         }
-
-        /**
-         * @return All the the super-types of this Type
-         */
-        @Override
-        Stream<? extends ThingType.Remote> getSupertypes();
-
-        /**
-         * Get all indirect sub-types of this type.
-         * The indirect sub-types are the type itself and all indirect sub-types of direct sub-types.
-         *
-         * @return All the indirect sub-types of this Type
-         */
-        @Override
-        @CheckReturnValue
-        Stream<? extends ThingType.Remote> getSubtypes();
-
-        /**
-         * Get all indirect instances of this type.
-         * The indirect instances are the direct instances and all indirect instances of direct sub-types.
-         *
-         * @return All the indirect instances of this type.
-         */
-        @CheckReturnValue
-        Stream<? extends Thing.Remote> getInstances();
-
-        /**
-         * Return if the type is set to abstract.
-         * By default, types are not abstract.
-         *
-         * @return returns true if the type is set to be abstract.
-         */
-        @CheckReturnValue
-        Boolean isAbstract();
 
         //------------------------------------- Other ----------------------------------
 

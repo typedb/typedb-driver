@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -57,9 +56,5 @@ public class EntityImpl {
             return (Entity.Remote) super.setHas(attribute);
         }
 
-        @Override
-        protected final Entity.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asEntity();
-        }
     }
 }

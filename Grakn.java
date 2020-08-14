@@ -31,8 +31,8 @@ import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
@@ -294,9 +294,9 @@ public interface Grakn {
 
         EntityType.Remote putEntityType(Label label);
 
-        <V> AttributeType.Remote putAttributeType(String label, ValueTypeOld valueType);
+        <V> AttributeType.Remote putAttributeType(String label, ValueType valueType);
 
-        <V> AttributeType.Remote putAttributeType(Label label, ValueTypeOld valueType);
+        <V> AttributeType.Remote putAttributeType(Label label, ValueType valueType);
 
         RelationType.Remote putRelationType(String label);
 

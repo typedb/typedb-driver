@@ -22,7 +22,6 @@ package grakn.client.concept.thing;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.GraknConceptException;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
@@ -45,14 +44,6 @@ public interface Attribute extends Thing {
      */
     @Override
     AttributeType getType();
-
-    @CheckReturnValue
-    default private Attribute asAttribute(ValueTypeOld valueType) {
-        if (!getValueType().equals(valueType)) {
-            throw GraknConceptException.invalidCasting(this, valueType.getClass());
-        }
-        return this;
-    }
 
     @CheckReturnValue
     Attribute.Boolean asBoolean();
@@ -83,15 +74,30 @@ public interface Attribute extends Thing {
      */
     interface Local extends Thing.Local, Attribute {
 
-        Attribute.Boolean.Local asBoolean();
+        @Override
+        default Attribute.Boolean.Local asBoolean() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+        }
 
-        Attribute.Long.Local asLong();
+        @Override
+        default Attribute.Long.Local asLong() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
+        }
 
-        Attribute.Double.Local asDouble();
+        @Override
+        default Attribute.Double.Local asDouble() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
+        }
 
-        Attribute.String.Local asString();
+        @Override
+        default Attribute.String.Local asString() {
+            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
+        }
 
-        Attribute.DateTime.Local asDateTime();
+        @Override
+        default Attribute.DateTime.Local asDateTime() {
+            throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
+        }
     }
 
     /**
@@ -148,15 +154,30 @@ public interface Attribute extends Thing {
             return this;
         }
 
-        Attribute.Boolean.Remote asBoolean();
+        @Override
+        default Attribute.Boolean.Remote asBoolean() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+        }
 
-        Attribute.Long.Remote asLong();
+        @Override
+        default Attribute.Long.Remote asLong() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
+        }
 
-        Attribute.Double.Remote asDouble();
+        @Override
+        default Attribute.Double.Remote asDouble() {
+            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
+        }
 
-        Attribute.String.Remote asString();
+        @Override
+        default Attribute.String.Remote asString() {
+            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
+        }
 
-        Attribute.DateTime.Remote asDateTime();
+        @Override
+        default Attribute.DateTime.Remote asDateTime() {
+            throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
+        }
     }
 
     interface Boolean extends Attribute {

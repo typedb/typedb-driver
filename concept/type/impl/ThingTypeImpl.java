@@ -23,11 +23,12 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
@@ -60,12 +61,12 @@ public abstract class ThingTypeImpl {
 
         @Override
         public Stream<? extends ThingType.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(Type.Remote::asThingType);
         }
 
         @Override
         public Stream<? extends ThingType.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(Type.Remote::asThingType);
         }
 
         @Override
@@ -85,7 +86,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote isAbstract(Boolean isAbstract) {
+        public ThingType.Remote setAbstract(boolean isAbstract) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.newBuilder()
                                                    .setAbstract(isAbstract)).build();
@@ -95,7 +96,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote> getOwns(ValueTypeOld valueType, boolean keysOnly) {
+        public final <D> Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
             ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
@@ -165,7 +166,5 @@ public abstract class ThingTypeImpl {
 
         protected abstract Thing.Remote asInstance(Concept.Remote concept);
 
-        @Override
-        protected abstract ThingType.Remote asCurrentBaseType(Concept.Remote other);
     }
 }

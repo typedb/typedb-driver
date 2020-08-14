@@ -19,8 +19,8 @@
 package grakn.client.test.behaviour.concept.type.attributetype;
 
 import grakn.client.concept.Label;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import io.cucumber.java.en.Then;
@@ -44,34 +44,34 @@ public class AttributeTypeSteps {
     private final String UNRECOGNISED_VALUE = "Unrecognized value";
 
     @When("put attribute type: {type_label}, with value type: {value_type}")
-    public void put_attribute_type_with_value_type(String typeLabel, ValueTypeOld valueType) {
+    public void put_attribute_type_with_value_type(String typeLabel, ValueType valueType) {
         tx().putAttributeType(typeLabel, valueType);
     }
 
     @Then("attribute\\( ?{type_label} ?) get value type: {value_type}")
-    public void attribute_type_get_value_type(String typeLabel, ValueTypeOld valueType) {
+    public void attribute_type_get_value_type(String typeLabel, ValueType valueType) {
         assertEquals(valueType, tx().getAttributeType(typeLabel).getValueType());
     }
 
     @Then("attribute\\( ?{type_label} ?) get supertype value type: {value_type}")
-    public void attribute_type_get_supertype_value_type(String typeLabel, ValueTypeOld valueType) {
+    public void attribute_type_get_supertype_value_type(String typeLabel, ValueType valueType) {
         Type.Remote supertype = tx().getAttributeType(typeLabel).asAttributeType().getSupertype();
         assertEquals(valueType, supertype.asAttributeType().getValueType());
     }
 
-    private <D> AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueTypeOld valueType) {
+    private <D> AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueType valueType) {
         return tx().getAttributeType(typeLabel).asAttributeType(valueType);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
-    public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueTypeOld valueType, List<String> subLabels) {
+    public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
         Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
-    public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueTypeOld valueType, List<String> subLabels) {
+    public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
         Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
         for (String subLabel : subLabels) {
@@ -80,16 +80,16 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")
-    public void attribute_type_as_value_type_set_regex(String typeLabel, ValueTypeOld valueType, String regex) {
-        if (!valueType.equals(ValueTypeOld.STRING)) fail();
+    public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType valueType, String regex) {
+        if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        attributeType.asAttributeType(ValueTypeOld.STRING).setRegex(regex);
+        attributeType.asAttributeType(ValueType.STRING).setRegex(regex);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
-    public void attribute_type_as_value_type_get_regex(String typeLabel, ValueTypeOld valueType, String regex) {
-        if (!valueType.equals(ValueTypeOld.STRING)) fail();
+    public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
+        if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        assertEquals(regex, attributeType.asAttributeType(ValueTypeOld.STRING).getRegex());
+        assertEquals(regex, attributeType.asAttributeType(ValueType.STRING).getRegex());
     }
 }

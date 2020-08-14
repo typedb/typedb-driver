@@ -24,7 +24,6 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.MetaType;
-import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 public class MetaTypeImpl {
@@ -48,12 +47,6 @@ public class MetaTypeImpl {
         @Override
         protected Thing.Remote asInstance(Concept.Remote concept) {
             return concept.asThing();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected final ThingType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asThingType();
         }
 
     }

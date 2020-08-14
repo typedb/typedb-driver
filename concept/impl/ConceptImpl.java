@@ -135,8 +135,6 @@ public abstract class ConceptImpl {
             return tx;
         }
 
-        protected abstract Remote asCurrentBaseType(Remote other);
-
         protected <R extends Remote> Stream<R> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
             return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));

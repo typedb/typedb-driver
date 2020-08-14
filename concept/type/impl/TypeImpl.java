@@ -116,7 +116,5 @@ public abstract class TypeImpl {
             return conceptStream(method, res -> res.getTypeGetSubtypesIterRes().getType());
         }
 
-        @Override
-        protected abstract Type.Remote asCurrentBaseType(Concept.Remote other);
     }
 }

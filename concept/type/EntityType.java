@@ -78,7 +78,7 @@ public interface EntityType extends ThingType {
          * @return The EntityType itself
          */
         @Override
-        EntityType.Remote isAbstract(Boolean isAbstract);
+        EntityType.Remote setAbstract(boolean isAbstract);
 
         /**
          * Sets a RoleType which instances of this EntityType may play.

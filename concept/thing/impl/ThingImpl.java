@@ -150,7 +150,5 @@ public abstract class ThingImpl {
             runMethod(method);
         }
 
-        @Override
-        protected abstract Thing.Remote asCurrentBaseType(Concept.Remote other);
     }
 }

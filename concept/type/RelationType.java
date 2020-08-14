@@ -141,7 +141,7 @@ public interface RelationType extends ThingType {
          * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote isAbstract(Boolean isAbstract);
+        RelationType.Remote setAbstract(boolean isAbstract);
 
         /**
          * Returns a collection of supertypes of this RelationType.

@@ -27,6 +27,7 @@ import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -82,8 +83,8 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote isAbstract(Boolean isAbstract) {
-            return (EntityType.Remote) super.isAbstract(isAbstract);
+        public final EntityType.Remote setAbstract(boolean isAbstract) {
+            return (EntityType.Remote) super.setAbstract(isAbstract);
         }
 
         @Override
@@ -93,12 +94,12 @@ public class EntityTypeImpl {
 
         @Override
         public final Stream<EntityType.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(ThingType.Remote::asEntityType);
         }
 
         @Override
         public final Stream<EntityType.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(ThingType.Remote::asEntityType);
         }
 
         @Override
@@ -117,11 +118,6 @@ public class EntityTypeImpl {
         @Override
         public final EntityType.Remote setSupertype(EntityType superEntityType) {
             return (EntityType.Remote) super.setSupertype(superEntityType);
-        }
-
-        @Override
-        protected final EntityType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asEntityType();
         }
 
         @Override

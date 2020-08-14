@@ -125,10 +125,5 @@ public class RelationImpl {
             runMethod(method);
         }
 
-        @Override
-        protected Relation.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asRelation();
-        }
-
     }
 }

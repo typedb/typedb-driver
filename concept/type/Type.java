@@ -67,7 +67,6 @@ public interface Type extends Concept {
      * 2. You can link them together into a hierarchical structure
      */
     interface Remote extends Type, Concept.Remote {
-        //------------------------------------- Modifiers ----------------------------------
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -77,7 +76,14 @@ public interface Type extends Concept {
          */
         Type.Remote setLabel(Label label);
 
-        //------------------------------------- Accessors ---------------------------------
+        /**
+         * Return if the type is set to abstract.
+         * By default, types are not abstract.
+         *
+         * @return returns true if the type is set to be abstract.
+         */
+        @CheckReturnValue
+        boolean isAbstract();
 
         /**
          * @return The direct supertype of this concept
@@ -87,7 +93,7 @@ public interface Type extends Concept {
         Type.Remote getSupertype();
 
         /**
-         * @return All super-concepts of this SchemaConcept, including itself and excluding the meta type THING.
+         * @return All super-concepts of this Type, including itself and excluding the meta type THING.
          * If you want to include THING, use Transaction.sups().
          */
         Stream<? extends Type.Remote> getSupertypes();
@@ -96,19 +102,15 @@ public interface Type extends Concept {
          * Get all indirect subs of this concept.
          * The indirect subs are the concept itself and all indirect subs of direct subs.
          *
-         * @return All the indirect sub-types of this SchemaConcept
+         * @return All the indirect sub-types of this Type
          */
         @CheckReturnValue
         Stream<? extends Type.Remote> getSubtypes();
 
-
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default Type.Remote asType() {
             return this;
         }
-
     }
 }

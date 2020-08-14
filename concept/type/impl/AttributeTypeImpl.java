@@ -22,11 +22,11 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
@@ -40,7 +40,7 @@ public class AttributeTypeImpl {
      */
     public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
-        private final ValueTypeOld valueType;
+        private final ValueType valueType;
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -49,7 +49,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public ValueTypeOld getValueType() {
+        public ValueType getValueType() {
             return valueType;
         }
     }
@@ -95,7 +95,7 @@ public class AttributeTypeImpl {
 
         @Override
         public final AttributeType.Remote isAbstract(Boolean isAbstract) {
-            return (AttributeType.Remote) super.isAbstract(isAbstract);
+            return (AttributeType.Remote) super.setAbstract(isAbstract);
         }
 
         @Override
@@ -105,12 +105,12 @@ public class AttributeTypeImpl {
 
         @Override
         public final Stream<AttributeType.Remote> getSupertypes() {
-            return super.getSupertypes().map(this::asCurrentBaseType);
+            return super.getSupertypes().map(ThingType.Remote::asAttributeType);
         }
 
         @Override
         public final Stream<AttributeType.Remote> getSubtypes() {
-            return super.getSubtypes().map(this::asCurrentBaseType);
+            return super.getSubtypes().map(ThingType.Remote::asAttributeType);
         }
 
         @Override
@@ -123,7 +123,6 @@ public class AttributeTypeImpl {
             return (AttributeType.Remote) super.setSupertype(type);
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public final Attribute.Remote put(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
@@ -154,7 +153,7 @@ public class AttributeTypeImpl {
 
         @Override
         @Nullable
-        public final ValueTypeOld getValueType() {
+        public final ValueType getValueType() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeGetValueTypeReq(ConceptProto.AttributeType.GetValueType.Req.getDefaultInstance()).build();
 
@@ -194,12 +193,6 @@ public class AttributeTypeImpl {
         @Override
         protected final Attribute.Remote asInstance(Concept.Remote concept) {
             return (Attribute.Remote) concept.asAttribute();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected final AttributeType.Remote asCurrentBaseType(Concept.Remote other) {
-            return other.asAttributeType();
         }
 
     }

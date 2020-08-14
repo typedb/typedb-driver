@@ -18,7 +18,7 @@
 
 package grakn.client.test.behaviour.concept.thing.attribute;
 
-import grakn.client.concept.ValueTypeOld;
+import grakn.client.concept.type.AttributeType.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -49,107 +49,107 @@ public class AttributeSteps {
     }
 
     @Then("attribute {var} has value type: {value_type}")
-    public void attribute_has_value_type(String var, ValueTypeOld valueType) {
+    public void attribute_has_value_type(String var, ValueType valueType) {
         assertEquals(valueType, get(var).asAttribute().getType().getValueType());
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")
     public void attribute_type_as_boolean_put(String var, String typeLabel, boolean value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.BOOLEAN).put(value));
+        put(var, tx().getAttributeType(typeLabel).asBoolean().put(value));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}; throws exception")
     public void attribute_type_as_boolean_put_throws_exception(String typeLabel, boolean value) {
-        assertThrows(() -> tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.BOOLEAN).put(value));
+        assertThrows(() -> tx().getAttributeType(typeLabel).asBoolean().put(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}")
     public void attribute_type_as_long_put(String var, String typeLabel, long value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.LONG).put(value));
+        put(var, tx().getAttributeType(typeLabel).asLong().put(value));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}; throws exception")
     public void attribute_type_as_long_put_throws_exception(String typeLabel, long value) {
-        assertThrows(() -> tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.LONG).put(value));
+        assertThrows(() -> tx().getAttributeType(typeLabel).asLong().put(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}")
     public void attribute_type_as_double_put(String var, String typeLabel, double value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DOUBLE).put(value));
+        put(var, tx().getAttributeType(typeLabel).asDouble().put(value));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}; throws exception")
     public void attribute_type_as_double_put_throws_exception(String typeLabel, double value) {
-        assertThrows(() -> tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DOUBLE).put(value));
+        assertThrows(() -> tx().getAttributeType(typeLabel).asDouble().put(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}")
     public void attribute_type_as_string_put(String var, String typeLabel, String value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.STRING).put(value));
+        put(var, tx().getAttributeType(typeLabel).asString().put(value));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}; throws exception")
     public void attribute_type_as_string_put_throws_exception(String typeLabel, String value) {
-        assertThrows(() -> tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.STRING).put(value));
+        assertThrows(() -> tx().getAttributeType(typeLabel).asString().put(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}")
     public void attribute_type_as_datetime_put(String var, String typeLabel, LocalDateTime value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DATETIME).put(value));
+        put(var, tx().getAttributeType(typeLabel).asDateTime().put(value));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}; throws exception")
     public void attribute_type_as_datetime_put_throws_exception(String typeLabel, LocalDateTime value) {
-        assertThrows(() -> tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DATETIME).put(value));
+        assertThrows(() -> tx().getAttributeType(typeLabel).asDateTime().put(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) get: {bool}")
     public void attribute_type_as_boolean_get(String var, String typeLabel, boolean value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.BOOLEAN).get(value));
+        put(var, tx().getAttributeType(typeLabel).asBoolean().get(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) get: {int}")
     public void attribute_type_as_long_get(String var, String typeLabel, long value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.LONG).get(value));
+        put(var, tx().getAttributeType(typeLabel).asLong().get(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) get: {double}")
     public void attribute_type_as_double_get(String var, String typeLabel, double value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DOUBLE).get(value));
+        put(var, tx().getAttributeType(typeLabel).asDouble().get(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) get: {word}")
     public void attribute_type_as_string_get(String var, String typeLabel, String value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.STRING).get(value));
+        put(var, tx().getAttributeType(typeLabel).asString().get(value));
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")
     public void attribute_type_as_datetime_get(String var, String typeLabel, LocalDateTime value) {
-        put(var, tx().getAttributeType(typeLabel).asAttributeType(ValueTypeOld.DATETIME).get(value));
+        put(var, tx().getAttributeType(typeLabel).asDateTime().get(value));
     }
 
     @Then("attribute {var} has boolean value: {bool}")
     public void attribute_has_boolean_value(String var, boolean value) {
-        assertEquals(value, get(var).asAttribute().asAttribute(ValueTypeOld.BOOLEAN).getValue());
+        assertEquals(value, get(var).asAttribute().asBoolean().getValue());
     }
 
     @Then("attribute {var} has long value: {long}")
     public void attribute_has_long_value(String var, long value) {
-        assertEquals(value, get(var).asAttribute().asAttribute(ValueTypeOld.LONG).getValue().longValue());
+        assertEquals(value, get(var).asAttribute().asLong().getValue().longValue());
     }
 
     @Then("attribute {var} has double value: {double}")
     public void attribute_has_double_value(String var, double value) {
-        assertEquals(value, get(var).asAttribute().asAttribute(ValueTypeOld.DOUBLE).getValue(), 0.0001);
+        assertEquals(value, get(var).asAttribute().asDouble().getValue(), 0.0001);
     }
 
     @Then("attribute {var} has string value: {word}")
     public void attribute_has_string_value(String var, String value) {
-        assertEquals(value, get(var).asAttribute().asAttribute(ValueTypeOld.STRING).getValue());
+        assertEquals(value, get(var).asAttribute().asString().getValue());
     }
 
     @Then("attribute {var} has datetime value: {datetime}")
     public void attribute_has_datetime_value(String var, LocalDateTime value) {
-        assertEquals(value, get(var).asAttribute().asAttribute(ValueTypeOld.DATETIME).getValue());
+        assertEquals(value, get(var).asAttribute().asDateTime().getValue());
     }
 }

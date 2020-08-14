@@ -23,12 +23,12 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueTypeOld;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
@@ -128,7 +128,7 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueTypeOld valueType) {
+        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType valueType) {
             TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                     .setLabel(label.getValue())
                     .setValueType(ConceptMessage.setValueType(valueType))
@@ -216,38 +216,39 @@ public class RequestBuilder {
             return builder.build();
         }
 
-        @SuppressWarnings("unchecked")
-        public static <D> ValueTypeOld valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+        public static <D> ValueType valueType(ConceptProto.AttributeType.VALUE_TYPE valueType) {
             switch (valueType) {
                 case STRING:
-                    return (ValueTypeOld) ValueTypeOld.STRING;
+                    return ValueType.STRING;
                 case BOOLEAN:
-                    return (ValueTypeOld) ValueTypeOld.BOOLEAN;
+                    return ValueType.BOOLEAN;
                 case LONG:
-                    return (ValueTypeOld) ValueTypeOld.LONG;
+                    return ValueType.LONG;
                 case DOUBLE:
-                    return (ValueTypeOld) ValueTypeOld.DOUBLE;
+                    return ValueType.DOUBLE;
                 case DATETIME:
-                    return (ValueTypeOld) ValueTypeOld.DATETIME;
+                    return ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + valueType);
             }
         }
 
-        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueTypeOld valueType) {
-            if (valueType.equals(ValueTypeOld.STRING)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
-            } else if (valueType.equals(ValueTypeOld.BOOLEAN)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
-            } else if (valueType.equals(ValueTypeOld.LONG)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.LONG;
-            } else if (valueType.equals(ValueTypeOld.DOUBLE)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
-            } else if (valueType.equals(ValueTypeOld.DATETIME)) {
-                return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
-            } else {
-                throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
+        public static ConceptProto.AttributeType.VALUE_TYPE setValueType(ValueType valueType) {
+            switch (valueType) {
+                case STRING:
+                    return ConceptProto.AttributeType.VALUE_TYPE.STRING;
+                case BOOLEAN:
+                    return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
+                case LONG:
+                    return ConceptProto.AttributeType.VALUE_TYPE.LONG;
+                case DOUBLE:
+                    return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
+                case DATETIME:
+                    return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
+                default:
+                case OBJECT:
+                    throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
             }
         }
     }
