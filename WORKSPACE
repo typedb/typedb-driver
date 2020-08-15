@@ -75,11 +75,15 @@ checkstyle_deps()
 load("@graknlabs_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-#####################################################################
-# Load @graknlabs_bazel_distribution from (@graknlabs_dependencies) #
-#####################################################################
 load("@graknlabs_dependencies//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
+
+#######################################
+# Load @graknlabs_bazel_distribution  #
+#######################################
+
+load("//dependencies/graknlabs:repositories.bzl", graknlabs_bazel_distribution = "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 pip3_import(
     name = "graknlabs_bazel_distribution_pip",
@@ -172,28 +176,20 @@ graknlabs_verification()
 ###############################
 # Load @graknlabs_client_java #
 ###############################
-load("@graknlabs_client_java//dependencies/maven:artifacts.bzl", graknlabs_client_java_artifacts = "artifacts")
+load("@graknlabs_client_java//dependencies/maven:artifacts.bzl",
+    graknlabs_client_java_artifacts = "artifacts",
+    graknlabs_client_java_overrides = "overrides")
 
 ###############
 # Load @maven #
 ###############
-
-# Override libraries conflicting with versions defined in @graknlabs_dependencies
-OVERRIDES = {
-    # @graknlabs_client_java overrides
-   "io.netty:netty-all": "4.1.38.Final",
-   "io.netty:netty-codec-http2": "4.1.38.Final",
-    # @graknlabs_grabl_tracing overrides
-   "io.netty:netty-handler": "4.1.38.Final",
-   "io.netty:netty-handler-proxy": "4.1.38.Final",
-}
 
 maven(
     graknlabs_common_artifacts +
     graknlabs_graql_artifacts +
     graknlabs_grabl_tracing_artifacts +
     graknlabs_client_java_artifacts,
-    OVERRIDES
+    graknlabs_client_java_overrides
 )
 
 ################################################

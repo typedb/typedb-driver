@@ -20,31 +20,53 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def graknlabs_graql():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_graql",
+#        remote = "https://github.com/graknlabs/graql",
+#        tag = "1.0.8" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
+#    )
+    native.local_repository(
         name = "graknlabs_graql",
-        remote = "https://github.com/graknlabs/graql",
-        tag = "1.0.8" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
+        path = "../graql",
     )
 
 def graknlabs_common():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_common",
+#        remote = "https://github.com/graknlabs/common",
+#        tag = "0.2.3" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+#    )
+    native.local_repository(
         name = "graknlabs_common",
-        remote = "https://github.com/graknlabs/common",
-        tag = "0.2.3" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        path = "../common",
     )
 
 def graknlabs_dependencies():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_dependencies",
+#        remote = "https://github.com/graknlabs/dependencies",
+#        commit = "1f7e4a696cc7b7492354750c337ae3f67ff39f06", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+#    )
+    native.local_repository(
         name = "graknlabs_dependencies",
-        remote = "https://github.com/graknlabs/dependencies",
-        commit = "1f7e4a696cc7b7492354750c337ae3f67ff39f06", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+        path = "../dependencies",
+    )
+
+def graknlabs_bazel_distribution():
+    native.local_repository(
+        name = "graknlabs_bazel_distribution",
+        path = "../bazel-distribution",
     )
 
 def graknlabs_protocol():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_protocol",
+#        remote = "https://github.com/graknlabs/protocol",
+#        tag = "1.0.7", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+#    )
+    native.local_repository(
         name = "graknlabs_protocol",
-        remote = "https://github.com/graknlabs/protocol",
-        tag = "1.0.7", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        path = "../protocol",
     )
 
 def graknlabs_verification():
@@ -55,8 +77,12 @@ def graknlabs_verification():
     )
 
 def graknlabs_grabl_tracing():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_grabl_tracing",
+#        remote = "https://github.com/graknlabs/grabl-tracing",
+#        tag = "0.1.1"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grabl_tracing
+#    )
+    native.local_repository(
         name = "graknlabs_grabl_tracing",
-        remote = "https://github.com/graknlabs/grabl-tracing",
-        tag = "0.1.1"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_grabl_tracing
+        path = "../grabl-tracing",
     )
