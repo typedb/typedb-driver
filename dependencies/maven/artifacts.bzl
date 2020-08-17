@@ -37,14 +37,6 @@ artifacts = [
   "org.zeroturnaround:zt-exec"
 ]
 
-def merge_maven_overrides(org_maven_overrides, repo_maven_overrides):
-    merged = {}
-    for artifact in org_maven_overrides:
-        org_version = org_maven_overrides[artifact]
-        org_version = org_version if type(org_version) == type("") else org_version["version"]
-        merged[artifact] = repo_maven_overrides.get(artifact, org_version)
-    return merged
-
 # Override libraries conflicting with versions defined in @graknlabs_dependencies
 overrides = {
     "io.netty:netty-all": "4.1.38.Final",

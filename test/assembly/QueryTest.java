@@ -19,8 +19,7 @@ package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.common.test.server.GraknProperties;
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
@@ -75,18 +74,20 @@ import static org.hamcrest.Matchers.hasSize;
 public class QueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknClient graknClient;
+    private static GraknCoreRunner runner;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
+        runner = new GraknCoreRunner();
+        runner.start();
+        String address = System.getProperty(runner.address());
         graknClient = new GraknClient(address);
     }
 
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
-        GraknSetup.shutdown();
+        runner.stop();
     }
 
     @Before
@@ -96,7 +97,7 @@ public class QueryTest {
     }
 
     @After
-    public void closeClient(){
+    public void closeClient() {
         graknClient.close();
     }
 
@@ -136,8 +137,8 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
                     .map(answer -> answer.get("t").asType().label().getValue()).collect(Collectors.toList());
-            String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
-                    "lion", "mating", "parentship", "child-bearing", "name" };
+            String[] correctSchema = new String[]{"thing", "entity", "relation", "attribute",
+                    "lion", "mating", "parentship", "child-bearing", "name"};
             assertThat(definedSchema, hasItems(correctSchema));
             LOG.info("clientJavaE2E() - done.");
         });

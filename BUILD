@@ -71,8 +71,6 @@ checkstyle_test(
 )
 
 
-
-
 assemble_maven(
     name = "assemble-maven",
     target = ":client-java",

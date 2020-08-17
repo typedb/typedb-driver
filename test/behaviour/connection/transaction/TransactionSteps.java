@@ -39,7 +39,7 @@ import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToT
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactionsParallel;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
-import static grakn.common.util.Collections.list;
+import static grakn.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

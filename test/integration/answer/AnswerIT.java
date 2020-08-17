@@ -23,8 +23,8 @@ import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.client.answer.Explanation;
 import grakn.client.exception.GraknClientException;
-import grakn.common.test.server.GraknProperties;
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknSingleton;
 import graql.lang.Graql;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
@@ -60,21 +60,24 @@ import static org.junit.Assert.fail;
 public class AnswerIT {
 
     private static GraknClient client;
+    private static GraknCoreRunner runner;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
+        runner = new GraknCoreRunner();
+        runner.start();
+        String address = System.getProperty(GraknSingleton.getGraknRunner().address());
         client = new GraknClient(address);
     }
 
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         client.close();
-        GraknSetup.shutdown();
+        runner.stop();
     }
 
-    @Test
+
+        @Test
     public void testExplanation() {
         GraknClient.Session session = client.session("test_rules");
         GraknClient.Transaction tx = session.transaction().write();

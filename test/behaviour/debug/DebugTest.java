@@ -26,7 +26,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 

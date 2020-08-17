@@ -62,38 +62,11 @@ grakn_test(
     size = "large",
 )
 
-# To run this test, you need to provide environment variables:
-# --test_env GRAKN_KGMS_ADDRESS=***
-# --test_env GRAKN_KGMS_USERNAME=****
-# --test_env GRAKN_KGMS_PASSWORD=****
-grakn_test(
-    name = "test-kgms",
-    srcs = [
-        "KeyspaceTest.java"
-    ],
-    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
-    deps = [
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        ":steps"
-    ],
-    data = [
-        "@graknlabs_verification//behaviour/connection:keyspace.feature",
-    ],
-    type = "grakn-kgms",
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "large",
-    tags = ["manual"]
-)
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":steps",
         ":test-core",
-        ":test-kgms",
     ],
     license_type = "apache"
 )
