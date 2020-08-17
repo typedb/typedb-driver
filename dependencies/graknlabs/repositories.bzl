@@ -29,9 +29,13 @@ def graknlabs_graql():
 def graknlabs_common():
     git_repository(
         name = "graknlabs_common",
-        remote = "https://github.com/graknlabs/common",
-        commit = "51ced6cca934d0a863ccfa262d76cfd16863fb86" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        remote = "https://github.com/flyingsilverfin/common",
+        commit  = "ce05ba86749e6ab12dd8c41cca51ac9c6cca9c7c" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
     )
+#    native.local_repository(
+#        name = "graknlabs_common",
+#        path = "../common",
+#    )
 
 def graknlabs_bazel_distribution():
     git_repository(
