@@ -35,7 +35,6 @@ import java.util.stream.Stream;
  * 2. You can link them together into a hierarchical structure
  */
 public interface Type extends Concept {
-    //------------------------------------- Accessors ---------------------------------
 
     /**
      * Returns the unique label of this Type.
@@ -45,8 +44,6 @@ public interface Type extends Concept {
     @CheckReturnValue
     Label getLabel();
 
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
     @CheckReturnValue
     @Override
     default Type asType() {

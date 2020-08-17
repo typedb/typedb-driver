@@ -37,7 +37,6 @@ import java.util.stream.Stream;
  * Relation are used to model n-ary relations between instances.
  */
 public interface Relation extends Thing {
-    //------------------------------------- Accessors ----------------------------------
 
     /**
      * Retrieve the associated RelationType for this Relation.
@@ -48,20 +47,18 @@ public interface Relation extends Thing {
     @Override
     RelationType getType();
 
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default Relation asRelation() {
-        return this;
-    }
-
     @Override
     default Remote asRemote(Transaction tx) {
         return Relation.Remote.of(tx, getIID());
     }
 
     interface Local extends Thing.Local, Relation {
+
+        @CheckReturnValue
+        @Override
+        default Relation.Local asRelation() {
+            return this;
+        }
     }
 
     /**
@@ -77,15 +74,6 @@ public interface Relation extends Thing {
         }
 
         /**
-         * Creates a relation from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which a relation is created
-         * @return The instance itself
-         */
-        @Override
-        Relation.Remote setHas(Attribute attribute);
-
-        /**
          * Retrieve the associated RelationType for this Relation.
          *
          * @return The associated RelationType for this Relation.
@@ -95,38 +83,10 @@ public interface Relation extends Thing {
         RelationType.Remote getType();
 
         /**
-         * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
-         *
-         * @return A list of all the role types and the instances playing them in this Relation.
-         * @see RoleType.Remote
-         */
-        @CheckReturnValue
-        Map<RoleType.Remote, List<Thing.Remote>> getPlayersByRoleType();
-
-        /**
-         * Retrieves a list of every Thing involved in the Relation.
-         *
-         * @return A list of every Thing involved in the Relation.
-         */
-        @CheckReturnValue
-        Stream<Thing.Remote> getPlayers();
-
-        /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
-         *
-         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
-         *
-         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
-         */
-        @CheckReturnValue
-        Stream<Thing.Remote> getPlayers(List<RoleType> roleTypes);
-
-        /**
          * Expands this Relation to include a new role player which is playing a specific role.
          *
          * @param roleType   The RoleType of the new role player.
          * @param player The new role player.
-         * @return The Relation itself.
          */
         void addPlayer(RoleType roleType, Thing player);
 
@@ -139,12 +99,47 @@ public interface Relation extends Thing {
          */
         void removePlayer(RoleType roleType, Thing player);
 
-        @Deprecated
+        /**
+         * Retrieves a list of every Thing involved in the Relation.
+         *
+         * @return A list of every Thing involved in the Relation.
+         */
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getPlayers();
+
+        /**
+         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
+         *
+         * @param roleType Used to filter the returned instances only to ones that play this role type.
+         *
+         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
+         */
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getPlayers(RoleType roleType);
+
+        /**
+         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
+         *
+         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
+         *
+         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
+         */
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getPlayers(List<RoleType> roleTypes);
+
+        /**
+         * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
+         *
+         * @return A list of all the role types and the instances playing them in this Relation.
+         * @see RoleType.Remote
+         */
+        @CheckReturnValue
+        Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType();
+
         @CheckReturnValue
         @Override
         default Relation.Remote asRelation() {
             return this;
         }
-
     }
 }

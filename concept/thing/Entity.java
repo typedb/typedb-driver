@@ -41,13 +41,6 @@ public interface Entity extends Thing {
     @Override
     EntityType getType();
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default Entity asEntity() {
-        return this;
-    }
-
     @CheckReturnValue
     @Override
     default Remote asRemote(Transaction tx) {
@@ -55,6 +48,12 @@ public interface Entity extends Thing {
     }
 
     interface Local extends Thing.Local, Entity {
+
+        @CheckReturnValue
+        @Override
+        default Entity.Local asEntity() {
+            return this;
+        }
     }
 
     /**
@@ -76,21 +75,10 @@ public interface Entity extends Thing {
         @Override
         EntityType.Remote getType();
 
-        /**
-         * Creates a relation from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which a relation is created
-         * @return The instance itself
-         */
-        @Override
-        Entity.Remote setHas(Attribute attribute);
-
-        @Deprecated
         @CheckReturnValue
         @Override
         default Entity.Remote asEntity() {
             return this;
         }
-
     }
 }

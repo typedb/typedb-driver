@@ -25,6 +25,7 @@ import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class RelationImpl {
+public abstract class RelationImpl {
     /**
      * Client implementation of Relation
      */
@@ -45,6 +46,10 @@ public class RelationImpl {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
+        }
+
+        public RelationType.Local getType() {
+            return super.getType().asRelationType();
         }
     }
 
@@ -63,12 +68,7 @@ public class RelationImpl {
         }
 
         @Override
-        public Relation.Remote setHas(Attribute attribute) {
-            return (Relation.Remote) super.setHas(attribute);
-        }
-
-        @Override
-        public Map<RoleType.Remote, List<Thing.Remote>> getPlayersByRoleType() {
+        public Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType() {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 

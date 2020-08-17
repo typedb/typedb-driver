@@ -35,23 +35,12 @@ public abstract class ConceptImpl {
      */
     public abstract static class Local implements Concept.Local {
 
-        private final ConceptIID iid;
-
-        protected Local(ConceptProto.Concept concept) {
-            this.iid = ConceptIID.of(concept.getIid());
-        }
-
-        @Override
-        public ConceptIID getIID() {
-            return iid;
-        }
-
         @Override
         public String toString() {
-            return this.getClass().getSimpleName() + "{id=" + iid + "}";
+            return this.getClass().getSimpleName();
         }
 
-        @Override
+        /*@Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -67,7 +56,7 @@ public abstract class ConceptImpl {
             h *= 1000003;
             h ^= iid.hashCode();
             return h;
-        }
+        }*/
     }
 
     /**
@@ -75,10 +64,10 @@ public abstract class ConceptImpl {
      */
     public abstract static class Remote implements Concept.Remote {
 
-        private final Transaction tx;
-        private final ConceptIID iid;
+        protected Transaction tx;
+        /* private final ConceptIID iid;
 
-        protected Remote(Transaction tx, ConceptIID iid) {
+         protected Remote(Transaction tx, ConceptIID iid) {
             this.tx = requireNonNull(tx, "Null tx");
             if (iid == null || iid.getValue().isEmpty()) {
                 throw new IllegalArgumentException("Null or empty iid");
@@ -89,7 +78,7 @@ public abstract class ConceptImpl {
         @Override
         public ConceptIID getIID() {
             return iid;
-        }
+        } */
 
         @Override
         public final void delete() {
@@ -101,16 +90,16 @@ public abstract class ConceptImpl {
         }
 
         @Override
-        public final boolean isDeleted() {
+        public abstract boolean isDeleted() {
             return tx().getConcept(getIID()) == null;
         }
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{tx=" + tx + ", iid=" + iid + "}";
+            return this.getClass().getCanonicalName() + "{tx=" + tx + "}";
         }
 
-        @Override
+        /*@Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -129,22 +118,22 @@ public abstract class ConceptImpl {
             h *= 1000003;
             h ^= iid.hashCode();
             return h;
-        }
+        }*/
 
         protected Transaction tx() {
             return tx;
         }
 
-        protected <R extends Remote> Stream<R> conceptStream
+        protected abstract <R extends Remote> Stream<R> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
             return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
         }
 
-        protected final ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
+        protected abstract ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
             return runMethod(getIID(), method);
         }
 
-        protected final ConceptProto.Method.Res runMethod(ConceptIID iid, ConceptProto.Method.Req method) {
+        private ConceptProto.Method.Res runMethod(ConceptIID iid, ConceptProto.Method.Req method) {
             return tx().runConceptMethod(iid, method).getConceptMethodRes().getResponse();
         }
 

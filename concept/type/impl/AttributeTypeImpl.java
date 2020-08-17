@@ -140,7 +140,7 @@ public class AttributeTypeImpl {
         /**
          * Client implementation of AttributeType.Boolean
          */
-        public abstract static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
+        public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
             private final ValueType valueType;
 

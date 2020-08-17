@@ -31,12 +31,6 @@ import java.util.stream.Stream;
 
 public interface Attribute extends Thing {
 
-    @CheckReturnValue
-    @Override
-    default Attribute asAttribute() {
-        return this;
-    }
-
     /**
      * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is a Thing.
      *
@@ -46,24 +40,28 @@ public interface Attribute extends Thing {
     AttributeType getType();
 
     @CheckReturnValue
-    Attribute.Boolean asBoolean();
+    default Attribute.Boolean asBoolean() {
+        throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+    }
 
     @CheckReturnValue
-    Attribute.Long asLong();
+    default Attribute.Long asLong() {
+        throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
+    }
 
     @CheckReturnValue
-    Attribute.Double asDouble();
+    default Attribute.Double asDouble() {
+        throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
+    }
 
     @CheckReturnValue
-    Attribute.String asString();
+    default Attribute.String asString() {
+        throw GraknConceptException.invalidCasting(this, java.lang.String.class);
+    }
 
     @CheckReturnValue
-    Attribute.DateTime asDateTime();
-
-    @CheckReturnValue
-    @Override
-    default Remote asRemote(Transaction tx) {
-        return Attribute.Remote.of(tx, getIID());
+    default Attribute.DateTime asDateTime() {
+        throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
     }
 
     /**
@@ -74,30 +72,31 @@ public interface Attribute extends Thing {
      */
     interface Local extends Thing.Local, Attribute {
 
+        @CheckReturnValue
         @Override
-        default Attribute.Boolean.Local asBoolean() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+        default Attribute.Local asAttribute() {
+            return this;
         }
 
+        @CheckReturnValue
         @Override
-        default Attribute.Long.Local asLong() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
-        }
+        Attribute.Boolean.Local asBoolean();
 
+        @CheckReturnValue
         @Override
-        default Attribute.Double.Local asDouble() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
-        }
+        Attribute.Long.Local asLong();
 
+        @CheckReturnValue
         @Override
-        default Attribute.String.Local asString() {
-            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
-        }
+        Attribute.Double.Local asDouble();
 
+        @CheckReturnValue
         @Override
-        default Attribute.DateTime.Local asDateTime() {
-            throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
-        }
+        Attribute.String.Local asString();
+
+        @CheckReturnValue
+        @Override
+        Attribute.DateTime.Local asDateTime();
     }
 
     /**
@@ -108,10 +107,6 @@ public interface Attribute extends Thing {
      */
     interface Remote extends Thing.Remote, Attribute {
 
-        static Attribute.Remote of(Transaction tx, ConceptIID iid) {
-            return new AttributeImpl.Remote<>(tx, iid);
-        }
-
         /**
          * Retrieves the type of the Attribute, that is, the AttributeType of which this resource is an Thing.
          *
@@ -121,15 +116,6 @@ public interface Attribute extends Thing {
         AttributeType.Remote getType();
 
         /**
-         * Creates an ownership from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which an ownership is created
-         * @return The instance itself
-         */
-        @Override
-        Attribute.Remote setHas(Attribute attribute);
-
-        /**
          * Retrieves the set of all Instances that possess this Attribute.
          *
          * @return The list of all Instances that possess this Attribute.
@@ -137,16 +123,13 @@ public interface Attribute extends Thing {
         @CheckReturnValue
         Stream<? extends Thing.Remote> getOwners();
 
-        // TODO: this was in core, but not in client-java - how do we align it?
         /**
          * Retrieves the set of all Instances of the specified type that possess this Attribute.
          *
          * @return The list of all Instances of the specified type that possess this Attribute.
          */
         @CheckReturnValue
-        default Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
-            throw new UnsupportedOperationException();
-        }
+        Stream<? extends Thing.Remote> getOwners(ThingType ownerType);
 
         @CheckReturnValue
         @Override
@@ -154,33 +137,34 @@ public interface Attribute extends Thing {
             return this;
         }
 
+        @CheckReturnValue
         @Override
-        default Attribute.Boolean.Remote asBoolean() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
-        }
+        Attribute.Boolean.Remote asBoolean();
 
+        @CheckReturnValue
         @Override
-        default Attribute.Long.Remote asLong() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
-        }
+        Attribute.Long.Remote asLong();
 
+        @CheckReturnValue
         @Override
-        default Attribute.Double.Remote asDouble() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
-        }
+        Attribute.Double.Remote asDouble();
 
+        @CheckReturnValue
         @Override
-        default Attribute.String.Remote asString() {
-            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
-        }
+        Attribute.String.Remote asString();
 
+        @CheckReturnValue
         @Override
-        default Attribute.DateTime.Remote asDateTime() {
-            throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
-        }
+        Attribute.DateTime.Remote asDateTime();
     }
 
     interface Boolean extends Attribute {
+
+        @CheckReturnValue
+        @Override
+        default Remote asRemote(Transaction tx) {
+            return Remote.of(tx, getIID());
+        }
 
         /**
          * Retrieves the value of the Attribute.
@@ -191,13 +175,35 @@ public interface Attribute extends Thing {
         java.lang.Boolean getValue();
 
         interface Local extends Attribute.Boolean, Attribute.Local {
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Boolean.Local asBoolean() {
+                return this;
+            }
         }
 
         interface Remote extends Attribute.Boolean, Attribute.Remote {
+
+            static Boolean.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeImpl.Boolean.Remote(tx, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Boolean.Remote asBoolean() {
+                return this;
+            }
         }
     }
 
     interface Long extends Attribute {
+
+        @CheckReturnValue
+        @Override
+        default Remote asRemote(Transaction tx) {
+            return Remote.of(tx, getIID());
+        }
 
         /**
          * Retrieves the value of the Attribute.
@@ -208,13 +214,35 @@ public interface Attribute extends Thing {
         java.lang.Long getValue();
 
         interface Local extends Attribute.Long, Attribute.Local {
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Long.Local asLong() {
+                return this;
+            }
         }
 
         interface Remote extends Attribute.Long, Attribute.Remote {
+
+            static Long.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeImpl.Long.Remote(tx, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Long.Remote asLong() {
+                return this;
+            }
         }
     }
 
     interface Double extends Attribute {
+
+        @CheckReturnValue
+        @Override
+        default Remote asRemote(Transaction tx) {
+            return Remote.of(tx, getIID());
+        }
 
         /**
          * Retrieves the value of the Attribute.
@@ -225,13 +253,35 @@ public interface Attribute extends Thing {
         java.lang.Double getValue();
 
         interface Local extends Attribute.Double, Attribute.Local {
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Double.Local asDouble() {
+                return this;
+            }
         }
 
         interface Remote extends Attribute.Double, Attribute.Remote {
+
+            static Double.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeImpl.Double.Remote(tx, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Double.Remote asDouble() {
+                return this;
+            }
         }
     }
 
     interface String extends Attribute {
+
+        @CheckReturnValue
+        @Override
+        default Remote asRemote(Transaction tx) {
+            return Remote.of(tx, getIID());
+        }
 
         /**
          * Retrieves the value of the Attribute.
@@ -242,13 +292,35 @@ public interface Attribute extends Thing {
         java.lang.String getValue();
 
         interface Local extends Attribute.String, Attribute.Local {
+
+            @CheckReturnValue
+            @Override
+            default Attribute.String.Local asString() {
+                return this;
+            }
         }
 
         interface Remote extends Attribute.String, Attribute.Remote {
+
+            static String.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeImpl.String.Remote(tx, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.String.Remote asString() {
+                return this;
+            }
         }
     }
 
     interface DateTime extends Attribute {
+
+        @CheckReturnValue
+        @Override
+        default Remote asRemote(Transaction tx) {
+            return Remote.of(tx, getIID());
+        }
 
         /**
          * Retrieves the value of the Attribute.
@@ -259,9 +331,25 @@ public interface Attribute extends Thing {
         java.time.LocalDateTime getValue();
 
         interface Local extends Attribute.DateTime, Attribute.Local {
+
+            @CheckReturnValue
+            @Override
+            default Attribute.DateTime.Local asDateTime() {
+                return this;
+            }
         }
 
         interface Remote extends Attribute.DateTime, Attribute.Remote {
+
+            static DateTime.Remote of(Transaction tx, ConceptIID iid) {
+                return new AttributeImpl.DateTime.Remote(tx, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.DateTime.Remote asDateTime() {
+                return this;
+            }
         }
     }
 }

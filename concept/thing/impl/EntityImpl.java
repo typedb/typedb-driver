@@ -26,7 +26,7 @@ import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
 
-public class EntityImpl {
+public abstract class EntityImpl {
     /**
      * Client implementation of Entity
      */
@@ -34,6 +34,10 @@ public class EntityImpl {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
+        }
+
+        public EntityType.Local getType() {
+            return super.getType().asEntityType();
         }
     }
 
@@ -50,11 +54,5 @@ public class EntityImpl {
         public final EntityType.Remote getType() {
             return (EntityType.Remote) super.getType();
         }
-
-        @Override
-        public Entity.Remote setHas(Attribute attribute) {
-            return (Entity.Remote) super.setHas(attribute);
-        }
-
     }
 }

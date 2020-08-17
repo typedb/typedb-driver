@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-public class AttributeImpl {
+public abstract class AttributeImpl {
 
     /**
      * Client implementation of Attribute
@@ -46,8 +46,8 @@ public class AttributeImpl {
         }
 
         @Override
-        public AttributeType getType() {
-            return (AttributeType.Local) super.getType();
+        public AttributeType.Local getType() {
+            return super.getType().asAttributeType();
         }
 
         public abstract VALUE getValue();
@@ -76,13 +76,7 @@ public class AttributeImpl {
             return (AttributeType.Remote) super.getType();
         }
 
-        @Override
-        public Attribute.Remote setHas(Attribute attribute) {
-            return (Attribute.Remote) super.setHas(attribute);
-        }
-
         public abstract VALUE getValue();
-
     }
 
     public abstract static class Boolean implements Attribute.Boolean {
@@ -127,18 +121,8 @@ public class AttributeImpl {
             }
 
             @Override
-            public final AttributeImpl.Boolean.Remote asBoolean() {
-                return this;
-            }
-
-            @Override
             public AttributeType.Boolean.Remote getType() {
                 return super.getType().asBoolean();
-            }
-
-            @Override
-            public Attribute.Boolean.Remote setHas(Attribute attribute) {
-                return super.setHas(attribute).asBoolean();
             }
         }
     }
@@ -185,18 +169,8 @@ public class AttributeImpl {
             }
 
             @Override
-            public final AttributeImpl.Long.Remote asLong() {
-                return this;
-            }
-
-            @Override
             public AttributeType.Long.Remote getType() {
                 return super.getType().asLong();
-            }
-
-            @Override
-            public Attribute.Long.Remote setHas(Attribute attribute) {
-                return super.setHas(attribute).asLong();
             }
         }
     }
@@ -243,18 +217,8 @@ public class AttributeImpl {
             }
 
             @Override
-            public final AttributeImpl.Double.Remote asDouble() {
-                return this;
-            }
-
-            @Override
             public AttributeType.Double.Remote getType() {
                 return super.getType().asDouble();
-            }
-
-            @Override
-            public Attribute.Double.Remote setHas(Attribute attribute) {
-                return super.setHas(attribute).asDouble();
             }
         }
     }
@@ -301,18 +265,8 @@ public class AttributeImpl {
             }
 
             @Override
-            public final AttributeImpl.String.Remote asString() {
-                return this;
-            }
-
-            @Override
             public AttributeType.String.Remote getType() {
                 return super.getType().asString();
-            }
-
-            @Override
-            public Attribute.String.Remote setHas(Attribute attribute) {
-                return super.setHas(attribute).asString();
             }
         }
     }
@@ -364,18 +318,8 @@ public class AttributeImpl {
             }
 
             @Override
-            public final AttributeImpl.DateTime.Remote asDateTime() {
-                return this;
-            }
-
-            @Override
             public AttributeType.DateTime.Remote getType() {
                 return super.getType().asDateTime();
-            }
-
-            @Override
-            public Attribute.DateTime.Remote setHas(Attribute attribute) {
-                return super.setHas(attribute).asDateTime();
             }
         }
     }

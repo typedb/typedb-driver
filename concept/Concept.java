@@ -44,24 +44,15 @@ import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
-
 /**
  * The base concept implementation.
- * A concept which can every object in the graph.
+ * A concept which can be every object in the graph.
  * This class forms the basis of assuring the graph follows the Grakn object model.
  * It provides methods to retrieve information about the Concept, and determine if it is a Type
  * (EntityType, RoleType, RelationType, Rule or AttributeType)
- * or an Thing (Entity, Relation , Attribute).
+ * or an Thing (Entity, Relation, Attribute).
  */
 public interface Concept {
-
-    /**
-     * Get the unique IID associated with the Concept.
-     *
-     * @return The concept's unique IID.
-     */
-    @CheckReturnValue
-    ConceptIID getIID();
 
     /**
      * Return as a Type if the Concept is a Type.
@@ -69,9 +60,7 @@ public interface Concept {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default Type asType() {
-        throw GraknConceptException.invalidCasting(this, Type.class);
-    }
+    Type asType();
 
     /**
      * Return as a ThingType if the Concept is a ThingType.
@@ -79,9 +68,7 @@ public interface Concept {
      * @return A ThingType if the Concept is a ThingType
      */
     @CheckReturnValue
-    default ThingType asThingType() {
-        throw GraknConceptException.invalidCasting(this, ThingType.class);
-    }
+    ThingType asThingType();
 
     /**
      * Return as an EntityType if the Concept is an EntityType.
@@ -89,9 +76,7 @@ public interface Concept {
      * @return A EntityType if the Concept is an EntityType
      */
     @CheckReturnValue
-    default EntityType asEntityType() {
-        throw GraknConceptException.invalidCasting(this, EntityType.class);
-    }
+    EntityType asEntityType();
 
     /**
      * Return as an AttributeType if the Concept is an AttributeType
@@ -99,9 +84,7 @@ public interface Concept {
      * @return An AttributeType if the Concept is an AttributeType
      */
     @CheckReturnValue
-    default AttributeType asAttributeType() {
-        throw GraknConceptException.invalidCasting(this, AttributeType.class);
-    }
+    AttributeType asAttributeType();
 
     /**
      * Return as a RelationType if the Concept is a RelationType.
@@ -109,9 +92,7 @@ public interface Concept {
      * @return A RelationType if the Concept is a RelationType
      */
     @CheckReturnValue
-    default RelationType asRelationType() {
-        throw GraknConceptException.invalidCasting(this, RelationType.class);
-    }
+    RelationType asRelationType();
 
     /**
      * Return as a RoleType if the Concept is a RoleType.
@@ -119,9 +100,7 @@ public interface Concept {
      * @return A RoleType if the Concept is a RoleType
      */
     @CheckReturnValue
-    default RoleType asRoleType() {
-        throw GraknConceptException.invalidCasting(this, RoleType.class);
-    }
+    RoleType asRoleType();
 
     /**
      * Return as a Thing if the Concept is a Thing.
@@ -129,9 +108,7 @@ public interface Concept {
      * @return A Thing if the Concept is a Thing
      */
     @CheckReturnValue
-    default Thing asThing() {
-        throw GraknConceptException.invalidCasting(this, Thing.class);
-    }
+    Thing asThing();
 
     /**
      * Return as an Entity, if the Concept is an Entity Thing.
@@ -139,9 +116,7 @@ public interface Concept {
      * @return An Entity if the Concept is a Thing
      */
     @CheckReturnValue
-    default Entity asEntity() {
-        throw GraknConceptException.invalidCasting(this, Entity.class);
-    }
+    Entity asEntity();
 
     /**
      * Return as a Attribute  if the Concept is a Attribute Thing.
@@ -149,9 +124,7 @@ public interface Concept {
      * @return A Attribute if the Concept is a Attribute
      */
     @CheckReturnValue
-    default Attribute asAttribute() {
-        throw GraknConceptException.invalidCasting(this, Attribute.class);
-    }
+    Attribute asAttribute();
 
     /**
      * Return as a Relation if the Concept is a Relation Thing.
@@ -159,9 +132,7 @@ public interface Concept {
      * @return A Relation  if the Concept is a Relation
      */
     @CheckReturnValue
-    default Relation asRelation() {
-        throw GraknConceptException.invalidCasting(this, Relation.class);
-    }
+    Relation asRelation();
 
     /**
      * Return as a Rule if the Concept is a Rule.
@@ -169,9 +140,7 @@ public interface Concept {
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    default Rule asRule() {
-        throw GraknConceptException.invalidCasting(this, Rule.class);
-    }
+    Rule asRule();
 
     /**
      * Return a Concept.Remote for this Concept.
@@ -192,20 +161,48 @@ public interface Concept {
 
     interface Local extends Concept {
 
-        static Concept of(ConceptProto.Concept concept) {
+        static Local of(ConceptProto.Concept concept) {
             switch (concept.getBaseType()) {
                 case ENTITY:
                     return new EntityImpl.Local(concept);
                 case RELATION:
                     return new RelationImpl.Local(concept);
                 case ATTRIBUTE:
-                    return new AttributeImpl.Local<>(concept);
+                    switch (concept.getValueTypeRes().getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeImpl.Boolean.Local(concept);
+                        case LONG:
+                            return new AttributeImpl.Long.Local(concept);
+                        case DOUBLE:
+                            return new AttributeImpl.Double.Local(concept);
+                        case STRING:
+                            return new AttributeImpl.String.Local(concept);
+                        case DATETIME:
+                            return new AttributeImpl.DateTime.Local(concept);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
+                    }
                 case ENTITY_TYPE:
                     return new EntityTypeImpl.Local(concept);
                 case RELATION_TYPE:
                     return new RelationTypeImpl.Local(concept);
                 case ATTRIBUTE_TYPE:
-                    return new AttributeTypeImpl.Local(concept);
+                    switch (concept.getValueTypeRes().getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeTypeImpl.Boolean.Local(concept);
+                        case LONG:
+                            return new AttributeImpl.Long.Local(concept);
+                        case DOUBLE:
+                            return new AttributeImpl.Double.Local(concept);
+                        case STRING:
+                            return new AttributeImpl.String.Local(concept);
+                        case DATETIME:
+                            return new AttributeImpl.DateTime.Local(concept);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
+                    }
                 case ROLE_TYPE:
                     return new RoleTypeImpl.Local(concept);
                 case RULE:
@@ -216,6 +213,127 @@ public interface Concept {
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
             }
+        }
+
+        /**
+         * Return as a Type if the Concept is a Type.
+         *
+         * @return A Type if the Concept is a Type
+         */
+        @CheckReturnValue
+        @Override
+        default Type.Local asType() {
+            throw GraknConceptException.invalidCasting(this, Type.class);
+        }
+
+        /**
+         * Return as a ThingType if the Concept is a ThingType.
+         *
+         * @return A ThingType if the Concept is a ThingType
+         */
+        @CheckReturnValue
+        @Override
+        default ThingType.Local asThingType() {
+            throw GraknConceptException.invalidCasting(this, ThingType.class);
+        }
+
+        /**
+         * Return as an EntityType if the Concept is an EntityType.
+         *
+         * @return A EntityType if the Concept is an EntityType
+         */
+        @CheckReturnValue
+        @Override
+        default EntityType.Local asEntityType() {
+            throw GraknConceptException.invalidCasting(this, EntityType.class);
+        }
+
+        /**
+         * Return as an AttributeType if the Concept is an AttributeType
+         *
+         * @return An AttributeType if the Concept is an AttributeType
+         */
+        @CheckReturnValue
+        @Override
+        default AttributeType.Local asAttributeType() {
+            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+        }
+
+        /**
+         * Return as a RelationType if the Concept is a RelationType.
+         *
+         * @return A RelationType if the Concept is a RelationType
+         */
+        @CheckReturnValue
+        @Override
+        default RelationType.Local asRelationType() {
+            throw GraknConceptException.invalidCasting(this, RelationType.class);
+        }
+
+        /**
+         * Return as a RoleType if the Concept is a RoleType.
+         *
+         * @return A RoleType if the Concept is a RoleType
+         */
+        @CheckReturnValue
+        @Override
+        default RoleType.Local asRoleType() {
+            throw GraknConceptException.invalidCasting(this, RoleType.class);
+        }
+
+        /**
+         * Return as a Thing if the Concept is a Thing.
+         *
+         * @return A Thing if the Concept is a Thing
+         */
+        @CheckReturnValue
+        @Override
+        default Thing.Local asThing() {
+            throw GraknConceptException.invalidCasting(this, Thing.class);
+        }
+
+        /**
+         * Return as an Entity, if the Concept is an Entity Thing.
+         *
+         * @return An Entity if the Concept is a Thing
+         */
+        @CheckReturnValue
+        @Override
+        default Entity.Local asEntity() {
+            throw GraknConceptException.invalidCasting(this, Entity.class);
+        }
+
+        /**
+         * Return as a Attribute  if the Concept is a Attribute Thing.
+         *
+         * @return A Attribute if the Concept is a Attribute
+         */
+        @CheckReturnValue
+        @Override
+        default Attribute.Local asAttribute() {
+            throw GraknConceptException.invalidCasting(this, Attribute.class);
+        }
+
+        /**
+         * Return as a Relation if the Concept is a Relation Thing.
+         *
+         * @return A Relation  if the Concept is a Relation
+         */
+        @CheckReturnValue
+        @Override
+        default Relation.Local asRelation() {
+            throw GraknConceptException.invalidCasting(this, Relation.class);
+        }
+
+        /**
+         * Return as a Rule if the Concept is a Rule.
+         *
+         * @return A Rule if the Concept is a Rule
+         */
+        @CheckReturnValue
+        @Override
+        default Rule.Local asRule() {
+            throw GraknConceptException.invalidCasting(this, Rule.class);
         }
     }
 
@@ -234,13 +352,41 @@ public interface Concept {
                 case RELATION:
                     return new RelationImpl.Remote(tx, iid);
                 case ATTRIBUTE:
-                    return new AttributeImpl.Remote<>(tx, iid);
+                    switch (concept.getValueTypeRes().getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeImpl.Boolean.Remote(tx, iid);
+                        case LONG:
+                            return new AttributeImpl.Long.Remote(tx, iid);
+                        case DOUBLE:
+                            return new AttributeImpl.Double.Remote(tx, iid);
+                        case STRING:
+                            return new AttributeImpl.String.Remote(tx, iid);
+                        case DATETIME:
+                            return new AttributeImpl.DateTime.Remote(tx, iid);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
+                    }
                 case ENTITY_TYPE:
                     return new EntityTypeImpl.Remote(tx, iid);
                 case RELATION_TYPE:
                     return new RelationTypeImpl.Remote(tx, iid);
                 case ATTRIBUTE_TYPE:
-                    return new AttributeTypeImpl.Remote(tx, iid);
+                    switch (concept.getValueTypeRes().getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeTypeImpl.Boolean.Remote(tx, iid);
+                        case LONG:
+                            return new AttributeTypeImpl.Long.Remote(tx, iid);
+                        case DOUBLE:
+                            return new AttributeTypeImpl.Double.Remote(tx, iid);
+                        case STRING:
+                            return new AttributeTypeImpl.String.Remote(tx, iid);
+                        case DATETIME:
+                            return new AttributeTypeImpl.DateTime.Remote(tx, iid);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
+                    }
                 case ROLE_TYPE:
                     return new RoleTypeImpl.Remote(tx, iid);
                 case RULE:

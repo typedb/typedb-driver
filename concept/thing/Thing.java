@@ -21,12 +21,15 @@ package grakn.client.concept.thing;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -36,6 +39,14 @@ import java.util.stream.Stream;
  * Instances can relate to one another via Relation
  */
 public interface Thing extends Concept {
+
+    /**
+     * Get the unique IID associated with the Thing.
+     *
+     * @return The thing's unique IID.
+     */
+    @CheckReturnValue
+    ConceptIID getIID();
 
     /**
      * Return the Type of the Concept.
@@ -53,17 +64,13 @@ public interface Thing extends Concept {
      */
     boolean isInferred();
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default Thing asThing() {
-        return this;
-    }
-
-    @Override
-    Remote asRemote(Transaction tx);
-
     interface Local extends Concept.Local, Thing {
+
+        @CheckReturnValue
+        @Override
+        default Thing.Local asThing() {
+            return this;
+        }
     }
 
     /**
@@ -75,72 +82,11 @@ public interface Thing extends Concept {
     interface Remote extends Concept.Remote, Thing {
 
         /**
-         * Return the Type of the Concept.
+         * Creates an ownership from this Thing to the provided Attribute.
          *
-         * @return A Type which is the type of this concept. This concept is an instance of that type.
+         * @param attribute The Attribute to which an ownership is created
          */
-        @Override
-        @CheckReturnValue
-        ThingType.Remote getType();
-
-        /**
-         * Retrieves the Relations which the Thing takes part in, which may optionally be narrowed to a particular set
-         * according to the RoleType you are interested in.
-         *
-         * @param roleTypes An optional parameter which allows you to specify the role type of the relations you wish to retrieve.
-         * @return A set of Relations which the concept instance takes part in, optionally constrained by the RoleType.
-         * @see RoleType.Remote
-         * @see Relation.Remote
-         */
-        @CheckReturnValue
-        Stream<Relation.Remote> getRelations(RoleType... roleTypes);
-
-        /**
-         * Determine the RoleTypes that this Thing is currently playing.
-         *
-         * @return A set of all the RoleTypes which this Thing is currently playing.
-         * @see RoleType.Remote
-         */
-        @CheckReturnValue
-        Stream<RoleType.Remote> getPlays();
-
-        /**
-         * Creates a Relation from this Thing to the provided Attribute.
-         * This has the same effect as #relhas(Attribute), but returns the instance itself to allow
-         * method chaining.
-         *
-         * @param attribute The Attribute to which a Relation is created
-         * @return The instance itself
-         */
-        Thing.Remote setHas(Attribute attribute);
-
-        /**
-         * Retrieves a collection of Attribute attached to this Thing
-         *
-         * @param attributeTypes AttributeTypes of the Attributes attached to this entity
-         * @return A collection of Attributes attached to this Thing.
-         * @see Attribute.Remote
-         */
-        @CheckReturnValue
-        Stream<Attribute.Remote> getHas(AttributeType... attributeTypes);
-
-        @CheckReturnValue
-        <T> Stream<Attribute.Remote> getHas(AttributeType attributeType);
-
-        /**
-         * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
-         *
-         * @param keysOnly If true, only fetch attributes which are keys.
-         * @return A collection of Attributes attached to this Thing.
-         * @see Attribute.Remote
-         */
-        @CheckReturnValue
-        Stream<Attribute.Remote> getHas(boolean keysOnly);
-
-        @CheckReturnValue
-        default Stream<Attribute.Remote> getHas() {
-            return getHas(false);
-        }
+        void setHas(Attribute attribute);
 
         /**
          * Removes the provided Attribute from this Thing
@@ -150,19 +96,71 @@ public interface Thing extends Concept {
         void unsetHas(Attribute attribute);
 
         /**
-         * Used to indicate if this Thing has been created as the result of a Rule inference.
+         * Return the Type of the Concept.
          *
-         * @return true if this Thing exists due to a rule
-         * @see Rule.Remote
+         * @return A Type which is the type of this concept. This concept is an instance of that type.
          */
-        boolean isInferred();
+        @Override
+        @CheckReturnValue
+        ThingType.Remote getType();
 
-        @Deprecated
+        /**
+         * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.
+         *
+         * @param onlyKey If true, only fetch attributes which are keys.
+         * @return A collection of Attributes attached to this Thing.
+         * @see Attribute.Remote
+         */
+        @CheckReturnValue
+        Stream<? extends Attribute.Remote> getHas(boolean onlyKey);
+
+        @CheckReturnValue
+        Stream<? extends Attribute.Boolean.Remote> getHas(AttributeType.Boolean attributeType);
+
+        @CheckReturnValue
+        Stream<? extends Attribute.Long.Remote> getHas(AttributeType.Long attributeType);
+
+        @CheckReturnValue
+        Stream<? extends Attribute.Double.Remote> getHas(AttributeType.Double attributeType);
+
+        @CheckReturnValue
+        Stream<? extends Attribute.String.Remote> getHas(AttributeType.String attributeType);
+
+        @CheckReturnValue
+        Stream<? extends Attribute.DateTime.Remote> getHas(AttributeType.DateTime attributeType);
+
+        /**
+         * Retrieves a collection of Attribute attached to this Thing
+         *
+         * @param attributeTypes AttributeTypes of the Attributes attached to this entity
+         * @return A collection of Attributes attached to this Thing.
+         * @see Attribute.Remote
+         */
+        @CheckReturnValue
+        Stream<? extends Attribute.Remote> getHas(AttributeType... attributeTypes);
+
+        /**
+         * Determine the RoleTypes that this Thing is currently playing.
+         *
+         * @return A set of all the RoleTypes which this Thing is currently playing.
+         * @see RoleType.Remote
+         */
+        @CheckReturnValue
+        Stream<? extends RoleType.Remote> getPlays();
+
+        /**
+         * Get all {@code Relation} instances that this {@code Thing} is playing any of the specified roles in.
+         * If no roles are specified, all Relations are retrieved regardless of role.
+         *
+         * @param roleTypes The role types that this {@code Thing} can play
+         * @return a stream of {@code Relation} that this {@code Thing} plays a specified role in
+         */
+        Stream<? extends Relation> getRelations(RoleType... roleTypes);
+
         @CheckReturnValue
         @Override
         default Thing.Remote asThing() {
             return this;
         }
-
     }
 }
