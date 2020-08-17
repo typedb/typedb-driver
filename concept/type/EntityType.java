@@ -20,7 +20,6 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 

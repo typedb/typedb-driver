@@ -21,7 +21,6 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -49,13 +48,8 @@ public abstract class ThingTypeImpl {
      */
     public abstract static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        protected Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
-        }
-
-        @Override
-        public void setLabel(String label) {
-            return (ThingType.Remote) super.setLabel(label);
+        protected Remote(Transaction tx, String label) {
+            super(tx, label);
         }
 
         @Override
@@ -143,7 +137,6 @@ public abstract class ThingTypeImpl {
                     .setThingTypeSetOwnsReq(req).build();
 
             runMethod(method);
-            return this;
         }
 
         @Override
@@ -153,7 +146,6 @@ public abstract class ThingTypeImpl {
                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();
 
             runMethod(method);
-            return this;
         }
 
         @Override

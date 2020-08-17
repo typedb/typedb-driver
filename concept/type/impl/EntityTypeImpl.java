@@ -21,11 +21,9 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
@@ -47,43 +45,18 @@ public class EntityTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(Transaction tx, String label) {
+            super(tx, label);
         }
 
         @Override
-        public final void setOwns(AttributeType attributeType) {
-            return (EntityType.Remote) super.setOwns(attributeType);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, boolean isKey) {
-            return (EntityType.Remote) super.setOwns(attributeType, isKey);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            return (EntityType.Remote) super.setOwns(attributeType, overriddenType);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            return (EntityType.Remote) super.setOwns(attributeType, overriddenType, isKey);
+        public EntityType.Remote getSupertype() {
+            return super.getSupertype().asEntityType();
         }
 
         @Override
         public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return super.getOwns(keysOnly);
-        }
-
-        @Override
-        public final void setPlays(RoleType role) {
-            return (EntityType.Remote) super.setPlays(role);
-        }
-
-        @Override
-        public final void setAbstract(boolean isAbstract) {
-            return (EntityType.Remote) super.setAbstract(isAbstract);
         }
 
         @Override
@@ -102,21 +75,16 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final void setLabel(String label) {
-            return (EntityType.Remote) super.setLabel(label);
-        }
-
-        @Override
         public final Entity.Remote create() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity());
+            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 
         @Override
         public final void setSupertype(EntityType superEntityType) {
-            return (EntityType.Remote) super.setSupertype(superEntityType);
+            super.setSupertype(superEntityType);
         }
 
         @Override

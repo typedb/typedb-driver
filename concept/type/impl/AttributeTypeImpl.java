@@ -21,10 +21,9 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.EntityType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
@@ -58,22 +57,20 @@ public class AttributeTypeImpl {
      */
     public abstract static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(Transaction tx, java.lang.String label) {
+            super(tx, label);
         }
 
-        @Override
-        public final Attribute.Remote put(D value) {
+        public final Attribute.Remote put(Object value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            return (Attribute.Remote) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            return Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
-        @Override
         @Nullable
-        public final Attribute.Remote get(D value) {
+        public final Attribute.Remote get(Object value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
@@ -83,7 +80,7 @@ public class AttributeTypeImpl {
                 case NULL:
                     return null;
                 case ATTRIBUTE:
-                    return (Attribute.Remote) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
+                    return Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -107,38 +104,17 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        @Nullable
-        public final String getRegex() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
-
-            String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
-            return regex.isEmpty() ? null : regex;
-        }
-
-        @Override
-        public final AttributeType.Remote setRegex(String regex) {
-            if (regex == null) regex = "";
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                                         .setRegex(regex)).build();
-
-            runMethod(method);
-            return this;
-        }
-
-        @Override
         protected final Attribute.Remote asInstance(Concept.Remote concept) {
-            return (Attribute.Remote) concept.asAttribute();
+            return concept.asAttribute();
         }
-
     }
 
-    public abstract static class Boolean implements AttributeType.Boolean {
+    public static abstract class Boolean implements AttributeType.Boolean {
+
         /**
          * Client implementation of AttributeType.Boolean
          */
-        public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Boolean.Local {
 
             private final ValueType valueType;
 
@@ -159,43 +135,13 @@ public class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
-                super(tx, iid);
+            public Remote(Transaction tx, java.lang.String label) {
+                super(tx, label);
             }
 
             @Override
-            public final void setOwns(AttributeType attributeType) {
-                return (AttributeType.Boolean.Remote) super.setOwns(attributeType);
-            }
-
-            @Override
-            public final void setOwns(AttributeType attributeType, boolean isKey) {
-                return (AttributeType.Boolean.Remote) super.setOwns(attributeType, isKey);
-            }
-
-            @Override
-            public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-                return (AttributeType.Boolean.Remote) super.setOwns(attributeType, overriddenType);
-            }
-
-            @Override
-            public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-                return (AttributeType.Boolean.Remote) super.setOwns(attributeType, overriddenType, isKey);
-            }
-
-            @Override
-            public final void setPlays(RoleType role) {
-                return (AttributeType.Boolean.Remote) super.setPlays(role);
-            }
-
-            @Override
-            public final void setAbstract(boolean isAbstract) {
-                return (AttributeType.Boolean.Remote) super.setAbstract(isAbstract);
-            }
-
-            @Override
-            public final void setLabel(java.lang.String label) {
-                return (AttributeType.Boolean.Remote) super.setLabel(label);
+            public AttributeType.Boolean.Remote getSupertype() {
+                return super.getSupertype().asAttributeType().asBoolean();
             }
 
             @Override
@@ -214,67 +160,31 @@ public class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setSupertype() {
-                return (AttributeType.Boolean.Remote) super.setPlays(role);
+            public final void setSupertype(AttributeType.Boolean type) {
+                super.setSupertype(type);
             }
 
-            @Override
-            public final Attribute.Remote put(D value) {
-                ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
-
-                return (Attribute.Remote) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            public final Attribute.Boolean.Remote put(boolean value) {
+                return super.put(value).asBoolean();
             }
 
-            @SuppressWarnings("unchecked")
-            @Override
             @Nullable
-            public final Attribute.Remote get(D value) {
-                ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                                                              .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
-
-                ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
-                switch (response.getResCase()) {
-                    case NULL:
-                        return null;
-                    case ATTRIBUTE:
-                        return (Attribute.Remote) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
-                    default:
-                        throw GraknClientException.unreachableStatement("Unexpected response " + response);
-                }
+            public final Attribute.Boolean.Remote get(boolean value) {
+                final Attribute.Remote attr = super.get(value);
+                return attr != null ? attr.asBoolean() : null;
             }
 
-            @Override
+            // TODO: move to AttributeType.String.Remote
             @Nullable
-            public final ValueType getValueType() {
-                ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                        .setAttributeTypeGetValueTypeReq(ConceptProto.AttributeType.GetValueType.Req.getDefaultInstance()).build();
-
-                ConceptProto.AttributeType.GetValueType.Res response = runMethod(method).getAttributeTypeGetValueTypeRes();
-                switch (response.getResCase()) {
-                    case NULL:
-                        return null;
-                    case VALUETYPE:
-                        return RequestBuilder.ConceptMessage.valueType(response.getValueType());
-                    default:
-                        throw GraknClientException.unreachableStatement("Unexpected response " + response);
-                }
-            }
-
-            @Override
-            @Nullable
-            public final String getRegex() {
+            public final java.lang.String getRegex() {
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
 
-                String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
+                java.lang.String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
                 return regex.isEmpty() ? null : regex;
             }
 
-            @Override
-            public final AttributeType.Remote setRegex(String regex) {
+            public final AttributeType.Remote setRegex(java.lang.String regex) {
                 if (regex == null) regex = "";
                 ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -283,13 +193,6 @@ public class AttributeTypeImpl {
                 runMethod(method);
                 return this;
             }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected final Attribute.Remote asInstance(Concept.Remote concept) {
-                return (Attribute.Remote) concept.asAttribute();
-            }
-
         }
     }
 }

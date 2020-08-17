@@ -21,7 +21,6 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RelationType;
@@ -47,43 +46,13 @@ public class RelationTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType) {
-            return (RelationType.Remote) super.setOwns(attributeType);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, boolean isKey) {
-            return (RelationType.Remote) super.setOwns(attributeType, isKey);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            return (RelationType.Remote) super.setOwns(attributeType, overriddenType);
-        }
-
-        @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            return (RelationType.Remote) super.setOwns(attributeType, overriddenType, isKey);
+        public Remote(Transaction tx, String label) {
+            super(tx, label);
         }
 
         @Override
         public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return super.getOwns(keysOnly);
-        }
-
-        @Override
-        public final void setPlays(RoleType role) {
-            return (RelationType.Remote) super.setPlays(role);
-        }
-
-        @Override
-        public final void setAbstract(boolean isAbstract) {
-            return (RelationType.Remote) super.setAbstract(isAbstract);
         }
 
         @Override
@@ -102,13 +71,8 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final void setLabel(String label) {
-            return (RelationType.Remote) super.setLabel(label);
-        }
-
-        @Override
-        public final RelationType.Remote setSupertype(RelationType type) {
-            return (RelationType.Remote) super.setSupertype(type);
+        public final void setSupertype(RelationType type) {
+            super.setSupertype(type);
         }
 
         @Override

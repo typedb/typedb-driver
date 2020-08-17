@@ -184,6 +184,15 @@ public abstract class ThingImpl {
         }
 
         @Override
+        public final void delete() {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setConceptDeleteReq(ConceptProto.Concept.Delete.Req.getDefaultInstance())
+                    .build();
+
+            runMethod(method);
+        }
+
+        @Override
         public final boolean isDeleted() {
             return tx().getConcept(getIID()) == null;
         }
