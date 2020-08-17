@@ -90,13 +90,17 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public void setAbstract(boolean isAbstract) {
+        public final void setAbstract() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.newBuilder()
-                                                   .setAbstract(isAbstract)).build();
-
+                    .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()).build();
             runMethod(method);
-            return this;
+        }
+
+        @Override
+        public final void unsetAbstract() {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setThingTypeUnsetAbstractReq(ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()).build();
+            runMethod(method);
         }
 
         @Override

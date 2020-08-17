@@ -115,7 +115,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote setSupertype(EntityType superEntityType) {
+        public final void setSupertype(EntityType superEntityType) {
             return (EntityType.Remote) super.setSupertype(superEntityType);
         }
 

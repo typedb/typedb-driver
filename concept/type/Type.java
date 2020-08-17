@@ -43,16 +43,16 @@ public interface Type extends Concept {
     @CheckReturnValue
     String getLabel();
 
-    @CheckReturnValue
-    @Override
-    default Type asType() {
-        return this;
-    }
-
     @Override
     Remote asRemote(Transaction tx);
 
     interface Local extends Type, Concept.Local {
+
+        @CheckReturnValue
+        @Override
+        default Type.Local asType() {
+            return this;
+        }
     }
 
     /**

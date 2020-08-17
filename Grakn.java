@@ -300,7 +300,11 @@ public interface Grakn {
 
         TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method);
 
+        TransactionProto.Transaction.Res runConceptMethod(String label, ConceptProto.Method.Req method);
+
         <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader);
+
+        <T> Stream<T> iterateConceptMethod(String label, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader);
 
         Explanation getExplanation(ConceptMap explainable);
 

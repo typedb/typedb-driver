@@ -33,12 +33,6 @@ import java.util.stream.Stream;
  * They are used to model and categorise n-ary Relations.
  */
 public interface RelationType extends ThingType {
-    //------------------------------------- Other ---------------------------------
-    @CheckReturnValue
-    @Override
-    default RelationType asRelationType() {
-        return this;
-    }
 
     @Override
     default Remote asRemote(Transaction tx) {
@@ -46,6 +40,12 @@ public interface RelationType extends ThingType {
     }
 
     interface Local extends ThingType.Local, RelationType {
+
+        @CheckReturnValue
+        @Override
+        default RelationType.Local asRelationType() {
+            return this;
+        }
     }
 
     /**

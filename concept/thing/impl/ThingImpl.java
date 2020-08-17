@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 
 public abstract class ThingImpl {
+
     /**
      * Client implementation of Thing
      */
@@ -182,18 +183,15 @@ public abstract class ThingImpl {
             runMethod(method);
         }
 
-        // TODO: we need a version using Labels in TypeImpl
         @Override
         public final boolean isDeleted() {
             return tx().getConcept(getIID()) == null;
         }
 
-        // TODO: needs to be copied to TypeImpl
         protected Transaction tx() {
             return tx;
         }
 
-        // TODO: we need a version of this using Labels for TypeImpl
         protected Stream<Concept.Remote> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
             return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));

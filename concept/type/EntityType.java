@@ -36,17 +36,17 @@ public interface EntityType extends ThingType {
 
     @CheckReturnValue
     @Override
-    default EntityType asEntityType() {
-        return this;
-    }
-
-    @CheckReturnValue
-    @Override
     default Remote asRemote(Transaction tx) {
-        return EntityType.Remote.of(tx, getIID());
+        return EntityType.Remote.of(tx, getLabel());
     }
 
     interface Local extends ThingType.Local, EntityType {
+
+        @CheckReturnValue
+        @Override
+        default EntityType.Local asEntityType() {
+            return this;
+        }
     }
 
     /**
@@ -56,34 +56,9 @@ public interface EntityType extends ThingType {
      */
     interface Remote extends ThingType.Remote, EntityType {
 
-        static EntityType.Remote of(Transaction tx, ConceptIID iid) {
-            return new EntityTypeImpl.Remote(tx, iid);
+        static EntityType.Remote of(Transaction tx, String label) {
+            return new EntityTypeImpl.Remote(tx, label);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
-
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         */
-        void setLabel(String label);
-
-        /**
-         * Sets the EntityType to be abstract - which prevents it from having any instances.
-         *
-         * @param isAbstract Specifies if the EntityType is to be abstract (true) or not (false).
-         */
-        @Override
-        void setAbstract(boolean isAbstract);
-
-        /**
-         * Sets a RoleType which instances of this EntityType may play.
-         *
-         * @param role The RoleType which the instances of this EntityType are allowed to play.
-         */
-        @Override
-        void setPlays(RoleType role);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -95,27 +70,8 @@ public interface EntityType extends ThingType {
 
         /**
          * Sets the supertype of this instance to the given type.
-         *
-         * @return the new super type.
-         * @see Entity.Remote This concept itself.
          */
-        EntityType.Remote setSupertype(EntityType superEntityType);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         */
-        @Override
-        void setOwns(AttributeType attributeType);
-        @Override
-        void setOwns(AttributeType attributeType, boolean isKey);
-        @Override
-        void setOwns(AttributeType attributeType, AttributeType overriddenType);
-        @Override
-        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
-
-        //------------------------------------- Accessors ----------------------------------
+        void setSupertype(EntityType superEntityType);
 
         /**
          * Returns a collection of supertypes of this EntityType.
@@ -147,6 +103,5 @@ public interface EntityType extends ThingType {
         default EntityType.Remote asEntityType() {
             return this;
         }
-
     }
 }

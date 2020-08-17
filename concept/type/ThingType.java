@@ -33,16 +33,16 @@ import java.util.stream.Stream;
  */
 public interface ThingType extends Type {
 
-    @CheckReturnValue
-    @Override
-    default ThingType asThingType() {
-        return this;
-    }
-
     @Override
     Remote asRemote(Transaction tx);
 
     interface Local extends Type.Local, ThingType {
+
+        @CheckReturnValue
+        @Override
+        default ThingType.Local asThingType() {
+            return this;
+        }
     }
 
     /**
@@ -92,10 +92,13 @@ public interface ThingType extends Type {
 
         /**
          * Sets the Type to be abstract - which prevents it from having any instances.
-         *
-         * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
          */
-        void setAbstract(boolean isAbstract);
+        void setAbstract();
+
+        /**
+         * Sets the Type to be not abstract - which allows it to have instances.
+         */
+        void unsetAbstract();
 
         /**
          * @param role The RoleType which the instances of this Type are allowed to play.
@@ -120,8 +123,6 @@ public interface ThingType extends Type {
         default void setOwns(AttributeType attributeType) {
             setOwns(attributeType, false);
         }
-
-        //------------------------------------- Accessors ---------------------------------
 
         /**
          * @return A list of RoleTypes which instances of this Type can indirectly play.
@@ -149,8 +150,6 @@ public interface ThingType extends Type {
         default Stream<? extends AttributeType.Remote> getOwns() {
             return getOwns(false);
         }
-
-        //------------------------------------- Other ----------------------------------
 
         /**
          * Removes the ability of this Type to play a specific RoleType.
