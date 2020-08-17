@@ -21,7 +21,6 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
@@ -63,7 +62,7 @@ public class RuleImpl {
         }
 
         @Override
-        public final Rule.Remote setLabel(Label label) {
+        public final void setLabel(String label) {
             return (Rule.Remote) super.setLabel(label);
         }
 

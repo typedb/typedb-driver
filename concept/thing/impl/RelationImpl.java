@@ -22,16 +22,15 @@ package grakn.client.concept.thing.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -85,24 +84,20 @@ public abstract class RelationImpl {
                 }
             });
 
-            return rolePlayerMap;
+            final Map<RoleType.Remote, List<? extends Thing.Remote>> result = new HashMap<>();
+            for (Map.Entry<RoleType.Remote, List<Thing.Remote>> entry : rolePlayerMap.entrySet()) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+            return result;
         }
 
         @Override
-        public Stream<Thing.Remote> getPlayers() {
+        public Stream<Thing.Remote> getPlayers(final RoleType... roleTypes) {
             final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationGetPlayersIterReq(ConceptProto.Relation.GetPlayers.Iter.Req.newBuilder()).build();
+                    .setRelationGetPlayersIterReq(ConceptProto.Relation.GetPlayers.Iter.Req.newBuilder()
+                            .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
 
             return conceptStream(method, res -> res.getRelationGetPlayersIterRes().getThing()).map(Concept.Remote::asThing);
-        }
-
-        @Override
-        public Stream<Thing.Remote> getPlayers(final List<RoleType> roleTypes) {
-            final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
-                    .setRelationGetPlayersForRoleTypesIterReq(ConceptProto.Relation.GetPlayersForRoleTypes.Iter.Req.newBuilder()
-                            .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(roleTypes))).build();
-
-            return conceptStream(method, res -> res.getRelationGetPlayersForRoleTypesIterRes().getThing()).map(Concept.Remote::asThing);
         }
 
         @Override

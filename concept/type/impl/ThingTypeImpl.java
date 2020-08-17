@@ -22,7 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -55,7 +54,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote setLabel(Label label) {
+        public void setLabel(String label) {
             return (ThingType.Remote) super.setLabel(label);
         }
 
@@ -91,7 +90,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote setAbstract(boolean isAbstract) {
+        public void setAbstract(boolean isAbstract) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.newBuilder()
                                                    .setAbstract(isAbstract)).build();
@@ -101,7 +100,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final <D> Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
+        public final Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
             ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
@@ -125,7 +124,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))
                     .setIsKey(isKey);
@@ -144,7 +143,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote setPlays(RoleType role) {
+        public void setPlays(RoleType role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();

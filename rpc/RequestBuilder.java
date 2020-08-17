@@ -23,7 +23,6 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -107,10 +106,10 @@ public class RequestBuilder {
             return req.build();
         }
 
-        public static TransactionProto.Transaction.Req getType(Label label) {
+        public static TransactionProto.Transaction.Req getType(String label) {
             return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label.getValue()))
+                    .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label))
                     .build();
         }
 
@@ -121,30 +120,30 @@ public class RequestBuilder {
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req putEntityType(Label label) {
+        public static TransactionProto.Transaction.Req putEntityType(String label) {
             return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder().setLabel(label.getValue()))
+                    .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder().setLabel(label))
                     .build();
         }
 
-        public static TransactionProto.Transaction.Req putAttributeType(Label label, ValueType valueType) {
+        public static TransactionProto.Transaction.Req putAttributeType(String label, ValueType valueType) {
             TransactionProto.Transaction.PutAttributeType.Req request = TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
-                    .setLabel(label.getValue())
+                    .setLabel(label)
                     .setValueType(ConceptMessage.setValueType(valueType))
                     .build();
 
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutAttributeTypeReq(request).build();
         }
 
-        public static TransactionProto.Transaction.Req putRelationType(Label label) {
+        public static TransactionProto.Transaction.Req putRelationType(String label) {
             TransactionProto.Transaction.PutRelationType.Req request = TransactionProto.Transaction.PutRelationType.Req.newBuilder()
-                    .setLabel(label.getValue())
+                    .setLabel(label)
                     .build();
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(getTracingData()).setPutRelationTypeReq(request).build();
         }
 
-        public static TransactionProto.Transaction.Req putRule(Label label, Pattern when, Pattern then) {
+        public static TransactionProto.Transaction.Req putRule(String label, Pattern when, Pattern then) {
             throw new UnsupportedOperationException();
 //            TransactionProto.Transaction.PutRule.Req request = TransactionProto.Transaction.PutRule.Req.newBuilder()
 //                    .setLabel(label.getValue())

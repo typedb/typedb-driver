@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 
@@ -79,36 +78,30 @@ public interface RelationType extends ThingType {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
         @Override
-        RelationType.Remote setLabel(Label label);
+        void setLabel(String label);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
          *
          * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
          */
         @Override
-        RelationType.Remote setOwns(AttributeType attributeType);
+        void setOwns(AttributeType attributeType);
         @Override
-        RelationType.Remote setOwns(AttributeType attributeType, boolean isKey);
+        void setOwns(AttributeType attributeType, boolean isKey);
         @Override
-        RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType);
         @Override
-        RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
         /**
          * Retrieve a specific RoleType.
          *
          *
          */
-        default RoleType.Remote getRelates(String role) {
-            return getRelates(Label.of(role));
-        }
-
-        RoleType.Remote getRelates(Label role);
+        RoleType.Remote getRelates(String role);
 
         /**
          * Retrieves a list of the RoleTypes that make up this RelationType.
@@ -126,11 +119,7 @@ public interface RelationType extends ThingType {
          * @return The RoleType itself.
          * @see RoleType.Remote
          */
-        default RoleType.Remote setRelates(String role) {
-            return setRelates(Label.of(role));
-        }
-
-        RoleType.Remote setRelates(Label role);
+        void setRelates(String role);
 
         //---- Inherited Methods
 
@@ -138,10 +127,9 @@ public interface RelationType extends ThingType {
          * Sets the RelationType to be abstract - which prevents it from having any instances.
          *
          * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
-         * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote setAbstract(boolean isAbstract);
+        void setAbstract(boolean isAbstract);
 
         /**
          * Returns a collection of supertypes of this RelationType.
@@ -172,10 +160,9 @@ public interface RelationType extends ThingType {
          * Sets the RoleType which instances of this RelationType may play.
          *
          * @param role The RoleType which the instances of this RelationType are allowed to play.
-         * @return The RelationType itself.
          */
         @Override
-        RelationType.Remote setPlays(RoleType role);
+        void setPlays(RoleType role);
 
         @CheckReturnValue
         @Override

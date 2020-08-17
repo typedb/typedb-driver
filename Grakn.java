@@ -30,7 +30,6 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
@@ -38,6 +37,7 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.client.connection.GraknClient;
 import grakn.client.connection.GraknDatabase;
 import grakn.client.connection.GraknTransaction;
@@ -258,7 +258,7 @@ public interface Grakn {
         ThingType.Remote getRootType();
 
         @Nullable
-        ThingType.Remote getThingType(Label label);
+        ThingType.Remote getThingType(String label);
 
         @Nullable
         EntityType.Remote getEntityType(String label);
@@ -273,7 +273,7 @@ public interface Grakn {
         Rule.Remote getRule(String label);
 
         @Nullable
-        grakn.client.concept.type.Type.Remote getType(Label label);
+        grakn.client.concept.type.Type.Remote getType(String label);
 
         grakn.client.concept.type.Type.Remote getMetaConcept();
 
@@ -292,19 +292,11 @@ public interface Grakn {
 
         EntityType.Remote putEntityType(String label);
 
-        EntityType.Remote putEntityType(Label label);
-
-        <V> AttributeType.Remote putAttributeType(String label, ValueType valueType);
-
-        <V> AttributeType.Remote putAttributeType(Label label, ValueType valueType);
+        AttributeType.Remote putAttributeType(String label, ValueType valueType);
 
         RelationType.Remote putRelationType(String label);
 
-        RelationType.Remote putRelationType(Label label);
-
         Rule.Remote putRule(String label, Pattern when, Pattern then);
-
-        Rule.Remote putRule(Label label, Pattern when, Pattern then);
 
         TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method);
 

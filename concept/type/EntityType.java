@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 
@@ -67,27 +66,24 @@ public interface EntityType extends ThingType {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
-        EntityType.Remote setLabel(Label label);
+        void setLabel(String label);
 
         /**
          * Sets the EntityType to be abstract - which prevents it from having any instances.
          *
          * @param isAbstract Specifies if the EntityType is to be abstract (true) or not (false).
-         * @return The EntityType itself
          */
         @Override
-        EntityType.Remote setAbstract(boolean isAbstract);
+        void setAbstract(boolean isAbstract);
 
         /**
          * Sets a RoleType which instances of this EntityType may play.
          *
          * @param role The RoleType which the instances of this EntityType are allowed to play.
-         * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote setPlays(RoleType role);
+        void setPlays(RoleType role);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -109,16 +105,15 @@ public interface EntityType extends ThingType {
          * Creates a RelationType which allows this type and a resource type to be linked.
          *
          * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
          */
         @Override
-        EntityType.Remote setOwns(AttributeType attributeType);
+        void setOwns(AttributeType attributeType);
         @Override
-        EntityType.Remote setOwns(AttributeType attributeType, boolean isKey);
+        void setOwns(AttributeType attributeType, boolean isKey);
         @Override
-        EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType);
         @Override
-        EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 

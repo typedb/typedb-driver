@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
@@ -85,9 +84,8 @@ public interface Rule extends Type {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
-        Rule.Remote setLabel(Label label);
+        void setLabel(String label);
 
 
         /**

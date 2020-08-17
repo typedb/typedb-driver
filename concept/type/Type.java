@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.Label;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -42,7 +41,7 @@ public interface Type extends Concept {
      * @return The unique label of this type
      */
     @CheckReturnValue
-    Label getLabel();
+    String getLabel();
 
     @CheckReturnValue
     @Override
@@ -69,9 +68,8 @@ public interface Type extends Concept {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
-        Type.Remote setLabel(Label label);
+        void setLabel(String label);
 
         /**
          * Return if the type is set to abstract.

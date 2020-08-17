@@ -18,7 +18,6 @@
 
 package grakn.client.test.behaviour.concept.type.relationtype;
 
-import grakn.client.concept.Label;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Type;
 import grakn.client.test.behaviour.config.Parameters;
@@ -76,7 +75,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")
     public void relation_type_get_role_type_set_label(String relationLabel, String roleLabel, String newLabel) {
-        tx().getRelationType(relationLabel).getRelates(roleLabel).setLabel(Label.of(newLabel));
+        tx().getRelationType(relationLabel).getRelates(roleLabel).setLabel(newLabel);
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
@@ -137,7 +136,7 @@ public class RelationTypeSteps {
     }
 
     private Set<String> relation_type_get_role_type_players_actuals(String relationLabel, String roleLabel) {
-        return tx().getRelationType(relationLabel).getRelates(roleLabel).getPlayers().map(Type::getLabel).map(Label::getValue).collect(toSet());
+        return tx().getRelationType(relationLabel).getRelates(roleLabel).getPlayers().map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players contain:")

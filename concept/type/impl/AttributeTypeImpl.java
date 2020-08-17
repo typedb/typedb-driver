@@ -22,11 +22,9 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.ThingType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
@@ -166,37 +164,37 @@ public class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setOwns(AttributeType attributeType) {
+            public final void setOwns(AttributeType attributeType) {
                 return (AttributeType.Boolean.Remote) super.setOwns(attributeType);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setOwns(AttributeType attributeType, boolean isKey) {
+            public final void setOwns(AttributeType attributeType, boolean isKey) {
                 return (AttributeType.Boolean.Remote) super.setOwns(attributeType, isKey);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
+            public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
                 return (AttributeType.Boolean.Remote) super.setOwns(attributeType, overriddenType);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+            public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
                 return (AttributeType.Boolean.Remote) super.setOwns(attributeType, overriddenType, isKey);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setPlays(RoleType role) {
+            public final void setPlays(RoleType role) {
                 return (AttributeType.Boolean.Remote) super.setPlays(role);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setAbstract(boolean isAbstract) {
+            public final void setAbstract(boolean isAbstract) {
                 return (AttributeType.Boolean.Remote) super.setAbstract(isAbstract);
             }
 
             @Override
-            public final AttributeType.Boolean.Remote setLabel(Label label) {
+            public final void setLabel(java.lang.String label) {
                 return (AttributeType.Boolean.Remote) super.setLabel(label);
             }
 

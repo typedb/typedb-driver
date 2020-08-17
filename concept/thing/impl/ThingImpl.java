@@ -22,7 +22,6 @@ package grakn.client.concept.thing.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -42,7 +41,7 @@ public abstract class ThingImpl {
     /**
      * Client implementation of Thing
      */
-    public abstract static class Local extends ConceptImpl.Local implements Thing.Local {
+    public abstract static class Local implements Thing.Local {
 
         private final ConceptIID iid;
         private final ThingType.Local type;
@@ -73,8 +72,9 @@ public abstract class ThingImpl {
     /**
      * Client implementation of Thing
      */
-    public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
+    public abstract static class Remote implements Thing.Remote {
 
+        private final Transaction tx;
         private final ConceptIID iid;
 
         protected Remote(Transaction tx, ConceptIID iid) {
@@ -182,12 +182,19 @@ public abstract class ThingImpl {
             runMethod(method);
         }
 
+        // TODO: we need a version using Labels in TypeImpl
         @Override
         public final boolean isDeleted() {
             return tx().getConcept(getIID()) == null;
         }
 
-        protected <R extends Concept.Remote> Stream<R> conceptStream
+        // TODO: needs to be copied to TypeImpl
+        protected Transaction tx() {
+            return tx;
+        }
+
+        // TODO: we need a version of this using Labels for TypeImpl
+        protected Stream<Concept.Remote> conceptStream
                 (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
             return tx.iterateConceptMethod(iid, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
         }

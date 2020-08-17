@@ -22,7 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
@@ -62,7 +61,7 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public final RoleType.Remote setLabel(Label label) {
+        public final void setLabel(String label) {
             return (RoleType.Remote) super.setLabel(label);
         }
 
@@ -72,8 +71,8 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public Label getScopedLabel() {
-            return Label.of("unknown:" + getLabel().getValue()); // TODO fix
+        public String getScopedLabel() {
+            return "unknown:" + getLabel().getValue(); // TODO fix
         }
 
         @Override

@@ -22,7 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
@@ -53,22 +52,22 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType attributeType) {
+        public final void setOwns(AttributeType attributeType) {
             return (EntityType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType attributeType, boolean isKey) {
+        public final void setOwns(AttributeType attributeType, boolean isKey) {
             return (EntityType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
             return (EntityType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final EntityType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             return (EntityType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
@@ -78,12 +77,12 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote setPlays(RoleType role) {
+        public final void setPlays(RoleType role) {
             return (EntityType.Remote) super.setPlays(role);
         }
 
         @Override
-        public final EntityType.Remote setAbstract(boolean isAbstract) {
+        public final void setAbstract(boolean isAbstract) {
             return (EntityType.Remote) super.setAbstract(isAbstract);
         }
 
@@ -103,7 +102,7 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final EntityType.Remote setLabel(Label label) {
+        public final void setLabel(String label) {
             return (EntityType.Remote) super.setLabel(label);
         }
 

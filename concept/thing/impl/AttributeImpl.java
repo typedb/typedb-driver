@@ -25,6 +25,9 @@ import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
+import grakn.client.concept.type.ThingType;
+import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import java.time.Instant;
@@ -68,6 +71,14 @@ public abstract class AttributeImpl {
         public final Stream<Thing.Remote> getOwners() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
+        }
+
+        @Override
+        public Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                    .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.newBuilder()
+                            .setThingType(RequestBuilder.ConceptMessage.from(ownerType))).build();
             return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
         }
 

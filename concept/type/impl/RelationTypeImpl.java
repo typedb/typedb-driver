@@ -22,7 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RelationType;
@@ -53,22 +52,22 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType attributeType) {
+        public final void setOwns(AttributeType attributeType) {
             return (RelationType.Remote) super.setOwns(attributeType);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType attributeType, boolean isKey) {
+        public final void setOwns(AttributeType attributeType, boolean isKey) {
             return (RelationType.Remote) super.setOwns(attributeType, isKey);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType) {
             return (RelationType.Remote) super.setOwns(attributeType, overriddenType);
         }
 
         @Override
-        public final RelationType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             return (RelationType.Remote) super.setOwns(attributeType, overriddenType, isKey);
         }
 
@@ -78,12 +77,12 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote setPlays(RoleType role) {
+        public final void setPlays(RoleType role) {
             return (RelationType.Remote) super.setPlays(role);
         }
 
         @Override
-        public final RelationType.Remote setAbstract(boolean isAbstract) {
+        public final void setAbstract(boolean isAbstract) {
             return (RelationType.Remote) super.setAbstract(isAbstract);
         }
 
@@ -103,7 +102,7 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RelationType.Remote setLabel(Label label) {
+        public final void setLabel(String label) {
             return (RelationType.Remote) super.setLabel(label);
         }
 
@@ -121,9 +120,9 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RoleType.Remote getRelates(Label role) {
+        public final RoleType.Remote getRelates(String role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setRelationTypeGetRelatesForRoleLabelReq(ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(role.getValue())).build();
+                    .setRelationTypeGetRelatesForRoleLabelReq(ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(role)).build();
 
             return Concept.Remote.of(tx(), runMethod(method).getRelationTypeGetRelatesForRoleLabelRes().getRole());
         }
@@ -137,10 +136,10 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final RoleType.Remote setRelates(Label role) {
+        public final void setRelates(String role) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRelationTypeSetRelatesReq(ConceptProto.RelationType.SetRelates.Req.newBuilder()
-                                                       .setLabel(role.getValue())).build();
+                                                       .setLabel(role)).build();
 
             runMethod(method);
             return Concept.Remote.of(tx(), runMethod(method).getRelationTypeSetRelatesRes().getRole());

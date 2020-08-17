@@ -18,7 +18,6 @@
 
 package grakn.client.test.behaviour.concept.type.attributetype;
 
-import grakn.client.concept.Label;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;
@@ -66,14 +65,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
     public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
+        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
     public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).map(Label::getValue).collect(toSet());
+        Set<String> actuals = attributeType.getSubtypes().map(ThingType::getLabel).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }

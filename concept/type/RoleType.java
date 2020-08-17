@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 
 import javax.annotation.CheckReturnValue;
@@ -63,9 +62,8 @@ public interface RoleType extends Type {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
-        RoleType.Remote setLabel(Label label);
+        void setLabel(String label);
 
         /**
          * Sets the supertype of this RoleType.
@@ -80,7 +78,7 @@ public interface RoleType extends Type {
          *
          * @return The scoped label
          */
-        Label getScopedLabel();
+        String getScopedLabel();
 
         /**
          * @return All the supertypes of this RoleType.

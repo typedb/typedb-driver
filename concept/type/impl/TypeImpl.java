@@ -22,8 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
-import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
@@ -34,22 +32,22 @@ import java.util.stream.Stream;
 
 public abstract class TypeImpl {
 
-    public abstract static class Local extends ConceptImpl.Local implements Type.Local {
+    public abstract static class Local implements Type.Local {
 
-        private final Label label;
+        private final String label;
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
-            this.label = Label.of(concept.getLabelRes().getLabel());
+            this.label = concept.getLabelRes().getLabel();
         }
 
         @Override
-        public final Label getLabel() {
+        public final String getLabel() {
             return label;
         }
     }
 
-    public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
+    public abstract static class Remote implements Type.Remote {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -65,15 +63,15 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final Label getLabel() {
+        public final String getLabel() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();
 
-            return Label.of(runMethod(method).getTypeGetLabelRes().getLabel());
+            return runMethod(method).getTypeGetLabelRes().getLabel();
         }
 
         @Override
-        public Type.Remote setLabel(Label label) {
+        public void setLabel(String label) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                                                          .setLabel(label.getValue())).build();

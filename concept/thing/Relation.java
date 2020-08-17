@@ -100,32 +100,15 @@ public interface Relation extends Thing {
         void removePlayer(RoleType roleType, Thing player);
 
         /**
-         * Retrieves a list of every Thing involved in the Relation.
-         *
-         * @return A list of every Thing involved in the Relation.
-         */
-        @CheckReturnValue
-        Stream<? extends Thing.Remote> getPlayers();
-
-        /**
          * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
-         *
-         * @param roleType Used to filter the returned instances only to ones that play this role type.
-         *
-         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
-         */
-        @CheckReturnValue
-        Stream<? extends Thing.Remote> getPlayers(RoleType roleType);
-
-        /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
+         * If no RoleTypes are specified then every involved Thing is retrieved, regardless of role.
          *
          * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
          *
          * @return A list of every Thing involved in the Relation, filtered by RoleType played.
          */
         @CheckReturnValue
-        Stream<? extends Thing.Remote> getPlayers(List<RoleType> roleTypes);
+        Stream<? extends Thing.Remote> getPlayers(RoleType... roleTypes);
 
         /**
          * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.

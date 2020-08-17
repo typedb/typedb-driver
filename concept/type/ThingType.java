@@ -21,7 +21,6 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.Label;
 import grakn.client.concept.thing.Thing;
 
 import javax.annotation.CheckReturnValue;
@@ -34,7 +33,6 @@ import java.util.stream.Stream;
  */
 public interface ThingType extends Type {
 
-    @Deprecated
     @CheckReturnValue
     @Override
     default ThingType asThingType() {
@@ -89,42 +87,38 @@ public interface ThingType extends Type {
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
-         * @return The Concept itself
          */
-        ThingType.Remote setLabel(Label label);
+        void setLabel(String label);
 
         /**
          * Sets the Type to be abstract - which prevents it from having any instances.
          *
          * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
-         * @return The concept itself
          */
-        ThingType.Remote setAbstract(boolean isAbstract);
+        void setAbstract(boolean isAbstract);
 
         /**
          * @param role The RoleType which the instances of this Type are allowed to play.
-         * @return The Type itself.
          */
-        ThingType.Remote setPlays(RoleType role);
+        void setPlays(RoleType role);
 
         /**
          * Creates a connection which allows this type and a AttributeType to be linked.
          *
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
-         * @return The Type itself.
          */
-        ThingType.Remote setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
 
-        default ThingType.Remote setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            return setOwns(attributeType, overriddenType, false);
+        default void setOwns(AttributeType attributeType, AttributeType overriddenType) {
+            setOwns(attributeType, overriddenType, false);
         }
 
-        default ThingType.Remote setOwns(AttributeType attributeType, boolean isKey) {
-            return setOwns(attributeType, null, isKey);
+        default void setOwns(AttributeType attributeType, boolean isKey) {
+            setOwns(attributeType, null, isKey);
         }
 
-        default ThingType.Remote setOwns(AttributeType attributeType) {
-            return setOwns(attributeType, false);
+        default void setOwns(AttributeType attributeType) {
+            setOwns(attributeType, false);
         }
 
         //------------------------------------- Accessors ---------------------------------
@@ -139,17 +133,20 @@ public interface ThingType extends Type {
          * @param keysOnly If true, only returns keys.
          */
         @CheckReturnValue
-        <D> Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
+
         @CheckReturnValue
-        default <D> Stream<? extends AttributeType.Remote> attributes(ValueType valueType) {
+        default Stream<? extends AttributeType.Remote> getOwns(ValueType valueType) {
             return getOwns(valueType, false);
         }
+
         @CheckReturnValue
         default Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
             return getOwns(null, keysOnly);
         }
+
         @CheckReturnValue
-        default Stream<? extends AttributeType.Remote> attributes() {
+        default Stream<? extends AttributeType.Remote> getOwns() {
             return getOwns(false);
         }
 
