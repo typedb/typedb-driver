@@ -237,7 +237,7 @@ workflows:
             - build-checkstyle
             - test-assembly-query
             - test-integration
-            - test-behaviour
+#            - test-behaviour
       - test-deployment-maven:
           filters:
             branches:
