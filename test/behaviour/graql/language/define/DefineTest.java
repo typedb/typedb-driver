@@ -66,7 +66,7 @@ public class DefineTest {
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
-        GraknCoreRunner runner = new GraknCoreRunner();
+        runner = new GraknCoreRunner();
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }

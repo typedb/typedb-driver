@@ -26,9 +26,7 @@ import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -80,7 +78,7 @@ public class QueryTest {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();
         runner.start();
-        String address = System.getProperty(runner.address());
+        String address = runner.address();
         graknClient = new GraknClient(address);
     }
 
@@ -88,17 +86,6 @@ public class QueryTest {
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
         runner.stop();
-    }
-
-    @Before
-    public void createClient() {
-        String host = "localhost:48555";
-        graknClient = new GraknClient(host);
-    }
-
-    @After
-    public void closeClient() {
-        graknClient.close();
     }
 
     @Test
