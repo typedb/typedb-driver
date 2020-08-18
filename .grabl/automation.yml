@@ -1,0 +1,98 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+build:
+  quality:
+    jobs:
+      build-dependency:
+        machine: graknlabs-ubuntu-20.04
+          script: |
+            dependencies/maven/update.sh
+            git diff --exit-code dependencies/maven/artifacts.snapshot
+            bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
+  correctness:
+    jobs:
+      build:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          bazel build --config=rbe //...
+          bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
+          bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
+      test-integration:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          bazel test --config=rbe //test/integration/... --test_output=errors
+      test-behaviour:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          bazel test --config=rbe //test/behaviour/... --test_output=errors
+      test-assembly-query:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          bazel test --config=rbe //test/assembly:test-assembly-query --test_output=errors
+      deploy-maven-snapshot:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
+      test-deployment-maven:
+        script: |
+          # TODO run grakn
+          # run-grakn
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
+          cat test/deployment/pom.xml
+          cd test/deployment && mvn test
+    execution:
+      - build
+      - test-integration
+      - test-behaviour
+      - test-assembly-query
+      - deploy-maven-snapshot:
+          depends: [build, test-integration, test-behaviour, test-assembly-query]
+      - test-deployment-maven:
+          depends: [deploy-maven-snapshot]
+
+  release:
+    validation:
+      job:
+        validate-dependencies:
+          machine: graknlabs-ubuntu-20.04
+          script: |
+            bazel run @graknlabs_dependencies//tool/release:validate-deps -- \
+            graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_grabl_tracing
+    deployment:
+      jobs:
+        deploy-github:
+          machine: graknlabs-ubuntu-20.04
+          script: |
+            pip install certifi
+            export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
+            bazel run @graknlabs_dependencies//tool/release:create-notes -- client-java $(cat VERSION) ./RELEASE_TEMPLATE.md
+            export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
+            bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
+        deploy-maven-release:
+          machine: graknlabs-ubuntu-20.04
+          script: |
+            export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
+            export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
+            bazel run --define version=$(cat VERSION) //:deploy-maven -- release
+      execution:
+        - deploy-github
+        - deploy-maven-release
