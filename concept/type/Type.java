@@ -21,6 +21,7 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.GraknConceptException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -43,6 +44,46 @@ public interface Type extends Concept {
     @CheckReturnValue
     String getLabel();
 
+    /**
+     * Return as a ThingType if the Concept is a ThingType.
+     *
+     * @return A ThingType if the Concept is a ThingType
+     */
+    @CheckReturnValue
+    ThingType asThingType();
+
+    /**
+     * Return as an EntityType if the Concept is an EntityType.
+     *
+     * @return A EntityType if the Concept is an EntityType
+     */
+    @CheckReturnValue
+    EntityType asEntityType();
+
+    /**
+     * Return as an AttributeType if the Concept is an AttributeType
+     *
+     * @return An AttributeType if the Concept is an AttributeType
+     */
+    @CheckReturnValue
+    AttributeType asAttributeType();
+
+    /**
+     * Return as a RelationType if the Concept is a RelationType.
+     *
+     * @return A RelationType if the Concept is a RelationType
+     */
+    @CheckReturnValue
+    RelationType asRelationType();
+
+    /**
+     * Return as a RoleType if the Concept is a RoleType.
+     *
+     * @return A RoleType if the Concept is a RoleType
+     */
+    @CheckReturnValue
+    RoleType asRoleType();
+
     @Override
     Remote asRemote(Transaction tx);
 
@@ -52,6 +93,61 @@ public interface Type extends Concept {
         @Override
         default Type.Local asType() {
             return this;
+        }
+
+        /**
+         * Return as a ThingType if the Type is a ThingType.
+         *
+         * @return A ThingType if the Type is a ThingType
+         */
+        @CheckReturnValue
+        @Override
+        default ThingType.Local asThingType() {
+            throw GraknConceptException.invalidCasting(this, ThingType.class);
+        }
+
+        /**
+         * Return as an EntityType if the Type is an EntityType.
+         *
+         * @return A EntityType if the Type is an EntityType
+         */
+        @CheckReturnValue
+        @Override
+        default EntityType.Local asEntityType() {
+            throw GraknConceptException.invalidCasting(this, EntityType.class);
+        }
+
+        /**
+         * Return as an AttributeType if the Type is an AttributeType
+         *
+         * @return An AttributeType if the Type is an AttributeType
+         */
+        @CheckReturnValue
+        @Override
+        default AttributeType.Local asAttributeType() {
+            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+        }
+
+        /**
+         * Return as a RelationType if the Type is a RelationType.
+         *
+         * @return A RelationType if the Type is a RelationType
+         */
+        @CheckReturnValue
+        @Override
+        default RelationType.Local asRelationType() {
+            throw GraknConceptException.invalidCasting(this, RelationType.class);
+        }
+
+        /**
+         * Return as a RoleType if the Type is a RoleType.
+         *
+         * @return A RoleType if the Type is a RoleType
+         */
+        @CheckReturnValue
+        @Override
+        default RoleType.Local asRoleType() {
+            throw GraknConceptException.invalidCasting(this, RoleType.class);
         }
     }
 
@@ -106,6 +202,61 @@ public interface Type extends Concept {
         @Override
         default Type.Remote asType() {
             return this;
+        }
+
+        /**
+         * Return as a ThingType if the Type is a ThingType.
+         *
+         * @return A ThingType if the Type is a ThingType
+         */
+        @Override
+        @CheckReturnValue
+        default ThingType.Remote asThingType() {
+            throw GraknConceptException.invalidCasting(this, ThingType.Remote.class);
+        }
+
+        /**
+         * Return as an EntityType if the Type is an EntityType.
+         *
+         * @return A EntityType if the Type is an EntityType
+         */
+        @Override
+        @CheckReturnValue
+        default EntityType.Remote asEntityType() {
+            throw GraknConceptException.invalidCasting(this, EntityType.Remote.class);
+        }
+
+        /**
+         * Return as a RelationType if the Type is a RelationType.
+         *
+         * @return A RelationType if the Type is a RelationType
+         */
+        @Override
+        @CheckReturnValue
+        default RelationType.Remote asRelationType() {
+            throw GraknConceptException.invalidCasting(this, RelationType.Remote.class);
+        }
+
+        /**
+         * Return as a AttributeType if the Type is a AttributeType
+         *
+         * @return A AttributeType if the Type is a AttributeType
+         */
+        @Override
+        @CheckReturnValue
+        default AttributeType.Remote asAttributeType() {
+            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+        }
+
+        /**
+         * Return as a RoleType if the Type is a RoleType.
+         *
+         * @return A RoleType if the Type is a RoleType
+         */
+        @Override
+        @CheckReturnValue
+        default RoleType.Remote asRoleType() {
+            throw GraknConceptException.invalidCasting(this, RoleType.Remote.class);
         }
     }
 }

@@ -23,6 +23,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -31,16 +32,18 @@ import java.util.stream.Stream;
 
 public interface AttributeType extends ThingType {
 
-    boolean isKeyable();
-
     /**
      * Get the data type to which instances of the AttributeType must conform.
      *
      * @return The data type to which instances of this Attribute  must conform.
      */
-    @Nullable
     @CheckReturnValue
     ValueType getValueType();
+
+    @CheckReturnValue
+    default boolean isKeyable() {
+        return getValueType().isKeyable();
+    }
 
     default AttributeType asObject() {
         throw GraknConceptException.invalidCasting(this, java.lang.Object.class);
@@ -55,6 +58,9 @@ public interface AttributeType extends ThingType {
     AttributeType.String asString();
 
     AttributeType.DateTime asDateTime();
+
+    @Override
+    Remote asRemote(Transaction tx);
 
     /**
      * A class used to hold the supported data types of attributes.
@@ -203,11 +209,13 @@ public interface AttributeType extends ThingType {
 
     interface Boolean extends AttributeType {
 
+        @CheckReturnValue
         @Override
-        default boolean isKeyable() {
-            return false;
+        default ValueType getValueType() {
+            return ValueType.BOOLEAN;
         }
 
+        @CheckReturnValue
         @Override
         default AttributeType.Boolean.Remote asRemote(Transaction tx) {
             return AttributeType.Boolean.Remote.of(tx, getLabel());
@@ -283,11 +291,13 @@ public interface AttributeType extends ThingType {
 
     interface Long extends AttributeType {
 
+        @CheckReturnValue
         @Override
-        default boolean isKeyable() {
-            return true;
+        default ValueType getValueType() {
+            return ValueType.LONG;
         }
 
+        @CheckReturnValue
         @Override
         default AttributeType.Long.Remote asRemote(Transaction tx) {
             return AttributeType.Long.Remote.of(tx, getLabel());
@@ -336,9 +346,8 @@ public interface AttributeType extends ThingType {
              * Sets the supertype of the AttributeType to be the AttributeType specified.
              *
              * @param type The super type of this AttributeType.
-             * @return The AttributeType itself.
              */
-            AttributeType.Long.Remote setSupertype(AttributeType type);
+            void setSupertype(AttributeType.Long type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -363,6 +372,13 @@ public interface AttributeType extends ThingType {
 
     interface Double extends AttributeType {
 
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.DOUBLE;
+        }
+
+        @CheckReturnValue
         @Override
         default AttributeType.Double.Remote asRemote(Transaction tx) {
             return AttributeType.Double.Remote.of(tx, getLabel());
@@ -411,9 +427,8 @@ public interface AttributeType extends ThingType {
              * Sets the supertype of the AttributeType to be the AttributeType specified.
              *
              * @param type The super type of this AttributeType.
-             * @return The AttributeType itself.
              */
-            AttributeType.Double.Remote setSupertype(AttributeType type);
+            void setSupertype(AttributeType.Double type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -438,6 +453,13 @@ public interface AttributeType extends ThingType {
 
     interface String extends AttributeType {
 
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.STRING;
+        }
+
+        @CheckReturnValue
         @Override
         default AttributeType.String.Remote asRemote(Transaction tx) {
             return AttributeType.String.Remote.of(tx, getLabel());
@@ -486,9 +508,8 @@ public interface AttributeType extends ThingType {
              * Sets the supertype of the AttributeType to be the AttributeType specified.
              *
              * @param type The super type of this AttributeType.
-             * @return The AttributeType itself.
              */
-            AttributeType.String.Remote setSupertype(AttributeType type);
+            void setSupertype(AttributeType.String type);
 
             /**
              * Set the value for the Attribute, unique to its type.
@@ -508,11 +529,24 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.String.Remote get(java.lang.String value);
+
+            @CheckReturnValue
+            @Nullable
+            java.lang.String getRegex();
+
+            void setRegex(java.lang.String regex);
         }
     }
 
     interface DateTime extends AttributeType {
 
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.DATETIME;
+        }
+
+        @CheckReturnValue
         @Override
         default AttributeType.DateTime.Remote asRemote(Transaction tx) {
             return AttributeType.DateTime.Remote.of(tx, getLabel());
@@ -561,9 +595,8 @@ public interface AttributeType extends ThingType {
              * Sets the supertype of the AttributeType to be the AttributeType specified.
              *
              * @param type The super type of this AttributeType.
-             * @return The AttributeType itself.
              */
-            AttributeType.DateTime.Remote setSupertype(AttributeType type);
+            void setSupertype(AttributeType.DateTime type);
 
             /**
              * Set the value for the Attribute, unique to its type.

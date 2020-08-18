@@ -553,10 +553,10 @@ public class GraqlSteps {
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
-                String when = Objects.requireNonNull(rule.when()).toString();
+                String when = Objects.requireNonNull(rule.getWhen()).toString();
                 assertEquals(String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when), expectedRuleDefinition.get("when"), when);
 
-                String then = Objects.requireNonNull(rule.then()).toString();
+                String then = Objects.requireNonNull(rule.getThen()).toString();
                 assertEquals(String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then), expectedRuleDefinition.get("then"), then);
             }
             for (String child : children) {

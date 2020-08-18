@@ -27,8 +27,8 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
- * A Type represents any ontological element in the graph.
- * Types are used to model the behaviour of Thing and how they relate to each other.
+ * A ThingType represents any ontological element in the graph.
+ * ThingTypes are used to model the behaviour of Thing and how they relate to each other.
  * They also aid in categorising Thing to different types.
  */
 public interface ThingType extends Type {
@@ -46,8 +46,8 @@ public interface ThingType extends Type {
     }
 
     /**
-     * A Type represents any ontological element in the graph.
-     * Types are used to model the behaviour of Thing and how they relate to each other.
+     * A ThingType represents any ontological element in the graph.
+     * ThingTypes are used to model the behaviour of Thing and how they relate to each other.
      * They also aid in categorising Thing to different types.
      */
     interface Remote extends Type.Remote, ThingType {
@@ -91,12 +91,12 @@ public interface ThingType extends Type {
         void setLabel(String label);
 
         /**
-         * Sets the Type to be abstract - which prevents it from having any instances.
+         * Sets the ThingType to be abstract - which prevents it from having any instances.
          */
         void setAbstract();
 
         /**
-         * Sets the Type to be not abstract - which allows it to have instances.
+         * Sets the ThingType to be not abstract - which allows it to have instances.
          */
         void unsetAbstract();
 
@@ -106,7 +106,7 @@ public interface ThingType extends Type {
         void setPlays(RoleType role);
 
         /**
-         * Creates a connection which allows this type and a AttributeType to be linked.
+         * Creates a connection which allows this type and an AttributeType to be linked.
          *
          * @param attributeType The AttributeType  which instances of this type should be allowed to play.
          */

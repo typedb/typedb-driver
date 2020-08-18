@@ -110,7 +110,7 @@ public abstract class ThingTypeImpl {
 
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
 
-            return conceptStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(Concept.Remote::asAttributeType);
+            return conceptStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(x -> x.asType().asAttributeType());
         }
 
         @Override
@@ -118,7 +118,7 @@ public abstract class ThingTypeImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setThingTypeGetPlaysIterReq(ConceptProto.ThingType.GetPlays.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(Concept.Remote::asRoleType);
+            return conceptStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(x -> x.asType().asRoleType());
         }
 
         @Override
@@ -165,6 +165,5 @@ public abstract class ThingTypeImpl {
         }
 
         protected abstract Thing.Remote asInstance(Concept.Remote concept);
-
     }
 }

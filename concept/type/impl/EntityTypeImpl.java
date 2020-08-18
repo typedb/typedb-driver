@@ -22,7 +22,6 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Entity;
-import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
@@ -55,11 +54,6 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
-            return super.getOwns(keysOnly);
-        }
-
-        @Override
         public final Stream<Entity.Remote> getInstances() {
             return super.getInstances().map(this::asInstance);
         }
@@ -79,7 +73,7 @@ public class EntityTypeImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
+            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity()).asThing().asEntity();
         }
 
         @Override
@@ -89,7 +83,7 @@ public class EntityTypeImpl {
 
         @Override
         protected final Entity.Remote asInstance(Concept.Remote concept) {
-            return concept.asEntity();
+            return concept.asThing().asEntity();
         }
     }
 }

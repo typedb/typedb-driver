@@ -22,6 +22,7 @@ package grakn.client.concept.thing;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.AttributeType;
@@ -64,12 +65,69 @@ public interface Thing extends Concept {
      */
     boolean isInferred();
 
+    /**
+     * Return as an Entity, if the Thing is an Entity.
+     *
+     * @return An Entity if the Thing is an Entity
+     */
+    @CheckReturnValue
+    Entity asEntity();
+
+    /**
+     * Return as a Attribute if the Thing is a Attribute.
+     *
+     * @return A Attribute if the Thing is an Attribute
+     */
+    @CheckReturnValue
+    Attribute asAttribute();
+
+    /**
+     * Return as a Relation if the Thing is a Relation.
+     *
+     * @return A Relation if the Thing is a Relation
+     */
+    @CheckReturnValue
+    Relation asRelation();
+
     interface Local extends Concept.Local, Thing {
 
         @CheckReturnValue
         @Override
         default Thing.Local asThing() {
             return this;
+        }
+
+        /**
+         * Return as an Entity, if the Concept is an Entity Thing.
+         *
+         * @return An Entity if the Concept is a Thing
+         */
+        @CheckReturnValue
+        @Override
+        default Entity.Local asEntity() {
+            throw GraknConceptException.invalidCasting(this, Entity.class);
+        }
+
+        /**
+         * Return as a Attribute  if the Concept is a Attribute Thing.
+         *
+         * @return A Attribute if the Concept is a Attribute
+         */
+        @CheckReturnValue
+        @Override
+        default Attribute.Local asAttribute() {
+            throw GraknConceptException.invalidCasting(this, Attribute.class);
+        }
+
+        /**
+         * Return as a Relation if the Concept is a Relation Thing.
+         *
+         * @return A Relation  if the Concept is a Relation
+         */
+        @CheckReturnValue
+        @Override
+        default Relation.Local asRelation() {
+            throw GraknConceptException.invalidCasting(this, Relation.class);
         }
     }
 
@@ -161,6 +219,39 @@ public interface Thing extends Concept {
         @Override
         default Thing.Remote asThing() {
             return this;
+        }
+
+        /**
+         * Return as an Entity, if the Thing is an Entity.
+         *
+         * @return An Entity if the Thing is an Entity
+         */
+        @Override
+        @CheckReturnValue
+        default Entity.Remote asEntity() {
+            throw GraknConceptException.invalidCasting(this, Entity.Remote.class);
+        }
+
+        /**
+         * Return as a Relation if the Thing is a Relation.
+         *
+         * @return A Relation if the Thing is a Relation
+         */
+        @Override
+        @CheckReturnValue
+        default Relation.Remote asRelation() {
+            throw GraknConceptException.invalidCasting(this, Relation.Remote.class);
+        }
+
+        /**
+         * Return as a Attribute if the Thing is a Attribute.
+         *
+         * @return An Attribute if the Thing is an Attribute
+         */
+        @Override
+        @CheckReturnValue
+        default Attribute.Remote asAttribute() {
+            throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
         }
     }
 }

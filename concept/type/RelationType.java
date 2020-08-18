@@ -73,31 +73,6 @@ public interface RelationType extends ThingType {
         void setSupertype(RelationType superRelationType);
 
         /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         */
-        @Override
-        void setLabel(String label);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         */
-        @Override
-        void setOwns(AttributeType attributeType);
-
-        @Override
-        void setOwns(AttributeType attributeType, boolean isKey);
-
-        @Override
-        void setOwns(AttributeType attributeType, AttributeType overriddenType);
-
-        @Override
-        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
-
-        /**
          * Retrieve a specific RoleType.
          */
         RoleType.Remote getRelates(String role);

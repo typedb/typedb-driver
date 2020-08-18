@@ -20,7 +20,6 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
@@ -47,8 +46,8 @@ public class RuleImpl {
      */
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(Transaction tx, String label) {
+            super(tx, label);
         }
 
         @Override
@@ -62,19 +61,9 @@ public class RuleImpl {
         }
 
         @Override
-        public final void setLabel(String label) {
-            return (Rule.Remote) super.setLabel(label);
-        }
-
-        @Override
-        public Rule.Remote setSupertype(Rule superRule) {
-            return (Rule.Remote) super.setSupertype(superRule);
-        }
-
-        @Override
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern when() {
+        public final Pattern getWhen() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
 
@@ -92,7 +81,7 @@ public class RuleImpl {
         @Override
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern then() {
+        public final Pattern getThen() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
 
@@ -106,6 +95,5 @@ public class RuleImpl {
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
         }
-
     }
 }

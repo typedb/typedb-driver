@@ -46,8 +46,8 @@ public class RoleTypeImpl {
      */
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(Transaction tx, String label) {
+            super(tx, label);
         }
 
         @Override
@@ -61,33 +61,37 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public final void setLabel(String label) {
-            return (RoleType.Remote) super.setLabel(label);
-        }
-
-        @Override
-        public RoleType.Remote setSupertype(RoleType superRole) {
-            return (RoleType.Remote) super.setSupertype(superRole);
+        public void setSupertype(RoleType superRole) {
+            super.setSupertype(superRole);
         }
 
         @Override
         public String getScopedLabel() {
-            return "unknown:" + getLabel().getValue(); // TODO fix
+            return "unknown:" + getLabel(); // TODO fix
+        }
+
+        @Override
+        public final RelationType.Remote getRelation() {
+            final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setRoleTypeGetRelationReq(ConceptProto.RoleType.GetRelation.Req.getDefaultInstance()).build();
+
+            final ConceptProto.RoleType.GetRelation.Res response = runMethod(method).getRoleTypeGetRelationRes();
+
+            return Concept.Remote.of(tx(), response.getRelationType()).asType().asRelationType();
         }
 
         @Override
         public final Stream<RelationType.Remote> getRelations() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleTypeGetRelationsIterReq(ConceptProto.RoleType.GetRelations.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRoleTypeGetRelationsIterRes().getRelationType()).map(Concept.Remote::asRelationType);
+            return conceptStream(method, res -> res.getRoleTypeGetRelationsIterRes().getRelationType()).map(x -> x.asType().asRelationType());
         }
 
         @Override
         public final Stream<ThingType.Remote> getPlayers() {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Concept.Remote::asThingType);
+            return conceptStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(x -> x.asType().asRelationType());
         }
-
     }
 }

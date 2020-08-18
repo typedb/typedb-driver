@@ -32,19 +32,19 @@ import java.util.stream.Stream;
  * A SchemaConcept used to model and categorise Rules.
  */
 public interface Rule extends Type {
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default Rule asRule() {
-        return this;
-    }
 
     @Override
     default Remote asRemote(Transaction tx) {
-        return Remote.of(tx, getIID());
+        return Remote.of(tx, getLabel());
     }
 
     interface Local extends Type.Local, Rule {
+
+        @CheckReturnValue
+        @Override
+        default Rule.Local asRule() {
+            return this;
+        }
     }
 
     /**
@@ -52,11 +52,14 @@ public interface Rule extends Type {
      */
     interface Remote extends Type.Remote, Rule {
 
-        static Rule.Remote of(Transaction tx, ConceptIID iid) {
-            return new RuleImpl.Remote(tx, iid);
+        static Rule.Remote of(Transaction tx, String label) {
+            return new RuleImpl.Remote(tx, label);
         }
 
-        //------------------------------------- Accessors ----------------------------------
+        @Override
+        default boolean isAbstract() {
+            return false;
+        }
 
         /**
          * Retrieves the when part of the Rule
@@ -66,7 +69,7 @@ public interface Rule extends Type {
          */
         @CheckReturnValue
         @Nullable
-        Pattern when();
+        Pattern getWhen();
 
         /**
          * Retrieves the then part of the Rule.
@@ -76,23 +79,7 @@ public interface Rule extends Type {
          */
         @CheckReturnValue
         @Nullable
-        Pattern then();
-
-        //------------------------------------- Modifiers ----------------------------------
-
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         */
-        void setLabel(String label);
-
-
-        /**
-         * @param superRule The super of this Rule
-         * @return The Rule itself
-         */
-        Rule.Remote setSupertype(Rule superRule);
+        Pattern getThen();
 
         /**
          * @return All the super-types of this this Rule
@@ -106,13 +93,10 @@ public interface Rule extends Type {
         @Override
         Stream<Rule.Remote> getSubtypes();
 
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default Rule.Remote asRule() {
             return this;
         }
-
     }
 }
