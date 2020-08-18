@@ -30,7 +30,7 @@ def graknlabs_common():
     git_repository(
         name = "graknlabs_common",
         remote = "https://github.com/flyingsilverfin/common",
-        commit  = "ce05ba86749e6ab12dd8c41cca51ac9c6cca9c7c" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        commit  = "774d49d0562146221642c945c9e8cfdb653f24b2" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
     )
 #    native.local_repository(
 #        name = "graknlabs_common",

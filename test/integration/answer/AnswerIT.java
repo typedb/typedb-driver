@@ -66,7 +66,7 @@ public class AnswerIT {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();
         runner.start();
-        String address = System.getProperty(GraknSingleton.getGraknRunner().address());
+        String address = runner.address();
         client = new GraknClient(address);
     }
 
@@ -77,7 +77,7 @@ public class AnswerIT {
     }
 
 
-        @Test
+    @Test
     public void testExplanation() {
         GraknClient.Session session = client.session("test_rules");
         GraknClient.Transaction tx = session.transaction().write();

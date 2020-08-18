@@ -50,7 +50,7 @@ public class TracingIT {
         openGlobalAnalysis("owner", "repo", "commit");
         runner = new GraknCoreRunner();
         runner.start();
-        String address = System.getProperty(GraknSingleton.getGraknRunner().address());
+        String address = runner.address();
         client = new GraknClient(address);
     }
 
