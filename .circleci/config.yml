@@ -77,7 +77,7 @@ jobs:
       - install-bazel
       - checkout
       - run-bazel:
-          command: bazel test //test/integration/... --test_output=errors
+          command: bazel test //test/integration/... --test_output=errors --spawn_strategy=local
 
   test-behaviour:
     machine: 
@@ -87,7 +87,7 @@ jobs:
       - install-bazel
       - checkout
       - run-bazel:
-          command: bazel test //test/behaviour/... --test_output=errors
+          command: bazel test //test/behaviour/... --test_output=error --spawn_strategy=locals
 
   deploy-maven-snapshot:
     machine: 
@@ -109,7 +109,7 @@ jobs:
       - install-bazel
       - checkout
       - run-bazel:
-          command: bazel test //test/assembly:test-assembly-query --test_output=errors
+          command: bazel test //test/assembly:test-assembly-query --test_output=error --spawn_strategy=locals
 
   test-deployment-maven:
     machine: 
