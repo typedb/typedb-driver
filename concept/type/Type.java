@@ -161,6 +161,13 @@ public interface Type extends Concept {
     interface Remote extends Type, Concept.Remote {
 
         /**
+         * Return if the type is a root type.
+         * @return Returns true if the type is a root type.
+         */
+        @CheckReturnValue
+        boolean isRoot();
+
+        /**
          * Changes the Label of this Concept to a new one.
          *
          * @param label The new Label.
@@ -185,8 +192,8 @@ public interface Type extends Concept {
 
         /**
          * @return All super-concepts of this Type, including itself and excluding the meta type THING.
-         * If you want to include THING, use Transaction.sups().
          */
+        @CheckReturnValue
         Stream<? extends Type.Remote> getSupertypes();
 
         /**

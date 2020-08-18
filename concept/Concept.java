@@ -28,13 +28,10 @@ import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Entity;
-import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.impl.MetaTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.impl.RoleTypeImpl;
+import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -138,8 +135,8 @@ public interface Concept {
                     return new RoleTypeImpl.Local(concept);
                 case RULE:
                     return new RuleImpl.Local(concept);
-                case META_TYPE:
-                    return new MetaTypeImpl.Local(concept);
+                case THING_TYPE:
+                    return new ThingTypeImpl.Local(concept);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);
@@ -235,8 +232,8 @@ public interface Concept {
                     return new RoleTypeImpl.Remote(tx, iid);
                 case RULE:
                     return new RuleImpl.Remote(tx, iid);
-                case META_TYPE:
-                    return new MetaTypeImpl.Remote(tx, iid);
+                case THING_TYPE:
+                    return new ThingTypeImpl.Remote(tx, iid);
                 default:
                 case UNRECOGNIZED:
                     throw new IllegalArgumentException("Unrecognised " + concept);

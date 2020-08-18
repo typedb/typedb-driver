@@ -184,7 +184,7 @@ public class RequestBuilder {
             } else if (concept instanceof Rule) {
                 return ConceptProto.Concept.SCHEMA.RULE;
             } else if (concept instanceof ThingType) {
-                return ConceptProto.Concept.SCHEMA.META_TYPE;
+                return ConceptProto.Concept.SCHEMA.THING_TYPE;
             } else {
                 throw GraknClientException.unreachableStatement("Unrecognised concept " + concept);
             }

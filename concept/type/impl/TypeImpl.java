@@ -68,6 +68,14 @@ public abstract class TypeImpl {
         }
 
         @Override
+        public final boolean isRoot() {
+            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                    .setTypeIsRootReq(ConceptProto.Type.IsRoot.Req.getDefaultInstance()).build();
+
+            return runMethod(method).getTypeIsRootRes().getRoot();
+        }
+
+        @Override
         public final String getLabel() {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();

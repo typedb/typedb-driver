@@ -22,6 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.impl.ThingTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -34,7 +35,9 @@ import java.util.stream.Stream;
 public interface ThingType extends Type {
 
     @Override
-    Remote asRemote(Transaction tx);
+    default Remote asRemote(Transaction tx) {
+        return Remote.of(tx, getLabel());
+    }
 
     interface Local extends Type.Local, ThingType {
 
@@ -51,6 +54,10 @@ public interface ThingType extends Type {
      * They also aid in categorising Thing to different types.
      */
     interface Remote extends Type.Remote, ThingType {
+
+        static ThingType.Remote of(Transaction tx, String label) {
+            return new ThingTypeImpl.Remote(tx, label);
+        }
 
         /**
          * @return The direct supertype of this concept

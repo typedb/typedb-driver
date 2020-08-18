@@ -21,6 +21,7 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -36,7 +37,7 @@ public abstract class ThingTypeImpl {
     /**
      * Client implementation of ThingType
      */
-    public abstract static class Local extends TypeImpl.Local implements ThingType.Local {
+    public static class Local extends TypeImpl.Local implements ThingType.Local {
 
         protected Local(ConceptProto.Concept concept) {
             super(concept);
@@ -46,9 +47,9 @@ public abstract class ThingTypeImpl {
     /**
      * Client implementation of ThingType
      */
-    public abstract static class Remote extends TypeImpl.Remote implements ThingType.Remote {
+    public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        protected Remote(Transaction tx, String label) {
+        public Remote(Transaction tx, String label) {
             super(tx, label);
         }
 
@@ -164,6 +165,9 @@ public abstract class ThingTypeImpl {
             runMethod(method);
         }
 
-        protected abstract Thing.Remote asInstance(Concept.Remote concept);
+        protected Thing.Remote asInstance(Concept.Remote concept) {
+            // TODO: extract hardcoded error message
+            throw GraknConceptException.create("Cannot create instances of ThingType");
+        }
     }
 }
