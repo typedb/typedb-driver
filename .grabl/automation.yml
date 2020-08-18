@@ -34,10 +34,10 @@ build:
           bazel build --config=rbe //...
           bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
           bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
-      test-integration:
-        machine: graknlabs-ubuntu-20.04
-        script: |
-          bazel test --config=rbe //test/integration/... --test_output=errors
+#      test-integration:
+#        machine: graknlabs-ubuntu-20.04
+#        script: |
+#          bazel test --config=rbe //test/integration/... --test_output=errors
       test-behaviour:
         machine: graknlabs-ubuntu-20.04
         script: |
@@ -61,7 +61,7 @@ build:
           cd test/deployment && mvn test
     execution:
       - build
-      - test-integration
+#      - test-integration
       - test-behaviour
       - test-assembly-query
       - deploy-maven-snapshot:
