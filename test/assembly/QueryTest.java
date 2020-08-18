@@ -19,17 +19,14 @@ package grakn.client.test.assembly;
 
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.common.test.server.GraknProperties;
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -75,29 +72,20 @@ import static org.hamcrest.Matchers.hasSize;
 public class QueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
     private static GraknClient graknClient;
+    private static GraknCoreRunner runner;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
+        runner = new GraknCoreRunner();
+        runner.start();
+        String address = runner.address();
         graknClient = new GraknClient(address);
     }
 
     @AfterClass
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         graknClient.close();
-        GraknSetup.shutdown();
-    }
-
-    @Before
-    public void createClient() {
-        String host = "localhost:48555";
-        graknClient = new GraknClient(host);
-    }
-
-    @After
-    public void closeClient(){
-        graknClient.close();
+        runner.stop();
     }
 
     @Test
@@ -136,8 +124,8 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
                     .map(answer -> answer.get("t").asType().label().getValue()).collect(Collectors.toList());
-            String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
-                    "lion", "mating", "parentship", "child-bearing", "name" };
+            String[] correctSchema = new String[]{"thing", "entity", "relation", "attribute",
+                    "lion", "mating", "parentship", "child-bearing", "name"};
             assertThat(definedSchema, hasItems(correctSchema));
             LOG.info("clientJavaE2E() - done.");
         });

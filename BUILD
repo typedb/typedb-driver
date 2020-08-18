@@ -21,8 +21,10 @@ package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_dependencies//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
+load("@graknlabs_dependencies//library/maven:artifacts.bzl", "maven_overrides", maven_overrides_org = "artifacts")
+load("@graknlabs_bazel_distribution//maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+load("//dependencies/maven:artifacts.bzl", maven_overrides_repo = "overrides")
 
 exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.properties"])
 
@@ -68,11 +70,13 @@ checkstyle_test(
     license_type = "apache"
 )
 
+
 assemble_maven(
     name = "assemble-maven",
     target = ":client-java",
     package = "client-java",
     workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    version_overrides = maven_overrides(maven_overrides_org, maven_overrides_repo),
     project_name = "Grakn Client Java",
     project_description = "Grakn Client API for Java",
     project_url = "https://github.com/graknlabs/client-java",
@@ -82,6 +86,7 @@ assemble_maven(
 deploy_maven(
     name = "deploy-maven",
     target = ":assemble-maven",
+    deployment_properties = "@graknlabs_dependencies//distribution:deployment.properties"
 )
 
 deploy_github(

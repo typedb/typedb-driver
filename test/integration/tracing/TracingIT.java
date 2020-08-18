@@ -23,14 +23,12 @@ import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadContext;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
-import grakn.common.test.server.GraknProperties;
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
@@ -43,20 +41,22 @@ import static org.junit.Assert.assertEquals;
 
 public class TracingIT {
     private static GraknClient client;
+    private static GraknCoreRunner runner;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         setGlobalTracingClient(tracingNoOp());
         openGlobalAnalysis("owner", "repo", "commit");
-        GraknSetup.bootup();
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
+        runner = new GraknCoreRunner();
+        runner.start();
+        String address = runner.address();
         client = new GraknClient(address);
     }
 
     @AfterClass
     public static void closeSession() throws Exception {
         client.close();
-        GraknSetup.shutdown();
+        runner.stop();
         GrablTracingThreadStatic.getGrablTracing().close();
     }
 

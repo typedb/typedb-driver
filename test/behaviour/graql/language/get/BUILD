@@ -45,40 +45,11 @@ grakn_test(
     visibility = ["//visibility:public"],
 )
 
-# To run this test, you need to provide environment variables:
-# --test_env GRAKN_KGMS_ADDRESS=***
-# --test_env GRAKN_KGMS_USERNAME=****
-# --test_env GRAKN_KGMS_PASSWORD=****
-grakn_test(
-    name = "test-kgms",
-    srcs = [
-        "GetTest.java",
-    ],
-    test_class = "grakn.client.test.behaviour.graql.language.get.GetTest",
-    deps = [
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        "//test/behaviour/graql:steps",
-        "//test/behaviour/connection:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/config:parameters",
-    ],
-    data = [
-        "@graknlabs_verification//behaviour/graql/language:get.feature"
-    ],
-    type = "grakn-kgms",
-    size = "large",
-    tags = ["manual"]
-)
-
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":test-core",
-        ":test-kgms",
     ],
     license_type = "apache",
 )

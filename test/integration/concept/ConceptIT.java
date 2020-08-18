@@ -21,13 +21,11 @@ package grakn.client.test.integration.concept;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
 import grakn.client.concept.Rule;
-import grakn.client.concept.type.MetaType;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.SchemaConcept;
+import grakn.client.concept.ValueType;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -35,9 +33,10 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.Role;
 import grakn.client.concept.type.Type;
-import grakn.common.test.server.GraknProperties;
-import grakn.common.test.server.GraknSetup;
+import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknSingleton;
 import graql.lang.pattern.Pattern;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,7 +45,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,7 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static graql.lang.Graql.var;
@@ -145,13 +142,15 @@ public class ConceptIT {
     private Relation.Remote selfEmployment;
     private Relation.Remote selfFriendship;
 
+
+    private static GraknCoreRunner runner;
+
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknSetup.bootup();
-
+        runner = new GraknCoreRunner();
+        runner.start();
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
-        String address = System.getProperty(GraknProperties.GRAKN_ADDRESS);
-        client = new GraknClient(address);
+        client = new GraknClient(runner.address());
         session = client.session(randomKeyspace);
     }
 
@@ -159,7 +158,7 @@ public class ConceptIT {
     public static void closeSession() throws InterruptedException, TimeoutException, IOException {
         session.close();
         client.close();
-        GraknSetup.shutdown();
+        runner.stop();
     }
 
     @Before
