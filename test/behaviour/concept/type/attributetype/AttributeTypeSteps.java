@@ -18,6 +18,7 @@
 
 package grakn.client.test.behaviour.concept.type.attributetype;
 
+import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;
@@ -36,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Behaviour Steps specific to AttributeSteps
+ * Behaviour Steps specific to AttributeTypeSteps
  */
 public class AttributeTypeSteps {
 
@@ -58,8 +59,22 @@ public class AttributeTypeSteps {
         assertEquals(valueType, supertype.asAttributeType().getValueType());
     }
 
-    private <D> AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueType valueType) {
-        return tx().getAttributeType(typeLabel).asAttributeType(valueType);
+    private AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueType valueType) {
+        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel).asAttributeType();
+        switch (valueType) {
+            case BOOLEAN:
+                return attributeType.asBoolean();
+            case LONG:
+                return attributeType.asLong();
+            case DOUBLE:
+                return attributeType.asDouble();
+            case STRING:
+                return attributeType.asString();
+            case DATETIME:
+                return attributeType.asDateTime();
+            default:
+                throw GraknConceptException.create(UNRECOGNISED_VALUE);
+        }
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
@@ -82,13 +97,13 @@ public class AttributeTypeSteps {
     public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        attributeType.asAttributeType(ValueType.STRING).setRegex(regex);
+        attributeType.asString().setRegex(regex);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType.Remote attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        assertEquals(regex, attributeType.asAttributeType(ValueType.STRING).getRegex());
+        assertEquals(regex, attributeType.asString().getRegex());
     }
 }

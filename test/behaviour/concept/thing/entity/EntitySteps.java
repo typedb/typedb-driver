@@ -19,6 +19,7 @@
 package grakn.client.test.behaviour.concept.thing.entity;
 
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.AttributeType.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -47,31 +48,41 @@ public class EntitySteps {
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {bool}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, boolean keyValue) {
         Attribute.Remote key = tx().getAttributeType(keyType).asBoolean().put(keyValue);
-        put(var, tx().getEntityType(type).create().setHas(key));
+        final Entity.Remote entity = tx().getEntityType(type).create();
+        entity.setHas(key);
+        put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
         Attribute.Remote key = tx().getAttributeType(keyType).asLong().put(keyValue);
-        put(var, tx().getEntityType(type).create().setHas(key));
+        final Entity.Remote entity = tx().getEntityType(type).create();
+        entity.setHas(key);
+        put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {double}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, double keyValue) {
         Attribute.Remote key = tx().getAttributeType(keyType).asDouble().put(keyValue);
-        put(var, tx().getEntityType(type).create().setHas(key));
+        final Entity.Remote entity = tx().getEntityType(type).create();
+        entity.setHas(key);
+        put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
         Attribute.Remote key = tx().getAttributeType(keyType).asString().put(keyValue);
-        put(var, tx().getEntityType(type).create().setHas(key));
+        final Entity.Remote entity = tx().getEntityType(type).create();
+        entity.setHas(key);
+        put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
         Attribute.Remote key = tx().getAttributeType(keyType).asDateTime().put(keyValue);
-        put(var, tx().getEntityType(type).create().setHas(key));
+        final Entity.Remote entity = tx().getEntityType(type).create();
+        entity.setHas(key);
+        put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {bool}")

@@ -75,7 +75,7 @@ public abstract class RelationImpl {
 
             final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleType.Remote role = Concept.Remote.of(tx(), rolePlayer.getRoleType()).asRoleType();
+                final RoleType.Remote role = Concept.Remote.of(tx(), rolePlayer.getRoleType()).asType().asRoleType();
                 final Thing.Remote player = Concept.Remote.of(tx(), rolePlayer.getPlayer()).asThing();
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);

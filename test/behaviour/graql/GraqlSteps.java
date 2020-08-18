@@ -33,6 +33,7 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -634,15 +635,11 @@ public class GraqlSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (concept instanceof ThingType) {
-                return label.equals(concept.asThingType().getLabel().toString());
-            } else if (concept instanceof RoleType) {
-                return label.equals(concept.asRoleType().getLabel().toString());
-            } else if (concept instanceof Rule) {
-                return label.equals(concept.asRule().getLabel().toString());
-            } else {
-                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a Role nor a Type nor a Rule.");
+            if (concept instanceof Type) {
+                return label.equals(concept.asType().getLabel());
             }
+
+            throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is not a Type.");
         }
     }
 
@@ -669,8 +666,8 @@ public class GraqlSteps {
 
         public boolean check(Concept concept) {
             return concept instanceof Attribute
-                    && type.equals(concept.asAttribute().getType().getLabel().toString())
-                    && value.equals(concept.asAttribute().getValue().toString());
+                    && type.equals(concept.asThing().asAttribute().getType().getLabel())
+                    && value.equals(concept.asThing().asAttribute().getValue().toString());
         }
     }
 
@@ -694,7 +691,7 @@ public class GraqlSteps {
 
             for (Attribute key : keys) {
                 keyMap.put(
-                        key.getType().getLabel().toString(),
+                        key.getType().getLabel(),
                         key.getValue().toString());
             }
             return value.equals(keyMap.get(type));

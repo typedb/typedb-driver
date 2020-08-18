@@ -129,7 +129,12 @@ public class ThingTypeSteps {
 
     @When("{root_label}\\( ?{type_label} ?) set abstract: {bool}")
     public void thing_type_set_abstract(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
-        get_thing_type(rootLabel, typeLabel).setAbstract(isAbstract);
+        final ThingType.Remote thingType = get_thing_type(rootLabel, typeLabel);
+        if (isAbstract) {
+            thingType.setAbstract();
+        } else {
+            thingType.unsetAbstract();
+        }
     }
 
     @Then("{root_label}\\( ?{type_label} ?) is abstract: {bool}")
@@ -337,7 +342,7 @@ public class ThingTypeSteps {
     @Then("{root_label}\\( ?{type_label} ?) get playing roles contain:")
     public void thing_type_get_playing_roles_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
         Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).getPlays().map(r -> {
-            String[] labels = r.getScopedLabel().getValue().split(":");
+            String[] labels = r.getScopedLabel().split(":");
             return new Parameters.ScopedLabel(labels[0], labels[1]);
         }).collect(toSet());
         assertTrue(actuals.containsAll(roleLabels));
@@ -346,7 +351,7 @@ public class ThingTypeSteps {
     @Then("{root_label}\\( ?{type_label} ?) get playing roles do not contain:")
     public void thing_type_get_playing_roles_do_not_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
         Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).getPlays().map(r -> {
-            String[] labels = r.getScopedLabel().getValue().split(":");
+            String[] labels = r.getScopedLabel().split(":");
             return new Parameters.ScopedLabel(labels[0], labels[1]);
         }).collect(toSet());
         for (Parameters.ScopedLabel roleLabel : roleLabels) {

@@ -91,8 +91,8 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_related_roles_actuals(String relationLabel) {
         return tx().getRelationType(relationLabel).getRelates()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().getValue().split(":")[0],
-                                                        role.getScopedLabel().getValue().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
+                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related roles contain:")
@@ -117,8 +117,8 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_supertypes_actuals(String relationLabel, String roleLabel) {
         return tx().getRelationType(relationLabel).getRelates(roleLabel).getSupertypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().getValue().split(":")[0],
-                                                        role.getScopedLabel().getValue().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
+                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")
@@ -155,8 +155,8 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_subtypes_actuals(String relationLabel, String roleLabel) {
         return tx().getRelationType(relationLabel).getRelates(roleLabel).getSubtypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().getValue().split(":")[0],
-                                                        role.getScopedLabel().getValue().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
+                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes contain:")

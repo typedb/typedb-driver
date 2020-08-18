@@ -175,6 +175,13 @@ public interface AttributeType extends ThingType {
      */
     interface Remote extends ThingType.Remote, AttributeType {
 
+        /**
+         * Sets the supertype of the AttributeType to be the AttributeType specified.
+         *
+         * @param type The super type of this AttributeType.
+         */
+        void setSupertype(AttributeType type);
+
         @CheckReturnValue
         @Override
         default AttributeType.Remote asAttributeType() {

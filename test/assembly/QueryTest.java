@@ -141,7 +141,7 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - assert if schema defined...");
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
-                    .map(answer -> answer.get("t").asThingType().getLabel().getValue()).collect(Collectors.toList());
+                    .map(answer -> answer.get("t").asType().asThingType().getLabel()).collect(Collectors.toList());
             String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
                     "lion", "mating", "parentship", "child-bearing", "name" };
             assertThat(definedSchema, hasItems(correctSchema));
@@ -195,7 +195,7 @@ public class QueryTest {
             GraqlGet getLionQuery = Graql.match(var("p").isa("lion").has("name", var("n"))).get();
             LOG.info("clientJavaE2E() - '" + getLionQuery + "'");
             List<ConceptMap> insertedLions = tx.execute(getLionQuery).get();
-            List<String> insertedNames = insertedLions.stream().map(answer -> answer.get("n").asAttribute().getValue().toString()).collect(Collectors.toList());
+            List<String> insertedNames = insertedLions.stream().map(answer -> answer.get("n").asThing().asAttribute().asString().getValue()).collect(Collectors.toList());
             assertThat(insertedNames, containsInAnyOrder(lionNames()));
 
             LOG.info("clientJavaE2E() - execute match get on the mating relations...");

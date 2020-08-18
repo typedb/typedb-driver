@@ -50,7 +50,7 @@ public abstract class ThingImpl {
 
         protected Local(ConceptProto.Concept concept) {
             this.iid = ConceptIID.of(concept.getIid());
-            this.type = Concept.Local.of(concept.getTypeRes().getThingType()).asThingType();
+            this.type = Concept.Local.of(concept.getTypeRes().getThingType()).asType().asThingType();
             this.inferred = concept.getInferredRes().getInferred();
         }
 
@@ -96,7 +96,7 @@ public abstract class ThingImpl {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
+            return Concept.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType()).asType().asThingType();
         }
 
         @Override
@@ -113,7 +113,7 @@ public abstract class ThingImpl {
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
                                                    .addAllAttributeTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(attributeTypes)))).build();
 
-            return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute);
+            return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(x -> x.asThing().asAttribute());
         }
 
         @Override
@@ -145,7 +145,7 @@ public abstract class ThingImpl {
         public final Stream<Attribute.Remote> getHas(boolean onlyKey) {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder().setKeysOnly(onlyKey)).build();
-            return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Concept.Remote::asAttribute);
+            return conceptStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(x -> x.asThing().asAttribute());
         }
 
         @Override
@@ -153,7 +153,7 @@ public abstract class ThingImpl {
             ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
                     .setThingGetPlaysIterReq(ConceptProto.Thing.GetPlays.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingGetPlaysIterRes().getRoleType()).map(Concept.Remote::asRoleType);
+            return conceptStream(method, res -> res.getThingGetPlaysIterRes().getRoleType()).map(x -> x.asType().asRoleType());
         }
 
         @Override
@@ -162,7 +162,7 @@ public abstract class ThingImpl {
                     .setThingGetRelationsIterReq(ConceptProto.Thing.GetRelations.Iter.Req.newBuilder()
                                                   .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
 
-            return conceptStream(method, res -> res.getThingGetRelationsIterRes().getRelation()).map(Concept.Remote::asRelation);
+            return conceptStream(method, res -> res.getThingGetRelationsIterRes().getRelation()).map(x -> x.asThing().asRelation());
         }
 
         @Override

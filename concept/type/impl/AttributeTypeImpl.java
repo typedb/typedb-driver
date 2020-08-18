@@ -77,6 +77,10 @@ public class AttributeTypeImpl {
             }
         }
 
+        public final void setSupertype(AttributeType type) {
+            super.setSupertype(type);
+        }
+
         // TODO: can we delete this? In theory the value type should always be known
         /*@Override
         @Nullable

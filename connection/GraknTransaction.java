@@ -635,19 +635,19 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public EntityType.Remote putEntityType(String label) {
-        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType()).asEntityType();
+        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType()).asType().asEntityType();
     }
 
     @Override
     public AttributeType.Remote putAttributeType(String label, ValueType valueType) {
         return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
-                .getPutAttributeTypeRes().getAttributeType()).asAttributeType();
+                .getPutAttributeTypeRes().getAttributeType()).asType().asAttributeType();
     }
 
     @Override
     public RelationType.Remote putRelationType(String label) {
         return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRelationType(label))
-                .getPutRelationTypeRes().getRelationType()).asRelationType();
+                .getPutRelationTypeRes().getRelationType()).asType().asRelationType();
     }
 
     @Override

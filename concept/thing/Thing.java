@@ -29,8 +29,6 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 
 import javax.annotation.CheckReturnValue;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -88,6 +86,14 @@ public interface Thing extends Concept {
      */
     @CheckReturnValue
     Relation asRelation();
+
+    /**
+     * Return a Thing.Remote for this Thing.
+     *
+     * @param tx The transaction to use for the RPCs.
+     * @return A remote concept using the given transaction to enable RPCs.
+     */
+    Remote asRemote(Transaction tx);
 
     interface Local extends Concept.Local, Thing {
 
