@@ -24,10 +24,9 @@ import grabl.tracing.client.GrablTracingThreadStatic.ThreadContext;
 import grakn.client.GraknClient;
 import grakn.client.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknRunner;
-import grakn.common.test.server.GraknSingleton;
 import graql.lang.Graql;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class TracingIT {
     private static GraknClient client;
     private static GraknCoreRunner runner;
 
-
+    @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         setGlobalTracingClient(tracingNoOp());
         openGlobalAnalysis("owner", "repo", "commit");

@@ -147,7 +147,7 @@ public class ConceptIT {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        GraknCoreRunner runner = new GraknCoreRunner();
+        runner = new GraknCoreRunner();
         runner.start();
         String randomKeyspace = "a" + UUID.randomUUID().toString().replaceAll("-", "");
         client = new GraknClient(runner.address());
