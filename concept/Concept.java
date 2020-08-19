@@ -20,18 +20,9 @@
 package grakn.client.concept;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.type.impl.RuleImpl;
-import grakn.client.concept.thing.impl.AttributeImpl;
-import grakn.client.concept.thing.impl.EntityImpl;
-import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
-import grakn.client.concept.type.impl.AttributeTypeImpl;
-import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.impl.RelationTypeImpl;
-import grakn.client.concept.type.impl.RoleTypeImpl;
-import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -89,57 +80,11 @@ public interface Concept {
 
     interface Local extends Concept {
 
-        static Local of(ConceptProto.Concept concept) {
-            switch (concept.getBaseType()) {
-                case ENTITY:
-                    return new EntityImpl.Local(concept);
-                case RELATION:
-                    return new RelationImpl.Local(concept);
-                case ATTRIBUTE:
-                    switch (concept.getValueTypeRes().getValueType()) {
-                        case BOOLEAN:
-                            return new AttributeImpl.Boolean.Local(concept);
-                        case LONG:
-                            return new AttributeImpl.Long.Local(concept);
-                        case DOUBLE:
-                            return new AttributeImpl.Double.Local(concept);
-                        case STRING:
-                            return new AttributeImpl.String.Local(concept);
-                        case DATETIME:
-                            return new AttributeImpl.DateTime.Local(concept);
-                        default:
-                        case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
-                    }
-                case ENTITY_TYPE:
-                    return new EntityTypeImpl.Local(concept);
-                case RELATION_TYPE:
-                    return new RelationTypeImpl.Local(concept);
-                case ATTRIBUTE_TYPE:
-                    switch (concept.getValueTypeRes().getValueType()) {
-                        case BOOLEAN:
-                            return new AttributeTypeImpl.Boolean.Local(concept);
-                        case LONG:
-                            return new AttributeImpl.Long.Local(concept);
-                        case DOUBLE:
-                            return new AttributeImpl.Double.Local(concept);
-                        case STRING:
-                            return new AttributeImpl.String.Local(concept);
-                        case DATETIME:
-                            return new AttributeImpl.DateTime.Local(concept);
-                        default:
-                        case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
-                    }
-                case ROLE_TYPE:
-                    return new RoleTypeImpl.Local(concept);
-                case RULE:
-                    return new RuleImpl.Local(concept);
-                case THING_TYPE:
-                    return new ThingTypeImpl.Local(concept);
-                default:
-                case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + concept);
+        static Concept.Local of(ConceptProto.Concept concept) {
+            if (concept.hasThing()) {
+                return Thing.Local.of(concept.getThing());
+            } else {
+                return Type.Local.of(concept.getType());
             }
         }
 
@@ -184,59 +129,11 @@ public interface Concept {
      */
     interface Remote extends Concept {
 
-        // TODO: fix this method after splitting ConceptProto.Concept into Type and Thing
-        static Remote of(Transaction tx, ConceptProto.Concept concept) {
-            ConceptIID iid = ConceptIID.of(concept.getIid());
-            switch (concept.getBaseType()) {
-                case ENTITY:
-                    return new EntityImpl.Remote(tx, iid);
-                case RELATION:
-                    return new RelationImpl.Remote(tx, iid);
-                case ATTRIBUTE:
-                    switch (concept.getValueTypeRes().getValueType()) {
-                        case BOOLEAN:
-                            return new AttributeImpl.Boolean.Remote(tx, iid);
-                        case LONG:
-                            return new AttributeImpl.Long.Remote(tx, iid);
-                        case DOUBLE:
-                            return new AttributeImpl.Double.Remote(tx, iid);
-                        case STRING:
-                            return new AttributeImpl.String.Remote(tx, iid);
-                        case DATETIME:
-                            return new AttributeImpl.DateTime.Remote(tx, iid);
-                        default:
-                        case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
-                    }
-                case ENTITY_TYPE:
-                    return new EntityTypeImpl.Remote(tx, iid);
-                case RELATION_TYPE:
-                    return new RelationTypeImpl.Remote(tx, iid);
-                case ATTRIBUTE_TYPE:
-                    switch (concept.getValueTypeRes().getValueType()) {
-                        case BOOLEAN:
-                            return new AttributeTypeImpl.Boolean.Remote(tx, iid);
-                        case LONG:
-                            return new AttributeTypeImpl.Long.Remote(tx, iid);
-                        case DOUBLE:
-                            return new AttributeTypeImpl.Double.Remote(tx, iid);
-                        case STRING:
-                            return new AttributeTypeImpl.String.Remote(tx, iid);
-                        case DATETIME:
-                            return new AttributeTypeImpl.DateTime.Remote(tx, iid);
-                        default:
-                        case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + concept.getValueTypeRes().getValueType() + " for concept " + concept);
-                    }
-                case ROLE_TYPE:
-                    return new RoleTypeImpl.Remote(tx, iid);
-                case RULE:
-                    return new RuleImpl.Remote(tx, iid);
-                case THING_TYPE:
-                    return new ThingTypeImpl.Remote(tx, iid);
-                default:
-                case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + concept);
+        static Concept.Remote of(Transaction tx, ConceptProto.Concept concept) {
+            if (concept.hasThing()) {
+                return Thing.Remote.of(tx, concept.getThing());
+            } else {
+                return Type.Remote.of(tx, concept.getType());
             }
         }
 

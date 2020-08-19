@@ -21,7 +21,6 @@ package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.ConceptIID;
-import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
@@ -32,8 +31,8 @@ public abstract class EntityImpl {
      */
     public static class Local extends ThingImpl.Local implements Entity.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Thing thing) {
+            super(thing);
         }
 
         public EntityType.Local getType() {

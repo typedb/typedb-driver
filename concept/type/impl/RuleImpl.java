@@ -36,8 +36,8 @@ public class RuleImpl {
      */
     public static class Local extends TypeImpl.Local implements Rule.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
@@ -64,7 +64,7 @@ public class RuleImpl {
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
         public final Pattern getWhen() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
 
             ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
@@ -82,7 +82,7 @@ public class RuleImpl {
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
         public final Pattern getThen() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
 
             ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();

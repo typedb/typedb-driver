@@ -21,10 +21,12 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
@@ -38,8 +40,8 @@ public class AttributeTypeImpl {
      */
     public abstract static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
@@ -52,26 +54,44 @@ public class AttributeTypeImpl {
             super(tx, label);
         }
 
-        public final Attribute.Remote put(Object value) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                                                       .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
+        @Override
+        public AttributeType.Remote getSupertype() {
+            return super.getSupertype().asAttributeType();
+        }
 
-            return Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asThing().asAttribute();
+        @Override
+        public Stream<? extends AttributeType.Remote> getSupertypes() {
+            return super.getSupertypes().map(Type.Remote::asAttributeType);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote> getSubtypes() {
+            return super.getSubtypes().map(Type.Remote::asAttributeType);
+        }
+
+        @Override
+        public Stream<? extends Attribute.Remote> getInstances() {
+            return super.getInstances().map(Thing.Remote::asAttribute);
+        }
+
+        protected final Attribute.Remote put(Object value) {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
+                            .setValue(ConceptMessage.attributeValue(value))).build();
+            return Thing.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @Nullable
-        public final Attribute.Remote get(Object value) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+        protected final Attribute.Remote get(Object value) {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                                                          .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
-
+                            .setValue(ConceptMessage.attributeValue(value))).build();
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case NULL:
                     return null;
                 case ATTRIBUTE:
-                    return Concept.Remote.of(tx(), response.getAttribute()).asThing().asAttribute();
+                    return Thing.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -100,8 +120,8 @@ public class AttributeTypeImpl {
         }*/
 
         @Override
-        protected final Attribute.Remote asInstance(Concept.Remote concept) {
-            return concept.asThing().asAttribute();
+        protected final Attribute.Remote asInstance(Thing.Remote thing) {
+            return thing.asAttribute();
         }
     }
 
@@ -112,8 +132,8 @@ public class AttributeTypeImpl {
          */
         public static class Local extends AttributeTypeImpl.Local implements AttributeType.Boolean.Local {
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
+            public Local(ConceptProto.Type type) {
+                super(type);
             }
         }
 
@@ -128,22 +148,22 @@ public class AttributeTypeImpl {
 
             @Override
             public AttributeType.Boolean.Remote getSupertype() {
-                return super.getSupertype().asAttributeType().asBoolean();
+                return super.getSupertype().asBoolean();
             }
 
             @Override
             public final Stream<AttributeType.Boolean.Remote> getSupertypes() {
-                return super.getSupertypes().map(x -> x.asAttributeType().asBoolean());
+                return super.getSupertypes().map(AttributeType.Remote::asBoolean);
             }
 
             @Override
             public final Stream<AttributeType.Boolean.Remote> getSubtypes() {
-                return super.getSubtypes().map(x -> x.asAttributeType().asBoolean());
+                return super.getSubtypes().map(AttributeType.Remote::asBoolean);
             }
 
             @Override
             public final Stream<Attribute.Boolean.Remote> getInstances() {
-                return super.getInstances().map(x -> x.asAttribute().asBoolean());
+                return super.getInstances().map(Attribute.Remote::asBoolean);
             }
 
             @Override
@@ -172,8 +192,8 @@ public class AttributeTypeImpl {
          */
         public static class Local extends AttributeTypeImpl.Local implements AttributeType.Long.Local {
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
+            public Local(ConceptProto.Type type) {
+                super(type);
             }
         }
 
@@ -188,22 +208,22 @@ public class AttributeTypeImpl {
 
             @Override
             public AttributeType.Long.Remote getSupertype() {
-                return super.getSupertype().asAttributeType().asLong();
+                return super.getSupertype().asLong();
             }
 
             @Override
             public final Stream<AttributeType.Long.Remote> getSupertypes() {
-                return super.getSupertypes().map(x -> x.asAttributeType().asLong());
+                return super.getSupertypes().map(AttributeType.Remote::asLong);
             }
 
             @Override
             public final Stream<AttributeType.Long.Remote> getSubtypes() {
-                return super.getSubtypes().map(x -> x.asAttributeType().asLong());
+                return super.getSubtypes().map(AttributeType.Remote::asLong);
             }
 
             @Override
             public final Stream<Attribute.Long.Remote> getInstances() {
-                return super.getInstances().map(x -> x.asAttribute().asLong());
+                return super.getInstances().map(Attribute.Remote::asLong);
             }
 
             @Override
@@ -232,8 +252,8 @@ public class AttributeTypeImpl {
          */
         public static class Local extends AttributeTypeImpl.Local implements AttributeType.Double.Local {
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
+            public Local(ConceptProto.Type type) {
+                super(type);
             }
         }
 
@@ -248,22 +268,22 @@ public class AttributeTypeImpl {
 
             @Override
             public AttributeType.Double.Remote getSupertype() {
-                return super.getSupertype().asAttributeType().asDouble();
+                return super.getSupertype().asDouble();
             }
 
             @Override
             public final Stream<AttributeType.Double.Remote> getSupertypes() {
-                return super.getSupertypes().map(x -> x.asAttributeType().asDouble());
+                return super.getSupertypes().map(AttributeType.Remote::asDouble);
             }
 
             @Override
             public final Stream<AttributeType.Double.Remote> getSubtypes() {
-                return super.getSubtypes().map(x -> x.asAttributeType().asDouble());
+                return super.getSubtypes().map(AttributeType.Remote::asDouble);
             }
 
             @Override
             public final Stream<Attribute.Double.Remote> getInstances() {
-                return super.getInstances().map(x -> x.asAttribute().asDouble());
+                return super.getInstances().map(Attribute.Remote::asDouble);
             }
 
             @Override
@@ -292,8 +312,8 @@ public class AttributeTypeImpl {
          */
         public static class Local extends AttributeTypeImpl.Local implements AttributeType.String.Local {
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
+            public Local(ConceptProto.Type type) {
+                super(type);
             }
         }
 
@@ -308,22 +328,22 @@ public class AttributeTypeImpl {
 
             @Override
             public AttributeType.String.Remote getSupertype() {
-                return super.getSupertype().asAttributeType().asString();
+                return super.getSupertype().asString();
             }
 
             @Override
             public final Stream<AttributeType.String.Remote> getSupertypes() {
-                return super.getSupertypes().map(x -> x.asAttributeType().asString());
+                return super.getSupertypes().map(AttributeType.Remote::asString);
             }
 
             @Override
             public final Stream<AttributeType.String.Remote> getSubtypes() {
-                return super.getSubtypes().map(x -> x.asAttributeType().asString());
+                return super.getSubtypes().map(AttributeType.Remote::asString);
             }
 
             @Override
             public final Stream<Attribute.String.Remote> getInstances() {
-                return super.getInstances().map(x -> x.asAttribute().asString());
+                return super.getInstances().map(Attribute.Remote::asString);
             }
 
             @Override
@@ -346,19 +366,18 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final java.lang.String getRegex() {
-                ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
-
-                java.lang.String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
+                final java.lang.String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
                 return regex.isEmpty() ? null : regex;
             }
 
             @Override
             public final void setRegex(java.lang.String regex) {
                 if (regex == null) regex = "";
-                ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                                             .setRegex(regex)).build();
+                                .setRegex(regex)).build();
                 runMethod(method);
             }
         }
@@ -371,8 +390,8 @@ public class AttributeTypeImpl {
          */
         public static class Local extends AttributeTypeImpl.Local implements AttributeType.DateTime.Local {
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
+            public Local(ConceptProto.Type type) {
+                super(type);
             }
         }
 
@@ -387,22 +406,22 @@ public class AttributeTypeImpl {
 
             @Override
             public AttributeType.DateTime.Remote getSupertype() {
-                return super.getSupertype().asAttributeType().asDateTime();
+                return super.getSupertype().asDateTime();
             }
 
             @Override
             public final Stream<AttributeType.DateTime.Remote> getSupertypes() {
-                return super.getSupertypes().map(x -> x.asAttributeType().asDateTime());
+                return super.getSupertypes().map(AttributeType.Remote::asDateTime);
             }
 
             @Override
             public final Stream<AttributeType.DateTime.Remote> getSubtypes() {
-                return super.getSubtypes().map(x -> x.asAttributeType().asDateTime());
+                return super.getSubtypes().map(AttributeType.Remote::asDateTime);
             }
 
             @Override
             public final Stream<Attribute.DateTime.Remote> getInstances() {
-                return super.getInstances().map(x -> x.asAttribute().asDateTime());
+                return super.getInstances().map(Attribute.Remote::asDateTime);
             }
 
             @Override

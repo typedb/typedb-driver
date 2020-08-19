@@ -20,11 +20,12 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Relation;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -35,8 +36,8 @@ public class RelationTypeImpl {
      */
     public static class Local extends ThingTypeImpl.Local implements RelationType.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
@@ -71,39 +72,39 @@ public class RelationTypeImpl {
 
         @Override
         public final Relation.Remote create() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeCreateRes().getRelation()).asThing().asRelation();
+            return Thing.Remote.of(tx(), runMethod(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
         public final RoleType.Remote getRelates(String role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeGetRelatesForRoleLabelReq(ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(role)).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getRelationTypeGetRelatesForRoleLabelRes().getRole()).asType().asRoleType();
+            return Type.Remote.of(tx(), runMethod(method).getRelationTypeGetRelatesForRoleLabelRes().getRole()).asRoleType();
         }
 
         @Override
         public final Stream<RoleType.Remote> getRelates() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setRelationTypeGetRelatesIterReq(ConceptProto.RelationType.GetRelates.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getRelationTypeGetRelatesIterRes().getRole()).map(x -> x.asType().asRoleType());
+            return typeStream(method, res -> res.getRelationTypeGetRelatesIterRes().getRole()).map(Type.Remote::asRoleType);
         }
 
         @Override
         public final void setRelates(String role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeSetRelatesReq(ConceptProto.RelationType.SetRelates.Req.newBuilder()
-                                                       .setLabel(role)).build();
+                            .setLabel(role)).build();
             runMethod(method);
         }
 
         @Override
-        protected final Relation.Remote asInstance(Concept.Remote concept) {
-            return concept.asThing().asRelation();
+        protected final Relation.Remote asInstance(Thing.Remote thing) {
+            return thing.asRelation();
         }
     }
 }

@@ -101,16 +101,16 @@ public class ConceptMap implements Answer {
 
     @CheckReturnValue
     public Concept get(String variable) {
-        Concept Concept = map.get(variable);
-        if (Concept == null) throw GraknConceptException.variableDoesNotExist(variable);
-        return Concept;
+        Concept concept = map.get(variable);
+        if (concept == null) throw GraknConceptException.variableDoesNotExist(variable);
+        return concept;
     }
 
     @Override
     public String toString() {
         return map.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .map(e -> "[" + e.getKey() + "/" + e.getValue().getIID() + "]").collect(Collectors.joining());
+                .map(e -> "[" + e.getKey() + "/" + e.getValue() + "]").collect(Collectors.joining());
     }
 
     @Override

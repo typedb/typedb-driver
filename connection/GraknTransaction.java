@@ -34,8 +34,9 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
+import grakn.client.concept.rpc.ConceptMessage;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
@@ -43,6 +44,7 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -68,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
@@ -81,6 +84,7 @@ public class GraknTransaction implements Transaction {
 
     private final Session session;
     private final Type type;
+    private final WeakHashMap<String, grakn.client.concept.type.Type.Local> typeCache;
     private final Transceiver transceiver;
 
     public static class Builder implements Transaction.Builder {
@@ -111,6 +115,7 @@ public class GraknTransaction implements Transaction {
             this.transceiver = Transceiver.create(GraknGrpc.newStub(channel));
             this.session = session;
             this.type = type;
+            this.typeCache = new WeakHashMap<>();
             sendAndReceiveOrThrow(RequestBuilder.Transaction.open(sessionId, type));
         }
     }
@@ -510,25 +515,40 @@ public class GraknTransaction implements Transaction {
         close();
     }
 
+    // TODO: is this a reasonable way of implementing this method?
     @Override
     public ThingType.Remote getRootType() {
-        grakn.client.concept.type.Type.Remote concept = getType("thing"); // TODO do this properly
-        if (concept instanceof ThingType.Remote) {
-            return (ThingType.Remote) concept;
-        } else {
-            return null;
-        }
+        return getType(GraqlToken.Type.THING.toString()).asThingType();
     }
 
     @Override
-    @Nullable
-    public ThingType.Remote getThingType(String label) {
-        grakn.client.concept.type.Type.Remote concept = getType(label);
-        if (concept instanceof ThingType.Remote) {
-            return (ThingType.Remote) concept;
-        } else {
-            return null;
-        }
+    public EntityType.Remote getRootEntityType() {
+        return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
+    }
+
+    @Override
+    public RelationType.Remote getRootRelationType() {
+        return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
+    }
+
+    @Override
+    public AttributeType.Remote getRootAttributeType() {
+        return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
+    }
+
+    @Override
+    public RoleType.Remote getRootRoleType() {
+        return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
+    }
+
+    @Override
+    public Rule.Remote getRootRule() {
+        return getType(GraqlToken.Type.RULE.toString()).asRule();
+    }
+
+    @Override
+    public EntityType.Remote putEntityType(String label) {
+        return grakn.client.concept.type.Type.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType()).asEntityType();
     }
 
     @Override
@@ -543,6 +563,12 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
+    public RelationType.Remote putRelationType(String label) {
+        return grakn.client.concept.type.Type.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRelationType(label))
+                .getPutRelationTypeRes().getRelationType()).asRelationType();
+    }
+
+    @Override
     @Nullable
     public RelationType.Remote getRelationType(String label) {
         grakn.client.concept.type.Type.Remote concept = getType(label);
@@ -554,6 +580,12 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
+    public AttributeType.Remote putAttributeType(String label, ValueType valueType) {
+        return grakn.client.concept.type.Type.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
+                .getPutAttributeTypeRes().getAttributeType()).asType().asAttributeType();
+    }
+
+    @Override
     @Nullable
     public AttributeType.Remote getAttributeType(String label) {
         grakn.client.concept.type.Type.Remote concept = getType(label);
@@ -562,6 +594,12 @@ public class GraknTransaction implements Transaction {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Rule.Remote putRule(String label, Pattern when, Pattern then) {
+        return grakn.client.concept.type.Type.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRule(label, when, then))
+                .getPutRuleRes().getRule()).asRule();
     }
 
     @Override
@@ -583,113 +621,66 @@ public class GraknTransaction implements Transaction {
             case NULL:
                 return null;
             case TYPE:
-                return Concept.Remote.of(this, response.getGetTypeRes().getType()).asType();
+                final grakn.client.concept.type.Type.Remote type = grakn.client.concept.type.Type.Remote.of(this, response.getGetTypeRes().getType());
+                typeCache.put(type.getLabel(), grakn.client.concept.type.Type.Local.of(response.getGetTypeRes().getType()));
             default:
                 throw GraknClientException.resultNotPresent();
         }
     }
 
-    @Override
-    public grakn.client.concept.type.Type.Remote getMetaConcept() {
-        return getType(GraqlToken.Type.THING.toString());
-    }
-
-    @Override
-    public RelationType.Remote getMetaRelationType() {
-        return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
-    }
-
-    @Override
-    public RoleType.Remote getMetaRoleType() {
-        return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
-    }
-
-    @Override
-    public AttributeType.Remote getMetaAttributeType() {
-        return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
-    }
-
-    @Override
-    public EntityType.Remote getMetaEntityType() {
-        return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
-    }
-
-    @Override
-    public Rule.Remote getMetaRule() {
-        return getType(GraqlToken.Type.RULE.toString()).asRule();
+    @Nullable
+    public grakn.client.concept.type.Type.Local getCachedType(String label) {
+        return typeCache.get(label);
     }
 
     @Override
     @Nullable
-    public Concept.Remote getConcept(ConceptIID iid) {
-        TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getConcept(iid));
-        switch (response.getGetConceptRes().getResCase()) {
+    public Thing.Remote getThing(ConceptIID iid) {
+        TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getThing(iid));
+        switch (response.getGetThingRes().getResCase()) {
             case NULL:
                 return null;
-            case CONCEPT:
-                return Concept.Remote.of(this, response.getGetConceptRes().getConcept());
+            case THING:
+                return Thing.Remote.of(this, response.getGetThingRes().getThing());
             default:
                 throw GraknClientException.resultNotPresent();
         }
     }
 
     @Override
-    public EntityType.Remote putEntityType(String label) {
-        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putEntityType(label)).getPutEntityTypeRes().getEntityType()).asType().asEntityType();
-    }
-
-    @Override
-    public AttributeType.Remote putAttributeType(String label, ValueType valueType) {
-        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
-                .getPutAttributeTypeRes().getAttributeType()).asType().asAttributeType();
-    }
-
-    @Override
-    public RelationType.Remote putRelationType(String label) {
-        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRelationType(label))
-                .getPutRelationTypeRes().getRelationType()).asType().asRelationType();
-    }
-
-    @Override
-    public Rule.Remote putRule(String label, Pattern when, Pattern then) {
-        return Concept.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putRule(label, when, then))
-                .getPutRuleRes().getRule()).asRule();
-    }
-
-    @Override
-    public TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.Method.Req method) {
-        TransactionProto.Transaction.ConceptMethod.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Req.newBuilder()
-                .setIid(iid.getValue()).setMethod(method).build();
-        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodReq(conceptMethod).build();
+    public TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Req thingMethod) {
+        TransactionProto.Transaction.ConceptMethod.Thing.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
+                .setIid(iid.getValue()).setMethod(thingMethod).build();
+        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodThingReq(conceptMethod).build();
 
         return sendAndReceiveOrThrow(request);
     }
 
     @Override
-    public TransactionProto.Transaction.Res runConceptMethod(String label, ConceptProto.Method.Req method) {
-        TransactionProto.Transaction.ConceptMethod.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Req.newBuilder()
-                .setLabel(label).setMethod(method).build();
-        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodReq(conceptMethod).build();
+    public TransactionProto.Transaction.Res runConceptMethod(String label, ConceptProto.TypeMethod.Req typeMethod) {
+        TransactionProto.Transaction.ConceptMethod.Type.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
+                .setLabel(label).setMethod(typeMethod).build();
+        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodTypeReq(conceptMethod).build();
 
         return sendAndReceiveOrThrow(request);
     }
 
     @Override
-    public <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
-        TransactionProto.Transaction.ConceptMethod.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Iter.Req.newBuilder()
+    public <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Iter.Req method, Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
+        TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
                 .setIid(iid.getValue()).setMethod(method).build();
-        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodIterReq(conceptIterMethod).build();
+        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodThingIterReq(conceptIterMethod).build();
 
-        return iterate(request, res -> responseReader.apply(res.getConceptMethodIterRes().getResponse()));
+        return iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
     }
 
     @Override
-    public <T> Stream<T> iterateConceptMethod(String label, ConceptProto.Method.Iter.Req method, Function<ConceptProto.Method.Iter.Res, T> responseReader) {
-        TransactionProto.Transaction.ConceptMethod.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Iter.Req.newBuilder()
+    public <T> Stream<T> iterateConceptMethod(String label, ConceptProto.TypeMethod.Iter.Req method, Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
+        TransactionProto.Transaction.ConceptMethod.Type.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
                 .setLabel(label).setMethod(method).build();
-        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodIterReq(conceptIterMethod).build();
+        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodTypeIterReq(conceptIterMethod).build();
 
-        return iterate(request, res -> responseReader.apply(res.getConceptMethodIterRes().getResponse()));
+        return iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }
 
     @Override
@@ -704,7 +695,7 @@ public class GraknTransaction implements Transaction {
     private AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
         AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
         conceptMap.map().forEach((var, concept) -> {
-            ConceptProto.Concept conceptProto = RequestBuilder.ConceptMessage.from(concept);
+            ConceptProto.Concept conceptProto = ConceptMessage.concept(concept);
             conceptMapProto.putMap(var, conceptProto);
         });
         conceptMapProto.setHasExplanation(conceptMap.hasExplanation());

@@ -97,6 +97,24 @@ public interface AttributeType extends ThingType {
             throw GraknConceptException.create("Unrecognised schema value!");
         }
 
+        public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+            switch (valueType) {
+                case STRING:
+                    return AttributeType.ValueType.STRING;
+                case BOOLEAN:
+                    return AttributeType.ValueType.BOOLEAN;
+                case LONG:
+                    return AttributeType.ValueType.LONG;
+                case DOUBLE:
+                    return AttributeType.ValueType.DOUBLE;
+                case DATETIME:
+                    return AttributeType.ValueType.DATETIME;
+                default:
+                case UNRECOGNIZED:
+                    throw new IllegalArgumentException("Unrecognised " + valueType);
+            }
+        }
+
         @CheckReturnValue
         public Class<?> valueClass() {
             return valueClass;
@@ -184,6 +202,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
+        // TODO: remove @deprecated
+        @Deprecated
         default AttributeType.Remote asAttributeType() {
             return this;
         }

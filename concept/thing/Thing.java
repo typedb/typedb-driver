@@ -23,10 +23,14 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.concept.thing.impl.AttributeImpl;
+import grakn.client.concept.thing.impl.EntityImpl;
+import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -97,6 +101,34 @@ public interface Thing extends Concept {
 
     interface Local extends Concept.Local, Thing {
 
+        static Thing.Local of(ConceptProto.Thing thing) {
+            switch (thing.getSchema()) {
+                case ENTITY:
+                    return new EntityImpl.Local(thing);
+                case RELATION:
+                    return new RelationImpl.Local(thing);
+                case ATTRIBUTE:
+                    switch (thing.getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeImpl.Boolean.Local(thing);
+                        case LONG:
+                            return new AttributeImpl.Long.Local(thing);
+                        case DOUBLE:
+                            return new AttributeImpl.Double.Local(thing);
+                        case STRING:
+                            return new AttributeImpl.String.Local(thing);
+                        case DATETIME:
+                            return new AttributeImpl.DateTime.Local(thing);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + thing.getValueType() + " for concept " + thing);
+                    }
+                default:
+                case UNRECOGNIZED:
+                    throw new IllegalArgumentException("Unrecognised " + thing);
+            }
+        }
+
         @CheckReturnValue
         @Override
         default Thing.Local asThing() {
@@ -144,6 +176,35 @@ public interface Thing extends Concept {
      * Instances can relate to one another via Relation
      */
     interface Remote extends Concept.Remote, Thing {
+
+        static Thing.Remote of(Transaction tx, ConceptProto.Thing thing) {
+            ConceptIID iid = ConceptIID.of(thing.getIid());
+            switch (thing.getSchema()) {
+                case ENTITY:
+                    return new EntityImpl.Remote(tx, iid);
+                case RELATION:
+                    return new RelationImpl.Remote(tx, iid);
+                case ATTRIBUTE:
+                    switch (thing.getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeImpl.Boolean.Remote(tx, iid);
+                        case LONG:
+                            return new AttributeImpl.Long.Remote(tx, iid);
+                        case DOUBLE:
+                            return new AttributeImpl.Double.Remote(tx, iid);
+                        case STRING:
+                            return new AttributeImpl.String.Remote(tx, iid);
+                        case DATETIME:
+                            return new AttributeImpl.DateTime.Remote(tx, iid);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + thing.getValueType() + " for concept " + thing);
+                    }
+                default:
+                case UNRECOGNIZED:
+                    throw new IllegalArgumentException("Unrecognised " + thing);
+            }
+        }
 
         /**
          * Creates an ownership from this Thing to the provided Attribute.
@@ -223,6 +284,8 @@ public interface Thing extends Concept {
 
         @CheckReturnValue
         @Override
+        // TODO: remove @deprecated
+        @Deprecated
         default Thing.Remote asThing() {
             return this;
         }

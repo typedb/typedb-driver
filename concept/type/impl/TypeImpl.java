@@ -20,11 +20,12 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
+import grakn.client.concept.rpc.ConceptMessage;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -40,14 +41,21 @@ public abstract class TypeImpl {
     public abstract static class Local implements Type.Local {
 
         private final String label;
+        private final boolean isRoot;
 
-        protected Local(ConceptProto.Concept concept) {
-            this.label = concept.getLabelRes().getLabel();
+        protected Local(ConceptProto.Type type) {
+            this.label = type.getLabel();
+            this.isRoot = type.getRoot();
         }
 
         @Override
         public final String getLabel() {
             return label;
+        }
+
+        @Override
+        public final boolean isRoot() {
+            return isRoot;
         }
     }
 
@@ -69,30 +77,30 @@ public abstract class TypeImpl {
 
         @Override
         public final boolean isRoot() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setTypeIsRootReq(ConceptProto.Type.IsRoot.Req.getDefaultInstance()).build();
-
-            return runMethod(method).getTypeIsRootRes().getRoot();
+            final Type.Local cached = tx().getCachedType(label);
+            if (cached != null) {
+                return cached.isRoot();
+            }
+            return tx().getType(label).isRoot();
         }
 
         @Override
         public final String getLabel() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setTypeGetLabelReq(ConceptProto.Type.GetLabel.Req.getDefaultInstance()).build();
-            return runMethod(method).getTypeGetLabelRes().getLabel();
+            return label;
         }
 
         @Override
         public void setLabel(String label) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                             .setLabel(label)).build();
+            // TODO: update the transaction's type cache
             runMethod(method);
         }
 
         @Nullable
         public Type.Remote getSupertype() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
             ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
@@ -101,7 +109,7 @@ public abstract class TypeImpl {
                 case NULL:
                     return null;
                 case TYPE:
-                    return Concept.Remote.of(tx(), response.getType()).asType();
+                    return Type.Remote.of(tx(), response.getType()).asType();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -110,33 +118,31 @@ public abstract class TypeImpl {
 
         @Override
         public Stream<? extends Type.Remote> getSupertypes() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeGetSupertypesIterRes().getType()).map(Concept.Remote::asType);
+            return typeStream(method, res -> res.getTypeGetSupertypesIterRes().getType());
         }
 
         @Override
         public Stream<? extends Type.Remote> getSubtypes() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(Concept.Remote::asType);
+            return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType());
         }
 
         protected final void setSupertype(Type type) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
-                            .setType(RequestBuilder.ConceptMessage.from(type))).build();
+                            .setType(ConceptMessage.type(type))).build();
             runMethod(method);
         }
 
         @Override
         public final void delete() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setConceptDeleteReq(ConceptProto.Concept.Delete.Req.getDefaultInstance())
-                    .build();
-
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setTypeDeleteReq(ConceptProto.Type.Delete.Req.getDefaultInstance()).build();
             runMethod(method);
         }
 
@@ -149,17 +155,16 @@ public abstract class TypeImpl {
             return tx;
         }
 
-        protected Stream<Concept.Remote> conceptStream
-                (ConceptProto.Method.Iter.Req request, Function<ConceptProto.Method.Iter.Res, ConceptProto.Concept> conceptGetter) {
-            return tx.iterateConceptMethod(label, request, response -> Concept.Remote.of(tx, conceptGetter.apply(response)));
+        protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
+            return tx.iterateConceptMethod(label, request, response -> Thing.Remote.of(tx, thingGetter.apply(response)));
         }
 
-        protected ConceptProto.Method.Res runMethod(ConceptProto.Method.Req method) {
-            return runMethod(label, method);
+        protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return tx.iterateConceptMethod(label, request, response -> Type.Remote.of(tx, typeGetter.apply(response)));
         }
 
-        private ConceptProto.Method.Res runMethod(String label, ConceptProto.Method.Req method) {
-            return tx().runConceptMethod(label, method).getConceptMethodRes().getResponse();
+        protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
+            return tx().runConceptMethod(label, typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

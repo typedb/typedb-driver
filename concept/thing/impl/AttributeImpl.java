@@ -20,14 +20,12 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
+import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import java.time.Instant;
@@ -42,10 +40,10 @@ public abstract class AttributeImpl {
      *
      * @param <VALUE> The value type of this attribute
      */
-    public abstract static class Local<VALUE> extends ThingImpl.Local implements Attribute.Local {
+    public abstract static class Local<VALUE> extends ThingImpl.Local implements Attribute.Local<VALUE> {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Thing thing) {
+            super(thing);
         }
 
         @Override
@@ -61,7 +59,7 @@ public abstract class AttributeImpl {
      *
      * @param <VALUE> The value type of this attribute
      */
-    public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote {
+    public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
         public Remote(Transaction tx, ConceptIID iid) {
             super(tx, iid);
@@ -69,17 +67,17 @@ public abstract class AttributeImpl {
 
         @Override
         public final Stream<Thing.Remote> getOwners() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.getDefaultInstance()).build();
-            return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
+            return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
         }
 
         @Override
         public Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.newBuilder()
-                            .setThingType(RequestBuilder.ConceptMessage.from(ownerType))).build();
-            return conceptStream(method, res -> res.getAttributeGetOwnersIterRes().getThing()).map(Concept.Remote::asThing);
+                            .setThingType(ConceptMessage.type(ownerType))).build();
+            return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
         }
 
         @Override
@@ -98,9 +96,9 @@ public abstract class AttributeImpl {
 
             private final java.lang.Boolean value;
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
-                this.value = concept.getValueRes().getValue().getBoolean();
+            public Local(ConceptProto.Thing thing) {
+                super(thing);
+                this.value = thing.getValueRes().getValue().getBoolean();
             }
 
             @Override
@@ -125,7 +123,7 @@ public abstract class AttributeImpl {
 
             @Override
             public final java.lang.Boolean getValue() {
-                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getAttributeGetValueRes().getValue().getBoolean();
@@ -146,9 +144,9 @@ public abstract class AttributeImpl {
 
             private final long value;
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
-                this.value = concept.getValueRes().getValue().getLong();
+            public Local(ConceptProto.Thing thing) {
+                super(thing);
+                this.value = thing.getValueRes().getValue().getLong();
             }
 
             @Override
@@ -173,7 +171,7 @@ public abstract class AttributeImpl {
 
             @Override
             public final java.lang.Long getValue() {
-                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getAttributeGetValueRes().getValue().getLong();
@@ -194,9 +192,9 @@ public abstract class AttributeImpl {
 
             private final double value;
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
-                this.value = concept.getValueRes().getValue().getDouble();
+            public Local(ConceptProto.Thing thing) {
+                super(thing);
+                this.value = thing.getValueRes().getValue().getDouble();
             }
 
             @Override
@@ -221,7 +219,7 @@ public abstract class AttributeImpl {
 
             @Override
             public final java.lang.Double getValue() {
-                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getAttributeGetValueRes().getValue().getDouble();
@@ -242,9 +240,9 @@ public abstract class AttributeImpl {
 
             private final java.lang.String value;
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
-                this.value = concept.getValueRes().getValue().getString();
+            public Local(ConceptProto.Thing thing) {
+                super(thing);
+                this.value = thing.getValueRes().getValue().getString();
             }
 
             @Override
@@ -269,7 +267,7 @@ public abstract class AttributeImpl {
 
             @Override
             public final java.lang.String getValue() {
-                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return runMethod(method).getAttributeGetValueRes().getValue().getString();
@@ -295,9 +293,9 @@ public abstract class AttributeImpl {
 
             private final LocalDateTime value;
 
-            public Local(ConceptProto.Concept concept) {
-                super(concept);
-                this.value = toLocalDateTime(concept.getValueRes().getValue().getDatetime());
+            public Local(ConceptProto.Thing thing) {
+                super(thing);
+                this.value = toLocalDateTime(thing.getValueRes().getValue().getDatetime());
             }
 
             @Override
@@ -322,7 +320,7 @@ public abstract class AttributeImpl {
 
             @Override
             public final LocalDateTime getValue() {
-                final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return toLocalDateTime(runMethod(method).getAttributeGetValueRes().getValue().getDatetime());

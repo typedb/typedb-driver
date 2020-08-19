@@ -21,7 +21,18 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.concept.thing.impl.AttributeImpl;
+import grakn.client.concept.thing.impl.EntityImpl;
+import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.concept.type.impl.AttributeTypeImpl;
+import grakn.client.concept.type.impl.EntityTypeImpl;
+import grakn.client.concept.type.impl.RelationTypeImpl;
+import grakn.client.concept.type.impl.RoleTypeImpl;
+import grakn.client.concept.type.impl.RuleImpl;
+import grakn.client.concept.type.impl.ThingTypeImpl;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -43,6 +54,13 @@ public interface Type extends Concept {
      */
     @CheckReturnValue
     String getLabel();
+
+    /**
+     * Return if the type is a root type.
+     * @return Returns true if the type is a root type.
+     */
+    @CheckReturnValue
+    boolean isRoot();
 
     /**
      * Return as a ThingType if the Concept is a ThingType.
@@ -88,6 +106,40 @@ public interface Type extends Concept {
     Remote asRemote(Transaction tx);
 
     interface Local extends Type, Concept.Local {
+
+        static Type.Local of(ConceptProto.Type type) {
+            switch (type.getSchema()) {
+                case ENTITY_TYPE:
+                    return new EntityTypeImpl.Local(type);
+                case RELATION_TYPE:
+                    return new RelationTypeImpl.Local(type);
+                case ATTRIBUTE_TYPE:
+                    switch (type.getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeTypeImpl.Boolean.Local(type);
+                        case LONG:
+                            return new AttributeTypeImpl.Long.Local(type);
+                        case DOUBLE:
+                            return new AttributeTypeImpl.Double.Local(type);
+                        case STRING:
+                            return new AttributeTypeImpl.String.Local(type);
+                        case DATETIME:
+                            return new AttributeTypeImpl.DateTime.Local(type);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + type.getValueType() + " for concept " + type);
+                    }
+                case ROLE_TYPE:
+                    return new RoleTypeImpl.Local(type);
+                case RULE:
+                    return new RuleImpl.Local(type);
+                case THING_TYPE:
+                    return new ThingTypeImpl.Local(type);
+                default:
+                case UNRECOGNIZED:
+                    throw new IllegalArgumentException("Unrecognised " + type);
+            }
+        }
 
         @CheckReturnValue
         @Override
@@ -160,12 +212,40 @@ public interface Type extends Concept {
      */
     interface Remote extends Type, Concept.Remote {
 
-        /**
-         * Return if the type is a root type.
-         * @return Returns true if the type is a root type.
-         */
-        @CheckReturnValue
-        boolean isRoot();
+        static Type.Remote of(Transaction tx, ConceptProto.Type type) {
+            final String label = type.getLabel();
+            switch (type.getSchema()) {
+                case ENTITY_TYPE:
+                    return new EntityTypeImpl.Remote(tx, label);
+                case RELATION_TYPE:
+                    return new RelationTypeImpl.Remote(tx, label);
+                case ATTRIBUTE_TYPE:
+                    switch (type.getValueType()) {
+                        case BOOLEAN:
+                            return new AttributeTypeImpl.Boolean.Remote(tx, label);
+                        case LONG:
+                            return new AttributeTypeImpl.Long.Remote(tx, label);
+                        case DOUBLE:
+                            return new AttributeTypeImpl.Double.Remote(tx, label);
+                        case STRING:
+                            return new AttributeTypeImpl.String.Remote(tx, label);
+                        case DATETIME:
+                            return new AttributeTypeImpl.DateTime.Remote(tx, label);
+                        default:
+                        case UNRECOGNIZED:
+                            throw new IllegalArgumentException("Unrecognised value type " + type.getValueType() + " for concept " + type);
+                    }
+                case ROLE_TYPE:
+                    return new RoleTypeImpl.Remote(tx, label);
+                case RULE:
+                    return new RuleImpl.Remote(tx, label);
+                case THING_TYPE:
+                    return new ThingTypeImpl.Remote(tx, label);
+                default:
+                case UNRECOGNIZED:
+                    throw new IllegalArgumentException("Unrecognised " + type);
+            }
+        }
 
         /**
          * Changes the Label of this Concept to a new one.
@@ -207,6 +287,8 @@ public interface Type extends Concept {
 
         @CheckReturnValue
         @Override
+        // TODO: remove @deprecated
+        @Deprecated
         default Type.Remote asType() {
             return this;
         }

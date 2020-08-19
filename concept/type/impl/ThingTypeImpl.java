@@ -20,15 +20,14 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.GraknConceptException;
+import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -39,8 +38,8 @@ public abstract class ThingTypeImpl {
      */
     public static class Local extends TypeImpl.Local implements ThingType.Local {
 
-        protected Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
@@ -70,15 +69,15 @@ public abstract class ThingTypeImpl {
 
         @Override
         public Stream<? extends Thing.Remote> getInstances() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setThingTypeGetInstancesIterReq(ConceptProto.ThingType.GetInstances.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing()).map(this::asInstance);
+            return thingStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing()).map(this::asInstance);
         }
 
         @Override
         public final boolean isAbstract() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeIsAbstractReq(ConceptProto.ThingType.IsAbstract.Req.getDefaultInstance()).build();
 
             return runMethod(method).getThingTypeIsAbstractRes().getAbstract();
@@ -86,55 +85,55 @@ public abstract class ThingTypeImpl {
 
         @Override
         public final void setAbstract() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()).build();
             runMethod(method);
         }
 
         @Override
         public final void unsetAbstract() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetAbstractReq(ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()).build();
             runMethod(method);
         }
 
         @Override
         public final Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
-            ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
+            final ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
             if (valueType != null) {
-                req.setValueType(RequestBuilder.ConceptMessage.setValueType(valueType));
+                req.setValueType(ConceptMessage.valueType(valueType));
             } else {
                 req.setNULL(ConceptProto.Null.getDefaultInstance());
             }
 
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
 
-            return conceptStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(x -> x.asType().asAttributeType());
+            return typeStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(Type.Remote::asAttributeType);
         }
 
         @Override
         public final Stream<RoleType.Remote> getPlays() {
-            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setThingTypeGetPlaysIterReq(ConceptProto.ThingType.GetPlays.Iter.Req.getDefaultInstance()).build();
 
-            return conceptStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(x -> x.asType().asRoleType());
+            return typeStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(Type.Remote::asRoleType);
         }
 
         @Override
         public void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
-                    .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))
+            final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
+                    .setAttributeType(ConceptMessage.type(attributeType))
                     .setIsKey(isKey);
 
             if (overriddenType != null) {
-                req.setOverriddenType(RequestBuilder.ConceptMessage.from(overriddenType));
+                req.setOverriddenType(ConceptMessage.type(overriddenType));
             } else {
                 req.setNULL(ConceptProto.Null.getDefaultInstance());
             }
 
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetOwnsReq(req).build();
 
             runMethod(method);
@@ -142,30 +141,29 @@ public abstract class ThingTypeImpl {
 
         @Override
         public void setPlays(RoleType role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
-                                             .setRole(RequestBuilder.ConceptMessage.from(role))).build();
-
+                            .setRole(ConceptMessage.type(role))).build();
             runMethod(method);
         }
 
         @Override
         public void unsetOwns(AttributeType attributeType) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
-                                             .setAttributeType(RequestBuilder.ConceptMessage.from(attributeType))).build();
+                            .setAttributeType(ConceptMessage.type(attributeType))).build();
             runMethod(method);
         }
 
         @Override
         public void unsetPlays(RoleType role) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
-                                              .setRole(RequestBuilder.ConceptMessage.from(role))).build();
+                            .setRole(ConceptMessage.type(role))).build();
             runMethod(method);
         }
 
-        protected Thing.Remote asInstance(Concept.Remote concept) {
+        protected Thing.Remote asInstance(Thing.Remote concept) {
             // TODO: extract hardcoded error message
             throw GraknConceptException.create("Cannot create instances of ThingType");
         }

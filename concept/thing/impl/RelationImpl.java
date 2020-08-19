@@ -20,13 +20,13 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.ConceptIID;
+import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
-import grakn.client.rpc.RequestBuilder;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.ArrayList;
@@ -43,8 +43,8 @@ public abstract class RelationImpl {
      */
     public static class Local extends ThingImpl.Local implements Relation.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Thing thing) {
+            super(thing);
         }
 
         public RelationType.Local getType() {
@@ -68,15 +68,15 @@ public abstract class RelationImpl {
 
         @Override
         public Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType() {
-            final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+            final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(getIID(), method, ConceptProto.Method.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(getIID(), method, ConceptProto.ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
             final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleType.Remote role = Concept.Remote.of(tx(), rolePlayer.getRoleType()).asType().asRoleType();
-                final Thing.Remote player = Concept.Remote.of(tx(), rolePlayer.getPlayer()).asThing();
+                final RoleType.Remote role = Type.Remote.of(tx(), rolePlayer.getRoleType()).asRoleType();
+                final Thing.Remote player = Thing.Remote.of(tx(), rolePlayer.getPlayer());
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {
@@ -92,33 +92,30 @@ public abstract class RelationImpl {
         }
 
         @Override
-        public Stream<Thing.Remote> getPlayers(final RoleType... roleTypes) {
-            final ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+        public Stream<Thing.Remote> getPlayers(RoleType... roleTypes) {
+            final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersIterReq(ConceptProto.Relation.GetPlayers.Iter.Req.newBuilder()
-                            .addAllRoleTypes(RequestBuilder.ConceptMessage.concepts(Arrays.asList(roleTypes)))).build();
+                            .addAllRoleTypes(ConceptMessage.types(Arrays.asList(roleTypes)))).build();
 
-            return conceptStream(method, res -> res.getRelationGetPlayersIterRes().getThing()).map(Concept.Remote::asThing);
+            return thingStream(method, res -> res.getRelationGetPlayersIterRes().getThing());
         }
 
         @Override
         public void addPlayer(RoleType roleType, Thing player) {
-            final ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setRelationAddPlayerReq(ConceptProto.Relation.AddPlayer.Req.newBuilder()
-                            .setRoleType(RequestBuilder.ConceptMessage.from(roleType))
-                            .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
-
+                            .setRoleType(ConceptMessage.type(roleType))
+                            .setPlayer(ConceptMessage.thing(player))).build();
             runMethod(method);
         }
 
         @Override
         public void removePlayer(RoleType roleType, Thing player) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setRelationRemovePlayerReq(ConceptProto.Relation.RemovePlayer.Req.newBuilder()
-                            .setRoleType(RequestBuilder.ConceptMessage.from(roleType))
-                            .setPlayer(RequestBuilder.ConceptMessage.from(player))).build();
-
+                            .setRoleType(ConceptMessage.type(roleType))
+                            .setPlayer(ConceptMessage.thing(player))).build();
             runMethod(method);
         }
-
     }
 }
