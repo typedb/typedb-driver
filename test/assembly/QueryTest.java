@@ -92,17 +92,6 @@ public class QueryTest {
         grakn.stop();
     }
 
-    @Before
-    public void createClient() {
-        String host = "localhost:48555";
-        graknClient = new GraknClient(host);
-    }
-
-    @After
-    public void closeClient(){
-        graknClient.close();
-    }
-
     @Ignore
     @Test
     public void applicationTest() {

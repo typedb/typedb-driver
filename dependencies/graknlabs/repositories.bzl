@@ -30,7 +30,14 @@ def graknlabs_common():
     git_repository(
         name = "graknlabs_common",
         remote = "https://github.com/graknlabs/common",
-        commit = "c27194391ad75e2dca641bc53e9167272a04c3d5" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        commit = "51ced6cca934d0a863ccfa262d76cfd16863fb86" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+    )
+
+def graknlabs_bazel_distribution():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "30e30cec9e3fe4821103cafbd240ee9862e262ea" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
 
 def graknlabs_dependencies():
@@ -44,7 +51,7 @@ def graknlabs_protocol():
     git_repository(
         name = "graknlabs_protocol",
         remote = "https://github.com/graknlabs/protocol",
-        commit = "c3bb80dffe70e6949f8ea789f64507ef39afd6b6", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        commit = "d50296804f9be3476b29a495d523936d22cdad59", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
 
 def graknlabs_verification():

@@ -30,6 +30,10 @@ commands:
     steps:
       - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
 
+  install-artifact-credentials:
+    steps:
+      - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+
   run-bazel:
     parameters:
       command:
@@ -87,7 +91,7 @@ jobs:
           command: bazel test //test/integration/... --test_output=errors
 
   test-behaviour:
-    machine: 
+    machine:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
