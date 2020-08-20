@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 
 import java.util.Set;
 
@@ -30,7 +30,7 @@ public class ConceptSetMeasure extends ConceptSet {
 
     private final Number measurement;
 
-    public ConceptSetMeasure(Set<ConceptId> set, Number measurement) {
+    public ConceptSetMeasure(Set<ConceptIID> set, Number measurement) {
         super(set);
         this.measurement = measurement;
     }

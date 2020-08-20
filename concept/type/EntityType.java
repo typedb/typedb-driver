@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.impl.EntityTypeImpl;
@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * An ontological element which represents categories instances can fall within.
  * Any instance of a Entity Type is called an Entity.
  */
-public interface EntityType extends Type<EntityType, Entity> {
+public interface EntityType extends ThingType<EntityType, Entity> {
 
     //------------------------------------- Other ---------------------------------
     @Deprecated
@@ -46,7 +46,7 @@ public interface EntityType extends Type<EntityType, Entity> {
     @CheckReturnValue
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return EntityType.Remote.of(tx, id());
+        return EntityType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -56,7 +56,7 @@ public interface EntityType extends Type<EntityType, Entity> {
         return true;
     }
 
-    interface Local extends Type.Local<EntityType, Entity>, EntityType {
+    interface Local extends ThingType.Local<EntityType, Entity>, EntityType {
     }
 
     /**
@@ -64,10 +64,10 @@ public interface EntityType extends Type<EntityType, Entity> {
      * An ontological element which represents categories instances can fall within.
      * Any instance of a Entity Type is called an Entity.
      */
-    interface Remote extends Type.Remote<EntityType, Entity>, EntityType {
+    interface Remote extends ThingType.Remote<EntityType, Entity>, EntityType {
 
-        static EntityType.Remote of(GraknClient.Transaction tx, ConceptId id) {
-            return new EntityTypeImpl.Remote(tx, id);
+        static EntityType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new EntityTypeImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
@@ -90,40 +90,31 @@ public interface EntityType extends Type<EntityType, Entity> {
         EntityType.Remote isAbstract(Boolean isAbstract);
 
         /**
-         * Sets the Role which instances of this EntityType may play.
+         * Sets a RoleType which instances of this EntityType may play.
          *
-         * @param role The Role Type which the instances of this EntityType are allowed to play.
-         * @return The EntityType itself
-         */
-        @Override
-        EntityType.Remote plays(Role role);
-
-        /**
-         * Removes the ability of this EntityType to play a specific Role
-         *
-         * @param role The Role which the Things of this EntityType should no longer be allowed to play.
+         * @param role The RoleType which the instances of this EntityType are allowed to play.
          * @return The EntityType itself.
          */
         @Override
-        EntityType.Remote unplay(Role role);
+        EntityType.Remote plays(RoleType role);
 
         /**
-         * Removes the ability for Things of this EntityType to have Attributes of type AttributeType
+         * Removes the ability of this EntityType to play a specific RoleType.
          *
-         * @param attributeType the AttributeType which this EntityType can no longer have
+         * @param role The RoleType which the Things of this EntityType should no longer be allowed to play.
+         * @return The EntityType itself.
+         */
+        @Override
+        EntityType.Remote unplay(RoleType role);
+
+        /**
+         * Removes the ability for Things of this EntityType to have Attributes of type AttributeType.
+         *
+         * @param attributeType The AttributeType which this EntityType can no longer have.
          * @return The EntityType itself.
          */
         @Override
         EntityType.Remote unhas(AttributeType<?> attributeType);
-
-        /**
-         * Removes AttributeType as a key to this EntityType
-         *
-         * @param attributeType the AttributeType which this EntityType can no longer have as a key
-         * @return The EntityType itself.
-         */
-        @Override
-        EntityType.Remote unkey(AttributeType<?> attributeType);
 
         /**
          * Creates and returns a new Entity instance, whose direct type will be this type.
@@ -142,15 +133,6 @@ public interface EntityType extends Type<EntityType, Entity> {
         EntityType.Remote sup(EntityType superEntityType);
 
         /**
-         * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        EntityType.Remote key(AttributeType<?> attributeType);
-
-        /**
          * Creates a RelationType which allows this type and a resource type to be linked.
          *
          * @param attributeType The resource type which instances of this type should be allowed to play.
@@ -158,6 +140,12 @@ public interface EntityType extends Type<EntityType, Entity> {
          */
         @Override
         EntityType.Remote has(AttributeType<?> attributeType);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, boolean isKey);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        @Override
+        EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ----------------------------------
 

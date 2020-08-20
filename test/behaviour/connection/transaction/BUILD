@@ -34,13 +34,12 @@ java_library(
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
-        "@graknlabs_graql//java:graql",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
-        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:io_cucumber_cucumber_java",
-    ]
+    ],
+    visibility = ["//visibility:public"],
 )
 
 grakn_test(
@@ -56,7 +55,7 @@ grakn_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection/keyspace:steps",
+        "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
     ],
     data = [
@@ -71,6 +70,6 @@ checkstyle_test(
     targets = [
         ":steps",
         ":test-core",
-    ],
+],
     license_type = "apache"
 )

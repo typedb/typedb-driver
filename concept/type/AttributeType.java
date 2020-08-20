@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.GraknConceptException;
 import grakn.client.concept.Label;
@@ -29,9 +29,10 @@ import grakn.client.concept.type.impl.AttributeTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
+public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<D>> {
 
 
 
@@ -67,7 +68,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
 
     @Override
     default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
-        return AttributeType.Remote.of(tx, id());
+        return AttributeType.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -88,7 +89,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Local<D> extends Type.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
+    interface Local<D> extends ThingType.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
     }
 
     /**
@@ -102,10 +103,10 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
      * @param <D> The data type of this resource type.
      *            Supported Types include: String, Long, Double, and Boolean
      */
-    interface Remote<D> extends Type.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
+    interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
 
-        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptId id) {
-            return new AttributeTypeImpl.Remote<>(tx, id);
+        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new AttributeTypeImpl.Remote<>(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
@@ -136,22 +137,22 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
         AttributeType.Remote<D> sup(AttributeType<D> type);
 
         /**
-         * Sets the Role which instances of this AttributeType may play.
+         * Sets the RoleType which instances of this AttributeType may play.
          *
-         * @param role The Role Type which the instances of this AttributeType are allowed to play.
+         * @param role The RoleType which the instances of this AttributeType are allowed to play.
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> plays(Role role);
+        AttributeType.Remote<D> plays(RoleType role);
 
         /**
-         * Removes the ability of this AttributeType to play a specific Role
+         * Removes the ability of this AttributeType to play a specific RoleType
          *
-         * @param role The Role which the Things of this AttributeType should no longer be allowed to play.
+         * @param role The RoleType which the Things of this AttributeType should no longer be allowed to play.
          * @return The AttributeType itself.
          */
         @Override
-        AttributeType.Remote<D> unplay(Role role);
+        AttributeType.Remote<D> unplay(RoleType role);
 
         /**
          * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType
@@ -161,15 +162,6 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          */
         @Override
         AttributeType.Remote<D> unhas(AttributeType<?> attributeType);
-
-        /**
-         * Removes AttributeType as a key to this AttributeType
-         *
-         * @param attributeType the AttributeType which this AttributeType can no longer have as a key
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote<D> unkey(AttributeType<?> attributeType);
 
         /**
          * Set the regular expression that instances of the AttributeType must conform to.
@@ -185,16 +177,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          * @param value A value for the Attribute which is unique to its type
          * @return new or existing Attribute of this type with the provided value.
          */
-        Attribute.Remote<D> create(D value);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        AttributeType.Remote<D> key(AttributeType<?> attributeType);
+        Attribute.Remote<D> put(D value);
 
         /**
          * Creates a RelationType which allows this type and a resource type to be linked.
@@ -204,6 +187,12 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          */
         @Override
         AttributeType.Remote<D> has(AttributeType<?> attributeType);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
+        @Override
+        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
 
         //------------------------------------- Accessors ---------------------------------
 
@@ -216,7 +205,7 @@ public interface AttributeType<D> extends Type<AttributeType<D>, Attribute<D>> {
          */
         @CheckReturnValue
         @Nullable
-        Attribute.Remote<D> attribute(D value);
+        Attribute.Remote<D> get(D value);
 
         /**
          * Returns a collection of super-types of this AttributeType.

@@ -24,7 +24,7 @@ load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 java_library(
     name = "steps",
     srcs = [
-        "KeyspaceSteps.java"
+        "DatabaseSteps.java"
     ],
     deps = [
         # Internal Package Dependencies
@@ -36,27 +36,25 @@ java_library(
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
-    ]
+    ],
+    visibility = ["//visibility:public"],
 )
 
 grakn_test(
     name = "test-core",
     srcs = [
-        "KeyspaceTest.java"
+        "DatabaseTest.java"
     ],
-    test_class = "grakn.client.test.behaviour.connection.keyspace.KeyspaceTest",
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
     deps = [
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        ":steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/config:parameters",
+        ":steps"
     ],
     data = [
-        "@graknlabs_verification//behaviour/connection:keyspace.feature",
+        "@graknlabs_verification//behaviour/connection:database.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",

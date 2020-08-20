@@ -21,11 +21,11 @@ package grakn.client.concept.thing.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 public class EntityImpl {
     /**
@@ -43,8 +43,8 @@ public class EntityImpl {
      */
     public static class Remote extends ThingImpl.Local.Remote<Entity, EntityType> implements Entity.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override

@@ -38,6 +38,7 @@ java_library(
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
+    visibility = ["//visibility:public"],
 )
 
 grakn_test(
@@ -53,7 +54,7 @@ grakn_test(
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection/keyspace:steps",
+        "//test/behaviour/connection/database:steps",
     ],
     data = [
         "@graknlabs_verification//behaviour/connection:session.feature",

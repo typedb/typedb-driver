@@ -19,7 +19,7 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.Rule;
+import grakn.client.concept.type.Rule;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
