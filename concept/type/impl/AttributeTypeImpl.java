@@ -20,7 +20,6 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
@@ -70,11 +69,11 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public Stream<? extends Attribute.Remote> getInstances() {
+        public Stream<? extends Attribute.Remote<?>> getInstances() {
             return super.getInstances().map(Thing.Remote::asAttribute);
         }
 
-        protected final Attribute.Remote put(Object value) {
+        protected final Attribute.Remote<?> put(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                             .setValue(ConceptMessage.attributeValue(value))).build();
@@ -82,13 +81,13 @@ public class AttributeTypeImpl {
         }
 
         @Nullable
-        protected final Attribute.Remote get(Object value) {
+        protected final Attribute.Remote<?> get(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
                             .setValue(ConceptMessage.attributeValue(value))).build();
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
-                case NULL:
+                case RES_NOT_SET:
                     return null;
                 case ATTRIBUTE:
                     return Thing.Remote.of(tx(), response.getAttribute()).asAttribute();
@@ -120,7 +119,7 @@ public class AttributeTypeImpl {
         }*/
 
         @Override
-        protected final Attribute.Remote asInstance(Thing.Remote thing) {
+        protected final Attribute.Remote<?> asInstance(Thing.Remote thing) {
             return thing.asAttribute();
         }
     }
@@ -179,7 +178,7 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final Attribute.Boolean.Remote get(boolean value) {
-                final Attribute.Remote attr = super.get(value);
+                final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asBoolean() : null;
             }
         }
@@ -239,7 +238,7 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final Attribute.Long.Remote get(long value) {
-                final Attribute.Remote attr = super.get(value);
+                final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asLong() : null;
             }
         }
@@ -299,7 +298,7 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final Attribute.Double.Remote get(double value) {
-                final Attribute.Remote attr = super.get(value);
+                final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asDouble() : null;
             }
         }
@@ -359,7 +358,7 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final Attribute.String.Remote get(java.lang.String value) {
-                final Attribute.Remote attr = super.get(value);
+                final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asString() : null;
             }
 
@@ -437,7 +436,7 @@ public class AttributeTypeImpl {
             @Nullable
             @Override
             public final Attribute.DateTime.Remote get(LocalDateTime value) {
-                final Attribute.Remote attr = super.get(value);
+                final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asDateTime() : null;
             }
         }

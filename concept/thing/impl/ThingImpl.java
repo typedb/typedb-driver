@@ -29,6 +29,7 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
@@ -49,9 +50,14 @@ public abstract class ThingImpl {
         private final boolean inferred;
 
         protected Local(ConceptProto.Thing thing) {
-            this.iid = ConceptIID.of(thing.getIid());
-            this.type = Type.Local.of(thing.getType()).asThingType();
-            this.inferred = thing.getInferredRes().getInferred();
+            // TODO we (probably) do need the Type, but we should have a better way of retrieving it.
+            // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
+            // not actually prefilled when using the Concept API.
+            // We should probably create a dedicated Proto class for Graql and keep the code clean.
+            throw new UnsupportedOperationException();
+            //this.iid = ConceptIID.of(thing.getIid());
+            //this.type = Type.Local.of(thing.getType()).asThingType();
+            //this.inferred = thing.getInferredRes().getInferred();
         }
 
         @Override
@@ -108,10 +114,10 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final Stream<Attribute.Remote> getHas(AttributeType... attributeTypes) {
+        public final Stream<? extends Attribute.Remote<?>> getHas(AttributeType... attributeTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
-                                                   .addAllAttributeTypes(ConceptMessage.types(Arrays.asList(attributeTypes)))).build();
+                            .addAllAttributeTypes(ConceptMessage.types(Arrays.asList(attributeTypes)))).build();
             return thingStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Thing.Remote::asAttribute);
         }
 
@@ -141,7 +147,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final Stream<Attribute.Remote> getHas(boolean onlyKey) {
+        public final Stream<? extends Attribute.Remote<?>> getHas(boolean onlyKey) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder().setKeysOnly(onlyKey)).build();
             return thingStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Thing.Remote::asAttribute);
@@ -163,7 +169,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final void setHas(Attribute attribute) {
+        public final void setHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingSetHasReq(ConceptProto.Thing.SetHas.Req.newBuilder()
                             .setAttribute(ConceptMessage.thing(attribute))).build();
@@ -171,7 +177,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final void unsetHas(Attribute attribute) {
+        public final void unsetHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingUnsetHasReq(ConceptProto.Thing.UnsetHas.Req.newBuilder()
                             .setAttribute(ConceptMessage.thing(attribute))).build();
@@ -189,6 +195,32 @@ public abstract class ThingImpl {
         @Override
         public final boolean isDeleted() {
             return tx().getThing(getIID()) == null;
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getCanonicalName() + "{tx=" + tx + ", iid=" + iid + "}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ThingImpl.Remote that = (ThingImpl.Remote) o;
+
+            return this.tx.equals(that.tx) &&
+                    this.iid.equals(that.iid);
+        }
+
+        @Override
+        public int hashCode() {
+            int h = 1;
+            h *= 1000003;
+            h ^= tx.hashCode();
+            h *= 1000003;
+            h ^= iid.hashCode();
+            return h;
         }
 
         protected Transaction tx() {

@@ -93,7 +93,6 @@ public interface Concept {
          *
          * @return A Type if the Concept is a Type
          */
-        @CheckReturnValue
         @Override
         default Type.Local asType() {
             throw GraknConceptException.invalidCasting(this, Type.class);
@@ -104,7 +103,6 @@ public interface Concept {
          *
          * @return A Thing if the Concept is a Thing
          */
-        @CheckReturnValue
         @Override
         default Thing.Local asThing() {
             throw GraknConceptException.invalidCasting(this, Thing.class);
@@ -115,7 +113,6 @@ public interface Concept {
          *
          * @return A Rule if the Concept is a Rule
          */
-        @CheckReturnValue
         @Override
         default Rule.Local asRule() {
             throw GraknConceptException.invalidCasting(this, Rule.class);
@@ -148,23 +145,21 @@ public interface Concept {
         boolean isDeleted();
 
         /**
-         * Return as a SchemaConcept if the Concept is a SchemaConcept.
+         * Return as a Type if the Concept is a Type.
          *
-         * @return A SchemaConcept if the Concept is a SchemaConcept
+         * @return A Type if the Concept is a Type
          */
         @Override
-        @CheckReturnValue
         default Type.Remote asType() {
             throw GraknConceptException.invalidCasting(this, Type.Remote.class);
         }
 
         /**
-         * Return as an Thing if the Concept is an Thing.
+         * Return as a Thing if the Concept is a Thing.
          *
-         * @return An Thing if the Concept is an Thing
+         * @return A Thing if the Concept is a Thing
          */
         @Override
-        @CheckReturnValue
         default Thing.Remote asThing() {
             throw GraknConceptException.invalidCasting(this, Thing.Remote.class);
         }
@@ -175,7 +170,6 @@ public interface Concept {
          * @return A Rule if the Concept is a Rule
          */
         @Override
-        @CheckReturnValue
         default Rule.Remote asRule() {
             throw GraknConceptException.invalidCasting(this, Rule.Remote.class);
         }

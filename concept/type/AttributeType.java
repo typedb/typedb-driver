@@ -152,34 +152,29 @@ public interface AttributeType extends ThingType {
             return this;
         }
 
-        @CheckReturnValue
         @Override
         default AttributeType.Boolean.Local asBoolean() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+            throw GraknConceptException.invalidCasting(this, Boolean.Local.class);
         }
 
-        @CheckReturnValue
         @Override
         default AttributeType.Long.Local asLong() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
+            throw GraknConceptException.invalidCasting(this, Long.Local.class);
         }
 
-        @CheckReturnValue
         @Override
         default AttributeType.Double.Local asDouble() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
+            throw GraknConceptException.invalidCasting(this, Double.Local.class);
         }
 
-        @CheckReturnValue
         @Override
         default AttributeType.String.Local asString() {
-            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
+            throw GraknConceptException.invalidCasting(this, String.Local.class);
         }
 
-        @CheckReturnValue
         @Override
         default AttributeType.DateTime.Local asDateTime() {
-            throw GraknConceptException.invalidCasting(this, LocalDateTime.class);
+            throw GraknConceptException.invalidCasting(this, DateTime.Local.class);
         }
     }
 
@@ -210,27 +205,27 @@ public interface AttributeType extends ThingType {
 
         @Override
         default AttributeType.Boolean.Remote asBoolean() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
+            throw GraknConceptException.invalidCasting(this, Boolean.Remote.class);
         }
 
         @Override
         default AttributeType.Long.Remote asLong() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
+            throw GraknConceptException.invalidCasting(this, Long.Remote.class);
         }
 
         @Override
         default AttributeType.Double.Remote asDouble() {
-            throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
+            throw GraknConceptException.invalidCasting(this, Double.Remote.class);
         }
 
         @Override
         default AttributeType.String.Remote asString() {
-            throw GraknConceptException.invalidCasting(this, java.lang.String.class);
+            throw GraknConceptException.invalidCasting(this, String.Remote.class);
         }
 
         @Override
         default AttributeType.DateTime.Remote asDateTime() {
-            throw GraknConceptException.invalidCasting(this, LocalDateTime.class);
+            throw GraknConceptException.invalidCasting(this, DateTime.Remote.class);
         }
     }
 
@@ -249,6 +244,12 @@ public interface AttributeType extends ThingType {
         }
 
         interface Local extends AttributeType.Boolean, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Local asBoolean() {
+                return this;
+            }
         }
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
@@ -313,6 +314,12 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.Boolean.Remote get(boolean value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Remote asBoolean() {
+                return this;
+            }
         }
     }
 
@@ -331,6 +338,12 @@ public interface AttributeType extends ThingType {
         }
 
         interface Local extends AttributeType.Long, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Local asLong() {
+                return this;
+            }
         }
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
@@ -394,6 +407,12 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.Long.Remote get(long value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Remote asLong() {
+                return this;
+            }
         }
     }
 
@@ -412,6 +431,12 @@ public interface AttributeType extends ThingType {
         }
 
         interface Local extends AttributeType.Double, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Local asDouble() {
+                return this;
+            }
         }
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
@@ -475,6 +500,12 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.Double.Remote get(double value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Remote asDouble() {
+                return this;
+            }
         }
     }
 
@@ -493,6 +524,12 @@ public interface AttributeType extends ThingType {
         }
 
         interface Local extends AttributeType.String, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Local asString() {
+                return this;
+            }
         }
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
@@ -562,6 +599,12 @@ public interface AttributeType extends ThingType {
             java.lang.String getRegex();
 
             void setRegex(java.lang.String regex);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asString() {
+                return this;
+            }
         }
     }
 
@@ -580,6 +623,12 @@ public interface AttributeType extends ThingType {
         }
 
         interface Local extends AttributeType.DateTime, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Local asDateTime() {
+                return this;
+            }
         }
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
@@ -643,6 +692,12 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.DateTime.Remote get(LocalDateTime value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Remote asDateTime() {
+                return this;
+            }
         }
     }
 }

@@ -101,7 +101,7 @@ public class RequestBuilder {
         public static TransactionProto.Transaction.Req getThing(ConceptIID iid) {
             return TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(getTracingData())
-                    .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setId(iid.getValue()))
+                    .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid.getValue()))
                     .build();
         }
 

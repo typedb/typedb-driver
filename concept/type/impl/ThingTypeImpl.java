@@ -104,8 +104,6 @@ public abstract class ThingTypeImpl {
 
             if (valueType != null) {
                 req.setValueType(ConceptMessage.valueType(valueType));
-            } else {
-                req.setNULL(ConceptProto.Null.getDefaultInstance());
             }
 
             final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
@@ -122,15 +120,13 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(ConceptMessage.type(attributeType))
                     .setIsKey(isKey);
 
             if (overriddenType != null) {
                 req.setOverriddenType(ConceptMessage.type(overriddenType));
-            } else {
-                req.setNULL(ConceptProto.Null.getDefaultInstance());
             }
 
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
@@ -140,7 +136,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public void setPlays(RoleType role) {
+        public final void setPlays(RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                             .setRole(ConceptMessage.type(role))).build();
@@ -148,7 +144,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public void unsetOwns(AttributeType attributeType) {
+        public final void unsetOwns(AttributeType attributeType) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
                             .setAttributeType(ConceptMessage.type(attributeType))).build();
@@ -156,7 +152,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public void unsetPlays(RoleType role) {
+        public final void unsetPlays(RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                             .setRole(ConceptMessage.type(role))).build();

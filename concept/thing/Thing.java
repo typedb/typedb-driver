@@ -81,7 +81,7 @@ public interface Thing extends Concept {
      * @return A Attribute if the Thing is an Attribute
      */
     @CheckReturnValue
-    Attribute asAttribute();
+    Attribute<?> asAttribute();
 
     /**
      * Return as a Relation if the Thing is a Relation.
@@ -153,7 +153,7 @@ public interface Thing extends Concept {
          */
         @CheckReturnValue
         @Override
-        default Attribute.Local asAttribute() {
+        default Attribute.Local<?> asAttribute() {
             throw GraknConceptException.invalidCasting(this, Attribute.class);
         }
 
@@ -211,14 +211,14 @@ public interface Thing extends Concept {
          *
          * @param attribute The Attribute to which an ownership is created
          */
-        void setHas(Attribute attribute);
+        void setHas(Attribute<?> attribute);
 
         /**
          * Removes the provided Attribute from this Thing
          *
          * @param attribute the Attribute to be removed
          */
-        void unsetHas(Attribute attribute);
+        void unsetHas(Attribute<?> attribute);
 
         /**
          * Return the Type of the Concept.
@@ -237,7 +237,7 @@ public interface Thing extends Concept {
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<? extends Attribute.Remote> getHas(boolean onlyKey);
+        Stream<? extends Attribute.Remote<?>> getHas(boolean onlyKey);
 
         @CheckReturnValue
         Stream<? extends Attribute.Boolean.Remote> getHas(AttributeType.Boolean attributeType);
@@ -262,7 +262,7 @@ public interface Thing extends Concept {
          * @see Attribute.Remote
          */
         @CheckReturnValue
-        Stream<? extends Attribute.Remote> getHas(AttributeType... attributeTypes);
+        Stream<? extends Attribute.Remote<?>> getHas(AttributeType... attributeTypes);
 
         /**
          * Determine the RoleTypes that this Thing is currently playing.
@@ -319,7 +319,7 @@ public interface Thing extends Concept {
          */
         @Override
         @CheckReturnValue
-        default Attribute.Remote asAttribute() {
+        default Attribute.Remote<?> asAttribute() {
             throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
         }
     }

@@ -63,13 +63,13 @@ public class EntityTest {
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner();
-        runner.start();
+        runner = new GraknCoreRunner(48555);
+//        runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        runner.stop();
+//        runner.stop();
     }
 }

@@ -44,7 +44,6 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.client.rpc.ResponseReader;
@@ -70,7 +69,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
@@ -84,7 +82,7 @@ public class GraknTransaction implements Transaction {
 
     private final Session session;
     private final Type type;
-    private final WeakHashMap<String, grakn.client.concept.type.Type.Local> typeCache;
+    private final HashMap<String, grakn.client.concept.type.Type.Local> typeCache;
     private final Transceiver transceiver;
 
     public static class Builder implements Transaction.Builder {
@@ -115,7 +113,7 @@ public class GraknTransaction implements Transaction {
             this.transceiver = Transceiver.create(GraknGrpc.newStub(channel));
             this.session = session;
             this.type = type;
-            this.typeCache = new WeakHashMap<>();
+            this.typeCache = new HashMap<>();
             sendAndReceiveOrThrow(RequestBuilder.Transaction.open(sessionId, type));
         }
     }
@@ -582,7 +580,7 @@ public class GraknTransaction implements Transaction {
     @Override
     public AttributeType.Remote putAttributeType(String label, ValueType valueType) {
         return grakn.client.concept.type.Type.Remote.of(this, sendAndReceiveOrThrow(RequestBuilder.Transaction.putAttributeType(label, valueType))
-                .getPutAttributeTypeRes().getAttributeType()).asType().asAttributeType();
+                .getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }
 
     @Override
@@ -618,11 +616,13 @@ public class GraknTransaction implements Transaction {
     public grakn.client.concept.type.Type.Remote getType(String label) {
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getType(label));
         switch (response.getGetTypeRes().getResCase()) {
-            case NULL:
-                return null;
             case TYPE:
                 final grakn.client.concept.type.Type.Remote type = grakn.client.concept.type.Type.Remote.of(this, response.getGetTypeRes().getType());
                 typeCache.put(type.getLabel(), grakn.client.concept.type.Type.Local.of(response.getGetTypeRes().getType()));
+                // TODO: maybe we should return the cached Type.Local? It has more information
+                return type;
+            case RES_NOT_SET:
+                return null;
             default:
                 throw GraknClientException.resultNotPresent();
         }
@@ -638,10 +638,10 @@ public class GraknTransaction implements Transaction {
     public Thing.Remote getThing(ConceptIID iid) {
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getThing(iid));
         switch (response.getGetThingRes().getResCase()) {
-            case NULL:
-                return null;
             case THING:
                 return Thing.Remote.of(this, response.getGetThingRes().getThing());
+            case RES_NOT_SET:
+                return null;
             default:
                 throw GraknClientException.resultNotPresent();
         }

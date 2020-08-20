@@ -236,7 +236,8 @@ public interface Type extends Concept {
                             throw new IllegalArgumentException("Unrecognised value type " + type.getValueType() + " for concept " + type);
                     }
                 case ROLE_TYPE:
-                    return new RoleTypeImpl.Remote(tx, label);
+                    final String scopedLabel = type.getScopedLabel();
+                    return new RoleTypeImpl.Remote(tx, label, scopedLabel);
                 case RULE:
                     return new RuleImpl.Remote(tx, label);
                 case THING_TYPE:

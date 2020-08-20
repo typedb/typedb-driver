@@ -98,7 +98,7 @@ public abstract class AttributeImpl {
 
             public Local(ConceptProto.Thing thing) {
                 super(thing);
-                this.value = thing.getValueRes().getValue().getBoolean();
+                this.value = thing.getValue().getBoolean();
             }
 
             @Override
@@ -146,7 +146,7 @@ public abstract class AttributeImpl {
 
             public Local(ConceptProto.Thing thing) {
                 super(thing);
-                this.value = thing.getValueRes().getValue().getLong();
+                this.value = thing.getValue().getLong();
             }
 
             @Override
@@ -194,7 +194,7 @@ public abstract class AttributeImpl {
 
             public Local(ConceptProto.Thing thing) {
                 super(thing);
-                this.value = thing.getValueRes().getValue().getDouble();
+                this.value = thing.getValue().getDouble();
             }
 
             @Override
@@ -242,7 +242,7 @@ public abstract class AttributeImpl {
 
             public Local(ConceptProto.Thing thing) {
                 super(thing);
-                this.value = thing.getValueRes().getValue().getString();
+                this.value = thing.getValue().getString();
             }
 
             @Override
@@ -295,7 +295,7 @@ public abstract class AttributeImpl {
 
             public Local(ConceptProto.Thing thing) {
                 super(thing);
-                this.value = toLocalDateTime(thing.getValueRes().getValue().getDatetime());
+                this.value = toLocalDateTime(thing.getValue().getDatetime());
             }
 
             @Override

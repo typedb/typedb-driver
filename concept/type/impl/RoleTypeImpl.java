@@ -26,6 +26,7 @@ import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public class RoleTypeImpl {
@@ -34,8 +35,17 @@ public class RoleTypeImpl {
      */
     public static class Local extends TypeImpl.Local implements RoleType.Local {
 
+        private final String scopedLabel;
+
         public Local(ConceptProto.Type type) {
             super(type);
+            scopedLabel = type.getScopedLabel();
+        }
+
+        @Override
+        @CheckReturnValue
+        public final String getScopedLabel() {
+            return scopedLabel;
         }
     }
 
@@ -44,16 +54,21 @@ public class RoleTypeImpl {
      */
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        public Remote(Transaction tx, String label) {
+        private final String scopedLabel;
+
+        public Remote(Transaction tx, String label, String scopedLabel) {
             super(tx, label);
+            this.scopedLabel = scopedLabel;
         }
 
         @Override
+        @CheckReturnValue
         public final Stream<RoleType.Remote> getSupertypes() {
             return super.getSupertypes().map(Type.Remote::asRoleType);
         }
 
         @Override
+        @CheckReturnValue
         public final Stream<RoleType.Remote> getSubtypes() {
             return super.getSubtypes().map(Type.Remote::asRoleType);
         }
@@ -64,11 +79,13 @@ public class RoleTypeImpl {
         }
 
         @Override
+        @CheckReturnValue
         public String getScopedLabel() {
-            return "unknown:" + getLabel(); // TODO fix
+            return scopedLabel;
         }
 
         @Override
+        @CheckReturnValue
         public final RelationType.Remote getRelation() {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRoleTypeGetRelationReq(ConceptProto.RoleType.GetRelation.Req.getDefaultInstance()).build();
@@ -79,6 +96,7 @@ public class RoleTypeImpl {
         }
 
         @Override
+        @CheckReturnValue
         public final Stream<RelationType.Remote> getRelations() {
             ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setRoleTypeGetRelationsIterReq(ConceptProto.RoleType.GetRelations.Iter.Req.getDefaultInstance()).build();
@@ -86,6 +104,7 @@ public class RoleTypeImpl {
         }
 
         @Override
+        @CheckReturnValue
         public final Stream<ThingType.Remote> getPlayers() {
             ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();

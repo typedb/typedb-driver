@@ -77,31 +77,26 @@ public interface Attribute<VALUE> extends Thing {
             return this;
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Boolean.Local asBoolean() {
             throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Long.Local asLong() {
             throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Double.Local asDouble() {
             throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.String.Local asString() {
             throw GraknConceptException.invalidCasting(this, java.lang.String.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.DateTime.Local asDateTime() {
             throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);
@@ -148,31 +143,26 @@ public interface Attribute<VALUE> extends Thing {
             return this;
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Boolean.Remote asBoolean() {
             throw GraknConceptException.invalidCasting(this, java.lang.Boolean.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Long.Remote asLong() {
             throw GraknConceptException.invalidCasting(this, java.lang.Long.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.Double.Remote asDouble() {
             throw GraknConceptException.invalidCasting(this, java.lang.Double.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.String.Remote asString() {
             throw GraknConceptException.invalidCasting(this, java.lang.String.class);
         }
 
-        @CheckReturnValue
         @Override
         default Attribute.DateTime.Remote asDateTime() {
             throw GraknConceptException.invalidCasting(this, java.time.LocalDateTime.class);

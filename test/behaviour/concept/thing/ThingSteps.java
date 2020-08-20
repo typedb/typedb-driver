@@ -32,8 +32,9 @@ import java.util.Map;
 import static grakn.client.test.behaviour.concept.type.thingtype.ThingTypeSteps.get_thing_type;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
-import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ThingSteps {
@@ -54,7 +55,11 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} is null: {bool}")
     public void thing_is_null(String var, boolean isNull) {
-        assertEquals(isNull, isNull(get(var)));
+        if (isNull) {
+            assertNull(get(var));
+        } else {
+            assertNotNull(get(var));
+        }
     }
 
     @Then("entity/attribute/relation {var} is deleted: {bool}")
@@ -69,7 +74,7 @@ public class ThingSteps {
     }
 
     @When("delete entity:/attribute:/relation: {var}")
-    public void delete_entity(String var) {
+    public void delete_thing(String var) {
         get(var).delete();
     }
 

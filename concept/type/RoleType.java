@@ -32,9 +32,16 @@ import java.util.stream.Stream;
  */
 public interface RoleType extends Type {
 
+    /**
+     * Get the label of this RoleType scoped to its relation.
+     *
+     * @return The scoped label
+     */
+    String getScopedLabel();
+
     @Override
     default Remote asRemote(Transaction tx) {
-        return RoleType.Remote.of(tx, getLabel());
+        return RoleType.Remote.of(tx, getLabel(), getScopedLabel());
     }
 
     interface Local extends Type.Local, RoleType {
@@ -53,8 +60,8 @@ public interface RoleType extends Type {
      */
     interface Remote extends Type.Remote, RoleType {
 
-        static RoleType.Remote of(Transaction tx, String label) {
-            return new RoleTypeImpl.Remote(tx, label);
+        static RoleType.Remote of(Transaction tx, String label, String scopedLabel) {
+            return new RoleTypeImpl.Remote(tx, label, scopedLabel);
         }
 
         @Override
@@ -69,13 +76,6 @@ public interface RoleType extends Type {
          * @return The RoleType itself.
          */
         void setSupertype(RoleType type);
-
-        /**
-         * Get the label of this RoleType scoped to its relation.
-         *
-         * @return The scoped label
-         */
-        String getScopedLabel();
 
         /**
          * @return All the supertypes of this RoleType.

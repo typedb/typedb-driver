@@ -25,7 +25,6 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
 import grakn.client.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -106,10 +105,10 @@ public abstract class TypeImpl {
             ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
 
             switch (response.getResCase()) {
-                case NULL:
+                case RES_NOT_SET:
                     return null;
                 case TYPE:
-                    return Type.Remote.of(tx(), response.getType()).asType();
+                    return Type.Remote.of(tx(), response.getType());
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
@@ -149,6 +148,32 @@ public abstract class TypeImpl {
         @Override
         public final boolean isDeleted() {
             return tx().getType(getLabel()) == null;
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getCanonicalName() + "{tx=" + tx + ", label=" + label + "}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TypeImpl.Remote that = (TypeImpl.Remote) o;
+
+            return this.tx.equals(that.tx) &&
+                    this.label.equals(that.label);
+        }
+
+        @Override
+        public int hashCode() {
+            int h = 1;
+            h *= 1000003;
+            h ^= tx.hashCode();
+            h *= 1000003;
+            h ^= label.hashCode();
+            return h;
         }
 
         protected Transaction tx() {

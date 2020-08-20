@@ -45,25 +45,9 @@ public class EntitySteps {
         assertThrows(() -> tx().getEntityType(typeLabel).create());
     }
 
-    @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {bool}")
-    public void entity_type_create_new_instance_with_key(String var, String type, String keyType, boolean keyValue) {
-        Attribute.Remote key = tx().getAttributeType(keyType).asBoolean().put(keyValue);
-        final Entity.Remote entity = tx().getEntityType(type).create();
-        entity.setHas(key);
-        put(var, entity);
-    }
-
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute.Remote key = tx().getAttributeType(keyType).asLong().put(keyValue);
-        final Entity.Remote entity = tx().getEntityType(type).create();
-        entity.setHas(key);
-        put(var, entity);
-    }
-
-    @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {double}")
-    public void entity_type_create_new_instance_with_key(String var, String type, String keyType, double keyValue) {
-        Attribute.Remote key = tx().getAttributeType(keyType).asDouble().put(keyValue);
+        final Attribute.Long.Remote key = tx().getAttributeType(keyType).asLong().put(keyValue);
         final Entity.Remote entity = tx().getEntityType(type).create();
         entity.setHas(key);
         put(var, entity);
@@ -71,7 +55,7 @@ public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute.Remote key = tx().getAttributeType(keyType).asString().put(keyValue);
+        final Attribute.String.Remote key = tx().getAttributeType(keyType).asString().put(keyValue);
         final Entity.Remote entity = tx().getEntityType(type).create();
         entity.setHas(key);
         put(var, entity);
@@ -79,29 +63,15 @@ public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute.Remote key = tx().getAttributeType(keyType).asDateTime().put(keyValue);
+        final Attribute.DateTime.Remote key = tx().getAttributeType(keyType).asDateTime().put(keyValue);
         final Entity.Remote entity = tx().getEntityType(type).create();
         entity.setHas(key);
         put(var, entity);
     }
 
-    @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {bool}")
-    public void entity_type_get_instance_with_key(String var1, String type, String keyType, boolean keyValue) {
-        put(var1, tx().getAttributeType(keyType).asBoolean().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
-                .findFirst().orElse(null));
-    }
-
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
         put(var1, tx().getAttributeType(keyType).asLong().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
-                .findFirst().orElse(null));
-    }
-
-    @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {double}")
-    public void entity_type_get_instance_with_key(String var1, String type, String keyType, double keyValue) {
-        put(var1, tx().getAttributeType(keyType).asDouble().get(keyValue).getOwners()
                 .filter(owner -> owner.getType().equals(tx().getEntityType(type)))
                 .findFirst().orElse(null));
     }

@@ -69,7 +69,7 @@ public class RuleImpl {
 
             ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
             switch (response.getResCase()) {
-                case NULL:
+                case RES_NOT_SET:
                     return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
@@ -87,7 +87,7 @@ public class RuleImpl {
 
             ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();
             switch (response.getResCase()) {
-                case NULL:
+                case RES_NOT_SET:
                     return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());

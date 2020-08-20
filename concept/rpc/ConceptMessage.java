@@ -44,10 +44,15 @@ public abstract class ConceptMessage {
     }
 
     public static ConceptProto.Type type(Type type) {
-        return ConceptProto.Type.newBuilder()
+        final ConceptProto.Type.Builder builder = ConceptProto.Type.newBuilder()
                 .setLabel(type.getLabel())
-                .setSchema(schema(type))
-                .build();
+                .setSchema(schema(type));
+
+        if (type instanceof RoleType) {
+            builder.setScopedLabel(type.asRoleType().getScopedLabel());
+        }
+
+        return builder.build();
     }
 
     private static ConceptProto.Thing.SCHEMA schema(Thing thing) {
@@ -80,20 +85,12 @@ public abstract class ConceptMessage {
         }
     }
 
-    public static Collection<ConceptProto.Concept> concepts(Collection<? extends Concept> concepts) {
-        return concepts.stream().map(ConceptMessage::concept).collect(toList());
-    }
-
-    public static Collection<ConceptProto.Thing> things(Collection<? extends Thing> things) {
-        return things.stream().map(ConceptMessage::thing).collect(toList());
-    }
-
     public static Collection<ConceptProto.Type> types(Collection<? extends Type> types) {
         return types.stream().map(ConceptMessage::type).collect(toList());
     }
 
-    public static ConceptProto.ValueObject attributeValue(Object value) {
-        ConceptProto.ValueObject.Builder builder = ConceptProto.ValueObject.newBuilder();
+    public static ConceptProto.Attribute.Value attributeValue(Object value) {
+        ConceptProto.Attribute.Value.Builder builder = ConceptProto.Attribute.Value.newBuilder();
         if (value instanceof String) {
             builder.setString((String) value);
         } else if (value instanceof Boolean) {
