@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.rpc;
+package grakn.client.connection;
 
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
@@ -46,7 +46,7 @@ import static grakn.protocol.TransactionProto.Transaction.Res;
  * A request is sent with the #send(Transaction.Req)} method, and you can block for a response with the
  * #receive() method.
  * {@code
- * try (Transceiver tx = Transceiver.create(stub) {
+ * try (GraknTransceiver tx = GraknTransceiver.create(stub) {
  * tx.send(openMessage);
  * Transaction.Res doneMessage = tx.receive().ok();
  * tx.send(commitMessage);
@@ -54,22 +54,22 @@ import static grakn.protocol.TransactionProto.Transaction.Res;
  * }
  * }
  */
-public class Transceiver implements AutoCloseable {
+public class GraknTransceiver implements AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GraknTransceiver.class);
 
     private final StreamObserver<Req> requestSender;
     private final ResponseListener responseListener;
 
-    private Transceiver(StreamObserver<Req> requestSender, ResponseListener responseListener) {
+    private GraknTransceiver(StreamObserver<Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
         this.responseListener = responseListener;
     }
 
-    public static Transceiver create(GraknGrpc.GraknStub stub) {
+    public static GraknTransceiver create(GraknGrpc.GraknStub stub) {
         ResponseListener responseListener = new ResponseListener();
         StreamObserver<Req> requestSender = stub.transaction(responseListener);
-        return new Transceiver(requestSender, responseListener);
+        return new GraknTransceiver(requestSender, responseListener);
     }
 
     /**
@@ -211,7 +211,7 @@ public class Transceiver implements AutoCloseable {
         private volatile boolean terminated = false;
 
         synchronized void addCollector(ResponseCollector collector) {
-            if (terminated) throw GraknClientException.create("Transaction listener was terminated");
+            if (terminated) throw new GraknClientException("Transaction listener was terminated");
             collectorQueue.add(collector);
         }
 
@@ -248,7 +248,7 @@ public class Transceiver implements AutoCloseable {
 
             // Exhaust the queue
             while (currentCollector != null || collectorQueue.peek() != null) {
-                dispatchResponse(Response.error((Exception) throwable));
+                dispatchResponse(Response.error((StatusRuntimeException) throwable));
             }
         }
 
@@ -271,14 +271,14 @@ public class Transceiver implements AutoCloseable {
     public static class Response {
 
         private final Res nullableOk;
-        private final Exception nullableError;
+        private final StatusRuntimeException nullableError;
 
-        Response(@Nullable Res nullableOk, @Nullable Exception nullableError) {
+        Response(@Nullable Res nullableOk, @Nullable StatusRuntimeException nullableError) {
             this.nullableOk = nullableOk;
             this.nullableError = nullableError;
         }
 
-        private static Response create(@Nullable Res response, @Nullable Exception error) {
+        private static Response create(@Nullable Res response, @Nullable StatusRuntimeException error) {
             if (!(response == null || error == null)) {
                 throw new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null");
             }
@@ -289,7 +289,7 @@ public class Transceiver implements AutoCloseable {
             return create(null, null);
         }
 
-        static Response error(Exception error) {
+        static Response error(StatusRuntimeException error) {
             return create(null, error);
         }
 
@@ -303,7 +303,7 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Nullable
-        Exception nullableError() {
+        StatusRuntimeException nullableError() {
             return nullableError;
         }
 
@@ -327,9 +327,9 @@ public class Transceiver implements AutoCloseable {
                 return nullableOk;
             } else if (nullableError != null) {
                 // TODO: parse different GRPC errors into specific GraknClientException
-                throw GraknClientException.create(nullableError.getMessage(), nullableError);
+                throw new GraknClientException(nullableError);
             } else {
-                throw GraknClientException.create("Transaction interrupted, all running queries have been stopped.");
+                throw new GraknClientException("Transaction interrupted, all running queries have been stopped.");
             }
         }
 
@@ -357,8 +357,8 @@ public class Transceiver implements AutoCloseable {
             if (o == this) {
                 return true;
             }
-            if (o instanceof Transceiver.Response) {
-                Transceiver.Response that = (Transceiver.Response) o;
+            if (o instanceof GraknTransceiver.Response) {
+                GraknTransceiver.Response that = (GraknTransceiver.Response) o;
                 return ((this.nullableOk == null) ? (that.nullableOk() == null) : this.nullableOk.equals(that.nullableOk()))
                         && ((this.nullableError == null) ? (that.nullableError() == null) : this.nullableError.equals(that.nullableError()));
             }

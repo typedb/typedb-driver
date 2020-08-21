@@ -27,6 +27,10 @@ public class GraknDatabase implements Database {
 
     private final String name;
 
+    public GraknDatabase() {
+        this(DEFAULT);
+    }
+
     public GraknDatabase(String name) {
         if (name == null) {
             throw new NullPointerException("Null name");

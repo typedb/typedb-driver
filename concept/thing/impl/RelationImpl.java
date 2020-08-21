@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RoleType;
@@ -35,6 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static grakn.client.concept.ConceptMessageWriter.thing;
+import static grakn.client.concept.ConceptMessageWriter.type;
+import static grakn.client.concept.ConceptMessageWriter.types;
 
 public abstract class RelationImpl {
     /**
@@ -94,7 +97,7 @@ public abstract class RelationImpl {
         public Stream<Thing.Remote> getPlayers(RoleType... roleTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersIterReq(ConceptProto.Relation.GetPlayers.Iter.Req.newBuilder()
-                            .addAllRoleTypes(ConceptMessage.types(Arrays.asList(roleTypes)))).build();
+                            .addAllRoleTypes(types(Arrays.asList(roleTypes)))).build();
 
             return thingStream(method, res -> res.getRelationGetPlayersIterRes().getThing());
         }
@@ -103,8 +106,8 @@ public abstract class RelationImpl {
         public void addPlayer(RoleType roleType, Thing player) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setRelationAddPlayerReq(ConceptProto.Relation.AddPlayer.Req.newBuilder()
-                            .setRoleType(ConceptMessage.type(roleType))
-                            .setPlayer(ConceptMessage.thing(player))).build();
+                            .setRoleType(type(roleType))
+                            .setPlayer(thing(player))).build();
             runMethod(method);
         }
 
@@ -112,8 +115,8 @@ public abstract class RelationImpl {
         public void removePlayer(RoleType roleType, Thing player) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setRelationRemovePlayerReq(ConceptProto.Relation.RemovePlayer.Req.newBuilder()
-                            .setRoleType(ConceptMessage.type(roleType))
-                            .setPlayer(ConceptMessage.thing(player))).build();
+                            .setRoleType(type(roleType))
+                            .setPlayer(thing(player))).build();
             runMethod(method);
         }
     }

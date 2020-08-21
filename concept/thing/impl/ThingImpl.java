@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -34,6 +33,8 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.concept.ConceptMessageWriter.thing;
+import static grakn.client.concept.ConceptMessageWriter.types;
 import static java.util.Objects.requireNonNull;
 
 public abstract class ThingImpl {
@@ -109,7 +110,7 @@ public abstract class ThingImpl {
         public final Stream<? extends Attribute.Remote<?>> getHas(AttributeType... attributeTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
-                            .addAllAttributeTypes(ConceptMessage.types(Arrays.asList(attributeTypes)))).build();
+                            .addAllAttributeTypes(types(Arrays.asList(attributeTypes)))).build();
             return thingStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Thing.Remote::asAttribute);
         }
 
@@ -156,7 +157,7 @@ public abstract class ThingImpl {
         public final Stream<? extends Relation> getRelations(RoleType... roleTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetRelationsIterReq(ConceptProto.Thing.GetRelations.Iter.Req.newBuilder()
-                            .addAllRoleTypes(ConceptMessage.types(Arrays.asList(roleTypes)))).build();
+                            .addAllRoleTypes(types(Arrays.asList(roleTypes)))).build();
             return thingStream(method, res -> res.getThingGetRelationsIterRes().getRelation()).map(Thing.Remote::asRelation);
         }
 
@@ -164,7 +165,7 @@ public abstract class ThingImpl {
         public final void setHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingSetHasReq(ConceptProto.Thing.SetHas.Req.newBuilder()
-                            .setAttribute(ConceptMessage.thing(attribute))).build();
+                            .setAttribute(thing(attribute))).build();
             runMethod(method);
         }
 
@@ -172,7 +173,7 @@ public abstract class ThingImpl {
         public final void unsetHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingUnsetHasReq(ConceptProto.Thing.UnsetHas.Req.newBuilder()
-                            .setAttribute(ConceptMessage.thing(attribute))).build();
+                            .setAttribute(thing(attribute))).build();
             runMethod(method);
         }
 

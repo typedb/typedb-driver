@@ -1,11 +1,12 @@
-package grakn.client.concept.rpc;
+package grakn.client.concept;
 
-import grakn.client.concept.Concept;
+import com.google.protobuf.ByteString;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
@@ -19,12 +20,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 
+import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
+import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.stream.Collectors.toList;
 
 /**
  * An RPC Request Builder class for Concept messages
  */
-public abstract class ConceptMessage {
+public abstract class ConceptMessageWriter {
 
     public static ConceptProto.Concept concept(Concept concept) {
         final ConceptProto.Concept.Builder builder = ConceptProto.Concept.newBuilder();
@@ -55,38 +58,8 @@ public abstract class ConceptMessage {
         return builder.build();
     }
 
-    private static ConceptProto.Thing.SCHEMA schema(Thing thing) {
-        if (thing instanceof Entity) {
-            return ConceptProto.Thing.SCHEMA.ENTITY;
-        } else if (thing instanceof Relation) {
-            return ConceptProto.Thing.SCHEMA.RELATION;
-        } else if (thing instanceof Attribute) {
-            return ConceptProto.Thing.SCHEMA.ATTRIBUTE;
-        } else {
-            throw GraknClientException.unreachableStatement("Unrecognised thing " + thing);
-        }
-    }
-
-    private static ConceptProto.Type.SCHEMA schema(Type type) {
-        if (type instanceof EntityType) {
-            return ConceptProto.Type.SCHEMA.ENTITY_TYPE;
-        } else if (type instanceof RelationType) {
-            return ConceptProto.Type.SCHEMA.RELATION_TYPE;
-        } else if (type instanceof AttributeType) {
-            return ConceptProto.Type.SCHEMA.ATTRIBUTE_TYPE;
-        } else if (type instanceof RoleType) {
-            return ConceptProto.Type.SCHEMA.ROLE_TYPE;
-        } else if (type instanceof Rule) {
-            return ConceptProto.Type.SCHEMA.RULE;
-        } else if (type instanceof ThingType) {
-            return ConceptProto.Type.SCHEMA.THING_TYPE;
-        } else {
-            throw GraknClientException.unreachableStatement("Unrecognised type " + type);
-        }
-    }
-
     public static Collection<ConceptProto.Type> types(Collection<? extends Type> types) {
-        return types.stream().map(ConceptMessage::type).collect(toList());
+        return types.stream().map(ConceptMessageWriter::type).collect(toList());
     }
 
     public static ConceptProto.Attribute.Value attributeValue(Object value) {
@@ -102,12 +75,12 @@ public abstract class ConceptMessage {
         } else if (value instanceof LocalDateTime) {
             builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
         } else {
-            throw GraknClientException.unreachableStatement("Unrecognised " + value);
+            throw new GraknClientException(UNRECOGNISED_CONCEPT.message("attribute value", value));
         }
         return builder.build();
     }
 
-    public static ConceptProto.AttributeType.VALUE_TYPE valueType(AttributeType.ValueType valueType) {
+    public static ConceptProto.AttributeType.VALUE_TYPE valueType(ValueType valueType) {
         switch (valueType) {
             case STRING:
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
@@ -121,10 +94,41 @@ public abstract class ConceptMessage {
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             default:
             case OBJECT:
+                return ConceptProto.AttributeType.VALUE_TYPE.UNRECOGNIZED;
+        }
+    }
 
     public static ByteString iid(final String iid) {
         return ByteString.copyFrom(hexStringToBytes(iid));
     }
+
+    private static ConceptProto.Thing.SCHEMA schema(final Thing thing) {
+        if (thing instanceof Entity) {
+            return ConceptProto.Thing.SCHEMA.ENTITY;
+        } else if (thing instanceof Relation) {
+            return ConceptProto.Thing.SCHEMA.RELATION;
+        } else if (thing instanceof Attribute) {
+            return ConceptProto.Thing.SCHEMA.ATTRIBUTE;
+        } else {
+            return ConceptProto.Thing.SCHEMA.UNRECOGNIZED;
+        }
+    }
+
+    private static ConceptProto.Type.SCHEMA schema(final Type type) {
+        if (type instanceof EntityType) {
+            return ConceptProto.Type.SCHEMA.ENTITY_TYPE;
+        } else if (type instanceof RelationType) {
+            return ConceptProto.Type.SCHEMA.RELATION_TYPE;
+        } else if (type instanceof AttributeType) {
+            return ConceptProto.Type.SCHEMA.ATTRIBUTE_TYPE;
+        } else if (type instanceof RoleType) {
+            return ConceptProto.Type.SCHEMA.ROLE_TYPE;
+        } else if (type instanceof Rule) {
+            return ConceptProto.Type.SCHEMA.RULE;
+        } else if (type instanceof ThingType) {
+            return ConceptProto.Type.SCHEMA.THING_TYPE;
+        } else {
+            return ConceptProto.Type.SCHEMA.UNRECOGNIZED;
         }
     }
 }

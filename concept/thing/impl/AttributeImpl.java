@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -31,6 +30,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
+
+import static grakn.client.concept.ConceptMessageWriter.type;
 
 public abstract class AttributeImpl {
 
@@ -75,7 +76,7 @@ public abstract class AttributeImpl {
         public Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
             ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.newBuilder()
-                            .setThingType(ConceptMessage.type(ownerType))).build();
+                            .setThingType(type(ownerType))).build();
             return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
         }
 

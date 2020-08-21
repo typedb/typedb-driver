@@ -35,7 +35,6 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -44,8 +43,6 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
-import grakn.client.rpc.ResponseReader;
-import grakn.client.rpc.Transceiver;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
@@ -76,16 +73,17 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
-import static grakn.client.concept.rpc.ConceptMessage.iid;
-import static grakn.client.concept.rpc.ConceptMessage.valueType;
-import static grakn.client.connection.ConnectionMessage.tracingData;
+import static grakn.client.concept.ConceptMessageWriter.concept;
+import static grakn.client.concept.ConceptMessageWriter.iid;
+import static grakn.client.concept.ConceptMessageWriter.valueType;
+import static grakn.client.connection.ConnectionMessageWriter.tracingData;
 
 public class GraknTransaction implements Transaction {
 
     private final Session session;
     private final Type type;
     private final HashMap<String, grakn.client.concept.type.Type.Local> typeCache;
-    private final Transceiver transceiver;
+    private final GraknTransceiver transceiver;
 
     public static class Builder implements Transaction.Builder {
 
@@ -112,7 +110,7 @@ public class GraknTransaction implements Transaction {
 
     GraknTransaction(ManagedChannel channel, Session session, ByteString sessionId, Type type) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread(type == Type.WRITE ? "tx.write" : "tx.read")) {
-            this.transceiver = Transceiver.create(GraknGrpc.newStub(channel));
+            this.transceiver = GraknTransceiver.create(GraknGrpc.newStub(channel));
             this.session = session;
             this.type = type;
             this.typeCache = new HashMap<>();
@@ -475,7 +473,8 @@ public class GraknTransaction implements Transaction {
         }
     }
 
-    private <T> RPCIterator<T> getQueryIterator(final GraqlQuery query, final QueryOptions options) {
+    @SuppressWarnings("unchecked")
+    private <T extends Answer> RPCIterator<T> getQueryIterator(final GraqlQuery query, final QueryOptions options) {
         final OptionsProto.Options.Builder optionsBuilder = OptionsProto.Options.newBuilder();
         options.whenSet(Grakn.Transaction.BooleanOption.INFER, optionsBuilder::setInfer)
                 .whenSet(Grakn.Transaction.BooleanOption.EXPLAIN, optionsBuilder::setExplain);
@@ -488,7 +487,7 @@ public class GraknTransaction implements Transaction {
         options.whenSet(Grakn.Transaction.BatchOption.BATCH_SIZE, reqBuilder::setOptions);
 
         final TransactionProto.Transaction.Iter.Req iterReq = reqBuilder.build();
-        return new RPCIterator<>(iterReq, response -> ResponseReader.answer(response.getQueryIterRes().getAnswer(), this));
+        return new RPCIterator<>(iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));
     }
 
     private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query) {
@@ -748,13 +747,13 @@ public class GraknTransaction implements Transaction {
         AnswerProto.Explanation.Req explanationReq = AnswerProto.Explanation.Req.newBuilder().setExplainable(conceptMapProto).build();
         TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setExplanationReq(explanationReq).build();
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(request);
-        return ResponseReader.explanation(response.getExplanationRes(), this);
+        return Explanation.of(this, response.getExplanationRes());
     }
 
     private AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
         AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
         conceptMap.map().forEach((var, concept) -> {
-            ConceptProto.Concept conceptProto = ConceptMessage.concept(concept);
+            ConceptProto.Concept conceptProto = concept(concept);
             conceptMapProto.putMap(var, conceptProto);
         });
         conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
@@ -885,7 +884,7 @@ public class GraknTransaction implements Transaction {
             sendRequest(iterReq);
         }
 
-        private class Batch extends Transceiver.MultiResponseCollector {
+        private class Batch extends GraknTransceiver.MultiResponseCollector {
             @Override
             protected boolean isLastResponse(TransactionProto.Transaction.Res response) {
                 TransactionProto.Transaction.Iter.Res iterRes = response.getIterRes();

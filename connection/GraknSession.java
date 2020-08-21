@@ -27,6 +27,8 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
+import static grakn.client.connection.ConnectionMessageWriter.sessionType;
+
 public class GraknSession implements Session {
 
     protected ManagedChannel channel;
@@ -42,7 +44,7 @@ public class GraknSession implements Session {
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(databaseName)
-                .setType(ConnectionMessage.sessionType(type)).build();
+                .setType(sessionType(type)).build();
 
         final SessionProto.Session.Open.Res response = sessionStub.sessionOpen(openReq);
         sessionId = response.getSessionID();

@@ -20,16 +20,15 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.concept.ConceptMessageWriter.type;
 import static java.util.Objects.requireNonNull;
 
 public abstract class TypeImpl {
@@ -132,7 +131,7 @@ public abstract class TypeImpl {
         protected final void setSupertype(Type type) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
-                            .setType(ConceptMessage.type(type))).build();
+                            .setType(type(type))).build();
             runMethod(method);
         }
 

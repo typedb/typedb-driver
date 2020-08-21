@@ -20,17 +20,17 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
+
+import static grakn.client.concept.ConceptMessageWriter.attributeValue;
 
 public class AttributeTypeImpl {
 
@@ -76,7 +76,7 @@ public class AttributeTypeImpl {
         protected final Attribute.Remote<?> put(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                            .setValue(ConceptMessage.attributeValue(value))).build();
+                            .setValue(attributeValue(value))).build();
             return Thing.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
@@ -84,7 +84,7 @@ public class AttributeTypeImpl {
         protected final Attribute.Remote<?> get(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                            .setValue(ConceptMessage.attributeValue(value))).build();
+                            .setValue(attributeValue(value))).build();
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
@@ -111,7 +111,7 @@ public class AttributeTypeImpl {
                 case NULL:
                     return null;
                 case VALUETYPE:
-                    return ConceptMessage.valueType(response.getValueType());
+                    return valueType(response.getValueType());
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
