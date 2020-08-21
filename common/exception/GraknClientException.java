@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.exception;
+package grakn.client.common.exception;
 
 import grakn.client.concept.Concept;
 import io.grpc.StatusRuntimeException;

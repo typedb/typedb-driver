@@ -20,7 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.GraknConceptException;
+import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;

@@ -21,7 +21,7 @@ package grakn.client.connection;
 
 import com.google.common.collect.ImmutableList;
 import grakn.client.Grakn.DatabaseManager;
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.GraknGrpc;
 import io.grpc.ManagedChannel;

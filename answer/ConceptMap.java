@@ -21,8 +21,8 @@ package grakn.client.answer;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.GraknConceptException;
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknConceptException;
+import grakn.client.common.exception.GraknClientException;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;

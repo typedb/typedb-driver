@@ -19,10 +19,9 @@
 
 package grakn.client.rpc;
 
-import com.google.common.collect.AbstractIterator;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -35,7 +34,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.protocol.TransactionProto.Transaction.Req;

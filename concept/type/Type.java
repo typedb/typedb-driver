@@ -21,11 +21,7 @@ package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.GraknConceptException;
-import grakn.client.concept.thing.impl.AttributeImpl;
-import grakn.client.concept.thing.impl.EntityImpl;
-import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;

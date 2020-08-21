@@ -23,7 +23,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.common.exception;
 
 public class GraknConceptException extends RuntimeException {
     final static String INVALID_OBJECT_TYPE = "The concept [%s] is not of type [%s]";

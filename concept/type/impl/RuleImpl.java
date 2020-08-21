@@ -22,7 +22,7 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;

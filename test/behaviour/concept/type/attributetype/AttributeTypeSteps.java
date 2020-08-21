@@ -18,7 +18,7 @@
 
 package grakn.client.test.behaviour.concept.type.attributetype;
 
-import grakn.client.concept.GraknConceptException;
+import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;

@@ -18,7 +18,7 @@
 
 package grakn.client.test.behaviour.util;
 
-import grakn.client.exception.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
