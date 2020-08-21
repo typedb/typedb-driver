@@ -19,6 +19,8 @@
 
 package grakn.client.answer;
 
+import grakn.protocol.AnswerProto;
+
 /**
  * A type of Answer object that contains a Number.
  */
@@ -28,6 +30,10 @@ public class Numeric implements Answer {
 
     public Numeric(Number number) {
         this.number = number;
+    }
+
+    public static Numeric of(final AnswerProto.Value res) {
+        return new Numeric(AnswerMessageReader.number(res.getNumber()));
     }
 
     @Override

@@ -23,12 +23,15 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
 import grakn.client.common.exception.GraknConceptException;
 import grakn.client.common.exception.GraknClientException;
+import grakn.protocol.AnswerProto;
+import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +53,14 @@ public class ConceptMap implements Answer {
         this.queryPattern = queryPattern;
         this.hasExplanation = hasExplanation;
         this.tx = tx;
+    }
+
+    public static ConceptMap of(final Transaction tx, final AnswerProto.ConceptMap res) {
+        final Map<String, Concept> variableMap = new HashMap<>();
+        res.getMapMap().forEach((resVar, resConcept) -> variableMap.put(resVar, Concept.Local.of(resConcept)));
+        boolean hasExplanation = res.getHasExplanation();
+        Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
+        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
     }
 
     /**

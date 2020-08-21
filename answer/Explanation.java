@@ -19,10 +19,15 @@
 
 package grakn.client.answer;
 
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.Type;
+import grakn.protocol.AnswerProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,6 +45,14 @@ public class Explanation {
     public Explanation(List<ConceptMap> ans, @Nullable Rule.Remote rule) {
         this.answers = Collections.unmodifiableList(ans);
         this.rule = rule;
+    }
+
+    public static Explanation of(final Transaction tx, final AnswerProto.Explanation.Res res) {
+        final List<ConceptMap> answers = new ArrayList<>();
+        res.getExplanationList().forEach(explanationMap -> answers.add(ConceptMap.of(tx, explanationMap)));
+        final ConceptProto.Type ruleProto = res.getRule();
+        final Rule.Remote rule = res.hasRule() ? Type.Remote.of(tx, ruleProto).asRule() : null;
+        return new Explanation(answers, rule);
     }
 
     /**

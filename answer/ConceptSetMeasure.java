@@ -19,7 +19,12 @@
 
 package grakn.client.answer;
 
+import grakn.protocol.AnswerProto;
+
 import java.util.Set;
+
+import static grakn.client.answer.AnswerMessageReader.number;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * A type of Answer object that contains a Set and Number, by extending RemoteConceptSet.
@@ -31,6 +36,13 @@ public class ConceptSetMeasure extends ConceptSet {
     public ConceptSetMeasure(Set<String> set, Number measurement) {
         super(set);
         this.measurement = measurement;
+    }
+
+    public static ConceptSetMeasure of(final AnswerProto.ConceptSetMeasure res) {
+        return new ConceptSetMeasure(
+                res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toSet()),
+                number(res.getMeasurement())
+        );
     }
 
     public Number measurement() {

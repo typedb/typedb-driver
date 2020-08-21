@@ -19,8 +19,12 @@
 
 package grakn.client.answer;
 
+import grakn.protocol.AnswerProto;
+
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A type of Answer object that contains a List of Concepts.
@@ -32,6 +36,10 @@ public class ConceptList implements Answer {
 
     public ConceptList(List<String> list) {
         this.list = Collections.unmodifiableList(list);
+    }
+
+    public static ConceptList of(final AnswerProto.ConceptList res) {
+        return new ConceptList(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toList()));
     }
 
     public boolean hasExplanation() {

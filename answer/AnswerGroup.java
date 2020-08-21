@@ -19,9 +19,13 @@
 
 package grakn.client.answer;
 
+import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.protocol.AnswerProto;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * A type of Answer object that contains a List of Answers as the members and a RemoteConcept
@@ -29,7 +33,7 @@ import java.util.List;
  *
  * @param <T> the type of Answer being grouped
  */
-public class AnswerGroup<T> implements Answer {
+public class AnswerGroup<T extends Answer> implements Answer {
 
     private final Concept.Remote owner;
     private final List<T> answers;
@@ -37,6 +41,13 @@ public class AnswerGroup<T> implements Answer {
     public AnswerGroup(Concept.Remote owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
+    }
+
+    public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
+        return new AnswerGroup<>(
+                Concept.Remote.of(tx, res.getOwner()),
+                res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList())
+        );
     }
 
     @Override

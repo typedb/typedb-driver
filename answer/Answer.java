@@ -19,6 +19,9 @@
 
 package grakn.client.answer;
 
+import grakn.client.Grakn.Transaction;
+import grakn.protocol.AnswerProto;
+
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -32,4 +35,25 @@ public interface Answer {
     @CheckReturnValue
     boolean hasExplanation();
 
+    static Answer of(final Transaction tx, final AnswerProto.Answer res) {
+        switch (res.getAnswerCase()) {
+            case ANSWERGROUP:
+                return AnswerGroup.of(tx, res.getAnswerGroup());
+            case CONCEPTMAP:
+                return ConceptMap.of(tx, res.getConceptMap());
+            case CONCEPTLIST:
+                return ConceptList.of(res.getConceptList());
+            case CONCEPTSET:
+                return ConceptSet.of(res.getConceptSet());
+            case CONCEPTSETMEASURE:
+                return ConceptSetMeasure.of(res.getConceptSetMeasure());
+            case VALUE:
+                return Numeric.of(res.getValue());
+            case VOID:
+                return Void.of(res.getVoid());
+            default:
+            case ANSWER_NOT_SET:
+                throw new IllegalArgumentException("Unexpected " + res);
+        }
+    }
 }

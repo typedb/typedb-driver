@@ -18,8 +18,12 @@
  */
 package grakn.client.answer;
 
+import grakn.protocol.AnswerProto;
+
 import java.util.Collections;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * A type of Answer object that contains a Set.
@@ -31,6 +35,10 @@ public class ConceptSet implements Answer {
 
     public ConceptSet(Set<String> set) {
         this.set = Collections.unmodifiableSet(set);
+    }
+
+    public static ConceptSet of(final AnswerProto.ConceptSet res) {
+        return new ConceptSet(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toSet()));
     }
 
     @Override

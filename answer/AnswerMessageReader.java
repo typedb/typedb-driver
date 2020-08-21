@@ -19,25 +19,25 @@
 
 package grakn.client.answer;
 
+import com.google.protobuf.ByteString;
 import grakn.protocol.AnswerProto;
 
-public class Void implements Answer {
-    private final String message;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
-    public Void(String message) {
-        this.message = message;
+import static grakn.common.collection.Bytes.bytesToHexString;
+
+abstract class AnswerMessageReader {
+
+    static String iid(final ByteString res) {
+        return bytesToHexString(res.toByteArray());
     }
 
-    public static Void of(final AnswerProto.Void res) {
-        return new Void(res.getMessage());
-    }
-
-    @Override
-    public boolean hasExplanation() {
-        return false;
-    }
-
-    public String message() {
-        return message;
+    static Number number(final AnswerProto.Number res) {
+        try {
+            return NumberFormat.getInstance().parse(res.getValue());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
