@@ -22,12 +22,13 @@ package grakn.client.connection;
 import com.google.common.collect.ImmutableList;
 import grakn.client.Grakn.DatabaseManager;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RequestBuilder;
+import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 class GraknDatabaseManager implements DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingStub;
@@ -38,37 +39,29 @@ class GraknDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean contains(String name) {
-        try {
-            return blockingStub.databaseContains(RequestBuilder.DatabaseMessage.contains(name)).getContains();
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.create(e.getMessage(), e);
-        }
+        return request(() -> blockingStub.databaseContains(DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build()).getContains());
     }
 
     @Override
     public void create(String name) {
-        try {
-            blockingStub.databaseCreate(RequestBuilder.DatabaseMessage.create(name));
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.create(e.getMessage(), e);
-        }
+        request(() -> blockingStub.databaseCreate(DatabaseProto.Database.Create.Req.newBuilder().setName(name).build()));
     }
 
     @Override
     public void delete(String name) {
-        try {
-            blockingStub.databaseDelete(RequestBuilder.DatabaseMessage.delete(name));
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.create(e.getMessage(), e);
-        }
+        request(() -> blockingStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build()));
     }
 
     @Override
     public List<String> all() {
+        return request(() -> ImmutableList.copyOf(blockingStub.databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()).getNamesList().iterator()));
+    }
+
+    private static <RES> RES request(final Supplier<RES> req) {
         try {
-            return ImmutableList.copyOf(blockingStub.databaseAll(RequestBuilder.DatabaseMessage.all()).getNamesList().iterator());
+            return req.get();
         } catch (StatusRuntimeException e) {
-            throw GraknClientException.create(e.getMessage(), e);
+            throw new GraknClientException(e);
         }
     }
 }

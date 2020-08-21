@@ -111,7 +111,7 @@ public class AttributeTypeImpl {
                 case NULL:
                     return null;
                 case VALUETYPE:
-                    return RequestBuilder.ConceptMessage.valueType(response.getValueType());
+                    return ConceptMessage.valueType(response.getValueType());
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }

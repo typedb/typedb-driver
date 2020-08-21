@@ -23,7 +23,6 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.rpc.RequestBuilder;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
@@ -31,35 +30,21 @@ import io.grpc.ManagedChannel;
 public class GraknSession implements Session {
 
     protected ManagedChannel channel;
-    private String username; // TODO: Do we need to save this? It's not used.
-    private String password; // TODO: Do we need to save this? It's not used.
     protected String databaseName;
     protected GraknGrpc.GraknBlockingStub sessionStub;
     protected ByteString sessionId;
     protected boolean isOpen;
 
-    GraknSession(ManagedChannel channel, String username, String password, String databaseName, Session.Type type) {
-        this.username = username;
-        this.password = password;
+    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type) {
         this.databaseName = databaseName;
         this.channel = channel;
         this.sessionStub = GraknGrpc.newBlockingStub(channel);
 
-        SessionProto.Session.Open.Req.Builder openReq = RequestBuilder.Session.open(databaseName).newBuilderForType();
-        openReq.setDatabase(databaseName);
+        final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
+                .setDatabase(databaseName)
+                .setType(ConnectionMessage.sessionType(type)).build();
 
-        switch (type) {
-            case DATA:
-                openReq.setType(SessionProto.Session.Type.DATA);
-                break;
-            case SCHEMA:
-                openReq.setType(SessionProto.Session.Type.SCHEMA);
-                break;
-            default:
-                openReq.setType(SessionProto.Session.Type.UNRECOGNIZED);
-        }
-
-        SessionProto.Session.Open.Res response = sessionStub.sessionOpen(openReq.build());
+        final SessionProto.Session.Open.Res response = sessionStub.sessionOpen(openReq);
         sessionId = response.getSessionID();
         isOpen = true;
     }
@@ -81,7 +66,11 @@ public class GraknSession implements Session {
 
     public void close() {
         if (!isOpen) return;
-        sessionStub.sessionClose(RequestBuilder.Session.close(sessionId));
+
+        final SessionProto.Session.Close.Req closeReq = SessionProto.Session.Close.Req.newBuilder()
+                .setSessionID(sessionId).build();
+
+        sessionStub.sessionClose(closeReq);
         isOpen = false;
     }
 
