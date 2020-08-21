@@ -20,9 +20,13 @@
 package grakn.client.answer;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 
 import javax.annotation.CheckReturnValue;
+
+import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
 /**
  * An object that contains the answer of every Graql Query.
@@ -51,9 +55,10 @@ public interface Answer {
                 return Numeric.of(res.getValue());
             case VOID:
                 return Void.of(res.getVoid());
-            default:
             case ANSWER_NOT_SET:
-                throw new IllegalArgumentException("Unexpected " + res);
+                throw new GraknClientException(REQUIRED_FIELD_NOT_SET.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName()));
+            default:
+                throw new GraknClientException(UNRECOGNISED_FIELD.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName(), res.getAnswerCase()));
         }
     }
 }

@@ -20,6 +20,7 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -33,9 +34,10 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
 import static grakn.client.concept.ConceptMessageWriter.thing;
 import static grakn.client.concept.ConceptMessageWriter.types;
-import static java.util.Objects.requireNonNull;
 
 public abstract class ThingImpl {
 
@@ -52,7 +54,7 @@ public abstract class ThingImpl {
             // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
             // not actually prefilled when using the Concept API.
             // We should probably create a dedicated Proto class for Graql and keep the code clean.
-            throw new UnsupportedOperationException();
+            throw new GraknClientException(new UnsupportedOperationException());
             //this.iid = thing.getIid();
             //this.type = Type.Local.of(thing.getType()).asThingType();
             //this.inferred = thing.getInferredRes().getInferred();
@@ -77,10 +79,13 @@ public abstract class ThingImpl {
         private final Transaction tx;
         private final String iid;
 
-        protected Remote(Transaction tx, String iid) {
-            this.tx = requireNonNull(tx, "Null tx");
+        protected Remote(final Transaction tx, final String iid) {
+            if (tx == null) {
+                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("tx"));
+            }
+            this.tx = tx;
             if (iid == null || iid.isEmpty()) {
-                throw new IllegalArgumentException("Null or empty iid");
+                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("iid"));
             }
             this.iid = iid;
         }

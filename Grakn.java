@@ -28,6 +28,7 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -327,7 +328,7 @@ public interface Grakn {
             T get();
 
             @Override
-            T get(long timeout, TimeUnit unit) throws TimeoutException;
+            T get(long timeout, TimeUnit unit);
         }
 
         interface Option<T> {

@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknConceptException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
@@ -29,6 +29,10 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
+
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.UNRECOGNISED_VALUE;
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
 public interface AttributeType extends ThingType {
 
@@ -43,10 +47,6 @@ public interface AttributeType extends ThingType {
     @CheckReturnValue
     default boolean isKeyable() {
         return getValueType().isKeyable();
-    }
-
-    default AttributeType asObject() {
-        throw GraknConceptException.invalidCasting(this, java.lang.Object.class);
     }
 
     AttributeType.Boolean asBoolean();
@@ -94,7 +94,7 @@ public interface AttributeType extends ThingType {
                 }
             }
             // TODO: extract hardcoded string to ErrorMessage.Internal.UNRECOGNISED_VALUE
-            throw GraknConceptException.create("Unrecognised schema value!");
+            throw new GraknClientException(UNRECOGNISED_VALUE);
         }
 
         public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
@@ -111,7 +111,7 @@ public interface AttributeType extends ThingType {
                     return AttributeType.ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + valueType);
+                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), valueType));
             }
         }
 
@@ -154,27 +154,27 @@ public interface AttributeType extends ThingType {
 
         @Override
         default AttributeType.Boolean.Local asBoolean() {
-            throw GraknConceptException.invalidCasting(this, Boolean.Local.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Long.Local asLong() {
-            throw GraknConceptException.invalidCasting(this, Long.Local.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Double.Local asDouble() {
-            throw GraknConceptException.invalidCasting(this, Double.Local.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.String.Local asString() {
-            throw GraknConceptException.invalidCasting(this, String.Local.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.DateTime.Local asDateTime() {
-            throw GraknConceptException.invalidCasting(this, DateTime.Local.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
     }
 
@@ -205,27 +205,27 @@ public interface AttributeType extends ThingType {
 
         @Override
         default AttributeType.Boolean.Remote asBoolean() {
-            throw GraknConceptException.invalidCasting(this, Boolean.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Long.Remote asLong() {
-            throw GraknConceptException.invalidCasting(this, Long.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Double.Remote asDouble() {
-            throw GraknConceptException.invalidCasting(this, Double.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.String.Remote asString() {
-            throw GraknConceptException.invalidCasting(this, String.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.DateTime.Remote asDateTime() {
-            throw GraknConceptException.invalidCasting(this, DateTime.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
     }
 

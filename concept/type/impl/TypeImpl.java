@@ -20,6 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -28,8 +29,9 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
 import static grakn.client.concept.ConceptMessageWriter.type;
-import static java.util.Objects.requireNonNull;
 
 public abstract class TypeImpl {
 
@@ -65,10 +67,13 @@ public abstract class TypeImpl {
         private final Transaction tx;
         private final String label;
 
-        public Remote(Transaction tx, String label) {
-            this.tx = requireNonNull(tx, "Null tx");
+        public Remote(final Transaction tx, final String label) {
+            if (tx == null) {
+                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("tx"));
+            }
+            this.tx = tx;
             if (label == null || label.isEmpty()) {
-                throw new IllegalArgumentException("Null or empty type label");
+                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
             }
             this.label = label;
         }

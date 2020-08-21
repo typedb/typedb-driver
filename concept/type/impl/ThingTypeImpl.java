@@ -20,7 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknConceptException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -31,6 +31,7 @@ import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_STATE;
 import static grakn.client.concept.ConceptMessageWriter.type;
 import static grakn.client.concept.ConceptMessageWriter.valueType;
 
@@ -162,8 +163,7 @@ public abstract class ThingTypeImpl {
         }
 
         protected Thing.Remote asInstance(Thing.Remote concept) {
-            // TODO: extract hardcoded error message
-            throw GraknConceptException.create("Cannot create instances of ThingType");
+            throw new GraknClientException(ILLEGAL_STATE);
         }
     }
 }

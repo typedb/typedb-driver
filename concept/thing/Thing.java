@@ -20,8 +20,8 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
-import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.RelationImpl;
@@ -34,6 +34,8 @@ import grakn.protocol.ConceptProto;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.common.collection.Bytes.bytesToHexString;
 
 /**
@@ -114,11 +116,11 @@ public interface Thing extends Concept {
                             return new AttributeImpl.DateTime.Local(thing);
                         default:
                         case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + thing.getValueType() + " for concept " + thing);
+                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), thing.getValueType()));
                     }
                 default:
                 case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + thing);
+                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Thing.SCHEMA.class.getCanonicalName(), thing.getSchema()));
             }
         }
 
@@ -136,7 +138,7 @@ public interface Thing extends Concept {
         @CheckReturnValue
         @Override
         default Entity.Local asEntity() {
-            throw GraknConceptException.invalidCasting(this, Entity.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getCanonicalName()));
         }
 
         /**
@@ -147,7 +149,7 @@ public interface Thing extends Concept {
         @CheckReturnValue
         @Override
         default Attribute.Local<?> asAttribute() {
-            throw GraknConceptException.invalidCasting(this, Attribute.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getCanonicalName()));
         }
 
         /**
@@ -158,7 +160,7 @@ public interface Thing extends Concept {
         @CheckReturnValue
         @Override
         default Relation.Local asRelation() {
-            throw GraknConceptException.invalidCasting(this, Relation.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getCanonicalName()));
         }
     }
 
@@ -191,11 +193,11 @@ public interface Thing extends Concept {
                             return new AttributeImpl.DateTime.Remote(tx, iid);
                         default:
                         case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + thing.getValueType() + " for concept " + thing);
+                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), thing.getValueType()));
                     }
                 default:
                 case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + thing);
+                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Thing.SCHEMA.class.getCanonicalName(), thing.getSchema()));
             }
         }
 
@@ -299,7 +301,7 @@ public interface Thing extends Concept {
         @Override
         @CheckReturnValue
         default Entity.Remote asEntity() {
-            throw GraknConceptException.invalidCasting(this, Entity.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getCanonicalName()));
         }
 
         /**
@@ -310,7 +312,7 @@ public interface Thing extends Concept {
         @Override
         @CheckReturnValue
         default Relation.Remote asRelation() {
-            throw GraknConceptException.invalidCasting(this, Relation.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getCanonicalName()));
         }
 
         /**
@@ -321,7 +323,7 @@ public interface Thing extends Concept {
         @Override
         @CheckReturnValue
         default Attribute.Remote<?> asAttribute() {
-            throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getCanonicalName()));
         }
     }
 }

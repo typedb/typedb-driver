@@ -20,8 +20,8 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
-import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
@@ -33,6 +33,9 @@ import grakn.protocol.ConceptProto;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
+
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
 /**
  * Facilitates construction of ontological elements.
@@ -123,7 +126,7 @@ public interface Type extends Concept {
                             return new AttributeTypeImpl.DateTime.Local(type);
                         default:
                         case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + type.getValueType() + " for concept " + type);
+                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
                     }
                 case ROLE_TYPE:
                     return new RoleTypeImpl.Local(type);
@@ -133,7 +136,7 @@ public interface Type extends Concept {
                     return new ThingTypeImpl.Local(type);
                 default:
                 case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + type);
+                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
             }
         }
 
@@ -148,10 +151,9 @@ public interface Type extends Concept {
          *
          * @return A ThingType if the Type is a ThingType
          */
-        @CheckReturnValue
         @Override
         default ThingType.Local asThingType() {
-            throw GraknConceptException.invalidCasting(this, ThingType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
         }
 
         /**
@@ -159,10 +161,9 @@ public interface Type extends Concept {
          *
          * @return A EntityType if the Type is an EntityType
          */
-        @CheckReturnValue
         @Override
         default EntityType.Local asEntityType() {
-            throw GraknConceptException.invalidCasting(this, EntityType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
         }
 
         /**
@@ -170,10 +171,9 @@ public interface Type extends Concept {
          *
          * @return An AttributeType if the Type is an AttributeType
          */
-        @CheckReturnValue
         @Override
         default AttributeType.Local asAttributeType() {
-            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
         }
 
         /**
@@ -181,10 +181,9 @@ public interface Type extends Concept {
          *
          * @return A RelationType if the Type is a RelationType
          */
-        @CheckReturnValue
         @Override
         default RelationType.Local asRelationType() {
-            throw GraknConceptException.invalidCasting(this, RelationType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
         }
 
         /**
@@ -192,10 +191,9 @@ public interface Type extends Concept {
          *
          * @return A RoleType if the Type is a RoleType
          */
-        @CheckReturnValue
         @Override
         default RoleType.Local asRoleType() {
-            throw GraknConceptException.invalidCasting(this, RoleType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
         }
     }
 
@@ -229,7 +227,7 @@ public interface Type extends Concept {
                             return new AttributeTypeImpl.DateTime.Remote(tx, label);
                         default:
                         case UNRECOGNIZED:
-                            throw new IllegalArgumentException("Unrecognised value type " + type.getValueType() + " for concept " + type);
+                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
                     }
                 case ROLE_TYPE:
                     final String scopedLabel = type.getScopedLabel();
@@ -240,7 +238,7 @@ public interface Type extends Concept {
                     return new ThingTypeImpl.Remote(tx, label);
                 default:
                 case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + type);
+                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
             }
         }
 
@@ -296,9 +294,8 @@ public interface Type extends Concept {
          * @return A ThingType if the Type is a ThingType
          */
         @Override
-        @CheckReturnValue
         default ThingType.Remote asThingType() {
-            throw GraknConceptException.invalidCasting(this, ThingType.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
         }
 
         /**
@@ -307,9 +304,8 @@ public interface Type extends Concept {
          * @return A EntityType if the Type is an EntityType
          */
         @Override
-        @CheckReturnValue
         default EntityType.Remote asEntityType() {
-            throw GraknConceptException.invalidCasting(this, EntityType.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
         }
 
         /**
@@ -318,9 +314,8 @@ public interface Type extends Concept {
          * @return A RelationType if the Type is a RelationType
          */
         @Override
-        @CheckReturnValue
         default RelationType.Remote asRelationType() {
-            throw GraknConceptException.invalidCasting(this, RelationType.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
         }
 
         /**
@@ -329,9 +324,8 @@ public interface Type extends Concept {
          * @return A AttributeType if the Type is a AttributeType
          */
         @Override
-        @CheckReturnValue
         default AttributeType.Remote asAttributeType() {
-            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
         }
 
         /**
@@ -340,9 +334,8 @@ public interface Type extends Concept {
          * @return A RoleType if the Type is a RoleType
          */
         @Override
-        @CheckReturnValue
         default RoleType.Remote asRoleType() {
-            throw GraknConceptException.invalidCasting(this, RoleType.Remote.class);
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
         }
     }
 }

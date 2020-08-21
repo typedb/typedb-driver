@@ -28,48 +28,22 @@ public class GraknClientException extends RuntimeException {
 
     private String statusCode;
 
-    protected GraknClientException(String error) {
+    public GraknClientException(String error) {
         super(error);
     }
 
-    protected GraknClientException(String error, Exception e) {
-        super(error, e);
+    public GraknClientException(ErrorMessage error) {
+        super(error.toString());
+        assert !getMessage().contains("%s");
     }
 
-    private GraknClientException(String error, StatusRuntimeException e) {
-        super(error, e);
-        this.statusCode = e.getStatus().getCode().name();
+    public GraknClientException(StatusRuntimeException statusRuntimeException) {
+        super(statusRuntimeException.getMessage(), statusRuntimeException);
+        this.statusCode = statusRuntimeException.getStatus().getCode().name();
     }
 
-    public static GraknClientException create(String error) {
-        return new GraknClientException(error);
-    }
-
-    public static GraknClientException create(String error, Exception e) {
-        if (e instanceof StatusRuntimeException) {
-            return new GraknClientException(error, (StatusRuntimeException) e);
-        }
-        return new GraknClientException(error, e);
-    }
-
-    public static GraknClientException connectionClosed() {
-        return create("The connection to the database is closed");
-    }
-
-    public static GraknClientException unreachableStatement(String message) {
-        return create("Statement expected to be unreachable: " + message);
-    }
-
-    public static GraknClientException explanationNotPresent() {
-        return create("No explanation found");
-    }
-
-    public static GraknClientException unknownBaseType(Concept.Remote concept) {
-        return create("No known base type for concept: " + concept);
-    }
-
-    public static GraknClientException resultNotPresent() {
-        return create("Result not present");
+    public GraknClientException(Exception e) {
+        super(e);
     }
 
     public String getName() {

@@ -36,9 +36,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.client.common.exception.ErrorMessage.Connection.CONNECTION_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Connection.TRANSACTION_LISTENER_TERMINATED;
 import static grakn.protocol.TransactionProto.Transaction.Req;
 import static grakn.protocol.TransactionProto.Transaction.Res;
-
 
 /**
  * Wrapper making transaction calls to the Grakn RPC Server - handles sending a stream of Transaction.Req and
@@ -54,7 +55,7 @@ import static grakn.protocol.TransactionProto.Transaction.Res;
  * }
  * }
  */
-public class GraknTransceiver implements AutoCloseable {
+class GraknTransceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GraknTransceiver.class);
 
@@ -66,7 +67,7 @@ public class GraknTransceiver implements AutoCloseable {
         this.responseListener = responseListener;
     }
 
-    public static GraknTransceiver create(GraknGrpc.GraknStub stub) {
+    static GraknTransceiver create(GraknGrpc.GraknStub stub) {
         ResponseListener responseListener = new ResponseListener();
         StreamObserver<Req> requestSender = stub.transaction(responseListener);
         return new GraknTransceiver(requestSender, responseListener);
@@ -84,7 +85,7 @@ public class GraknTransceiver implements AutoCloseable {
         synchronized (this) {
             synchronized (responseListener) {
                 if (responseListener.terminated) {
-                    throw GraknClientException.connectionClosed();
+                    throw new GraknClientException(CONNECTION_CLOSED);
                 }
                 responseListener.addCollector(collector); // Must add collector first to be watertight
             }
@@ -92,7 +93,7 @@ public class GraknTransceiver implements AutoCloseable {
         }
     }
 
-    public Res sendAndReceive(Req request) throws InterruptedException {
+    Res sendAndReceive(Req request) throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("sendAndReceive")) {
             SingleResponseCollector collector = new SingleResponseCollector();
             send(request, collector);
@@ -100,7 +101,7 @@ public class GraknTransceiver implements AutoCloseable {
         }
     }
 
-    public void sendAndReceiveMultipleAsync(Req request, MultiResponseCollector collector) {
+    void sendAndReceiveMultipleAsync(Req request, MultiResponseCollector collector) {
         try (ThreadTrace trace = GrablTracingThreadStatic.traceOnThread("sendAndReceiveMultipleAsync")) {
             send(request, collector);
         }
@@ -120,7 +121,7 @@ public class GraknTransceiver implements AutoCloseable {
         }
     }
 
-    public synchronized boolean isOpen() {
+    synchronized boolean isOpen() {
         return !responseListener.terminated;
     }
 
@@ -211,7 +212,7 @@ public class GraknTransceiver implements AutoCloseable {
         private volatile boolean terminated = false;
 
         synchronized void addCollector(ResponseCollector collector) {
-            if (terminated) throw new GraknClientException("Transaction listener was terminated");
+            if (terminated) throw new GraknClientException(TRANSACTION_LISTENER_TERMINATED);
             collectorQueue.add(collector);
         }
 
@@ -226,8 +227,8 @@ public class GraknTransceiver implements AutoCloseable {
                     }
                 } catch (InterruptedException e) {
                     terminated = true;
-                    throw new IllegalStateException("Interrupted whilst waiting for a result collector, " +
-                            "should never happen since response collectors are queued before send.");
+                    // should never happen since response collectors are queued before send
+                    throw new GraknClientException("Interrupted whilst waiting for a result collector.");
                 }
             }
 
@@ -280,7 +281,7 @@ public class GraknTransceiver implements AutoCloseable {
 
         private static Response create(@Nullable Res response, @Nullable StatusRuntimeException error) {
             if (!(response == null || error == null)) {
-                throw new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null");
+                throw new GraknClientException(new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null"));
             }
             return new Response(response, error);
         }
@@ -320,7 +321,7 @@ public class GraknTransceiver implements AutoCloseable {
         /**
          * If this is a successful response, retrieve it.
          *
-         * @throws IllegalStateException if this is not a successful response
+         * @throws GraknClientException if this is not a successful response
          */
         public final Res ok() {
             if (nullableOk != null) {
@@ -336,12 +337,12 @@ public class GraknTransceiver implements AutoCloseable {
         /**
          * If this is an error, retrieve it.
          *
-         * @throws IllegalStateException if this is not an error
+         * @throws GraknClientException if this is not an error
          */
         public final Exception error() {
             Exception throwable = nullableError();
             if (throwable == null) {
-                throw new IllegalStateException("Expected error not found: " + toString());
+                throw new GraknClientException(new IllegalStateException("Expected error not found: " + toString()));
             } else {
                 return throwable;
             }

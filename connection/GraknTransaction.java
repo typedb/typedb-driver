@@ -35,6 +35,7 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -64,7 +65,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
@@ -73,6 +73,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.client.common.exception.ErrorMessage.Connection.INVALID_BATCH_SIZE_MODE;
+import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BATCH_SIZE;
+import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
+import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
 import static grakn.client.concept.ConceptMessageWriter.concept;
 import static grakn.client.concept.ConceptMessageWriter.iid;
 import static grakn.client.concept.ConceptMessageWriter.valueType;
@@ -421,7 +425,7 @@ public class GraknTransaction implements Transaction {
             return execute((GraqlCompute.Cluster) query);
 
         } else {
-            throw new IllegalArgumentException("Unrecognised Query object");
+            throw new GraknClientException(UNRECOGNISED_QUERY_OBJECT.message(query));
         }
     }
 
@@ -469,7 +473,7 @@ public class GraknTransaction implements Transaction {
             return stream((GraqlCompute.Cluster) query);
 
         } else {
-            throw new IllegalArgumentException("Unrecognised Query object");
+            throw new GraknClientException(UNRECOGNISED_QUERY_OBJECT.message(query));
         }
     }
 
@@ -522,7 +526,7 @@ public class GraknTransaction implements Transaction {
             Thread.currentThread().interrupt();
             // This is called from classes like Transaction, that impl methods which do not throw InterruptedException
             // Therefore, we have to wrap it in a RuntimeException.
-            throw new RuntimeException(e);
+            throw new GraknClientException(e);
         }
     }
 
@@ -636,7 +640,7 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public Rule.Remote putRule(final String label, final Pattern when, final Pattern then) {
-        throw new UnsupportedOperationException();
+        throw new GraknClientException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
@@ -763,7 +767,7 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public <T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        return Objects.requireNonNull(StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false));
+        return StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false);
     }
 
     private abstract class QueryFutureBase<T> implements QueryFuture<T> {
@@ -784,22 +788,19 @@ public class GraknTransaction implements Transaction {
 
         @Override
         public T get() {
-            try {
-                getIterator().waitForStart();
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(ex);
-            }
+            getIterator().waitForStart();
             return getInternal();
         }
 
         @Override
-        public T get(long timeout, TimeUnit unit) throws TimeoutException {
+        public T get(long timeout, TimeUnit unit) {
             try {
                 getIterator().waitForStart(timeout, unit);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(ex);
+                throw new GraknClientException(ex);
+            } catch (TimeoutException ex) {
+                throw new GraknClientException(ex);
             }
             return getInternal();
         }
@@ -898,14 +899,13 @@ public class GraknTransaction implements Transaction {
 
         public void waitForStart(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
             if (first != null) {
-                throw new IllegalStateException("Should not poll RPCIterator multiple times");
+                throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
             }
 
             first = currentBatch.poll(timeout, unit).getIterRes();
         }
 
-        public void waitForStart() throws InterruptedException {
-
+        public void waitForStart() {
         }
 
         @Override
@@ -916,12 +916,12 @@ public class GraknTransaction implements Transaction {
                 return responseReader.apply(iterRes);
             }
 
-            TransactionProto.Transaction.Iter.Res res;
+            final TransactionProto.Transaction.Iter.Res res;
             try {
                 res = currentBatch.take().getIterRes();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
+                throw new GraknClientException(e);
             }
             started = true;
             switch (res.getResCase()) {
@@ -931,7 +931,7 @@ public class GraknTransaction implements Transaction {
                 case DONE:
                     return endOfData();
                 case RES_NOT_SET:
-                    throw new IllegalStateException("Received an empty response");
+                    throw new GraknClientException(REQUIRED_FIELD_NOT_SET.message(TransactionProto.Transaction.Iter.Res.class.getCanonicalName()));
                 default:
                     return responseReader.apply(res);
             }
@@ -979,7 +979,7 @@ public class GraknTransaction implements Transaction {
         @Override
         public QueryOptions batchSize(int size) {
             if (size < 1) {
-                throw new IllegalArgumentException("Batch size cannot be less that 1, was: " + size);
+                throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(size));
             }
             return set(BatchOption.BATCH_SIZE, TransactionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(size).build());
         }
@@ -989,7 +989,7 @@ public class GraknTransaction implements Transaction {
             if (batchSize == BatchSize.ALL) {
                 return set(BatchOption.BATCH_SIZE, TransactionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build());
             }
-            throw new IllegalArgumentException("Invalid batch size mode: " + batchSize);
+            throw new GraknClientException(INVALID_BATCH_SIZE_MODE.message(batchSize));
         }
     }
 }

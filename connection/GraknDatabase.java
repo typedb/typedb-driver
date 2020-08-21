@@ -20,6 +20,9 @@
 package grakn.client.connection;
 
 import grakn.client.Grakn.Database;
+import grakn.client.common.exception.GraknClientException;
+
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
 
 public class GraknDatabase implements Database {
     private static final long serialVersionUID = 2726154016735929123L;
@@ -32,8 +35,8 @@ public class GraknDatabase implements Database {
     }
 
     public GraknDatabase(String name) {
-        if (name == null) {
-            throw new NullPointerException("Null name");
+        if (name == null || name.isEmpty()) {
+            throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("name"));
         }
         this.name = name;
     }

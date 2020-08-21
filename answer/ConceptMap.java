@@ -21,7 +21,6 @@ package grakn.client.answer;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.common.exception.GraknConceptException;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 import graql.lang.Graql;
@@ -36,6 +35,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static grakn.client.common.exception.ErrorMessage.Query.NO_EXPLANATION;
+import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
 
 /**
@@ -86,7 +88,7 @@ public class ConceptMap implements Answer {
         if (hasExplanation) {
             return tx.getExplanation(this);
         } else {
-            throw GraknClientException.explanationNotPresent();
+            throw new GraknClientException(NO_EXPLANATION);
         }
     }
 
@@ -105,7 +107,7 @@ public class ConceptMap implements Answer {
         return map;
     }
 
-
+    @CheckReturnValue
     public Collection<Concept> concepts() {
         return map.values();
     }
@@ -113,7 +115,7 @@ public class ConceptMap implements Answer {
     @CheckReturnValue
     public Concept get(String variable) {
         Concept concept = map.get(variable);
-        if (concept == null) throw GraknConceptException.variableDoesNotExist(variable);
+        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST.message(variable));
         return concept;
     }
 
