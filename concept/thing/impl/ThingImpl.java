@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
@@ -29,7 +28,6 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
@@ -45,9 +43,8 @@ public abstract class ThingImpl {
      */
     public abstract static class Local implements Thing.Local {
 
-        private final ConceptIID iid;
+        private final String iid;
         private final ThingType.Local type;
-        private final boolean inferred;
 
         protected Local(ConceptProto.Thing thing) {
             // TODO we (probably) do need the Type, but we should have a better way of retrieving it.
@@ -55,24 +52,19 @@ public abstract class ThingImpl {
             // not actually prefilled when using the Concept API.
             // We should probably create a dedicated Proto class for Graql and keep the code clean.
             throw new UnsupportedOperationException();
-            //this.iid = ConceptIID.of(thing.getIid());
+            //this.iid = thing.getIid();
             //this.type = Type.Local.of(thing.getType()).asThingType();
             //this.inferred = thing.getInferredRes().getInferred();
         }
 
         @Override
-        public ConceptIID getIID() {
+        public String getIID() {
             return iid;
         }
 
         @Override
         public ThingType.Local getType() {
             return type;
-        }
-
-        @Override
-        public final boolean isInferred() {
-            return inferred;
         }
     }
 
@@ -82,24 +74,24 @@ public abstract class ThingImpl {
     public abstract static class Remote implements Thing.Remote {
 
         private final Transaction tx;
-        private final ConceptIID iid;
+        private final String iid;
 
-        protected Remote(Transaction tx, ConceptIID iid) {
+        protected Remote(Transaction tx, String iid) {
             this.tx = requireNonNull(tx, "Null tx");
-            if (iid == null || iid.getValue().isEmpty()) {
+            if (iid == null || iid.isEmpty()) {
                 throw new IllegalArgumentException("Null or empty iid");
             }
             this.iid = iid;
         }
 
         @Override
-        public ConceptIID getIID() {
+        public String getIID() {
             return iid;
         }
 
         @Override
         public ThingType.Remote getType() {
-            ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+            final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
             return Type.Remote.of(tx(), runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
@@ -107,7 +99,7 @@ public abstract class ThingImpl {
 
         @Override
         public final boolean isInferred() {
-            ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+            final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingIsInferredReq(ConceptProto.Thing.IsInferred.Req.getDefaultInstance()).build();
 
             return runMethod(method).getThingIsInferredRes().getInferred();

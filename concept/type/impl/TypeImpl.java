@@ -90,7 +90,7 @@ public abstract class TypeImpl {
 
         @Override
         public void setLabel(String label) {
-            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                             .setLabel(label)).build();
             // TODO: update the transaction's type cache
@@ -99,20 +99,18 @@ public abstract class TypeImpl {
 
         @Nullable
         public Type.Remote getSupertype() {
-            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
-            ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
+            final ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
 
             switch (response.getResCase()) {
-                case RES_NOT_SET:
-                    return null;
                 case TYPE:
                     return Type.Remote.of(tx(), response.getType());
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
-
         }
 
         @Override
@@ -125,7 +123,7 @@ public abstract class TypeImpl {
 
         @Override
         public Stream<? extends Type.Remote> getSubtypes() {
-            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
             return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType());

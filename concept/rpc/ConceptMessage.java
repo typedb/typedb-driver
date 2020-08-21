@@ -38,7 +38,7 @@ public abstract class ConceptMessage {
 
     public static ConceptProto.Thing thing(Thing thing) {
         return ConceptProto.Thing.newBuilder()
-                .setIid(thing.getIID().getValue())
+                .setIid(iid(thing.getIID()))
                 .setSchema(schema(thing))
                 .build();
     }
@@ -121,7 +121,10 @@ public abstract class ConceptMessage {
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             default:
             case OBJECT:
-                throw GraknClientException.unreachableStatement("Unrecognised " + valueType);
+
+    public static ByteString iid(final String iid) {
+        return ByteString.copyFrom(hexStringToBytes(iid));
+    }
         }
     }
 }

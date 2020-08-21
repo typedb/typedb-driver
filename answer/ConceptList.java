@@ -19,8 +19,6 @@
 
 package grakn.client.answer;
 
-import grakn.client.concept.ConceptIID;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -30,9 +28,9 @@ import java.util.List;
 public class ConceptList implements Answer {
 
     // TODO: change to store List<Concept> once we are able to construct Concept without a database look up
-    private final List<ConceptIID> list;
+    private final List<String> list;
 
-    public ConceptList(List<ConceptIID> list) {
+    public ConceptList(List<String> list) {
         this.list = Collections.unmodifiableList(list);
     }
 
@@ -40,7 +38,7 @@ public class ConceptList implements Answer {
         return false;
     }
 
-    public List<ConceptIID> list() {
+    public List<String> list() {
         return list;
     }
 

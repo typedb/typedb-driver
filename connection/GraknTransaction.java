@@ -635,7 +635,7 @@ public class GraknTransaction implements Transaction {
 
     @Override
     @Nullable
-    public Thing.Remote getThing(ConceptIID iid) {
+    public Thing.Remote getThing(String iid) {
         TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(RequestBuilder.Transaction.getThing(iid));
         switch (response.getGetThingRes().getResCase()) {
             case THING:
@@ -648,37 +648,41 @@ public class GraknTransaction implements Transaction {
     }
 
     @Override
-    public TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Req thingMethod) {
-        TransactionProto.Transaction.ConceptMethod.Thing.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
-                .setIid(iid.getValue()).setMethod(thingMethod).build();
-        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodThingReq(conceptMethod).build();
+    public TransactionProto.Transaction.Res runConceptMethod(final String iid, final ConceptProto.ThingMethod.Req thingMethod) {
+        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                .setConceptMethodThingReq(TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
+                        .setIid(ConceptMessage.iid(iid))
+                        .setMethod(thingMethod)).build();
 
         return sendAndReceiveOrThrow(request);
     }
 
     @Override
-    public TransactionProto.Transaction.Res runConceptMethod(String label, ConceptProto.TypeMethod.Req typeMethod) {
-        TransactionProto.Transaction.ConceptMethod.Type.Req conceptMethod = TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
-                .setLabel(label).setMethod(typeMethod).build();
-        TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setConceptMethodTypeReq(conceptMethod).build();
+    public TransactionProto.Transaction.Res runConceptMethod(final String label, final ConceptProto.TypeMethod.Req typeMethod) {
+        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                .setConceptMethodTypeReq(TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
+                        .setLabel(label)
+                        .setMethod(typeMethod)).build();
 
         return sendAndReceiveOrThrow(request);
     }
 
     @Override
-    public <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Iter.Req method, Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
-        TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
-                .setIid(iid.getValue()).setMethod(method).build();
-        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodThingIterReq(conceptIterMethod).build();
+    public <T> Stream<T> iterateConceptMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method, final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
+        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                .setConceptMethodThingIterReq(TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
+                        .setIid(ConceptMessage.iid(iid))
+                        .setMethod(method)).build();
 
         return iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
     }
 
     @Override
-    public <T> Stream<T> iterateConceptMethod(String label, ConceptProto.TypeMethod.Iter.Req method, Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
-        TransactionProto.Transaction.ConceptMethod.Type.Iter.Req conceptIterMethod = TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
-                .setLabel(label).setMethod(method).build();
-        TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder().setConceptMethodTypeIterReq(conceptIterMethod).build();
+    public <T> Stream<T> iterateConceptMethod(final String label, final ConceptProto.TypeMethod.Iter.Req method, final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
+        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                .setConceptMethodTypeIterReq(TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
+                        .setLabel(label)
+                        .setMethod(method)).build();
 
         return iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }

@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -57,7 +56,7 @@ public abstract class RelationImpl {
      */
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, String iid) {
             super(tx, iid);
         }
 

@@ -37,28 +37,20 @@ public class GraknClient implements Client {
     public static final String DEFAULT_URI = "localhost:48555";
 
     private ManagedChannel channel;
-    private final String username;
-    private final String password;
     private final DatabaseManager databases;
 
     public GraknClient() {
         this(DEFAULT_URI);
     }
 
-    public GraknClient(String address) {
-        this(address, null, null);
-    }
-
-    public GraknClient(String address, String username, String password) {
+    public GraknClient(final String address) {
         channel = ManagedChannelBuilder.forTarget(address)
                 .usePlaintext().build();
-        this.username = username;
-        this.password = password;
         databases = new GraknDatabaseManager(channel);
     }
 
     @Override
-    public GraknClient overrideChannel(ManagedChannel channel) {
+    public GraknClient overrideChannel(final ManagedChannel channel) {
         this.channel = channel;
         return this;
     }
@@ -78,18 +70,18 @@ public class GraknClient implements Client {
     }
 
     @Override
-    public Session session(String databaseName) {
+    public Session session(final String databaseName) {
         return session(databaseName, DATA);
     }
 
     @Override
-    public Session schemaSession(String databaseName) {
+    public Session schemaSession(final String databaseName) {
         return session(databaseName, SCHEMA);
     }
 
     @Override
-    public Session session(String databaseName, Session.Type type) {
-        return new GraknSession(channel, username, password, databaseName, type);
+    public Session session(final String databaseName, final Session.Type type) {
+        return new GraknSession(channel, databaseName, type);
     }
 
     @Override

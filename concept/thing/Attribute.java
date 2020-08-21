@@ -20,7 +20,6 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.type.AttributeType;
@@ -173,7 +172,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        default Remote asRemote(Transaction tx) {
+        default Remote asRemote(final Transaction tx) {
             return Remote.of(tx, getIID());
         }
 
@@ -188,7 +187,7 @@ public interface Attribute<VALUE> extends Thing {
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
 
-            static Boolean.Remote of(Transaction tx, ConceptIID iid) {
+            static Boolean.Remote of(final Transaction tx, final java.lang.String iid) {
                 return new AttributeImpl.Boolean.Remote(tx, iid);
             }
 
@@ -204,7 +203,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        default Remote asRemote(Transaction tx) {
+        default Remote asRemote(final Transaction tx) {
             return Remote.of(tx, getIID());
         }
 
@@ -219,7 +218,7 @@ public interface Attribute<VALUE> extends Thing {
 
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
 
-            static Long.Remote of(Transaction tx, ConceptIID iid) {
+            static Long.Remote of(final Transaction tx, final java.lang.String iid) {
                 return new AttributeImpl.Long.Remote(tx, iid);
             }
 
@@ -235,7 +234,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        default Remote asRemote(Transaction tx) {
+        default Remote asRemote(final Transaction tx) {
             return Remote.of(tx, getIID());
         }
 
@@ -250,7 +249,7 @@ public interface Attribute<VALUE> extends Thing {
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
 
-            static Double.Remote of(Transaction tx, ConceptIID iid) {
+            static Double.Remote of(final Transaction tx, final java.lang.String iid) {
                 return new AttributeImpl.Double.Remote(tx, iid);
             }
 
@@ -266,7 +265,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        default Remote asRemote(Transaction tx) {
+        default Remote asRemote(final Transaction tx) {
             return Remote.of(tx, getIID());
         }
 
@@ -281,7 +280,7 @@ public interface Attribute<VALUE> extends Thing {
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
 
-            static String.Remote of(Transaction tx, ConceptIID iid) {
+            static String.Remote of(final Transaction tx, final java.lang.String iid) {
                 return new AttributeImpl.String.Remote(tx, iid);
             }
 
@@ -297,7 +296,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        default Remote asRemote(Transaction tx) {
+        default Remote asRemote(final Transaction tx) {
             return Remote.of(tx, getIID());
         }
 
@@ -312,7 +311,7 @@ public interface Attribute<VALUE> extends Thing {
 
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
 
-            static DateTime.Remote of(Transaction tx, ConceptIID iid) {
+            static DateTime.Remote of(final Transaction tx, final java.lang.String iid) {
                 return new AttributeImpl.DateTime.Remote(tx, iid);
             }
 

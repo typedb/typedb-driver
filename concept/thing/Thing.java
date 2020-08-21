@@ -21,7 +21,6 @@ package grakn.client.concept.thing;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.common.exception.GraknConceptException;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.EntityImpl;
@@ -34,6 +33,8 @@ import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
+
+import static grakn.common.collection.Bytes.bytesToHexString;
 
 /**
  * A data instance in the graph belonging to a specific Type
@@ -49,7 +50,7 @@ public interface Thing extends Concept {
      * @return The thing's unique IID.
      */
     @CheckReturnValue
-    ConceptIID getIID();
+    String getIID();
 
     /**
      * Return the Type of the Concept.
@@ -58,14 +59,6 @@ public interface Thing extends Concept {
      */
     @CheckReturnValue
     ThingType getType();
-
-    /**
-     * Used to indicate if this Thing has been created as the result of a Rule inference.
-     *
-     * @return true if this Thing exists due to a rule
-     * @see Rule
-     */
-    boolean isInferred();
 
     /**
      * Return as an Entity, if the Thing is an Entity.
@@ -177,8 +170,8 @@ public interface Thing extends Concept {
      */
     interface Remote extends Concept.Remote, Thing {
 
-        static Thing.Remote of(Transaction tx, ConceptProto.Thing thing) {
-            ConceptIID iid = ConceptIID.of(thing.getIid());
+        static Thing.Remote of(final Transaction tx, final ConceptProto.Thing thing) {
+            final String iid = bytesToHexString(thing.getIid().toByteArray());
             switch (thing.getSchema()) {
                 case ENTITY:
                     return new EntityImpl.Remote(tx, iid);
@@ -228,6 +221,14 @@ public interface Thing extends Concept {
         @Override
         @CheckReturnValue
         ThingType.Remote getType();
+
+        /**
+         * Used to indicate if this Thing has been created as the result of a Rule inference.
+         *
+         * @return true if this Thing exists due to a rule
+         * @see Rule
+         */
+        boolean isInferred();
 
         /**
          * Retrieves a collection of Attribute attached to this Thing, possibly specifying only keys.

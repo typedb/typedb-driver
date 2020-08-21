@@ -20,7 +20,6 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.type.EntityType;
 
@@ -64,7 +63,7 @@ public interface Entity extends Thing {
      */
     interface Remote extends Thing.Remote, Entity {
 
-        static Entity.Remote of(Transaction tx, ConceptIID iid) {
+        static Entity.Remote of(Transaction tx, String iid) {
             return new EntityImpl.Remote(tx, iid);
         }
 

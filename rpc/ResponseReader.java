@@ -19,10 +19,10 @@
 
 package grakn.client.rpc;
 
+import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Transaction;
 import grakn.client.answer.Void;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.protocol.AnswerProto;
@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static grakn.common.collection.Bytes.bytesToHexString;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -103,18 +104,22 @@ public class ResponseReader {
     }
 
     private static ConceptList conceptList(AnswerProto.ConceptList res) {
-        return new ConceptList(res.getIidsList().stream().map(ConceptIID::of).collect(toList()));
+        return new ConceptList(res.getIidsList().stream().map(ResponseReader::iid).collect(toList()));
     }
 
     private static ConceptSet conceptSet(AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getIidsList().stream().map(ConceptIID::of).collect(toSet()));
+        return new ConceptSet(res.getIidsList().stream().map(ResponseReader::iid).collect(toSet()));
     }
 
     private static ConceptSetMeasure conceptSetMeasure(AnswerProto.ConceptSetMeasure res) {
         return new ConceptSetMeasure(
-                res.getIidsList().stream().map(ConceptIID::of).collect(toSet()),
+                res.getIidsList().stream().map(ResponseReader::iid).collect(toSet()),
                 number(res.getMeasurement())
         );
+    }
+
+    private static String iid(ByteString res) {
+        return bytesToHexString(res.toByteArray());
     }
 
     private static Numeric value(AnswerProto.Value res) {

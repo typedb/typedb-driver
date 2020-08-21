@@ -28,7 +28,6 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -70,11 +69,11 @@ public interface Grakn {
     }
 
     static Client client(String address) {
-        return new GraknClient(address, null, null);
+        return new GraknClient(address);
     }
 
     static Client client(String address, String username, String password) {
-        return new GraknClient(address, username, password);
+        return new GraknClient(address);
     }
 
     interface Client extends AutoCloseable {
@@ -293,13 +292,13 @@ public interface Grakn {
         grakn.client.concept.type.Type.Local getCachedType(String label);
 
         @Nullable
-        Thing.Remote getThing(ConceptIID iid);
+        Thing.Remote getThing(String iid);
 
-        TransactionProto.Transaction.Res runConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Req thingMethod);
+        TransactionProto.Transaction.Res runConceptMethod(String iid, ConceptProto.ThingMethod.Req thingMethod);
 
         TransactionProto.Transaction.Res runConceptMethod(String label, ConceptProto.TypeMethod.Req typeMethod);
 
-        <T> Stream<T> iterateConceptMethod(ConceptIID iid, ConceptProto.ThingMethod.Iter.Req thingMethod, Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader);
+        <T> Stream<T> iterateConceptMethod(String iid, ConceptProto.ThingMethod.Iter.Req thingMethod, Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader);
 
         <T> Stream<T> iterateConceptMethod(String label, ConceptProto.TypeMethod.Iter.Req typeMethod, Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader);
 
@@ -388,7 +387,7 @@ public interface Grakn {
                 this.type = type;
             }
 
-            public int iid() {
+            public int id() {
                 return type;
             }
 

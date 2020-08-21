@@ -69,12 +69,11 @@ public class RuleImpl {
 
             ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
             switch (response.getResCase()) {
-                case RES_NOT_SET:
-                    return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
         }
 
@@ -87,12 +86,11 @@ public class RuleImpl {
 
             ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();
             switch (response.getResCase()) {
-                case RES_NOT_SET:
-                    return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
         }
     }

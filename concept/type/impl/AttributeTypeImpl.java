@@ -87,12 +87,11 @@ public class AttributeTypeImpl {
                             .setValue(ConceptMessage.attributeValue(value))).build();
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
-                case RES_NOT_SET:
-                    return null;
                 case ATTRIBUTE:
                     return Thing.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
         }
 

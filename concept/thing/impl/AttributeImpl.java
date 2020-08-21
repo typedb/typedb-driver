@@ -20,7 +20,6 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.ConceptIID;
 import grakn.client.concept.rpc.ConceptMessage;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
@@ -61,7 +60,7 @@ public abstract class AttributeImpl {
      */
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
-        public Remote(Transaction tx, ConceptIID iid) {
+        public Remote(Transaction tx, java.lang.String iid) {
             super(tx, iid);
         }
 
@@ -96,7 +95,7 @@ public abstract class AttributeImpl {
 
             private final java.lang.Boolean value;
 
-            public Local(ConceptProto.Thing thing) {
+            public Local(final ConceptProto.Thing thing) {
                 super(thing);
                 this.value = thing.getValue().getBoolean();
             }
@@ -117,7 +116,7 @@ public abstract class AttributeImpl {
          */
         public static class Remote extends AttributeImpl.Remote<java.lang.Boolean> implements Attribute.Boolean.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, java.lang.String iid) {
                 super(tx, iid);
             }
 
@@ -165,7 +164,7 @@ public abstract class AttributeImpl {
          */
         public static class Remote extends AttributeImpl.Remote<java.lang.Long> implements Attribute.Long.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, java.lang.String iid) {
                 super(tx, iid);
             }
 
@@ -213,7 +212,7 @@ public abstract class AttributeImpl {
          */
         public static class Remote extends AttributeImpl.Remote<java.lang.Double> implements Attribute.Double.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, java.lang.String iid) {
                 super(tx, iid);
             }
 
@@ -261,7 +260,7 @@ public abstract class AttributeImpl {
          */
         public static class Remote extends AttributeImpl.Remote<java.lang.String> implements Attribute.String.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, java.lang.String iid) {
                 super(tx, iid);
             }
 
@@ -314,7 +313,7 @@ public abstract class AttributeImpl {
          */
         public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {
 
-            public Remote(Transaction tx, ConceptIID iid) {
+            public Remote(Transaction tx, java.lang.String iid) {
                 super(tx, iid);
             }
 
