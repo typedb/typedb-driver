@@ -21,18 +21,20 @@ package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_dependencies//distribution/maven:rules.bzl", "deploy_maven", "assemble_maven")
+load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+load("//:deployment.bzl", github_deployment = "deployment")
 
-exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.properties"])
+exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
 
 java_library(
     name = "client-java",
     srcs = glob([
         "answer/*.java",
+        "common/**/*.java",
         "concept/**/*.java",
         "connection/*.java",
-        "exception/*.java",
         "rpc/*.java",
         "test/*.java",
         "Grakn.java"
@@ -87,12 +89,15 @@ assemble_maven(
 deploy_maven(
     name = "deploy-maven",
     target = ":assemble-maven",
+    snapshot = deployment["maven.snapshot"],
+    release = deployment["maven.release"],
 )
 
 deploy_github(
     name = "deploy-github",
+    organisation = github_deployment["github.organisation"],
+    repository = github_deployment["github.repository"],
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Java",
     title_append_version = True,
-    deployment_properties = "//:deployment.properties",
 )
