@@ -17,5 +17,7 @@
 # under the License.
 #
 
-repo.github.organisation=graknlabs
-repo.github.repository=client-java
+deployment = {
+    'github.organisation': 'graknlabs',
+    'github.repository': 'client-java'
+}

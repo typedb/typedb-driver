@@ -25,8 +25,10 @@ load("@graknlabs_dependencies//library/maven:artifacts.bzl", "maven_overrides", 
 load("@graknlabs_bazel_distribution//maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 load("//dependencies/maven:artifacts.bzl", maven_overrides_repo = "overrides")
+load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
+load("//:deployment.bzl", github_deployment = "deployment")
 
-exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.properties"])
+exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
 
 java_library(
     name = "client-java",
@@ -90,7 +92,8 @@ assemble_maven(
 deploy_maven(
     name = "deploy-maven",
     target = ":assemble-maven",
-    deployment_properties = "@graknlabs_dependencies//distribution:deployment.properties"
+    snapshot = deployment['maven.snapshot'],
+    release = deployment['maven.release']
 )
 
 deploy_github(
@@ -98,5 +101,6 @@ deploy_github(
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Java",
     title_append_version = True,
-    deployment_properties = "//:deployment.properties",
+    organisation = github_deployment['github.organisation'],
+    repository = github_deployment['github.repository']
 )

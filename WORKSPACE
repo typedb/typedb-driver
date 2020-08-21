@@ -75,14 +75,11 @@ checkstyle_deps()
 load("@graknlabs_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-load("@graknlabs_dependencies//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps()
+#####################################################################
+# Load @graknlabs_bazel_distribution (from @graknlabs_dependencies) #
+#####################################################################
 
-#######################################
-# Load @graknlabs_bazel_distribution  #
-#######################################
-
-load("//dependencies/graknlabs:repositories.bzl", graknlabs_bazel_distribution = "graknlabs_bazel_distribution")
+load("@graknlabs_dependencies//dependencies/graknlabs:repositories.bzl", graknlabs_bazel_distribution = "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
 pip3_import(
@@ -161,9 +158,9 @@ load("//dependencies/graknlabs:repositories.bzl", "graknlabs_grabl_tracing")
 graknlabs_grabl_tracing()
 load("@graknlabs_grabl_tracing//dependencies/maven:artifacts.bzl", graknlabs_grabl_tracing_artifacts = "artifacts")
 
-##############################
+#######################################
 # Load @graknlabs_grakn_core_artifact #
-##############################
+#######################################
 load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
 graknlabs_grakn_core_artifact()
 
