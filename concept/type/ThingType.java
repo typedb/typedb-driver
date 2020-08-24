@@ -108,9 +108,11 @@ public interface ThingType extends Type {
         void unsetAbstract();
 
         /**
-         * @param role The RoleType which the instances of this Type are allowed to play.
+         * @param role Set the RoleType which the instances of this Type are allowed to play.
          */
         void setPlays(RoleType role);
+
+        void setPlays(RoleType roleType, RoleType overriddenType);
 
         /**
          * Creates a connection which allows this type and an AttributeType to be linked.

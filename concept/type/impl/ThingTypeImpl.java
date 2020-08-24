@@ -39,7 +39,7 @@ public abstract class ThingTypeImpl {
      */
     public static class Local extends TypeImpl.Local implements ThingType.Local {
 
-        public Local(ConceptProto.Type type) {
+        public Local(final ConceptProto.Type type) {
             super(type);
         }
     }
@@ -49,7 +49,7 @@ public abstract class ThingTypeImpl {
      */
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        public Remote(Transaction tx, String label) {
+        public Remote(final Transaction tx, final String label) {
             super(tx, label);
         }
 
@@ -99,7 +99,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final Stream<AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly) {
+        public final Stream<AttributeType.Remote> getOwns(final ValueType valueType, final boolean keysOnly) {
             final ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
                             .setKeysOnly(keysOnly);
 
@@ -137,7 +137,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void setPlays(RoleType role) {
+        public final void setPlays(final RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                             .setRole(type(role))).build();
@@ -145,7 +145,16 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void unsetOwns(AttributeType attributeType) {
+        public void setPlays(final RoleType role, final RoleType overriddenRole) {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
+                            .setRole(type(role))
+                            .setOverriddenRole(type(overriddenRole))).build();
+            runMethod(method);
+        }
+
+        @Override
+        public final void unsetOwns(final AttributeType attributeType) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
                             .setAttributeType(type(attributeType))).build();
@@ -153,7 +162,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void unsetPlays(RoleType role) {
+        public final void unsetPlays(final RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                             .setRole(type(role))).build();

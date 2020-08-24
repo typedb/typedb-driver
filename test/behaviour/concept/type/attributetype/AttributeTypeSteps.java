@@ -61,6 +61,8 @@ public class AttributeTypeSteps {
     private AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueType valueType) {
         final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
         switch (valueType) {
+            case OBJECT:
+                return attributeType;
             case BOOLEAN:
                 return attributeType.asBoolean();
             case LONG:

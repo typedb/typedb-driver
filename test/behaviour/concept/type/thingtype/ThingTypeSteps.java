@@ -321,16 +321,14 @@ public class ThingTypeSteps {
         RoleType roleType = tx().getRelationType(roleLabel.scope()).getRelates(roleLabel.role());
         RoleType overriddenType = tx().getRelationType(roleLabel.scope()).getSupertypes()
                 .flatMap(RelationType.Remote::getRelates).filter(r -> r.getLabel().equals(overriddenLabel)).findAny().get();
-//        get_thing_type(rootLabel, typeLabel).plays(roleType, overriddenType); // TODO fix
-        get_thing_type(rootLabel, typeLabel).setPlays(roleType);
+        get_thing_type(rootLabel, typeLabel).setPlays(roleType, overriddenType);
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}; throws exception")
     public void thing_type_set_plays_role_as_throws_exception(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, Parameters.ScopedLabel overriddenLabel) {
         RoleType roleType = tx().getRelationType(roleLabel.scope()).getRelates(roleLabel.role());
         RoleType overriddenType = tx().getRelationType(overriddenLabel.scope()).getRelates(overriddenLabel.role());
-//        assertThrows(() -> get_thing_type(rootLabel, typeLabel).plays(roleType, overriddenType)); // TODO fix
-        assertThrows(() -> get_thing_type(rootLabel, typeLabel).setPlays(roleType));
+        assertThrows(() -> get_thing_type(rootLabel, typeLabel).setPlays(roleType, overriddenType));
     }
 
     @When("{root_label}\\( ?{type_label} ?) remove plays role: {scoped_label}")

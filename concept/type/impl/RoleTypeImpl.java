@@ -20,6 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
@@ -27,6 +28,7 @@ import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class RoleTypeImpl {
@@ -109,6 +111,21 @@ public class RoleTypeImpl {
             ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
             return typeStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Type.Remote::asThingType);
+        }
+
+        @Override
+        protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
+            return tx().iterateConceptMethod(scopedLabel, request, response -> Thing.Remote.of(tx(), thingGetter.apply(response)));
+        }
+
+        @Override
+        protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return tx().iterateConceptMethod(scopedLabel, request, response -> Type.Remote.of(tx(), typeGetter.apply(response)));
+        }
+
+        @Override
+        protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
+            return tx().runConceptMethod(scopedLabel, typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

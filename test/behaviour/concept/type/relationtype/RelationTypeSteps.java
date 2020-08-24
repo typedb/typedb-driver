@@ -53,14 +53,13 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")
     public void relation_type_set_relates_role_type_as(String relationLabel, String roleLabel, String superRole) {
-//        tx().getRelationType(relationLabel).relates(roleLabel, superRole); // TODO fix
+        tx().getRelationType(relationLabel).setRelates(roleLabel, superRole);
         tx().getRelationType(relationLabel).setRelates(roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")
     public void thing_set_relates_role_type_as_throws_exception(String relationLabel, String roleLabel, String superRole) {
-//        assertThrows(() -> tx().getRelationType(relationLabel).relates(roleLabel, superRole)); // TODO fix
-        assertThrows(() -> tx().getRelationType(relationLabel).setRelates(roleLabel));
+        assertThrows(() -> tx().getRelationType(relationLabel).setRelates(roleLabel, superRole));
     }
 
     @When("relation\\( ?{type_label} ?) remove related role: {type_label}")
@@ -85,7 +84,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")
     public void relation_type_get_role_type_is_abstract(String relationLabel, String roleLabel, boolean isAbstract) {
-//        assertEquals(isAbstract, tx().getRelationType(relationLabel).role(roleLabel).isAbstract()); // TODO fix
+        assertEquals(isAbstract, tx().getRelationType(relationLabel).getRelates(roleLabel).isAbstract());
         fail();
     }
 

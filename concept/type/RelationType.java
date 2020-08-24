@@ -75,7 +75,7 @@ public interface RelationType extends ThingType {
         /**
          * Retrieve a specific RoleType.
          */
-        RoleType.Remote getRelates(String role);
+        RoleType.Remote getRelates(String roleLabel);
 
         /**
          * Retrieves a list of the RoleTypes that make up this RelationType.
@@ -89,10 +89,19 @@ public interface RelationType extends ThingType {
         /**
          * Creates a new RoleType for this RelationType.
          *
-         * @param role A new RoleType which is part of this RelationType.
+         * @param roleLabel The label of a new RoleType which is part of this RelationType.
          * @see RoleType.Remote
          */
-        void setRelates(String role);
+        void setRelates(String roleLabel);
+
+        /**
+         * Creates a new RoleType override for this RelationType.
+         *
+         * @param roleLabel The label of a new RoleType which is part of this RelationType.
+         * @param overriddenLabel The label of the RoleType that is to be overridden.
+         * @see RoleType.Remote
+         */
+        void setRelates(String roleLabel, String overriddenLabel);
 
         /**
          * Returns a collection of supertypes of this RelationType.
