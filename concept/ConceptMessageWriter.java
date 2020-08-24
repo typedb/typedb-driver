@@ -82,6 +82,8 @@ public abstract class ConceptMessageWriter {
 
     public static ConceptProto.AttributeType.VALUE_TYPE valueType(ValueType valueType) {
         switch (valueType) {
+            case OBJECT:
+                return ConceptProto.AttributeType.VALUE_TYPE.OBJECT;
             case STRING:
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             case BOOLEAN:
@@ -93,7 +95,6 @@ public abstract class ConceptMessageWriter {
             case DATETIME:
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             default:
-            case OBJECT:
                 return ConceptProto.AttributeType.VALUE_TYPE.UNRECOGNIZED;
         }
     }

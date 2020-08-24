@@ -55,7 +55,7 @@ public class EntityTypeImpl {
 
         @Override
         public final Stream<Entity.Remote> getInstances() {
-            return super.getInstances().map(this::asInstance);
+            return super.getInstances().map(Thing.Remote::asEntity);
         }
 
         @Override
@@ -81,9 +81,5 @@ public class EntityTypeImpl {
             super.setSupertype(superEntityType);
         }
 
-        @Override
-        protected final Entity.Remote asInstance(Thing.Remote thing) {
-            return thing.asEntity();
-        }
     }
 }

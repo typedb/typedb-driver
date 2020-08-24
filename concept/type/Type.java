@@ -225,6 +225,8 @@ public interface Type extends Concept {
                             return new AttributeTypeImpl.String.Remote(tx, label);
                         case DATETIME:
                             return new AttributeTypeImpl.DateTime.Remote(tx, label);
+                        case OBJECT:
+                            return new AttributeTypeImpl.Remote(tx, label);
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));

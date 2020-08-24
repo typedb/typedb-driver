@@ -22,6 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
 
@@ -42,7 +43,9 @@ public interface AttributeType extends ThingType {
      * @return The data type to which instances of this Attribute  must conform.
      */
     @CheckReturnValue
-    ValueType getValueType();
+    default ValueType getValueType() {
+        return ValueType.OBJECT;
+    }
 
     @CheckReturnValue
     default boolean isKeyable() {
@@ -59,8 +62,11 @@ public interface AttributeType extends ThingType {
 
     AttributeType.DateTime asDateTime();
 
+    @CheckReturnValue
     @Override
-    Remote asRemote(Transaction tx);
+    default Remote asRemote(Transaction tx) {
+        return Remote.of(tx, getLabel());
+    }
 
     /**
      * A class used to hold the supported data types of attributes.
@@ -188,6 +194,10 @@ public interface AttributeType extends ThingType {
      */
     interface Remote extends ThingType.Remote, AttributeType {
 
+        static AttributeType.Remote of(Transaction tx, java.lang.String label) {
+            return new AttributeTypeImpl.Remote(tx, label);
+        }
+
         /**
          * Sets the supertype of the AttributeType to be the AttributeType specified.
          *
@@ -202,6 +212,15 @@ public interface AttributeType extends ThingType {
         default AttributeType.Remote asAttributeType() {
             return this;
         }
+
+        /**
+         * Retrieve all the Attribute instances of this AttributeType
+         *
+         * @return All the Attribute instances of this AttributeType
+         * @see Attribute.Remote
+         */
+        @Override
+        Stream<? extends Attribute.Remote<?>> getInstances();
 
         @Override
         default AttributeType.Boolean.Remote asBoolean() {

@@ -20,7 +20,6 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -31,7 +30,6 @@ import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_STATE;
 import static grakn.client.concept.ConceptMessageWriter.type;
 import static grakn.client.concept.ConceptMessageWriter.valueType;
 
@@ -75,7 +73,7 @@ public abstract class ThingTypeImpl {
             final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setThingTypeGetInstancesIterReq(ConceptProto.ThingType.GetInstances.Iter.Req.getDefaultInstance()).build();
 
-            return thingStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing()).map(this::asInstance);
+            return thingStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing());
         }
 
         @Override
@@ -160,10 +158,6 @@ public abstract class ThingTypeImpl {
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
                             .setRole(type(role))).build();
             runMethod(method);
-        }
-
-        protected Thing.Remote asInstance(Thing.Remote concept) {
-            throw new GraknClientException(ILLEGAL_STATE);
         }
     }
 }

@@ -52,7 +52,7 @@ public class RelationTypeImpl {
 
         @Override
         public final Stream<Relation.Remote> getInstances() {
-            return super.getInstances().map(this::asInstance);
+            return super.getInstances().map(Thing.Remote::asRelation);
         }
 
         @Override
@@ -102,9 +102,5 @@ public class RelationTypeImpl {
             runMethod(method);
         }
 
-        @Override
-        protected final Relation.Remote asInstance(Thing.Remote thing) {
-            return thing.asRelation();
-        }
     }
 }

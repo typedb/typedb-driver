@@ -47,7 +47,7 @@ public class AttributeTypeImpl {
     /**
      * Client implementation of AttributeType
      */
-    public abstract static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
         public Remote(Transaction tx, java.lang.String label) {
             super(tx, label);
@@ -117,10 +117,6 @@ public class AttributeTypeImpl {
             }
         }*/
 
-        @Override
-        protected final Attribute.Remote<?> asInstance(Thing.Remote thing) {
-            return thing.asAttribute();
-        }
     }
 
     public static abstract class Boolean implements AttributeType.Boolean {
