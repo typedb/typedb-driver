@@ -95,16 +95,6 @@ public class QueryTest {
         grakn.stop();
     }
 
-    @Before
-    public void createClient() {
-        graknClient = Grakn.client();
-    }
-
-    @After
-    public void closeClient() throws Exception {
-        graknClient.close();
-    }
-
     @Ignore
     @Test
     public void applicationTest() {
