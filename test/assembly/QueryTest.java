@@ -30,9 +30,7 @@ import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -103,11 +101,11 @@ public class QueryTest {
         localhostGraknTx(tx -> {
             GraqlDefine defineQuery = Graql.define(
                     type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
-                    type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearer"),
+                    type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("mating", "child-bearer"),
                     type("parentship").sub("relation").relates("parent").relates("child"),
 
                     type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
-                    type("lion").sub("entity").has("name").plays("male-partner").plays("female-partner").plays("offspring").plays("parent").plays("child")
+                    type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
 
             GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
