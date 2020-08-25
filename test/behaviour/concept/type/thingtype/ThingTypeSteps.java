@@ -212,45 +212,45 @@ public class ThingTypeSteps {
         }
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set has key type: {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}")
     public void thing_type_set_has_key_type(RootLabel rootLabel, String typeLabel, String attTypeLabel) {
         AttributeType attributeType = tx().getAttributeType(attTypeLabel);
         get_thing_type(rootLabel, typeLabel).setOwns(attributeType, true);
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set has key type: {type_label} as {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}")
     public void thing_type_set_has_key_type_as(RootLabel rootLabel, String typeLabel, String attTypeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().getAttributeType(attTypeLabel);
         AttributeType overriddenType = tx().getAttributeType(overriddenLabel);
         get_thing_type(rootLabel, typeLabel).setOwns(attributeType, overriddenType, true);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set has key type: {type_label}; throws exception")
+    @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}; throws exception")
     public void thing_type_set_has_key_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setOwns(attributeType, true));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set has key type: {type_label} as {type_label}; throws exception")
+    @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}; throws exception")
     public void thing_type_set_has_key_type_as_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().getAttributeType(overriddenLabel);
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setOwns(attributeType, overriddenType, true));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) remove has key type: {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) unset owns key type: {type_label}")
     public void thing_type_remove_has_key_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         get_thing_type(rootLabel, typeLabel).unsetOwns(attributeType);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get has key types contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns key types contain:")
     public void thing_type_get_has_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).getOwns(true).map(Type.Remote::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get has key types do not contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns key types do not contain:")
     public void thing_type_get_has_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).getOwns(true).map(Type.Remote::getLabel).collect(toSet());
         for (String attributeLabel : attributeLabels) {
@@ -258,45 +258,45 @@ public class ThingTypeSteps {
         }
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set has attribute type: {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}")
     public void thing_type_set_has_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         get_thing_type(rootLabel, typeLabel).setOwns(attributeType);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set has attribute type: {type_label}; throws exception")
+    @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}; throws exception")
     public void thing_type_set_has_attribute_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setOwns(attributeType));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set has attribute type: {type_label} as {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}")
     public void thing_type_set_has_attribute_type_as(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().getAttributeType(overriddenLabel);
         get_thing_type(rootLabel, typeLabel).setOwns(attributeType, overriddenType);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set has attribute type: {type_label} as {type_label}; throws exception")
+    @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}; throws exception")
     public void thing_type_set_has_attribute_as_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().getAttributeType(overriddenLabel);
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setOwns(attributeType, overriddenType));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) remove has attribute type: {type_label}")
+    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
     public void thing_type_remove_has_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().getAttributeType(attributeLabel);
         get_thing_type(rootLabel, typeLabel).unsetOwns(attributeType);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get has attribute types contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types contain:")
     public void thing_type_get_has_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).getOwns().map(Type.Remote::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get has attribute types do not contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")
     public void thing_type_get_has_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).getOwns().map(Type.Remote::getLabel).collect(toSet());
         for (String attributeLabel : attributeLabels) {
@@ -331,7 +331,7 @@ public class ThingTypeSteps {
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setPlays(roleType, overriddenType));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) remove plays role: {scoped_label}")
+    @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")
     public void thing_type_remove_plays_role(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
         RoleType roleType = tx().getRelationType(roleLabel.scope()).getRelates(roleLabel.role());
         get_thing_type(rootLabel, typeLabel).unsetPlays(roleType);

@@ -101,6 +101,14 @@ public abstract class TypeImpl {
             runMethod(method);
         }
 
+        @Override
+        public final boolean isAbstract() {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()).build();
+
+            return runMethod(method).getTypeIsAbstractRes().getAbstract();
+        }
+
         @Nullable
         public Type.Remote getSupertype() {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()

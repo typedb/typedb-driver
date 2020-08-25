@@ -24,6 +24,7 @@ import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
@@ -75,6 +76,8 @@ public interface RelationType extends ThingType {
         /**
          * Retrieve a specific RoleType.
          */
+        @Nullable
+        @CheckReturnValue
         RoleType.Remote getRelates(String roleLabel);
 
         /**
@@ -102,6 +105,14 @@ public interface RelationType extends ThingType {
          * @see RoleType.Remote
          */
         void setRelates(String roleLabel, String overriddenLabel);
+
+        /**
+         * Removes a RoleType from this RelationType.
+         *
+         * @param roleLabel The label of a RoleType which is part of this RelationType.
+         * @see RoleType.Remote
+         */
+        void unsetRelates(String roleLabel);
 
         /**
          * Returns a collection of supertypes of this RelationType.

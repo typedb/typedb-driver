@@ -124,6 +124,8 @@ public interface Type extends Concept {
                             return new AttributeTypeImpl.String.Local(type);
                         case DATETIME:
                             return new AttributeTypeImpl.DateTime.Local(type);
+                        case OBJECT:
+                            return new AttributeTypeImpl.Local(type);
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));

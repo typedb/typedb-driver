@@ -64,11 +64,6 @@ public interface RoleType extends Type {
             return new RoleTypeImpl.Remote(tx, label, scopedLabel);
         }
 
-        @Override
-        default boolean isAbstract() {
-            return false;
-        }
-
         /**
          * Sets the supertype of this RoleType.
          *

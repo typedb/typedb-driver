@@ -77,14 +77,6 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final boolean isAbstract() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeIsAbstractReq(ConceptProto.ThingType.IsAbstract.Req.getDefaultInstance()).build();
-
-            return runMethod(method).getThingTypeIsAbstractRes().getAbstract();
-        }
-
-        @Override
         public final void setAbstract() {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()).build();

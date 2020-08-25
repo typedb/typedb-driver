@@ -22,7 +22,6 @@ package grakn.client.concept.type;
 import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
 
@@ -213,6 +212,21 @@ public interface AttributeType extends ThingType {
             return this;
         }
 
+        @Override
+        AttributeType.Boolean.Remote asBoolean();
+
+        @Override
+        AttributeType.Long.Remote asLong();
+
+        @Override
+        AttributeType.Double.Remote asDouble();
+
+        @Override
+        AttributeType.String.Remote asString();
+
+        @Override
+        AttributeType.DateTime.Remote asDateTime();
+
         /**
          * Retrieve all the Attribute instances of this AttributeType
          *
@@ -222,30 +236,9 @@ public interface AttributeType extends ThingType {
         @Override
         Stream<? extends Attribute.Remote<?>> getInstances();
 
-        @Override
-        default AttributeType.Boolean.Remote asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
-        }
+        Stream<? extends ThingType> getOwners();
 
-        @Override
-        default AttributeType.Long.Remote asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
-        }
-
-        @Override
-        default AttributeType.Double.Remote asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
-        }
-
-        @Override
-        default AttributeType.String.Remote asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
-        }
-
-        @Override
-        default AttributeType.DateTime.Remote asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
-        }
+        Stream<? extends ThingType> getOwners(boolean onlyKey);
     }
 
     interface Boolean extends AttributeType {
@@ -618,12 +611,6 @@ public interface AttributeType extends ThingType {
             java.lang.String getRegex();
 
             void setRegex(java.lang.String regex);
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.String.Remote asString() {
-                return this;
-            }
         }
     }
 

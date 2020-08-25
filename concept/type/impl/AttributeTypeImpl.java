@@ -20,16 +20,20 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.concept.ConceptMessageWriter.attributeValue;
 
 public class AttributeTypeImpl {
@@ -37,7 +41,7 @@ public class AttributeTypeImpl {
     /**
      * Client implementation of AttributeType
      */
-    public abstract static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
+    public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
         public Local(ConceptProto.Type type) {
             super(type);
@@ -73,6 +77,19 @@ public class AttributeTypeImpl {
             return super.getInstances().map(Thing.Remote::asAttribute);
         }
 
+        @Override
+        public Stream<? extends ThingType> getOwners() {
+            return getOwners(false);
+        }
+
+        @Override
+        public Stream<? extends ThingType> getOwners(boolean onlyKey) {
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+                    .setAttributeTypeGetOwnersIterReq(ConceptProto.AttributeType.GetOwners.Iter.Req.getDefaultInstance()).build();
+
+            return typeStream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(Type.Remote::asThingType);
+        }
+
         protected final Attribute.Remote<?> put(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
@@ -99,24 +116,57 @@ public class AttributeTypeImpl {
             super.setSupertype(type);
         }
 
-        // TODO: can we delete this? In theory the value type should always be known
-        /*@Override
-        @Nullable
-        public final ValueType getValueType() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeGetValueTypeReq(ConceptProto.AttributeType.GetValueType.Req.getDefaultInstance()).build();
-
-            ConceptProto.AttributeType.GetValueType.Res response = runMethod(method).getAttributeTypeGetValueTypeRes();
-            switch (response.getResCase()) {
-                case NULL:
-                    return null;
-                case VALUETYPE:
-                    return valueType(response.getValueType());
-                default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+        @Override
+        public AttributeType.Boolean.Remote asBoolean() {
+            if (isRoot()) {
+                return AttributeType.Boolean.Remote.of(tx(), getLabel());
             }
-        }*/
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+        }
 
+        @Override
+        public AttributeType.Long.Remote asLong() {
+            if (isRoot()) {
+                return AttributeType.Long.Remote.of(tx(), getLabel());
+            }
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.Double.Remote asDouble() {
+            if (isRoot()) {
+                return AttributeType.Double.Remote.of(tx(), getLabel());
+            }
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.String.Remote asString() {
+            if (isRoot()) {
+                return AttributeType.String.Remote.of(tx(), getLabel());
+            }
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.DateTime.Remote asDateTime() {
+            if (isRoot()) {
+                return AttributeType.DateTime.Remote.of(tx(), getLabel());
+            }
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            // Allows the supertypes of 'name sub attribute' and 'age sub attribute' to be equal, despite being of different classes
+            if (!(o instanceof AttributeTypeImpl.Remote)) return false;
+
+            AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
+
+            return this.tx().equals(that.tx()) &&
+                    this.getLabel().equals(that.getLabel());
+        }
     }
 
     public static abstract class Boolean implements AttributeType.Boolean {
@@ -175,6 +225,12 @@ public class AttributeTypeImpl {
             public final Attribute.Boolean.Remote get(boolean value) {
                 final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asBoolean() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Boolean.Remote asBoolean() {
+                return this;
             }
         }
     }
@@ -236,6 +292,12 @@ public class AttributeTypeImpl {
                 final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asLong() : null;
             }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Long.Remote asLong() {
+                return this;
+            }
         }
     }
 
@@ -295,6 +357,12 @@ public class AttributeTypeImpl {
             public final Attribute.Double.Remote get(double value) {
                 final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asDouble() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Double.Remote asDouble() {
+                return this;
             }
         }
     }
@@ -374,6 +442,12 @@ public class AttributeTypeImpl {
                                 .setRegex(regex)).build();
                 runMethod(method);
             }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.String.Remote asString() {
+                return this;
+            }
         }
     }
 
@@ -433,6 +507,12 @@ public class AttributeTypeImpl {
             public final Attribute.DateTime.Remote get(LocalDateTime value) {
                 final Attribute.Remote<?> attr = super.get(value);
                 return attr != null ? attr.asDateTime() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.DateTime.Remote asDateTime() {
+                return this;
             }
         }
     }
