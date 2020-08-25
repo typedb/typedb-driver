@@ -32,6 +32,8 @@ grakn_test(
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",
+        "@graknlabs_graql//java/common",
+        "@graknlabs_graql//java/query",
 
         # External dependencies from Maven
         "@maven//:org_hamcrest_hamcrest_library",

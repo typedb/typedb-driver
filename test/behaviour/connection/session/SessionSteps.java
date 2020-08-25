@@ -26,12 +26,15 @@ import io.cucumber.java.en.When;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessions;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsParallel;
+import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactions;
+import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactionsParallel;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
 import static grakn.common.collection.Collections.list;
 import static java.util.Objects.isNull;
@@ -40,25 +43,59 @@ import static org.junit.Assert.assertTrue;
 
 public class SessionSteps {
 
-    @When("connection open session for keyspace: {word}")
-    public void connection_open_session_for_keyspace(String name) {
-        connection_open_sessions_for_keyspaces(list(name));
+    @When("connection open schema session for database: {word}")
+    public void connection_open_schema_session_for_database(String name) {
+        connection_open_schema_sessions_for_databases(list(name));
     }
 
-    @When("connection open session(s) for keyspace(s):")
-    public void connection_open_sessions_for_keyspaces(List<String> names) {
+    @When("connection open (data )session for database: {word}")
+    public void connection_open_data_session_for_database(String name) {
+        connection_open_data_sessions_for_databases(list(name));
+    }
+
+    @When("connection open schema session(s) for database(s):")
+    public void connection_open_schema_sessions_for_databases(List<String> names) {
+        for (String name : names) {
+            sessions.add(client.schemaSession(name));
+        }
+    }
+
+    @When("connection open (data )session(s) for database(s):")
+    public void connection_open_data_sessions_for_databases(List<String> names) {
         for (String name : names) {
             sessions.add(client.session(name));
         }
     }
 
-    @When("connection open sessions in parallel for keyspaces:")
-    public void connection_open_sessions_in_parallel_for_keyspaces(List<String> names) {
+    @When("connection open (data )sessions in parallel for databases:")
+    public void connection_open_data_sessions_in_parallel_for_databases(List<String> names) {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
             sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name), threadPool));
         }
+    }
+
+    @When("connection close all sessions")
+    public void connection_close_all_sessions() throws ExecutionException, InterruptedException {
+        for (GraknClient.Session session : sessions) {
+            if (sessionsToTransactions.containsKey(session)) {
+                for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+                    transaction.close();
+                }
+                sessionsToTransactions.remove(session);
+            }
+
+            if (sessionsToTransactionsParallel.containsKey(session)) {
+                for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
+                    futureTransaction.get().close();
+                }
+                sessionsToTransactionsParallel.remove(session);
+            }
+
+            session.close();
+        }
+        sessions.clear();
     }
 
     @Then("session(s) is/are null: {bool}")
@@ -96,18 +133,18 @@ public class SessionSteps {
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new)).join();
     }
 
-    @Then("session(s) has/have keyspace(s):")
-    public void sessions_have_keyspaces(List<String> names) {
+    @Then("session(s) has/have database(s):")
+    public void sessions_have_databases(List<String> names) {
         assertEquals(names.size(), sessions.size());
         Iterator<GraknClient.Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().keyspace().name());
+            assertEquals(name, sessionIter.next().database().name());
         }
     }
 
-    @Then("sessions in parallel have keyspaces:")
-    public void sessions_in_parallel_have_keyspaces(List<String> names) {
+    @Then("sessions in parallel have databases:")
+    public void sessions_in_parallel_have_databases(List<String> names) {
         assertEquals(names.size(), sessionsParallel.size());
         Iterator<CompletableFuture<GraknClient.Session>> futureSessionIter = sessionsParallel.iterator();
         CompletableFuture[] assertions = new CompletableFuture[names.size()];
@@ -115,7 +152,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.keyspace().name()); return null;
+                assertEquals(name, session.database().name()); return null;
             });
         }
 

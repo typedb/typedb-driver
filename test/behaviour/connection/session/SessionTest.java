@@ -20,6 +20,9 @@
 package grakn.client.test.behaviour.connection.session;
 
 import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknRunner;
+import grakn.common.test.server.GraknCoreRunner;
+import grakn.common.test.server.GraknSingleton;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -65,7 +68,7 @@ public class SessionTest {
     private static GraknCoreRunner runner;
 
     @BeforeClass
-    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
+    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();
         runner.start();
         GraknSingleton.setGraknRunner(runner);

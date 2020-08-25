@@ -21,15 +21,15 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.ValueType;
 import grakn.client.concept.Label;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.exception.GraknClientException;
 import grakn.client.rpc.RequestBuilder;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -40,7 +40,7 @@ public class AttributeTypeImpl {
      *
      * @param <D> The data type of this attribute type
      */
-    public static class Local<D> extends TypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
+    public static class Local<D> extends ThingTypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
 
         private final ValueType<D> valueType;
 
@@ -61,15 +61,10 @@ public class AttributeTypeImpl {
      *
      * @param <D> The data type of this attribute type
      */
-    public static class Remote<D> extends TypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
+    public static class Remote<D> extends ThingTypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> key(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.key(attributeType);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override
@@ -78,13 +73,28 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> plays(Role role) {
-            return (AttributeType.Remote<D>) super.plays(role);
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey) {
+            return (AttributeType.Remote<D>) super.has(attributeType, isKey);
         }
 
         @Override
-        public final AttributeType.Remote<D> unkey(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.unkey(attributeType);
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
+            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType);
+        }
+
+        @Override
+        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
+            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType, isKey);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
+            return super.attributes(keysOnly);
+        }
+
+        @Override
+        public final AttributeType.Remote<D> plays(RoleType role) {
+            return (AttributeType.Remote<D>) super.plays(role);
         }
 
         @Override
@@ -93,7 +103,7 @@ public class AttributeTypeImpl {
         }
 
         @Override
-        public final AttributeType.Remote<D> unplay(Role role) {
+        public final AttributeType.Remote<D> unplay(RoleType role) {
             return (AttributeType.Remote<D>) super.unplay(role);
         }
 
@@ -129,28 +139,28 @@ public class AttributeTypeImpl {
 
         @SuppressWarnings("unchecked")
         @Override
-        public final Attribute.Remote<D> create(D value) {
+        public final Attribute.Remote<D> put(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeCreateReq(ConceptProto.AttributeType.Create.Req.newBuilder()
+                    .setAttributeTypePutReq(ConceptProto.AttributeType.Create.Req.newBuilder()
                                                        .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            return (Attribute.Remote<D>) Concept.Remote.of(runMethod(method).getAttributeTypeCreateRes().getAttribute(), tx()).asAttribute();
+            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @SuppressWarnings("unchecked")
         @Override
         @Nullable
-        public final Attribute.Remote<D> attribute(D value) {
+        public final Attribute.Remote<D> get(D value) {
             ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeAttributeReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
+                    .setAttributeTypeGetReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
                                                           .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
 
-            ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeAttributeRes();
+            ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case NULL:
                     return null;
                 case ATTRIBUTE:
-                    return (Attribute.Remote<D>) Concept.Remote.of(response.getAttribute(), tx()).asAttribute();
+                    return (Attribute.Remote<D>) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
                 default:
                     throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }

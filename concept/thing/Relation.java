@@ -20,9 +20,9 @@
 package grakn.client.concept.thing;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.thing.impl.RelationImpl;
-import grakn.client.concept.type.Role;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
 
 import javax.annotation.CheckReturnValue;
@@ -58,7 +58,7 @@ public interface Relation extends Thing<Relation, RelationType> {
 
     @Override
     default Remote asRemote(GraknClient.Transaction tx) {
-        return Relation.Remote.of(tx, id());
+        return Relation.Remote.of(tx, iid());
     }
 
     @Deprecated
@@ -79,8 +79,8 @@ public interface Relation extends Thing<Relation, RelationType> {
      */
     interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
 
-        static Relation.Remote of (GraknClient.Transaction tx, ConceptId id) {
-            return new RelationImpl.Remote(tx, id);
+        static Relation.Remote of (GraknClient.Transaction tx, ConceptIID iid) {
+            return new RelationImpl.Remote(tx, iid);
         }
 
         //------------------------------------- Modifiers ----------------------------------
@@ -106,32 +106,40 @@ public interface Relation extends Thing<Relation, RelationType> {
         RelationType.Remote type();
 
         /**
-         * Retrieve a list of all Instances involved in the Relation, and the Role they play.
+         * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
          *
          * @return A list of all the role types and the instances playing them in this Relation.
-         * @see Role.Remote
+         * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<Role.Remote, List<Thing.Remote<?, ?>>> rolePlayersMap();
+        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersByRoleType();
 
         /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by Role played.
+         * Retrieves a list of every Thing involved in the Relation.
          *
-         * @param roles used to filter the returned instances only to ones that play any of the role types.
-         *              If blank, returns all role players.
-         * @return a list of every Thing involved in the Relation.
+         * @return A list of every Thing involved in the Relation.
          */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> rolePlayers(Role... roles);
+        Stream<Thing.Remote<?, ?>> players();
+
+        /**
+         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
+         *
+         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
+         *
+         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
+         */
+        @CheckReturnValue
+        Stream<Thing.Remote<?, ?>> players(List<RoleType> roleTypes);
 
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
          *
-         * @param role   The Role Type of the new role player.
+         * @param roleType   The RoleType of the new role player.
          * @param player The new role player.
          * @return The Relation itself.
          */
-        Relation.Remote assign(Role role, Thing<?, ?> player);
+        Relation.Remote relate(RoleType roleType, Thing<?, ?> player);
 
         /**
          * Removes the provided Attribute from this Relation
@@ -143,13 +151,13 @@ public interface Relation extends Thing<Relation, RelationType> {
         Relation.Remote unhas(Attribute<?> attribute);
 
         /**
-         * Removes the Thing which is playing a Role in this Relation.
-         * If the Thing is not playing any Role in this Relation nothing happens.
+         * Removes the Thing which is playing a RoleType in this Relation.
+         * If the Thing is not playing any RoleType in this Relation nothing happens.
          *
-         * @param role   The Role being played by the Thing
+         * @param roleType The RoleType being played by the Thing
          * @param player The Thing playing the Role in this Relation
          */
-        void unassign(Role role, Thing<?, ?> player);
+        void unrelate(RoleType roleType, Thing<?, ?> player);
 
         //------------------------------------- Other ---------------------------------
         @Deprecated

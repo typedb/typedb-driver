@@ -23,9 +23,7 @@ import com.google.common.collect.AbstractIterator;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.session.SessionProto;
-import grakn.protocol.session.SessionProto.Transaction;
-import grakn.protocol.session.SessionServiceGrpc;
+import grakn.protocol.GraknGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
@@ -40,6 +38,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.protocol.TransactionProto.Transaction.Req;
+import static grakn.protocol.TransactionProto.Transaction.Res;
 
 
 /**
@@ -60,17 +60,17 @@ public class Transceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(Transceiver.class);
 
-    private final StreamObserver<Transaction.Req> requestSender;
+    private final StreamObserver<Req> requestSender;
     private final ResponseListener responseListener;
 
-    private Transceiver(StreamObserver<Transaction.Req> requestSender, ResponseListener responseListener) {
+    private Transceiver(StreamObserver<Req> requestSender, ResponseListener responseListener) {
         this.requestSender = requestSender;
         this.responseListener = responseListener;
     }
 
-    public static Transceiver create(SessionServiceGrpc.SessionServiceStub stub) {
+    public static Transceiver create(GraknGrpc.GraknStub stub) {
         ResponseListener responseListener = new ResponseListener();
-        StreamObserver<Transaction.Req> requestSender = stub.transaction(responseListener);
+        StreamObserver<Req> requestSender = stub.transaction(responseListener);
         return new Transceiver(requestSender, responseListener);
     }
 
@@ -78,20 +78,23 @@ public class Transceiver implements AutoCloseable {
      * Send a request and return immediately.
          * This method is non-blocking - it returns immediately.
      */
-    private void send(Transaction.Req request, ResponseCollector collector) {
-        if (responseListener.terminated.get()) {
-            throw GraknClientException.connectionClosed();
-        }
+    private void send(Req request, ResponseCollector collector) {
+
         LOG.trace("send:{}", request);
 
         // We must add the response collectors in exact the same order we send the requests
         synchronized (this) {
-            responseListener.addCollector(collector); // Must add collector first to be watertight
+            synchronized (responseListener) {
+                if (responseListener.terminated) {
+                    throw GraknClientException.connectionClosed();
+                }
+                responseListener.addCollector(collector); // Must add collector first to be watertight
+            }
             requestSender.onNext(request);
         }
     }
 
-    public Transaction.Res sendAndReceive(Transaction.Req request) throws InterruptedException {
+    public Res sendAndReceive(Req request) throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("sendAndReceive")) {
             SingleResponseCollector collector = new SingleResponseCollector();
             send(request, collector);
@@ -99,7 +102,7 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
-    public void sendAndReceiveMultipleAsync(Transaction.Req request, MultiResponseCollector collector) {
+    public void sendAndReceiveMultipleAsync(Req request, MultiResponseCollector collector) {
         try (ThreadTrace trace = GrablTracingThreadStatic.traceOnThread("sendAndReceiveMultipleAsync")) {
             send(request, collector);
         }
@@ -119,8 +122,8 @@ public class Transceiver implements AutoCloseable {
         }
     }
 
-    public boolean isOpen() {
-        return !responseListener.terminated.get();
+    public synchronized boolean isOpen() {
+        return !responseListener.terminated;
     }
 
     /**
@@ -149,14 +152,14 @@ public class Transceiver implements AutoCloseable {
             return true;
         }
 
-        public SessionProto.Transaction.Res receive() throws InterruptedException {
+        public Res receive() throws InterruptedException {
             latch.await();
             return response.ok();
         }
     }
 
     /**
-     * Advanced abstract multi-response collector. The {@link #isLastResponse(Transaction.Res)} method must be
+     * Advanced abstract multi-response collector. The {@link #isLastResponse(Res)} method must be
      * overridden in a sub-class because the last response must be known by the GRPC response receiving thread in order
      * to keep it from blocking other collectors for later responses.
      */
@@ -168,15 +171,15 @@ public class Transceiver implements AutoCloseable {
         public boolean onResponse(Response response) {
             started = true;
             received.add(response);
-            SessionProto.Transaction.Res nullableRes = response.nullableOk();
+            Res nullableRes = response.nullableOk();
             return nullableRes == null || isLastResponse(nullableRes);
         }
 
-        public SessionProto.Transaction.Res take() throws InterruptedException {
+        public Res take() throws InterruptedException {
             return received.take().ok();
         }
 
-        public SessionProto.Transaction.Res poll(long timeout, TimeUnit unit) throws InterruptedException,
+        public Res poll(long timeout, TimeUnit unit) throws InterruptedException,
                 TimeoutException {
             Response response = received.poll(timeout, unit);
             if (response == null) {
@@ -197,28 +200,34 @@ public class Transceiver implements AutoCloseable {
          * @param response The next response.
          * @return true if this is the last response, false if more responses are expected.
          */
-        protected abstract boolean isLastResponse(SessionProto.Transaction.Res response);
+        protected abstract boolean isLastResponse(Res response);
     }
 
     /**
      * A StreamObserver that pushes received responses to the corresponding collector.
      */
-    private static class ResponseListener implements StreamObserver<Transaction.Res> {
+    private static class ResponseListener implements StreamObserver<Res> {
 
-        private ResponseCollector currentCollector;
+        private volatile ResponseCollector currentCollector;
         private final BlockingQueue<ResponseCollector> collectorQueue = new LinkedBlockingQueue<>();
-        private final AtomicBoolean terminated = new AtomicBoolean(false);
+        private volatile boolean terminated = false;
 
-        void addCollector(ResponseCollector collector) {
+        synchronized void addCollector(ResponseCollector collector) {
+            if (terminated) throw GraknClientException.create("Transaction listener was terminated");
             collectorQueue.add(collector);
         }
 
-        private void dispatchResponse(Response res) {
+        private synchronized void dispatchResponse(Response res) {
             if (currentCollector == null) {
                 try {
-                    currentCollector = collectorQueue.take();
+                    currentCollector = collectorQueue.poll(1, TimeUnit.SECONDS);
+                    if (currentCollector == null) {
+                        LOG.error("Unexpected response: {}", res);
+                        terminated = true;
+                        return;
+                    }
                 } catch (InterruptedException e) {
-                    terminated.set(true);
+                    terminated = true;
                     throw new IllegalStateException("Interrupted whilst waiting for a result collector, " +
                             "should never happen since response collectors are queued before send.");
                 }
@@ -230,13 +239,13 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Override
-        public void onNext(Transaction.Res value) {
+        public synchronized void onNext(Res value) {
             dispatchResponse(Response.ok(value));
         }
 
         @Override
-        public void onError(Throwable throwable) {
-            terminated.set(true);
+        public synchronized void onError(Throwable throwable) {
+            terminated = true;
             assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
 
             // Exhaust the queue
@@ -246,11 +255,12 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Override
-        public void onCompleted() {
-            terminated.set(true);
+        public synchronized void onCompleted() {
+            terminated = true;
 
             // Exhaust the queue
             while (currentCollector != null || collectorQueue.peek() != null) {
+                LOG.info("Does this happen often?");
                 dispatchResponse(Response.completed());
             }
         }
@@ -262,15 +272,15 @@ public class Transceiver implements AutoCloseable {
      */
     public static class Response {
 
-        private final SessionProto.Transaction.Res nullableOk;
+        private final Res nullableOk;
         private final Exception nullableError;
 
-        Response(@Nullable SessionProto.Transaction.Res nullableOk, @Nullable Exception nullableError) {
+        Response(@Nullable Res nullableOk, @Nullable Exception nullableError) {
             this.nullableOk = nullableOk;
             this.nullableError = nullableError;
         }
 
-        private static Response create(@Nullable Transaction.Res response, @Nullable Exception error) {
+        private static Response create(@Nullable Res response, @Nullable Exception error) {
             if (!(response == null || error == null)) {
                 throw new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null");
             }
@@ -285,12 +295,12 @@ public class Transceiver implements AutoCloseable {
             return create(null, error);
         }
 
-        static Response ok(Transaction.Res response) {
+        static Response ok(Res response) {
             return create(response, null);
         }
 
         @Nullable
-        SessionProto.Transaction.Res nullableOk() {
+        Res nullableOk() {
             return nullableOk;
         }
 
@@ -314,7 +324,7 @@ public class Transceiver implements AutoCloseable {
          *
          * @throws IllegalStateException if this is not a successful response
          */
-        public final Transaction.Res ok() {
+        public final Res ok() {
             if (nullableOk != null) {
                 return nullableOk;
             } else if (nullableError != null) {

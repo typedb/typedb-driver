@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.keyspace;
+package grakn.client.test.behaviour.connection.database;
 
 import grakn.common.test.server.GraknCoreRunner;
 import grakn.common.test.server.GraknSingleton;
@@ -35,17 +35,17 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/connection/keyspace.feature",
+        features = "external/graknlabs_verification/behaviour/connection/database.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
-public class KeyspaceTest {
+public class DatabaseTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test KeyspaceTest'
+    // 3) Select 'Bazel test DatabaseTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
@@ -65,7 +65,7 @@ public class KeyspaceTest {
     private static GraknCoreRunner runner;
 
     @BeforeClass
-    public static void beforeClass() throws InterruptedException, TimeoutException, IOException {
+    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();
         runner.start();
         GraknSingleton.setGraknRunner(runner);

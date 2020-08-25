@@ -49,13 +49,24 @@ public class ConnectionSteps {
     public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
     public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
-    private static GraknClient connect_to_grakn_core() {
+    private static synchronized void connect_to_grakn() {
+        if (!isNull(client)) return;
+
+        System.out.println("Connecting to Grakn ...");
+
         System.out.println("Establishing Connection to Grakn Core");
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
+        client = new GraknClient(address);
+
         System.out.println("Connection to Grakn Core established");
-        return new GraknClient(address);
+
+        assertNotNull(client);
+    }
+
+    public static GraknClient.Transaction tx() {
+        return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
     @Given("connection has been opened")
@@ -68,16 +79,16 @@ public class ConnectionSteps {
         assertTrue(client.isOpen());
     }
 
-    @Given("connection delete all keyspaces")
-    public void connection_delete_all_keyspaces() {
-        for (String keyspace : client.keyspaces().retrieve()) {
-            client.keyspaces().delete(keyspace);
+    @Given("connection delete all databases")
+    public void connection_delete_all_databases() {
+        for (String database : client.databases().all()) {
+            client.databases().delete(database);
         }
     }
 
-    @Given("connection does not have any keyspace")
-    public void connection_does_not_have_any_keyspace() {
-        assertTrue(client.keyspaces().retrieve().isEmpty());
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        assertTrue(client.databases().all().isEmpty());
     }
 
     @After

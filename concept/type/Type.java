@@ -20,55 +20,62 @@
 package grakn.client.concept.type;
 
 import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
 import grakn.client.concept.Label;
-import grakn.client.concept.SchemaConcept;
-import grakn.client.concept.thing.Thing;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
- * A Type represents any ontological element in the graph.
- * Types are used to model the behaviour of Thing and how they relate to each other.
- * They also aid in categorising Thing to different types.
+ * Facilitates construction of ontological elements.
+ * Allows you to create schema or ontological elements.
+ * These differ from normal graph constructs in two ways:
+ * 1. They have a unique Label which identifies them
+ * 2. You can link them together into a hierarchical structure
  */
-public interface Type<SomeType extends Type<SomeType, SomeThing>,
-                      SomeThing extends Thing<SomeThing, SomeType>>
-        extends SchemaConcept<SomeType> {
+public interface Type<BaseType extends Type<BaseType>> extends Concept<BaseType> {
+    //------------------------------------- Accessors ---------------------------------
 
+    /**
+     * Returns the unique label of this Type.
+     *
+     * @return The unique label of this type
+     */
+    @CheckReturnValue
+    Label label();
+
+    //------------------------------------- Other ---------------------------------
     @Deprecated
     @CheckReturnValue
     @Override
-    default Type<SomeType, SomeThing> asType() {
+    default Type<BaseType> asSchemaConcept() {
         return this;
     }
 
     @Override
-    Remote<SomeType, SomeThing> asRemote(GraknClient.Transaction tx);
+    Remote<BaseType> asRemote(GraknClient.Transaction tx);
 
     @Deprecated
     @CheckReturnValue
     @Override
-    default boolean isType() {
+    default boolean isSchemaConcept() {
         return true;
     }
 
-    interface Local<
-            SomeType extends Type<SomeType, SomeThing>,
-            SomeThing extends Thing<SomeThing, SomeType>>
-            extends SchemaConcept.Local<SomeType>, Type<SomeType, SomeThing> {
+    interface Local<T extends Type<T>> extends Type<T>, Concept.Local<T> {
     }
 
     /**
-     * A Type represents any ontological element in the graph.
-     * Types are used to model the behaviour of Thing and how they relate to each other.
-     * They also aid in categorising Thing to different types.
+     * Facilitates construction of ontological elements.
+     * Allows you to create schema or ontological elements.
+     * These differ from normal graph constructs in two ways:
+     * 1. They have a unique Label which identifies them
+     * 2. You can link them together into a hierarchical structure
      */
-    interface Remote<
-            SomeRemoteType extends Type<SomeRemoteType, SomeRemoteThing>,
-            SomeRemoteThing extends Thing<SomeRemoteThing, SomeRemoteType>>
-            extends SchemaConcept.Remote<SomeRemoteType>, Type<SomeRemoteType, SomeRemoteThing> {
-
+    interface Remote<BaseType extends Type<BaseType>>
+            extends Type<BaseType>,
+            Concept.Remote<BaseType> {
         //------------------------------------- Modifiers ----------------------------------
 
         /**
@@ -77,128 +84,46 @@ public interface Type<SomeType extends Type<SomeType, SomeThing>,
          * @param label The new Label.
          * @return The Concept itself
          */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> label(Label label);
-
-        /**
-         * Sets the Type to be abstract - which prevents it from having any instances.
-         *
-         * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
-         * @return The concept itself
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> isAbstract(Boolean isAbstract);
-
-        /**
-         * @param role The Role Type which the instances of this Type are allowed to play.
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> plays(Role role);
-
-        /**
-         * Creates a RelationType which allows this type and a AttributeType to be linked in a strictly one-to-one mapping.
-         *
-         * @param attributeType The AttributeType which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> key(AttributeType<?> attributeType);
-
-        /**
-         * Creates a RelationType which allows this type and a AttributeType  to be linked.
-         *
-         * @param attributeType The AttributeType  which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> has(AttributeType<?> attributeType);
+        Type.Remote<BaseType> label(Label label);
 
         //------------------------------------- Accessors ---------------------------------
 
         /**
-         * @return A list of Role Types which instances of this Type can indirectly play.
-         */
-        Stream<Role.Remote> playing();
-
-        /**
-         * @return The AttributeTypes which this Type is linked with.
+         * @return The direct super of this concept
          */
         @CheckReturnValue
-        Stream<? extends AttributeType.Remote<?>> attributes();
+        @Nullable
+        Type.Remote<BaseType> sup();
 
         /**
-         * @return The AttributeTypes which this Type is linked with as a key.
+         * @return All super-concepts of this SchemaConcept  including itself and excluding the meta
+         * Schema.MetaSchema#THING.
+         * If you want to include Schema.MetaSchema#THING, use Transaction.sups().
+         */
+        Stream<? extends Type.Remote<BaseType>> sups();
+
+        /**
+         * Get all indirect subs of this concept.
+         * The indirect subs are the concept itself and all indirect subs of direct subs.
+         *
+         * @return All the indirect sub-types of this SchemaConcept
          */
         @CheckReturnValue
-        Stream<? extends AttributeType.Remote<?>> keys();
+        Stream<? extends Type.Remote<BaseType>> subs();
 
-        /**
-         * @return All the the super-types of this Type
-         */
-        @Override
-        Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> sups();
 
-        /**
-         * Get all indirect sub-types of this type.
-         * The indirect sub-types are the type itself and all indirect sub-types of direct sub-types.
-         *
-         * @return All the indirect sub-types of this Type
-         */
-        @Override
-        @CheckReturnValue
-        Stream<? extends Type.Remote<SomeRemoteType, SomeRemoteThing>> subs();
-
-        /**
-         * Get all indirect instances of this type.
-         * The indirect instances are the direct instances and all indirect instances of direct sub-types.
-         *
-         * @return All the indirect instances of this type.
-         */
-        @CheckReturnValue
-        Stream<? extends Thing.Remote<SomeRemoteThing, SomeRemoteType>> instances();
-
-        /**
-         * Return if the type is set to abstract.
-         * By default, types are not abstract.
-         *
-         * @return returns true if the type is set to be abstract.
-         */
-        @CheckReturnValue
-        Boolean isAbstract();
-
-        //------------------------------------- Other ----------------------------------
-
-        /**
-         * Removes the ability of this Type to play a specific Role
-         *
-         * @param role The Role which the Things of this Type should no longer be allowed to play.
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> unplay(Role role);
-
-        /**
-         * Removes the ability for Things of this Type to have Attributes of type AttributeType
-         *
-         * @param attributeType the AttributeType which this Type can no longer have
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> unhas(AttributeType<?> attributeType);
-
-        /**
-         * Removes AttributeType as a key to this Type
-         *
-         * @param attributeType the AttributeType which this Type can no longer have as a key
-         * @return The Type itself.
-         */
-        Type.Remote<SomeRemoteType, SomeRemoteThing> unkey(AttributeType<?> attributeType);
-
+        //------------------------------------- Other ---------------------------------
         @Deprecated
         @CheckReturnValue
         @Override
-        default Type.Remote<SomeRemoteType, SomeRemoteThing> asType() {
+        default Type.Remote<BaseType> asSchemaConcept() {
             return this;
         }
 
         @Deprecated
         @CheckReturnValue
         @Override
-        default boolean isType() {
+        default boolean isSchemaConcept() {
             return true;
         }
     }

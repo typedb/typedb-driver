@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package grakn.client.concept.impl;
+package grakn.client.concept.type.impl;
 
 import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptId;
+import grakn.client.concept.ConceptIID;
 import grakn.client.concept.Label;
-import grakn.client.concept.Rule;
+import grakn.client.concept.type.Rule;
 import grakn.client.exception.GraknClientException;
-import grakn.protocol.session.ConceptProto;
+import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
@@ -36,7 +36,7 @@ public class RuleImpl {
     /**
      * Client implementation of Rule
      */
-    public static class Local extends SchemaConceptImpl.Local<Rule> implements Rule.Local {
+    public static class Local extends TypeImpl.Local<Rule> implements Rule.Local {
 
         public Local(ConceptProto.Concept concept) {
             super(concept);
@@ -46,10 +46,10 @@ public class RuleImpl {
     /**
      * Client implementation of Rule
      */
-    public static class Remote extends SchemaConceptImpl.Remote<Rule> implements Rule.Remote {
+    public static class Remote extends TypeImpl.Remote<Rule> implements Rule.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptId id) {
-            super(tx, id);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override
