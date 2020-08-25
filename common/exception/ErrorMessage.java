@@ -17,7 +17,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new ClientInternal(4, "'%s' can not be null or empty.");
 
         private static final String codePrefix = "CIN";
-        private static final String messagePrefix = "Invalid Internal Client State";
+        private static final String messagePrefix = "Invalid Internal State (Client)";
 
         ClientInternal(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
@@ -77,11 +77,25 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Protocol(1, "The %s '%s' was not recognised.");
         public static final Protocol REQUIRED_FIELD_NOT_SET =
                 new Protocol(2, "The required field '%s' was not set.");
+        public static final Protocol ILLEGAL_COMBINATION_OF_FIELDS =
+                new Protocol(3, "'%s' cannot be [%s] while '%s' is [%s].");
 
         private static final String codePrefix = "PRO";
         private static final String messagePrefix = "Protocol Error";
 
         Protocol(int number, String message) {
+            super(codePrefix, number, messagePrefix, message);
+        }
+    }
+
+    public static class ClientTypeWrite extends ErrorMessage {
+        public static final ClientTypeWrite ROOT_TYPE_MUTATION =
+                new ClientTypeWrite(1, "Root types are immutable.");
+
+        private static final String codePrefix = "CTW";
+        private static final String messagePrefix = "Invalid Type Write (Client)";
+
+        ClientTypeWrite(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

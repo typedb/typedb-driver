@@ -35,6 +35,7 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Protocol.ILLEGAL_COMBINATION_OF_FIELDS;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
 /**
@@ -125,7 +126,13 @@ public interface Type extends Concept {
                         case DATETIME:
                             return new AttributeTypeImpl.DateTime.Local(type);
                         case OBJECT:
-                            return new AttributeTypeImpl.Local(type);
+                            if (type.getRoot()) {
+                                return new AttributeTypeImpl.Local.Root(type);
+                            } else {
+                                throw new GraknClientException(ILLEGAL_COMBINATION_OF_FIELDS.message(
+                                        "valueType", ConceptProto.AttributeType.VALUE_TYPE.OBJECT,
+                                        "root", false));
+                            }
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
@@ -218,17 +225,17 @@ public interface Type extends Concept {
                 case ATTRIBUTE_TYPE:
                     switch (type.getValueType()) {
                         case BOOLEAN:
-                            return new AttributeTypeImpl.Boolean.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Boolean.Remote.Root(tx) : new AttributeTypeImpl.Boolean.Remote(tx, label);
                         case LONG:
-                            return new AttributeTypeImpl.Long.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Long.Remote.Root(tx) : new AttributeTypeImpl.Long.Remote(tx, label);
                         case DOUBLE:
-                            return new AttributeTypeImpl.Double.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Double.Remote.Root(tx) : new AttributeTypeImpl.Double.Remote(tx, label);
                         case STRING:
-                            return new AttributeTypeImpl.String.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.String.Remote.Root(tx) : new AttributeTypeImpl.String.Remote(tx, label);
                         case DATETIME:
-                            return new AttributeTypeImpl.DateTime.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.DateTime.Remote.Root(tx) : new AttributeTypeImpl.DateTime.Remote(tx, label);
                         case OBJECT:
-                            return new AttributeTypeImpl.Remote(tx, label);
+                            return new AttributeTypeImpl.Remote.Root(tx);
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));

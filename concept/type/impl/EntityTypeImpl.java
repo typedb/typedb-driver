@@ -24,6 +24,7 @@ import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -50,7 +51,7 @@ public class EntityTypeImpl {
 
         @Override
         public EntityType.Remote getSupertype() {
-            return super.getSupertype().asEntityType();
+            return getSupertypeInternal(Type.Remote::asEntityType);
         }
 
         @Override
@@ -78,8 +79,7 @@ public class EntityTypeImpl {
 
         @Override
         public final void setSupertype(EntityType superEntityType) {
-            super.setSupertype(superEntityType);
+            setSupertypeInternal(superEntityType);
         }
-
     }
 }

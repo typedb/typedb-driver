@@ -28,6 +28,7 @@ import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -63,6 +64,12 @@ public class RoleTypeImpl {
             this.scopedLabel = scopedLabel;
         }
 
+        @Nullable
+        @Override
+        public Type.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asRoleType);
+        }
+
         @Override
         @CheckReturnValue
         public final Stream<RoleType.Remote> getSupertypes() {
@@ -77,7 +84,7 @@ public class RoleTypeImpl {
 
         @Override
         public void setSupertype(RoleType superRole) {
-            super.setSupertype(superRole);
+            setSupertypeInternal(superRole);
         }
 
         @Override

@@ -50,6 +50,12 @@ public class RuleImpl {
             super(tx, label);
         }
 
+        @Nullable
+        @Override
+        public Type.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asRule);
+        }
+
         @Override
         public final Stream<Rule.Remote> getSupertypes() {
             return super.getSupertypes().map(Type.Remote::asRule);

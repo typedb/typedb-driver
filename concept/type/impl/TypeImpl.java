@@ -22,6 +22,7 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
@@ -79,7 +80,7 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final boolean isRoot() {
+        public boolean isRoot() {
             final Type.Local cached = tx().getCachedType(label);
             if (cached != null) {
                 return cached.isRoot();
@@ -110,7 +111,7 @@ public abstract class TypeImpl {
         }
 
         @Nullable
-        public Type.Remote getSupertype() {
+        protected <TYPE extends Type.Remote> TYPE getSupertypeInternal(final Function<Type.Remote, TYPE> typeConverter) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -118,7 +119,7 @@ public abstract class TypeImpl {
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return Type.Remote.of(tx(), response.getType());
+                    return typeConverter.apply(Type.Remote.of(tx(), response.getType()));
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -141,7 +142,7 @@ public abstract class TypeImpl {
             return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType());
         }
 
-        protected final void setSupertype(Type type) {
+        protected void setSupertypeInternal(Type type) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
                             .setType(type(type))).build();

@@ -55,7 +55,7 @@ public abstract class ThingTypeImpl {
 
         @Override
         public ThingType.Remote getSupertype() {
-            return super.getSupertype().asThingType();
+            return getSupertypeInternal(Type.Remote::asThingType);
         }
 
         @Override
@@ -84,7 +84,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void unsetAbstract() {
+        public void unsetAbstract() {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetAbstractReq(ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()).build();
             runMethod(method);
@@ -113,7 +113,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(type(attributeType))
                     .setIsKey(isKey);
@@ -129,7 +129,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final void setPlays(final RoleType role) {
+        public void setPlays(final RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                             .setRole(type(role))).build();

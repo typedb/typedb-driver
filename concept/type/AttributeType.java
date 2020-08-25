@@ -63,9 +63,7 @@ public interface AttributeType extends ThingType {
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(Transaction tx) {
-        return Remote.of(tx, getLabel());
-    }
+    Remote asRemote(Transaction tx);
 
     /**
      * A class used to hold the supported data types of attributes.
@@ -192,10 +190,6 @@ public interface AttributeType extends ThingType {
      * For example if you have an AttributeType modelling month throughout the year there can only be one January.
      */
     interface Remote extends ThingType.Remote, AttributeType {
-
-        static AttributeType.Remote of(Transaction tx, java.lang.String label) {
-            return new AttributeTypeImpl.Remote(tx, label);
-        }
 
         /**
          * Sets the supertype of the AttributeType to be the AttributeType specified.

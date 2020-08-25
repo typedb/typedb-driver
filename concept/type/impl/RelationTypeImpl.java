@@ -56,6 +56,11 @@ public class RelationTypeImpl {
         }
 
         @Override
+        public RelationType.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asRelationType);
+        }
+
+        @Override
         public final Stream<RelationType.Remote> getSupertypes() {
             return super.getSupertypes().map(ThingType.Remote::asRelationType);
         }
@@ -67,7 +72,7 @@ public class RelationTypeImpl {
 
         @Override
         public final void setSupertype(final RelationType type) {
-            super.setSupertype(type);
+            setSupertypeInternal(type);
         }
 
         @Override
