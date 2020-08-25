@@ -28,7 +28,10 @@ commands:
 
   install-artifact-credentials:
     steps:
-      - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+      - run: |
+          ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
+          ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
 
   run-bazel:
     parameters:
@@ -51,7 +54,6 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-java
     steps:
-      - install-bazel
       - checkout
       - install-bazel
       - install-artifact-credentials
