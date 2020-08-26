@@ -34,10 +34,9 @@ import java.util.stream.Stream;
  */
 public interface ThingType extends Type {
 
+    @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return Remote.of(concepts, getLabel());
-    }
+    ThingType.Remote asRemote(Concepts concepts);
 
     interface Local extends Type.Local, ThingType {
 
@@ -45,6 +44,12 @@ public interface ThingType extends Type {
         @Override
         default ThingType.Local asThingType() {
             return this;
+        }
+
+        @CheckReturnValue
+        @Override
+        default ThingType.Remote asRemote(final Concepts concepts) {
+            return ThingType.Remote.of(concepts, getLabel(), isRoot());
         }
     }
 
@@ -55,8 +60,8 @@ public interface ThingType extends Type {
      */
     interface Remote extends Type.Remote, ThingType {
 
-        static ThingType.Remote of(final Concepts concepts, final String label) {
-            return new ThingTypeImpl.Remote(concepts, label);
+        static ThingType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new ThingTypeImpl.Remote(concepts, label, isRoot);
         }
 
         /**
@@ -173,6 +178,12 @@ public interface ThingType extends Type {
          * @param attributeType the AttributeType which this Type can no longer have
          */
         void unsetOwns(AttributeType attributeType);
+
+        @CheckReturnValue
+        @Override
+        default ThingType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

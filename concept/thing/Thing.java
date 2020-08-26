@@ -92,7 +92,9 @@ public interface Thing extends Concept {
      * @param concepts The transaction to use for the RPCs.
      * @return A remote concept using the given transaction to enable RPCs.
      */
-    Remote asRemote(Concepts concepts);
+    @CheckReturnValue
+    @Override
+    Thing.Remote asRemote(Concepts concepts);
 
     interface Local extends Concept.Local, Thing {
 
@@ -311,6 +313,12 @@ public interface Thing extends Concept {
         @CheckReturnValue
         default Relation.Remote asRelation() {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getCanonicalName()));
+        }
+
+        @CheckReturnValue
+        @Override
+        default Thing.Remote asRemote(Concepts concepts) {
+            return this;
         }
 
         /**

@@ -34,10 +34,9 @@ import java.util.stream.Stream;
  */
 public interface RelationType extends ThingType {
 
+    @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return RelationType.Remote.of(concepts, getLabel());
-    }
+    RelationType.Remote asRemote(Concepts concepts);
 
     interface Local extends ThingType.Local, RelationType {
 
@@ -45,6 +44,11 @@ public interface RelationType extends ThingType {
         @Override
         default RelationType.Local asRelationType() {
             return this;
+        }
+
+        @Override
+        default RelationType.Remote asRemote(final Concepts concepts) {
+            return RelationType.Remote.of(concepts, getLabel(), isRoot());
         }
     }
 
@@ -55,8 +59,8 @@ public interface RelationType extends ThingType {
      */
     interface Remote extends ThingType.Remote, RelationType {
 
-        static RelationType.Remote of(final Concepts concepts, final String label) {
-            return new RelationTypeImpl.Remote(concepts, label);
+        static RelationType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new RelationTypeImpl.Remote(concepts, label, isRoot);
         }
 
         /**
@@ -138,6 +142,12 @@ public interface RelationType extends ThingType {
          */
         @Override
         Stream<? extends Relation.Remote> getInstances();
+
+        @CheckReturnValue
+        @Override
+        default RelationType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

@@ -24,7 +24,6 @@ import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -133,14 +132,14 @@ public abstract class AttributeTypeImpl {
             }
         }
 
-        public void setSupertype(AttributeType type) {
+        public final void setSupertype(AttributeType type) {
             setSupertypeInternal(type);
         }
 
         @Override
         public AttributeType.Boolean.Remote asBoolean() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Boolean.Remote.Root(concepts());
+                return new AttributeTypeImpl.Boolean.Remote(concepts(), ROOT_LABEL, true);
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
@@ -148,7 +147,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.Long.Remote asLong() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Long.Remote.Root(concepts());
+                return new AttributeTypeImpl.Long.Remote(concepts(), ROOT_LABEL, true);
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
@@ -156,7 +155,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.Double.Remote asDouble() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Double.Remote.Root(concepts());
+                return new AttributeTypeImpl.Double.Remote(concepts(), ROOT_LABEL, true);
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
@@ -164,7 +163,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.String.Remote asString() {
             if (isRoot()) {
-                return new AttributeTypeImpl.String.Remote.Root(concepts());
+                return new AttributeTypeImpl.String.Remote(concepts(), ROOT_LABEL, true);
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
@@ -172,7 +171,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.DateTime.Remote asDateTime() {
             if (isRoot()) {
-                return new AttributeTypeImpl.DateTime.Remote.Root(concepts());
+                return new AttributeTypeImpl.DateTime.Remote(concepts(), ROOT_LABEL, true);
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
@@ -197,21 +196,6 @@ public abstract class AttributeTypeImpl {
                 super(concepts, ROOT_LABEL, true);
             }
 
-            @Override
-            public void setLabel(final java.lang.String label) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
-            @Override
-            public void unsetAbstract() {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
-            @Override
-            public void setSupertype(final AttributeType type) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             @Nullable
             @Override
             public AttributeType.Remote getSupertype() {
@@ -230,26 +214,6 @@ public abstract class AttributeTypeImpl {
                         .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
 
                 return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(Type.Remote::asAttributeType);
-            }
-
-            @Override
-            public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
-            @Override
-            public void setPlays(final RoleType role) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
-            @Override
-            public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
-            @Override
-            public AttributeTypeImpl.Remote.Root asRemote(final Concepts concepts) {
-                return this;
             }
         }
     }
@@ -276,12 +240,12 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.Boolean.Remote getSupertype() {
+            public final AttributeType.Boolean.Remote getSupertype() {
                 return getSupertypeInternal(t -> t.asAttributeType().asBoolean());
             }
 
             @Override
-            public Stream<AttributeType.Boolean.Remote> getSupertypes() {
+            public final Stream<AttributeType.Boolean.Remote> getSupertypes() {
                 return super.getSupertypes().map(AttributeType.Remote::asBoolean);
             }
 
@@ -323,47 +287,6 @@ public abstract class AttributeTypeImpl {
                 public Root(final Concepts concepts) {
                     super(concepts, ROOT_LABEL, true);
                 }
-
-                @Override
-                public void setLabel(final java.lang.String label) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void unsetAbstract() {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setSupertype(final AttributeType type) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Nullable
-                @Override
-                public AttributeType.Boolean.Remote getSupertype() {
-                    return null;
-                }
-
-                @Override
-                public Stream<AttributeType.Boolean.Remote> getSupertypes() {
-                    return Stream.of(this);
-                }
-
-                @Override
-                public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
             }
         }
     }
@@ -390,12 +313,12 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.Long.Remote getSupertype() {
+            public final AttributeType.Long.Remote getSupertype() {
                 return getSupertypeInternal(t -> t.asAttributeType().asLong());
             }
 
             @Override
-            public Stream<AttributeType.Long.Remote> getSupertypes() {
+            public final Stream<AttributeType.Long.Remote> getSupertypes() {
                 return super.getSupertypes().map(AttributeType.Remote::asLong);
             }
 
@@ -432,51 +355,11 @@ public abstract class AttributeTypeImpl {
                 return this;
             }
 
+            // TODO: do we actually need these Root types anymore, now that isRoot is a field?
             public static final class Root extends AttributeTypeImpl.Long.Remote {
 
                 public Root(final Concepts concepts) {
                     super(concepts, ROOT_LABEL, true);
-                }
-
-                @Override
-                public void setLabel(final java.lang.String label) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void unsetAbstract() {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setSupertype(final AttributeType type) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Nullable
-                @Override
-                public AttributeType.Long.Remote getSupertype() {
-                    return null;
-                }
-
-                @Override
-                public Stream<AttributeType.Long.Remote> getSupertypes() {
-                    return Stream.of(this);
-                }
-
-                @Override
-                public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
                 }
             }
         }
@@ -504,12 +387,12 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.Double.Remote getSupertype() {
+            public final AttributeType.Double.Remote getSupertype() {
                 return getSupertypeInternal(t -> t.asAttributeType().asDouble());
             }
 
             @Override
-            public Stream<AttributeType.Double.Remote> getSupertypes() {
+            public final Stream<AttributeType.Double.Remote> getSupertypes() {
                 return super.getSupertypes().map(AttributeType.Remote::asDouble);
             }
 
@@ -551,47 +434,6 @@ public abstract class AttributeTypeImpl {
                 public Root(final Concepts concepts) {
                     super(concepts, ROOT_LABEL, true);
                 }
-
-                @Override
-                public void setLabel(final java.lang.String label) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void unsetAbstract() {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setSupertype(final AttributeType type) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Nullable
-                @Override
-                public AttributeType.Double.Remote getSupertype() {
-                    return null;
-                }
-
-                @Override
-                public Stream<AttributeType.Double.Remote> getSupertypes() {
-                    return Stream.of(this);
-                }
-
-                @Override
-                public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
             }
         }
     }
@@ -618,12 +460,12 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.String.Remote getSupertype() {
+            public final AttributeType.String.Remote getSupertype() {
                 return getSupertypeInternal(t -> t.asAttributeType().asString());
             }
 
             @Override
-            public Stream<AttributeType.String.Remote> getSupertypes() {
+            public final Stream<AttributeType.String.Remote> getSupertypes() {
                 return super.getSupertypes().map(AttributeType.Remote::asString);
             }
 
@@ -664,7 +506,10 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public void setRegex(java.lang.String regex) {
+            public final void setRegex(java.lang.String regex) {
+                if (isRoot()) {
+                    throw new GraknClientException(ROOT_TYPE_MUTATION);
+                }
                 if (regex == null) regex = "";
                 final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -682,52 +527,6 @@ public abstract class AttributeTypeImpl {
 
                 public Root(final Concepts concepts) {
                     super(concepts, ROOT_LABEL, true);
-                }
-
-                @Override
-                public void setLabel(final java.lang.String label) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void unsetAbstract() {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setSupertype(final AttributeType type) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Nullable
-                @Override
-                public AttributeType.String.Remote getSupertype() {
-                    return null;
-                }
-
-                @Override
-                public Stream<AttributeType.String.Remote> getSupertypes() {
-                    return Stream.of(this);
-                }
-
-                @Override
-                public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setRegex(final java.lang.String regex) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
                 }
             }
         }
@@ -755,12 +554,12 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.DateTime.Remote getSupertype() {
+            public final AttributeType.DateTime.Remote getSupertype() {
                 return getSupertypeInternal(t -> t.asAttributeType().asDateTime());
             }
 
             @Override
-            public Stream<AttributeType.DateTime.Remote> getSupertypes() {
+            public final Stream<AttributeType.DateTime.Remote> getSupertypes() {
                 return super.getSupertypes().map(AttributeType.Remote::asDateTime);
             }
 
@@ -801,47 +600,6 @@ public abstract class AttributeTypeImpl {
 
                 public Root(final Concepts concepts) {
                     super(concepts, ROOT_LABEL, true);
-                }
-
-                @Override
-                public void setLabel(final java.lang.String label) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void unsetAbstract() {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setSupertype(final AttributeType type) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Nullable
-                @Override
-                public AttributeType.DateTime.Remote getSupertype() {
-                    return null;
-                }
-
-                @Override
-                public Stream<AttributeType.DateTime.Remote> getSupertypes() {
-                    return Stream.of(this);
-                }
-
-                @Override
-                public void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
-
-                @Override
-                public void setPlays(final RoleType role, final RoleType overriddenRole) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
                 }
             }
         }

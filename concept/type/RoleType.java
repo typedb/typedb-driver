@@ -39,10 +39,9 @@ public interface RoleType extends Type {
      */
     String getScopedLabel();
 
+    @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return RoleType.Remote.of(concepts, getLabel(), getScopedLabel());
-    }
+    RoleType.Remote asRemote(Concepts concepts);
 
     interface Local extends Type.Local, RoleType {
 
@@ -50,6 +49,11 @@ public interface RoleType extends Type {
         @Override
         default RoleType.Local asRoleType() {
             return this;
+        }
+
+        @Override
+        default RoleType.Remote asRemote(final Concepts concepts) {
+            return RoleType.Remote.of(concepts, getLabel(), getScopedLabel(), isRoot());
         }
     }
 
@@ -60,8 +64,8 @@ public interface RoleType extends Type {
      */
     interface Remote extends Type.Remote, RoleType {
 
-        static RoleType.Remote of(final Concepts concepts, final String label, final String scopedLabel) {
-            return new RoleTypeImpl.Remote(concepts, label, scopedLabel);
+        static RoleType.Remote of(final Concepts concepts, final String label, final String scopedLabel, final boolean isRoot) {
+            return new RoleTypeImpl.Remote(concepts, label, scopedLabel, isRoot);
         }
 
         /**
@@ -112,6 +116,12 @@ public interface RoleType extends Type {
          */
         @CheckReturnValue
         Stream<? extends ThingType.Remote> getPlayers();
+
+        @CheckReturnValue
+        @Override
+        default RoleType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

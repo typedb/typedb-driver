@@ -32,10 +32,9 @@ import java.util.stream.Stream;
  */
 public interface Rule extends Type {
 
+    @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return Remote.of(concepts, getLabel());
-    }
+    Rule.Remote asRemote(Concepts concepts);
 
     interface Local extends Type.Local, Rule {
 
@@ -44,6 +43,11 @@ public interface Rule extends Type {
         default Rule.Local asRule() {
             return this;
         }
+
+        @Override
+        default Rule.Remote asRemote(final Concepts concepts) {
+            return Rule.Remote.of(concepts, getLabel(), isRoot());
+        }
     }
 
     /**
@@ -51,8 +55,8 @@ public interface Rule extends Type {
      */
     interface Remote extends Type.Remote, Rule {
 
-        static Rule.Remote of(final Concepts concepts, final String label) {
-            return new RuleImpl.Remote(concepts, label);
+        static Rule.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new RuleImpl.Remote(concepts, label, isRoot);
         }
 
         @Override
@@ -91,6 +95,12 @@ public interface Rule extends Type {
          */
         @Override
         Stream<Rule.Remote> getSubtypes();
+
+        @CheckReturnValue
+        @Override
+        default Rule.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

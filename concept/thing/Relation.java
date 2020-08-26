@@ -46,10 +46,9 @@ public interface Relation extends Thing {
     @Override
     RelationType getType();
 
+    @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return Relation.Remote.of(concepts, getIID());
-    }
+    Relation.Remote asRemote(Concepts concepts);
 
     interface Local extends Thing.Local, Relation {
 
@@ -57,6 +56,11 @@ public interface Relation extends Thing {
         @Override
         default Relation.Local asRelation() {
             return this;
+        }
+
+        @Override
+        default Relation.Remote asRemote(final Concepts concepts) {
+            return Relation.Remote.of(concepts, getIID());
         }
     }
 
@@ -117,6 +121,12 @@ public interface Relation extends Thing {
          */
         @CheckReturnValue
         Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType();
+
+        @CheckReturnValue
+        @Override
+        default Relation.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

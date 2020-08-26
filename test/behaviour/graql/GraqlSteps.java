@@ -549,8 +549,8 @@ public class GraqlSteps {
                 assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
             } else {
                 // rule
-                Rule.Remote rule = explanation.getRule().asRemote(tx.concepts());
-                String ruleLabel = rule.getLabel().toString();
+                Rule.Remote rule = explanation.getRule();
+                String ruleLabel = rule.getLabel();
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);

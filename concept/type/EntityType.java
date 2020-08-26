@@ -35,9 +35,7 @@ public interface EntityType extends ThingType {
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return EntityType.Remote.of(concepts, getLabel());
-    }
+    EntityType.Remote asRemote(Concepts concepts);
 
     interface Local extends ThingType.Local, EntityType {
 
@@ -45,6 +43,12 @@ public interface EntityType extends ThingType {
         @Override
         default EntityType.Local asEntityType() {
             return this;
+        }
+
+        @CheckReturnValue
+        @Override
+        default EntityType.Remote asRemote(final Concepts concepts) {
+            return EntityType.Remote.of(concepts, getLabel(), isRoot());
         }
     }
 
@@ -55,8 +59,8 @@ public interface EntityType extends ThingType {
      */
     interface Remote extends ThingType.Remote, EntityType {
 
-        static EntityType.Remote of(final Concepts concepts, final String label) {
-            return new EntityTypeImpl.Remote(concepts, label);
+        static EntityType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new EntityTypeImpl.Remote(concepts, label, isRoot);
         }
 
         /**
@@ -96,6 +100,12 @@ public interface EntityType extends ThingType {
          */
         @Override
         Stream<? extends Entity.Remote> getInstances();
+
+        @CheckReturnValue
+        @Override
+        default EntityType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

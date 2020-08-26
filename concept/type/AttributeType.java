@@ -51,6 +51,10 @@ public interface AttributeType extends ThingType {
         return getValueType().isKeyable();
     }
 
+    @CheckReturnValue
+    @Override
+    AttributeType.Remote asRemote(Concepts concepts);
+
     AttributeType.Boolean asBoolean();
 
     AttributeType.Long asLong();
@@ -60,10 +64,6 @@ public interface AttributeType extends ThingType {
     AttributeType.String asString();
 
     AttributeType.DateTime asDateTime();
-
-    @CheckReturnValue
-    @Override
-    Remote asRemote(Concepts concepts);
 
     /**
      * A class used to hold the supported data types of attributes.
@@ -150,6 +150,10 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
+        AttributeType.Remote asRemote(Concepts concepts);
+
+        @CheckReturnValue
+        @Override
         default AttributeType.Local asAttributeType() {
             return this;
         }
@@ -199,6 +203,12 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
+        default AttributeType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
+        @CheckReturnValue
+        @Override
         default AttributeType.Remote asAttributeType() {
             return this;
         }
@@ -242,9 +252,7 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
-            return AttributeType.Boolean.Remote.of(concepts, getLabel());
-        }
+        AttributeType.Boolean.Remote asRemote(Concepts concepts);
 
         interface Local extends AttributeType.Boolean, AttributeType.Local {
 
@@ -253,12 +261,18 @@ public interface AttributeType extends ThingType {
             default AttributeType.Boolean.Local asBoolean() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Boolean.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
-            static AttributeType.Boolean.Remote of(final Concepts concepts, java.lang.String label) {
-                return new AttributeTypeImpl.Boolean.Remote(concepts, label);
+            static AttributeType.Boolean.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Boolean.Remote(concepts, label, isRoot);
             }
 
             /**
@@ -320,6 +334,12 @@ public interface AttributeType extends ThingType {
 
             @CheckReturnValue
             @Override
+            default AttributeType.Boolean.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
             default AttributeType.Boolean.Remote asBoolean() {
                 return this;
             }
@@ -336,9 +356,7 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Long.Remote asRemote(final Concepts concepts) {
-            return AttributeType.Long.Remote.of(concepts, getLabel());
-        }
+        AttributeType.Long.Remote asRemote(Concepts concepts);
 
         interface Local extends AttributeType.Long, AttributeType.Local {
 
@@ -347,12 +365,18 @@ public interface AttributeType extends ThingType {
             default AttributeType.Long.Local asLong() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Long.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
-            static AttributeType.Long.Remote of(final Concepts concepts, java.lang.String label) {
-                return new AttributeTypeImpl.Long.Remote(concepts, label);
+            static AttributeType.Long.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Long.Remote(concepts, label, isRoot);
             }
 
             /**
@@ -413,6 +437,12 @@ public interface AttributeType extends ThingType {
 
             @CheckReturnValue
             @Override
+            default AttributeType.Long.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
             default AttributeType.Long.Remote asLong() {
                 return this;
             }
@@ -429,9 +459,7 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Double.Remote asRemote(final Concepts concepts) {
-            return AttributeType.Double.Remote.of(concepts, getLabel());
-        }
+        AttributeType.Double.Remote asRemote(Concepts concepts);
 
         interface Local extends AttributeType.Double, AttributeType.Local {
 
@@ -440,12 +468,18 @@ public interface AttributeType extends ThingType {
             default AttributeType.Double.Local asDouble() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Double.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
-            static AttributeType.Double.Remote of(final Concepts concepts, java.lang.String label) {
-                return new AttributeTypeImpl.Double.Remote(concepts, label);
+            static AttributeType.Double.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Double.Remote(concepts, label, isRoot);
             }
 
             /**
@@ -506,6 +540,12 @@ public interface AttributeType extends ThingType {
 
             @CheckReturnValue
             @Override
+            default AttributeType.Double.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
             default AttributeType.Double.Remote asDouble() {
                 return this;
             }
@@ -522,9 +562,7 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.String.Remote asRemote(final Concepts concepts) {
-            return AttributeType.String.Remote.of(concepts, getLabel());
-        }
+        AttributeType.String.Remote asRemote(Concepts concepts);
 
         interface Local extends AttributeType.String, AttributeType.Local {
 
@@ -533,12 +571,18 @@ public interface AttributeType extends ThingType {
             default AttributeType.String.Local asString() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asRemote(final Concepts concepts) {
+                return AttributeType.String.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
-            static AttributeType.String.Remote of(final Concepts concepts, java.lang.String label) {
-                return new AttributeTypeImpl.String.Remote(concepts, label);
+            static AttributeType.String.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.String.Remote(concepts, label, isRoot);
             }
 
             /**
@@ -602,6 +646,18 @@ public interface AttributeType extends ThingType {
             java.lang.String getRegex();
 
             void setRegex(java.lang.String regex);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asString() {
+                return this;
+            }
         }
     }
 
@@ -615,9 +671,7 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
-            return AttributeType.DateTime.Remote.of(concepts, getLabel());
-        }
+        AttributeType.DateTime.Remote asRemote(Concepts concepts);
 
         interface Local extends AttributeType.DateTime, AttributeType.Local {
 
@@ -626,12 +680,18 @@ public interface AttributeType extends ThingType {
             default AttributeType.DateTime.Local asDateTime() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
+                return AttributeType.DateTime.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
-            static AttributeType.DateTime.Remote of(final Concepts concepts, java.lang.String label) {
-                return new AttributeTypeImpl.DateTime.Remote(concepts, label);
+            static AttributeType.DateTime.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.DateTime.Remote(concepts, label, isRoot);
             }
 
             /**
@@ -689,6 +749,12 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             @Nullable
             Attribute.DateTime.Remote get(LocalDateTime value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Remote asRemote(Concepts concepts) {
+                return this;
+            }
 
             @CheckReturnValue
             @Override

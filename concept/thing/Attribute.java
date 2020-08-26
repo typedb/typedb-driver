@@ -64,6 +64,10 @@ public interface Attribute<VALUE> extends Thing {
     @CheckReturnValue
     Attribute.DateTime asDateTime();
 
+    @CheckReturnValue
+    @Override
+    Attribute.Remote<VALUE> asRemote(Concepts concepts);
+
     /**
      * Represent a literal Attribute in the graph.
      * Acts as a Thing when relating to other instances except it has the added functionality of:
@@ -138,6 +142,12 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
+        default Attribute.Remote<VALUE> asRemote(Concepts concepts) {
+            return this;
+        }
+
+        @CheckReturnValue
+        @Override
         default Attribute.Remote<VALUE> asAttribute() {
             return this;
         }
@@ -170,12 +180,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Boolean extends Attribute<java.lang.Boolean> {
 
-        @CheckReturnValue
-        @Override
-        default Remote asRemote(final Concepts concepts) {
-            return Remote.of(concepts, getIID());
-        }
-
         interface Local extends Attribute.Boolean, Attribute.Local<java.lang.Boolean> {
 
             @CheckReturnValue
@@ -183,12 +187,24 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Boolean.Local asBoolean() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default Boolean.Remote asRemote(final Concepts concepts) {
+                return Boolean.Remote.of(concepts, getIID());
+            }
         }
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
 
             static Boolean.Remote of(final Concepts concepts, final java.lang.String iid) {
                 return new AttributeImpl.Boolean.Remote(concepts, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Boolean.Remote asRemote(Concepts concepts) {
+                return this;
             }
 
             @CheckReturnValue
@@ -201,12 +217,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Long extends Attribute<java.lang.Long> {
 
-        @CheckReturnValue
-        @Override
-        default Remote asRemote(final Concepts concepts) {
-            return Remote.of(concepts, getIID());
-        }
-
         interface Local extends Attribute.Long, Attribute.Local<java.lang.Long> {
 
             @CheckReturnValue
@@ -214,12 +224,24 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Long.Local asLong() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default Long.Remote asRemote(final Concepts concepts) {
+                return Long.Remote.of(concepts, getIID());
+            }
         }
 
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
 
             static Long.Remote of(final Concepts concepts, final java.lang.String iid) {
                 return new AttributeImpl.Long.Remote(concepts, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Long.Remote asRemote(Concepts concepts) {
+                return this;
             }
 
             @CheckReturnValue
@@ -232,12 +254,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Double extends Attribute<java.lang.Double> {
 
-        @CheckReturnValue
-        @Override
-        default Remote asRemote(final Concepts concepts) {
-            return Remote.of(concepts, getIID());
-        }
-
         interface Local extends Attribute.Double, Attribute.Local<java.lang.Double> {
 
             @CheckReturnValue
@@ -245,12 +261,24 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Double.Local asDouble() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default Double.Remote asRemote(final Concepts concepts) {
+                return Double.Remote.of(concepts, getIID());
+            }
         }
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
 
             static Double.Remote of(final Concepts concepts, final java.lang.String iid) {
                 return new AttributeImpl.Double.Remote(concepts, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.Double.Remote asRemote(Concepts concepts) {
+                return this;
             }
 
             @CheckReturnValue
@@ -263,12 +291,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface String extends Attribute<java.lang.String> {
 
-        @CheckReturnValue
-        @Override
-        default Remote asRemote(final Concepts concepts) {
-            return Remote.of(concepts, getIID());
-        }
-
         interface Local extends Attribute.String, Attribute.Local<java.lang.String> {
 
             @CheckReturnValue
@@ -276,12 +298,24 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.String.Local asString() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default String.Remote asRemote(final Concepts concepts) {
+                return String.Remote.of(concepts, getIID());
+            }
         }
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
 
             static String.Remote of(final Concepts concepts, final java.lang.String iid) {
                 return new AttributeImpl.String.Remote(concepts, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.String.Remote asRemote(Concepts concepts) {
+                return this;
             }
 
             @CheckReturnValue
@@ -294,12 +328,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface DateTime extends Attribute<LocalDateTime> {
 
-        @CheckReturnValue
-        @Override
-        default Remote asRemote(final Concepts concepts) {
-            return Remote.of(concepts, getIID());
-        }
-
         interface Local extends Attribute.DateTime, Attribute.Local<LocalDateTime> {
 
             @CheckReturnValue
@@ -307,12 +335,24 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.DateTime.Local asDateTime() {
                 return this;
             }
+
+            @CheckReturnValue
+            @Override
+            default DateTime.Remote asRemote(final Concepts concepts) {
+                return DateTime.Remote.of(concepts, getIID());
+            }
         }
 
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
 
             static DateTime.Remote of(final Concepts concepts, final java.lang.String iid) {
                 return new AttributeImpl.DateTime.Remote(concepts, iid);
+            }
+
+            @CheckReturnValue
+            @Override
+            default Attribute.DateTime.Remote asRemote(Concepts concepts) {
+                return this;
             }
 
             @CheckReturnValue

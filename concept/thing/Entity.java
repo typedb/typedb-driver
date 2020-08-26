@@ -42,9 +42,7 @@ public interface Entity extends Thing {
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(final Concepts concepts) {
-        return Entity.Remote.of(concepts, getIID());
-    }
+    Entity.Remote asRemote(Concepts concepts);
 
     interface Local extends Thing.Local, Entity {
 
@@ -52,6 +50,12 @@ public interface Entity extends Thing {
         @Override
         default Entity.Local asEntity() {
             return this;
+        }
+
+        @CheckReturnValue
+        @Override
+        default Entity.Remote asRemote(final Concepts concepts) {
+            return Entity.Remote.of(concepts, getIID());
         }
     }
 
@@ -73,6 +77,12 @@ public interface Entity extends Thing {
          */
         @Override
         EntityType.Remote getType();
+
+        @CheckReturnValue
+        @Override
+        default Entity.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override

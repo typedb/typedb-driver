@@ -177,6 +177,11 @@ public interface Concept {
         }
 
         @Override
+        default Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
+        @Override
         default boolean isRemote() {
             return true;
         }

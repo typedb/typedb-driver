@@ -102,6 +102,7 @@ public interface Type extends Concept {
     @CheckReturnValue
     RoleType asRoleType();
 
+    @CheckReturnValue
     @Override
     Remote asRemote(Concepts concepts);
 
@@ -219,21 +220,21 @@ public interface Type extends Concept {
             final String label = type.getLabel();
             switch (type.getSchema()) {
                 case ENTITY_TYPE:
-                    return new EntityTypeImpl.Remote(concepts, label);
+                    return new EntityTypeImpl.Remote(concepts, label, type.getRoot());
                 case RELATION_TYPE:
-                    return new RelationTypeImpl.Remote(concepts, label);
+                    return new RelationTypeImpl.Remote(concepts, label, type.getRoot());
                 case ATTRIBUTE_TYPE:
                     switch (type.getValueType()) {
                         case BOOLEAN:
-                            return type.getRoot() ? new AttributeTypeImpl.Boolean.Remote.Root(concepts) : new AttributeTypeImpl.Boolean.Remote(concepts, label);
+                            return new AttributeTypeImpl.Boolean.Remote(concepts, label, type.getRoot());
                         case LONG:
-                            return type.getRoot() ? new AttributeTypeImpl.Long.Remote.Root(concepts) : new AttributeTypeImpl.Long.Remote(concepts, label);
+                            return new AttributeTypeImpl.Long.Remote(concepts, label, type.getRoot());
                         case DOUBLE:
-                            return type.getRoot() ? new AttributeTypeImpl.Double.Remote.Root(concepts) : new AttributeTypeImpl.Double.Remote(concepts, label);
+                            return new AttributeTypeImpl.Double.Remote(concepts, label, type.getRoot());
                         case STRING:
-                            return type.getRoot() ? new AttributeTypeImpl.String.Remote.Root(concepts) : new AttributeTypeImpl.String.Remote(concepts, label);
+                            return new AttributeTypeImpl.String.Remote(concepts, label, type.getRoot());
                         case DATETIME:
-                            return type.getRoot() ? new AttributeTypeImpl.DateTime.Remote.Root(concepts) : new AttributeTypeImpl.DateTime.Remote(concepts, label);
+                            return new AttributeTypeImpl.DateTime.Remote(concepts, label, type.getRoot());
                         case OBJECT:
                             return new AttributeTypeImpl.Remote.Root(concepts);
                         default:
@@ -242,11 +243,11 @@ public interface Type extends Concept {
                     }
                 case ROLE_TYPE:
                     final String scopedLabel = type.getScopedLabel();
-                    return new RoleTypeImpl.Remote(concepts, label, scopedLabel);
+                    return new RoleTypeImpl.Remote(concepts, label, scopedLabel, type.getRoot());
                 case RULE:
-                    return new RuleImpl.Remote(concepts, label);
+                    return new RuleImpl.Remote(concepts, label, type.getRoot());
                 case THING_TYPE:
-                    return new ThingTypeImpl.Remote(concepts, label);
+                    return new ThingTypeImpl.Remote(concepts, label, type.getRoot());
                 default:
                 case UNRECOGNIZED:
                     throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
@@ -290,6 +291,11 @@ public interface Type extends Concept {
          */
         @CheckReturnValue
         Stream<? extends Type.Remote> getSubtypes();
+
+        @Override
+        default Type.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
         @CheckReturnValue
         @Override
