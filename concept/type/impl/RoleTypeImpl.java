@@ -59,8 +59,8 @@ public class RoleTypeImpl {
 
         private final String scopedLabel;
 
-        public Remote(final Concepts concepts, final String label, final String scopedLabel) {
-            super(concepts, label);
+        public Remote(final Concepts concepts, final String label, final String scopedLabel, final boolean isRoot) {
+            super(concepts, label, isRoot);
             this.scopedLabel = scopedLabel;
         }
 

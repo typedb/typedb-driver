@@ -293,8 +293,6 @@ public interface Type extends Concept {
 
         @CheckReturnValue
         @Override
-        // TODO: remove @deprecated
-        @Deprecated
         default Type.Remote asType() {
             return this;
         }

@@ -138,8 +138,6 @@ public interface Attribute<VALUE> extends Thing {
 
         @CheckReturnValue
         @Override
-        // TODO: remove @deprecated
-        @Deprecated
         default Attribute.Remote<VALUE> asAttribute() {
             return this;
         }

@@ -49,8 +49,8 @@ public abstract class ThingTypeImpl {
      */
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        public Remote(final Concepts concepts, final String label) {
-            super(concepts, label);
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
         @Override

@@ -69,8 +69,8 @@ public abstract class AttributeTypeImpl {
      */
     public static abstract class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        public Remote(final Concepts concepts, final java.lang.String label) {
-            super(concepts, label);
+        public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
         @Nullable
@@ -194,12 +194,7 @@ public abstract class AttributeTypeImpl {
         public static final class Root extends AttributeTypeImpl.Remote {
 
             public Root(final Concepts concepts) {
-                super(concepts, ROOT_LABEL);
-            }
-
-            @Override
-            public boolean isRoot() {
-                return true;
+                super(concepts, ROOT_LABEL, true);
             }
 
             @Override
@@ -269,8 +264,6 @@ public abstract class AttributeTypeImpl {
             public Local(ConceptProto.Type type) {
                 super(type);
             }
-
-            // TODO: create Local.Root for the 5 attribute types
         }
 
         /**
@@ -278,8 +271,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String label) {
-                super(concepts, label);
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
             }
 
             @Override
@@ -328,12 +321,7 @@ public abstract class AttributeTypeImpl {
             public static final class Root extends AttributeTypeImpl.Boolean.Remote {
 
                 public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL);
-                }
-
-                @Override
-                public boolean isRoot() {
-                    return true;
+                    super(concepts, ROOT_LABEL, true);
                 }
 
                 @Override
@@ -397,8 +385,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String label) {
-                super(concepts, label);
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
             }
 
             @Override
@@ -447,12 +435,7 @@ public abstract class AttributeTypeImpl {
             public static final class Root extends AttributeTypeImpl.Long.Remote {
 
                 public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL);
-                }
-
-                @Override
-                public boolean isRoot() {
-                    return true;
+                    super(concepts, ROOT_LABEL, true);
                 }
 
                 @Override
@@ -516,8 +499,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String label) {
-                super(concepts, label);
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
             }
 
             @Override
@@ -566,12 +549,7 @@ public abstract class AttributeTypeImpl {
             public static final class Root extends AttributeTypeImpl.Double.Remote {
 
                 public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL);
-                }
-
-                @Override
-                public boolean isRoot() {
-                    return true;
+                    super(concepts, ROOT_LABEL, true);
                 }
 
                 @Override
@@ -635,8 +613,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String label) {
-                super(concepts, label);
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
             }
 
             @Override
@@ -703,12 +681,7 @@ public abstract class AttributeTypeImpl {
             public static final class Root extends AttributeTypeImpl.String.Remote {
 
                 public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL);
-                }
-
-                @Override
-                public boolean isRoot() {
-                    return true;
+                    super(concepts, ROOT_LABEL, true);
                 }
 
                 @Override
@@ -777,8 +750,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String label) {
-                super(concepts, label);
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
             }
 
             @Override
@@ -827,12 +800,7 @@ public abstract class AttributeTypeImpl {
             public static final class Root extends AttributeTypeImpl.DateTime.Remote {
 
                 public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL);
-                }
-
-                @Override
-                public boolean isRoot() {
-                    return true;
+                    super(concepts, ROOT_LABEL, true);
                 }
 
                 @Override

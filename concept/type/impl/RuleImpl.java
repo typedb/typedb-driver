@@ -45,8 +45,8 @@ public class RuleImpl {
      */
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(final Concepts concepts, final String label) {
-            super(concepts, label);
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
         @Nullable

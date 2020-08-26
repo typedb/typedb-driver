@@ -287,8 +287,6 @@ public interface Thing extends Concept {
 
         @CheckReturnValue
         @Override
-        // TODO: remove @deprecated
-        @Deprecated
         default Thing.Remote asThing() {
             return this;
         }

@@ -66,8 +66,9 @@ public abstract class TypeImpl {
 
         private final Concepts concepts;
         private final String label;
+        private final boolean isRoot;
 
-        public Remote(final Concepts concepts, final String label) {
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
             if (concepts == null) {
                 throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("concept"));
             }
@@ -76,15 +77,12 @@ public abstract class TypeImpl {
                 throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
             }
             this.label = label;
+            this.isRoot = isRoot;
         }
 
         @Override
-        public boolean isRoot() {
-            final Type.Local cached = concepts.getCachedType(label);
-            if (cached != null) {
-                return cached.isRoot();
-            }
-            return concepts.getType(label).isRoot();
+        public final boolean isRoot() {
+            return isRoot;
         }
 
         @Override

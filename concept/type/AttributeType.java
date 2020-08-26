@@ -96,7 +96,6 @@ public interface AttributeType extends ThingType {
                     return t;
                 }
             }
-            // TODO: extract hardcoded string to ErrorMessage.Internal.UNRECOGNISED_VALUE
             throw new GraknClientException(UNRECOGNISED_VALUE);
         }
 
@@ -200,8 +199,6 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        // TODO: remove @deprecated
-        @Deprecated
         default AttributeType.Remote asAttributeType() {
             return this;
         }

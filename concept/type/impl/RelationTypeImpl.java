@@ -46,8 +46,8 @@ public class RelationTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(final Concepts concepts, final String label) {
-            super(concepts, label);
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
         @Override

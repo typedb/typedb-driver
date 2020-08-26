@@ -35,7 +35,6 @@ public final class GraknConcepts implements Concepts {
         this.typeCache = new HashMap<>();
     }
 
-    // TODO: is this a reasonable way of implementing this method?
     @Override
     public ThingType.Remote getRootType() {
         return getType(GraqlToken.Type.THING.toString()).asThingType();
