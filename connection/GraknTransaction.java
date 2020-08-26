@@ -34,11 +34,9 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.parameters.Options;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.connection.GraknConcepts;
-import grakn.common.parameters.Arguments;
-import grakn.common.parameters.Arguments.Transaction.Type;
-import grakn.common.parameters.Options;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
@@ -61,18 +59,18 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.client.Grakn.Transaction.Type.READ;
+import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.RpcMessageWriter.tracingData;
 import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
 import static grakn.client.concept.ConceptMessageWriter.concept;
 import static grakn.client.connection.ConnectionMessageWriter.batchSize;
 import static grakn.client.connection.ConnectionMessageWriter.options;
-import static grakn.common.parameters.Arguments.Transaction.Type.READ;
-import static grakn.common.parameters.Arguments.Transaction.Type.WRITE;
 
 public class GraknTransaction implements Transaction {
 
     private final Session session;
-    private final Arguments.Transaction.Type type;
+    private final Transaction.Type type;
     private final Concepts concepts;
     private final GraknTransceiver transceiver;
 

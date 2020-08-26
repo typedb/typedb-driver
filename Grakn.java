@@ -28,11 +28,10 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
+import grakn.client.common.parameters.Options;
 import grakn.client.concept.Concepts;
 import grakn.client.connection.GraknClient;
 import grakn.client.connection.GraknDatabase;
-import grakn.common.parameters.Arguments;
-import grakn.common.parameters.Options;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
@@ -69,11 +68,11 @@ public interface Grakn {
 
         Session session(String databaseName);
 
-        Session session(String databaseName, Arguments.Session.Type type);
+        Session session(String databaseName, Session.Type type);
 
         Session session(String databaseName, Options.Session options);
 
-        Session session(String databaseName, Arguments.Session.Type type, Options.Session options);
+        Session session(String databaseName, Session.Type type, Options.Session options);
 
         Session schemaSession(String databaseName);
 
@@ -117,20 +116,48 @@ public interface Grakn {
 
         Transaction.Builder transaction(Options.Transaction options);
 
-        Transaction transaction(Arguments.Transaction.Type type);
+        Transaction transaction(Transaction.Type type);
 
-        Transaction transaction(Arguments.Transaction.Type type, Options.Transaction options);
+        Transaction transaction(Transaction.Type type, Options.Transaction options);
 
         boolean isOpen();
 
         void close();
 
         Database database();
+
+        enum Type {
+            DATA(0),
+            SCHEMA(1);
+
+            private final int id;
+            private final boolean isSchema;
+
+            Type(int id) {
+                this.id = id;
+                this.isSchema = id == 1;
+            }
+
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
+                }
+                return null;
+            }
+
+            public int id() {
+                return id;
+            }
+
+            public boolean isData() { return !isSchema; }
+
+            public boolean isSchema() { return isSchema; }
+        }
     }
 
     interface Transaction extends AutoCloseable {
 
-        Arguments.Transaction.Type type();
+        Transaction.Type type();
 
         Session session();
 
@@ -225,6 +252,34 @@ public interface Grakn {
         void commit();
 
         Explanation getExplanation(ConceptMap explainable);
+
+        enum Type {
+            READ(0),
+            WRITE(1);
+
+            private final int id;
+            private final boolean isWrite;
+
+            Type(int id) {
+                this.id = id;
+                this.isWrite = id == 1;
+            }
+
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
+                }
+                return null;
+            }
+
+            public int id() {
+                return id;
+            }
+
+            public boolean isRead() { return !isWrite; }
+
+            public boolean isWrite() { return isWrite; }
+        }
 
         interface Builder {
 

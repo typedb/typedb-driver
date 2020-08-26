@@ -1,7 +1,7 @@
 package grakn.client.connection;
 
 import grakn.client.common.exception.GraknClientException;
-import grakn.common.parameters.Options;
+import grakn.client.common.parameters.Options;
 import grakn.protocol.OptionsProto;
 import grakn.protocol.TransactionProto;
 
@@ -9,7 +9,7 @@ import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BAT
 
 public abstract class ConnectionMessageWriter {
 
-    static OptionsProto.Options options(Options<?, ?> options) {
+    static OptionsProto.Options options(Options options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
         if (options.explain() != null) {
             builder.setExplain(options.explain());

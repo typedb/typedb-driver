@@ -21,7 +21,6 @@ package grakn.client.test.behaviour.connection.transaction;
 
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.common.parameters.Arguments;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -51,15 +50,15 @@ public class TransactionSteps {
     // =============================================//
 
     @When("session open(s) transaction of type: {transaction_type}")
-    public void session_opens_transaction_of_type(Arguments.Transaction.Type type) {
+    public void session_opens_transaction_of_type(Transaction.Type type) {
         for_each_session_open_transactions_of_type(list(type));
     }
 
     @When("for each session, open transaction(s) of type:")
-    public void for_each_session_open_transactions_of_type(List<Arguments.Transaction.Type> types) {
+    public void for_each_session_open_transactions_of_type(List<Transaction.Type> types) {
         for (Session session : sessions) {
             List<Transaction> transactions = new ArrayList<>();
-            for (Arguments.Transaction.Type type : types) {
+            for (Transaction.Type type : types) {
                 Transaction transaction = session.transaction(type);
                 transactions.add(transaction);
             }
@@ -123,12 +122,12 @@ public class TransactionSteps {
     }
 
     @Then("for each session, transaction(s) has/have type:")
-    public void for_each_session_transactions_have_type(List<Arguments.Transaction.Type> types) {
+    public void for_each_session_transactions_have_type(List<Transaction.Type> types) {
         for (Session session : sessions) {
             List<Transaction> transactions = sessionsToTransactions.get(session);
             assertEquals(types.size(), transactions.size());
 
-            Iterator<Arguments.Transaction.Type> typesIterator = types.iterator();
+            Iterator<Transaction.Type> typesIterator = types.iterator();
             Iterator<Transaction> transactionIterator = transactions.iterator();
             while (typesIterator.hasNext()) {
                 assertEquals(typesIterator.next(), transactionIterator.next().type());
@@ -141,11 +140,11 @@ public class TransactionSteps {
     // ===========================================//
 
     @When("for each session, open transaction(s) in parallel of type:")
-    public void for_each_session_open_transactions_in_parallel_of_type(List<Arguments.Transaction.Type> types) {
+    public void for_each_session_open_transactions_in_parallel_of_type(List<Transaction.Type> types) {
         assertTrue(THREAD_POOL_SIZE >= types.size());
         for (Session session : sessions) {
             List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
-            for (Arguments.Transaction.Type type : types) {
+            for (Transaction.Type type : types) {
                 transactionsParallel.add(CompletableFuture.supplyAsync(() -> session.transaction(type), threadPool));
             }
             sessionsToTransactionsParallel.put(session, transactionsParallel);
@@ -175,7 +174,7 @@ public class TransactionSteps {
     }
 
     @Then("for each session, transactions in parallel have type:")
-    public void for_each_session_transactions_in_parallel_have_type(List<Arguments.Transaction.Type> types) {
+    public void for_each_session_transactions_in_parallel_have_type(List<Transaction.Type> types) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
         for (Session session : sessions) {
             List<CompletableFuture<Transaction>> futureTxs =
@@ -183,11 +182,11 @@ public class TransactionSteps {
 
             assertEquals(types.size(), futureTxs.size());
 
-            Iterator<Arguments.Transaction.Type> typesIter = types.iterator();
+            Iterator<Transaction.Type> typesIter = types.iterator();
             Iterator<CompletableFuture<Transaction>> futureTxsIter = futureTxs.iterator();
 
             while (typesIter.hasNext()) {
-                Arguments.Transaction.Type type = typesIter.next();
+                Transaction.Type type = typesIter.next();
                 futureTxsIter.next().thenApplyAsync(tx -> {
                     assertEquals(type, tx.type());
                     return null;

@@ -23,8 +23,7 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.common.parameters.Arguments;
-import grakn.common.parameters.Options;
+import grakn.client.common.parameters.Options;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
@@ -39,11 +38,11 @@ public class GraknSession implements Session {
     private final ByteString sessionId;
     private boolean isOpen;
 
-    GraknSession(final ManagedChannel channel, final String databaseName, final Arguments.Session.Type type) {
+    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type) {
         this(channel, databaseName, type, new Options.Session());
     }
 
-    GraknSession(final ManagedChannel channel, final String databaseName, final Arguments.Session.Type type, final Options.Session options) {
+    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final Options.Session options) {
         this.databaseName = databaseName;
         this.channel = channel;
         this.sessionStub = GraknGrpc.newBlockingStub(channel);
@@ -69,12 +68,12 @@ public class GraknSession implements Session {
     }
 
     @Override
-    public Transaction transaction(final Arguments.Transaction.Type type) {
+    public Transaction transaction(final Transaction.Type type) {
         return new GraknTransaction(channel, this, sessionId, type);
     }
 
     @Override
-    public Transaction transaction(final Arguments.Transaction.Type type, final Options.Transaction options) {
+    public Transaction transaction(final Transaction.Type type, final Options.Transaction options) {
         return new GraknTransaction(channel, this, sessionId, type, options);
     }
 
@@ -98,7 +97,7 @@ public class GraknSession implements Session {
         return Database.of(databaseName);
     }
 
-    private static SessionProto.Session.Type sessionType(final Arguments.Session.Type type) {
+    private static SessionProto.Session.Type sessionType(final Session.Type type) {
         switch (type) {
             case DATA:
                 return SessionProto.Session.Type.DATA;
