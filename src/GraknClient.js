@@ -20,6 +20,11 @@
 const grpc = require("grpc");
 const Session = require('./Session');
 const KeyspaceService = require('./service/Keyspace/KeyspaceService');
+
+/*
+NOTE: in Grakn 2.0, the protocol has changed, and the locations of the various compiled protobuf files
+have moved (along with rename, etc.)
+*/
 const messages = require("../grpc/nodejs/protocol/session/Session_pb");
 const sessionServices = require("../grpc/nodejs/protocol/session/Session_grpc_pb");
 const keyspaceServices = require("../grpc/nodejs/protocol/keyspace/Keyspace_grpc_pb");

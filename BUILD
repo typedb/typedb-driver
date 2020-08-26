@@ -19,18 +19,21 @@ exports_files([
     "package.json",
     "yarn.lock",
     "VERSION",
-    "deployment.properties",
     "RELEASE_TEMPLATE.md",
 ])
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
-load("@npm_bazel_jasmine//:index.bzl", "jasmine_node_test")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "artifact_extractor")
+load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+
+load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
+load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
+load("//:deployment.bzl", github_deployment = "deployment")
 
 
-npm_package(
+pkg_npm(
     name = "client-nodejs",
     srcs = glob([
        "package.json",
@@ -62,16 +65,17 @@ assemble_npm(
 deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
-    deployment_properties = "@graknlabs_dependencies//distribution:deployment.properties",
+    snapshot = deployment["npm.snapshot"],
+    release = deployment["npm.release"],
 )
-
 
 deploy_github(
     name = "deploy-github",
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Node.js",
     title_append_version = True,
-    deployment_properties = "//:deployment.properties",
+    organisation = deployment["npm.snapshot"],
+    repository = deployment["npm.release"],
 )
 
 NODEJS_TEST_DEPENDENCIES = [
@@ -271,4 +275,13 @@ test_suite(
 artifact_extractor(
     name = "grakn-extractor",
     artifact = "@graknlabs_grakn_core_artifact//file",
+)
+
+release_validate_deps(
+    name = "release-validate-deps",
+    refs = "@graknlabs_client_nodejs_workspace_refs//:refs.json",
+    tagged_deps = [
+        "graknlabs_protocol",
+    ],
+    tags = ["manual"]  # in order for bazel test //... to not fail
 )

@@ -31,11 +31,18 @@ commands:
     steps:
       - run: bazel run @graknlabs_dependencies//tool/bazelrun:rbe -- << parameters.command >>
 
+  install-artifact-credentials:
+    steps:
+      - run: |
+          ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
+          ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+
   run-grakn:
     steps:
       - run-bazel:
-          command: bazel run //:grakn-extractor -- dist/grakn-core-all-linux
-      - run: nohup ./dist/grakn-core-all-linux/grakn server start
+          command: bazel run //:grakn-extractor -- dist/grakn-core-server-linux
+      - run: nohup ./dist/grakn-core-server-linux/grakn server start
 
 jobs:
   build:
@@ -43,20 +50,21 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
-      - install-bazel
       - checkout
-      - run-bazel:
-          command: bazel build //...
+      - install-bazel
+      - install-artifact-credentials
+      # NOTE: pkg_npm is not executable on RBE as it generates directories
+      - run: bazel build //...
 
   test:
     machine: 
       image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
-      - install-bazel
       - checkout
-      - run-bazel:
-          command: bazel test //:test-integration --test_output=streamed
+      - install-bazel
+      - install-artifact-credentials
+      - run: bazel test //:test-integration --test_output=streamed
 
   deploy-npm-snapshot:
     machine: 
@@ -80,8 +88,9 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/client-nodejs
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
+      - install-artifact-credentials
       - run-grakn
       - run: |
           source /opt/circleci/.nvm/nvm.sh
@@ -117,6 +126,15 @@ jobs:
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @graknlabs_dependencies//tool/release:approval
+
+  release-validate:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - install-bazel
+      - checkout
+      - run: |
+          bazel test //:release-validate-deps --test_output=streamed
 
   deploy-github:
     machine: 

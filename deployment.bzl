@@ -15,5 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-repo.github.organisation=graknlabs
-repo.github.repository=client-nodejs
+deployment = {
+    "github.organisation" : "graknlabs",
+    "github.repository" : "client-nodejs",
+}

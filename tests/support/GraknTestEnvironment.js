@@ -30,7 +30,6 @@ const path = require('path');
 const tmp = require('tmp');
 const propertiesReader = require('properties-reader');
 
-
 const GraknClient = require("../../client-nodejs/src/GraknClient");
 
 const graknClient = new GraknClient(DEFAULT_URI);
