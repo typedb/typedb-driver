@@ -63,13 +63,13 @@ public class AttributeTest {
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner(48555);
-//        runner.start();
+        runner = new GraknCoreRunner();
+        runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-//        runner.stop();
+        runner.stop();
     }
 }

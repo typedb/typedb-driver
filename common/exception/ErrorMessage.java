@@ -11,10 +11,12 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new ClientInternal(1, "Illegal internal state!");
         public static final ClientInternal UNRECOGNISED_VALUE =
                 new ClientInternal(2, "Unrecognised schema value!");
+        public static final ClientInternal ILLEGAL_ARGUMENT =
+                new ClientInternal(3, "Illegal argument provided.");
         public static final ClientInternal ILLEGAL_ARGUMENT_NULL =
-                new ClientInternal(3, "'%s' can not be null.");
+                new ClientInternal(4, "'%s' can not be null.");
         public static final ClientInternal ILLEGAL_ARGUMENT_NULL_OR_EMPTY =
-                new ClientInternal(4, "'%s' can not be null or empty.");
+                new ClientInternal(5, "'%s' can not be null or empty.");
 
         private static final String codePrefix = "CIN";
         private static final String messagePrefix = "Invalid Internal State (Client)";
@@ -29,10 +31,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Connection(1, "The connection to the database is closed.");
         public static final Connection NEGATIVE_BATCH_SIZE =
                 new Connection(2, "Batch size cannot be less than 1, was: '%d'.");
-        public static final Connection INVALID_BATCH_SIZE_MODE =
-                new Connection(3, "Invalid batch size mode: '%s'.");
         public static final Connection TRANSACTION_LISTENER_TERMINATED =
-                new Connection(4, "Transaction listener was terminated");
+                new Connection(3, "Transaction listener was terminated");
 
         private static final String codePrefix = "CNN";
         private static final String messagePrefix = "Database Connection Error";

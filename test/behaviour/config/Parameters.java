@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.config;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.AttributeType.ValueType;
+import grakn.common.parameters.Arguments;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static grakn.common.parameters.Arguments.Transaction.Type.READ;
+import static grakn.common.parameters.Arguments.Transaction.Type.WRITE;
 import static java.util.Objects.hash;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -106,20 +108,20 @@ public class Parameters {
     }
 
     @ParameterType("read|write")
-    public Transaction.Type transaction_type(String type) {
+    public Arguments.Transaction.Type transaction_type(String type) {
         if (type.equals("read")) {
-            return Transaction.Type.READ;
+            return READ;
         } else if (type.equals("write")) {
-            return Transaction.Type.WRITE;
+            return WRITE;
         }
         return null;
     }
 
     @DataTableType
-    public List<Transaction.Type> transaction_types(List<String> values) {
-        List<Transaction.Type> typeList = new ArrayList<>();
+    public List<Arguments.Transaction.Type> transaction_types(List<String> values) {
+        List<Arguments.Transaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            Transaction.Type type = transaction_type(value);
+            Arguments.Transaction.Type type = transaction_type(value);
             assertNotNull(type);
             typeList.add(type);
         }

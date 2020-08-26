@@ -549,7 +549,7 @@ public class GraqlSteps {
                 assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
             } else {
                 // rule
-                Rule.Remote rule = explanation.getRule().asRemote(tx);
+                Rule.Remote rule = explanation.getRule().asRemote(tx.concepts());
                 String ruleLabel = rule.getLabel().toString();
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
@@ -685,7 +685,7 @@ public class GraqlSteps {
         public boolean check(Concept concept) {
             if (!(concept instanceof Thing)) { return false; }
 
-            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx).getHas(true).collect(Collectors.toSet());
+            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx.concepts()).getHas(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 

@@ -28,22 +28,11 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Rule;
-import grakn.client.concept.type.ThingType;
 import grakn.client.connection.GraknClient;
 import grakn.client.connection.GraknDatabase;
-import grakn.client.connection.GraknTransaction;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
-import graql.lang.pattern.Pattern;
+import grakn.common.parameters.Arguments;
+import grakn.common.parameters.Options;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
@@ -54,14 +43,10 @@ import graql.lang.query.GraqlUndefine;
 import io.grpc.ManagedChannel;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface Grakn {
@@ -71,10 +56,6 @@ public interface Grakn {
     }
 
     static Client client(String address) {
-        return new GraknClient(address);
-    }
-
-    static Client client(String address, String username, String password) {
         return new GraknClient(address);
     }
 
@@ -88,9 +69,15 @@ public interface Grakn {
 
         Session session(String databaseName);
 
+        Session session(String databaseName, Arguments.Session.Type type);
+
+        Session session(String databaseName, Options.Session options);
+
+        Session session(String databaseName, Arguments.Session.Type type, Options.Session options);
+
         Session schemaSession(String databaseName);
 
-        Session session(String databaseName, Session.Type type);
+        Session schemaSession(String databaseName, Options.Session options);
 
         DatabaseManager databases();
     }
@@ -128,42 +115,22 @@ public interface Grakn {
 
         Transaction.Builder transaction();
 
-        Transaction transaction(Transaction.Type type);
+        Transaction.Builder transaction(Options.Transaction options);
+
+        Transaction transaction(Arguments.Transaction.Type type);
+
+        Transaction transaction(Arguments.Transaction.Type type, Options.Transaction options);
 
         boolean isOpen();
 
         void close();
 
         Database database();
-
-        enum Type {
-            DATA(0),
-            SCHEMA(1);
-
-            private final int id;
-            private final boolean isSchema;
-
-            Type(int id) {
-                this.id = id;
-                this.isSchema = id == 1;
-            }
-
-            public static Session.Type of(int value) {
-                for (Session.Type t : Session.Type.values()) {
-                    if (t.id == value) return t;
-                }
-                return null;
-            }
-
-            public boolean isData() { return !isSchema; }
-
-            public boolean isSchema() { return isSchema; }
-        }
     }
 
     interface Transaction extends AutoCloseable {
 
-        Type type();
+        Arguments.Transaction.Type type();
 
         Session session();
 
@@ -175,15 +142,15 @@ public interface Grakn {
 
         QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, Options.Query options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
 
-        QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
+        QueryFuture<List<Void>> execute(GraqlDelete query, Options.Query options);
 
         QueryFuture<List<Void>> execute(GraqlDelete query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlGet query, Options.Query options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlGet query);
 
@@ -191,41 +158,41 @@ public interface Grakn {
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, Options.Query options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
 
-        QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
+        QueryFuture<Stream<Void>> stream(GraqlDelete query, Options.Query options);
 
         QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, Options.Query options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
 
         QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
 
-        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, Options.Query options);
 
         QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
 
-        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, Options.Query options);
 
         QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
 
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, Options.Query options);
 
         QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
 
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, Options.Query options);
 
         QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, Options.Query options);
 
         QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, Options.Query options);
 
         QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 
@@ -245,11 +212,11 @@ public interface Grakn {
 
         QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
 
-        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, Options.Query options);
 
         QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
 
-        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, Options.Query options);
 
         boolean isOpen();
 
@@ -281,100 +248,6 @@ public interface Grakn {
 
             @Override
             T get(long timeout, TimeUnit unit);
-        }
-
-        interface Option<T> {
-        }
-
-        interface QueryOptions {
-
-            QueryOptions infer(boolean infer);
-
-            QueryOptions explain(boolean explain);
-
-            QueryOptions batchSize(int size);
-
-            QueryOptions batchSize(BatchSize batchSize);
-
-            <T> QueryOptions set(Option<T> flag, T value);
-
-            <T> QueryOptions whenSet(Option<T> option, Consumer<T> consumer);
-        }
-
-        // TODO: align this tremendously awkward interface with core
-        interface Options {
-            QueryOptions DEFAULT = new GraknTransaction.QueryOptionsImpl();
-
-            static QueryOptions infer(boolean infer) {
-                return DEFAULT.infer(infer);
-            }
-
-            static QueryOptions explain(boolean explain) {
-                return DEFAULT.explain(explain);
-            }
-
-            static QueryOptions batchSize(int size) {
-                return DEFAULT.batchSize(size);
-            }
-
-            static QueryOptions batchSize(BatchSize batchSize) {
-                return DEFAULT.batchSize(batchSize);
-            }
-        }
-
-        enum Type {
-
-            /**
-             * Read-only transaction, where database mutation is prohibited
-             */
-            READ(0),
-
-            /**
-             * Write transaction, where database mutation is allowed
-             */
-            WRITE(1);
-
-            private final int type;
-
-            Type(int type) {
-                this.type = type;
-            }
-
-            public int id() {
-                return type;
-            }
-
-            @Override
-            public String toString() {
-                return this.name();
-            }
-
-            public static Type of(int value) {
-                for (Type t : Transaction.Type.values()) {
-                    if (t.type == value) return t;
-                }
-                return null;
-            }
-
-            public static Type of(String value) {
-                for (Type t : Transaction.Type.values()) {
-                    if (t.name().equalsIgnoreCase(value)) return t;
-                }
-                return null;
-            }
-        }
-
-        enum BooleanOption implements Option<Boolean> {
-            INFER,
-            EXPLAIN
-        }
-
-        enum BatchOption implements Option<TransactionProto.Transaction.Iter.Req.Options> {
-            BATCH_SIZE
-        }
-
-        enum BatchSize {
-            ALL
         }
     }
 }

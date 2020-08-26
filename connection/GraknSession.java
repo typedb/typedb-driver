@@ -23,26 +23,35 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import grakn.common.parameters.Arguments;
+import grakn.common.parameters.Options;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
+import static grakn.client.connection.ConnectionMessageWriter.options;
+
 public class GraknSession implements Session {
 
-    protected ManagedChannel channel;
-    protected String databaseName;
-    protected GraknGrpc.GraknBlockingStub sessionStub;
-    protected ByteString sessionId;
-    protected boolean isOpen;
+    private final ManagedChannel channel;
+    private final String databaseName;
+    private final GraknGrpc.GraknBlockingStub sessionStub;
+    private final ByteString sessionId;
+    private boolean isOpen;
 
-    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type) {
+    GraknSession(final ManagedChannel channel, final String databaseName, final Arguments.Session.Type type) {
+        this(channel, databaseName, type, new Options.Session());
+    }
+
+    GraknSession(final ManagedChannel channel, final String databaseName, final Arguments.Session.Type type, final Options.Session options) {
         this.databaseName = databaseName;
         this.channel = channel;
         this.sessionStub = GraknGrpc.newBlockingStub(channel);
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(databaseName)
-                .setType(sessionType(type)).build();
+                .setType(sessionType(type))
+                .setOptions(options(options)).build();
 
         final SessionProto.Session.Open.Res response = sessionStub.sessionOpen(openReq);
         sessionId = response.getSessionID();
@@ -55,8 +64,18 @@ public class GraknSession implements Session {
     }
 
     @Override
-    public Transaction transaction(Transaction.Type type) {
+    public Transaction.Builder transaction(final Options.Transaction options) {
+        return new GraknTransaction.Builder(channel, this, sessionId, options);
+    }
+
+    @Override
+    public Transaction transaction(final Arguments.Transaction.Type type) {
         return new GraknTransaction(channel, this, sessionId, type);
+    }
+
+    @Override
+    public Transaction transaction(final Arguments.Transaction.Type type, final Options.Transaction options) {
+        return new GraknTransaction(channel, this, sessionId, type, options);
     }
 
     @Override
@@ -79,7 +98,7 @@ public class GraknSession implements Session {
         return Database.of(databaseName);
     }
 
-    private static SessionProto.Session.Type sessionType(final Session.Type type) {
+    private static SessionProto.Session.Type sessionType(final Arguments.Session.Type type) {
         switch (type) {
             case DATA:
                 return SessionProto.Session.Type.DATA;
