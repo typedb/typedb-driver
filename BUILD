@@ -285,3 +285,15 @@ release_validate_deps(
     ],
     tags = ["manual"]  # in order for bazel test //... to not fail
 )
+
+# CI targets that are not declared in any BUILD file, but are called externally
+filegroup(
+    name = "ci",
+    data = [
+        "@graknlabs_dependencies//tool/bazelrun:rbe",
+        "@graknlabs_dependencies//distribution/artifact:create-netrc",
+        "@graknlabs_dependencies//tool/sync:dependencies",
+        "@graknlabs_dependencies//tool/release:approval",
+        "@graknlabs_dependencies//tool/release:create-notes",
+    ],
+)
