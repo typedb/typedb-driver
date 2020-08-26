@@ -34,7 +34,7 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_behaviour/behaviour/concept/thing/entity.feature",
+        features = "external/graknlabs_behaviour/concept/thing/entity.feature",
         tags = "not @ignore and not @ignore-grakn"
 )
 public class EntityTest {
