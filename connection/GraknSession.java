@@ -27,8 +27,6 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
-import static grakn.client.connection.ConnectionMessageWriter.sessionType;
-
 public class GraknSession implements Session {
 
     protected ManagedChannel channel;
@@ -79,5 +77,16 @@ public class GraknSession implements Session {
     @Override
     public Database database() {
         return Database.of(databaseName);
+    }
+
+    private static SessionProto.Session.Type sessionType(final Session.Type type) {
+        switch (type) {
+            case DATA:
+                return SessionProto.Session.Type.DATA;
+            case SCHEMA:
+                return SessionProto.Session.Type.SCHEMA;
+            default:
+                return SessionProto.Session.Type.UNRECOGNIZED;
+        }
     }
 }
