@@ -19,10 +19,9 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -46,8 +45,8 @@ public class RuleImpl {
      */
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(Transaction tx, String label) {
-            super(tx, label);
+        public Remote(final Concepts concepts, final String label) {
+            super(concepts, label);
         }
 
         @Nullable

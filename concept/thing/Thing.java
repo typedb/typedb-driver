@@ -19,9 +19,9 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.RelationImpl;
@@ -89,14 +89,14 @@ public interface Thing extends Concept {
     /**
      * Return a Thing.Remote for this Thing.
      *
-     * @param tx The transaction to use for the RPCs.
+     * @param concepts The transaction to use for the RPCs.
      * @return A remote concept using the given transaction to enable RPCs.
      */
-    Remote asRemote(Transaction tx);
+    Remote asRemote(Concepts concepts);
 
     interface Local extends Concept.Local, Thing {
 
-        static Thing.Local of(ConceptProto.Thing thing) {
+        static Thing.Local of(final ConceptProto.Thing thing) {
             switch (thing.getSchema()) {
                 case ENTITY:
                     return new EntityImpl.Local(thing);
@@ -172,25 +172,25 @@ public interface Thing extends Concept {
      */
     interface Remote extends Concept.Remote, Thing {
 
-        static Thing.Remote of(final Transaction tx, final ConceptProto.Thing thing) {
+        static Thing.Remote of(final Concepts concepts, final ConceptProto.Thing thing) {
             final String iid = bytesToHexString(thing.getIid().toByteArray());
             switch (thing.getSchema()) {
                 case ENTITY:
-                    return new EntityImpl.Remote(tx, iid);
+                    return new EntityImpl.Remote(concepts, iid);
                 case RELATION:
-                    return new RelationImpl.Remote(tx, iid);
+                    return new RelationImpl.Remote(concepts, iid);
                 case ATTRIBUTE:
                     switch (thing.getValueType()) {
                         case BOOLEAN:
-                            return new AttributeImpl.Boolean.Remote(tx, iid);
+                            return new AttributeImpl.Boolean.Remote(concepts, iid);
                         case LONG:
-                            return new AttributeImpl.Long.Remote(tx, iid);
+                            return new AttributeImpl.Long.Remote(concepts, iid);
                         case DOUBLE:
-                            return new AttributeImpl.Double.Remote(tx, iid);
+                            return new AttributeImpl.Double.Remote(concepts, iid);
                         case STRING:
-                            return new AttributeImpl.String.Remote(tx, iid);
+                            return new AttributeImpl.String.Remote(concepts, iid);
                         case DATETIME:
-                            return new AttributeImpl.DateTime.Remote(tx, iid);
+                            return new AttributeImpl.DateTime.Remote(concepts, iid);
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), thing.getValueType()));

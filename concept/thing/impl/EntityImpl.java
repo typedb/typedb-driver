@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
@@ -30,7 +30,7 @@ public abstract class EntityImpl {
      */
     public static class Local extends ThingImpl.Local implements Entity.Local {
 
-        public Local(ConceptProto.Thing thing) {
+        public Local(final ConceptProto.Thing thing) {
             super(thing);
         }
 
@@ -44,8 +44,8 @@ public abstract class EntityImpl {
      */
     public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
-        public Remote(Transaction tx, String iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final String iid) {
+            super(concepts, iid);
         }
 
         @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
@@ -59,8 +59,8 @@ public class RoleTypeImpl {
 
         private final String scopedLabel;
 
-        public Remote(Transaction tx, String label, String scopedLabel) {
-            super(tx, label);
+        public Remote(final Concepts concepts, final String label, final String scopedLabel) {
+            super(concepts, label);
             this.scopedLabel = scopedLabel;
         }
 
@@ -101,7 +101,7 @@ public class RoleTypeImpl {
 
             final ConceptProto.RoleType.GetRelation.Res response = runMethod(method).getRoleTypeGetRelationRes();
 
-            return Type.Remote.of(tx(), response.getRelationType()).asRelationType();
+            return Type.Remote.of(concepts(), response.getRelationType()).asRelationType();
         }
 
         @Override
@@ -122,17 +122,17 @@ public class RoleTypeImpl {
 
         @Override
         protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return tx().iterateConceptMethod(scopedLabel, request, response -> Thing.Remote.of(tx(), thingGetter.apply(response)));
+            return concepts().iterateTypeMethod(scopedLabel, request, response -> Thing.Remote.of(concepts(), thingGetter.apply(response)));
         }
 
         @Override
         protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return tx().iterateConceptMethod(scopedLabel, request, response -> Type.Remote.of(tx(), typeGetter.apply(response)));
+            return concepts().iterateTypeMethod(scopedLabel, request, response -> Type.Remote.of(concepts(), typeGetter.apply(response)));
         }
 
         @Override
         protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
-            return tx().runConceptMethod(scopedLabel, typeMethod).getConceptMethodTypeRes().getResponse();
+            return concepts().runTypeMethod(scopedLabel, typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

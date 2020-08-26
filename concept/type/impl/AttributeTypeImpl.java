@@ -19,8 +19,8 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -58,8 +58,8 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeType.Remote asRemote(final Transaction tx) {
-                return new AttributeTypeImpl.Remote.Root(tx);
+            public AttributeType.Remote asRemote(final Concepts concepts) {
+                return new AttributeTypeImpl.Remote.Root(concepts);
             }
         }
     }
@@ -69,8 +69,8 @@ public abstract class AttributeTypeImpl {
      */
     public static abstract class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        public Remote(Transaction tx, java.lang.String label) {
-            super(tx, label);
+        public Remote(final Concepts concepts, final java.lang.String label) {
+            super(concepts, label);
         }
 
         @Nullable
@@ -115,7 +115,7 @@ public abstract class AttributeTypeImpl {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                             .setValue(attributeValue(value))).build();
-            return Thing.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            return Thing.Remote.of(concepts(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @Nullable
@@ -126,7 +126,7 @@ public abstract class AttributeTypeImpl {
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
-                    return Thing.Remote.of(tx(), response.getAttribute()).asAttribute();
+                    return Thing.Remote.of(concepts(), response.getAttribute()).asAttribute();
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -140,7 +140,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.Boolean.Remote asBoolean() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Boolean.Remote.Root(tx());
+                return new AttributeTypeImpl.Boolean.Remote.Root(concepts());
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
@@ -148,7 +148,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.Long.Remote asLong() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Long.Remote.Root(tx());
+                return new AttributeTypeImpl.Long.Remote.Root(concepts());
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
@@ -156,7 +156,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.Double.Remote asDouble() {
             if (isRoot()) {
-                return new AttributeTypeImpl.Double.Remote.Root(tx());
+                return new AttributeTypeImpl.Double.Remote.Root(concepts());
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
@@ -164,7 +164,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.String.Remote asString() {
             if (isRoot()) {
-                return new AttributeTypeImpl.String.Remote.Root(tx());
+                return new AttributeTypeImpl.String.Remote.Root(concepts());
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
@@ -172,7 +172,7 @@ public abstract class AttributeTypeImpl {
         @Override
         public AttributeType.DateTime.Remote asDateTime() {
             if (isRoot()) {
-                return new AttributeTypeImpl.DateTime.Remote.Root(tx());
+                return new AttributeTypeImpl.DateTime.Remote.Root(concepts());
             }
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
@@ -187,14 +187,14 @@ public abstract class AttributeTypeImpl {
 
             AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
 
-            return this.tx().equals(that.tx()) &&
+            return this.concepts().equals(that.concepts()) &&
                     this.getLabel().equals(that.getLabel());
         }
 
         public static final class Root extends AttributeTypeImpl.Remote {
 
-            public Root(final Transaction tx) {
-                super(tx, ROOT_LABEL);
+            public Root(final Concepts concepts) {
+                super(concepts, ROOT_LABEL);
             }
 
             @Override
@@ -253,7 +253,7 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public AttributeTypeImpl.Remote.Root asRemote(Transaction tx) {
+            public AttributeTypeImpl.Remote.Root asRemote(final Concepts concepts) {
                 return this;
             }
         }
@@ -278,8 +278,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(Transaction tx, java.lang.String label) {
-                super(tx, label);
+            public Remote(final Concepts concepts, final java.lang.String label) {
+                super(concepts, label);
             }
 
             @Override
@@ -327,8 +327,8 @@ public abstract class AttributeTypeImpl {
 
             public static final class Root extends AttributeTypeImpl.Boolean.Remote {
 
-                public Root(final Transaction tx) {
-                    super(tx, ROOT_LABEL);
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL);
                 }
 
                 @Override
@@ -397,8 +397,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            public Remote(Transaction tx, java.lang.String label) {
-                super(tx, label);
+            public Remote(final Concepts concepts, final java.lang.String label) {
+                super(concepts, label);
             }
 
             @Override
@@ -446,8 +446,8 @@ public abstract class AttributeTypeImpl {
 
             public static final class Root extends AttributeTypeImpl.Long.Remote {
 
-                public Root(final Transaction tx) {
-                    super(tx, ROOT_LABEL);
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL);
                 }
 
                 @Override
@@ -516,8 +516,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            public Remote(Transaction tx, java.lang.String label) {
-                super(tx, label);
+            public Remote(final Concepts concepts, final java.lang.String label) {
+                super(concepts, label);
             }
 
             @Override
@@ -565,8 +565,8 @@ public abstract class AttributeTypeImpl {
 
             public static final class Root extends AttributeTypeImpl.Double.Remote {
 
-                public Root(final Transaction tx) {
-                    super(tx, ROOT_LABEL);
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL);
                 }
 
                 @Override
@@ -635,8 +635,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            public Remote(Transaction tx, java.lang.String label) {
-                super(tx, label);
+            public Remote(final Concepts concepts, final java.lang.String label) {
+                super(concepts, label);
             }
 
             @Override
@@ -702,8 +702,8 @@ public abstract class AttributeTypeImpl {
 
             public static final class Root extends AttributeTypeImpl.String.Remote {
 
-                public Root(final Transaction tx) {
-                    super(tx, ROOT_LABEL);
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL);
                 }
 
                 @Override
@@ -777,8 +777,8 @@ public abstract class AttributeTypeImpl {
          */
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            public Remote(Transaction tx, java.lang.String label) {
-                super(tx, label);
+            public Remote(final Concepts concepts, final java.lang.String label) {
+                super(concepts, label);
             }
 
             @Override
@@ -826,8 +826,8 @@ public abstract class AttributeTypeImpl {
 
             public static final class Root extends AttributeTypeImpl.DateTime.Remote {
 
-                public Root(final Transaction tx) {
-                    super(tx, ROOT_LABEL);
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL);
                 }
 
                 @Override

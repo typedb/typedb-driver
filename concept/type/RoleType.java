@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 
 import javax.annotation.CheckReturnValue;
@@ -40,8 +40,8 @@ public interface RoleType extends Type {
     String getScopedLabel();
 
     @Override
-    default Remote asRemote(Transaction tx) {
-        return RoleType.Remote.of(tx, getLabel(), getScopedLabel());
+    default Remote asRemote(final Concepts concepts) {
+        return RoleType.Remote.of(concepts, getLabel(), getScopedLabel());
     }
 
     interface Local extends Type.Local, RoleType {
@@ -60,8 +60,8 @@ public interface RoleType extends Type {
      */
     interface Remote extends Type.Remote, RoleType {
 
-        static RoleType.Remote of(Transaction tx, String label, String scopedLabel) {
-            return new RoleTypeImpl.Remote(tx, label, scopedLabel);
+        static RoleType.Remote of(final Concepts concepts, final String label, final String scopedLabel) {
+            return new RoleTypeImpl.Remote(concepts, label, scopedLabel);
         }
 
         /**

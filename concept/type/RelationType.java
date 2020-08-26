@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 
@@ -35,8 +35,8 @@ import java.util.stream.Stream;
 public interface RelationType extends ThingType {
 
     @Override
-    default Remote asRemote(Transaction tx) {
-        return RelationType.Remote.of(tx, getLabel());
+    default Remote asRemote(final Concepts concepts) {
+        return RelationType.Remote.of(concepts, getLabel());
     }
 
     interface Local extends ThingType.Local, RelationType {
@@ -55,8 +55,8 @@ public interface RelationType extends ThingType {
      */
     interface Remote extends ThingType.Remote, RelationType {
 
-        static RelationType.Remote of(Transaction tx, String label) {
-            return new RelationTypeImpl.Remote(tx, label);
+        static RelationType.Remote of(final Concepts concepts, final String label) {
+            return new RelationTypeImpl.Remote(concepts, label);
         }
 
         /**

@@ -19,7 +19,6 @@
 
 package grakn.client.concept;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
@@ -67,10 +66,10 @@ public interface Concept {
     /**
      * Return a Concept.Remote for this Concept.
      *
-     * @param tx The transaction to use for the RPCs.
-     * @return A remote concept using the given transaction to enable RPCs.
+     * @param concepts The Concept API to use for the RPCs.
+     * @return A remote concept using the given Concept API to enable RPCs.
      */
-    Remote asRemote(Transaction tx);
+    Remote asRemote(Concepts concepts);
 
     /**
      * Determine if the Concept is remote.
@@ -129,11 +128,11 @@ public interface Concept {
      */
     interface Remote extends Concept {
 
-        static Concept.Remote of(Transaction tx, ConceptProto.Concept concept) {
+        static Concept.Remote of(final Concepts concepts, ConceptProto.Concept concept) {
             if (concept.hasThing()) {
-                return Thing.Remote.of(tx, concept.getThing());
+                return Thing.Remote.of(concepts, concept.getThing());
             } else {
-                return Type.Remote.of(tx, concept.getType());
+                return Type.Remote.of(concepts, concept.getType());
             }
         }
 

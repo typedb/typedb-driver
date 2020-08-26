@@ -19,8 +19,8 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
@@ -63,7 +63,7 @@ public interface AttributeType extends ThingType {
 
     @CheckReturnValue
     @Override
-    Remote asRemote(Transaction tx);
+    Remote asRemote(Concepts concepts);
 
     /**
      * A class used to hold the supported data types of attributes.
@@ -245,8 +245,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Boolean.Remote asRemote(Transaction tx) {
-            return AttributeType.Boolean.Remote.of(tx, getLabel());
+        default AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
+            return AttributeType.Boolean.Remote.of(concepts, getLabel());
         }
 
         interface Local extends AttributeType.Boolean, AttributeType.Local {
@@ -260,8 +260,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
-            static AttributeType.Boolean.Remote of(Transaction tx, java.lang.String label) {
-                return new AttributeTypeImpl.Boolean.Remote(tx, label);
+            static AttributeType.Boolean.Remote of(final Concepts concepts, java.lang.String label) {
+                return new AttributeTypeImpl.Boolean.Remote(concepts, label);
             }
 
             /**
@@ -339,8 +339,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Long.Remote asRemote(Transaction tx) {
-            return AttributeType.Long.Remote.of(tx, getLabel());
+        default AttributeType.Long.Remote asRemote(final Concepts concepts) {
+            return AttributeType.Long.Remote.of(concepts, getLabel());
         }
 
         interface Local extends AttributeType.Long, AttributeType.Local {
@@ -354,8 +354,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
-            static AttributeType.Long.Remote of(Transaction tx, java.lang.String label) {
-                return new AttributeTypeImpl.Long.Remote(tx, label);
+            static AttributeType.Long.Remote of(final Concepts concepts, java.lang.String label) {
+                return new AttributeTypeImpl.Long.Remote(concepts, label);
             }
 
             /**
@@ -432,8 +432,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.Double.Remote asRemote(Transaction tx) {
-            return AttributeType.Double.Remote.of(tx, getLabel());
+        default AttributeType.Double.Remote asRemote(final Concepts concepts) {
+            return AttributeType.Double.Remote.of(concepts, getLabel());
         }
 
         interface Local extends AttributeType.Double, AttributeType.Local {
@@ -447,8 +447,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
-            static AttributeType.Double.Remote of(Transaction tx, java.lang.String label) {
-                return new AttributeTypeImpl.Double.Remote(tx, label);
+            static AttributeType.Double.Remote of(final Concepts concepts, java.lang.String label) {
+                return new AttributeTypeImpl.Double.Remote(concepts, label);
             }
 
             /**
@@ -525,8 +525,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.String.Remote asRemote(Transaction tx) {
-            return AttributeType.String.Remote.of(tx, getLabel());
+        default AttributeType.String.Remote asRemote(final Concepts concepts) {
+            return AttributeType.String.Remote.of(concepts, getLabel());
         }
 
         interface Local extends AttributeType.String, AttributeType.Local {
@@ -540,8 +540,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
-            static AttributeType.String.Remote of(Transaction tx, java.lang.String label) {
-                return new AttributeTypeImpl.String.Remote(tx, label);
+            static AttributeType.String.Remote of(final Concepts concepts, java.lang.String label) {
+                return new AttributeTypeImpl.String.Remote(concepts, label);
             }
 
             /**
@@ -618,8 +618,8 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         @Override
-        default AttributeType.DateTime.Remote asRemote(Transaction tx) {
-            return AttributeType.DateTime.Remote.of(tx, getLabel());
+        default AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
+            return AttributeType.DateTime.Remote.of(concepts, getLabel());
         }
 
         interface Local extends AttributeType.DateTime, AttributeType.Local {
@@ -633,8 +633,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
-            static AttributeType.DateTime.Remote of(Transaction tx, java.lang.String label) {
-                return new AttributeTypeImpl.DateTime.Remote(tx, label);
+            static AttributeType.DateTime.Remote of(final Concepts concepts, java.lang.String label) {
+                return new AttributeTypeImpl.DateTime.Remote(concepts, label);
             }
 
             /**

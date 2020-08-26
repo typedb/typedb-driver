@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
@@ -46,8 +46,8 @@ public class RelationTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(final Transaction tx, final String label) {
-            super(tx, label);
+        public Remote(final Concepts concepts, final String label) {
+            super(concepts, label);
         }
 
         @Override
@@ -80,7 +80,7 @@ public class RelationTypeImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-            return Thing.Remote.of(tx(), runMethod(method).getRelationTypeCreateRes().getRelation()).asRelation();
+            return Thing.Remote.of(concepts(), runMethod(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
@@ -90,7 +90,7 @@ public class RelationTypeImpl {
 
             final ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = runMethod(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) {
-                return Type.Remote.of(tx(), res.getRoleType()).asRoleType();
+                return Type.Remote.of(concepts(), res.getRoleType()).asRoleType();
             } else {
                 return null;
             }

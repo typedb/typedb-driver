@@ -23,6 +23,7 @@ import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
+import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.common.exception.ErrorMessage.Connection.CONNECTION_CLOSED;
@@ -55,29 +59,42 @@ import static grakn.protocol.TransactionProto.Transaction.Res;
  * }
  * }
  */
-class GraknTransceiver implements AutoCloseable {
+public class GraknTransceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GraknTransceiver.class);
 
     private final StreamObserver<Req> requestSender;
     private final ResponseListener responseListener;
 
-    private GraknTransceiver(StreamObserver<Req> requestSender, ResponseListener responseListener) {
+    private GraknTransceiver(final StreamObserver<Req> requestSender, final ResponseListener responseListener) {
         this.requestSender = requestSender;
         this.responseListener = responseListener;
     }
 
-    static GraknTransceiver create(GraknGrpc.GraknStub stub) {
-        ResponseListener responseListener = new ResponseListener();
-        StreamObserver<Req> requestSender = stub.transaction(responseListener);
+    static GraknTransceiver create(final GraknGrpc.GraknStub stub) {
+        final ResponseListener responseListener = new ResponseListener();
+        final StreamObserver<Req> requestSender = stub.transaction(responseListener);
         return new GraknTransceiver(requestSender, responseListener);
+    }
+
+    public TransactionProto.Transaction.Res sendAndReceiveOrThrow(final TransactionProto.Transaction.Req request) {
+        try {
+            return sendAndReceive(request);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GraknClientException(e);
+        }
+    }
+
+    public <T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
+        return StreamSupport.stream(((Iterable<T>) () -> new RpcIterator<>(this, request, responseReader)).spliterator(), false);
     }
 
     /**
      * Send a request and return immediately.
-         * This method is non-blocking - it returns immediately.
+     * This method is non-blocking - it returns immediately.
      */
-    private void send(Req request, ResponseCollector collector) {
+    private void send(final Req request, final ResponseCollector collector) {
 
         LOG.trace("send:{}", request);
 
@@ -331,20 +348,6 @@ class GraknTransceiver implements AutoCloseable {
                 throw new GraknClientException(nullableError);
             } else {
                 throw new GraknClientException("Transaction interrupted, all running queries have been stopped.");
-            }
-        }
-
-        /**
-         * If this is an error, retrieve it.
-         *
-         * @throws GraknClientException if this is not an error
-         */
-        public final Exception error() {
-            Exception throwable = nullableError();
-            if (throwable == null) {
-                throw new GraknClientException(new IllegalStateException("Expected error not found: " + toString()));
-            } else {
-                return throwable;
             }
         }
 

@@ -19,9 +19,9 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
@@ -103,7 +103,7 @@ public interface Type extends Concept {
     RoleType asRoleType();
 
     @Override
-    Remote asRemote(Transaction tx);
+    Remote asRemote(Concepts concepts);
 
     interface Local extends Type, Concept.Local {
 
@@ -215,38 +215,38 @@ public interface Type extends Concept {
      */
     interface Remote extends Type, Concept.Remote {
 
-        static Type.Remote of(Transaction tx, ConceptProto.Type type) {
+        static Type.Remote of(final Concepts concepts, final ConceptProto.Type type) {
             final String label = type.getLabel();
             switch (type.getSchema()) {
                 case ENTITY_TYPE:
-                    return new EntityTypeImpl.Remote(tx, label);
+                    return new EntityTypeImpl.Remote(concepts, label);
                 case RELATION_TYPE:
-                    return new RelationTypeImpl.Remote(tx, label);
+                    return new RelationTypeImpl.Remote(concepts, label);
                 case ATTRIBUTE_TYPE:
                     switch (type.getValueType()) {
                         case BOOLEAN:
-                            return type.getRoot() ? new AttributeTypeImpl.Boolean.Remote.Root(tx) : new AttributeTypeImpl.Boolean.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Boolean.Remote.Root(concepts) : new AttributeTypeImpl.Boolean.Remote(concepts, label);
                         case LONG:
-                            return type.getRoot() ? new AttributeTypeImpl.Long.Remote.Root(tx) : new AttributeTypeImpl.Long.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Long.Remote.Root(concepts) : new AttributeTypeImpl.Long.Remote(concepts, label);
                         case DOUBLE:
-                            return type.getRoot() ? new AttributeTypeImpl.Double.Remote.Root(tx) : new AttributeTypeImpl.Double.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.Double.Remote.Root(concepts) : new AttributeTypeImpl.Double.Remote(concepts, label);
                         case STRING:
-                            return type.getRoot() ? new AttributeTypeImpl.String.Remote.Root(tx) : new AttributeTypeImpl.String.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.String.Remote.Root(concepts) : new AttributeTypeImpl.String.Remote(concepts, label);
                         case DATETIME:
-                            return type.getRoot() ? new AttributeTypeImpl.DateTime.Remote.Root(tx) : new AttributeTypeImpl.DateTime.Remote(tx, label);
+                            return type.getRoot() ? new AttributeTypeImpl.DateTime.Remote.Root(concepts) : new AttributeTypeImpl.DateTime.Remote(concepts, label);
                         case OBJECT:
-                            return new AttributeTypeImpl.Remote.Root(tx);
+                            return new AttributeTypeImpl.Remote.Root(concepts);
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
                     }
                 case ROLE_TYPE:
                     final String scopedLabel = type.getScopedLabel();
-                    return new RoleTypeImpl.Remote(tx, label, scopedLabel);
+                    return new RoleTypeImpl.Remote(concepts, label, scopedLabel);
                 case RULE:
-                    return new RuleImpl.Remote(tx, label);
+                    return new RuleImpl.Remote(concepts, label);
                 case THING_TYPE:
-                    return new ThingTypeImpl.Remote(tx, label);
+                    return new ThingTypeImpl.Remote(concepts, label);
                 default:
                 case UNRECOGNIZED:
                     throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));

@@ -45,7 +45,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
 
     public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
         return new AnswerGroup<>(
-                Concept.Remote.of(tx, res.getOwner()),
+                Concept.Remote.of(tx.concepts(), res.getOwner()),
                 res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList())
         );
     }

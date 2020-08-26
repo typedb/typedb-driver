@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
@@ -33,8 +33,8 @@ import java.util.stream.Stream;
 public interface Rule extends Type {
 
     @Override
-    default Remote asRemote(Transaction tx) {
-        return Remote.of(tx, getLabel());
+    default Remote asRemote(final Concepts concepts) {
+        return Remote.of(concepts, getLabel());
     }
 
     interface Local extends Type.Local, Rule {
@@ -51,8 +51,8 @@ public interface Rule extends Type {
      */
     interface Remote extends Type.Remote, Rule {
 
-        static Rule.Remote of(Transaction tx, String label) {
-            return new RuleImpl.Remote(tx, label);
+        static Rule.Remote of(final Concepts concepts, final String label) {
+            return new RuleImpl.Remote(concepts, label);
         }
 
         @Override

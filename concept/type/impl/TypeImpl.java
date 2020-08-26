@@ -19,10 +19,9 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
@@ -65,14 +64,14 @@ public abstract class TypeImpl {
      */
     public abstract static class Remote implements Type.Remote {
 
-        private final Transaction tx;
+        private final Concepts concepts;
         private final String label;
 
-        public Remote(final Transaction tx, final String label) {
-            if (tx == null) {
-                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("tx"));
+        public Remote(final Concepts concepts, final String label) {
+            if (concepts == null) {
+                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("concept"));
             }
-            this.tx = tx;
+            this.concepts = concepts;
             if (label == null || label.isEmpty()) {
                 throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
             }
@@ -81,11 +80,11 @@ public abstract class TypeImpl {
 
         @Override
         public boolean isRoot() {
-            final Type.Local cached = tx().getCachedType(label);
+            final Type.Local cached = concepts.getCachedType(label);
             if (cached != null) {
                 return cached.isRoot();
             }
-            return tx().getType(label).isRoot();
+            return concepts.getType(label).isRoot();
         }
 
         @Override
@@ -119,7 +118,7 @@ public abstract class TypeImpl {
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return typeConverter.apply(Type.Remote.of(tx(), response.getType()));
+                    return typeConverter.apply(Type.Remote.of(concepts, response.getType()));
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -128,7 +127,7 @@ public abstract class TypeImpl {
 
         @Override
         public Stream<? extends Type.Remote> getSupertypes() {
-            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
 
             return typeStream(method, res -> res.getTypeGetSupertypesIterRes().getType());
@@ -158,12 +157,12 @@ public abstract class TypeImpl {
 
         @Override
         public final boolean isDeleted() {
-            return tx().getType(getLabel()) == null;
+            return concepts.getType(getLabel()) == null;
         }
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{tx=" + tx + ", label=" + label + "}";
+            return this.getClass().getCanonicalName() + "{concepts=" + concepts + ", label=" + label + "}";
         }
 
         @Override
@@ -171,9 +170,9 @@ public abstract class TypeImpl {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            TypeImpl.Remote that = (TypeImpl.Remote) o;
+            final TypeImpl.Remote that = (TypeImpl.Remote) o;
 
-            return this.tx.equals(that.tx) &&
+            return this.concepts.equals(that.concepts) &&
                     this.label.equals(that.label);
         }
 
@@ -181,26 +180,26 @@ public abstract class TypeImpl {
         public int hashCode() {
             int h = 1;
             h *= 1000003;
-            h ^= tx.hashCode();
+            h ^= concepts.hashCode();
             h *= 1000003;
             h ^= label.hashCode();
             return h;
         }
 
-        protected Transaction tx() {
-            return tx;
+        protected final Concepts concepts() {
+            return concepts;
         }
 
-        protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return tx.iterateConceptMethod(label, request, response -> Thing.Remote.of(tx, thingGetter.apply(response)));
+        protected Stream<Thing.Remote> thingStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
+            return concepts.iterateTypeMethod(label, request, response -> Thing.Remote.of(concepts, thingGetter.apply(response)));
         }
 
-        protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return tx.iterateConceptMethod(label, request, response -> Type.Remote.of(tx, typeGetter.apply(response)));
+        protected Stream<Type.Remote> typeStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return concepts.iterateTypeMethod(label, request, response -> Type.Remote.of(concepts, typeGetter.apply(response)));
         }
 
-        protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
-            return tx().runConceptMethod(label, typeMethod).getConceptMethodTypeRes().getResponse();
+        protected ConceptProto.TypeMethod.Res runMethod(final ConceptProto.TypeMethod.Req typeMethod) {
+            return concepts.runTypeMethod(label, typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

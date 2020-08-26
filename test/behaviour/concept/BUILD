@@ -15,21 +15,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-package(default_visibility = ["//test/behaviour:__subpackages__"])
+package(default_visibility = ["//test/behaviour/concept:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "AttributeSteps.java"
+        "ConceptSteps.java"
     ],
     deps = [
         # Internal Package Dependencies
         "//:client-java",
-        "//test/behaviour/concept/thing:steps",
-        "//test/behaviour/concept:steps",
-        "//test/behaviour/util:util",
+        "//test/behaviour/connection:steps",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -38,36 +35,9 @@ java_library(
     visibility = ["//visibility:public"],
 )
 
-grakn_test(
-    name = "test",
-    srcs = [
-        "AttributeTest.java"
-    ],
-    test_class = "grakn.client.test.behaviour.concept.thing.attribute.AttributeTest",
-    deps = [
-        # External Maven Dependencies
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        ":steps",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/concept/type/attributetype:steps",
-        "//test/behaviour/concept/type/thingtype:steps",
-        "//test/behaviour/connection/database:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-    ],
-    data = [
-        "@graknlabs_behaviour//concept/thing:attribute.feature",
-    ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "medium",
-)
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":steps",
-        ":test",
     ],
 )

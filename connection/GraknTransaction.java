@@ -19,7 +19,6 @@
 
 package grakn.client.connection;
 
-import com.google.common.collect.AbstractIterator;
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grakn.client.Grakn;
@@ -36,21 +35,13 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Rule;
-import grakn.client.concept.type.ThingType;
+import grakn.client.concept.Concepts;
+import grakn.client.concept.connection.GraknConcepts;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.OptionsProto;
 import grakn.protocol.TransactionProto;
-import graql.lang.common.GraqlToken;
-import graql.lang.pattern.Pattern;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
@@ -60,7 +51,6 @@ import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
 import io.grpc.ManagedChannel;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,34 +58,30 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
+import static grakn.client.common.RpcMessageWriter.tracingData;
 import static grakn.client.common.exception.ErrorMessage.Connection.INVALID_BATCH_SIZE_MODE;
 import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BATCH_SIZE;
-import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
 import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
 import static grakn.client.concept.ConceptMessageWriter.concept;
-import static grakn.client.concept.ConceptMessageWriter.iid;
-import static grakn.client.concept.ConceptMessageWriter.valueType;
-import static grakn.client.connection.ConnectionMessageWriter.tracingData;
 
 public class GraknTransaction implements Transaction {
 
     private final Session session;
     private final Type type;
-    private final HashMap<String, grakn.client.concept.type.Type.Local> typeCache;
+    private final Concepts concepts;
     private final GraknTransceiver transceiver;
 
     public static class Builder implements Transaction.Builder {
 
-        private ManagedChannel channel;
-        private Session session;
-        private ByteString sessionId;
+        private final ManagedChannel channel;
+        private final Session session;
+        private final ByteString sessionId;
 
-        public Builder(ManagedChannel channel, Session session, ByteString sessionId) {
+        public Builder(final ManagedChannel channel, final Session session, final ByteString sessionId) {
             this.channel = channel;
             this.session = session;
             this.sessionId = sessionId;
@@ -112,12 +98,12 @@ public class GraknTransaction implements Transaction {
         }
     }
 
-    GraknTransaction(ManagedChannel channel, Session session, ByteString sessionId, Type type) {
+    GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread(type == Type.WRITE ? "tx.write" : "tx.read")) {
             this.transceiver = GraknTransceiver.create(GraknGrpc.newStub(channel));
             this.session = session;
             this.type = type;
-            this.typeCache = new HashMap<>();
+            this.concepts = new GraknConcepts(this.transceiver);
 
             final TransactionProto.Transaction.Req openTxReq = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -125,7 +111,7 @@ public class GraknTransaction implements Transaction {
                             .setSessionID(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))).build();
 
-            sendAndReceiveOrThrow(openTxReq);
+            this.transceiver.sendAndReceiveOrThrow(openTxReq);
         }
     }
 
@@ -478,7 +464,7 @@ public class GraknTransaction implements Transaction {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Answer> RPCIterator<T> getQueryIterator(final GraqlQuery query, final QueryOptions options) {
+    private <T extends Answer> RpcIterator<T> getQueryIterator(final GraqlQuery query, final QueryOptions options) {
         final OptionsProto.Options.Builder optionsBuilder = OptionsProto.Options.newBuilder();
         options.whenSet(Grakn.Transaction.BooleanOption.INFER, optionsBuilder::setInfer)
                 .whenSet(Grakn.Transaction.BooleanOption.EXPLAIN, optionsBuilder::setExplain);
@@ -491,7 +477,7 @@ public class GraknTransaction implements Transaction {
         options.whenSet(Grakn.Transaction.BatchOption.BATCH_SIZE, reqBuilder::setOptions);
 
         final TransactionProto.Transaction.Iter.Req iterReq = reqBuilder.build();
-        return new RPCIterator<>(iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));
+        return new RpcIterator<>(transceiver, iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));
     }
 
     private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query) {
@@ -519,15 +505,9 @@ public class GraknTransaction implements Transaction {
         return transceiver.isOpen();
     }
 
-    private TransactionProto.Transaction.Res sendAndReceiveOrThrow(TransactionProto.Transaction.Req request) {
-        try {
-            return transceiver.sendAndReceive(request);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            // This is called from classes like Transaction, that impl methods which do not throw InterruptedException
-            // Therefore, we have to wrap it in a RuntimeException.
-            throw new GraknClientException(e);
-        }
+    @Override
+    public Concepts concepts() {
+        return concepts;
     }
 
     @Override
@@ -536,213 +516,8 @@ public class GraknTransaction implements Transaction {
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance()).build();
 
-        sendAndReceiveOrThrow(commitReq);
+        transceiver.sendAndReceiveOrThrow(commitReq);
         close();
-    }
-
-    // TODO: is this a reasonable way of implementing this method?
-    @Override
-    public ThingType.Remote getRootType() {
-        return getType(GraqlToken.Type.THING.toString()).asThingType();
-    }
-
-    @Override
-    public EntityType.Remote getRootEntityType() {
-        return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
-    }
-
-    @Override
-    public RelationType.Remote getRootRelationType() {
-        return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
-    }
-
-    @Override
-    public AttributeType.Remote getRootAttributeType() {
-        return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
-    }
-
-    @Override
-    public RoleType.Remote getRootRoleType() {
-        return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
-    }
-
-    @Override
-    public Rule.Remote getRootRule() {
-        return getType(GraqlToken.Type.RULE.toString()).asRule();
-    }
-
-    @Override
-    public EntityType.Remote putEntityType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
-                        .setLabel(label)).build();
-
-        final TransactionProto.Transaction.Res res = sendAndReceiveOrThrow(req);
-        return grakn.client.concept.type.Type.Remote.of(this, res.getPutEntityTypeRes().getEntityType()).asEntityType();
-    }
-
-    @Override
-    @Nullable
-    public EntityType.Remote getEntityType(final String label) {
-        final grakn.client.concept.type.Type.Remote concept = getType(label);
-        if (concept instanceof ThingType.Remote) {
-            return (grakn.client.concept.type.EntityType.Remote) concept;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public RelationType.Remote putRelationType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
-                        .setLabel(label)).build();
-
-        final TransactionProto.Transaction.Res res = sendAndReceiveOrThrow(req);
-        return grakn.client.concept.type.Type.Remote.of(this, res.getPutRelationTypeRes().getRelationType()).asRelationType();
-    }
-
-    @Override
-    @Nullable
-    public RelationType.Remote getRelationType(final String label) {
-        final grakn.client.concept.type.Type.Remote concept = getType(label);
-        if (concept instanceof RelationType.Remote) {
-            return (RelationType.Remote) concept;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public AttributeType.Remote putAttributeType(final String label, final ValueType valueType) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
-                        .setLabel(label)
-                        .setValueType(valueType(valueType))).build();
-
-        final TransactionProto.Transaction.Res res = sendAndReceiveOrThrow(req);
-        return grakn.client.concept.type.Type.Remote.of(this, res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
-    }
-
-    @Override
-    @Nullable
-    public AttributeType.Remote getAttributeType(final String label) {
-        final grakn.client.concept.type.Type.Remote concept = getType(label);
-        if (concept instanceof AttributeType.Remote) {
-            return (AttributeType.Remote) concept;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public Rule.Remote putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknClientException(new UnsupportedOperationException());
-        /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
-                        .setLabel(label)
-                        .setWhen(when.toString())
-                        .setThen(then.toString())).build();
-
-        final TransactionProto.Transaction.Res res = sendAndReceiveOrThrow(req);
-        return grakn.client.concept.type.Type.Remote.of(this, res.getPutRuleRes().getRule()).asRule();*/
-    }
-
-    @Override
-    @Nullable
-    public Rule.Remote getRule(String label) {
-        grakn.client.concept.type.Type.Remote concept = getType(label);
-        if (concept instanceof Rule.Remote) {
-            return (Rule.Remote) concept;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    @Nullable
-    public grakn.client.concept.type.Type.Remote getType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
-
-        final TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(req);
-        switch (response.getGetTypeRes().getResCase()) {
-            case TYPE:
-                final grakn.client.concept.type.Type.Remote type = grakn.client.concept.type.Type.Remote.of(this, response.getGetTypeRes().getType());
-                typeCache.put(type.getLabel(), grakn.client.concept.type.Type.Local.of(response.getGetTypeRes().getType()));
-                // TODO: maybe we should return the cached Type.Local? It has more information
-                return type;
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
-    }
-
-    @Nullable
-    public grakn.client.concept.type.Type.Local getCachedType(final String label) {
-        return typeCache.get(label);
-    }
-
-    @Override
-    @Nullable
-    public Thing.Remote getThing(final String iid) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
-
-        final TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(req);
-        switch (response.getGetThingRes().getResCase()) {
-            case THING:
-                return Thing.Remote.of(this, response.getGetThingRes().getThing());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
-    }
-
-    @Override
-    public TransactionProto.Transaction.Res runConceptMethod(final String iid, final ConceptProto.ThingMethod.Req thingMethod) {
-        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodThingReq(TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
-                        .setIid(iid(iid))
-                        .setMethod(thingMethod)).build();
-
-        return sendAndReceiveOrThrow(request);
-    }
-
-    @Override
-    public TransactionProto.Transaction.Res runConceptMethod(final String label, final ConceptProto.TypeMethod.Req typeMethod) {
-        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodTypeReq(TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
-                        .setLabel(label)
-                        .setMethod(typeMethod)).build();
-
-        return sendAndReceiveOrThrow(request);
-    }
-
-    @Override
-    public <T> Stream<T> iterateConceptMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method, final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodThingIterReq(TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
-                        .setIid(iid(iid))
-                        .setMethod(method)).build();
-
-        return iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
-    }
-
-    @Override
-    public <T> Stream<T> iterateConceptMethod(final String label, final ConceptProto.TypeMethod.Iter.Req method, final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodTypeIterReq(TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
-                        .setLabel(label)
-                        .setMethod(method)).build();
-
-        return iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }
 
     @Override
@@ -750,7 +525,7 @@ public class GraknTransaction implements Transaction {
         AnswerProto.ConceptMap conceptMapProto = conceptMap(explainable);
         AnswerProto.Explanation.Req explanationReq = AnswerProto.Explanation.Req.newBuilder().setExplainable(conceptMapProto).build();
         TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setExplanationReq(explanationReq).build();
-        TransactionProto.Transaction.Res response = sendAndReceiveOrThrow(request);
+        TransactionProto.Transaction.Res response = transceiver.sendAndReceiveOrThrow(request);
         return Explanation.of(this, response.getExplanationRes());
     }
 
@@ -763,11 +538,6 @@ public class GraknTransaction implements Transaction {
         conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
         conceptMapProto.setPattern(conceptMap.queryPattern().toString());
         return conceptMapProto.build();
-    }
-
-    @Override
-    public <T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        return StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(request, responseReader)).spliterator(), false);
     }
 
     private abstract class QueryFutureBase<T> implements QueryFuture<T> {
@@ -805,19 +575,19 @@ public class GraknTransaction implements Transaction {
             return getInternal();
         }
 
-        protected abstract RPCIterator<?> getIterator();
+        protected abstract RpcIterator<?> getIterator();
         protected abstract T getInternal();
     }
 
     private class QueryStreamFuture<T> extends QueryFutureBase<Stream<T>> {
-        private RPCIterator<T> iterator;
+        private RpcIterator<T> iterator;
 
-        protected QueryStreamFuture(RPCIterator<T> iterator) {
+        protected QueryStreamFuture(RpcIterator<T> iterator) {
             this.iterator = iterator;
         }
 
         @Override
-        protected RPCIterator<?> getIterator() {
+        protected RpcIterator<?> getIterator() {
             return iterator;
         }
 
@@ -828,14 +598,14 @@ public class GraknTransaction implements Transaction {
     }
 
     private class QueryExecuteFuture<T> extends QueryFutureBase<List<T>> {
-        private RPCIterator<T> iterator;
+        private RpcIterator<T> iterator;
 
-        protected QueryExecuteFuture(RPCIterator<T> iterator) {
+        protected QueryExecuteFuture(RpcIterator<T> iterator) {
             this.iterator = iterator;
         }
 
         @Override
-        protected RPCIterator<?> getIterator() {
+        protected RpcIterator<?> getIterator() {
             return iterator;
         }
 
@@ -844,97 +614,6 @@ public class GraknTransaction implements Transaction {
             List<T> result = new ArrayList<>();
             iterator.forEachRemaining(result::add);
             return result;
-        }
-    }
-
-    /**
-     * A client-side iterator over gRPC messages. Will send TransactionProto.Transaction.Iter.Req messages until
-     * TransactionProto.Transaction.Iter.Res returns done as a message.
-     *
-     * @param <T> class type of objects being iterated
-     */
-    public class RPCIterator<T> extends AbstractIterator<T> {
-        private Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
-        private Batch currentBatch;
-        private volatile boolean started;
-        private TransactionProto.Transaction.Iter.Res first;
-        private TransactionProto.Transaction.Iter.Req.Options options;
-
-        private RPCIterator(TransactionProto.Transaction.Iter.Req req,
-                            Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-            this.responseReader = responseReader;
-            options = req.getOptions();
-            sendRequest(req);
-        }
-
-        private void sendRequest(TransactionProto.Transaction.Iter.Req req) {
-            currentBatch = new Batch();
-
-            TransactionProto.Transaction.Req transactionReq = TransactionProto.Transaction.Req.newBuilder()
-                    .setIterReq(req).build();
-
-            transceiver.sendAndReceiveMultipleAsync(transactionReq, currentBatch);
-        }
-
-        private void nextBatch(int iteratorID) {
-            TransactionProto.Transaction.Iter.Req iterReq = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setIteratorID(iteratorID)
-                    .setOptions(options)
-                    .build();
-
-            sendRequest(iterReq);
-        }
-
-        private class Batch extends GraknTransceiver.MultiResponseCollector {
-            @Override
-            protected boolean isLastResponse(TransactionProto.Transaction.Res response) {
-                TransactionProto.Transaction.Iter.Res iterRes = response.getIterRes();
-                return iterRes.getIteratorID() != 0 || iterRes.getDone();
-            }
-        }
-
-        public boolean isStarted() {
-            return started;
-        }
-
-        public void waitForStart(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-            if (first != null) {
-                throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-            }
-
-            first = currentBatch.poll(timeout, unit).getIterRes();
-        }
-
-        public void waitForStart() {
-        }
-
-        @Override
-        protected T computeNext() {
-            if (first != null) {
-                TransactionProto.Transaction.Iter.Res iterRes = first;
-                first = null;
-                return responseReader.apply(iterRes);
-            }
-
-            final TransactionProto.Transaction.Iter.Res res;
-            try {
-                res = currentBatch.take().getIterRes();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new GraknClientException(e);
-            }
-            started = true;
-            switch (res.getResCase()) {
-                case ITERATORID:
-                    nextBatch(res.getIteratorID());
-                    return computeNext();
-                case DONE:
-                    return endOfData();
-                case RES_NOT_SET:
-                    throw new GraknClientException(REQUIRED_FIELD_NOT_SET.message(TransactionProto.Transaction.Iter.Res.class.getCanonicalName()));
-                default:
-                    return responseReader.apply(res);
-            }
         }
     }
 

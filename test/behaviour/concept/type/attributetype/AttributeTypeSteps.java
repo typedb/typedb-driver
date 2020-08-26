@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.concept.ConceptSteps.concepts;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -44,22 +44,22 @@ public class AttributeTypeSteps {
 
     @When("put attribute type: {type_label}, with value type: {value_type}")
     public void put_attribute_type_with_value_type(String typeLabel, ValueType valueType) {
-        tx().putAttributeType(typeLabel, valueType);
+        concepts().putAttributeType(typeLabel, valueType);
     }
 
     @Then("attribute\\( ?{type_label} ?) get value type: {value_type}")
     public void attribute_type_get_value_type(String typeLabel, ValueType valueType) {
-        assertEquals(valueType, tx().getAttributeType(typeLabel).getValueType());
+        assertEquals(valueType, concepts().getAttributeType(typeLabel).getValueType());
     }
 
     @Then("attribute\\( ?{type_label} ?) get supertype value type: {value_type}")
     public void attribute_type_get_supertype_value_type(String typeLabel, ValueType valueType) {
-        Type.Remote supertype = tx().getAttributeType(typeLabel).getSupertype();
+        Type.Remote supertype = concepts().getAttributeType(typeLabel).getSupertype();
         assertEquals(valueType, supertype.asAttributeType().getValueType());
     }
 
     private AttributeType.Remote attribute_type_as_value_type(String typeLabel, ValueType valueType) {
-        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
+        final AttributeType.Remote attributeType = concepts().getAttributeType(typeLabel);
         switch (valueType) {
             case OBJECT:
                 return attributeType;
@@ -110,14 +110,14 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) get key owners contain:")
     public void attribute_type_get_owners_as_key_contains(final String typeLabel, final List<String> ownerLabels) {
-        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
+        final AttributeType.Remote attributeType = concepts().getAttributeType(typeLabel);
         final Set<String> actuals = attributeType.getOwners(true).map(ThingType::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get key owners do not contain:")
     public void attribute_type_get_owners_as_key_do_not_contains(final String typeLabel, final List<String> ownerLabels) {
-        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
+        final AttributeType.Remote attributeType = concepts().getAttributeType(typeLabel);
         final Set<String> actuals = attributeType.getOwners(true).map(ThingType::getLabel).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
@@ -126,14 +126,14 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) get attribute owners contain:")
     public void attribute_type_get_owners_as_attribute_contains(final String typeLabel, final List<String> ownerLabels) {
-        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
+        final AttributeType.Remote attributeType = concepts().getAttributeType(typeLabel);
         final Set<String> actuals = attributeType.getOwners(false).map(ThingType::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get attribute owners do not contain:")
     public void attribute_type_get_owners_as_attribute_do_not_contains(final String typeLabel, final List<String> ownerLabels) {
-        final AttributeType.Remote attributeType = tx().getAttributeType(typeLabel);
+        final AttributeType.Remote attributeType = concepts().getAttributeType(typeLabel);
         final Set<String> actuals = attributeType.getOwners(false).map(ThingType::getLabel).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));

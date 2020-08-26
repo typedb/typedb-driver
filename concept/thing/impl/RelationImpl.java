@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RoleType;
@@ -45,7 +45,7 @@ public abstract class RelationImpl {
      */
     public static class Local extends ThingImpl.Local implements Relation.Local {
 
-        public Local(ConceptProto.Thing thing) {
+        public Local(final ConceptProto.Thing thing) {
             super(thing);
         }
 
@@ -59,8 +59,8 @@ public abstract class RelationImpl {
      */
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(Transaction tx, String iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final String iid) {
+            super(concepts, iid);
         }
 
         @Override
@@ -73,12 +73,12 @@ public abstract class RelationImpl {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().iterateConceptMethod(getIID(), method, ConceptProto.ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = concepts().iterateThingMethod(getIID(), method, ConceptProto.ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
             final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleType.Remote role = Type.Remote.of(tx(), rolePlayer.getRoleType()).asRoleType();
-                final Thing.Remote player = Thing.Remote.of(tx(), rolePlayer.getPlayer());
+                final RoleType.Remote role = Type.Remote.of(concepts(), rolePlayer.getRoleType()).asRoleType();
+                final Thing.Remote player = Thing.Remote.of(concepts(), rolePlayer.getPlayer());
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {

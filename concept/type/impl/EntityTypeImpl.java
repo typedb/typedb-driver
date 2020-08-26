@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.EntityType;
@@ -45,8 +45,8 @@ public class EntityTypeImpl {
      */
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(Transaction tx, String label) {
-            super(tx, label);
+        public Remote(final Concepts concepts, final String label) {
+            super(concepts, label);
         }
 
         @Override
@@ -74,7 +74,7 @@ public class EntityTypeImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Thing.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
+            return Thing.Remote.of(concepts(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 
         @Override

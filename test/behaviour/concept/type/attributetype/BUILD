@@ -27,8 +27,7 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//:client-java",
-        "//test/behaviour/connection:steps",
-
+        "//test/behaviour/concept:steps",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

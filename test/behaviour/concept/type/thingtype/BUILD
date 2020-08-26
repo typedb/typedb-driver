@@ -28,7 +28,7 @@ java_library(
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/concept:steps",
         "//test/behaviour/util:util",
 
         # External Maven Dependencies
