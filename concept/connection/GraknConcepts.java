@@ -17,7 +17,6 @@ import graql.lang.common.GraqlToken;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -28,11 +27,9 @@ import static grakn.client.concept.ConceptMessageWriter.valueType;
 public final class GraknConcepts implements Concepts {
 
     private final GraknTransceiver transceiver;
-    private final HashMap<String, Type.Local> typeCache;
 
     public GraknConcepts(final GraknTransceiver transceiver) {
         this.transceiver = transceiver;
-        this.typeCache = new HashMap<>();
     }
 
     @Override
@@ -167,18 +164,11 @@ public final class GraknConcepts implements Concepts {
         final TransactionProto.Transaction.Res response = transceiver.sendAndReceiveOrThrow(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
-                final Type.Remote type = Type.Remote.of(this, response.getGetTypeRes().getType());
-                typeCache.put(type.getLabel(), Type.Local.of(response.getGetTypeRes().getType()));
-                return type;
+                return Type.Remote.of(this, response.getGetTypeRes().getType());
             default:
             case RES_NOT_SET:
                 return null;
         }
-    }
-
-    @Nullable
-    public Type.Local getCachedType(final String label) {
-        return typeCache.get(label);
     }
 
     @Override

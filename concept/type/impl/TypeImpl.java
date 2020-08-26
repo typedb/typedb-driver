@@ -100,7 +100,7 @@ public abstract class TypeImpl {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                             .setLabel(label)).build();
-            // TODO: update the transaction's type cache
+
             runMethod(method);
         }
 

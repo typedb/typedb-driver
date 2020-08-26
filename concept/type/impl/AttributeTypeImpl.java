@@ -191,9 +191,9 @@ public abstract class AttributeTypeImpl {
         }
 
         // Exposes a special implementation of getSubtypes that allows us to retrieve all Attribute types, regardless of their value type
-        static final class Root extends AttributeTypeImpl.Remote {
+        public static final class Root extends AttributeTypeImpl.Remote {
 
-            Root(final Concepts concepts) {
+            public Root(final Concepts concepts) {
                 super(concepts, ROOT_LABEL, true);
             }
 

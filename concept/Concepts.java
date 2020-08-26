@@ -7,6 +7,7 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
@@ -50,10 +51,7 @@ public interface Concepts {
     Rule.Remote getRule(String label);
 
     @Nullable
-    grakn.client.concept.type.Type.Remote getType(String label);
-
-    @Nullable
-    grakn.client.concept.type.Type.Local getCachedType(String label);
+    Type.Remote getType(String label);
 
     @Nullable
     Thing.Remote getThing(String iid);
