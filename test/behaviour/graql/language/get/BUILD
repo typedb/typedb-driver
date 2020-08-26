@@ -38,7 +38,7 @@ grakn_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:get.feature",
+        "@graknlabs_behaviour//graql/language:get.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",

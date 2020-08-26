@@ -59,7 +59,7 @@ grakn_test(
         "//test/behaviour/connection/session:steps",
     ],
     data = [
-        "@graknlabs_verification//behaviour/connection:transaction.feature",
+        "@graknlabs_behaviour//connection:transaction.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",

@@ -36,7 +36,7 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/connection/transaction.feature",
+        features = "external/graknlabs_behaviour/behaviour/connection/transaction.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
 public class TransactionTest {

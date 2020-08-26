@@ -163,10 +163,10 @@ load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
 graknlabs_grakn_core_artifact()
 
 ################################
-# Load @graknlabs_verification #
+# Load @graknlabs_behaviour #
 ################################
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_verification")
-graknlabs_verification()
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
+graknlabs_behaviour()
 
 ###############################
 # Load @graknlabs_client_java #

@@ -51,7 +51,7 @@ grakn_test(
         "//test/behaviour/connection/transaction:steps",
     ],
     data = [
-        "@graknlabs_verification//behaviour/concept/type:entitytype.feature",
+        "@graknlabs_behaviour//concept/type:entitytype.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",
