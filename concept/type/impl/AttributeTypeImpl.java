@@ -190,9 +190,10 @@ public abstract class AttributeTypeImpl {
                     this.getLabel().equals(that.getLabel());
         }
 
-        public static final class Root extends AttributeTypeImpl.Remote {
+        // Exposes a special implementation of getSubtypes that allows us to retrieve all Attribute types, regardless of their value type
+        static final class Root extends AttributeTypeImpl.Remote {
 
-            public Root(final Concepts concepts) {
+            Root(final Concepts concepts) {
                 super(concepts, ROOT_LABEL, true);
             }
 
@@ -354,14 +355,6 @@ public abstract class AttributeTypeImpl {
             public AttributeType.Long.Remote asLong() {
                 return this;
             }
-
-            // TODO: do we actually need these Root types anymore, now that isRoot is a field?
-            public static final class Root extends AttributeTypeImpl.Long.Remote {
-
-                public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL, true);
-                }
-            }
         }
     }
 
@@ -427,13 +420,6 @@ public abstract class AttributeTypeImpl {
             @Override
             public AttributeType.Double.Remote asDouble() {
                 return this;
-            }
-
-            public static final class Root extends AttributeTypeImpl.Double.Remote {
-
-                public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL, true);
-                }
             }
         }
     }
@@ -522,13 +508,6 @@ public abstract class AttributeTypeImpl {
             public AttributeType.String.Remote asString() {
                 return this;
             }
-
-            public static final class Root extends AttributeTypeImpl.String.Remote {
-
-                public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL, true);
-                }
-            }
         }
     }
 
@@ -594,13 +573,6 @@ public abstract class AttributeTypeImpl {
             @Override
             public AttributeType.DateTime.Remote asDateTime() {
                 return this;
-            }
-
-            public static final class Root extends AttributeTypeImpl.DateTime.Remote {
-
-                public Root(final Concepts concepts) {
-                    super(concepts, ROOT_LABEL, true);
-                }
             }
         }
     }

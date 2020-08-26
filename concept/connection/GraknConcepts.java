@@ -169,7 +169,6 @@ public final class GraknConcepts implements Concepts {
             case TYPE:
                 final Type.Remote type = Type.Remote.of(this, response.getGetTypeRes().getType());
                 typeCache.put(type.getLabel(), Type.Local.of(response.getGetTypeRes().getType()));
-                // TODO: maybe we should return the cached Type.Local? It has more information
                 return type;
             default:
             case RES_NOT_SET:
