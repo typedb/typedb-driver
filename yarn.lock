@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@bazel/jasmine@latest":
+"@bazel/jasmine@2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-2.0.3.tgz#91416eab2eb3da265a21cbc829294d51e93f0c52"
   integrity sha512-szLfDDw+nuUoX51drpq0C32CJ3FuOIl7X06ljX7YpX15GyCjLzCRnX2antZCUq2gau/AcBJ3RY+3yruzD6RZiQ==
@@ -870,7 +870,7 @@ jasmine-reporters@^2.3.2, jasmine-reporters@~2.3.2:
     mkdirp "^0.5.1"
     xmldom "^0.1.22"
 
-jasmine@latest:
+jasmine@3.6.1:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.6.1.tgz#a20456b309a669b547a3c24bb2120f16f70cfc65"
   integrity sha512-Jqp8P6ZWkTVFGmJwBK46p+kJNrZCdqkQ4GL+PGuBXZwK1fM4ST9BizkYgIwCFqYYqnTizAy6+XG2Ej5dFrej9Q==

@@ -15,8 +15,8 @@
     "grpc": "^1.24.3"
   },
   "devDependencies": {
-    "@bazel/jasmine": "latest",
-    "jasmine": "latest",
+    "@bazel/jasmine": "2.0.3",
+    "jasmine": "3.6.1",
     "fs-extra": "^7.0.0",
     "grpc-tools": "^1.6.6",
     "jasmine-reporters": "^2.3.2",
