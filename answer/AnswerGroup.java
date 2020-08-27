@@ -35,17 +35,17 @@ import static java.util.stream.Collectors.toList;
  */
 public class AnswerGroup<T extends Answer> implements Answer {
 
-    private final Concept.Remote owner;
+    private final Concept.Local owner;
     private final List<T> answers;
 
-    public AnswerGroup(Concept.Remote owner, List<T> answers) {
+    public AnswerGroup(Concept.Local owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
 
     public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
         return new AnswerGroup<>(
-                Concept.Remote.of(tx.concepts(), res.getOwner()),
+                Concept.Local.of(res.getOwner()),
                 res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList())
         );
     }
@@ -55,7 +55,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
         return false;
     }
 
-    public Concept.Remote owner() {
+    public Concept.Local owner() {
         return this.owner;
     }
 
