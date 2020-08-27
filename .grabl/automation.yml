@@ -47,7 +47,8 @@ build:
           export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
           export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
           bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-          bazel test --config=rbe //test/behaviour/... --test_output=errors
+          bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
+          bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
       test-assembly-query:
         machine: graknlabs-ubuntu-20.04
         script: |
