@@ -19,7 +19,7 @@
 
 build:
   quality:
-    jobs:
+    job:
       build-dependency:
         machine: graknlabs-ubuntu-20.04
         script: |
@@ -94,4 +94,5 @@ build:
             bazel run --define version=$(cat VERSION) //:deploy-maven -- release
       execution:
         - deploy-github
-        - deploy-maven-release
+        - deploy-maven-release:
+            depends: [deploy-github]
