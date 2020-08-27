@@ -22,6 +22,7 @@ package grakn.client.connection;
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grakn.client.Grakn.Database;
+import grakn.client.Grakn.QueryOptions;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.answer.Answer;
@@ -34,7 +35,6 @@ import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.parameters.Options;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.connection.GraknConcepts;
 import grakn.protocol.AnswerProto;
@@ -79,13 +79,13 @@ public class GraknTransaction implements Transaction {
         private final ManagedChannel channel;
         private final Session session;
         private final ByteString sessionId;
-        private final Options.Transaction options;
+        private final QueryOptions options;
 
         Builder(final ManagedChannel channel, final Session session, final ByteString sessionId) {
-            this(channel, session, sessionId, new Options.Transaction());
+            this(channel, session, sessionId, new QueryOptions());
         }
 
-        Builder(final ManagedChannel channel, final Session session, final ByteString sessionId, final Options.Transaction options) {
+        Builder(final ManagedChannel channel, final Session session, final ByteString sessionId, final QueryOptions options) {
             this.channel = channel;
             this.session = session;
             this.sessionId = sessionId;
@@ -104,10 +104,10 @@ public class GraknTransaction implements Transaction {
     }
 
     GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type) {
-        this(channel, session, sessionId, type, new Options.Transaction());
+        this(channel, session, sessionId, type, new QueryOptions());
     }
 
-    GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type, final Options.Transaction options) {
+    GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type, final QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.transceiver = GraknTransceiver.create(GraknGrpc.newStub(channel));
             this.session = session;
@@ -143,30 +143,30 @@ public class GraknTransaction implements Transaction {
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlDefine query) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.define")) {
-            return executeInternal(query, new Options.Query());
+            return executeInternal(query, new QueryOptions());
         }
     }
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlUndefine query) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
-            return executeInternal(query, new Options.Query());
+            return executeInternal(query, new QueryOptions());
         }
     }
 
     @Override
-    public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, Options.Query options) {
+    public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.insert")) {
             return executeInternal(query, options);
         }
     }
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlInsert query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<List<Void>> execute(GraqlDelete query, Options.Query options) {
+    public QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.delete")) {
             return executeInternal(query, options);
         }
@@ -174,11 +174,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<Void>> execute(GraqlDelete query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<List<ConceptMap>> execute(GraqlGet query, Options.Query options) {
+    public QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get")) {
             return executeInternal(query, options);
         }
@@ -186,25 +186,25 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlGet query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.define")) {
-            return streamInternal(query, new Options.Query());
+            return streamInternal(query, new QueryOptions());
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.undefine")) {
-            return streamInternal(query, new Options.Query());
+            return streamInternal(query, new QueryOptions());
         }
     }
 
     @Override
-    public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, Options.Query options) {
+    public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.insert")) {
             return streamInternal(query, options);
         }
@@ -212,11 +212,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<Stream<Void>> stream(GraqlDelete query, Options.Query options) {
+    public QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.delete")) {
             return streamInternal(query, options);
         }
@@ -224,11 +224,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<Void>> stream(GraqlDelete query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, Options.Query options) {
+    public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get")) {
             return streamInternal(query, options);
         }
@@ -236,18 +236,18 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     // Aggregate Query
 
     @Override
     public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, Options.Query options) {
+    public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
             return executeInternal(query, options);
         }
@@ -255,11 +255,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, Options.Query options) {
+    public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
             return streamInternal(query, options);
         }
@@ -269,11 +269,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, Options.Query options) {
+    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
             return executeInternal(query, options);
         }
@@ -281,11 +281,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, Options.Query options) {
+    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
             return streamInternal(query, options);
         }
@@ -295,11 +295,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, Options.Query options) {
+    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
             return executeInternal(query, options);
         }
@@ -307,11 +307,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, Options.Query options) {
+    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
             return streamInternal(query, options);
         }
@@ -379,11 +379,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query) {
-        return execute(query, new Options.Query());
+        return execute(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, Options.Query options) {
+    public QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options) {
         if (query instanceof GraqlDefine) {
             return execute((GraqlDefine) query);
 
@@ -427,11 +427,11 @@ public class GraknTransaction implements Transaction {
 
     @Override
     public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query) {
-        return stream(query, new Options.Query());
+        return stream(query, new QueryOptions());
     }
 
     @Override
-    public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, Options.Query options) {
+    public QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options) {
         if (query instanceof GraqlDefine) {
             return stream((GraqlDefine) query);
 
@@ -474,7 +474,7 @@ public class GraknTransaction implements Transaction {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Answer> RpcIterator<T> getQueryIterator(final GraqlQuery query, final Options.Query options) {
+    private <T extends Answer> RpcIterator<T> getQueryIterator(final GraqlQuery query, final QueryOptions options) {
         final OptionsProto.Options.Builder optionsBuilder = OptionsProto.Options.newBuilder();
         if (options.infer() != null) {
             optionsBuilder.setInfer(options.infer());
@@ -488,7 +488,6 @@ public class GraknTransaction implements Transaction {
                         .setQuery(query.toString())
                         .setOptions(optionsBuilder));
 
-        // TODO: does not currently support batch size 'ALL'
         if (options.batchSize() != null) {
             reqBuilder.setOptions(batchSize(options.batchSize()));
         }
@@ -498,18 +497,18 @@ public class GraknTransaction implements Transaction {
     }
 
     private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query) {
-        return executeInternal(query, new Options.Query());
+        return executeInternal(query, new QueryOptions());
     }
 
-    private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, Options.Query options) {
+    private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query, QueryOptions options) {
         return new QueryExecuteFuture<>(getQueryIterator(query, options));
     }
 
     private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query) {
-        return streamInternal(query, new Options.Query());
+        return streamInternal(query, new QueryOptions());
     }
 
-    private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, Options.Query options) {
+    private <T extends Answer> QueryFuture<Stream<T>> streamInternal(GraqlQuery query, QueryOptions options) {
         return new QueryStreamFuture<>(getQueryIterator(query, options));
     }
 

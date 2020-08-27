@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package grakn.client.common.exception;
 
 public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
@@ -25,10 +44,10 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     public static class Connection extends ErrorMessage {
         public static final Connection CONNECTION_CLOSED =
                 new Connection(1, "The connection to the database is closed.");
-        public static final Connection NEGATIVE_BATCH_SIZE =
-                new Connection(2, "Batch size cannot be less than 1, was: '%d'.");
         public static final Connection TRANSACTION_LISTENER_TERMINATED =
-                new Connection(3, "Transaction listener was terminated");
+                new Connection(2, "Transaction listener was terminated");
+        public static final Connection NEGATIVE_BATCH_SIZE =
+                new Connection(3, "Batch size cannot be less than 1, was: '%d'.");
 
         private static final String codePrefix = "CNN";
         private static final String messagePrefix = "Database Connection Error";

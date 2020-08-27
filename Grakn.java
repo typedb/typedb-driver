@@ -28,7 +28,6 @@ import grakn.client.answer.ConceptSetMeasure;
 import grakn.client.answer.Explanation;
 import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
-import grakn.client.common.parameters.Options;
 import grakn.client.concept.Concepts;
 import grakn.client.connection.GraknClient;
 import grakn.client.connection.GraknDatabase;
@@ -60,7 +59,7 @@ public interface Grakn {
 
     interface Client extends AutoCloseable {
 
-        GraknClient overrideChannel(ManagedChannel channel);
+        Client overrideChannel(ManagedChannel channel);
 
         boolean isOpen();
 
@@ -70,13 +69,13 @@ public interface Grakn {
 
         Session session(String databaseName, Session.Type type);
 
-        Session session(String databaseName, Options.Session options);
+        Session session(String databaseName, QueryOptions options);
 
-        Session session(String databaseName, Session.Type type, Options.Session options);
+        Session session(String databaseName, Session.Type type, QueryOptions options);
 
         Session schemaSession(String databaseName);
 
-        Session schemaSession(String databaseName, Options.Session options);
+        Session schemaSession(String databaseName, QueryOptions options);
 
         DatabaseManager databases();
     }
@@ -114,11 +113,11 @@ public interface Grakn {
 
         Transaction.Builder transaction();
 
-        Transaction.Builder transaction(Options.Transaction options);
+        Transaction.Builder transaction(QueryOptions options);
 
         Transaction transaction(Transaction.Type type);
 
-        Transaction transaction(Transaction.Type type, Options.Transaction options);
+        Transaction transaction(Transaction.Type type, QueryOptions options);
 
         boolean isOpen();
 
@@ -169,15 +168,15 @@ public interface Grakn {
 
         QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, Options.Query options);
+        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
 
-        QueryFuture<List<Void>> execute(GraqlDelete query, Options.Query options);
+        QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
 
         QueryFuture<List<Void>> execute(GraqlDelete query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlGet query, Options.Query options);
+        QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlGet query);
 
@@ -185,41 +184,41 @@ public interface Grakn {
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, Options.Query options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
 
-        QueryFuture<Stream<Void>> stream(GraqlDelete query, Options.Query options);
+        QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
 
         QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, Options.Query options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
 
         QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
 
-        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, Options.Query options);
+        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
 
         QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
 
-        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, Options.Query options);
+        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
 
         QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
 
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, Options.Query options);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
 
         QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
 
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, Options.Query options);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
 
         QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, Options.Query options);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
 
         QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, Options.Query options);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
 
         QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 
@@ -239,11 +238,11 @@ public interface Grakn {
 
         QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
 
-        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, Options.Query options);
+        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
 
         QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
 
-        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, Options.Query options);
+        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
 
         boolean isOpen();
 
@@ -303,6 +302,83 @@ public interface Grakn {
 
             @Override
             T get(long timeout, TimeUnit unit);
+        }
+    }
+
+    class QueryOptions {
+
+        public static final boolean DEFAULT_INFER = true;
+        public static final boolean DEFAULT_EXPLAIN = false;
+        public static final int DEFAULT_BATCH_SIZE = 50;
+
+        private Boolean infer = null;
+        private Boolean explain = null;
+        private BatchSize batchSize = null;
+
+        public Boolean infer() {
+            if (infer != null) {
+                return infer;
+            } else {
+                return DEFAULT_INFER;
+            }
+        }
+
+        public QueryOptions infer(boolean infer) {
+            this.infer = infer;
+            return this;
+        }
+
+        public Boolean explain() {
+            if (explain != null) {
+                return explain;
+            } else {
+                return DEFAULT_EXPLAIN;
+            }
+        }
+
+        public QueryOptions explain(boolean explain) {
+            this.explain = explain;
+            return this;
+        }
+
+        public BatchSize batchSize() {
+            if (batchSize != null) {
+                return batchSize;
+            } else {
+                return BatchSize.of(DEFAULT_BATCH_SIZE);
+            }
+        }
+
+        public QueryOptions batchSize(final BatchSize batchSize) {
+            this.batchSize = batchSize;
+            return this;
+        }
+
+        public static class BatchSize {
+
+            private final Integer size;
+            private final boolean all;
+
+            private BatchSize(final Integer size, final boolean all) {
+                this.size = size;
+                this.all = all;
+            }
+
+            public static BatchSize of(final int size) {
+                return new BatchSize(size, false);
+            }
+
+            public static BatchSize all() {
+                return new BatchSize(null, true);
+            }
+
+            public int getSize() {
+                return size;
+            }
+
+            public boolean isAll() {
+                return all;
+            }
         }
     }
 }

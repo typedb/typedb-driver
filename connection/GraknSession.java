@@ -21,9 +21,9 @@ package grakn.client.connection;
 
 import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Database;
+import grakn.client.Grakn.QueryOptions;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.parameters.Options;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
@@ -39,10 +39,10 @@ public class GraknSession implements Session {
     private boolean isOpen;
 
     GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type) {
-        this(channel, databaseName, type, new Options.Session());
+        this(channel, databaseName, type, new QueryOptions());
     }
 
-    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final Options.Session options) {
+    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final QueryOptions options) {
         this.databaseName = databaseName;
         this.channel = channel;
         this.sessionStub = GraknGrpc.newBlockingStub(channel);
@@ -63,7 +63,7 @@ public class GraknSession implements Session {
     }
 
     @Override
-    public Transaction.Builder transaction(final Options.Transaction options) {
+    public Transaction.Builder transaction(final QueryOptions options) {
         return new GraknTransaction.Builder(channel, this, sessionId, options);
     }
 
@@ -73,7 +73,7 @@ public class GraknSession implements Session {
     }
 
     @Override
-    public Transaction transaction(final Transaction.Type type, final Options.Transaction options) {
+    public Transaction transaction(final Transaction.Type type, final QueryOptions options) {
         return new GraknTransaction(channel, this, sessionId, type, options);
     }
 

@@ -19,7 +19,6 @@
 
 package grakn.client.common.exception;
 
-import grakn.client.concept.Concept;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
