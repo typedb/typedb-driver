@@ -31,6 +31,9 @@ build:
       build:
         machine: graknlabs-ubuntu-20.04
         script: |
+          export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+          export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel build --config=rbe //...
           bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
           bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
@@ -41,10 +44,16 @@ build:
       test-behaviour:
         machine: graknlabs-ubuntu-20.04
         script: |
+          export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+          export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel test --config=rbe //test/behaviour/... --test_output=errors
       test-assembly-query:
         machine: graknlabs-ubuntu-20.04
         script: |
+          export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+          export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel test --config=rbe //test/assembly:test-assembly-query --test_output=errors
       deploy-maven-snapshot:
         filter:
