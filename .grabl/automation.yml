@@ -22,10 +22,10 @@ build:
     jobs:
       build-dependency:
         machine: graknlabs-ubuntu-20.04
-          script: |
-            dependencies/maven/update.sh
-            git diff --exit-code dependencies/maven/artifacts.snapshot
-            bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
+        script: |
+          dependencies/maven/update.sh
+          git diff --exit-code dependencies/maven/artifacts.snapshot
+          bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
   correctness:
     jobs:
       build:
@@ -53,6 +53,7 @@ build:
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
       test-deployment-maven:
+        machine: graknlabs-ubuntu-20.04
         script: |
           bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
           nohup ./dist/grakn-core-all-linux/grakn server start
