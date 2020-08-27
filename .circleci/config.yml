@@ -28,14 +28,6 @@ commands:
 
   install-artifact-credentials:
     steps:
-      - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-
-  install-artifact-credentials:
-    steps:
-      - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-
-  install-artifact-credentials:
-    steps:
       - run: |
           ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
           ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
