@@ -24,7 +24,6 @@ java_library(
     name = "parameters",
     srcs = ["Parameters.java"],
     deps = [
-        "@graknlabs_common//:common",
         "//:client-java",
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java"
