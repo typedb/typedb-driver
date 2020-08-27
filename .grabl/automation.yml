@@ -47,12 +47,18 @@ build:
         script: |
           bazel test --config=rbe //test/assembly:test-assembly-query --test_output=errors
       deploy-maven-snapshot:
+        filter:
+          owner: graknlabs
+          branch: master
         machine: graknlabs-ubuntu-20.04
         script: |
           export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
       test-deployment-maven:
+        filter:
+          owner: graknlabs
+          branch: master
         machine: graknlabs-ubuntu-20.04
         script: |
           bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
