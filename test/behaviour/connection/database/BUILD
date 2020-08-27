@@ -51,7 +51,10 @@ grakn_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        ":steps"
+        ":steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/connection/session:steps",
     ],
     data = [
         "@graknlabs_behaviour//connection:database.feature",

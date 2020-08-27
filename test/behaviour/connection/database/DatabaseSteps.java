@@ -34,6 +34,7 @@ import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
 
@@ -64,6 +65,18 @@ public class DatabaseSteps {
     public void connection_delete_databases(List<String> names) {
         for (String databaseName : names) {
             client.databases().delete(databaseName);
+        }
+    }
+
+    @Then("connection delete database(s); throws exception")
+    public void connection_delete_databases_throws_exception(List<String> names) {
+        for (String databaseName : names) {
+            try {
+                client.databases().delete(databaseName);
+                fail();
+            } catch (Exception e) {
+                // successfully failed
+            }
         }
     }
 
