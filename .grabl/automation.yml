@@ -54,8 +54,8 @@ build:
           bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
       test-deployment-maven:
         script: |
-          # TODO run grakn
-          # run-grakn
+          bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
+          nohup ./dist/grakn-core-all-linux/grakn server start
           sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
           cat test/deployment/pom.xml
           cd test/deployment && mvn test
@@ -74,9 +74,7 @@ build:
       job:
         validate-dependencies:
           machine: graknlabs-ubuntu-20.04
-          script: |
-            bazel run @graknlabs_dependencies//tool/release:validate-deps -- \
-            graknlabs_common graknlabs_graql graknlabs_protocol graknlabs_grabl_tracing
+          script: bazel test //:release-validate-deps --test_output=streamed
     deployment:
       jobs:
         deploy-github:

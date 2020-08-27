@@ -20,6 +20,7 @@
 package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
+load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_dependencies//library/maven:artifacts.bzl", "maven_overrides", maven_overrides_org = "artifacts")
 load("@graknlabs_bazel_distribution//maven:rules.bzl", "deploy_maven", "assemble_maven")
@@ -105,4 +106,26 @@ deploy_github(
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Java",
     title_append_version = True,
+)
+
+release_validate_deps(
+    name = "release-validate-deps",
+    refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    tagged_deps = [
+        "@graknlabs_common",
+        "@graknlabs_graql",
+        "@graknlabs_protocol",
+        "@graknlabs_grabl_tracing",
+    ],
+    tags = ["manual"]  # in order for bazel test //... to not fail
+)
+
+# CI targets that are not declared in any BUILD file, but are called externally
+filegroup(
+    name = "ci",
+    data = [
+        "@graknlabs_dependencies//tool/unuseddeps:unused-deps",
+        "@graknlabs_dependencies//tool/checkstyle:test-coverage",
+        "@graknlabs_dependencies//tool/release:create-notes"
+    ],
 )
