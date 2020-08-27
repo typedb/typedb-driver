@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
-import static grakn.client.common.exception.ErrorMessage.ClientTypeWrite.ROOT_TYPE_MUTATION;
 import static grakn.client.concept.ConceptMessageWriter.type;
 
 public abstract class TypeImpl {
@@ -44,7 +43,7 @@ public abstract class TypeImpl {
         private final String label;
         private final boolean isRoot;
 
-        protected Local(ConceptProto.Type type) {
+        Local(ConceptProto.Type type) {
             this.label = type.getLabel();
             this.isRoot = type.getRoot();
         }
@@ -69,7 +68,7 @@ public abstract class TypeImpl {
         private final String label;
         private final boolean isRoot;
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+        Remote(final Concepts concepts, final String label, final boolean isRoot) {
             if (concepts == null) {
                 throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("concept"));
             }
@@ -93,14 +92,9 @@ public abstract class TypeImpl {
 
         @Override
         public final void setLabel(String label) {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                             .setLabel(label)).build();
-
             runMethod(method);
         }
 
@@ -114,10 +108,6 @@ public abstract class TypeImpl {
 
         @Nullable
         protected <TYPE extends Type.Remote> TYPE getSupertypeInternal(final Function<Type.Remote, TYPE> typeConverter) {
-            if (isRoot()) {
-                return null;
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -153,10 +143,6 @@ public abstract class TypeImpl {
         }
 
         protected void setSupertypeInternal(Type type) {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
                             .setType(type(type))).build();

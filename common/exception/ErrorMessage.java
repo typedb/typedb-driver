@@ -7,16 +7,12 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     }
 
     public static class ClientInternal extends ErrorMessage {
-        public static final ClientInternal ILLEGAL_STATE =
-                new ClientInternal(1, "Illegal internal state!");
         public static final ClientInternal UNRECOGNISED_VALUE =
-                new ClientInternal(2, "Unrecognised schema value!");
-        public static final ClientInternal ILLEGAL_ARGUMENT =
-                new ClientInternal(3, "Illegal argument provided.");
+                new ClientInternal(1, "Unrecognised schema value!");
         public static final ClientInternal ILLEGAL_ARGUMENT_NULL =
-                new ClientInternal(4, "'%s' can not be null.");
+                new ClientInternal(2, "'%s' can not be null.");
         public static final ClientInternal ILLEGAL_ARGUMENT_NULL_OR_EMPTY =
-                new ClientInternal(5, "'%s' can not be null or empty.");
+                new ClientInternal(3, "'%s' can not be null or empty.");
 
         private static final String codePrefix = "CIN";
         private static final String messagePrefix = "Invalid Internal State (Client)";
@@ -84,18 +80,6 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         private static final String messagePrefix = "Protocol Error";
 
         Protocol(int number, String message) {
-            super(codePrefix, number, messagePrefix, message);
-        }
-    }
-
-    public static class ClientTypeWrite extends ErrorMessage {
-        public static final ClientTypeWrite ROOT_TYPE_MUTATION =
-                new ClientTypeWrite(1, "Root types are immutable.");
-
-        private static final String codePrefix = "CTW";
-        private static final String messagePrefix = "Invalid Type Write (Client)";
-
-        ClientTypeWrite(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

@@ -19,7 +19,6 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -31,7 +30,6 @@ import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientTypeWrite.ROOT_TYPE_MUTATION;
 import static grakn.client.concept.ConceptMessageWriter.type;
 import static grakn.client.concept.ConceptMessageWriter.valueType;
 
@@ -87,10 +85,6 @@ public abstract class ThingTypeImpl {
 
         @Override
         public final void unsetAbstract() {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetAbstractReq(ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()).build();
             runMethod(method);
@@ -99,7 +93,7 @@ public abstract class ThingTypeImpl {
         @Override
         public final Stream<AttributeType.Remote> getOwns(final ValueType valueType, final boolean keysOnly) {
             final ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
-                            .setKeysOnly(keysOnly);
+                    .setKeysOnly(keysOnly);
 
             if (valueType != null) {
                 req.setValueType(valueType(valueType));
@@ -120,10 +114,6 @@ public abstract class ThingTypeImpl {
 
         @Override
         public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(type(attributeType))
                     .setIsKey(isKey);
@@ -139,10 +129,6 @@ public abstract class ThingTypeImpl {
 
         @Override
         public final void setPlays(final RoleType role) {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                             .setRole(type(role))).build();
@@ -151,10 +137,6 @@ public abstract class ThingTypeImpl {
 
         @Override
         public final void setPlays(final RoleType role, final RoleType overriddenRole) {
-            if (isRoot()) {
-                throw new GraknClientException(ROOT_TYPE_MUTATION);
-            }
-
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
                             .setRole(type(role))

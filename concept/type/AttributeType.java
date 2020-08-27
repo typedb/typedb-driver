@@ -261,12 +261,6 @@ public interface AttributeType extends ThingType {
             default AttributeType.Boolean.Local asBoolean() {
                 return this;
             }
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
-                return AttributeType.Boolean.Remote.of(concepts, getLabel(), isRoot());
-            }
         }
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
@@ -365,12 +359,6 @@ public interface AttributeType extends ThingType {
             default AttributeType.Long.Local asLong() {
                 return this;
             }
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.Long.Remote asRemote(final Concepts concepts) {
-                return AttributeType.Long.Remote.of(concepts, getLabel(), isRoot());
-            }
         }
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
@@ -468,12 +456,6 @@ public interface AttributeType extends ThingType {
             default AttributeType.Double.Local asDouble() {
                 return this;
             }
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.Double.Remote asRemote(final Concepts concepts) {
-                return AttributeType.Double.Remote.of(concepts, getLabel(), isRoot());
-            }
         }
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
@@ -570,12 +552,6 @@ public interface AttributeType extends ThingType {
             @Override
             default AttributeType.String.Local asString() {
                 return this;
-            }
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.String.Remote asRemote(final Concepts concepts) {
-                return AttributeType.String.Remote.of(concepts, getLabel(), isRoot());
             }
         }
 
@@ -679,12 +655,6 @@ public interface AttributeType extends ThingType {
             @Override
             default AttributeType.DateTime.Local asDateTime() {
                 return this;
-            }
-
-            @CheckReturnValue
-            @Override
-            default AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
-                return AttributeType.DateTime.Remote.of(concepts, getLabel(), isRoot());
             }
         }
 

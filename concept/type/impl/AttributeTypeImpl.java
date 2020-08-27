@@ -33,7 +33,6 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientTypeWrite.ROOT_TYPE_MUTATION;
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.concept.ConceptMessageWriter.attributeValue;
 
@@ -44,29 +43,22 @@ public abstract class AttributeTypeImpl {
     /**
      * Client implementation of AttributeType
      */
-    public static abstract class Local extends ThingTypeImpl.Local implements AttributeType.Local {
+    public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
         public Local(final ConceptProto.Type type) {
             super(type);
         }
 
-        public static final class Root extends AttributeTypeImpl.Local {
-
-            public Root(final ConceptProto.Type type) {
-                super(type);
-            }
-
-            @Override
-            public AttributeType.Remote asRemote(final Concepts concepts) {
-                return new AttributeTypeImpl.Remote.Root(concepts);
-            }
+        @Override
+        public AttributeType.Remote asRemote(final Concepts concepts) {
+            return new AttributeTypeImpl.Remote(concepts, getLabel(), isRoot());
         }
     }
 
     /**
      * Client implementation of AttributeType
      */
-    public static abstract class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
         public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
             super(concepts, label, isRoot);
@@ -85,10 +77,14 @@ public abstract class AttributeTypeImpl {
 
         @Override
         public Stream<? extends AttributeType.Remote> getSubtypes() {
-            // Compare value types to ensure we can get all attribute types of a given value type using AttributeTypeImpl.{VALUE_TYPE}.Remote.Root
-            // Compare labels to ensure that 'attribute' is a subtype of itself
-            return super.getSubtypes().map(Type.Remote::asAttributeType).filter(x ->
-                    x.getValueType() == this.getValueType() || x.getLabel().equals(this.getLabel()));
+            final Stream<? extends AttributeType.Remote> stream = super.getSubtypes().map(Type.Remote::asAttributeType);
+
+            if (isRoot() && getValueType() != ValueType.OBJECT) {
+                // Get all attribute types of this value type
+                return stream.filter(x -> x.getValueType() == this.getValueType() || x.getLabel().equals(this.getLabel()));
+            }
+
+            return stream;
         }
 
         @Override
@@ -189,34 +185,6 @@ public abstract class AttributeTypeImpl {
             return this.concepts().equals(that.concepts()) &&
                     this.getLabel().equals(that.getLabel());
         }
-
-        // Exposes a special implementation of getSubtypes that allows us to retrieve all Attribute types, regardless of their value type
-        public static final class Root extends AttributeTypeImpl.Remote {
-
-            public Root(final Concepts concepts) {
-                super(concepts, ROOT_LABEL, true);
-            }
-
-            @Nullable
-            @Override
-            public AttributeType.Remote getSupertype() {
-                return null;
-            }
-
-            @Override
-            public Stream<? extends AttributeType.Remote> getSupertypes() {
-                return Stream.of(this);
-            }
-
-            @Override
-            public Stream<? extends AttributeType.Remote> getSubtypes() {
-                // identical to Type.getSubtypes, but that is not accessible from this class
-                final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
-                        .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
-
-                return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(Type.Remote::asAttributeType);
-            }
-        }
     }
 
     public static abstract class Boolean implements AttributeType.Boolean {
@@ -228,6 +196,12 @@ public abstract class AttributeTypeImpl {
 
             public Local(ConceptProto.Type type) {
                 super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Boolean.Remote.of(concepts, getLabel(), isRoot());
             }
         }
 
@@ -302,6 +276,12 @@ public abstract class AttributeTypeImpl {
             public Local(ConceptProto.Type type) {
                 super(type);
             }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Long.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Long.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         /**
@@ -367,6 +347,12 @@ public abstract class AttributeTypeImpl {
 
             public Local(ConceptProto.Type type) {
                 super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Double.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Double.Remote.of(concepts, getLabel(), isRoot());
             }
         }
 
@@ -434,6 +420,12 @@ public abstract class AttributeTypeImpl {
             public Local(ConceptProto.Type type) {
                 super(type);
             }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.String.Remote asRemote(final Concepts concepts) {
+                return AttributeType.String.Remote.of(concepts, getLabel(), isRoot());
+            }
         }
 
         /**
@@ -493,9 +485,6 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final void setRegex(java.lang.String regex) {
-                if (isRoot()) {
-                    throw new GraknClientException(ROOT_TYPE_MUTATION);
-                }
                 if (regex == null) regex = "";
                 final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
@@ -520,6 +509,12 @@ public abstract class AttributeTypeImpl {
 
             public Local(ConceptProto.Type type) {
                 super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
+                return AttributeType.DateTime.Remote.of(concepts, getLabel(), isRoot());
             }
         }
 

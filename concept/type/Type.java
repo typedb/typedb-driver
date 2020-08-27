@@ -128,7 +128,7 @@ public interface Type extends Concept {
                             return new AttributeTypeImpl.DateTime.Local(type);
                         case OBJECT:
                             if (type.getRoot()) {
-                                return new AttributeTypeImpl.Local.Root(type);
+                                return new AttributeTypeImpl.Local(type);
                             } else {
                                 throw new GraknClientException(ILLEGAL_COMBINATION_OF_FIELDS.message(
                                         "valueType", ConceptProto.AttributeType.VALUE_TYPE.OBJECT,
@@ -236,7 +236,13 @@ public interface Type extends Concept {
                         case DATETIME:
                             return new AttributeTypeImpl.DateTime.Remote(concepts, label, type.getRoot());
                         case OBJECT:
-                            return new AttributeTypeImpl.Remote.Root(concepts);
+                            if (type.getRoot()) {
+                                return new AttributeTypeImpl.Remote(concepts, label, true);
+                            } else {
+                                throw new GraknClientException(ILLEGAL_COMBINATION_OF_FIELDS.message(
+                                        "valueType", ConceptProto.AttributeType.VALUE_TYPE.OBJECT,
+                                        "root", false));
+                            }
                         default:
                         case UNRECOGNIZED:
                             throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
