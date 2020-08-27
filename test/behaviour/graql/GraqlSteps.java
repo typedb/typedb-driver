@@ -586,7 +586,8 @@ public class GraqlSteps {
     }
 
     private String applyQueryTemplate(String template, ConceptMap templateFiller) {
-        // find shortest matching strings between <>
+        throw new UnsupportedOperationException(); // TODO fix
+        /* // find shortest matching strings between <>
         Pattern pattern = Pattern.compile("<.+?>");
         Matcher matcher = pattern.matcher(template);
 
@@ -609,7 +610,7 @@ public class GraqlSteps {
             i = matcher.end();
         }
         builder.append(template.substring(i));
-        return builder.toString();
+        return builder.toString(); */
     }
 
     private String variableFromTemplatePlaceholder(String placeholder) {

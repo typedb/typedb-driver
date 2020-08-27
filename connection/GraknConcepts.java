@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.connection;
+package grakn.client.connection;
 
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
@@ -29,7 +29,6 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.connection.GraknTransceiver;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;

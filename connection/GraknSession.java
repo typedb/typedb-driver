@@ -59,22 +59,22 @@ public class GraknSession implements Session {
 
     @Override
     public Transaction.Builder transaction() {
-        return new GraknTransaction.Builder(channel, this, sessionId);
+        return new GraknTransaction.Builder(this, sessionId);
     }
 
     @Override
     public Transaction.Builder transaction(final QueryOptions options) {
-        return new GraknTransaction.Builder(channel, this, sessionId, options);
+        return new GraknTransaction.Builder(this, sessionId, options);
     }
 
     @Override
     public Transaction transaction(final Transaction.Type type) {
-        return new GraknTransaction(channel, this, sessionId, type);
+        return new GraknTransaction(this, sessionId, type);
     }
 
     @Override
     public Transaction transaction(final Transaction.Type type, final QueryOptions options) {
-        return new GraknTransaction(channel, this, sessionId, type, options);
+        return new GraknTransaction(this, sessionId, type, options);
     }
 
     @Override
@@ -95,6 +95,10 @@ public class GraknSession implements Session {
     @Override
     public Database database() {
         return Database.of(databaseName);
+    }
+
+    ManagedChannel getChannel() {
+        return channel;
     }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {

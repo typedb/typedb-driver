@@ -36,7 +36,6 @@ import grakn.client.answer.Numeric;
 import grakn.client.answer.Void;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
-import grakn.client.concept.connection.GraknConcepts;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
@@ -49,7 +48,6 @@ import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
-import io.grpc.ManagedChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,17 +74,15 @@ public class GraknTransaction implements Transaction {
 
     public static class Builder implements Transaction.Builder {
 
-        private final ManagedChannel channel;
-        private final Session session;
+        private final GraknSession session;
         private final ByteString sessionId;
         private final QueryOptions options;
 
-        Builder(final ManagedChannel channel, final Session session, final ByteString sessionId) {
-            this(channel, session, sessionId, new QueryOptions());
+        Builder(final GraknSession session, final ByteString sessionId) {
+            this(session, sessionId, new QueryOptions());
         }
 
-        Builder(final ManagedChannel channel, final Session session, final ByteString sessionId, final QueryOptions options) {
-            this.channel = channel;
+        Builder(final GraknSession session, final ByteString sessionId, final QueryOptions options) {
             this.session = session;
             this.sessionId = sessionId;
             this.options = options;
@@ -94,22 +90,22 @@ public class GraknTransaction implements Transaction {
 
         @Override
         public Transaction read() {
-            return new GraknTransaction(channel, session, sessionId, READ, options);
+            return new GraknTransaction(session, sessionId, READ, options);
         }
 
         @Override
         public Transaction write() {
-            return new GraknTransaction(channel, session, sessionId, WRITE, options);
+            return new GraknTransaction(session, sessionId, WRITE, options);
         }
     }
 
-    GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type) {
-        this(channel, session, sessionId, type, new QueryOptions());
+    GraknTransaction(final GraknSession session, final ByteString sessionId, final Type type) {
+        this(session, sessionId, type, new QueryOptions());
     }
 
-    GraknTransaction(final ManagedChannel channel, final Session session, final ByteString sessionId, final Type type, final QueryOptions options) {
+    GraknTransaction(final GraknSession session, final ByteString sessionId, final Type type, final QueryOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
-            this.transceiver = GraknTransceiver.create(GraknGrpc.newStub(channel));
+            this.transceiver = GraknTransceiver.create(GraknGrpc.newStub(session.getChannel()));
             this.session = session;
             this.type = type;
             this.concepts = new GraknConcepts(this.transceiver);
