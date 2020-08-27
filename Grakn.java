@@ -305,20 +305,12 @@ public interface Grakn {
 
     class QueryOptions {
 
-        public static final boolean DEFAULT_INFER = true;
-        public static final boolean DEFAULT_EXPLAIN = false;
-        public static final int DEFAULT_BATCH_SIZE = 50;
-
         private Boolean infer = null;
         private Boolean explain = null;
         private BatchSize batchSize = null;
 
         public Boolean infer() {
-            if (infer != null) {
-                return infer;
-            } else {
-                return DEFAULT_INFER;
-            }
+            return infer;
         }
 
         public QueryOptions infer(boolean infer) {
@@ -327,11 +319,7 @@ public interface Grakn {
         }
 
         public Boolean explain() {
-            if (explain != null) {
-                return explain;
-            } else {
-                return DEFAULT_EXPLAIN;
-            }
+            return explain;
         }
 
         public QueryOptions explain(boolean explain) {
@@ -340,11 +328,7 @@ public interface Grakn {
         }
 
         public BatchSize batchSize() {
-            if (batchSize != null) {
-                return batchSize;
-            } else {
-                return BatchSize.of(DEFAULT_BATCH_SIZE);
-            }
+            return batchSize;
         }
 
         public QueryOptions batchSize(final BatchSize batchSize) {
