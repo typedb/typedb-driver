@@ -64,15 +64,12 @@ public class TransactionTest {
 
     private static GraknCoreRunner runner;
 
-    private static GraknCoreRunner runner;
-
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
-
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {

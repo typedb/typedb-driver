@@ -21,6 +21,7 @@ package grakn.client.test.behaviour.connection.transaction;
 
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import graql.lang.Graql;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.hamcrest.Matchers;
@@ -70,11 +71,11 @@ public class TransactionSteps {
     }
 
     @Then("for each session, open transaction(s) of type; throws exception")
-    public void for_each_session_open_transactions_of_type_throws_exception(List<GraknClient.Transaction.Type> types) {
-        for (GraknClient.Session session : sessions) {
-            for (GraknClient.Transaction.Type type : types) {
+    public void for_each_session_open_transactions_of_type_throws_exception(List<Transaction.Type> types) {
+        for (Session session : sessions) {
+            for (Transaction.Type type : types) {
                 try {
-                    GraknClient.Transaction transaction = session.transaction(type);
+                    Transaction transaction = session.transaction(type);
                     fail();
                 } catch (Exception e) {
                     // successfully threw
@@ -251,8 +252,8 @@ public class TransactionSteps {
 
     @Then("for each transaction, define query; throws exception containing {string}")
     public void for_each_transaction_execute_define_throws_exception(String expectedException, String defineQueryStatements) {
-        for (GraknClient.Session session : sessions) {
-            for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+        for (Session session : sessions) {
+            for (Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
                     transaction.execute(Graql.parse(defineQueryStatements).asDefine()).get();
                     fail();

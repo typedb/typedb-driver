@@ -64,8 +64,6 @@ public class UndefineTest {
 
     private static GraknCoreRunner runner;
 
-    private static GraknCoreRunner runner;
-
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
         runner = new GraknCoreRunner();

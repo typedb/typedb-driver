@@ -97,15 +97,13 @@ public abstract class TypeImpl {
                             .setLabel(label)).build();
             runMethod(method);
         }
-    }
 
         @Override
         public final boolean isAbstract() {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()).build();
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+            return runMethod(method).getTypeIsAbstractRes().getAbstract();
         }
 
         @Nullable
