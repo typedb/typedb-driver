@@ -39,7 +39,7 @@ public class GraknClient implements Client {
 
     public static final String DEFAULT_URI = "localhost:48555";
 
-    private ManagedChannel channel;
+    private final ManagedChannel channel;
     private final DatabaseManager databases;
 
     public GraknClient() {
@@ -50,12 +50,6 @@ public class GraknClient implements Client {
         channel = ManagedChannelBuilder.forTarget(address)
                 .usePlaintext().build();
         databases = new GraknDatabaseManager(channel);
-    }
-
-    @Override
-    public Client overrideChannel(final ManagedChannel channel) {
-        this.channel = channel;
-        return this;
     }
 
     public void close() {

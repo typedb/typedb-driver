@@ -59,8 +59,6 @@ public interface Grakn {
 
     interface Client extends AutoCloseable {
 
-        Client overrideChannel(ManagedChannel channel);
-
         boolean isOpen();
 
         void close();
