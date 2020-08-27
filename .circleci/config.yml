@@ -34,6 +34,13 @@ commands:
     steps:
       - run: bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
 
+  install-artifact-credentials:
+    steps:
+      - run: |
+          ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
+          ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+
   run-bazel:
     parameters:
       command:
@@ -264,18 +271,12 @@ workflows:
               only: master
           requires:
             - deploy-maven-snapshot
-      - sync-dependencies-snapshot:
-          filters:
-            branches:
-              only: master
-          requires:
-            - test-deployment-maven
       - release-approval:
           filters:
             branches:
               only: master
           requires:
-            - sync-dependencies-snapshot
+            - test-deployment-maven
   client-java-release:
     jobs:
       - release-validate:
@@ -298,15 +299,9 @@ workflows:
               only: client-java-release-branch
           requires:
             - deploy-approval
-      - sync-dependencies-release:
-          filters:
-            branches:
-              only: client-java-release-branch
-          requires:
-            - deploy-maven-release
       - release-cleanup:
           filters:
             branches:
               only: client-java-release-branch
           requires:
-            - sync-dependencies-release
+            - deploy-maven-release

@@ -74,7 +74,7 @@ public class ConnectionSteps {
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         if (isNull(client)) {
-            connect_to_grakn();
+            connect_to_grakn_core();
         }
 
         assertNotNull(client);

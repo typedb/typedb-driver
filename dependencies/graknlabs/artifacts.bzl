@@ -19,7 +19,6 @@
 
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_file")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment_private")
-
 def graknlabs_grakn_core_artifact():
     artifact_file(
         name = "graknlabs_grakn_core_artifact",

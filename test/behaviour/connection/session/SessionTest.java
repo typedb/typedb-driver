@@ -30,7 +30,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -64,7 +63,9 @@ public class SessionTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run Grakn)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static GraknCoreRunner runner;
+
+    private static GraknCoreRunner runner;
 
     private static GraknCoreRunner runner;
 
@@ -74,6 +75,7 @@ public class SessionTest {
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
+
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {

@@ -19,120 +19,85 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
-import grakn.client.concept.thing.Thing;
+import grakn.client.GraknClient;
+import grakn.client.concept.Concept;
+import grakn.client.concept.ConceptIID;
+import grakn.client.concept.Label;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class RoleTypeImpl {
     /**
      * Client implementation of Role
      */
-    public static class Local extends TypeImpl.Local implements RoleType.Local {
+    public static class Local extends TypeImpl.Local<RoleType> implements RoleType.Local {
 
-        private final String scopedLabel;
-
-        public Local(ConceptProto.Type type) {
-            super(type);
-            scopedLabel = type.getScopedLabel();
-        }
-
-        @Override
-        @CheckReturnValue
-        public final String getScopedLabel() {
-            return scopedLabel;
+        public Local(ConceptProto.Concept concept) {
+            super(concept);
         }
     }
 
     /**
      * Client implementation of Role
      */
-    public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
+    public static class Remote extends TypeImpl.Remote<RoleType> implements RoleType.Remote {
 
-        private final String scopedLabel;
-
-        public Remote(final Concepts concepts, final String label, final String scopedLabel, final boolean isRoot) {
-            super(concepts, label, isRoot);
-            this.scopedLabel = scopedLabel;
-        }
-
-        @Nullable
-        @Override
-        public Type.Remote getSupertype() {
-            return getSupertypeInternal(Type.Remote::asRoleType);
+        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
+            super(tx, iid);
         }
 
         @Override
-        @CheckReturnValue
-        public final Stream<RoleType.Remote> getSupertypes() {
-            return super.getSupertypes().map(Type.Remote::asRoleType);
+        public final Stream<RoleType.Remote> sups() {
+            return super.sups().map(this::asCurrentBaseType);
         }
 
         @Override
-        @CheckReturnValue
-        public final Stream<RoleType.Remote> getSubtypes() {
-            return super.getSubtypes().map(Type.Remote::asRoleType);
+        public final Stream<RoleType.Remote> subs() {
+            return super.subs().map(this::asCurrentBaseType);
         }
 
         @Override
-        public void setSupertype(RoleType superRole) {
-            setSupertypeInternal(superRole);
+        public final RoleType.Remote label(Label label) {
+            return (RoleType.Remote) super.label(label);
         }
 
         @Override
-        @CheckReturnValue
-        public String getScopedLabel() {
-            return scopedLabel;
+        public RoleType.Remote sup(RoleType superRole) {
+            return (RoleType.Remote) super.sup(superRole);
         }
 
         @Override
-        @CheckReturnValue
-        public final RelationType.Remote getRelation() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setRoleTypeGetRelationReq(ConceptProto.RoleType.GetRelation.Req.getDefaultInstance()).build();
-
-            final ConceptProto.RoleType.GetRelation.Res response = runMethod(method).getRoleTypeGetRelationRes();
-
-            return Type.Remote.of(concepts(), response.getRelationType()).asRelationType();
+        public Label scopedLabel() {
+            return Label.of("unknown:" + label().getValue()); // TODO fix
         }
 
         @Override
-        @CheckReturnValue
-        public final Stream<RelationType.Remote> getRelations() {
-            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
-                    .setRoleTypeGetRelationsIterReq(ConceptProto.RoleType.GetRelations.Iter.Req.getDefaultInstance()).build();
-            return typeStream(method, res -> res.getRoleTypeGetRelationsIterRes().getRelationType()).map(Type.Remote::asRelationType);
+        public final Stream<RelationType.Remote> relations() {
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                    .setRoleRelationsIterReq(ConceptProto.RoleType.Relations.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getRoleRelationsIterRes().getRelationType()).map(Concept.Remote::asRelationType);
         }
 
         @Override
-        @CheckReturnValue
-        public final Stream<ThingType.Remote> getPlayers() {
-            ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
-                    .setRoleTypeGetPlayersIterReq(ConceptProto.RoleType.GetPlayers.Iter.Req.getDefaultInstance()).build();
-            return typeStream(method, res -> res.getRoleTypeGetPlayersIterRes().getThingType()).map(Type.Remote::asThingType);
+        public final Stream<ThingType.Remote<?, ?>> players() {
+            ConceptProto.Method.Iter.Req method = ConceptProto.Method.Iter.Req.newBuilder()
+                    .setRolePlayersIterReq(ConceptProto.RoleType.Players.Iter.Req.getDefaultInstance()).build();
+            return conceptStream(method, res -> res.getRolePlayersIterRes().getThingType()).map(Concept.Remote::asType);
         }
 
         @Override
-        protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return concepts().iterateTypeMethod(scopedLabel, request, response -> Thing.Remote.of(concepts(), thingGetter.apply(response)));
+        protected final RoleType.Remote asCurrentBaseType(Concept.Remote<?> other) {
+            return other.asRoleType();
         }
 
         @Override
-        protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return concepts().iterateTypeMethod(scopedLabel, request, response -> Type.Remote.of(concepts(), typeGetter.apply(response)));
+        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
+            return other.isRoleType();
         }
 
-        @Override
-        protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
-            return concepts().runTypeMethod(scopedLabel, typeMethod).getConceptMethodTypeRes().getResponse();
-        }
     }
 }

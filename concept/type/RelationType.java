@@ -85,7 +85,8 @@ public interface RelationType extends ThingType {
         RoleType.Remote getRelates(String roleLabel);
 
         /**
-         * Retrieves a list of the RoleTypes that make up this RelationType.
+         * Retrieve a specific RoleType.
+         *
          *
          * @return A list of the RoleTypes which make up this RelationType.
          * @see RoleType.Remote

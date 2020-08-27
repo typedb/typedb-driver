@@ -17,6 +17,13 @@ artifacts = [
   "io.netty:netty-codec-http2",
   "io.netty:netty-handler",
   "io.netty:netty-handler-proxy",
+  "io.netty:netty-buffer",
+  "io.netty:netty-codec",
+  "io.netty:netty-codec-http",
+  "io.netty:netty-codec-socks",
+  "io.netty:netty-common",
+  "io.netty:netty-transport",
+  "io.netty:netty-resolver",
   "javax.annotation:javax.annotation-api",
   "junit:junit",
   "org.hamcrest:hamcrest-all",
@@ -29,3 +36,18 @@ artifacts = [
   "org.slf4j:slf4j-simple",
   "org.zeroturnaround:zt-exec"
 ]
+
+# Override libraries conflicting with versions defined in @graknlabs_dependencies
+overrides = {
+    "io.netty:netty-all": "4.1.38.Final",
+    "io.netty:netty-codec-http2": "4.1.38.Final",
+    "io.netty:netty-handler": "4.1.38.Final",
+    "io.netty:netty-handler-proxy": "4.1.38.Final",
+    "io.netty:netty-buffer": "4.1.38.Final",
+    "io.netty:netty-codec": "4.1.38.Final",
+    "io.netty:netty-codec-http": "4.1.38.Final",
+    "io.netty:netty-codec-socks": "4.1.38.Final",
+    "io.netty:netty-common": "4.1.38.Final",
+    "io.netty:netty-transport": "4.1.38.Final",
+    "io.netty:netty-resolver": "4.1.38.Final",
+}

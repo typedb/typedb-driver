@@ -93,6 +93,13 @@ public class GraqlSteps {
         assertTrue(tx.isOpen());
     }
 
+    @Given("transaction is closed and opened without commit")
+    public void transaction_is_reopened_without_commit() {
+        tx.close();
+        assertFalse(tx.isOpen());
+        tx = session.transaction().write();
+    }
+
     @Given("the integrity is validated")
     public void integrity_is_validated(){
 

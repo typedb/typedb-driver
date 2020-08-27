@@ -19,54 +19,64 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concepts;
+import grakn.client.GraknClient;
+import grakn.client.concept.ConceptIID;
+import grakn.client.concept.Label;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 /**
- * A Type which defines a role which can be played in a RelationType.
+ * A SchemaConcept which defines a role which can be played in a RelationType.
  * This ontological element defines the RoleTypes which make up a RelationType.
- * It behaves similarly to Type when relating to other types.
+ * It behaves similarly to SchemaConcept when relating to other types.
  */
-public interface RoleType extends Type {
+public interface RoleType extends Type<RoleType> {
 
-    /**
-     * Get the label of this RoleType scoped to its relation.
-     *
-     * @return The scoped label
-     */
-    String getScopedLabel();
-
+    //------------------------------------- Other ---------------------------------
+    @Deprecated
     @CheckReturnValue
     @Override
-    RoleType.Remote asRemote(Concepts concepts);
+    default RoleType asRoleType() {
+        return this;
+    }
 
-    interface Local extends Type.Local, RoleType {
+    @Override
+    default Remote asRemote(GraknClient.Transaction tx) {
+        return RoleType.Remote.of(tx, iid());
+    }
 
-        @CheckReturnValue
-        @Override
-        default RoleType.Local asRoleType() {
-            return this;
-        }
+    @Deprecated
+    @CheckReturnValue
+    @Override
+    default boolean isRoleType() {
+        return true;
+    }
 
-        @Override
-        default RoleType.Remote asRemote(final Concepts concepts) {
-            return RoleType.Remote.of(concepts, getLabel(), getScopedLabel(), isRoot());
-        }
+    interface Local extends Type.Local<RoleType>, RoleType {
     }
 
     /**
-     * A Type which defines a role which can be played in a RelationType.
+     * A SchemaConcept which defines a role which can be played in a RelationType.
      * This ontological element defines the RoleTypes which make up a RelationType.
-     * It behaves similarly to Type when relating to other types.
+     * It behaves similarly to SchemaConcept when relating to other types.
      */
-    interface Remote extends Type.Remote, RoleType {
+    interface Remote extends Type.Remote<RoleType>, RoleType {
 
-        static RoleType.Remote of(final Concepts concepts, final String label, final String scopedLabel, final boolean isRoot) {
-            return new RoleTypeImpl.Remote(concepts, label, scopedLabel, isRoot);
+        static RoleType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
+            return new RoleTypeImpl.Remote(tx, iid);
         }
+
+        //------------------------------------- Modifiers ----------------------------------
+
+        /**
+         * Changes the Label of this Concept to a new one.
+         *
+         * @param label The new Label.
+         * @return The Concept itself
+         */
+        RoleType.Remote label(Label label);
 
         /**
          * Sets the supertype of this RoleType.
@@ -74,13 +84,22 @@ public interface RoleType extends Type {
          * @param type The supertype of this RoleType.
          * @return The RoleType itself.
          */
-        void setSupertype(RoleType type);
+        RoleType.Remote sup(RoleType type);
+
+        //------------------------------------- Accessors ----------------------------------
+
+        /**
+         * Get the label of this RoleType scoped to its relation.
+         *
+         * @return The scoped label
+         */
+        Label scopedLabel();
 
         /**
          * @return All the supertypes of this RoleType.
          */
         @Override
-        Stream<? extends RoleType.Remote> getSupertypes();
+        Stream<RoleType.Remote> sups();
 
         /**
          * Returns the subtype of this RoleType.
@@ -88,16 +107,7 @@ public interface RoleType extends Type {
          * @return The subtype of this RoleType.
          */
         @Override
-        Stream<? extends RoleType.Remote> getSubtypes();
-
-        /**
-         * Returns the RelationType that this RoleType takes part in.
-         *
-         * @return The RelationType which this RoleType takes part in.
-         * @see RelationType.Remote
-         */
-        @CheckReturnValue
-        RelationType.Remote getRelation();
+        Stream<RoleType.Remote> subs();
 
         /**
          * Returns the RelationTypes that this RoleType takes part in.
@@ -106,7 +116,7 @@ public interface RoleType extends Type {
          * @see RelationType.Remote
          */
         @CheckReturnValue
-        Stream<? extends RelationType.Remote> getRelations();
+        Stream<RelationType.Remote> relations();
 
         /**
          * Returns a collection of the Types that can play this RoleType.
@@ -115,18 +125,22 @@ public interface RoleType extends Type {
          * @see ThingType.Remote
          */
         @CheckReturnValue
-        Stream<? extends ThingType.Remote> getPlayers();
+        Stream<ThingType.Remote<?, ?>> players();
 
-        @CheckReturnValue
-        @Override
-        default RoleType.Remote asRemote(Concepts concepts) {
-            return this;
-        }
-
+        //------------------------------------- Other ---------------------------------
+        @Deprecated
         @CheckReturnValue
         @Override
         default RoleType.Remote asRoleType() {
             return this;
         }
+
+        @Deprecated
+        @CheckReturnValue
+        @Override
+        default boolean isRoleType() {
+            return true;
+        }
     }
 }
+

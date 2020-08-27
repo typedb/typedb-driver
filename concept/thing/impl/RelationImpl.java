@@ -28,7 +28,6 @@ import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
