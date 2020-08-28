@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
 import com.google.common.collect.ImmutableList;
 import grakn.client.Grakn.DatabaseManager;
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 import io.grpc.ManagedChannel;
@@ -30,10 +30,10 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import java.util.function.Supplier;
 
-class GraknDatabaseManager implements DatabaseManager {
+class RPCDatabaseManager implements DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingStub;
 
-    GraknDatabaseManager(ManagedChannel channel) {
+    RPCDatabaseManager(ManagedChannel channel) {
         blockingStub = GraknGrpc.newBlockingStub(channel);
     }
 
@@ -61,7 +61,7 @@ class GraknDatabaseManager implements DatabaseManager {
         try {
             return req.get();
         } catch (StatusRuntimeException e) {
-            throw new GraknClientException(e);
+            throw new GraknException(e);
         }
     }
 }

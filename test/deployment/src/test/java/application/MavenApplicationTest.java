@@ -4,7 +4,7 @@ import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptMap;
 import graql.lang.Graql;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class MavenApplicationTest {
     public void testImport() {
         Client client = Grakn.client("localhost:48555");
         Session session = client.session("grakn");
-        Transaction tx = session.transaction().write();
+        Transaction tx = session.transaction(Transaction.Type.WRITE);
         List<ConceptMap> answers = tx.execute(Graql.match(var("t").sub("thing")).get()).get();
         tx.close();
         session.close();

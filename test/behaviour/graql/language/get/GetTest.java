@@ -70,6 +70,7 @@ public class GetTest {
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
+
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
         runner.stop();

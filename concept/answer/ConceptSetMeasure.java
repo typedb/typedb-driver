@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
 import grakn.protocol.AnswerProto;
 
 import java.util.Set;
 
-import static grakn.client.answer.AnswerMessageReader.number;
+import static grakn.client.concept.answer.AnswerMessageReader.number;
 import static java.util.stream.Collectors.toSet;
 
 /**

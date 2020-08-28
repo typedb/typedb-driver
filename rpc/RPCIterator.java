@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.protocol.TransactionProto;
 
 import java.util.concurrent.TimeUnit;
@@ -35,17 +35,17 @@ import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD
  *
  * @param <T> class type of objects being iterated
  */
-class RpcIterator<T> extends AbstractIterator<T> {
+class RPCIterator<T> extends AbstractIterator<T> {
 
     private Batch currentBatch;
     private volatile boolean started;
     private TransactionProto.Transaction.Iter.Res first;
 
-    private final GraknTransceiver transceiver;
+    private final RPCTransceiver transceiver;
     private final Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
     private final TransactionProto.Transaction.Iter.Req.Options options;
 
-    RpcIterator(final GraknTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
+    RPCIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
         this.transceiver = transceiver;
         this.responseReader = responseReader;
         options = req.getOptions();
@@ -69,7 +69,7 @@ class RpcIterator<T> extends AbstractIterator<T> {
         sendRequest(iterReq);
     }
 
-    private static class Batch extends GraknTransceiver.MultiResponseCollector {
+    private static class Batch extends RPCTransceiver.MultiResponseCollector {
         @Override
         protected boolean isLastResponse(final TransactionProto.Transaction.Res response) {
             final TransactionProto.Transaction.Iter.Res iterRes = response.getIterRes();
@@ -83,7 +83,7 @@ class RpcIterator<T> extends AbstractIterator<T> {
 
     public void waitForStart(final long timeout, final TimeUnit unit) throws InterruptedException, TimeoutException {
         if (first != null) {
-            throw new GraknClientException(new IllegalStateException("Should not poll RpcIterator multiple times"));
+            throw new GraknException(new IllegalStateException("Should not poll RpcIterator multiple times"));
         }
 
         first = currentBatch.poll(timeout, unit).getIterRes();
@@ -105,7 +105,7 @@ class RpcIterator<T> extends AbstractIterator<T> {
             res = currentBatch.take().getIterRes();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new GraknClientException(e);
+            throw new GraknException(e);
         }
         started = true;
         switch (res.getResCase()) {
@@ -115,7 +115,7 @@ class RpcIterator<T> extends AbstractIterator<T> {
             case DONE:
                 return endOfData();
             case RES_NOT_SET:
-                throw new GraknClientException(REQUIRED_FIELD_NOT_SET.message(TransactionProto.Transaction.Iter.Res.class.getCanonicalName()));
+                throw new GraknException(REQUIRED_FIELD_NOT_SET.message(TransactionProto.Transaction.Iter.Res.class.getCanonicalName()));
             default:
                 return responseReader.apply(res);
         }

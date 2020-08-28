@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-import static grakn.client.concept.ConceptMessageWriter.type;
+import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 
 public abstract class AttributeImpl {
 
@@ -76,7 +76,7 @@ public abstract class AttributeImpl {
         public Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
             ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.newBuilder()
-                            .setThingType(type(ownerType))).build();
+                                                          .setThingType(type(ownerType))).build();
             return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
         }
 

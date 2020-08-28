@@ -32,9 +32,9 @@ import static grakn.client.test.behaviour.concept.ConceptSteps.concepts;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class RelationSteps {
 
@@ -148,14 +148,14 @@ public class RelationSteps {
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .getPlayers(get(var1).asRelation().getType().getRelates(roleTypeLabel))
-                .anyMatch(p -> p.equals(get(var2))));
+                           .getPlayers(get(var1).asRelation().getType().getRelates(roleTypeLabel))
+                           .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation()
-                .getPlayers(get(var1).asRelation().getType().getRelates(roleTypeLabel))
-                .noneMatch(p -> p.equals(get(var2))));
+                           .getPlayers(get(var1).asRelation().getType().getRelates(roleTypeLabel))
+                           .noneMatch(p -> p.equals(get(var2))));
     }
 }

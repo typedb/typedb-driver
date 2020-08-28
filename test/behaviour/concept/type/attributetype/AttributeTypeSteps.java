@@ -18,7 +18,7 @@
 
 package grakn.client.test.behaviour.concept.type.attributetype;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.ThingType;
@@ -32,9 +32,9 @@ import java.util.Set;
 import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
 import static grakn.client.test.behaviour.concept.ConceptSteps.concepts;
 import static java.util.stream.Collectors.toSet;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -74,7 +74,7 @@ public class AttributeTypeSteps {
             case DATETIME:
                 return attributeType.asDateTime();
             default:
-                throw new GraknClientException(UNRECOGNISED_CONCEPT.message(ValueType.class.getCanonicalName(), valueType));
+                throw new GraknException(UNRECOGNISED_CONCEPT.message(ValueType.class.getCanonicalName(), valueType));
         }
     }
 

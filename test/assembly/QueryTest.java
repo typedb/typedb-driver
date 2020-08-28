@@ -21,7 +21,7 @@ import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -43,6 +43,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
 import static graql.lang.Graql.type;
@@ -109,13 +110,13 @@ public class QueryTest {
             );
 
             GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
-                    .when(and(
-                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                            var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
-                    ))
-                    .then(and(
-                            rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
-                    )));
+                                                         .when(and(
+                                                                 rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                                                                 var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
+                                                         ))
+                                                         .then(and(
+                                                                 rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
+                                                         )));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.execute(defineQuery);
@@ -130,8 +131,8 @@ public class QueryTest {
             LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
             List<String> definedSchema = tx.execute(getThingQuery).get().stream()
                     .map(answer -> answer.get("t").asType().asThingType().getLabel()).collect(Collectors.toList());
-            String[] correctSchema = new String[] { "thing", "entity", "relation", "attribute",
-                    "lion", "mating", "parentship", "child-bearing", "name" };
+            String[] correctSchema = new String[]{"thing", "entity", "relation", "attribute",
+                    "lion", "mating", "parentship", "child-bearing", "name"};
             assertThat(definedSchema, hasItems(correctSchema));
             LOG.info("clientJavaE2E() - done.");
         });
@@ -252,7 +253,7 @@ public class QueryTest {
     private void localhostGraknTx(Consumer<Transaction> fn) {
         String database = "grakn";
         try (Session session = graknClient.session(database)) {
-            try (Transaction transaction = session.transaction().write()) {
+            try (Transaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }
         }

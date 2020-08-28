@@ -16,29 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package grakn.client.answer;
+
+package grakn.client.concept.answer;
 
 import grakn.protocol.AnswerProto;
 
-import java.util.Collections;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
-
 /**
- * A type of Answer object that contains a Set.
+ * A type of Answer object that contains a Number.
  */
-public class ConceptSet implements Answer {
+public class Numeric implements Answer {
 
-    // TODO: change to store Set<Concept> once we are able to construct Concept without a database look up
-    private final Set<String> set;
+    private final Number number;
 
-    public ConceptSet(Set<String> set) {
-        this.set = Collections.unmodifiableSet(set);
+    public Numeric(Number number) {
+        this.number = number;
     }
 
-    public static ConceptSet of(final AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toSet()));
+    public static Numeric of(final AnswerProto.Value res) {
+        return new Numeric(AnswerMessageReader.number(res.getNumber()));
     }
 
     @Override
@@ -46,20 +41,20 @@ public class ConceptSet implements Answer {
         return false;
     }
 
-    public Set<String> set() {
-        return set;
+    public Number number() {
+        return number;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        ConceptSet a2 = (ConceptSet) obj;
-        return this.set.equals(a2.set);
+        Numeric a2 = (Numeric) obj;
+        return this.number.toString().equals(a2.number.toString());
     }
 
     @Override
     public int hashCode() {
-        return set.hashCode();
+        return number.hashCode();
     }
 }

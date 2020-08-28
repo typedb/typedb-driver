@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
@@ -36,11 +36,6 @@ import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_F
 
 public interface AttributeType extends ThingType {
 
-    /**
-     * Get the data type to which instances of the AttributeType must conform.
-     *
-     * @return The data type to which instances of this Attribute  must conform.
-     */
     @CheckReturnValue
     default ValueType getValueType() {
         return ValueType.OBJECT;
@@ -65,14 +60,8 @@ public interface AttributeType extends ThingType {
 
     AttributeType.DateTime asDateTime();
 
-    /**
-     * A class used to hold the supported data types of attributes.
-     * This is used tp constrain value data types to only those we explicitly support.
-     */
     enum ValueType {
-        /**
-         * A special value type used only as the return type when retrieving instances of meta 'attribute'.
-         */
+
         OBJECT(Object.class, false, false),
         BOOLEAN(Boolean.class, true, false),
         LONG(Long.class, true, true),
@@ -96,7 +85,7 @@ public interface AttributeType extends ThingType {
                     return t;
                 }
             }
-            throw new GraknClientException(UNRECOGNISED_VALUE);
+            throw new GraknException(UNRECOGNISED_VALUE);
         }
 
         public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
@@ -113,7 +102,7 @@ public interface AttributeType extends ThingType {
                     return AttributeType.ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), valueType));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), valueType));
             }
         }
 
@@ -138,14 +127,6 @@ public interface AttributeType extends ThingType {
         }
     }
 
-    /**
-     * An ontological element which models and categorises the various Attribute in the graph.
-     * This ontological element behaves similarly to Type when defining how it relates to other
-     * types. It has two additional functions to be aware of:
-     * 1. It has a ValueType constraining the data types of the values it's instances may take.
-     * 2. Any of it's instances are unique to the type.
-     * For example if you have an AttributeType modelling month throughout the year there can only be one January.
-     */
     interface Local extends ThingType.Local, AttributeType {
 
         @CheckReturnValue
@@ -160,27 +141,27 @@ public interface AttributeType extends ThingType {
 
         @Override
         default AttributeType.Boolean.Local asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Long.Local asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.Double.Local asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.String.Local asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
 
         @Override
         default AttributeType.DateTime.Local asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
     }
 

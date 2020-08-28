@@ -19,13 +19,13 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -36,8 +36,8 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
-import static grakn.client.concept.ConceptMessageWriter.thing;
-import static grakn.client.concept.ConceptMessageWriter.types;
+import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
+import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 
 public abstract class ThingImpl {
 
@@ -54,7 +54,7 @@ public abstract class ThingImpl {
             // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
             // not actually prefilled when using the Concept API - only when using the Query API.
             // We should probably create a dedicated Proto class for Graql (AnswerProto or QueryProto) and keep the code clean.
-            throw new GraknClientException(new UnsupportedOperationException());
+            throw new GraknException(new UnsupportedOperationException());
             //this.iid = thing.getIid();
             //this.type = Type.Local.of(thing.getType()).asThingType();
             //this.inferred = thing.getInferredRes().getInferred();
@@ -81,11 +81,11 @@ public abstract class ThingImpl {
 
         protected Remote(final Concepts concepts, final String iid) {
             if (concepts == null) {
-                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("concepts"));
+                throw new GraknException(ILLEGAL_ARGUMENT_NULL.message("concepts"));
             }
             this.concepts = concepts;
             if (iid == null || iid.isEmpty()) {
-                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("iid"));
+                throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("iid"));
             }
             this.iid = iid;
         }
@@ -115,7 +115,7 @@ public abstract class ThingImpl {
         public final Stream<? extends Attribute.Remote<?>> getHas(AttributeType... attributeTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
-                            .addAllAttributeTypes(types(Arrays.asList(attributeTypes)))).build();
+                                                   .addAllAttributeTypes(types(Arrays.asList(attributeTypes)))).build();
             return thingStream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(Thing.Remote::asAttribute);
         }
 
@@ -162,7 +162,7 @@ public abstract class ThingImpl {
         public final Stream<? extends Relation> getRelations(RoleType... roleTypes) {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setThingGetRelationsIterReq(ConceptProto.Thing.GetRelations.Iter.Req.newBuilder()
-                            .addAllRoleTypes(types(Arrays.asList(roleTypes)))).build();
+                                                         .addAllRoleTypes(types(Arrays.asList(roleTypes)))).build();
             return thingStream(method, res -> res.getThingGetRelationsIterRes().getRelation()).map(Thing.Remote::asRelation);
         }
 
@@ -170,7 +170,7 @@ public abstract class ThingImpl {
         public final void setHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingSetHasReq(ConceptProto.Thing.SetHas.Req.newBuilder()
-                            .setAttribute(thing(attribute))).build();
+                                               .setAttribute(thing(attribute))).build();
             runMethod(method);
         }
 
@@ -178,7 +178,7 @@ public abstract class ThingImpl {
         public final void unsetHas(Attribute<?> attribute) {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingUnsetHasReq(ConceptProto.Thing.UnsetHas.Req.newBuilder()
-                            .setAttribute(thing(attribute))).build();
+                                                 .setAttribute(thing(attribute))).build();
             runMethod(method);
         }
 

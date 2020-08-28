@@ -34,13 +34,11 @@ exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
 java_library(
     name = "client-java",
     srcs = glob([
-        "answer/*.java",
         "common/**/*.java",
         "concept/**/*.java",
-        "connection/*.java",
-        "rpc/*.java",
+        "rpc/**/*.java",
         "test/*.java",
-        "Grakn.java"
+        "*.java"
     ]),
     deps = [
         # External dependencies from @graknlabs

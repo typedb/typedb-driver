@@ -21,8 +21,8 @@ package grakn.client.concept.thing;
 
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.impl.RelationImpl;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RoleType;
 
 import javax.annotation.CheckReturnValue;
 import java.util.List;
@@ -88,8 +88,8 @@ public interface Relation extends Thing {
         /**
          * Expands this Relation to include a new role player which is playing a specific role.
          *
-         * @param roleType   The RoleType of the new role player.
-         * @param player The new role player.
+         * @param roleType The RoleType of the new role player.
+         * @param player   The new role player.
          */
         void addPlayer(RoleType roleType, Thing player);
 
@@ -98,7 +98,7 @@ public interface Relation extends Thing {
          * If the Thing is not playing any RoleType in this Relation nothing happens.
          *
          * @param roleType The RoleType being played by the Thing
-         * @param player The Thing playing the Role in this Relation
+         * @param player   The Thing playing the Role in this Relation
          */
         void removePlayer(RoleType roleType, Thing player);
 
@@ -107,7 +107,6 @@ public interface Relation extends Thing {
          * If no RoleTypes are specified then every involved Thing is retrieved, regardless of role.
          *
          * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
-         *
          * @return A list of every Thing involved in the Relation, filtered by RoleType played.
          */
         @CheckReturnValue

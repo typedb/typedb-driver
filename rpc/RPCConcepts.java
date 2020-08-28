@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -38,15 +38,15 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.RpcMessageWriter.tracingData;
-import static grakn.client.concept.ConceptMessageWriter.iid;
-import static grakn.client.concept.ConceptMessageWriter.valueType;
+import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
+import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
+import static grakn.client.rpc.RPCProtoBuilder.tracingData;
 
-public final class GraknConcepts implements Concepts {
+public final class RPCConcepts implements Concepts {
 
-    private final GraknTransceiver transceiver;
+    private final RPCTransceiver transceiver;
 
-    public GraknConcepts(final GraknTransceiver transceiver) {
+    public RPCConcepts(final RPCTransceiver transceiver) {
         this.transceiver = transceiver;
     }
 
@@ -85,7 +85,7 @@ public final class GraknConcepts implements Concepts {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
-                        .setLabel(label)).build();
+                                             .setLabel(label)).build();
 
         final TransactionProto.Transaction.Res res = transceiver.sendAndReceiveOrThrow(req);
         return Type.Remote.of(this, res.getPutEntityTypeRes().getEntityType()).asEntityType();
@@ -107,8 +107,7 @@ public final class GraknConcepts implements Concepts {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
-                        .setLabel(label)).build();
-
+                                               .setLabel(label)).build();
         final TransactionProto.Transaction.Res res = transceiver.sendAndReceiveOrThrow(req);
         return Type.Remote.of(this, res.getPutRelationTypeRes().getRelationType()).asRelationType();
     }
@@ -129,9 +128,8 @@ public final class GraknConcepts implements Concepts {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
-                        .setLabel(label)
-                        .setValueType(valueType(valueType))).build();
-
+                                                .setLabel(label)
+                                                .setValueType(valueType(valueType))).build();
         final TransactionProto.Transaction.Res res = transceiver.sendAndReceiveOrThrow(req);
         return Type.Remote.of(this, res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }
@@ -149,7 +147,7 @@ public final class GraknConcepts implements Concepts {
 
     @Override
     public Rule.Remote putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknClientException(new UnsupportedOperationException());
+        throw new GraknException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
@@ -210,8 +208,8 @@ public final class GraknConcepts implements Concepts {
     public TransactionProto.Transaction.Res runThingMethod(final String iid, final ConceptProto.ThingMethod.Req thingMethod) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                 .setConceptMethodThingReq(TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
-                        .setIid(iid(iid))
-                        .setMethod(thingMethod)).build();
+                                                  .setIid(iid(iid))
+                                                  .setMethod(thingMethod)).build();
 
         return transceiver.sendAndReceiveOrThrow(request);
     }
@@ -220,28 +218,30 @@ public final class GraknConcepts implements Concepts {
     public TransactionProto.Transaction.Res runTypeMethod(final String label, final ConceptProto.TypeMethod.Req typeMethod) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                 .setConceptMethodTypeReq(TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
-                        .setLabel(label)
-                        .setMethod(typeMethod)).build();
+                                                 .setLabel(label)
+                                                 .setMethod(typeMethod)).build();
 
         return transceiver.sendAndReceiveOrThrow(request);
     }
 
     @Override
-    public <T> Stream<T> iterateThingMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method, final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
+    public <T> Stream<T> iterateThingMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method,
+                                            final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setConceptMethodThingIterReq(TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
-                        .setIid(iid(iid))
-                        .setMethod(method)).build();
+                                                      .setIid(iid(iid))
+                                                      .setMethod(method)).build();
 
         return transceiver.iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
     }
 
     @Override
-    public <T> Stream<T> iterateTypeMethod(final String label, final ConceptProto.TypeMethod.Iter.Req method, final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
+    public <T> Stream<T> iterateTypeMethod(final String label, final ConceptProto.TypeMethod.Iter.Req method,
+                                           final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setConceptMethodTypeIterReq(TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
-                        .setLabel(label)
-                        .setMethod(method)).build();
+                                                     .setLabel(label)
+                                                     .setMethod(method)).build();
 
         return transceiver.iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }

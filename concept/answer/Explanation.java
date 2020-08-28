@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.Rule;

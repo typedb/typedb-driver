@@ -30,8 +30,8 @@ import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.concept.ConceptMessageWriter.type;
-import static grakn.client.concept.ConceptMessageWriter.valueType;
+import static grakn.client.concept.proto.ConceptProtoBuilder.type;
+import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public abstract class ThingTypeImpl {
     /**
@@ -131,7 +131,7 @@ public abstract class ThingTypeImpl {
         public final void setPlays(final RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
-                            .setRole(type(role))).build();
+                                                     .setRole(type(role))).build();
             runMethod(method);
         }
 
@@ -139,8 +139,8 @@ public abstract class ThingTypeImpl {
         public final void setPlays(final RoleType role, final RoleType overriddenRole) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
-                            .setRole(type(role))
-                            .setOverriddenRole(type(overriddenRole))).build();
+                                                     .setRole(type(role))
+                                                     .setOverriddenRole(type(overriddenRole))).build();
             runMethod(method);
         }
 
@@ -148,7 +148,7 @@ public abstract class ThingTypeImpl {
         public final void unsetOwns(final AttributeType attributeType) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
-                            .setAttributeType(type(attributeType))).build();
+                                                      .setAttributeType(type(attributeType))).build();
             runMethod(method);
         }
 
@@ -156,7 +156,7 @@ public abstract class ThingTypeImpl {
         public final void unsetPlays(final RoleType role) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
-                            .setRole(type(role))).build();
+                                                       .setRole(type(role))).build();
             runMethod(method);
         }
     }

@@ -20,8 +20,8 @@
 package grakn.client.concept.type;
 
 import grakn.client.concept.Concepts;
-import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 
 import javax.annotation.CheckReturnValue;
@@ -144,8 +144,8 @@ public interface ThingType extends Type {
         Stream<RoleType.Remote> getPlays();
 
         /**
-         * @return The AttributeTypes which this Type is linked with, optionally only keys.
          * @param keysOnly If true, only returns keys.
+         * @return The AttributeTypes which this Type is linked with, optionally only keys.
          */
         @CheckReturnValue
         Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);

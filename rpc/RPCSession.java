@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Database;
-import grakn.client.Grakn.QueryOptions;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import grakn.client.GraknOptions;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
-import static grakn.client.connection.ConnectionMessageWriter.options;
+import static grakn.client.rpc.RPCProtoBuilder.options;
 
-public class GraknSession implements Session {
+public class RPCSession implements Session {
 
     private final ManagedChannel channel;
     private final String databaseName;
@@ -38,11 +38,7 @@ public class GraknSession implements Session {
     private final ByteString sessionId;
     private boolean isOpen;
 
-    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type) {
-        this(channel, databaseName, type, new QueryOptions());
-    }
-
-    GraknSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final QueryOptions options) {
+    RPCSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final GraknOptions options) {
         this.databaseName = databaseName;
         this.channel = channel;
         this.sessionStub = GraknGrpc.newBlockingStub(channel);
@@ -58,23 +54,8 @@ public class GraknSession implements Session {
     }
 
     @Override
-    public Transaction.Builder transaction() {
-        return new GraknTransaction.Builder(this, sessionId);
-    }
-
-    @Override
-    public Transaction.Builder transaction(final QueryOptions options) {
-        return new GraknTransaction.Builder(this, sessionId, options);
-    }
-
-    @Override
-    public Transaction transaction(final Transaction.Type type) {
-        return new GraknTransaction(this, sessionId, type);
-    }
-
-    @Override
-    public Transaction transaction(final Transaction.Type type, final QueryOptions options) {
-        return new GraknTransaction(this, sessionId, type, options);
+    public Transaction transaction(final Transaction.Type type, final GraknOptions options) {
+        return new RPCTransaction(this, sessionId, type, options);
     }
 
     @Override
@@ -94,7 +75,7 @@ public class GraknSession implements Session {
 
     @Override
     public Database database() {
-        return Database.of(databaseName);
+        return new RPCDatabase(databaseName);
     }
 
     ManagedChannel getChannel() {

@@ -17,9 +17,11 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package grakn.client.concept.proto;
 
 import com.google.protobuf.ByteString;
+import grakn.client.common.exception.GraknException;
+import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -32,7 +34,6 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ConceptProto;
 
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * An RPC Request Builder class for Concept messages
  */
-public abstract class ConceptMessageWriter {
+public abstract class ConceptProtoBuilder {
 
     public static ConceptProto.Concept concept(Concept concept) {
         final ConceptProto.Concept.Builder builder = ConceptProto.Concept.newBuilder();
@@ -78,7 +79,7 @@ public abstract class ConceptMessageWriter {
     }
 
     public static Collection<ConceptProto.Type> types(Collection<? extends Type> types) {
-        return types.stream().map(ConceptMessageWriter::type).collect(toList());
+        return types.stream().map(ConceptProtoBuilder::type).collect(toList());
     }
 
     public static ConceptProto.Attribute.Value attributeValue(Object value) {
@@ -94,7 +95,7 @@ public abstract class ConceptMessageWriter {
         } else if (value instanceof LocalDateTime) {
             builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
         } else {
-            throw new GraknClientException(UNRECOGNISED_CONCEPT.message("attribute value", value));
+            throw new GraknException(UNRECOGNISED_CONCEPT.message("attribute value", value));
         }
         return builder.build();
     }

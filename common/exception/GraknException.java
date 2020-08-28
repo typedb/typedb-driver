@@ -17,27 +17,38 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.common.exception;
 
-import grakn.protocol.AnswerProto;
+import io.grpc.StatusRuntimeException;
 
-public class Void implements Answer {
-    private final String message;
+import javax.annotation.Nullable;
 
-    public Void(String message) {
-        this.message = message;
+public class GraknException extends RuntimeException {
+
+    private String statusCode;
+
+    public GraknException(String error) {
+        super(error);
     }
 
-    public static Void of(final AnswerProto.Void res) {
-        return new Void(res.getMessage());
+    public GraknException(ErrorMessage error) {
+        super(error.toString());
+        assert !getMessage().contains("%s");
     }
 
-    @Override
-    public boolean hasExplanation() {
-        return false;
+    public GraknException(StatusRuntimeException statusRuntimeException) {
+        super(statusRuntimeException.getMessage(), statusRuntimeException);
+        this.statusCode = statusRuntimeException.getStatus().getCode().name();
     }
 
-    public String message() {
-        return message;
+    public GraknException(Exception e) {
+        super(e);
     }
+
+    public String getName() {
+        return this.getClass().getName();
+    }
+
+    @Nullable
+    public String getStatusCode() { return this.statusCode; }
 }

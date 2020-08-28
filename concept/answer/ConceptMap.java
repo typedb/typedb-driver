@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concept;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -88,7 +88,7 @@ public class ConceptMap implements Answer {
         if (hasExplanation) {
             return tx.getExplanation(this);
         } else {
-            throw new GraknClientException(NO_EXPLANATION);
+            throw new GraknException(NO_EXPLANATION);
         }
     }
 
@@ -115,7 +115,7 @@ public class ConceptMap implements Answer {
     @CheckReturnValue
     public Concept get(String variable) {
         Concept concept = map.get(variable);
-        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST.message(variable));
+        if (concept == null) throw new GraknException(VARIABLE_DOES_NOT_EXIST.message(variable));
         return concept;
     }
 

@@ -19,10 +19,10 @@
 
 package grakn.client.concept;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
-import grakn.client.concept.thing.Thing;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
@@ -97,7 +97,7 @@ public interface Concept {
          */
         @Override
         default Type.Local asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
         }
 
         /**
@@ -107,7 +107,7 @@ public interface Concept {
          */
         @Override
         default Thing.Local asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
         }
 
         /**
@@ -117,7 +117,7 @@ public interface Concept {
          */
         @Override
         default Rule.Local asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
         }
     }
 
@@ -153,7 +153,7 @@ public interface Concept {
          */
         @Override
         default Type.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
         }
 
         /**
@@ -163,7 +163,7 @@ public interface Concept {
          */
         @Override
         default Thing.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
         }
 
         /**
@@ -173,7 +173,7 @@ public interface Concept {
          */
         @Override
         default Rule.Remote asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
         }
 
         @Override

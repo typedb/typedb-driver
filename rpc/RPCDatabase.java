@@ -17,26 +17,26 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
 import grakn.client.Grakn.Database;
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
 
-public class GraknDatabase implements Database {
+public class RPCDatabase implements Database {
     private static final long serialVersionUID = 2726154016735929123L;
     public static final String DEFAULT = "grakn";
 
     private final String name;
 
-    public GraknDatabase() {
+    public RPCDatabase() {
         this(DEFAULT);
     }
 
-    public GraknDatabase(String name) {
+    public RPCDatabase(String name) {
         if (name == null || name.isEmpty()) {
-            throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("name"));
+            throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("name"));
         }
         this.name = name;
     }
@@ -54,7 +54,7 @@ public class GraknDatabase implements Database {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final GraknDatabase that = (GraknDatabase) o;
+        final RPCDatabase that = (RPCDatabase) o;
         return this.name.equals(that.name);
     }
 

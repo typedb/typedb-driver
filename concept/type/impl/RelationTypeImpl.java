@@ -108,7 +108,7 @@ public class RelationTypeImpl {
         public final void setRelates(final String roleLabel) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeSetRelatesReq(ConceptProto.RelationType.SetRelates.Req.newBuilder()
-                            .setLabel(roleLabel)).build();
+                                                          .setLabel(roleLabel)).build();
             runMethod(method);
         }
 
@@ -116,8 +116,8 @@ public class RelationTypeImpl {
         public final void setRelates(final String roleLabel, final String overriddenLabel) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeSetRelatesReq(ConceptProto.RelationType.SetRelates.Req.newBuilder()
-                            .setLabel(roleLabel)
-                            .setOverriddenLabel(overriddenLabel)).build();
+                                                          .setLabel(roleLabel)
+                                                          .setOverriddenLabel(overriddenLabel)).build();
             runMethod(method);
         }
 
@@ -125,7 +125,7 @@ public class RelationTypeImpl {
         public final void unsetRelates(String roleLabel) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeUnsetRelatesReq(ConceptProto.RelationType.UnsetRelates.Req.newBuilder()
-                            .setLabel(roleLabel)).build();
+                                                            .setLabel(roleLabel)).build();
             runMethod(method);
         }
     }

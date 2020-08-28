@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Type;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
-import static grakn.client.concept.ConceptMessageWriter.type;
+import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 
 public abstract class TypeImpl {
 
@@ -70,11 +70,11 @@ public abstract class TypeImpl {
 
         Remote(final Concepts concepts, final String label, final boolean isRoot) {
             if (concepts == null) {
-                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL.message("concept"));
+                throw new GraknException(ILLEGAL_ARGUMENT_NULL.message("concept"));
             }
             this.concepts = concepts;
             if (label == null || label.isEmpty()) {
-                throw new GraknClientException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
+                throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
             }
             this.label = label;
             this.isRoot = isRoot;
@@ -94,7 +94,7 @@ public abstract class TypeImpl {
         public final void setLabel(String label) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
-                            .setLabel(label)).build();
+                                                .setLabel(label)).build();
             runMethod(method);
         }
 
@@ -145,7 +145,7 @@ public abstract class TypeImpl {
         protected void setSupertypeInternal(Type type) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
-                            .setType(type(type))).build();
+                                                    .setType(type(type))).build();
             runMethod(method);
         }
 

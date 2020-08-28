@@ -17,39 +17,35 @@
  * under the License.
  */
 
-package grakn.client.connection;
+package grakn.client.rpc;
 
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.DatabaseManager;
-import grakn.client.Grakn.QueryOptions;
 import grakn.client.Grakn.Session;
-
+import grakn.client.GraknOptions;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-import static grakn.client.Grakn.Session.Type.DATA;
-import static grakn.client.Grakn.Session.Type.SCHEMA;
-
 /**
  * Entry-point which communicates with a running Grakn server using gRPC.
  */
-public class GraknClient implements Client {
+public class RPCClient implements Client {
 
     public static final String DEFAULT_URI = "localhost:48555";
 
     private final ManagedChannel channel;
     private final DatabaseManager databases;
 
-    public GraknClient() {
+    public RPCClient() {
         this(DEFAULT_URI);
     }
 
-    public GraknClient(final String address) {
+    public RPCClient(final String address) {
         channel = ManagedChannelBuilder.forTarget(address)
                 .usePlaintext().build();
-        databases = new GraknDatabaseManager(channel);
+        databases = new RPCDatabaseManager(channel);
     }
 
     public void close() {
@@ -67,33 +63,8 @@ public class GraknClient implements Client {
     }
 
     @Override
-    public Session session(final String databaseName) {
-        return session(databaseName, DATA);
-    }
-
-    @Override
-    public Session session(final String databaseName, final Session.Type type) {
-        return new GraknSession(channel, databaseName, type);
-    }
-
-    @Override
-    public Session session(final String databaseName, final QueryOptions options) {
-        return session(databaseName, DATA, options);
-    }
-
-    @Override
-    public Session session(final String databaseName, final Session.Type type, final QueryOptions options) {
-        return new GraknSession(channel, databaseName, type, options);
-    }
-
-    @Override
-    public Session schemaSession(final String databaseName) {
-        return session(databaseName, SCHEMA);
-    }
-
-    @Override
-    public Session schemaSession(final String databaseName, final QueryOptions options) {
-        return session(databaseName, SCHEMA, options);
+    public Session session(final String databaseName, final Session.Type type, final GraknOptions options) {
+        return new RPCSession(channel, databaseName, type, options);
     }
 
     @Override

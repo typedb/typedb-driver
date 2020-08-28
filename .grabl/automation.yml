@@ -37,10 +37,10 @@ build:
           bazel build --config=rbe //...
           bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
           bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
-#      test-integration:
-#        machine: graknlabs-ubuntu-20.04
-#        script: |
-#          bazel test --config=rbe //test/integration/... --test_output=errors
+      #      test-integration:
+      #        machine: graknlabs-ubuntu-20.04
+      #        script: |
+      #          bazel test --config=rbe //test/integration/... --test_output=errors
       test-behaviour:
         machine: graknlabs-ubuntu-20.04
         script: |
@@ -49,7 +49,7 @@ build:
           bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
           bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
-# TODO: revert above tests to //test/behaviour/...
+      # TODO: revert above tests to //test/behaviour/...
       test-assembly-query:
         machine: graknlabs-ubuntu-20.04
         script: |
@@ -79,7 +79,7 @@ build:
           cd test/deployment && mvn test
     execution:
       - build
-#      - test-integration
+      #      - test-integration
       - test-behaviour
       - test-assembly-query
       - deploy-maven-snapshot:

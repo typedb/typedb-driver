@@ -19,18 +19,17 @@
 
 package grakn.client;
 
-import grakn.client.answer.Answer;
-import grakn.client.answer.AnswerGroup;
-import grakn.client.answer.ConceptList;
-import grakn.client.answer.ConceptMap;
-import grakn.client.answer.ConceptSet;
-import grakn.client.answer.ConceptSetMeasure;
-import grakn.client.answer.Explanation;
-import grakn.client.answer.Numeric;
-import grakn.client.answer.Void;
 import grakn.client.concept.Concepts;
-import grakn.client.connection.GraknClient;
-import grakn.client.connection.GraknDatabase;
+import grakn.client.concept.answer.Answer;
+import grakn.client.concept.answer.AnswerGroup;
+import grakn.client.concept.answer.ConceptList;
+import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptSet;
+import grakn.client.concept.answer.ConceptSetMeasure;
+import grakn.client.concept.answer.Explanation;
+import grakn.client.concept.answer.Numeric;
+import grakn.client.concept.answer.Void;
+import grakn.client.rpc.RPCClient;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
@@ -38,7 +37,6 @@ import graql.lang.query.GraqlGet;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
-import io.grpc.ManagedChannel;
 
 import javax.annotation.CheckReturnValue;
 import java.io.Serializable;
@@ -47,14 +45,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static grakn.client.Grakn.Session.Type.DATA;
+
 public interface Grakn {
 
     static Client client() {
-        return new GraknClient();
+        return new RPCClient();
     }
 
     static Client client(String address) {
-        return new GraknClient(address);
+        return new RPCClient(address);
     }
 
     interface Client extends AutoCloseable {
@@ -63,24 +63,19 @@ public interface Grakn {
 
         void close();
 
-        Session session(String databaseName);
+        default Session session(String databaseName) {
+            return session(databaseName, DATA);
+        }
 
-        Session session(String databaseName, Session.Type type);
+        default Session session(String databaseName, Session.Type type) {
+            return session(databaseName, type, new GraknOptions());
+        }
 
-        Session session(String databaseName, QueryOptions options);
-
-        Session session(String databaseName, Session.Type type, QueryOptions options);
-
-        Session schemaSession(String databaseName);
-
-        Session schemaSession(String databaseName, QueryOptions options);
+        Session session(String databaseName, Session.Type type, GraknOptions options);
 
         DatabaseManager databases();
     }
 
-    /**
-     * Manages a collection of Grakn databases.
-     */
     interface DatabaseManager {
 
         boolean contains(String name);
@@ -95,27 +90,20 @@ public interface Grakn {
     interface Database extends Serializable {
 
         @CheckReturnValue
-        static Database of(String name) {
-            return new GraknDatabase(name);
-        }
-
-        @CheckReturnValue
         String name();
     }
 
-    /**
-     * @see Transaction
-     * @see Client
-     */
     interface Session extends AutoCloseable {
 
-        Transaction.Builder transaction();
+        default Transaction transaction() {
+            return transaction(Transaction.Type.READ);
+        }
 
-        Transaction.Builder transaction(QueryOptions options);
+        default Transaction transaction(Transaction.Type type) {
+            return transaction(type, new GraknOptions());
+        }
 
-        Transaction transaction(Transaction.Type type);
-
-        Transaction transaction(Transaction.Type type, QueryOptions options);
+        Transaction transaction(Transaction.Type type, GraknOptions options);
 
         boolean isOpen();
 
@@ -166,15 +154,15 @@ public interface Grakn {
 
         QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, GraknOptions options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
 
-        QueryFuture<List<Void>> execute(GraqlDelete query, QueryOptions options);
+        QueryFuture<List<Void>> execute(GraqlDelete query, GraknOptions options);
 
         QueryFuture<List<Void>> execute(GraqlDelete query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlGet query, QueryOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlGet query, GraknOptions options);
 
         QueryFuture<List<ConceptMap>> execute(GraqlGet query);
 
@@ -182,41 +170,41 @@ public interface Grakn {
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, GraknOptions options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
 
-        QueryFuture<Stream<Void>> stream(GraqlDelete query, QueryOptions options);
+        QueryFuture<Stream<Void>> stream(GraqlDelete query, GraknOptions options);
 
         QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, QueryOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, GraknOptions options);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
 
         QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
 
-        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, GraknOptions options);
 
         QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
 
-        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, GraknOptions options);
 
         QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
 
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, GraknOptions options);
 
         QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
 
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, GraknOptions options);
 
         QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, GraknOptions options);
 
         QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
 
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, QueryOptions options);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, GraknOptions options);
 
         QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 
@@ -236,11 +224,11 @@ public interface Grakn {
 
         QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
 
-        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, GraknOptions options);
 
         QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
 
-        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, QueryOptions options);
+        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, GraknOptions options);
 
         boolean isOpen();
 
@@ -278,22 +266,6 @@ public interface Grakn {
             public boolean isWrite() { return isWrite; }
         }
 
-        interface Builder {
-
-            /**
-             * Read-only transaction, where database mutation is prohibited
-             */
-            Transaction read();
-
-            /**
-             * Write transaction, where database mutation is allowed
-             */
-            Transaction write();
-        }
-
-        /**
-         * An extension of @code Future that catches @code InterruptedException and @code ExecutionException.
-         */
         interface QueryFuture<T> extends Future<T> {
             @Override
             T get();
@@ -303,64 +275,4 @@ public interface Grakn {
         }
     }
 
-    class QueryOptions {
-
-        private Boolean infer = null;
-        private Boolean explain = null;
-        private BatchSize batchSize = null;
-
-        public Boolean infer() {
-            return infer;
-        }
-
-        public QueryOptions infer(boolean infer) {
-            this.infer = infer;
-            return this;
-        }
-
-        public Boolean explain() {
-            return explain;
-        }
-
-        public QueryOptions explain(boolean explain) {
-            this.explain = explain;
-            return this;
-        }
-
-        public BatchSize batchSize() {
-            return batchSize;
-        }
-
-        public QueryOptions batchSize(final BatchSize batchSize) {
-            this.batchSize = batchSize;
-            return this;
-        }
-
-        public static class BatchSize {
-
-            private final Integer size;
-            private final boolean all;
-
-            private BatchSize(final Integer size, final boolean all) {
-                this.size = size;
-                this.all = all;
-            }
-
-            public static BatchSize of(final int size) {
-                return new BatchSize(size, false);
-            }
-
-            public static BatchSize all() {
-                return new BatchSize(null, true);
-            }
-
-            public int getSize() {
-                return size;
-            }
-
-            public boolean isAll() {
-                return all;
-            }
-        }
-    }
 }

@@ -17,28 +17,27 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
-import com.google.protobuf.ByteString;
-import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
+public class Void implements Answer {
+    private final String message;
 
-import static grakn.common.collection.Bytes.bytesToHexString;
-
-abstract class AnswerMessageReader {
-
-    static String iid(final ByteString res) {
-        return bytesToHexString(res.toByteArray());
+    public Void(String message) {
+        this.message = message;
     }
 
-    static Number number(final AnswerProto.Number res) {
-        try {
-            return NumberFormat.getInstance().parse(res.getValue());
-        } catch (ParseException e) {
-            throw new GraknClientException(e);
-        }
+    public static Void of(final AnswerProto.Void res) {
+        return new Void(res.getMessage());
+    }
+
+    @Override
+    public boolean hasExplanation() {
+        return false;
+    }
+
+    public String message() {
+        return message;
     }
 }

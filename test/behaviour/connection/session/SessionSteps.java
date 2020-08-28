@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
+import static grakn.client.Grakn.Session.Type.SCHEMA;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessions;
@@ -57,7 +58,7 @@ public class SessionSteps {
     @When("connection open schema session(s) for database(s):")
     public void connection_open_schema_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.schemaSession(name));
+            sessions.add(client.session(name, SCHEMA));
         }
     }
 
@@ -128,7 +129,8 @@ public class SessionSteps {
     public void sessions_in_parallel_are_open(Boolean isOpen) {
         Stream<CompletableFuture<Void>> assertions = sessionsParallel
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
-                    assertEquals(isOpen, session.isOpen()); return null;
+                    assertEquals(isOpen, session.isOpen());
+                    return null;
                 }));
 
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new)).join();
@@ -153,7 +155,8 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database().name()); return null;
+                assertEquals(name, session.database().name());
+                return null;
             });
         }
 

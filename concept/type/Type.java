@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
@@ -57,6 +57,7 @@ public interface Type extends Concept {
 
     /**
      * Return if the type is a root type.
+     *
      * @return Returns true if the type is a root type.
      */
     @CheckReturnValue
@@ -130,13 +131,13 @@ public interface Type extends Concept {
                             if (type.getRoot()) {
                                 return new AttributeTypeImpl.Local(type);
                             } else {
-                                throw new GraknClientException(ILLEGAL_COMBINATION_OF_FIELDS.message(
+                                throw new GraknException(ILLEGAL_COMBINATION_OF_FIELDS.message(
                                         "valueType", ConceptProto.AttributeType.VALUE_TYPE.OBJECT,
                                         "root", false));
                             }
                         default:
                         case UNRECOGNIZED:
-                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
+                            throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
                     }
                 case ROLE_TYPE:
                     return new RoleTypeImpl.Local(type);
@@ -146,7 +147,7 @@ public interface Type extends Concept {
                     return new ThingTypeImpl.Local(type);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
             }
         }
 
@@ -163,7 +164,7 @@ public interface Type extends Concept {
          */
         @Override
         default ThingType.Local asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
         }
 
         /**
@@ -173,7 +174,7 @@ public interface Type extends Concept {
          */
         @Override
         default EntityType.Local asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
         }
 
         /**
@@ -183,7 +184,7 @@ public interface Type extends Concept {
          */
         @Override
         default AttributeType.Local asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
         }
 
         /**
@@ -193,7 +194,7 @@ public interface Type extends Concept {
          */
         @Override
         default RelationType.Local asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
         }
 
         /**
@@ -203,7 +204,7 @@ public interface Type extends Concept {
          */
         @Override
         default RoleType.Local asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
         }
     }
 
@@ -239,13 +240,13 @@ public interface Type extends Concept {
                             if (type.getRoot()) {
                                 return new AttributeTypeImpl.Remote(concepts, label, true);
                             } else {
-                                throw new GraknClientException(ILLEGAL_COMBINATION_OF_FIELDS.message(
+                                throw new GraknException(ILLEGAL_COMBINATION_OF_FIELDS.message(
                                         "valueType", ConceptProto.AttributeType.VALUE_TYPE.OBJECT,
                                         "root", false));
                             }
                         default:
                         case UNRECOGNIZED:
-                            throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
+                            throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), type.getValueType()));
                     }
                 case ROLE_TYPE:
                     final String scopedLabel = type.getScopedLabel();
@@ -256,7 +257,7 @@ public interface Type extends Concept {
                     return new ThingTypeImpl.Remote(concepts, label, type.getRoot());
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknClientException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
             }
         }
 
@@ -316,7 +317,7 @@ public interface Type extends Concept {
          */
         @Override
         default ThingType.Remote asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
         }
 
         /**
@@ -326,7 +327,7 @@ public interface Type extends Concept {
          */
         @Override
         default EntityType.Remote asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
         }
 
         /**
@@ -336,7 +337,7 @@ public interface Type extends Concept {
          */
         @Override
         default RelationType.Remote asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
         }
 
         /**
@@ -346,7 +347,7 @@ public interface Type extends Concept {
          */
         @Override
         default AttributeType.Remote asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
         }
 
         /**
@@ -356,7 +357,7 @@ public interface Type extends Concept {
          */
         @Override
         default RoleType.Remote asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
         }
     }
 }

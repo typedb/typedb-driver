@@ -20,9 +20,6 @@
 package grakn.client.test.behaviour.connection.session;
 
 import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknRunner;
-import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknSingleton;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;

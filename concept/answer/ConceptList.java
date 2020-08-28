@@ -17,66 +17,49 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
-import grakn.client.Grakn.Transaction;
-import grakn.client.concept.Concept;
 import grakn.protocol.AnswerProto;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 /**
- * A type of Answer object that contains a List of Answers as the members and a RemoteConcept
- * as the owner.
- *
- * @param <T> the type of Answer being grouped
+ * A type of Answer object that contains a List of Concepts.
  */
-public class AnswerGroup<T extends Answer> implements Answer {
+public class ConceptList implements Answer {
 
-    private final Concept.Local owner;
-    private final List<T> answers;
+    // TODO: change to store List<Concept> once we are able to construct Concept without a database look up
+    private final List<String> list;
 
-    public AnswerGroup(Concept.Local owner, List<T> answers) {
-        this.owner = owner;
-        this.answers = answers;
+    public ConceptList(List<String> list) {
+        this.list = Collections.unmodifiableList(list);
     }
 
-    public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
-        return new AnswerGroup<>(
-                Concept.Local.of(res.getOwner()),
-                res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList())
-        );
+    public static ConceptList of(final AnswerProto.ConceptList res) {
+        return new ConceptList(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toList()));
     }
 
-    @Override
     public boolean hasExplanation() {
         return false;
     }
 
-    public Concept.Local owner() {
-        return this.owner;
-    }
-
-    public List<T> answers() {
-        return this.answers;
+    public List<String> list() {
+        return list;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        AnswerGroup<?> a2 = (AnswerGroup<?>) obj;
-        return this.owner.equals(a2.owner) &&
-                this.answers.equals(a2.answers);
+        ConceptList a2 = (ConceptList) obj;
+        return this.list.equals(a2.list);
     }
 
     @Override
     public int hashCode() {
-        int hash = owner.hashCode();
-        hash = 31 * hash + answers.hashCode();
-
-        return hash;
+        return list.hashCode();
     }
 }

@@ -26,9 +26,9 @@ import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
 
 import static grakn.client.test.behaviour.concept.ConceptSteps.concepts;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
+import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

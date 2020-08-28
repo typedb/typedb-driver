@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.protocol.AnswerProto;
 
 import javax.annotation.CheckReturnValue;
@@ -56,9 +56,9 @@ public interface Answer {
             case VOID:
                 return Void.of(res.getVoid());
             case ANSWER_NOT_SET:
-                throw new GraknClientException(REQUIRED_FIELD_NOT_SET.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName()));
+                throw new GraknException(REQUIRED_FIELD_NOT_SET.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName()));
             default:
-                throw new GraknClientException(UNRECOGNISED_FIELD.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName(), res.getAnswerCase()));
+                throw new GraknException(UNRECOGNISED_FIELD.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName(), res.getAnswerCase()));
         }
     }
 }

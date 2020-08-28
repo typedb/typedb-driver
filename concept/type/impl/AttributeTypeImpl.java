@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
@@ -34,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.concept.ConceptMessageWriter.attributeValue;
+import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
 
 public abstract class AttributeTypeImpl {
 
@@ -101,7 +101,7 @@ public abstract class AttributeTypeImpl {
         public Stream<? extends ThingType> getOwners(boolean onlyKey) {
             final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setAttributeTypeGetOwnersIterReq(ConceptProto.AttributeType.GetOwners.Iter.Req.newBuilder()
-                            .setOnlyKey(onlyKey)).build();
+                                                              .setOnlyKey(onlyKey)).build();
 
             return typeStream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(Type.Remote::asThingType);
         }
@@ -109,7 +109,7 @@ public abstract class AttributeTypeImpl {
         protected final Attribute.Remote<?> put(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                            .setValue(attributeValue(value))).build();
+                                                    .setValue(attributeValue(value))).build();
             return Thing.Remote.of(concepts(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
@@ -117,7 +117,7 @@ public abstract class AttributeTypeImpl {
         protected final Attribute.Remote<?> get(Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                            .setValue(attributeValue(value))).build();
+                                                    .setValue(attributeValue(value))).build();
             ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
@@ -137,7 +137,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Boolean.Remote(concepts(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
 
         @Override
@@ -145,7 +145,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Long.Remote(concepts(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
         }
 
         @Override
@@ -153,7 +153,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Double.Remote(concepts(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
         }
 
         @Override
@@ -161,7 +161,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.String.Remote(concepts(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
         }
 
         @Override
@@ -169,7 +169,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.DateTime.Remote(concepts(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
         }
 
         @Override
@@ -488,7 +488,7 @@ public abstract class AttributeTypeImpl {
                 if (regex == null) regex = "";
                 final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                .setRegex(regex)).build();
+                                                             .setRegex(regex)).build();
                 runMethod(method);
             }
 

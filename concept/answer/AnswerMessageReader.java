@@ -17,44 +17,28 @@
  * under the License.
  */
 
-package grakn.client.answer;
+package grakn.client.concept.answer;
 
+import com.google.protobuf.ByteString;
+import grakn.client.common.exception.GraknException;
 import grakn.protocol.AnswerProto;
 
-/**
- * A type of Answer object that contains a Number.
- */
-public class Numeric implements Answer {
+import java.text.NumberFormat;
+import java.text.ParseException;
 
-    private final Number number;
+import static grakn.common.collection.Bytes.bytesToHexString;
 
-    public Numeric(Number number) {
-        this.number = number;
+abstract class AnswerMessageReader {
+
+    static String iid(final ByteString res) {
+        return bytesToHexString(res.toByteArray());
     }
 
-    public static Numeric of(final AnswerProto.Value res) {
-        return new Numeric(AnswerMessageReader.number(res.getNumber()));
-    }
-
-    @Override
-    public boolean hasExplanation() {
-        return false;
-    }
-
-    public Number number() {
-        return number;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Numeric a2 = (Numeric) obj;
-        return this.number.toString().equals(a2.number.toString());
-    }
-
-    @Override
-    public int hashCode() {
-        return number.hashCode();
+    static Number number(final AnswerProto.Number res) {
+        try {
+            return NumberFormat.getInstance().parse(res.getValue());
+        } catch (ParseException e) {
+            throw new GraknException(e);
+        }
     }
 }
