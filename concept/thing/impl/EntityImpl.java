@@ -19,52 +19,38 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
 
-public class EntityImpl {
+public abstract class EntityImpl {
     /**
      * Client implementation of Entity
      */
-    public static class Local extends ThingImpl.Local<Entity, EntityType> implements Entity.Local {
+    public static class Local extends ThingImpl.Local implements Entity.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(final ConceptProto.Thing thing) {
+            super(thing);
+        }
+
+        public EntityType.Local getType() {
+            return super.getType().asEntityType();
         }
     }
 
     /**
      * Client implementation of Entity
      */
-    public static class Remote extends ThingImpl.Local.Remote<Entity, EntityType> implements Entity.Remote {
+    public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final String iid) {
+            super(concepts, iid);
         }
 
         @Override
-        public final EntityType.Remote type() {
-            return (EntityType.Remote) super.type();
-        }
-
-        @Override
-        public Entity.Remote has(Attribute<?> attribute) {
-            return (Entity.Remote) super.has(attribute);
-        }
-
-        @Override
-        public Entity.Remote unhas(Attribute<?> attribute) {
-            return (Entity.Remote) super.unhas(attribute);
-        }
-
-        @Override
-        protected final Entity.Remote asCurrentBaseType(Concept.Remote<?> other) {
-            return other.asEntity();
+        public final EntityType.Remote getType() {
+            return (EntityType.Remote) super.getType();
         }
     }
 }

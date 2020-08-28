@@ -35,8 +35,8 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/connection/database.feature",
-        tags = "not @ignore and not @ignore-client-java"
+        features = "external/graknlabs_behaviour/connection/database.feature",
+        tags = "not @ignore and not @ignore-client-java and not @ignore-grakn-2.0" // TODO: remove @ignore-grakn-2.0
 )
 public class DatabaseTest {
     // ATTENTION:
@@ -70,7 +70,6 @@ public class DatabaseTest {
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
-
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {

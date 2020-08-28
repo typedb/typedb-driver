@@ -19,8 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptIID;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.type.EntityType;
 
@@ -32,38 +31,32 @@ import javax.annotation.CheckReturnValue;
  * Entities are objects which are defined by their Attribute and their links to
  * other entities via Relation
  */
-public interface Entity extends Thing<Entity, EntityType> {
-    //------------------------------------- Accessors ----------------------------------
+public interface Entity extends Thing {
 
     /**
      * @return The EntityType of this Entity
      * @see EntityType
      */
     @Override
-    EntityType type();
-
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default Entity asEntity() {
-        return this;
-    }
+    EntityType getType();
 
     @CheckReturnValue
     @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
-        return Entity.Remote.of(tx, iid());
-    }
+    Entity.Remote asRemote(Concepts concepts);
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isEntity() {
-        return true;
-    }
+    interface Local extends Thing.Local, Entity {
 
-    interface Local extends Thing.Local<Entity, EntityType>, Entity {
+        @CheckReturnValue
+        @Override
+        default Entity.Local asEntity() {
+            return this;
+        }
+
+        @CheckReturnValue
+        @Override
+        default Entity.Remote asRemote(final Concepts concepts) {
+            return Entity.Remote.of(concepts, getIID());
+        }
     }
 
     /**
@@ -72,52 +65,29 @@ public interface Entity extends Thing<Entity, EntityType> {
      * Entities are objects which are defined by their Attribute and their links to
      * other entities via Relation
      */
-    interface Remote extends Thing.Remote<Entity, EntityType>, Entity {
+    interface Remote extends Thing.Remote, Entity {
 
-        static Entity.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
-            return new EntityImpl.Remote(tx, iid);
+        static Entity.Remote of(Concepts concepts, String iid) {
+            return new EntityImpl.Remote(concepts, iid);
         }
-
-        //------------------------------------- Accessors ----------------------------------
 
         /**
          * @return The EntityType of this Entity
          * @see EntityType.Remote
          */
         @Override
-        EntityType.Remote type();
+        EntityType.Remote getType();
 
-        /**
-         * Creates a relation from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which a relation is created
-         * @return The instance itself
-         */
+        @CheckReturnValue
         @Override
-        Entity.Remote has(Attribute<?> attribute);
+        default Entity.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
-        /**
-         * Removes the provided Attribute from this Entity
-         *
-         * @param attribute the Attribute to be removed
-         * @return The Entity itself
-         */
-        @Override
-        Entity.Remote unhas(Attribute<?> attribute);
-
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default Entity.Remote asEntity() {
             return this;
-        }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isEntity() {
-            return true;
         }
     }
 }

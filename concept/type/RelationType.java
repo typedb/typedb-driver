@@ -19,13 +19,12 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 /**
@@ -33,28 +32,24 @@ import java.util.stream.Stream;
  * A RelationType defines how Type may relate to one another.
  * They are used to model and categorise n-ary Relations.
  */
-public interface RelationType extends ThingType<RelationType, Relation> {
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
+public interface RelationType extends ThingType {
+
     @CheckReturnValue
     @Override
-    default RelationType asRelationType() {
-        return this;
-    }
+    RelationType.Remote asRemote(Concepts concepts);
 
-    @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
-        return RelationType.Remote.of(tx, iid());
-    }
+    interface Local extends ThingType.Local, RelationType {
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRelationType() {
-        return true;
-    }
+        @CheckReturnValue
+        @Override
+        default RelationType.Local asRelationType() {
+            return this;
+        }
 
-    interface Local extends ThingType.Local<RelationType, Relation>, RelationType {
+        @Override
+        default RelationType.Remote asRemote(final Concepts concepts) {
+            return RelationType.Remote.of(concepts, getLabel(), isRoot());
+        }
     }
 
     /**
@@ -62,13 +57,11 @@ public interface RelationType extends ThingType<RelationType, Relation> {
      * A RelationType defines how Type may relate to one another.
      * They are used to model and categorise n-ary Relations.
      */
-    interface Remote extends ThingType.Remote<RelationType, Relation>, RelationType {
+    interface Remote extends ThingType.Remote, RelationType {
 
-        static RelationType.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
-            return new RelationTypeImpl.Remote(tx, iid);
+        static RelationType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new RelationTypeImpl.Remote(concepts, label, isRoot);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
 
         /**
          * Create a relation of this relation type.
@@ -81,79 +74,49 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * Set the super type of this relation type.
          *
          * @param superRelationType The super type to set.
-         * @return This concept itself.
          */
-        RelationType.Remote sup(RelationType superRelationType);
-
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         * @return The Concept itself
-         */
-        @Override
-        RelationType.Remote label(Label label);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        RelationType.Remote has(AttributeType<?> attributeType);
-        @Override
-        RelationType.Remote has(AttributeType<?> attributeType, boolean isKey);
-        @Override
-        RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
-        @Override
-        RelationType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
-
-        //------------------------------------- Accessors ----------------------------------
+        void setSupertype(RelationType superRelationType);
 
         /**
          * Retrieve a specific RoleType.
-         *
-         *
          */
-        default RoleType.Remote role(String role) {
-            return role(Label.of(role));
-        }
-        RoleType.Remote role(Label role);
+        @Nullable
+        @CheckReturnValue
+        RoleType.Remote getRelates(String roleLabel);
 
         /**
-         * Retrieves a list of the RoleTypes that make up this RelationType.
+         * Retrieve a specific RoleType.
          *
          * @return A list of the RoleTypes which make up this RelationType.
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Stream<RoleType.Remote> roles();
-
-        //------------------------------------- Edge Handling ----------------------------------
+        Stream<RoleType.Remote> getRelates();
 
         /**
          * Creates a new RoleType for this RelationType.
          *
-         * @param role A new RoleType which is part of this RelationType.
-         * @return The RoleType itself.
+         * @param roleLabel The label of a new RoleType which is part of this RelationType.
          * @see RoleType.Remote
          */
-        default RoleType.Remote relates(String role) {
-            return relates(Label.of(role));
-        }
-        RoleType.Remote relates(Label role);
-
-        //---- Inherited Methods
+        void setRelates(String roleLabel);
 
         /**
-         * Sets the RelationType to be abstract - which prevents it from having any instances.
+         * Creates a new RoleType override for this RelationType.
          *
-         * @param isAbstract Specifies if the concept is to be abstract (true) or not (false).
-         * @return The RelationType itself.
+         * @param roleLabel       The label of a new RoleType which is part of this RelationType.
+         * @param overriddenLabel The label of the RoleType that is to be overridden.
+         * @see RoleType.Remote
          */
-        @Override
-        RelationType.Remote isAbstract(Boolean isAbstract);
+        void setRelates(String roleLabel, String overriddenLabel);
+
+        /**
+         * Removes a RoleType from this RelationType.
+         *
+         * @param roleLabel The label of a RoleType which is part of this RelationType.
+         * @see RoleType.Remote
+         */
+        void unsetRelates(String roleLabel);
 
         /**
          * Returns a collection of supertypes of this RelationType.
@@ -161,7 +124,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return All the supertypes of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> sups();
+        Stream<? extends RelationType.Remote> getSupertypes();
 
         /**
          * Returns a collection of subtypes of this RelationType.
@@ -169,34 +132,7 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @return All the sub types of this RelationType
          */
         @Override
-        Stream<RelationType.Remote> subs();
-
-        /**
-         * Sets the RoleType which instances of this RelationType may play.
-         *
-         * @param role The RoleType which the instances of this RelationType are allowed to play.
-         * @return The RelationType itself.
-         */
-        @Override
-        RelationType.Remote plays(RoleType role);
-
-        /**
-         * Removes the ability of this RelationType to play a specific RoleType.
-         *
-         * @param role The RoleType which the instances of this RelationType should no longer be allowed to play.
-         * @return The RoleType itself.
-         */
-        @Override
-        RelationType.Remote unplay(RoleType role);
-
-        /**
-         * Removes the ability for instances of this RelationType to have Attributes of a specific AttributeType.
-         *
-         * @param attributeType The AttributeType which this RelationType can no longer have
-         * @return The RelationType itself.
-         */
-        @Override
-        RelationType.Remote unhas(AttributeType<?> attributeType);
+        Stream<? extends RelationType.Remote> getSubtypes();
 
         /**
          * Retrieve all the Relation instances of this RelationType
@@ -205,21 +141,18 @@ public interface RelationType extends ThingType<RelationType, Relation> {
          * @see Relation.Remote
          */
         @Override
-        Stream<Relation.Remote> instances();
+        Stream<? extends Relation.Remote> getInstances();
 
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
+        @CheckReturnValue
+        @Override
+        default RelationType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
         @CheckReturnValue
         @Override
         default RelationType.Remote asRelationType() {
             return this;
-        }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRelationType() {
-            return true;
         }
     }
 }

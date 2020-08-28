@@ -19,12 +19,9 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.Rule;
-import grakn.client.exception.GraknClientException;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -36,87 +33,70 @@ public class RuleImpl {
     /**
      * Client implementation of Rule
      */
-    public static class Local extends TypeImpl.Local<Rule> implements Rule.Local {
+    public static class Local extends TypeImpl.Local implements Rule.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
     /**
      * Client implementation of Rule
      */
-    public static class Remote extends TypeImpl.Remote<Rule> implements Rule.Remote {
+    public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
+        }
+
+        @Nullable
+        @Override
+        public Type.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asRule);
         }
 
         @Override
-        public final Stream<Rule.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
+        public final Stream<Rule.Remote> getSupertypes() {
+            return super.getSupertypes().map(Type.Remote::asRule);
         }
 
         @Override
-        public final Stream<Rule.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public final Rule.Remote label(Label label) {
-            return (Rule.Remote) super.label(label);
-        }
-
-        @Override
-        public Rule.Remote sup(Rule superRule) {
-            return (Rule.Remote) super.sup(superRule);
+        public final Stream<Rule.Remote> getSubtypes() {
+            return super.getSubtypes().map(Type.Remote::asRule);
         }
 
         @Override
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern when() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+        public final Pattern getWhen() {
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
 
             ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
             switch (response.getResCase()) {
-                case NULL:
-                    return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
         }
 
         @Override
         @Nullable
         @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern then() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+        public final Pattern getThen() {
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
 
             ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();
             switch (response.getResCase()) {
-                case NULL:
-                    return null;
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
+                case RES_NOT_SET:
+                    return null;
             }
         }
-
-        @Override
-        protected final Rule.Remote asCurrentBaseType(Concept.Remote<?> other) {
-            return other.asRule();
-        }
-
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
-            return other.isRule();
-        }
-
     }
 }

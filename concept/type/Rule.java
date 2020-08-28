@@ -19,9 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.type.impl.RuleImpl;
 import graql.lang.pattern.Pattern;
 
@@ -32,39 +30,39 @@ import java.util.stream.Stream;
 /**
  * A SchemaConcept used to model and categorise Rules.
  */
-public interface Rule extends Type<Rule> {
-    @Deprecated
+public interface Rule extends Type {
+
     @CheckReturnValue
     @Override
-    default Rule asRule() {
-        return this;
-    }
+    Rule.Remote asRemote(Concepts concepts);
 
-    @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
-        return Remote.of(tx, iid());
-    }
+    interface Local extends Type.Local, Rule {
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRule() {
-        return true;
-    }
+        @CheckReturnValue
+        @Override
+        default Rule.Local asRule() {
+            return this;
+        }
 
-    interface Local extends Type.Local<Rule>, Rule {
+        @Override
+        default Rule.Remote asRemote(final Concepts concepts) {
+            return Rule.Remote.of(concepts, getLabel(), isRoot());
+        }
     }
 
     /**
      * A SchemaConcept used to model and categorise Rules.
      */
-    interface Remote extends Type.Remote<Rule>, Rule {
+    interface Remote extends Type.Remote, Rule {
 
-        static Rule.Remote of(GraknClient.Transaction tx, ConceptIID iid) {
-            return new RuleImpl.Remote(tx, iid);
+        static Rule.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
+            return new RuleImpl.Remote(concepts, label, isRoot);
         }
 
-        //------------------------------------- Accessors ----------------------------------
+        @Override
+        default boolean isAbstract() {
+            return false;
+        }
 
         /**
          * Retrieves the when part of the Rule
@@ -74,7 +72,7 @@ public interface Rule extends Type<Rule> {
          */
         @CheckReturnValue
         @Nullable
-        Pattern when();
+        Pattern getWhen();
 
         /**
          * Retrieves the then part of the Rule.
@@ -84,50 +82,30 @@ public interface Rule extends Type<Rule> {
          */
         @CheckReturnValue
         @Nullable
-        Pattern then();
-
-        //------------------------------------- Modifiers ----------------------------------
-
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         * @return The Concept itself
-         */
-        Rule.Remote label(Label label);
-
-
-        /**
-         * @param superRule The super of this Rule
-         * @return The Rule itself
-         */
-        Rule.Remote sup(Rule superRule);
+        Pattern getThen();
 
         /**
          * @return All the super-types of this this Rule
          */
         @Override
-        Stream<Rule.Remote> sups();
+        Stream<Rule.Remote> getSupertypes();
 
         /**
          * @return All the sub of this Rule
          */
         @Override
-        Stream<Rule.Remote> subs();
+        Stream<Rule.Remote> getSubtypes();
 
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
+        @CheckReturnValue
+        @Override
+        default Rule.Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
         @CheckReturnValue
         @Override
         default Rule.Remote asRule() {
             return this;
-        }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRule() {
-            return true;
         }
     }
 }

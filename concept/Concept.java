@@ -19,64 +19,25 @@
 
 package grakn.client.concept;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.type.impl.RuleImpl;
-import grakn.client.concept.thing.impl.AttributeImpl;
-import grakn.client.concept.thing.impl.EntityImpl;
-import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.common.exception.GraknException;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
-import grakn.client.concept.type.impl.AttributeTypeImpl;
-import grakn.client.concept.type.impl.EntityTypeImpl;
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Entity;
-import grakn.client.concept.thing.Relation;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.MetaType;
-import grakn.client.concept.type.impl.MetaTypeImpl;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.impl.RelationTypeImpl;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.impl.RoleTypeImpl;
-import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 /**
  * The base concept implementation.
- * A concept which can every object in the graph.
+ * A concept which can be every object in the graph.
  * This class forms the basis of assuring the graph follows the Grakn object model.
  * It provides methods to retrieve information about the Concept, and determine if it is a Type
  * (EntityType, RoleType, RelationType, Rule or AttributeType)
- * or an Thing (Entity, Relation , Attribute).
+ * or an Thing (Entity, Relation, Attribute).
  */
-public interface Concept<BaseType extends Concept<BaseType>> {
-
-    //------------------------------------- Accessors ----------------------------------
-
-    /**
-     * Get the unique IID associated with the Concept.
-     *
-     * @return A value the concept's unique iid.
-     */
-    @CheckReturnValue
-    ConceptIID iid();
-
-    //------------------------------------- Other ---------------------------------
-
-    /**
-     * Return as a SchemaConcept if the Concept is a SchemaConcept.
-     *
-     * @return A SchemaConcept if the Concept is a SchemaConcept
-     */
-    @CheckReturnValue
-    default Type<?> asSchemaConcept() {
-        throw GraknConceptException.invalidCasting(this, Type.class);
-    }
+public interface Concept {
 
     /**
      * Return as a Type if the Concept is a Type.
@@ -84,69 +45,15 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Type if the Concept is a Type
      */
     @CheckReturnValue
-    default ThingType<?, ?> asType() {
-        throw GraknConceptException.invalidCasting(this, ThingType.class);
-    }
+    Type asType();
 
     /**
-     * Return as an Thing if the Concept is an Thing.
+     * Return as a Thing if the Concept is a Thing.
      *
-     * @return An Thing if the Concept is an Thing
+     * @return A Thing if the Concept is a Thing
      */
     @CheckReturnValue
-    default Thing<?, ?> asThing() {
-        throw GraknConceptException.invalidCasting(this, Thing.class);
-    }
-
-    /**
-     * Return as an EntityType if the Concept is an EntityType.
-     *
-     * @return A EntityType if the Concept is an EntityType
-     */
-    @CheckReturnValue
-    default EntityType asEntityType() {
-        throw GraknConceptException.invalidCasting(this, EntityType.class);
-    }
-
-    /**
-     * Return as a RoleType if the Concept is a RoleType.
-     *
-     * @return A RoleType if the Concept is a RoleType
-     */
-    @CheckReturnValue
-    default RoleType asRoleType() {
-        throw GraknConceptException.invalidCasting(this, RoleType.class);
-    }
-
-    /**
-     * Return as a RelationType if the Concept is a RelationType.
-     *
-     * @return A RelationType if the Concept is a RelationType
-     */
-    @CheckReturnValue
-    default RelationType asRelationType() {
-        throw GraknConceptException.invalidCasting(this, RelationType.class);
-    }
-
-    /**
-     * Return as a AttributeType if the Concept is a AttributeType
-     *
-     * @return A AttributeType if the Concept is a AttributeType
-     */
-    @CheckReturnValue
-    default <D> AttributeType<D> asAttributeType() {
-        throw GraknConceptException.invalidCasting(this, AttributeType.class);
-    }
-
-    /**
-     * Return as a AttributeType if the Concept is a AttributeType
-     *
-     * @return A AttributeType if the Concept is a AttributeType
-     */
-    @CheckReturnValue
-    default <D> AttributeType<D> asAttributeType(ValueType<D> valueType) {
-        throw GraknConceptException.invalidCasting(this, AttributeType.class);
-    }
+    Thing asThing();
 
     /**
      * Return as a Rule if the Concept is a Rule.
@@ -154,186 +61,15 @@ public interface Concept<BaseType extends Concept<BaseType>> {
      * @return A Rule if the Concept is a Rule
      */
     @CheckReturnValue
-    default Rule asRule() {
-        throw GraknConceptException.invalidCasting(this, Rule.class);
-    }
+    Rule asRule();
 
     /**
-     * Return as an Entity, if the Concept is an Entity Thing.
+     * Return a Concept.Remote for this Concept.
      *
-     * @return An Entity if the Concept is a Thing
+     * @param concepts The Concept API to use for the RPCs.
+     * @return A remote concept using the given Concept API to enable RPCs.
      */
-    @CheckReturnValue
-    default Entity asEntity() {
-        throw GraknConceptException.invalidCasting(this, Entity.class);
-    }
-
-    /**
-     * Return as a Relation if the Concept is a Relation Thing.
-     *
-     * @return A Relation  if the Concept is a Relation
-     */
-    @CheckReturnValue
-    default Relation asRelation() {
-        throw GraknConceptException.invalidCasting(this, Relation.class);
-    }
-
-    /**
-     * Return as a Attribute  if the Concept is a Attribute Thing.
-     *
-     * @return A Attribute if the Concept is a Attribute
-     */
-    @CheckReturnValue
-    default <D> Attribute<D> asAttribute() {
-        throw GraknConceptException.invalidCasting(this, Attribute.class);
-    }
-
-    /**
-     * Return as a Attribute  if the Concept is a Attribute Thing.
-     *
-     * @return A Attribute if the Concept is a Attribute
-     */
-    @CheckReturnValue
-    default <D> Attribute<D> asAttribute(ValueType<D> valueType) {
-        throw GraknConceptException.invalidCasting(this, Attribute.class);
-    }
-
-    /**
-     * Return as a MetaType if the Concept is a MetaType.
-     *
-     * @return A MetaType if the Concept is a MetaType
-     */
-    @CheckReturnValue
-    default MetaType<?, ?> asMetaType() {
-        throw GraknConceptException.invalidCasting(this, MetaType.class);
-    }
-
-    /**
-     * Return a RemoteConcept for this Concept.
-     *
-     * @param tx The transaction to use for the RPCs.
-     * @return A remote concept using the given transaction to enable RPCs.
-     */
-    Remote asRemote(GraknClient.Transaction tx);
-
-    /**
-     * Determine if the Concept is a SchemaConcept
-     *
-     * @return true if theConcept concept is a SchemaConcept
-     */
-    @CheckReturnValue
-    default boolean isSchemaConcept() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a Type.
-     *
-     * @return true if theConcept concept is a Type
-     */
-    @CheckReturnValue
-    default boolean isType() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is an Thing.
-     *
-     * @return true if the Concept is an Thing
-     */
-    @CheckReturnValue
-    default boolean isThing() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is an EntityType.
-     *
-     * @return true if the Concept is an EntityType.
-     */
-    @CheckReturnValue
-    default boolean isEntityType() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a RoleType.
-     *
-     * @return true if the Concept is a RoleType.
-     */
-    @CheckReturnValue
-    default boolean isRoleType() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a RelationType.
-     *
-     * @return true if the Concept is a RelationType
-     */
-    @CheckReturnValue
-    default boolean isRelationType() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a AttributeType.
-     *
-     * @return true if theConcept concept is a AttributeType
-     */
-    @CheckReturnValue
-    default boolean isAttributeType() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a Rule.
-     *
-     * @return true if the Concept is a Rule
-     */
-    @CheckReturnValue
-    default boolean isRule() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is an Entity.
-     *
-     * @return true if the Concept is a Entity
-     */
-    @CheckReturnValue
-    default boolean isEntity() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a Relation.
-     *
-     * @return true if the Concept is a Relation
-     */
-    @CheckReturnValue
-    default boolean isRelation() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a Attribute.
-     *
-     * @return true if the Concept is a Attribute
-     */
-    @CheckReturnValue
-    default boolean isAttribute() {
-        return false;
-    }
-
-    /**
-     * Determine if the Concept is a MetaType.
-     *
-     * @return true if the Concept is a MetaType.
-     */
-    default boolean isMetaType() {
-        return false;
-    }
+    Remote asRemote(Concepts concepts);
 
     /**
      * Determine if the Concept is remote.
@@ -344,85 +80,14 @@ public interface Concept<BaseType extends Concept<BaseType>> {
         return false;
     }
 
-    interface Local<BaseType extends Concept<BaseType>> extends Concept<BaseType> {
+    interface Local extends Concept {
 
-        @SuppressWarnings("unchecked")
-        static <BaseType extends Concept<? extends BaseType>>
-        BaseType of(ConceptProto.Concept concept) {
-            switch (concept.getBaseType()) {
-                case ENTITY:
-                    return (BaseType) new EntityImpl.Local(concept);
-                case RELATION:
-                    return (BaseType) new RelationImpl.Local(concept);
-                case ATTRIBUTE:
-                    return (BaseType) new AttributeImpl.Local<>(concept);
-                case ENTITY_TYPE:
-                    return (BaseType) new EntityTypeImpl.Local(concept);
-                case RELATION_TYPE:
-                    return (BaseType) new RelationTypeImpl.Local(concept);
-                case ATTRIBUTE_TYPE:
-                    return (BaseType) new AttributeTypeImpl.Local<>(concept);
-                case ROLE:
-                    return (BaseType) new RoleTypeImpl.Local(concept);
-                case RULE:
-                    return (BaseType) new RuleImpl.Local(concept);
-                case META_TYPE:
-                    return (BaseType) new MetaTypeImpl.Local<>(concept);
-                default:
-                case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + concept);
+        static Concept.Local of(ConceptProto.Concept concept) {
+            if (concept.hasThing()) {
+                return Thing.Local.of(concept.getThing());
+            } else {
+                return Type.Local.of(concept.getType());
             }
-        }
-    }
-
-    /**
-     * The base remote concept implementation.
-     *
-     * Provides the basic RPCs to delete a concept and check if it is deleted.
-     */
-    interface Remote<BaseType extends Concept<BaseType>>
-            extends Concept<BaseType> {
-
-        @SuppressWarnings("unchecked")
-        static <RemoteType extends Remote<BaseType>, BaseType extends Concept<BaseType>>
-        RemoteType of(GraknClient.Transaction tx, ConceptProto.Concept concept) {
-            ConceptIID iid = ConceptIID.of(concept.getIid());
-            switch (concept.getBaseType()) {
-                case ENTITY:
-                    return (RemoteType) new EntityImpl.Remote(tx, iid);
-                case RELATION:
-                    return (RemoteType) new RelationImpl.Remote(tx, iid);
-                case ATTRIBUTE:
-                    return (RemoteType) new AttributeImpl.Remote<>(tx, iid);
-                case ENTITY_TYPE:
-                    return (RemoteType) new EntityTypeImpl.Remote(tx, iid);
-                case RELATION_TYPE:
-                    return (RemoteType) new RelationTypeImpl.Remote(tx, iid);
-                case ATTRIBUTE_TYPE:
-                    return (RemoteType) new AttributeTypeImpl.Remote<>(tx, iid);
-                case ROLE:
-                    return (RemoteType) new RoleTypeImpl.Remote(tx, iid);
-                case RULE:
-                    return (RemoteType) new RuleImpl.Remote(tx, iid);
-                case META_TYPE:
-                    return (RemoteType) new MetaTypeImpl.Remote<>(tx, iid);
-                default:
-                case UNRECOGNIZED:
-                    throw new IllegalArgumentException("Unrecognised " + concept);
-            }
-        }
-
-        //------------------------------------- Other ---------------------------------
-
-        /**
-         * Return as a SchemaConcept if the Concept is a SchemaConcept.
-         *
-         * @return A SchemaConcept if the Concept is a SchemaConcept
-         */
-        @Override
-        @CheckReturnValue
-        default Type.Remote<?> asSchemaConcept() {
-            throw GraknConceptException.invalidCasting(this, Type.Remote.class);
         }
 
         /**
@@ -431,75 +96,18 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          * @return A Type if the Concept is a Type
          */
         @Override
-        @CheckReturnValue
-        default ThingType.Remote<?, ?> asType() {
-            throw GraknConceptException.invalidCasting(this, ThingType.Remote.class);
+        default Type.Local asType() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
         }
 
         /**
-         * Return as an Thing if the Concept is an Thing.
+         * Return as a Thing if the Concept is a Thing.
          *
-         * @return An Thing if the Concept is an Thing
+         * @return A Thing if the Concept is a Thing
          */
         @Override
-        @CheckReturnValue
-        default Thing.Remote<?, ?> asThing() {
-            throw GraknConceptException.invalidCasting(this, Thing.Remote.class);
-        }
-
-        /**
-         * Return as an EntityType if the Concept is an EntityType.
-         *
-         * @return A EntityType if the Concept is an EntityType
-         */
-        @Override
-        @CheckReturnValue
-        default EntityType.Remote asEntityType() {
-            throw GraknConceptException.invalidCasting(this, EntityType.Remote.class);
-        }
-
-        /**
-         * Return as a RoleType if the Concept is a RoleType.
-         *
-         * @return A RoleType if the Concept is a RoleType
-         */
-        @Override
-        @CheckReturnValue
-        default RoleType.Remote asRoleType() {
-            throw GraknConceptException.invalidCasting(this, RoleType.Remote.class);
-        }
-
-        /**
-         * Return as a RelationType if the Concept is a RelationType.
-         *
-         * @return A RelationType if the Concept is a RelationType
-         */
-        @Override
-        @CheckReturnValue
-        default RelationType.Remote asRelationType() {
-            throw GraknConceptException.invalidCasting(this, RelationType.Remote.class);
-        }
-
-        /**
-         * Return as a AttributeType if the Concept is a AttributeType
-         *
-         * @return A AttributeType if the Concept is a AttributeType
-         */
-        @Override
-        @CheckReturnValue
-        default <D> AttributeType.Remote<D> asAttributeType() {
-            throw GraknConceptException.invalidCasting(this, AttributeType.class);
-        }
-
-        /**
-         * Return as a AttributeType if the Concept is a AttributeType
-         *
-         * @return A AttributeType if the Concept is a AttributeType
-         */
-        @Override
-        @CheckReturnValue
-        default <D> AttributeType.Remote<D> asAttributeType(ValueType<D> valueType) {
-            throw GraknConceptException.invalidCasting(this, AttributeType.class);
+        default Thing.Local asThing() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
         }
 
         /**
@@ -508,66 +116,28 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          * @return A Rule if the Concept is a Rule
          */
         @Override
-        @CheckReturnValue
-        default Rule.Remote asRule() {
-            throw GraknConceptException.invalidCasting(this, Rule.Remote.class);
+        default Rule.Local asRule() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
+        }
+    }
+
+    /**
+     * The base remote concept implementation.
+     *
+     * Provides the basic RPCs to delete a concept and check if it is deleted.
+     */
+    interface Remote extends Concept {
+
+        static Concept.Remote of(final Concepts concepts, ConceptProto.Concept concept) {
+            if (concept.hasThing()) {
+                return Thing.Remote.of(concepts, concept.getThing());
+            } else {
+                return Type.Remote.of(concepts, concept.getType());
+            }
         }
 
         /**
-         * Return as an Entity, if the Concept is an Entity Thing.
-         *
-         * @return An Entity if the Concept is a Thing
-         */
-        @Override
-        @CheckReturnValue
-        default Entity.Remote asEntity() {
-            throw GraknConceptException.invalidCasting(this, Entity.Remote.class);
-        }
-
-        /**
-         * Return as a Relation if the Concept is a Relation Thing.
-         *
-         * @return A Relation  if the Concept is a Relation
-         */
-        @Override
-        @CheckReturnValue
-        default Relation.Remote asRelation() {
-            throw GraknConceptException.invalidCasting(this, Relation.Remote.class);
-        }
-
-        /**
-         * Return as a Attribute  if the Concept is a Attribute Thing.
-         *
-         * @return A Attribute if the Concept is a Attribute
-         */
-        @Override
-        @CheckReturnValue
-        default <D> Attribute.Remote<D> asAttribute() {
-            throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
-        }
-
-        /**
-         * Return as a Attribute  if the Concept is a Attribute Thing.
-         *
-         * @return A Attribute if the Concept is a Attribute
-         */
-        @Override
-        @CheckReturnValue
-        default <D> Attribute.Remote<D> asAttribute(ValueType<D> valueType) {
-            throw GraknConceptException.invalidCasting(this, Attribute.Remote.class);
-        }
-
-        default MetaType.Remote<?, ?> asMetaType() {
-            throw GraknConceptException.invalidCasting(this, MetaType.Remote.class);
-        }
-
-        @Override
-        default boolean isRemote() {
-            return true;
-        }
-
-        /**
-         * Delete the Concepts
+         * Delete the Concept
          */
         void delete();
 
@@ -575,5 +145,45 @@ public interface Concept<BaseType extends Concept<BaseType>> {
          * Return whether the concept has been deleted.
          */
         boolean isDeleted();
+
+        /**
+         * Return as a Type if the Concept is a Type.
+         *
+         * @return A Type if the Concept is a Type
+         */
+        @Override
+        default Type.Remote asType() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getCanonicalName()));
+        }
+
+        /**
+         * Return as a Thing if the Concept is a Thing.
+         *
+         * @return A Thing if the Concept is a Thing
+         */
+        @Override
+        default Thing.Remote asThing() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getCanonicalName()));
+        }
+
+        /**
+         * Return as a Rule if the Concept is a Rule.
+         *
+         * @return A Rule if the Concept is a Rule
+         */
+        @Override
+        default Rule.Remote asRule() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getCanonicalName()));
+        }
+
+        @Override
+        default Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
+        @Override
+        default boolean isRemote() {
+            return true;
+        }
     }
 }

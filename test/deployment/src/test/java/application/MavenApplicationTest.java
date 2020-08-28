@@ -1,7 +1,10 @@
 package application;
 
-import grakn.client.GraknClient;
-import grakn.client.answer.ConceptMap;
+import grakn.client.Grakn;
+import grakn.client.Grakn.Client;
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
+import grakn.client.concept.answer.ConceptMap;
 import graql.lang.Graql;
 import org.junit.Test;
 
@@ -13,9 +16,9 @@ import static org.junit.Assert.assertEquals;
 public class MavenApplicationTest {
     @Test
     public void testImport() {
-        GraknClient client = new GraknClient("localhost:48555");
-        GraknClient.Session session = client.session("grakn");
-        GraknClient.Transaction tx = session.transaction().write();
+        Client client = Grakn.client("localhost:48555");
+        Session session = client.session("grakn");
+        Transaction tx = session.transaction(Transaction.Type.WRITE);
         List<ConceptMap> answers = tx.execute(Graql.match(var("t").sub("thing")).get()).get();
         tx.close();
         session.close();

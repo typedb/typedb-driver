@@ -19,11 +19,10 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptIID;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.impl.RelationImpl;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RoleType;
 
 import javax.annotation.CheckReturnValue;
 import java.util.List;
@@ -36,8 +35,7 @@ import java.util.stream.Stream;
  * It represents how different entities relate to one another.
  * Relation are used to model n-ary relations between instances.
  */
-public interface Relation extends Thing<Relation, RelationType> {
-    //------------------------------------- Accessors ----------------------------------
+public interface Relation extends Thing {
 
     /**
      * Retrieve the associated RelationType for this Relation.
@@ -46,29 +44,24 @@ public interface Relation extends Thing<Relation, RelationType> {
      * @see RelationType
      */
     @Override
-    RelationType type();
+    RelationType getType();
 
-    //------------------------------------- Other ---------------------------------
-    @Deprecated
     @CheckReturnValue
     @Override
-    default Relation asRelation() {
-        return this;
-    }
+    Relation.Remote asRemote(Concepts concepts);
 
-    @Override
-    default Remote asRemote(GraknClient.Transaction tx) {
-        return Relation.Remote.of(tx, iid());
-    }
+    interface Local extends Thing.Local, Relation {
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isRelation() {
-        return true;
-    }
+        @CheckReturnValue
+        @Override
+        default Relation.Local asRelation() {
+            return this;
+        }
 
-    interface Local extends Thing.Local<Relation, RelationType>, Relation {
+        @Override
+        default Relation.Remote asRemote(final Concepts concepts) {
+            return Relation.Remote.of(concepts, getIID());
+        }
     }
 
     /**
@@ -77,24 +70,11 @@ public interface Relation extends Thing<Relation, RelationType> {
      * It represents how different entities relate to one another.
      * Relation are used to model n-ary relations between instances.
      */
-    interface Remote extends Thing.Remote<Relation, RelationType>, Relation {
+    interface Remote extends Thing.Remote, Relation {
 
-        static Relation.Remote of (GraknClient.Transaction tx, ConceptIID iid) {
-            return new RelationImpl.Remote(tx, iid);
+        static Relation.Remote of(final Concepts concepts, final String iid) {
+            return new RelationImpl.Remote(concepts, iid);
         }
-
-        //------------------------------------- Modifiers ----------------------------------
-
-        /**
-         * Creates a relation from this instance to the provided Attribute.
-         *
-         * @param attribute The Attribute to which a relation is created
-         * @return The instance itself
-         */
-        @Override
-        Relation.Remote has(Attribute<?> attribute);
-
-        //------------------------------------- Accessors ----------------------------------
 
         /**
          * Retrieve the associated RelationType for this Relation.
@@ -103,7 +83,34 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RelationType.Remote
          */
         @Override
-        RelationType.Remote type();
+        RelationType.Remote getType();
+
+        /**
+         * Expands this Relation to include a new role player which is playing a specific role.
+         *
+         * @param roleType The RoleType of the new role player.
+         * @param player   The new role player.
+         */
+        void addPlayer(RoleType roleType, Thing player);
+
+        /**
+         * Removes the Thing which is playing a RoleType in this Relation.
+         * If the Thing is not playing any RoleType in this Relation nothing happens.
+         *
+         * @param roleType The RoleType being played by the Thing
+         * @param player   The Thing playing the Role in this Relation
+         */
+        void removePlayer(RoleType roleType, Thing player);
+
+        /**
+         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
+         * If no RoleTypes are specified then every involved Thing is retrieved, regardless of role.
+         *
+         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
+         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
+         */
+        @CheckReturnValue
+        Stream<? extends Thing.Remote> getPlayers(RoleType... roleTypes);
 
         /**
          * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
@@ -112,66 +119,18 @@ public interface Relation extends Thing<Relation, RelationType> {
          * @see RoleType.Remote
          */
         @CheckReturnValue
-        Map<RoleType.Remote, List<Thing.Remote<?, ?>>> playersByRoleType();
+        Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType();
 
-        /**
-         * Retrieves a list of every Thing involved in the Relation.
-         *
-         * @return A list of every Thing involved in the Relation.
-         */
         @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> players();
-
-        /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
-         *
-         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
-         *
-         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
-         */
-        @CheckReturnValue
-        Stream<Thing.Remote<?, ?>> players(List<RoleType> roleTypes);
-
-        /**
-         * Expands this Relation to include a new role player which is playing a specific role.
-         *
-         * @param roleType   The RoleType of the new role player.
-         * @param player The new role player.
-         * @return The Relation itself.
-         */
-        Relation.Remote relate(RoleType roleType, Thing<?, ?> player);
-
-        /**
-         * Removes the provided Attribute from this Relation
-         *
-         * @param attribute the Attribute to be removed
-         * @return The Relation itself
-         */
         @Override
-        Relation.Remote unhas(Attribute<?> attribute);
+        default Relation.Remote asRemote(Concepts concepts) {
+            return this;
+        }
 
-        /**
-         * Removes the Thing which is playing a RoleType in this Relation.
-         * If the Thing is not playing any RoleType in this Relation nothing happens.
-         *
-         * @param roleType The RoleType being played by the Thing
-         * @param player The Thing playing the Role in this Relation
-         */
-        void unrelate(RoleType roleType, Thing<?, ?> player);
-
-        //------------------------------------- Other ---------------------------------
-        @Deprecated
         @CheckReturnValue
         @Override
         default Relation.Remote asRelation() {
             return this;
-        }
-
-        @Deprecated
-        @CheckReturnValue
-        @Override
-        default boolean isRelation() {
-            return true;
         }
     }
 }

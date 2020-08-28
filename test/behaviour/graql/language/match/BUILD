@@ -38,19 +38,17 @@ grakn_test(
         "//test/behaviour/config:parameters",
     ],
     data = [
-        "@graknlabs_verification//behaviour/graql/language:match.feature",
+        "@graknlabs_behaviour//graql/language:match.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "large",
     visibility = ["//visibility:public"]
 )
 
-
-
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":test-core",
-    ],
+],
     license_type = "apache",
 )

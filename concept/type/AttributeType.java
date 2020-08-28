@@ -19,250 +19,699 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueType;
-import grakn.client.concept.GraknConceptException;
-import grakn.client.concept.Label;
+import grakn.client.common.exception.GraknException;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
+import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-public interface AttributeType<D> extends ThingType<AttributeType<D>, Attribute<D>> {
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.UNRECOGNISED_VALUE;
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
+public interface AttributeType extends ThingType {
 
-
-    //------------------------------------- Accessors ---------------------------------
-    /**
-     * Get the data type to which instances of the AttributeType must conform.
-     *
-     * @return The data type to which instances of this Attribute  must conform.
-     */
-    @Nullable
     @CheckReturnValue
-    ValueType<D> valueType();
-
-    //------------------------------------- Other ---------------------------------
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default <T> AttributeType<T> asAttributeType() {
-        return (AttributeType<T>) this;
+    default ValueType getValueType() {
+        return ValueType.OBJECT;
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
+    @CheckReturnValue
+    default boolean isKeyable() {
+        return getValueType().isKeyable();
+    }
+
     @CheckReturnValue
     @Override
-    default <T> AttributeType<T> asAttributeType(ValueType<T> valueType) {
-        if (!valueType.equals(valueType())) {
-            throw GraknConceptException.invalidCasting(this, valueType.getClass());
-        }
-        return (AttributeType<T>) this;
-    }
+    AttributeType.Remote asRemote(Concepts concepts);
 
-    @Override
-    default AttributeType.Remote<D> asRemote(GraknClient.Transaction tx) {
-        return AttributeType.Remote.of(tx, iid());
-    }
+    AttributeType.Boolean asBoolean();
 
-    @Deprecated
-    @CheckReturnValue
-    @Override
-    default boolean isAttributeType() {
-        return true;
-    }
+    AttributeType.Long asLong();
 
-    /**
-     * An ontological element which models and categorises the various Attribute in the graph.
-     * This ontological element behaves similarly to Type when defining how it relates to other
-     * types. It has two additional functions to be aware of:
-     * 1. It has a ValueType constraining the data types of the values it's instances may take.
-     * 2. Any of it's instances are unique to the type.
-     * For example if you have an AttributeType modelling month throughout the year there can only be one January.
-     *
-     * @param <D> The data type of this resource type.
-     *            Supported Types include: String, Long, Double, and Boolean
-     */
-    interface Local<D> extends ThingType.Local<AttributeType<D>, Attribute<D>>, AttributeType<D> {
-    }
+    AttributeType.Double asDouble();
 
-    /**
-     * An ontological element which models and categorises the various Attribute in the graph.
-     * This ontological element behaves similarly to Type when defining how it relates to other
-     * types. It has two additional functions to be aware of:
-     * 1. It has a ValueType constraining the data types of the values it's instances may take.
-     * 2. Any of it's instances are unique to the type.
-     * For example if you have an AttributeType modelling month throughout the year there can only be one January.
-     *
-     * @param <D> The data type of this resource type.
-     *            Supported Types include: String, Long, Double, and Boolean
-     */
-    interface Remote<D> extends ThingType.Remote<AttributeType<D>, Attribute<D>>, AttributeType<D> {
+    AttributeType.String asString();
 
-        static <D> AttributeType.Remote<D> of(GraknClient.Transaction tx, ConceptIID iid) {
-            return new AttributeTypeImpl.Remote<>(tx, iid);
+    AttributeType.DateTime asDateTime();
+
+    enum ValueType {
+
+        OBJECT(Object.class, false, false),
+        BOOLEAN(Boolean.class, true, false),
+        LONG(Long.class, true, true),
+        DOUBLE(Double.class, true, false),
+        STRING(String.class, true, true),
+        DATETIME(LocalDateTime.class, true, true);
+
+        private final Class<?> valueClass;
+        private final boolean isWritable;
+        private final boolean isKeyable;
+
+        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable) {
+            this.valueClass = valueClass;
+            this.isWritable = isWritable;
+            this.isKeyable = isKeyable;
         }
 
-        //------------------------------------- Modifiers ----------------------------------
+        public static ValueType of(Class<?> valueClass) {
+            for (final ValueType t : ValueType.values()) {
+                if (t.valueClass == valueClass) {
+                    return t;
+                }
+            }
+            throw new GraknException(UNRECOGNISED_VALUE);
+        }
 
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         * @return The Concept itself
-         */
-        AttributeType.Remote<D> label(Label label);
+        public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+            switch (valueType) {
+                case STRING:
+                    return AttributeType.ValueType.STRING;
+                case BOOLEAN:
+                    return AttributeType.ValueType.BOOLEAN;
+                case LONG:
+                    return AttributeType.ValueType.LONG;
+                case DOUBLE:
+                    return AttributeType.ValueType.DOUBLE;
+                case DATETIME:
+                    return AttributeType.ValueType.DATETIME;
+                default:
+                case UNRECOGNIZED:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), valueType));
+            }
+        }
 
-        /**
-         * Sets the AttributeType to be abstract - which prevents it from having any instances.
-         *
-         * @param isAbstract Specifies if the AttributeType is to be abstract (true) or not (false).
-         * @return The AttributeType itself.
-         */
+        @CheckReturnValue
+        public Class<?> valueClass() {
+            return valueClass;
+        }
+
+        @CheckReturnValue
+        public boolean isWritable() {
+            return isWritable;
+        }
+
+        @CheckReturnValue
+        public boolean isKeyable() {
+            return isKeyable;
+        }
+
         @Override
-        AttributeType.Remote<D> isAbstract(Boolean isAbstract);
+        public java.lang.String toString() {
+            return valueClass.getName();
+        }
+    }
+
+    interface Local extends ThingType.Local, AttributeType {
+
+        @CheckReturnValue
+        @Override
+        AttributeType.Remote asRemote(Concepts concepts);
+
+        @CheckReturnValue
+        @Override
+        default AttributeType.Local asAttributeType() {
+            return this;
+        }
+
+        @Override
+        default AttributeType.Boolean.Local asBoolean() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+        }
+
+        @Override
+        default AttributeType.Long.Local asLong() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+        }
+
+        @Override
+        default AttributeType.Double.Local asDouble() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+        }
+
+        @Override
+        default AttributeType.String.Local asString() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+        }
+
+        @Override
+        default AttributeType.DateTime.Local asDateTime() {
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+        }
+    }
+
+    /**
+     * An ontological element which models and categorises the various Attribute in the graph.
+     * This ontological element behaves similarly to Type when defining how it relates to other
+     * types. It has two additional functions to be aware of:
+     * 1. It has a ValueType constraining the data types of the values it's instances may take.
+     * 2. Any of it's instances are unique to the type.
+     * For example if you have an AttributeType modelling month throughout the year there can only be one January.
+     */
+    interface Remote extends ThingType.Remote, AttributeType {
 
         /**
          * Sets the supertype of the AttributeType to be the AttributeType specified.
          *
          * @param type The super type of this AttributeType.
-         * @return The AttributeType itself.
          */
-        AttributeType.Remote<D> sup(AttributeType<D> type);
+        void setSupertype(AttributeType type);
+
+        @CheckReturnValue
+        @Override
+        default AttributeType.Remote asRemote(Concepts concepts) {
+            return this;
+        }
+
+        @CheckReturnValue
+        @Override
+        default AttributeType.Remote asAttributeType() {
+            return this;
+        }
+
+        @Override
+        AttributeType.Boolean.Remote asBoolean();
+
+        @Override
+        AttributeType.Long.Remote asLong();
+
+        @Override
+        AttributeType.Double.Remote asDouble();
+
+        @Override
+        AttributeType.String.Remote asString();
+
+        @Override
+        AttributeType.DateTime.Remote asDateTime();
 
         /**
-         * Sets the RoleType which instances of this AttributeType may play.
+         * Retrieve all the Attribute instances of this AttributeType
          *
-         * @param role The RoleType which the instances of this AttributeType are allowed to play.
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote<D> plays(RoleType role);
-
-        /**
-         * Removes the ability of this AttributeType to play a specific RoleType
-         *
-         * @param role The RoleType which the Things of this AttributeType should no longer be allowed to play.
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote<D> unplay(RoleType role);
-
-        /**
-         * Removes the ability for Things of this AttributeType to have Attributes of type AttributeType
-         *
-         * @param attributeType the AttributeType which this AttributeType can no longer have
-         * @return The AttributeType itself.
-         */
-        @Override
-        AttributeType.Remote<D> unhas(AttributeType<?> attributeType);
-
-        /**
-         * Set the regular expression that instances of the AttributeType must conform to.
-         *
-         * @param regex The regular expression that instances of this AttributeType must conform to.
-         * @return The AttributeType itself.
-         */
-        AttributeType.Remote<D> regex(String regex);
-
-        /**
-         * Set the value for the Attribute, unique to its type.
-         *
-         * @param value A value for the Attribute which is unique to its type
-         * @return new or existing Attribute of this type with the provided value.
-         */
-        Attribute.Remote<D> put(D value);
-
-        /**
-         * Creates a RelationType which allows this type and a resource type to be linked.
-         *
-         * @param attributeType The resource type which instances of this type should be allowed to play.
-         * @return The Type itself.
-         */
-        @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType);
-        @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey);
-        @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType);
-        @Override
-        AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey);
-
-        //------------------------------------- Accessors ---------------------------------
-
-        /**
-         * Get the Attribute with the value provided, and its type, or return NULL
-         *
-         * @param value A value which an Attribute in the graph may be holding
-         * @return The Attribute with the provided value and type or null if no such Attribute exists.
+         * @return All the Attribute instances of this AttributeType
          * @see Attribute.Remote
          */
-        @CheckReturnValue
-        @Nullable
-        Attribute.Remote<D> get(D value);
-
-        /**
-         * Returns a collection of super-types of this AttributeType.
-         *
-         * @return The super-types of this AttributeType
-         */
         @Override
-        Stream<AttributeType.Remote<D>> sups();
+        Stream<? extends Attribute.Remote<?>> getInstances();
 
-        /**
-         * Returns a collection of subtypes of this AttributeType.
-         *
-         * @return The subtypes of this AttributeType
-         */
-        @Override
-        Stream<AttributeType.Remote<D>> subs();
+        Stream<? extends ThingType> getOwners();
 
-        /**
-         * Returns a collection of all Attribute of this AttributeType.
-         *
-         * @return The resource instances of this AttributeType
-         */
-        @Override
-        Stream<Attribute.Remote<D>> instances();
+        Stream<? extends ThingType> getOwners(boolean onlyKey);
+    }
 
-        /**
-         * Retrieve the regular expression to which instances of this AttributeType must conform, or {@code null} if no
-         * regular expression is set.
-         * By default, an AttributeType does not have a regular expression set.
-         *
-         * @return The regular expression to which instances of this AttributeType must conform.
-         */
-        @CheckReturnValue
-        @Nullable
-        String regex();
+    interface Boolean extends AttributeType {
 
-        //------------------------------------- Other ---------------------------------
-        @SuppressWarnings("unchecked")
-        @Deprecated
         @CheckReturnValue
         @Override
-        default <T> AttributeType.Remote<T> asAttributeType() {
-            return (AttributeType.Remote<T>) this;
+        default ValueType getValueType() {
+            return ValueType.BOOLEAN;
         }
 
-        @Deprecated
         @CheckReturnValue
         @Override
-        default <T> AttributeType.Remote<T> asAttributeType(ValueType<T> valueType) {
-            return (AttributeType.Remote<T>) AttributeType.super.asAttributeType(valueType);
+        AttributeType.Boolean.Remote asRemote(Concepts concepts);
+
+        interface Local extends AttributeType.Boolean, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Local asBoolean() {
+                return this;
+            }
         }
 
-        @Deprecated
+        interface Remote extends AttributeType.Boolean, AttributeType.Remote {
+
+            static AttributeType.Boolean.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Boolean.Remote(concepts, label, isRoot);
+            }
+
+            /**
+             * @return The direct supertype of this concept
+             */
+            @Override
+            AttributeType.Boolean.Remote getSupertype();
+
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Boolean.Remote> getSupertypes();
+
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Boolean.Remote> getSubtypes();
+
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
+            @Override
+            Stream<? extends Attribute.Boolean.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             * @return The AttributeType itself.
+             */
+            void setSupertype(AttributeType.Boolean type);
+
+            /**
+             * Set the value for the Attribute, unique to its type.
+             *
+             * @param value A value for the Attribute which is unique to its type
+             * @return new or existing Attribute of this type with the provided value.
+             */
+            Attribute.Boolean.Remote put(boolean value);
+
+            /**
+             * Get the Attribute with the value provided, and its type, or return NULL
+             *
+             * @param value A value which an Attribute in the graph may be holding
+             * @return The Attribute with the provided value and type or null if no such Attribute exists.
+             * @see Attribute.Boolean.Remote
+             */
+            @CheckReturnValue
+            @Nullable
+            Attribute.Boolean.Remote get(boolean value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Boolean.Remote asBoolean() {
+                return this;
+            }
+        }
+    }
+
+    interface Long extends AttributeType {
+
         @CheckReturnValue
         @Override
-        default boolean isAttributeType() {
-            return true;
+        default ValueType getValueType() {
+            return ValueType.LONG;
+        }
+
+        @CheckReturnValue
+        @Override
+        AttributeType.Long.Remote asRemote(Concepts concepts);
+
+        interface Local extends AttributeType.Long, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Local asLong() {
+                return this;
+            }
+        }
+
+        interface Remote extends AttributeType.Long, AttributeType.Remote {
+
+            static AttributeType.Long.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Long.Remote(concepts, label, isRoot);
+            }
+
+            /**
+             * @return The direct supertype of this concept
+             */
+            @Override
+            AttributeType.Long.Remote getSupertype();
+
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Long.Remote> getSupertypes();
+
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Long.Remote> getSubtypes();
+
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
+            @Override
+            Stream<? extends Attribute.Long.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             */
+            void setSupertype(AttributeType.Long type);
+
+            /**
+             * Set the value for the Attribute, unique to its type.
+             *
+             * @param value A value for the Attribute which is unique to its type
+             * @return new or existing Attribute of this type with the provided value.
+             */
+            Attribute.Long.Remote put(long value);
+
+            /**
+             * Get the Attribute with the value provided, and its type, or return NULL
+             *
+             * @param value A value which an Attribute in the graph may be holding
+             * @return The Attribute with the provided value and type or null if no such Attribute exists.
+             * @see Attribute.Long.Remote
+             */
+            @CheckReturnValue
+            @Nullable
+            Attribute.Long.Remote get(long value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Long.Remote asLong() {
+                return this;
+            }
+        }
+    }
+
+    interface Double extends AttributeType {
+
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.DOUBLE;
+        }
+
+        @CheckReturnValue
+        @Override
+        AttributeType.Double.Remote asRemote(Concepts concepts);
+
+        interface Local extends AttributeType.Double, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Local asDouble() {
+                return this;
+            }
+        }
+
+        interface Remote extends AttributeType.Double, AttributeType.Remote {
+
+            static AttributeType.Double.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.Double.Remote(concepts, label, isRoot);
+            }
+
+            /**
+             * @return The direct supertype of this concept
+             */
+            @Override
+            AttributeType.Double.Remote getSupertype();
+
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Double.Remote> getSupertypes();
+
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.Double.Remote> getSubtypes();
+
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
+            @Override
+            Stream<? extends Attribute.Double.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             */
+            void setSupertype(AttributeType.Double type);
+
+            /**
+             * Set the value for the Attribute, unique to its type.
+             *
+             * @param value A value for the Attribute which is unique to its type
+             * @return new or existing Attribute of this type with the provided value.
+             */
+            Attribute.Double.Remote put(double value);
+
+            /**
+             * Get the Attribute with the value provided, and its type, or return NULL
+             *
+             * @param value A value which an Attribute in the graph may be holding
+             * @return The Attribute with the provided value and type or null if no such Attribute exists.
+             * @see Attribute.Double.Remote
+             */
+            @CheckReturnValue
+            @Nullable
+            Attribute.Double.Remote get(double value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.Double.Remote asDouble() {
+                return this;
+            }
+        }
+    }
+
+    interface String extends AttributeType {
+
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.STRING;
+        }
+
+        @CheckReturnValue
+        @Override
+        AttributeType.String.Remote asRemote(Concepts concepts);
+
+        interface Local extends AttributeType.String, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Local asString() {
+                return this;
+            }
+        }
+
+        interface Remote extends AttributeType.String, AttributeType.Remote {
+
+            static AttributeType.String.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.String.Remote(concepts, label, isRoot);
+            }
+
+            /**
+             * @return The direct supertype of this concept
+             */
+            @Override
+            AttributeType.String.Remote getSupertype();
+
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.String.Remote> getSupertypes();
+
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.String.Remote> getSubtypes();
+
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
+            @Override
+            Stream<? extends Attribute.String.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             */
+            void setSupertype(AttributeType.String type);
+
+            /**
+             * Set the value for the Attribute, unique to its type.
+             *
+             * @param value A value for the Attribute which is unique to its type
+             * @return new or existing Attribute of this type with the provided value.
+             */
+            Attribute.String.Remote put(java.lang.String value);
+
+            /**
+             * Get the Attribute with the value provided, and its type, or return NULL
+             *
+             * @param value A value which an Attribute in the graph may be holding
+             * @return The Attribute with the provided value and type or null if no such Attribute exists.
+             * @see Attribute.String.Remote
+             */
+            @CheckReturnValue
+            @Nullable
+            Attribute.String.Remote get(java.lang.String value);
+
+            @CheckReturnValue
+            @Nullable
+            java.lang.String getRegex();
+
+            void setRegex(java.lang.String regex);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.String.Remote asString() {
+                return this;
+            }
+        }
+    }
+
+    interface DateTime extends AttributeType {
+
+        @CheckReturnValue
+        @Override
+        default ValueType getValueType() {
+            return ValueType.DATETIME;
+        }
+
+        @CheckReturnValue
+        @Override
+        AttributeType.DateTime.Remote asRemote(Concepts concepts);
+
+        interface Local extends AttributeType.DateTime, AttributeType.Local {
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Local asDateTime() {
+                return this;
+            }
+        }
+
+        interface Remote extends AttributeType.DateTime, AttributeType.Remote {
+
+            static AttributeType.DateTime.Remote of(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                return new AttributeTypeImpl.DateTime.Remote(concepts, label, isRoot);
+            }
+
+            /**
+             * @return The direct supertype of this concept
+             */
+            @Override
+            AttributeType.DateTime.Remote getSupertype();
+
+            /**
+             * Returns a collection of super-types of this AttributeType.
+             *
+             * @return The super-types of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.DateTime.Remote> getSupertypes();
+
+            /**
+             * Returns a collection of subtypes of this AttributeType.
+             *
+             * @return The subtypes of this AttributeType
+             */
+            @Override
+            Stream<? extends AttributeType.DateTime.Remote> getSubtypes();
+
+            /**
+             * Returns a collection of all Attribute of this AttributeType.
+             *
+             * @return The resource instances of this AttributeType
+             */
+            @Override
+            Stream<? extends Attribute.DateTime.Remote> getInstances();
+
+            /**
+             * Sets the supertype of the AttributeType to be the AttributeType specified.
+             *
+             * @param type The super type of this AttributeType.
+             */
+            void setSupertype(AttributeType.DateTime type);
+
+            /**
+             * Set the value for the Attribute, unique to its type.
+             *
+             * @param value A value for the Attribute which is unique to its type
+             * @return new or existing Attribute of this type with the provided value.
+             */
+            Attribute.DateTime.Remote put(LocalDateTime value);
+
+            /**
+             * Get the Attribute with the value provided, and its type, or return NULL
+             *
+             * @param value A value which an Attribute in the graph may be holding
+             * @return The Attribute with the provided value and type or null if no such Attribute exists.
+             * @see Attribute.DateTime.Remote
+             */
+            @CheckReturnValue
+            @Nullable
+            Attribute.DateTime.Remote get(LocalDateTime value);
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Remote asRemote(Concepts concepts) {
+                return this;
+            }
+
+            @CheckReturnValue
+            @Override
+            default AttributeType.DateTime.Remote asDateTime() {
+                return this;
+            }
         }
     }
 }

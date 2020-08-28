@@ -20,9 +20,6 @@
 package grakn.client.test.behaviour.connection.session;
 
 import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknRunner;
-import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknSingleton;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -38,7 +35,7 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/connection/session.feature",
+        features = "external/graknlabs_behaviour/connection/session.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
 public class SessionTest {
@@ -73,7 +70,6 @@ public class SessionTest {
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
-
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {

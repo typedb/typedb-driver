@@ -19,133 +19,67 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.Label;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Entity;
-import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
 public class EntityTypeImpl {
     /**
-     * Client implementation of a MetaType, a special type of Type
-     * TODO: This class is not defined in Concept API, and at server side implementation.
-     * TODO: we should remove this class, or implement properly on server side.
+     * Client implementation of EntityType
      */
-    public static class Local extends ThingTypeImpl.Local<EntityType, Entity> implements EntityType.Local {
+    public static class Local extends ThingTypeImpl.Local implements EntityType.Local {
 
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
+        public Local(ConceptProto.Type type) {
+            super(type);
         }
     }
 
     /**
-     * Client implementation of a MetaType, a special type of Type
-     * TODO: This class is not defined in Concept API, and at server side implementation.
-     * TODO: we should remove this class, or implement properly on server side.
+     * Client implementation of EntityType
      */
-    public static class Remote extends ThingTypeImpl.Remote<EntityType, Entity> implements EntityType.Remote {
+    public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.has(attributeType);
+        public EntityType.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asEntityType);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, boolean isKey) {
-            return (EntityType.Remote) super.has(attributeType, isKey);
+        public final Stream<Entity.Remote> getInstances() {
+            return super.getInstances().map(Thing.Remote::asEntity);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return (EntityType.Remote) super.has(attributeType, overriddenType);
+        public final Stream<EntityType.Remote> getSupertypes() {
+            return super.getSupertypes().map(ThingType.Remote::asEntityType);
         }
 
         @Override
-        public final EntityType.Remote has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            return (EntityType.Remote) super.has(attributeType, overriddenType, isKey);
-        }
-
-        @Override
-        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
-            return super.attributes(keysOnly);
-        }
-
-        @Override
-        public final EntityType.Remote plays(RoleType role) {
-            return (EntityType.Remote) super.plays(role);
-        }
-
-        @Override
-        public final EntityType.Remote unhas(AttributeType<?> attributeType) {
-            return (EntityType.Remote) super.unhas(attributeType);
-        }
-
-        @Override
-        public final EntityType.Remote unplay(RoleType role) {
-            return (EntityType.Remote) super.unplay(role);
-        }
-
-        @Override
-        public final EntityType.Remote isAbstract(Boolean isAbstract) {
-            return (EntityType.Remote) super.isAbstract(isAbstract);
-        }
-
-        @Override
-        public final Stream<Entity.Remote> instances() {
-            return super.instances().map(this::asInstance);
-        }
-
-        @Override
-        public final Stream<EntityType.Remote> sups() {
-            return super.sups().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public final Stream<EntityType.Remote> subs() {
-            return super.subs().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public final EntityType.Remote label(Label label) {
-            return (EntityType.Remote) super.label(label);
+        public final Stream<EntityType.Remote> getSubtypes() {
+            return super.getSubtypes().map(ThingType.Remote::asEntityType);
         }
 
         @Override
         public final Entity.Remote create() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
+            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Concept.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity());
+            return Thing.Remote.of(concepts(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 
         @Override
-        public final EntityType.Remote sup(EntityType superEntityType) {
-            return (EntityType.Remote) super.sup(superEntityType);
-        }
-
-        @Override
-        protected final EntityType.Remote asCurrentBaseType(Concept.Remote<?> other) {
-            return other.asEntityType();
-        }
-
-        @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
-            return other.isEntityType();
-        }
-
-        @Override
-        protected final Entity.Remote asInstance(Concept.Remote<?> concept) {
-            return concept.asEntity();
+        public final void setSupertype(EntityType superEntityType) {
+            setSupertypeInternal(superEntityType);
         }
     }
 }

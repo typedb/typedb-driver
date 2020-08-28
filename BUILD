@@ -20,11 +20,13 @@
 package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
+load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_dependencies//library/maven:artifacts.bzl", "maven_overrides", maven_overrides_org = "artifacts")
+load("@graknlabs_dependencies//distribution/maven:version.bzl", "version")
+load("@graknlabs_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
 load("@graknlabs_bazel_distribution//maven:rules.bzl", "deploy_maven", "assemble_maven")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-load("//dependencies/maven:artifacts.bzl", maven_overrides_repo = "overrides")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
@@ -33,15 +35,15 @@ exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
 java_library(
     name = "client-java",
     srcs = glob([
-        "answer/*.java",
+        "common/**/*.java",
         "concept/**/*.java",
-        "exception/*.java",
-        "rpc/*.java",
+        "rpc/**/*.java",
         "test/*.java",
-        "GraknClient.java"
+        "*.java"
     ]),
     deps = [
         # External dependencies from @graknlabs
+        "@graknlabs_common//:common",
         "@graknlabs_graql//java:graql",
         "@graknlabs_graql//java/common",
         "@graknlabs_graql//java/pattern",
@@ -82,7 +84,7 @@ assemble_maven(
     target = ":client-java",
     package = "client-java",
     workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json",
-    version_overrides = maven_overrides(maven_overrides_org, maven_overrides_repo),
+    version_overrides = version(artifacts_org, artifacts_repo),
     project_name = "Grakn Client Java",
     project_description = "Grakn Client API for Java",
     project_url = "https://github.com/graknlabs/client-java",
@@ -92,15 +94,37 @@ assemble_maven(
 deploy_maven(
     name = "deploy-maven",
     target = ":assemble-maven",
-    snapshot = deployment['maven.snapshot'],
-    release = deployment['maven.release']
+    snapshot = deployment["maven.snapshot"],
+    release = deployment["maven.release"],
 )
 
 deploy_github(
     name = "deploy-github",
+    organisation = github_deployment["github.organisation"],
+    repository = github_deployment["github.repository"],
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Java",
     title_append_version = True,
-    organisation = github_deployment['github.organisation'],
-    repository = github_deployment['github.repository']
+)
+
+release_validate_deps(
+    name = "release-validate-deps",
+    refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    tagged_deps = [
+        "@graknlabs_common",
+        "@graknlabs_graql",
+        "@graknlabs_protocol",
+        "@graknlabs_grabl_tracing",
+    ],
+    tags = ["manual"]  # in order for bazel test //... to not fail
+)
+
+# CI targets that are not declared in any BUILD file, but are called externally
+filegroup(
+    name = "ci",
+    data = [
+        "@graknlabs_dependencies//tool/unuseddeps:unused-deps",
+        "@graknlabs_dependencies//tool/checkstyle:test-coverage",
+        "@graknlabs_dependencies//tool/release:create-notes"
+    ],
 )

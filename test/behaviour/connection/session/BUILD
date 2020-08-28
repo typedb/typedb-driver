@@ -57,18 +57,17 @@ grakn_test(
         "//test/behaviour/connection/database:steps",
     ],
     data = [
-        "@graknlabs_verification//behaviour/connection:session.feature",
+        "@graknlabs_behaviour//connection:session.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",
 )
-
 
 checkstyle_test(
     name = "checkstyle",
     targets = [
         ":steps",
         ":test-core",
-    ],
+],
     license_type = "apache",
 )

@@ -28,7 +28,7 @@ java_library(
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/concept/thing:steps",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/concept:steps",
         "//test/behaviour/util:util",
 
         # External Maven Dependencies
@@ -61,7 +61,7 @@ grakn_test(
         "//test/behaviour/connection/transaction:steps",
     ],
     data = [
-        "@graknlabs_verification//behaviour/concept/thing:relation.feature",
+        "@graknlabs_behaviour//concept/thing:relation.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
     size = "medium",

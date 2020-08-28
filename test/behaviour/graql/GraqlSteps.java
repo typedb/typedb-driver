@@ -20,21 +20,24 @@
 package grakn.client.test.behaviour.graql;
 
 import com.google.common.collect.Iterators;
-import grakn.client.GraknClient;
-import grakn.client.answer.Answer;
-import grakn.client.answer.AnswerGroup;
-import grakn.client.answer.ConceptMap;
-import grakn.client.answer.Explanation;
-import grakn.client.answer.Numeric;
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
+import grakn.client.concept.answer.Answer;
+import grakn.client.concept.answer.AnswerGroup;
+import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.answer.Explanation;
+import grakn.client.concept.answer.Numeric;
 import grakn.client.concept.Concept;
-import grakn.client.concept.type.Rule;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Thing;
+import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.Type;
 import grakn.client.test.behaviour.connection.ConnectionSteps;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlGet;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
@@ -51,11 +54,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -65,8 +67,8 @@ import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
-    private static GraknClient.Session session = null;
-    private static GraknClient.Transaction tx = null;
+    private static Session session = null;
+    private static Transaction tx = null;
 
     private static List<ConceptMap> answers;
     private static List<Numeric> numericAnswers;
@@ -84,7 +86,7 @@ public class GraqlSteps {
     @Given("transaction is initialised")
     public void transaction_is_initialised() {
         session = Iterators.getOnlyElement(ConnectionSteps.sessions.iterator());
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
         assertTrue(tx.isOpen());
     }
 
@@ -92,11 +94,11 @@ public class GraqlSteps {
     public void transaction_is_reopened_without_commit() {
         tx.close();
         assertFalse(tx.isOpen());
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @Given("the integrity is validated")
-    public void integrity_is_validated(){
+    public void integrity_is_validated() {
 
         // TODO
 
@@ -107,7 +109,7 @@ public class GraqlSteps {
         GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
         tx.execute(graqlQuery);
         tx.commit();
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @Given("graql define without commit")
@@ -127,7 +129,7 @@ public class GraqlSteps {
             threw = true;
         } finally {
             tx.close();
-            tx = session.transaction().write();
+            tx = session.transaction(WRITE);
         }
 
         assertTrue(threw);
@@ -138,7 +140,7 @@ public class GraqlSteps {
         GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
         tx.execute(graqlQuery);
         tx.commit();
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @Given("graql undefine without commit")
@@ -158,7 +160,7 @@ public class GraqlSteps {
             threw = true;
         } finally {
             tx.close();
-            tx = session.transaction().write();
+            tx = session.transaction(WRITE);
         }
 
         assertTrue(threw);
@@ -169,7 +171,7 @@ public class GraqlSteps {
         GraqlInsert graqlQuery = Graql.parse(String.join("\n", insertQueryStatements)).asInsert();
         tx.execute(graqlQuery);
         tx.commit();
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @Given("graql insert without commit")
@@ -189,7 +191,7 @@ public class GraqlSteps {
             threw = true;
         } finally {
             tx.close();
-            tx = session.transaction().write();
+            tx = session.transaction(WRITE);
         }
         assertTrue(threw);
     }
@@ -199,7 +201,7 @@ public class GraqlSteps {
         GraqlDelete graqlQuery = Graql.parse(String.join("\n", deleteQueryStatements)).asDelete();
         tx.execute(graqlQuery);
         tx.commit();
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @Given("graql delete throws")
@@ -213,7 +215,7 @@ public class GraqlSteps {
             threw = true;
         } finally {
             tx.close();
-            tx = session.transaction().write();
+            tx = session.transaction(WRITE);
         }
         assertTrue(threw);
     }
@@ -229,7 +231,7 @@ public class GraqlSteps {
 
         answers = tx.execute(graqlQuery).get();
         tx.commit();
-        tx = session.transaction().write();
+        tx = session.transaction(WRITE);
     }
 
     @When("get answers of graql query")
@@ -240,18 +242,18 @@ public class GraqlSteps {
         numericAnswers = null;
         answerGroups = null;
         numericAnswerGroups = null;
-        if (graqlQuery instanceof GraqlGet) {
-            answers = tx.execute(graqlQuery.asGet()).get();
+        if (graqlQuery instanceof GraqlMatch) {
+            answers = tx.execute(graqlQuery.asMatch()).get();
         } else if (graqlQuery instanceof GraqlInsert) {
             throw new ScenarioDefinitionException("Insert is not supported; use `get answers of graql insert` instead");
-        } else if (graqlQuery instanceof GraqlGet.Aggregate) {
-            numericAnswers = tx.execute(graqlQuery.asGetAggregate()).get();
-        } else if (graqlQuery instanceof GraqlGet.Group) {
-            answerGroups = tx.execute(graqlQuery.asGetGroup()).get();
-        } else if (graqlQuery instanceof GraqlGet.Group.Aggregate) {
-            numericAnswerGroups = tx.execute(graqlQuery.asGetGroupAggregate()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Aggregate) {
+            numericAnswers = tx.execute(graqlQuery.asMatchAggregate()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Group) {
+            answerGroups = tx.execute(graqlQuery.asMatchGroup()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Group.Aggregate) {
+            numericAnswerGroups = tx.execute(graqlQuery.asMatchGroupAggregate()).get();
         } else {
-            throw new ScenarioDefinitionException("Only match-get, insert, aggregate, group and group aggregate supported for now");
+            throw new ScenarioDefinitionException("Only match, insert, aggregate, group and group aggregate supported for now");
         }
     }
 
@@ -260,14 +262,14 @@ public class GraqlSteps {
         boolean threw = true;
         try {
             GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
-            if (graqlQuery instanceof GraqlGet) {
-                tx.execute(graqlQuery.asGet()).get();
-            } else if (graqlQuery instanceof GraqlGet.Aggregate) {
-                tx.execute(graqlQuery.asGetAggregate()).get();
-            } else if (graqlQuery instanceof GraqlGet.Group) {
-                tx.execute(graqlQuery.asGetGroup()).get();
-            } else if (graqlQuery instanceof GraqlGet.Group.Aggregate) {
-                tx.execute(graqlQuery.asGetGroupAggregate()).get();
+            if (graqlQuery instanceof GraqlMatch) {
+                tx.execute(graqlQuery.asMatch()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Aggregate) {
+                tx.execute(graqlQuery.asMatchAggregate()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Group) {
+                tx.execute(graqlQuery.asMatchGroup()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Group.Aggregate) {
+                tx.execute(graqlQuery.asMatchGroupAggregate()).get();
             } else {
                 throw new ScenarioDefinitionException("Expected a match-get, aggregate, group or group aggregate query, but got a different query type");
             }
@@ -276,7 +278,7 @@ public class GraqlSteps {
             threw = true;
         } finally {
             tx.close();
-            tx = session.transaction().write();
+            tx = session.transaction(WRITE);
         }
         assertTrue(threw);
     }
@@ -315,7 +317,7 @@ public class GraqlSteps {
     public void uniquely_identify_answer_concepts(List<Map<String, String>> answersIdentifiers) {
         assertEquals(
                 String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers",
-                        answersIdentifiers.size(), answers.size()),
+                              answersIdentifiers.size(), answers.size()),
                 answersIdentifiers.size(), answers.size()
         );
 
@@ -330,7 +332,7 @@ public class GraqlSteps {
             }
             assertEquals(
                     String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s",
-                            matchingIdentifiers.size(), answer.map().keySet().toString()),
+                                  matchingIdentifiers.size(), answer.map().keySet().toString()),
                     1, matchingIdentifiers.size()
             );
         }
@@ -340,7 +342,7 @@ public class GraqlSteps {
     public void order_of_answer_concepts_is(List<Map<String, String>> answersIdentifiers) {
         assertEquals(
                 String.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers",
-                        answersIdentifiers.size(), answers.size()),
+                              answersIdentifiers.size(), answers.size()),
                 answersIdentifiers.size(), answers.size()
         );
 
@@ -359,9 +361,9 @@ public class GraqlSteps {
         assertNotNull("The last executed query was not an aggregate query", numericAnswers);
         assertEquals(String.format("Expected 1 answer, but got %d answers", numericAnswers.size()), 1, numericAnswers.size());
         assertEquals(String.format("Expected answer to equal %f, but it was %f", expectedAnswer, numericAnswers.get(0).number().doubleValue()),
-                expectedAnswer,
-                numericAnswers.get(0).number().doubleValue(),
-                0.01);
+                     expectedAnswer,
+                     numericAnswers.get(0).number().doubleValue(),
+                     0.01);
     }
 
     @Then("aggregate answer is empty")
@@ -389,8 +391,8 @@ public class GraqlSteps {
                 .collect(Collectors.toSet());
 
         assertEquals(String.format("Expected [%d] answer groups, but found [%d]",
-                answerIdentifierGroups.size(), answerGroups.size()),
-                answerIdentifierGroups.size(), answerGroups.size()
+                                   answerIdentifierGroups.size(), answerGroups.size()),
+                     answerIdentifierGroups.size(), answerGroups.size()
         );
 
         for (AnswerIdentifierGroup answerIdentifierGroup : answerIdentifierGroups) {
@@ -413,7 +415,7 @@ public class GraqlSteps {
                 }
                 assertEquals(
                         String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were [%d] matching identifier entries for answer with variables %s",
-                                matchingIdentifiers.size(), answer.map().keySet().toString()),
+                                      matchingIdentifiers.size(), answer.map().keySet().toString()),
                         1, matchingIdentifiers.size()
                 );
             }
@@ -431,8 +433,8 @@ public class GraqlSteps {
         }
 
         assertEquals(String.format("Expected [%d] answer groups, but found [%d]",
-                expectations.size(), numericAnswerGroups.size()),
-                expectations.size(), numericAnswerGroups.size()
+                                   expectations.size(), numericAnswerGroups.size()),
+                     expectations.size(), numericAnswerGroups.size()
         );
 
         for (Map.Entry<String, Double> expectation : expectations.entrySet()) {
@@ -447,7 +449,7 @@ public class GraqlSteps {
             double actualAnswer = answerGroup.answers().get(0).number().doubleValue();
             assertEquals(
                     String.format("Expected answer [%f] for group [%s], but got [%f]",
-                            expectedAnswer, groupIdentifier, actualAnswer),
+                                  expectedAnswer, groupIdentifier, actualAnswer),
                     expectedAnswer, actualAnswer, 0.01
             );
         }
@@ -470,8 +472,8 @@ public class GraqlSteps {
             answersIdentifiers = new ArrayList<>();
             for (final Map<String, String> rawAnswerIdentifiers : answerIdentifierTable) {
                 answersIdentifiers.add(rawAnswerIdentifiers.entrySet().stream()
-                        .filter(e -> !e.getKey().equals(GROUP_COLUMN_NAME))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                                               .filter(e -> !e.getKey().equals(GROUP_COLUMN_NAME))
+                                               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
             }
         }
     }
@@ -486,11 +488,11 @@ public class GraqlSteps {
             String varName = entry.getKey();
             String identifier = entry.getValue();
 
-            if(!identifierChecks.containsKey(identifier)) {
+            if (!identifierChecks.containsKey(identifier)) {
                 throw new ScenarioDefinitionException(String.format("Identifier \"%s\" hasn't previously been declared", identifier));
             }
 
-            if(!identifierChecks.get(identifier).check(answer.get(varName))) {
+            if (!identifierChecks.get(identifier).check(answer.get(varName))) {
                 return false;
             }
         }
@@ -551,15 +553,15 @@ public class GraqlSteps {
                 assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
             } else {
                 // rule
-                Rule.Remote rule = explanation.getRule().asRemote(tx);
-                String ruleLabel = rule.label().toString();
+                Rule.Remote rule = explanation.getRule();
+                String ruleLabel = rule.getLabel();
                 assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
 
                 Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
-                String when = Objects.requireNonNull(rule.when()).toString();
+                String when = Objects.requireNonNull(rule.getWhen()).toString();
                 assertEquals(String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when), expectedRuleDefinition.get("when"), when);
 
-                String then = Objects.requireNonNull(rule.then()).toString();
+                String then = Objects.requireNonNull(rule.getThen()).toString();
                 assertEquals(String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then), expectedRuleDefinition.get("then"), then);
             }
             for (String child : children) {
@@ -581,7 +583,8 @@ public class GraqlSteps {
     }
 
     private String applyQueryTemplate(String template, ConceptMap templateFiller) {
-        // find shortest matching strings between <>
+        throw new UnsupportedOperationException(); // TODO fix
+        /* // find shortest matching strings between <>
         Pattern pattern = Pattern.compile("<.+?>");
         Matcher matcher = pattern.matcher(template);
 
@@ -594,8 +597,8 @@ public class GraqlSteps {
             builder.append(template, i, matcher.start());
             if (templateFiller.map().containsKey(requiredVariable)) {
 
-                Concept<?> concept = templateFiller.get(requiredVariable);
-                String conceptId = concept.iid().toString();
+                Concept concept = templateFiller.get(requiredVariable);
+                String conceptId = concept.getIID().toString();
                 builder.append(conceptId);
 
             } else {
@@ -604,7 +607,7 @@ public class GraqlSteps {
             i = matcher.end();
         }
         builder.append(template.substring(i));
-        return builder.toString();
+        return builder.toString(); */
     }
 
     private String variableFromTemplatePlaceholder(String placeholder) {
@@ -624,7 +627,7 @@ public class GraqlSteps {
     }
 
     private interface UniquenessCheck {
-        boolean check(Concept<?> concept);
+        boolean check(Concept concept);
     }
 
     public static class LabelUniquenessCheck implements UniquenessCheck {
@@ -637,15 +640,11 @@ public class GraqlSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (concept.isType()) {
-                return label.equals(concept.asType().label().toString());
-            } else if (concept.isRoleType()) {
-                return label.equals(concept.asRoleType().label().toString());
-            } else if (concept.isRule()) {
-                return label.equals(concept.asRule().label().toString());
-            } else {
-                throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is neither a Role nor a Type nor a Rule.");
+            if (concept instanceof Type) {
+                return label.equals(concept.asType().getLabel());
             }
+
+            throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is not a Type.");
         }
     }
 
@@ -671,9 +670,9 @@ public class GraqlSteps {
         }
 
         public boolean check(Concept concept) {
-            return concept.isAttribute()
-                    && type.equals(concept.asAttribute().type().label().toString())
-                    && value.equals(concept.asAttribute().value().toString());
+            return concept instanceof Attribute
+                    && type.equals(concept.asThing().asAttribute().getType().getLabel())
+                    && value.equals(concept.asThing().asAttribute().getValue().toString());
         }
     }
 
@@ -684,21 +683,22 @@ public class GraqlSteps {
 
         /**
          * Check that the given key is in the concept's keys
+         *
          * @param concept to check
          * @return whether the given key matches a key belonging to the concept
          */
         @Override
-        public boolean check(Concept<?> concept) {
-            if(!concept.isThing()) { return false; }
+        public boolean check(Concept concept) {
+            if (!(concept instanceof Thing)) { return false; }
 
-            Set<Attribute.Remote<?>> keys = concept.asThing().asRemote(tx).attributes(true).collect(Collectors.toSet());
+            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx.concepts()).getHas(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 
-            for (Attribute<?> key : keys) {
+            for (Attribute key : keys) {
                 keyMap.put(
-                        key.type().label().toString(),
-                        key.value().toString());
+                        key.getType().getLabel(),
+                        key.getValue().toString());
             }
             return value.equals(keyMap.get(type));
         }

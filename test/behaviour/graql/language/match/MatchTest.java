@@ -35,7 +35,7 @@ import java.util.concurrent.TimeoutException;
         strict = true,
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_verification/behaviour/graql/language/match.feature",
+        features = "external/graknlabs_behaviour/graql/language/match.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
 public class MatchTest {
@@ -70,6 +70,7 @@ public class MatchTest {
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
+
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
         runner.stop();

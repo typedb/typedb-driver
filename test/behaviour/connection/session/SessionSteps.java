@@ -19,7 +19,8 @@
 
 package grakn.client.test.behaviour.connection.session;
 
-import grakn.client.GraknClient;
+import grakn.client.Grakn.Session;
+import grakn.client.Grakn.Transaction;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -29,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
+import static grakn.client.Grakn.Session.Type.SCHEMA;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessions;
@@ -56,7 +58,7 @@ public class SessionSteps {
     @When("connection open schema session(s) for database(s):")
     public void connection_open_schema_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.schemaSession(name));
+            sessions.add(client.session(name, SCHEMA));
         }
     }
 
@@ -78,16 +80,16 @@ public class SessionSteps {
 
     @When("connection close all sessions")
     public void connection_close_all_sessions() throws ExecutionException, InterruptedException {
-        for (GraknClient.Session session : sessions) {
+        for (Session session : sessions) {
             if (sessionsToTransactions.containsKey(session)) {
-                for (GraknClient.Transaction transaction : sessionsToTransactions.get(session)) {
+                for (Transaction transaction : sessionsToTransactions.get(session)) {
                     transaction.close();
                 }
                 sessionsToTransactions.remove(session);
             }
 
             if (sessionsToTransactionsParallel.containsKey(session)) {
-                for (CompletableFuture<GraknClient.Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
+                for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
                     futureTransaction.get().close();
                 }
                 sessionsToTransactionsParallel.remove(session);
@@ -100,14 +102,14 @@ public class SessionSteps {
 
     @Then("session(s) is/are null: {bool}")
     public void sessions_are_null(Boolean isNull) {
-        for (GraknClient.Session session : sessions) {
+        for (Session session : sessions) {
             assertEquals(isNull, isNull(session));
         }
     }
 
     @Then("session(s) is/are open: {bool}")
     public void sessions_are_open(Boolean isOpen) {
-        for (GraknClient.Session session : sessions) {
+        for (Session session : sessions) {
             assertEquals(isOpen, session.isOpen());
         }
     }
@@ -127,7 +129,8 @@ public class SessionSteps {
     public void sessions_in_parallel_are_open(Boolean isOpen) {
         Stream<CompletableFuture<Void>> assertions = sessionsParallel
                 .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
-                    assertEquals(isOpen, session.isOpen()); return null;
+                    assertEquals(isOpen, session.isOpen());
+                    return null;
                 }));
 
         CompletableFuture.allOf(assertions.toArray(CompletableFuture[]::new)).join();
@@ -136,7 +139,7 @@ public class SessionSteps {
     @Then("session(s) has/have database(s):")
     public void sessions_have_databases(List<String> names) {
         assertEquals(names.size(), sessions.size());
-        Iterator<GraknClient.Session> sessionIter = sessions.iterator();
+        Iterator<Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
             assertEquals(name, sessionIter.next().database().name());
@@ -146,13 +149,14 @@ public class SessionSteps {
     @Then("sessions in parallel have databases:")
     public void sessions_in_parallel_have_databases(List<String> names) {
         assertEquals(names.size(), sessionsParallel.size());
-        Iterator<CompletableFuture<GraknClient.Session>> futureSessionIter = sessionsParallel.iterator();
+        Iterator<CompletableFuture<Session>> futureSessionIter = sessionsParallel.iterator();
         CompletableFuture[] assertions = new CompletableFuture[names.size()];
 
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database().name()); return null;
+                assertEquals(name, session.database().name());
+                return null;
             });
         }
 

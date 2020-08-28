@@ -19,206 +19,556 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.GraknClient;
-import grakn.client.concept.Concept;
-import grakn.client.concept.ConceptIID;
-import grakn.client.concept.ValueType;
-import grakn.client.concept.Label;
+import grakn.client.common.exception.GraknException;
+import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.exception.GraknClientException;
-import grakn.client.rpc.RequestBuilder;
+import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-public class AttributeTypeImpl {
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
+
+public abstract class AttributeTypeImpl {
+
+    private static final java.lang.String ROOT_LABEL = "attribute";
+
     /**
      * Client implementation of AttributeType
-     *
-     * @param <D> The data type of this attribute type
      */
-    public static class Local<D> extends ThingTypeImpl.Local<AttributeType<D>, Attribute<D>> implements AttributeType.Local<D> {
+    public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
 
-        private final ValueType<D> valueType;
-
-        public Local(ConceptProto.Concept concept) {
-            super(concept);
-            this.valueType = RequestBuilder.ConceptMessage.valueType(concept.getValueTypeRes().getValueType());
+        public Local(final ConceptProto.Type type) {
+            super(type);
         }
 
         @Override
-        @Nullable
-        public ValueType<D> valueType() {
-            return valueType;
+        public AttributeType.Remote asRemote(final Concepts concepts) {
+            return new AttributeTypeImpl.Remote(concepts, getLabel(), isRoot());
         }
     }
 
     /**
      * Client implementation of AttributeType
-     *
-     * @param <D> The data type of this attribute type
      */
-    public static class Remote<D> extends ThingTypeImpl.Remote<AttributeType<D>, Attribute<D>> implements AttributeType.Remote<D> {
+    public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        public Remote(GraknClient.Transaction tx, ConceptIID iid) {
-            super(tx, iid);
+        public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+            super(concepts, label, isRoot);
         }
 
-        @Override
-        public final AttributeType.Remote<D> has(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.has(attributeType);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, boolean isKey) {
-            return (AttributeType.Remote<D>) super.has(attributeType, isKey);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType) {
-            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> has(AttributeType<?> attributeType, AttributeType<?> overriddenType, boolean isKey) {
-            return (AttributeType.Remote<D>) super.has(attributeType, overriddenType, isKey);
-        }
-
-        @Override
-        public Stream<? extends AttributeType.Remote<?>> attributes(boolean keysOnly) {
-            return super.attributes(keysOnly);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> plays(RoleType role) {
-            return (AttributeType.Remote<D>) super.plays(role);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> unhas(AttributeType<?> attributeType) {
-            return (AttributeType.Remote<D>) super.unhas(attributeType);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> unplay(RoleType role) {
-            return (AttributeType.Remote<D>) super.unplay(role);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> isAbstract(Boolean isAbstract) {
-            return (AttributeType.Remote<D>) super.isAbstract(isAbstract);
-        }
-
-        @Override
-        public final Stream<Attribute.Remote<D>> instances() {
-            return super.instances().map(this::asInstance);
-        }
-
-        @Override
-        public final Stream<AttributeType.Remote<D>> sups() {
-            return super.sups().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public final Stream<AttributeType.Remote<D>> subs() {
-            return super.subs().map(this::asCurrentBaseType);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> label(Label label) {
-            return (AttributeType.Remote<D>) super.label(label);
-        }
-
-        @Override
-        public final AttributeType.Remote<D> sup(AttributeType<D> type) {
-            return (AttributeType.Remote<D>) super.sup(type);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public final Attribute.Remote<D> put(D value) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypePutReq(ConceptProto.AttributeType.Create.Req.newBuilder()
-                                                       .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
-
-            return (Attribute.Remote<D>) Concept.Remote.of(tx(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
         @Nullable
-        public final Attribute.Remote<D> get(D value) {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeGetReq(ConceptProto.AttributeType.Attribute.Req.newBuilder()
-                                                          .setValue(RequestBuilder.ConceptMessage.attributeValue(value))).build();
+        @Override
+        public AttributeType.Remote getSupertype() {
+            return getSupertypeInternal(Type.Remote::asAttributeType);
+        }
 
-            ConceptProto.AttributeType.Attribute.Res response = runMethod(method).getAttributeTypeGetRes();
+        @Override
+        public Stream<? extends AttributeType.Remote> getSupertypes() {
+            return super.getSupertypes().map(Type.Remote::asAttributeType);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Remote> getSubtypes() {
+            final Stream<? extends AttributeType.Remote> stream = super.getSubtypes().map(Type.Remote::asAttributeType);
+
+            if (isRoot() && getValueType() != ValueType.OBJECT) {
+                // Get all attribute types of this value type
+                return stream.filter(x -> x.getValueType() == this.getValueType() || x.getLabel().equals(this.getLabel()));
+            }
+
+            return stream;
+        }
+
+        @Override
+        public Stream<? extends Attribute.Remote<?>> getInstances() {
+            return super.getInstances().map(Thing.Remote::asAttribute);
+        }
+
+        @Override
+        public Stream<? extends ThingType> getOwners() {
+            return getOwners(false);
+        }
+
+        @Override
+        public Stream<? extends ThingType> getOwners(boolean onlyKey) {
+            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+                    .setAttributeTypeGetOwnersIterReq(ConceptProto.AttributeType.GetOwners.Iter.Req.newBuilder()
+                                                              .setOnlyKey(onlyKey)).build();
+
+            return typeStream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(Type.Remote::asThingType);
+        }
+
+        protected final Attribute.Remote<?> put(Object value) {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
+                                                    .setValue(attributeValue(value))).build();
+            return Thing.Remote.of(concepts(), runMethod(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+        }
+
+        @Nullable
+        protected final Attribute.Remote<?> get(Object value) {
+            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                    .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
+                                                    .setValue(attributeValue(value))).build();
+            ConceptProto.AttributeType.Get.Res response = runMethod(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
-                case NULL:
-                    return null;
                 case ATTRIBUTE:
-                    return (Attribute.Remote<D>) Concept.Remote.of(tx(), response.getAttribute()).asAttribute();
+                    return Thing.Remote.of(concepts(), response.getAttribute()).asAttribute();
                 default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
-            }
-        }
-
-        @Override
-        @Nullable
-        public final ValueType<D> valueType() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeValueTypeReq(ConceptProto.AttributeType.ValueType.Req.getDefaultInstance()).build();
-
-            ConceptProto.AttributeType.ValueType.Res response = runMethod(method).getAttributeTypeValueTypeRes();
-            switch (response.getResCase()) {
-                case NULL:
+                case RES_NOT_SET:
                     return null;
-                case VALUETYPE:
-                    return RequestBuilder.ConceptMessage.valueType(response.getValueType());
-                default:
-                    throw GraknClientException.unreachableStatement("Unexpected response " + response);
             }
         }
 
-        @Override
-        @Nullable
-        public final String regex() {
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
-
-            String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
-            return regex.isEmpty() ? null : regex;
+        public final void setSupertype(AttributeType type) {
+            setSupertypeInternal(type);
         }
 
         @Override
-        public final AttributeType.Remote<D> regex(String regex) {
-            if (regex == null) regex = "";
-            ConceptProto.Method.Req method = ConceptProto.Method.Req.newBuilder()
-                    .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                                         .setRegex(regex)).build();
-
-            runMethod(method);
-            return this;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected final Attribute.Remote<D> asInstance(Concept.Remote<?> concept) {
-            return (Attribute.Remote<D>) concept.asAttribute();
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected final AttributeType.Remote<D> asCurrentBaseType(Concept.Remote<?> other) {
-            return (AttributeType.Remote<D>) other.asAttributeType();
+        public AttributeType.Boolean.Remote asBoolean() {
+            if (isRoot()) {
+                return new AttributeTypeImpl.Boolean.Remote(concepts(), ROOT_LABEL, true);
+            }
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
         }
 
         @Override
-        protected final boolean equalsCurrentBaseType(Concept.Remote<?> other) {
-            return other.isAttributeType();
+        public AttributeType.Long.Remote asLong() {
+            if (isRoot()) {
+                return new AttributeTypeImpl.Long.Remote(concepts(), ROOT_LABEL, true);
+            }
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.Double.Remote asDouble() {
+            if (isRoot()) {
+                return new AttributeTypeImpl.Double.Remote(concepts(), ROOT_LABEL, true);
+            }
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.String.Remote asString() {
+            if (isRoot()) {
+                return new AttributeTypeImpl.String.Remote(concepts(), ROOT_LABEL, true);
+            }
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+        }
+
+        @Override
+        public AttributeType.DateTime.Remote asDateTime() {
+            if (isRoot()) {
+                return new AttributeTypeImpl.DateTime.Remote(concepts(), ROOT_LABEL, true);
+            }
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof AttributeTypeImpl.Remote)) return false;
+            // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
+            // because it is possible to compare a attribute root types wrapped in different type classes
+            // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
+
+            AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
+
+            return this.concepts().equals(that.concepts()) &&
+                    this.getLabel().equals(that.getLabel());
+        }
+    }
+
+    public static abstract class Boolean implements AttributeType.Boolean {
+
+        /**
+         * Client implementation of AttributeType.Boolean
+         */
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Boolean.Local {
+
+            public Local(ConceptProto.Type type) {
+                super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Boolean.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Boolean.Remote.of(concepts, getLabel(), isRoot());
+            }
+        }
+
+        /**
+         * Client implementation of AttributeType.Boolean
+         */
+        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
+
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
+            }
+
+            @Override
+            public final AttributeType.Boolean.Remote getSupertype() {
+                return getSupertypeInternal(t -> t.asAttributeType().asBoolean());
+            }
+
+            @Override
+            public final Stream<AttributeType.Boolean.Remote> getSupertypes() {
+                return super.getSupertypes().map(AttributeType.Remote::asBoolean);
+            }
+
+            @Override
+            public final Stream<AttributeType.Boolean.Remote> getSubtypes() {
+                return super.getSubtypes().map(AttributeType.Remote::asBoolean);
+            }
+
+            @Override
+            public final Stream<Attribute.Boolean.Remote> getInstances() {
+                return super.getInstances().map(Attribute.Remote::asBoolean);
+            }
+
+            @Override
+            public final void setSupertype(AttributeType.Boolean type) {
+                super.setSupertype(type);
+            }
+
+            @Override
+            public final Attribute.Boolean.Remote put(boolean value) {
+                return super.put(value).asBoolean();
+            }
+
+            @Nullable
+            @Override
+            public final Attribute.Boolean.Remote get(boolean value) {
+                final Attribute.Remote<?> attr = super.get(value);
+                return attr != null ? attr.asBoolean() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Boolean.Remote asBoolean() {
+                return this;
+            }
+
+            public static final class Root extends AttributeTypeImpl.Boolean.Remote {
+
+                public Root(final Concepts concepts) {
+                    super(concepts, ROOT_LABEL, true);
+                }
+            }
+        }
+    }
+
+    public static abstract class Long implements AttributeType.Long {
+
+        /**
+         * Client implementation of AttributeType.Long
+         */
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Long.Local {
+
+            public Local(ConceptProto.Type type) {
+                super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Long.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Long.Remote.of(concepts, getLabel(), isRoot());
+            }
+        }
+
+        /**
+         * Client implementation of AttributeType.Long
+         */
+        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
+
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
+            }
+
+            @Override
+            public final AttributeType.Long.Remote getSupertype() {
+                return getSupertypeInternal(t -> t.asAttributeType().asLong());
+            }
+
+            @Override
+            public final Stream<AttributeType.Long.Remote> getSupertypes() {
+                return super.getSupertypes().map(AttributeType.Remote::asLong);
+            }
+
+            @Override
+            public final Stream<AttributeType.Long.Remote> getSubtypes() {
+                return super.getSubtypes().map(AttributeType.Remote::asLong);
+            }
+
+            @Override
+            public final Stream<Attribute.Long.Remote> getInstances() {
+                return super.getInstances().map(Attribute.Remote::asLong);
+            }
+
+            @Override
+            public final void setSupertype(AttributeType.Long type) {
+                super.setSupertype(type);
+            }
+
+            @Override
+            public final Attribute.Long.Remote put(long value) {
+                return super.put(value).asLong();
+            }
+
+            @Nullable
+            @Override
+            public final Attribute.Long.Remote get(long value) {
+                final Attribute.Remote<?> attr = super.get(value);
+                return attr != null ? attr.asLong() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Long.Remote asLong() {
+                return this;
+            }
+        }
+    }
+
+    public static abstract class Double implements AttributeType.Double {
+
+        /**
+         * Client implementation of AttributeType.Double
+         */
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Double.Local {
+
+            public Local(ConceptProto.Type type) {
+                super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Double.Remote asRemote(final Concepts concepts) {
+                return AttributeType.Double.Remote.of(concepts, getLabel(), isRoot());
+            }
+        }
+
+        /**
+         * Client implementation of AttributeType.Double
+         */
+        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
+
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
+            }
+
+            @Override
+            public final AttributeType.Double.Remote getSupertype() {
+                return getSupertypeInternal(t -> t.asAttributeType().asDouble());
+            }
+
+            @Override
+            public final Stream<AttributeType.Double.Remote> getSupertypes() {
+                return super.getSupertypes().map(AttributeType.Remote::asDouble);
+            }
+
+            @Override
+            public final Stream<AttributeType.Double.Remote> getSubtypes() {
+                return super.getSubtypes().map(AttributeType.Remote::asDouble);
+            }
+
+            @Override
+            public final Stream<Attribute.Double.Remote> getInstances() {
+                return super.getInstances().map(Attribute.Remote::asDouble);
+            }
+
+            @Override
+            public final void setSupertype(AttributeType.Double type) {
+                super.setSupertype(type);
+            }
+
+            @Override
+            public final Attribute.Double.Remote put(double value) {
+                return super.put(value).asDouble();
+            }
+
+            @Nullable
+            @Override
+            public final Attribute.Double.Remote get(double value) {
+                final Attribute.Remote<?> attr = super.get(value);
+                return attr != null ? attr.asDouble() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.Double.Remote asDouble() {
+                return this;
+            }
+        }
+    }
+
+    public static abstract class String implements AttributeType.String {
+
+        /**
+         * Client implementation of AttributeType.String
+         */
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.String.Local {
+
+            public Local(ConceptProto.Type type) {
+                super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.String.Remote asRemote(final Concepts concepts) {
+                return AttributeType.String.Remote.of(concepts, getLabel(), isRoot());
+            }
+        }
+
+        /**
+         * Client implementation of AttributeType.Double
+         */
+        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
+
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
+            }
+
+            @Override
+            public final AttributeType.String.Remote getSupertype() {
+                return getSupertypeInternal(t -> t.asAttributeType().asString());
+            }
+
+            @Override
+            public final Stream<AttributeType.String.Remote> getSupertypes() {
+                return super.getSupertypes().map(AttributeType.Remote::asString);
+            }
+
+            @Override
+            public final Stream<AttributeType.String.Remote> getSubtypes() {
+                return super.getSubtypes().map(AttributeType.Remote::asString);
+            }
+
+            @Override
+            public final Stream<Attribute.String.Remote> getInstances() {
+                return super.getInstances().map(Attribute.Remote::asString);
+            }
+
+            @Override
+            public final void setSupertype(AttributeType.String type) {
+                super.setSupertype(type);
+            }
+
+            @Override
+            public final Attribute.String.Remote put(java.lang.String value) {
+                return super.put(value).asString();
+            }
+
+            @Nullable
+            @Override
+            public final Attribute.String.Remote get(java.lang.String value) {
+                final Attribute.Remote<?> attr = super.get(value);
+                return attr != null ? attr.asString() : null;
+            }
+
+            @Nullable
+            @Override
+            public final java.lang.String getRegex() {
+                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                        .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
+                final java.lang.String regex = runMethod(method).getAttributeTypeGetRegexRes().getRegex();
+                return regex.isEmpty() ? null : regex;
+            }
+
+            @Override
+            public final void setRegex(java.lang.String regex) {
+                if (regex == null) regex = "";
+                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                        .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
+                                                             .setRegex(regex)).build();
+                runMethod(method);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.String.Remote asString() {
+                return this;
+            }
+        }
+    }
+
+    public static abstract class DateTime implements AttributeType.DateTime {
+
+        /**
+         * Client implementation of AttributeType.DateTime
+         */
+        public static class Local extends AttributeTypeImpl.Local implements AttributeType.DateTime.Local {
+
+            public Local(ConceptProto.Type type) {
+                super(type);
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.DateTime.Remote asRemote(final Concepts concepts) {
+                return AttributeType.DateTime.Remote.of(concepts, getLabel(), isRoot());
+            }
+        }
+
+        /**
+         * Client implementation of AttributeType.DateTime
+         */
+        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
+
+            public Remote(final Concepts concepts, final java.lang.String label, final boolean isRoot) {
+                super(concepts, label, isRoot);
+            }
+
+            @Override
+            public final AttributeType.DateTime.Remote getSupertype() {
+                return getSupertypeInternal(t -> t.asAttributeType().asDateTime());
+            }
+
+            @Override
+            public final Stream<AttributeType.DateTime.Remote> getSupertypes() {
+                return super.getSupertypes().map(AttributeType.Remote::asDateTime);
+            }
+
+            @Override
+            public final Stream<AttributeType.DateTime.Remote> getSubtypes() {
+                return super.getSubtypes().map(AttributeType.Remote::asDateTime);
+            }
+
+            @Override
+            public final Stream<Attribute.DateTime.Remote> getInstances() {
+                return super.getInstances().map(Attribute.Remote::asDateTime);
+            }
+
+            @Override
+            public final void setSupertype(AttributeType.DateTime type) {
+                super.setSupertype(type);
+            }
+
+            @Override
+            public final Attribute.DateTime.Remote put(LocalDateTime value) {
+                return super.put(value).asDateTime();
+            }
+
+            @Nullable
+            @Override
+            public final Attribute.DateTime.Remote get(LocalDateTime value) {
+                final Attribute.Remote<?> attr = super.get(value);
+                return attr != null ? attr.asDateTime() : null;
+            }
+
+            @CheckReturnValue
+            @Override
+            public AttributeType.DateTime.Remote asDateTime() {
+                return this;
+            }
         }
     }
 }
