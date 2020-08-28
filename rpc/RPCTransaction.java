@@ -44,7 +44,7 @@ import grakn.protocol.TransactionProto;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlGet;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
@@ -60,7 +60,6 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
 import static grakn.client.concept.proto.ConceptProtoBuilder.concept;
-import static grakn.client.rpc.RPCProtoBuilder.batchSize;
 import static grakn.client.rpc.RPCProtoBuilder.options;
 import static grakn.client.rpc.RPCProtoBuilder.tracingData;
 
@@ -143,14 +142,14 @@ public class RPCTransaction implements Transaction {
     }
 
     @Override
-    public QueryFuture<List<ConceptMap>> execute(GraqlGet query, GraknOptions options) {
+    public QueryFuture<List<ConceptMap>> execute(GraqlMatch query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get")) {
             return executeInternal(query, options);
         }
     }
 
     @Override
-    public QueryFuture<List<ConceptMap>> execute(GraqlGet query) {
+    public QueryFuture<List<ConceptMap>> execute(GraqlMatch query) {
         return execute(query, new GraknOptions());
     }
 
@@ -193,38 +192,38 @@ public class RPCTransaction implements Transaction {
     }
 
     @Override
-    public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, GraknOptions options) {
+    public QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get")) {
             return streamInternal(query, options);
         }
     }
 
     @Override
-    public QueryFuture<Stream<ConceptMap>> stream(GraqlGet query) {
+    public QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query) {
         return stream(query, new GraknOptions());
     }
 
     // Aggregate Query
 
     @Override
-    public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query) {
+    public QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query) {
         return execute(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, GraknOptions options) {
+    public QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
             return executeInternal(query, options);
         }
     }
 
     @Override
-    public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query) {
+    public QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query) {
         return stream(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, GraknOptions options) {
+    public QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
             return streamInternal(query, options);
         }
@@ -233,24 +232,24 @@ public class RPCTransaction implements Transaction {
     // Group Query
 
     @Override
-    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query) {
+    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query) {
         return execute(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, GraknOptions options) {
+    public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
             return executeInternal(query, options);
         }
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query) {
+    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query) {
         return stream(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, GraknOptions options) {
+    public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
             return streamInternal(query, options);
         }
@@ -259,24 +258,24 @@ public class RPCTransaction implements Transaction {
     // Group Aggregate Query
 
     @Override
-    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query) {
+    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query) {
         return execute(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, GraknOptions options) {
+    public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
             return executeInternal(query, options);
         }
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query) {
+    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query) {
         return stream(query, new GraknOptions());
     }
 
     @Override
-    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, GraknOptions options) {
+    public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query, GraknOptions options) {
         try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
             return streamInternal(query, options);
         }
@@ -361,17 +360,17 @@ public class RPCTransaction implements Transaction {
         } else if (query instanceof GraqlDelete) {
             return execute((GraqlDelete) query, options);
 
-        } else if (query instanceof GraqlGet) {
-            return execute((GraqlGet) query, options);
+        } else if (query instanceof GraqlMatch) {
+            return execute((GraqlMatch) query, options);
 
-        } else if (query instanceof GraqlGet.Aggregate) {
-            return execute((GraqlGet.Aggregate) query, options);
+        } else if (query instanceof GraqlMatch.Aggregate) {
+            return execute((GraqlMatch.Aggregate) query, options);
 
-        } else if (query instanceof GraqlGet.Group.Aggregate) {
-            return execute((GraqlGet.Group.Aggregate) query, options);
+        } else if (query instanceof GraqlMatch.Group.Aggregate) {
+            return execute((GraqlMatch.Group.Aggregate) query, options);
 
-        } else if (query instanceof GraqlGet.Group) {
-            return execute((GraqlGet.Group) query, options);
+        } else if (query instanceof GraqlMatch.Group) {
+            return execute((GraqlMatch.Group) query, options);
 
         } else if (query instanceof GraqlCompute.Statistics) {
             return execute((GraqlCompute.Statistics) query);
@@ -409,17 +408,17 @@ public class RPCTransaction implements Transaction {
         } else if (query instanceof GraqlDelete) {
             return stream((GraqlDelete) query, options);
 
-        } else if (query instanceof GraqlGet) {
-            return stream((GraqlGet) query, options);
+        } else if (query instanceof GraqlMatch) {
+            return stream((GraqlMatch) query, options);
 
-        } else if (query instanceof GraqlGet.Aggregate) {
-            return stream((GraqlGet.Aggregate) query, options);
+        } else if (query instanceof GraqlMatch.Aggregate) {
+            return stream((GraqlMatch.Aggregate) query, options);
 
-        } else if (query instanceof GraqlGet.Group.Aggregate) {
-            return stream((GraqlGet.Group.Aggregate) query, options);
+        } else if (query instanceof GraqlMatch.Group.Aggregate) {
+            return stream((GraqlMatch.Group.Aggregate) query, options);
 
-        } else if (query instanceof GraqlGet.Group) {
-            return stream((GraqlGet.Group) query, options);
+        } else if (query instanceof GraqlMatch.Group) {
+            return stream((GraqlMatch.Group) query, options);
 
         } else if (query instanceof GraqlCompute.Statistics) {
             return stream((GraqlCompute.Statistics) query);
@@ -440,22 +439,10 @@ public class RPCTransaction implements Transaction {
 
     @SuppressWarnings("unchecked")
     private <T extends Answer> RPCIterator<T> getQueryIterator(final GraqlQuery query, final GraknOptions options) {
-        final OptionsProto.Options.Builder optionsBuilder = OptionsProto.Options.newBuilder();
-        if (options.infer() != null) {
-            optionsBuilder.setInfer(options.infer());
-        }
-        if (options.explain() != null) {
-            optionsBuilder.setExplain(options.explain());
-        }
-
         final TransactionProto.Transaction.Iter.Req.Builder reqBuilder = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setQueryIterReq(TransactionProto.Transaction.Query.Iter.Req.newBuilder()
-                                         .setQuery(query.toString())
-                                         .setOptions(optionsBuilder));
-
-        if (options.batchSize() != null) {
-            reqBuilder.setOptions(batchSize(options.batchSize()));
-        }
+                        .setQuery(query.toString())
+                        .setOptions(options(options)));
 
         final TransactionProto.Transaction.Iter.Req iterReq = reqBuilder.build();
         return new RPCIterator<>(transceiver, iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));

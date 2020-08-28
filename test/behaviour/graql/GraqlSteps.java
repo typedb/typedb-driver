@@ -37,7 +37,7 @@ import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlGet;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
@@ -242,18 +242,18 @@ public class GraqlSteps {
         numericAnswers = null;
         answerGroups = null;
         numericAnswerGroups = null;
-        if (graqlQuery instanceof GraqlGet) {
-            answers = tx.execute(graqlQuery.asGet()).get();
+        if (graqlQuery instanceof GraqlMatch) {
+            answers = tx.execute(graqlQuery.asMatch()).get();
         } else if (graqlQuery instanceof GraqlInsert) {
             throw new ScenarioDefinitionException("Insert is not supported; use `get answers of graql insert` instead");
-        } else if (graqlQuery instanceof GraqlGet.Aggregate) {
-            numericAnswers = tx.execute(graqlQuery.asGetAggregate()).get();
-        } else if (graqlQuery instanceof GraqlGet.Group) {
-            answerGroups = tx.execute(graqlQuery.asGetGroup()).get();
-        } else if (graqlQuery instanceof GraqlGet.Group.Aggregate) {
-            numericAnswerGroups = tx.execute(graqlQuery.asGetGroupAggregate()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Aggregate) {
+            numericAnswers = tx.execute(graqlQuery.asMatchAggregate()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Group) {
+            answerGroups = tx.execute(graqlQuery.asMatchGroup()).get();
+        } else if (graqlQuery instanceof GraqlMatch.Group.Aggregate) {
+            numericAnswerGroups = tx.execute(graqlQuery.asMatchGroupAggregate()).get();
         } else {
-            throw new ScenarioDefinitionException("Only match-get, insert, aggregate, group and group aggregate supported for now");
+            throw new ScenarioDefinitionException("Only match, insert, aggregate, group and group aggregate supported for now");
         }
     }
 
@@ -262,14 +262,14 @@ public class GraqlSteps {
         boolean threw = true;
         try {
             GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
-            if (graqlQuery instanceof GraqlGet) {
-                tx.execute(graqlQuery.asGet()).get();
-            } else if (graqlQuery instanceof GraqlGet.Aggregate) {
-                tx.execute(graqlQuery.asGetAggregate()).get();
-            } else if (graqlQuery instanceof GraqlGet.Group) {
-                tx.execute(graqlQuery.asGetGroup()).get();
-            } else if (graqlQuery instanceof GraqlGet.Group.Aggregate) {
-                tx.execute(graqlQuery.asGetGroupAggregate()).get();
+            if (graqlQuery instanceof GraqlMatch) {
+                tx.execute(graqlQuery.asMatch()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Aggregate) {
+                tx.execute(graqlQuery.asMatchAggregate()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Group) {
+                tx.execute(graqlQuery.asMatchGroup()).get();
+            } else if (graqlQuery instanceof GraqlMatch.Group.Aggregate) {
+                tx.execute(graqlQuery.asMatchGroupAggregate()).get();
             } else {
                 throw new ScenarioDefinitionException("Expected a match-get, aggregate, group or group aggregate query, but got a different query type");
             }

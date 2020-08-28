@@ -33,7 +33,7 @@ import grakn.client.rpc.RPCClient;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlGet;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
@@ -162,9 +162,9 @@ public interface Grakn {
 
         QueryFuture<List<Void>> execute(GraqlDelete query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlGet query, GraknOptions options);
+        QueryFuture<List<ConceptMap>> execute(GraqlMatch query, GraknOptions options);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlGet query);
+        QueryFuture<List<ConceptMap>> execute(GraqlMatch query);
 
         QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query);
 
@@ -178,33 +178,33 @@ public interface Grakn {
 
         QueryFuture<Stream<Void>> stream(GraqlDelete query);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query, GraknOptions options);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query, GraknOptions options);
 
-        QueryFuture<Stream<ConceptMap>> stream(GraqlGet query);
+        QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query);
 
-        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query);
+        QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query);
 
-        QueryFuture<List<Numeric>> execute(GraqlGet.Aggregate query, GraknOptions options);
+        QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query, GraknOptions options);
 
-        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query);
+        QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query);
 
-        QueryFuture<Stream<Numeric>> stream(GraqlGet.Aggregate query, GraknOptions options);
+        QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query, GraknOptions options);
 
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query);
 
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlGet.Group query, GraknOptions options);
+        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query, GraknOptions options);
 
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query);
 
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlGet.Group query, GraknOptions options);
+        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query, GraknOptions options);
 
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query);
 
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlGet.Group.Aggregate query, GraknOptions options);
+        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query, GraknOptions options);
 
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query);
 
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlGet.Group.Aggregate query, GraknOptions options);
+        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query, GraknOptions options);
 
         QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
 

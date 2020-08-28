@@ -19,14 +19,20 @@
 
 package grakn.client;
 
+import grakn.client.common.exception.GraknException;
+
+import java.util.Optional;
+
+import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BATCH_SIZE;
+
 public class GraknOptions {
 
     private Boolean infer = null;
     private Boolean explain = null;
-    private BatchSize batchSize = null;
+    private Integer batchSize = null;
 
-    public Boolean infer() {
-        return infer;
+    public Optional<Boolean> infer() {
+        return Optional.ofNullable(infer);
     }
 
     public GraknOptions infer(boolean infer) {
@@ -34,8 +40,8 @@ public class GraknOptions {
         return this;
     }
 
-    public Boolean explain() {
-        return explain;
+    public Optional<Boolean> explain() {
+        return Optional.ofNullable(explain);
     }
 
     public GraknOptions explain(boolean explain) {
@@ -43,39 +49,15 @@ public class GraknOptions {
         return this;
     }
 
-    public BatchSize batchSize() {
-        return batchSize;
+    public Optional<Integer> batchSize() {
+        return Optional.ofNullable(batchSize);
     }
 
-    public GraknOptions batchSize(final BatchSize batchSize) {
+    public GraknOptions batchSize(final int batchSize) {
+        if (batchSize < 1) {
+            throw new GraknException(NEGATIVE_BATCH_SIZE.message(batchSize));
+        }
         this.batchSize = batchSize;
         return this;
-    }
-
-    public static class BatchSize {
-
-        private final Integer size;
-        private final boolean all;
-
-        private BatchSize(final Integer size, final boolean all) {
-            this.size = size;
-            this.all = all;
-        }
-
-        public static BatchSize of(final int size) {
-            return new BatchSize(size, false);
-        }
-
-        public static BatchSize all() {
-            return new BatchSize(null, true);
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public boolean isAll() {
-            return all;
-        }
     }
 }

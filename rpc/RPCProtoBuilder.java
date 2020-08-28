@@ -21,10 +21,7 @@ package grakn.client.rpc;
 
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grakn.client.GraknOptions;
-import grakn.client.GraknOptions.BatchSize;
-import grakn.client.common.exception.GraknException;
 import grakn.protocol.OptionsProto;
-import grakn.protocol.TransactionProto;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,34 +29,15 @@ import java.util.Map;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BATCH_SIZE;
 
 abstract class RPCProtoBuilder {
 
     static OptionsProto.Options options(final GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
-        if (options.explain() != null) {
-            builder.setExplain(options.explain());
-        }
-        if (options.infer() != null) {
-            builder.setInfer(options.infer());
-        }
-        if (options.batchSize() != null) {
-            builder.setBatchSize(options.batchSize().getSize());
-        }
+        options.infer().ifPresent(builder::setInfer);
+        options.explain().ifPresent(builder::setExplain);
+        options.batchSize().ifPresent(builder::setBatchSize);
         return builder.build();
-    }
-
-    static TransactionProto.Transaction.Iter.Req.Options batchSize(final BatchSize batchSize) {
-        if (batchSize.isAll()) {
-            return TransactionProto.Transaction.Iter.Req.Options.newBuilder().setAll(true).build();
-        }
-
-        if (batchSize.getSize() < 1) {
-            throw new GraknException(NEGATIVE_BATCH_SIZE.message(batchSize.getSize()));
-        }
-
-        return TransactionProto.Transaction.Iter.Req.Options.newBuilder().setNumber(batchSize.getSize()).build();
     }
 
     static Map<String, String> tracingData() {

@@ -43,12 +43,10 @@ class RPCIterator<T> extends AbstractIterator<T> {
 
     private final RPCTransceiver transceiver;
     private final Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
-    private final TransactionProto.Transaction.Iter.Req.Options options;
 
     RPCIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
         this.transceiver = transceiver;
         this.responseReader = responseReader;
-        options = req.getOptions();
         sendRequest(req);
     }
 
@@ -63,8 +61,7 @@ class RPCIterator<T> extends AbstractIterator<T> {
 
     private void nextBatch(int iteratorID) {
         final TransactionProto.Transaction.Iter.Req iterReq = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setIteratorID(iteratorID)
-                .setOptions(options).build();
+                .setIteratorID(iteratorID).build();
 
         sendRequest(iterReq);
     }
