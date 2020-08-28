@@ -70,6 +70,7 @@ build:
           cd test/deployment && mvn test
     execution:
       - build
+      - build-dependency
       # - test-integration
       - test-behaviour
       - deploy-maven-snapshot:
