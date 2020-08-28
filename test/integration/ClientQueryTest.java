@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package grakn.client.test.assembly;
+package grakn.client.test.integration;
 
 import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
@@ -32,7 +32,6 @@ import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,8 +75,8 @@ import static org.hamcrest.Matchers.hasSize;
  * that offspring is the child of the male and female partners which are involved in the mating act.
  */
 @SuppressWarnings("Duplicates")
-public class QueryTest {
-    private static final Logger LOG = LoggerFactory.getLogger(QueryTest.class);
+public class ClientQueryTest {
+    private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static GraknCoreRunner grakn;
     private static Client graknClient;
 
@@ -94,7 +93,6 @@ public class QueryTest {
         grakn.stop();
     }
 
-    @Ignore
     @Test
     public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");

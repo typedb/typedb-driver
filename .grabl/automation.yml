@@ -18,14 +18,6 @@
 #
 
 build:
-  quality:
-    job:
-      build-dependency:
-        machine: graknlabs-ubuntu-20.04
-        script: |
-          dependencies/maven/update.sh
-          git diff --exit-code dependencies/maven/artifacts.snapshot
-          bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
   correctness:
     jobs:
       build:
@@ -37,10 +29,16 @@ build:
           bazel build --config=rbe //...
           bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
           bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
-      #      test-integration:
-      #        machine: graknlabs-ubuntu-20.04
-      #        script: |
-      #          bazel test --config=rbe //test/integration/... --test_output=errors
+      build-dependency:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          dependencies/maven/update.sh
+          git diff --exit-code dependencies/maven/artifacts.snapshot
+          bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
+      test-integration:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          bazel test --config=rbe //test/integration/... --test_output=errors
       test-behaviour:
         machine: graknlabs-ubuntu-20.04
         script: |
@@ -49,14 +47,7 @@ build:
           bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
           bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
-      # TODO: revert above tests to //test/behaviour/...
-      test-assembly-query:
-        machine: graknlabs-ubuntu-20.04
-        script: |
-          export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-          export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-          bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-          bazel test --config=rbe //test/assembly:test-assembly-query --test_output=errors
+        # TODO: revert above tests to //test/behaviour/...
       deploy-maven-snapshot:
         filter:
           owner: graknlabs
@@ -79,11 +70,12 @@ build:
           cd test/deployment && mvn test
     execution:
       - build
-      #      - test-integration
+      - build-dependency
+      # - test-integration
       - test-behaviour
-      - test-assembly-query
       - deploy-maven-snapshot:
-          depends: [build, test-integration, test-behaviour, test-assembly-query]
+          depends: [build, test-behaviour]
+        # depends: [build, test-integration, test-behaviour]
       - test-deployment-maven:
           depends: [deploy-maven-snapshot]
 
