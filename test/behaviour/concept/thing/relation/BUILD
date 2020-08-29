@@ -28,8 +28,8 @@ java_library(
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/concept/thing:steps",
-        "//test/behaviour/concept:steps",
         "//test/behaviour/util:util",
+        "//test/behaviour/connection:steps",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

@@ -28,9 +28,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static grakn.client.test.behaviour.concept.ConceptSteps.concepts;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
+import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -40,72 +40,72 @@ public class RelationSteps {
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance")
     public void relation_type_create_new_instance(String var, String typeLabel) {
-        put(var, concepts().getRelationType(typeLabel).create());
+        put(var, tx().concepts().getRelationType(typeLabel).create());
     }
 
     @Then("relation\\( ?{type_label} ?) create new instance; throws exception")
     public void relation_type_create_new_instance_throws_exception(String typeLabel) {
-        assertThrows(() -> concepts().getRelationType(typeLabel).create());
+        assertThrows(() -> tx().concepts().getRelationType(typeLabel).create());
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute.Long.Remote key = concepts().getAttributeType(keyType).asLong().put(keyValue);
-        final Relation.Remote relation = concepts().getRelationType(type).create();
+        Attribute.Long.Remote key = tx().concepts().getAttributeType(keyType).asLong().put(keyValue);
+        final Relation.Remote relation = tx().concepts().getRelationType(type).create();
         relation.setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute.String.Remote key = concepts().getAttributeType(keyType).asString().put(keyValue);
-        final Relation.Remote relation = concepts().getRelationType(type).create();
+        Attribute.String.Remote key = tx().concepts().getAttributeType(keyType).asString().put(keyValue);
+        final Relation.Remote relation = tx().concepts().getRelationType(type).create();
         relation.setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute.DateTime.Remote key = concepts().getAttributeType(keyType).asDateTime().put(keyValue);
-        final Relation.Remote relation = concepts().getRelationType(type).create();
+        Attribute.DateTime.Remote key = tx().concepts().getAttributeType(keyType).asDateTime().put(keyValue);
+        final Relation.Remote relation = tx().concepts().getRelationType(type).create();
         relation.setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-        put(var1, concepts().getAttributeType(keyType).asLong().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asLong().get(keyValue).getOwners()
+                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-        put(var1, concepts().getAttributeType(keyType).asString().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asString().get(keyValue).getOwners()
+                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-        put(var1, concepts().getAttributeType(keyType).asDateTime().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().get(keyValue).getOwners()
+                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @Then("relation\\( ?{type_label} ?) get instances contain: {var}")
     public void relation_type_get_instances_contain(String typeLabel, String var) {
-        assertTrue(concepts().getRelationType(typeLabel).getInstances().anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().concepts().getRelationType(typeLabel).getInstances().anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("relation\\( ?{type_label} ?) get instances do not contain: {var}")
     public void relation_type_get_instances_do_not_contain(String typeLabel, String var) {
-        assertTrue(concepts().getRelationType(typeLabel).getInstances().noneMatch(i -> i.equals(get(var))));
+        assertTrue(tx().concepts().getRelationType(typeLabel).getInstances().noneMatch(i -> i.equals(get(var))));
     }
 
     @Then("relation\\( ?{type_label} ?) get instances is empty")
     public void relation_type_get_instances_is_empty(String typeLabel) {
-        assertEquals(0, concepts().getRelationType(typeLabel).getInstances().count());
+        assertEquals(0, tx().concepts().getRelationType(typeLabel).getInstances().count());
     }
 
     @When("relation {var} add player for role\\( ?{type_label} ?): {var}")

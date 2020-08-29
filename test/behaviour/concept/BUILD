@@ -14,30 +14,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-package(default_visibility = ["//test/behaviour/concept:__subpackages__"])
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-java_library(
-    name = "steps",
-    srcs = [
-        "ConceptSteps.java"
-    ],
-    deps = [
-        # Internal Package Dependencies
-        "//:client-java",
-        "//test/behaviour/connection:steps",
-
-        # External Maven Dependencies
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    targets = [
-        ":steps",
-    ],
-)
