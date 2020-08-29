@@ -18,6 +18,18 @@
 #
 
 build:
+  quality:
+    filter:
+      owner: graknlabs
+      branch: master
+    job:
+      build-analysis:
+        machine: graknlabs-ubuntu-20.04
+        script: |
+          SONARCLOUD_CODE_ANALYSIS_CREDENTIAL=$SONARCLOUD_CREDENTIAL \
+            bazel run @graknlabs_dependencies//tool/sonarcloud:code-analysis -- \
+            --project-key=graknlabs_client_java \
+            --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
   correctness:
     jobs:
       build:
