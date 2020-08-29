@@ -79,7 +79,7 @@ build:
           export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
           bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
           bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
-          nohup ./dist/grakn-core-all-linux/grakn server start
+          nohup ./dist/grakn-core-all-linux/grakn server
           sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
           cat test/deployment/pom.xml
           cd test/deployment && mvn test
