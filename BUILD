@@ -123,8 +123,9 @@ release_validate_deps(
 filegroup(
     name = "ci",
     data = [
-        "@graknlabs_dependencies//tool/unuseddeps:unused-deps",
         "@graknlabs_dependencies//tool/checkstyle:test-coverage",
-        "@graknlabs_dependencies//tool/release:create-notes"
+        "@graknlabs_dependencies//tool/release:create-notes",
+        "@graknlabs_dependencies//tool/sonarcloud:code-analysis",
+        "@graknlabs_dependencies//tool/unuseddeps:unused-deps",
     ],
 )
