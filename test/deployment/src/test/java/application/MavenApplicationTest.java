@@ -4,24 +4,26 @@ import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.concept.answer.ConceptMap;
-import graql.lang.Graql;
+import grakn.client.concept.type.ThingType;
 import org.junit.Test;
 
-import java.util.List;
-
-import static graql.lang.Graql.var;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+// TODO: implement more advanced tests using Graql queries once Grakn 2.0 supports them
 public class MavenApplicationTest {
+
     @Test
-    public void testImport() {
-        Client client = Grakn.client("localhost:48555");
-        Session session = client.session("grakn");
-        Transaction tx = session.transaction(Transaction.Type.WRITE);
-        List<ConceptMap> answers = tx.execute(Graql.match(var("t").sub("thing")).get()).get();
-        tx.close();
-        session.close();
-        assertEquals(4, answers.size());
+    public void test() {
+        try (Client client = Grakn.client("localhost:48555")) {
+            client.databases().create("grakn");
+            try (Session session = client.session("grakn")) {
+                try (Transaction tx = session.transaction(Transaction.Type.WRITE)) {
+                    ThingType root = tx.concepts().getRootType();
+                    assertNotNull(root);
+                    assertEquals(4, root.asRemote(tx.concepts()).getSubtypes().count());
+                }
+            }
+        }
     }
 }
