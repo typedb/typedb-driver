@@ -75,7 +75,7 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [":client-java"],
-    license_type = "apache"
+    license_type = "apache",
 )
 
 

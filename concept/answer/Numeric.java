@@ -21,9 +21,6 @@ package grakn.client.concept.answer;
 
 import grakn.protocol.AnswerProto;
 
-/**
- * A type of Answer object that contains a Number.
- */
 public class Numeric implements Answer {
 
     private final Number number;
@@ -33,7 +30,7 @@ public class Numeric implements Answer {
     }
 
     public static Numeric of(final AnswerProto.Value res) {
-        return new Numeric(AnswerMessageReader.number(res.getNumber()));
+        return new Numeric(AnswerProtoReader.number(res.getNumber()));
     }
 
     @Override

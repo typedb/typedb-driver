@@ -19,7 +19,7 @@ public class MavenApplicationTest {
             client.databases().create("grakn");
             try (Session session = client.session("grakn")) {
                 try (Transaction tx = session.transaction(Transaction.Type.WRITE)) {
-                    ThingType root = tx.concepts().getRootType();
+                    ThingType root = tx.concepts().getRootThingType();
                     assertNotNull(root);
                     assertEquals(4, root.asRemote(tx.concepts()).getSubtypes().count());
                 }

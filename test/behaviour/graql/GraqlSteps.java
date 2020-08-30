@@ -22,12 +22,12 @@ package grakn.client.test.behaviour.graql;
 import com.google.common.collect.Iterators;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import grakn.client.concept.Concept;
 import grakn.client.concept.answer.Answer;
 import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.answer.Explanation;
 import grakn.client.concept.answer.Numeric;
-import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Rule;
@@ -37,8 +37,8 @@ import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
 import io.cucumber.java.After;
@@ -681,17 +681,11 @@ public class GraqlSteps {
             super(typeAndValue);
         }
 
-        /**
-         * Check that the given key is in the concept's keys
-         *
-         * @param concept to check
-         * @return whether the given key matches a key belonging to the concept
-         */
         @Override
         public boolean check(Concept concept) {
             if (!(concept instanceof Thing)) { return false; }
 
-            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx.concepts()).getHas(true).collect(Collectors.toSet());
+            Set<Attribute.Remote> keys = concept.asThing().asRemote(tx).getHas(true).collect(Collectors.toSet());
 
             HashMap<String, String> keyMap = new HashMap<>();
 

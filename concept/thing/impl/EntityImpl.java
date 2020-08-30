@@ -19,15 +19,13 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.protocol.ConceptProto;
 
 public abstract class EntityImpl {
-    /**
-     * Client implementation of Entity
-     */
     public static class Local extends ThingImpl.Local implements Entity.Local {
 
         public Local(final ConceptProto.Thing thing) {
@@ -37,20 +35,22 @@ public abstract class EntityImpl {
         public EntityType.Local getType() {
             return super.getType().asEntityType();
         }
+
+        @Override
+        public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new EntityImpl.Remote(transaction, getIID());
+        }
     }
 
-    /**
-     * Client implementation of Entity
-     */
     public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
-        public Remote(final Concepts concepts, final String iid) {
-            super(concepts, iid);
+        public Remote(final Grakn.Transaction transaction, final String iid) {
+            super(transaction, iid);
         }
 
         @Override
         public final EntityType.Remote getType() {
-            return (EntityType.Remote) super.getType();
+            return super.getType().asEntityType();
         }
     }
 }

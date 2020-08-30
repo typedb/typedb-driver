@@ -25,9 +25,6 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 
-/**
- * A type of Answer object that contains a Set.
- */
 public class ConceptSet implements Answer {
 
     // TODO: change to store Set<Concept> once we are able to construct Concept without a database look up
@@ -38,7 +35,7 @@ public class ConceptSet implements Answer {
     }
 
     public static ConceptSet of(final AnswerProto.ConceptSet res) {
-        return new ConceptSet(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toSet()));
+        return new ConceptSet(res.getIidsList().stream().map(AnswerProtoReader::iid).collect(toSet()));
     }
 
     @Override

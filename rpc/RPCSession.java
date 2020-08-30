@@ -28,7 +28,7 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
-import static grakn.client.rpc.RPCProtoBuilder.options;
+import static grakn.client.common.ProtoBuilder.options;
 
 public class RPCSession implements Session {
 

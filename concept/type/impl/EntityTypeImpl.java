@@ -19,9 +19,10 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
@@ -30,23 +31,23 @@ import grakn.protocol.ConceptProto;
 import java.util.stream.Stream;
 
 public class EntityTypeImpl {
-    /**
-     * Client implementation of EntityType
-     */
+
     public static class Local extends ThingTypeImpl.Local implements EntityType.Local {
 
         public Local(ConceptProto.Type type) {
             super(type);
         }
+
+        @Override
+        public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
     }
 
-    /**
-     * Client implementation of EntityType
-     */
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, isRoot);
         }
 
         @Override
@@ -74,7 +75,7 @@ public class EntityTypeImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance()).build();
 
-            return Thing.Remote.of(concepts(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
+            return ThingImpl.Remote.of(tx(), runMethod(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 
         @Override

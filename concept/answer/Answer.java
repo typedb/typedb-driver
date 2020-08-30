@@ -23,20 +23,11 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknException;
 import grakn.protocol.AnswerProto;
 
-import javax.annotation.CheckReturnValue;
-
 import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
-/**
- * An object that contains the answer of every Graql Query.
- */
 public interface Answer {
 
-    /**
-     * Whether this answer has an Explanation that can be retrieved
-     */
-    @CheckReturnValue
     boolean hasExplanation();
 
     static Answer of(final Transaction tx, final AnswerProto.Answer res) {

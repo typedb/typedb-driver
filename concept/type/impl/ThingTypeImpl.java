@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
@@ -34,23 +34,23 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public abstract class ThingTypeImpl {
-    /**
-     * Client implementation of ThingType
-     */
+
     public static class Local extends TypeImpl.Local implements ThingType.Local {
 
         public Local(final ConceptProto.Type type) {
             super(type);
         }
+
+        @Override
+        public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
     }
 
-    /**
-     * Client implementation of ThingType
-     */
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, isRoot);
         }
 
         @Override

@@ -28,7 +28,7 @@ import java.text.ParseException;
 
 import static grakn.common.collection.Bytes.bytesToHexString;
 
-abstract class AnswerMessageReader {
+abstract class AnswerProtoReader {
 
     static String iid(final ByteString res) {
         return bytesToHexString(res.toByteArray());

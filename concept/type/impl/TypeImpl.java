@@ -19,9 +19,10 @@
 
 package grakn.client.concept.type.impl;
 
+import grakn.client.Grakn;
 import grakn.client.common.exception.GraknException;
-import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
@@ -31,13 +32,11 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 
 public abstract class TypeImpl {
 
-    /**
-     * Client implementation of Type
-     */
     public abstract static class Local implements Type.Local {
 
         private final String label;
@@ -46,6 +45,26 @@ public abstract class TypeImpl {
         Local(ConceptProto.Type type) {
             this.label = type.getLabel();
             this.isRoot = type.getRoot();
+        }
+
+        public static TypeImpl.Local of(ConceptProto.Type type) {
+            switch (type.getSchema()) {
+                case ENTITY_TYPE:
+                    return new EntityTypeImpl.Local(type);
+                case RELATION_TYPE:
+                    return new RelationTypeImpl.Local(type);
+                case ATTRIBUTE_TYPE:
+                    return AttributeTypeImpl.Local.of(type);
+                case ROLE_TYPE:
+                    return new RoleTypeImpl.Local(type);
+                case RULE:
+                    return new RuleImpl.Local(type);
+                case THING_TYPE:
+                    return new ThingTypeImpl.Local(type);
+                case UNRECOGNIZED:
+                default:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+            }
         }
 
         @Override
@@ -59,25 +78,43 @@ public abstract class TypeImpl {
         }
     }
 
-    /**
-     * Client implementation of Type
-     */
     public abstract static class Remote implements Type.Remote {
 
-        private final Concepts concepts;
+        private final Grakn.Transaction transaction;
         private final String label;
         private final boolean isRoot;
 
-        Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            if (concepts == null) {
+        Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            if (transaction == null) {
                 throw new GraknException(ILLEGAL_ARGUMENT_NULL.message("concept"));
-            }
-            this.concepts = concepts;
-            if (label == null || label.isEmpty()) {
+            } else if (label == null || label.isEmpty()) {
                 throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("label"));
             }
+            this.transaction = transaction;
             this.label = label;
             this.isRoot = isRoot;
+        }
+
+        public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
+            final String label = type.getLabel();
+            switch (type.getSchema()) {
+                case ENTITY_TYPE:
+                    return new EntityTypeImpl.Remote(transaction, label, type.getRoot());
+                case RELATION_TYPE:
+                    return new RelationTypeImpl.Remote(transaction, label, type.getRoot());
+                case ATTRIBUTE_TYPE:
+                    return AttributeTypeImpl.Remote.of(transaction, type, label);
+                case ROLE_TYPE:
+                    final String scopedLabel = type.getScopedLabel();
+                    return new RoleTypeImpl.Remote(transaction, label, scopedLabel, type.getRoot());
+                case RULE:
+                    return new RuleImpl.Remote(transaction, label, type.getRoot());
+                case THING_TYPE:
+                    return new ThingTypeImpl.Remote(transaction, label, type.getRoot());
+                default:
+                case UNRECOGNIZED:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+            }
         }
 
         @Override
@@ -115,7 +152,7 @@ public abstract class TypeImpl {
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return typeConverter.apply(Type.Remote.of(concepts, response.getType()));
+                    return typeConverter.apply(of(transaction, response.getType()));
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -158,12 +195,12 @@ public abstract class TypeImpl {
 
         @Override
         public final boolean isDeleted() {
-            return concepts.getType(getLabel()) == null;
+            return transaction.concepts().getType(getLabel()) == null;
         }
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{concepts=" + concepts + ", label=" + label + "}";
+            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", label=" + label + "}";
         }
 
         @Override
@@ -173,7 +210,7 @@ public abstract class TypeImpl {
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
 
-            return this.concepts.equals(that.concepts) &&
+            return this.transaction.equals(that.transaction) &&
                     this.label.equals(that.label);
         }
 
@@ -181,26 +218,26 @@ public abstract class TypeImpl {
         public int hashCode() {
             int h = 1;
             h *= 1000003;
-            h ^= concepts.hashCode();
+            h ^= transaction.hashCode();
             h *= 1000003;
             h ^= label.hashCode();
             return h;
         }
 
-        protected final Concepts concepts() {
-            return concepts;
+        protected final Grakn.Transaction tx() {
+            return transaction;
         }
 
         protected Stream<Thing.Remote> thingStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return concepts.iterateTypeMethod(label, request, response -> Thing.Remote.of(concepts, thingGetter.apply(response)));
+            return transaction.concepts().iterateTypeMethod(label, request, response -> ThingImpl.Remote.of(transaction, thingGetter.apply(response)));
         }
 
         protected Stream<Type.Remote> typeStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return concepts.iterateTypeMethod(label, request, response -> Type.Remote.of(concepts, typeGetter.apply(response)));
+            return transaction.concepts().iterateTypeMethod(label, request, response -> of(transaction, typeGetter.apply(response)));
         }
 
         protected ConceptProto.TypeMethod.Res runMethod(final ConceptProto.TypeMethod.Req typeMethod) {
-            return concepts.runTypeMethod(label, typeMethod).getConceptMethodTypeRes().getResponse();
+            return transaction.concepts().runTypeMethod(label, typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

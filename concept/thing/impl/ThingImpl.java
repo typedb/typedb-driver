@@ -19,8 +19,8 @@
 
 package grakn.client.concept.thing.impl;
 
+import grakn.client.Grakn;
 import grakn.client.common.exception.GraknException;
-import grakn.client.concept.Concepts;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -28,6 +28,7 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
@@ -36,14 +37,13 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
+import static grakn.common.collection.Bytes.bytesToHexString;
 
 public abstract class ThingImpl {
 
-    /**
-     * Client implementation of Thing
-     */
     public abstract static class Local implements Thing.Local {
 
         private final String iid;
@@ -60,6 +60,22 @@ public abstract class ThingImpl {
             //this.inferred = thing.getInferredRes().getInferred();
         }
 
+        public static ThingImpl.Local of(final ConceptProto.Thing thing) {
+            switch (thing.getSchema()) {
+                case ENTITY:
+                    return new EntityImpl.Local(thing);
+                case RELATION:
+                    return new RelationImpl.Local(thing);
+                case ATTRIBUTE:
+                    return AttributeImpl.Local.of(thing);
+                case UNRECOGNIZED:
+                default:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(
+                            ConceptProto.Thing.SCHEMA.class.getSimpleName(), thing.getSchema())
+                    );
+            }
+        }
+
         @Override
         public String getIID() {
             return iid;
@@ -71,23 +87,35 @@ public abstract class ThingImpl {
         }
     }
 
-    /**
-     * Client implementation of Thing
-     */
     public abstract static class Remote implements Thing.Remote {
 
-        private final Concepts concepts;
+        private final Grakn.Transaction transaction;
         private final String iid;
 
-        protected Remote(final Concepts concepts, final String iid) {
-            if (concepts == null) {
+        protected Remote(final Grakn.Transaction transaction, final String iid) {
+            if (transaction == null) {
                 throw new GraknException(ILLEGAL_ARGUMENT_NULL.message("concepts"));
             }
-            this.concepts = concepts;
+            this.transaction = transaction;
             if (iid == null || iid.isEmpty()) {
                 throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("iid"));
             }
             this.iid = iid;
+        }
+
+        public static ThingImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thing) {
+            final String iid = bytesToHexString(thing.getIid().toByteArray());
+            switch (thing.getSchema()) {
+                case ENTITY:
+                    return new EntityImpl.Remote(transaction, iid);
+                case RELATION:
+                    return new RelationImpl.Remote(transaction, iid);
+                case ATTRIBUTE:
+                    return AttributeImpl.Remote.of(transaction, thing, iid);
+                default:
+                case UNRECOGNIZED:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Thing.SCHEMA.class.getCanonicalName(), thing.getSchema()));
+            }
         }
 
         @Override
@@ -100,7 +128,7 @@ public abstract class ThingImpl {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
-            return Type.Remote.of(concepts, runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
+            return TypeImpl.Remote.of(transaction, runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
         }
 
         @Override
@@ -192,12 +220,12 @@ public abstract class ThingImpl {
 
         @Override
         public final boolean isDeleted() {
-            return concepts.getThing(getIID()) == null;
+            return transaction.concepts().getThing(getIID()) == null;
         }
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{concepts=" + concepts + ", iid=" + iid + "}";
+            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", iid=" + iid + "}";
         }
 
         @Override
@@ -207,7 +235,7 @@ public abstract class ThingImpl {
 
             ThingImpl.Remote that = (ThingImpl.Remote) o;
 
-            return this.concepts.equals(that.concepts) &&
+            return this.transaction.equals(that.transaction) &&
                     this.iid.equals(that.iid);
         }
 
@@ -215,26 +243,26 @@ public abstract class ThingImpl {
         public int hashCode() {
             int h = 1;
             h *= 1000003;
-            h ^= concepts.hashCode();
+            h ^= transaction.hashCode();
             h *= 1000003;
             h ^= iid.hashCode();
             return h;
         }
 
-        protected final Concepts concepts() {
-            return concepts;
+        protected final Grakn.Transaction tx() {
+            return transaction;
         }
 
         protected Stream<Thing.Remote> thingStream(final ConceptProto.ThingMethod.Iter.Req request, final Function<ConceptProto.ThingMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return concepts.iterateThingMethod(iid, request, response -> Thing.Remote.of(concepts, thingGetter.apply(response)));
+            return transaction.concepts().iterateThingMethod(iid, request, response -> of(transaction, thingGetter.apply(response)));
         }
 
         protected Stream<Type.Remote> typeStream(final ConceptProto.ThingMethod.Iter.Req request, final Function<ConceptProto.ThingMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return concepts.iterateThingMethod(iid, request, response -> Type.Remote.of(concepts, typeGetter.apply(response)));
+            return transaction.concepts().iterateThingMethod(iid, request, response -> TypeImpl.Remote.of(transaction, typeGetter.apply(response)));
         }
 
         protected ConceptProto.ThingMethod.Res runMethod(final ConceptProto.ThingMethod.Req method) {
-            return concepts.runThingMethod(iid, method).getConceptMethodThingRes().getResponse();
+            return transaction.concepts().runThingMethod(iid, method).getConceptMethodThingRes().getResponse();
         }
     }
 }

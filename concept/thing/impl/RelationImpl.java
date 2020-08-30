@@ -19,12 +19,12 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Type;
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.ArrayList;
@@ -40,9 +40,7 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 
 public abstract class RelationImpl {
-    /**
-     * Client implementation of Relation
-     */
+
     public static class Local extends ThingImpl.Local implements Relation.Local {
 
         public Local(final ConceptProto.Thing thing) {
@@ -52,15 +50,17 @@ public abstract class RelationImpl {
         public RelationType.Local getType() {
             return super.getType().asRelationType();
         }
+
+        @Override
+        public Relation.Remote asRemote(Grakn.Transaction transaction) {
+            return new RelationImpl.Remote(transaction, getIID());
+        }
     }
 
-    /**
-     * Client implementation of Relation
-     */
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(final Concepts concepts, final String iid) {
-            super(concepts, iid);
+        public Remote(final Grakn.Transaction transaction, final String iid) {
+            super(transaction, iid);
         }
 
         @Override
@@ -73,12 +73,12 @@ public abstract class RelationImpl {
             final ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = concepts().iterateThingMethod(getIID(), method, ConceptProto.ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().concepts().iterateThingMethod(getIID(), method, ConceptProto.ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
             final Map<RoleType.Remote, List<Thing.Remote>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleType.Remote role = Type.Remote.of(concepts(), rolePlayer.getRoleType()).asRoleType();
-                final Thing.Remote player = Thing.Remote.of(concepts(), rolePlayer.getPlayer());
+                final RoleType.Remote role = TypeImpl.Remote.of(tx(), rolePlayer.getRoleType()).asRoleType();
+                final Thing.Remote player = ThingImpl.Remote.of(tx(), rolePlayer.getPlayer());
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {

@@ -19,9 +19,10 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
@@ -31,23 +32,23 @@ import grakn.protocol.ConceptProto;
 import java.util.stream.Stream;
 
 public class RelationTypeImpl {
-    /**
-     * Client implementation of RelationType
-     */
+
     public static class Local extends ThingTypeImpl.Local implements RelationType.Local {
 
         public Local(final ConceptProto.Type type) {
             super(type);
         }
+
+        @Override
+        public RelationTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
     }
 
-    /**
-     * Client implementation of RelationType
-     */
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, isRoot);
         }
 
         @Override
@@ -80,7 +81,7 @@ public class RelationTypeImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRelationTypeCreateReq(ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
 
-            return Thing.Remote.of(concepts(), runMethod(method).getRelationTypeCreateRes().getRelation()).asRelation();
+            return ThingImpl.Remote.of(tx(), runMethod(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
@@ -90,7 +91,7 @@ public class RelationTypeImpl {
 
             final ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = runMethod(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) {
-                return Type.Remote.of(concepts(), res.getRoleType()).asRoleType();
+                return TypeImpl.Remote.of(tx(), res.getRoleType()).asRoleType();
             } else {
                 return null;
             }

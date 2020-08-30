@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -30,23 +30,23 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class RuleImpl {
-    /**
-     * Client implementation of Rule
-     */
+
     public static class Local extends TypeImpl.Local implements Rule.Local {
 
         public Local(ConceptProto.Type type) {
             super(type);
         }
+
+        @Override
+        public Rule.Remote asRemote(Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+        }
     }
 
-    /**
-     * Client implementation of Rule
-     */
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, isRoot);
         }
 
         @Nullable

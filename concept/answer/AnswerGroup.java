@@ -21,18 +21,14 @@ package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
+import grakn.client.concept.thing.impl.ThingImpl;
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.AnswerProto;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * A type of Answer object that contains a List of Answers as the members and a RemoteConcept
- * as the owner.
- *
- * @param <T> the type of Answer being grouped
- */
 public class AnswerGroup<T extends Answer> implements Answer {
 
     private final Concept.Local owner;
@@ -44,10 +40,10 @@ public class AnswerGroup<T extends Answer> implements Answer {
     }
 
     public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
-        return new AnswerGroup<>(
-                Concept.Local.of(res.getOwner()),
-                res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList())
-        );
+        Concept.Local concept;
+        if (res.getOwner().hasThing()) concept = ThingImpl.Local.of(res.getOwner().getThing());
+        else concept = TypeImpl.Local.of(res.getOwner().getType());
+        return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
     }
 
     @Override

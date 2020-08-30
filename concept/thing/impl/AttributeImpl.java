@@ -19,7 +19,8 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -31,19 +32,35 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 
 public abstract class AttributeImpl {
 
-    /**
-     * Client implementation of Attribute
-     *
-     * @param <VALUE> The value type of this attribute
-     */
     public abstract static class Local<VALUE> extends ThingImpl.Local implements Attribute.Local<VALUE> {
 
         public Local(final ConceptProto.Thing thing) {
             super(thing);
+        }
+
+        public static AttributeImpl.Local of(ConceptProto.Thing thing) {
+            switch (thing.getValueType()) {
+                case BOOLEAN:
+                    return new AttributeImpl.Boolean.Local(thing);
+                case LONG:
+                    return new AttributeImpl.Long.Local(thing);
+                case DOUBLE:
+                    return new AttributeImpl.Double.Local(thing);
+                case STRING:
+                    return new AttributeImpl.String.Local(thing);
+                case DATETIME:
+                    return new AttributeImpl.DateTime.Local(thing);
+                case UNRECOGNIZED:
+                default:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(
+                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), thing.getValueType())
+                    );
+            }
         }
 
         @Override
@@ -54,15 +71,30 @@ public abstract class AttributeImpl {
         public abstract VALUE getValue();
     }
 
-    /**
-     * Client implementation of Attribute
-     *
-     * @param <VALUE> The value type of this attribute
-     */
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
-        public Remote(final Concepts concepts, final java.lang.String iid) {
-            super(concepts, iid);
+        public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            super(transaction, iid);
+        }
+
+        public static AttributeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thing, java.lang.String iid) {
+            switch (thing.getValueType()) {
+                case BOOLEAN:
+                    return new AttributeImpl.Boolean.Remote(transaction, iid);
+                case LONG:
+                    return new AttributeImpl.Long.Remote(transaction, iid);
+                case DOUBLE:
+                    return new AttributeImpl.Double.Remote(transaction, iid);
+                case STRING:
+                    return new AttributeImpl.String.Remote(transaction, iid);
+                case DATETIME:
+                    return new AttributeImpl.DateTime.Remote(transaction, iid);
+                case UNRECOGNIZED:
+                default:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(
+                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), thing.getValueType())
+                    );
+            }
         }
 
         @Override
@@ -82,16 +114,14 @@ public abstract class AttributeImpl {
 
         @Override
         public AttributeType.Remote getType() {
-            return (AttributeType.Remote) super.getType();
+            return super.getType().asAttributeType();
         }
 
         public abstract VALUE getValue();
     }
 
     public abstract static class Boolean implements Attribute.Boolean {
-        /**
-         * Client implementation of Attribute.Boolean
-         */
+
         public static class Local extends AttributeImpl.Local<java.lang.Boolean> implements Attribute.Boolean.Local {
 
             private final java.lang.Boolean value;
@@ -110,15 +140,17 @@ public abstract class AttributeImpl {
             public final AttributeImpl.Boolean.Local asBoolean() {
                 return this;
             }
+
+            @Override
+            public AttributeImpl.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Boolean.Remote(transaction, getIID());
+            }
         }
 
-        /**
-         * Client implementation of Attribute.Boolean
-         */
         public static class Remote extends AttributeImpl.Remote<java.lang.Boolean> implements Attribute.Boolean.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String iid) {
-                super(concepts, iid);
+            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+                super(transaction, iid);
             }
 
             @Override
@@ -137,9 +169,7 @@ public abstract class AttributeImpl {
     }
 
     public abstract static class Long implements Attribute.Long {
-        /**
-         * Client implementation of Attribute.Long
-         */
+
         public static class Local extends AttributeImpl.Local<java.lang.Long> implements Attribute.Long.Local {
 
             private final long value;
@@ -158,15 +188,17 @@ public abstract class AttributeImpl {
             public final AttributeImpl.Long.Local asLong() {
                 return this;
             }
+
+            @Override
+            public AttributeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Long.Remote(transaction, getIID());
+            }
         }
 
-        /**
-         * Client implementation of Attribute.Long
-         */
         public static class Remote extends AttributeImpl.Remote<java.lang.Long> implements Attribute.Long.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String iid) {
-                super(concepts, iid);
+            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+                super(transaction, iid);
             }
 
             @Override
@@ -185,9 +217,7 @@ public abstract class AttributeImpl {
     }
 
     public abstract static class Double implements Attribute.Double {
-        /**
-         * Client implementation of Attribute.Double
-         */
+
         public static class Local extends AttributeImpl.Local<java.lang.Double> implements Attribute.Double.Local {
 
             private final double value;
@@ -206,15 +236,17 @@ public abstract class AttributeImpl {
             public final AttributeImpl.Double.Local asDouble() {
                 return this;
             }
+
+            @Override
+            public AttributeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Double.Remote(transaction, getIID());
+            }
         }
 
-        /**
-         * Client implementation of Attribute.Double
-         */
         public static class Remote extends AttributeImpl.Remote<java.lang.Double> implements Attribute.Double.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String iid) {
-                super(concepts, iid);
+            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+                super(transaction, iid);
             }
 
             @Override
@@ -233,9 +265,7 @@ public abstract class AttributeImpl {
     }
 
     public abstract static class String implements Attribute.String {
-        /**
-         * Client implementation of Attribute.String
-         */
+
         public static class Local extends AttributeImpl.Local<java.lang.String> implements Attribute.String.Local {
 
             private final java.lang.String value;
@@ -254,15 +284,17 @@ public abstract class AttributeImpl {
             public final AttributeImpl.String.Local asString() {
                 return this;
             }
+
+            @Override
+            public AttributeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.String.Remote(transaction, getIID());
+            }
         }
 
-        /**
-         * Client implementation of Attribute.String
-         */
         public static class Remote extends AttributeImpl.Remote<java.lang.String> implements Attribute.String.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String iid) {
-                super(concepts, iid);
+            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+                super(transaction, iid);
             }
 
             @Override
@@ -286,9 +318,6 @@ public abstract class AttributeImpl {
             return LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneId.of("Z"));
         }
 
-        /**
-         * Client implementation of Attribute.DateTime
-         */
         public static class Local extends AttributeImpl.Local<LocalDateTime> implements Attribute.DateTime.Local {
 
             private final LocalDateTime value;
@@ -307,15 +336,17 @@ public abstract class AttributeImpl {
             public final AttributeImpl.DateTime.Local asDateTime() {
                 return this;
             }
+
+            @Override
+            public AttributeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.DateTime.Remote(transaction, getIID());
+            }
         }
 
-        /**
-         * Client implementation of Attribute.DateTime
-         */
         public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {
 
-            public Remote(final Concepts concepts, final java.lang.String iid) {
-                super(concepts, iid);
+            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+                super(transaction, iid);
             }
 
             @Override

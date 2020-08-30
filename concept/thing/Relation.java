@@ -19,115 +19,51 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.concept.Concepts;
-import grakn.client.concept.thing.impl.RelationImpl;
+import grakn.client.Grakn;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 
-import javax.annotation.CheckReturnValue;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-/**
- * Encapsulates relations between Thing
- * A relation which is an instance of a RelationType defines how instances may relate to one another.
- * It represents how different entities relate to one another.
- * Relation are used to model n-ary relations between instances.
- */
 public interface Relation extends Thing {
 
-    /**
-     * Retrieve the associated RelationType for this Relation.
-     *
-     * @return The associated RelationType for this Relation.
-     * @see RelationType
-     */
     @Override
     RelationType getType();
 
-    @CheckReturnValue
     @Override
-    Relation.Remote asRemote(Concepts concepts);
+    Relation.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Thing.Local, Relation {
 
-        @CheckReturnValue
         @Override
         default Relation.Local asRelation() {
             return this;
         }
 
         @Override
-        default Relation.Remote asRemote(final Concepts concepts) {
-            return Relation.Remote.of(concepts, getIID());
-        }
+        Relation.Remote asRemote(final Grakn.Transaction transaction);
     }
 
-    /**
-     * Encapsulates relations between Thing
-     * A relation which is an instance of a RelationType defines how instances may relate to one another.
-     * It represents how different entities relate to one another.
-     * Relation are used to model n-ary relations between instances.
-     */
     interface Remote extends Thing.Remote, Relation {
 
-        static Relation.Remote of(final Concepts concepts, final String iid) {
-            return new RelationImpl.Remote(concepts, iid);
-        }
-
-        /**
-         * Retrieve the associated RelationType for this Relation.
-         *
-         * @return The associated RelationType for this Relation.
-         * @see RelationType.Remote
-         */
         @Override
         RelationType.Remote getType();
 
-        /**
-         * Expands this Relation to include a new role player which is playing a specific role.
-         *
-         * @param roleType The RoleType of the new role player.
-         * @param player   The new role player.
-         */
         void addPlayer(RoleType roleType, Thing player);
 
-        /**
-         * Removes the Thing which is playing a RoleType in this Relation.
-         * If the Thing is not playing any RoleType in this Relation nothing happens.
-         *
-         * @param roleType The RoleType being played by the Thing
-         * @param player   The Thing playing the Role in this Relation
-         */
         void removePlayer(RoleType roleType, Thing player);
 
-        /**
-         * Retrieves a list of every Thing involved in the Relation, filtered by RoleType played.
-         * If no RoleTypes are specified then every involved Thing is retrieved, regardless of role.
-         *
-         * @param roleTypes Used to filter the returned instances only to ones that play any of the role types.
-         * @return A list of every Thing involved in the Relation, filtered by RoleType played.
-         */
-        @CheckReturnValue
         Stream<? extends Thing.Remote> getPlayers(RoleType... roleTypes);
 
-        /**
-         * Retrieve a list of all Instances involved in the Relation, and the RoleTypes they play.
-         *
-         * @return A list of all the role types and the instances playing them in this Relation.
-         * @see RoleType.Remote
-         */
-        @CheckReturnValue
         Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType();
 
-        @CheckReturnValue
         @Override
-        default Relation.Remote asRemote(Concepts concepts) {
+        default Relation.Remote asRemote(Grakn.Transaction transaction) {
             return this;
         }
 
-        @CheckReturnValue
         @Override
         default Relation.Remote asRelation() {
             return this;

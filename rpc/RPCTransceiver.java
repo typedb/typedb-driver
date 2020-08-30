@@ -45,20 +45,6 @@ import static grakn.client.common.exception.ErrorMessage.Connection.TRANSACTION_
 import static grakn.protocol.TransactionProto.Transaction.Req;
 import static grakn.protocol.TransactionProto.Transaction.Res;
 
-/**
- * Wrapper making transaction calls to the Grakn RPC Server - handles sending a stream of Transaction.Req and
- * receiving a stream of Transaction.Res.
- * A request is sent with the #send(Transaction.Req)} method, and you can block for a response with the
- * #receive() method.
- * {@code
- * try (GraknTransceiver tx = GraknTransceiver.create(stub) {
- * tx.send(openMessage);
- * Transaction.Res doneMessage = tx.receive().ok();
- * tx.send(commitMessage);
- * StatusRuntimeException validationError = tx.receive.error();
- * }
- * }
- */
 public class RPCTransceiver implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(RPCTransceiver.class);
@@ -90,10 +76,6 @@ public class RPCTransceiver implements AutoCloseable {
         return StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(this, request, responseReader)).spliterator(), false);
     }
 
-    /**
-     * Send a request and return immediately.
-     * This method is non-blocking - it returns immediately.
-     */
     private void send(final Req request, final ResponseCollector collector) {
 
         LOG.trace("send:{}", request);
@@ -142,22 +124,10 @@ public class RPCTransceiver implements AutoCloseable {
         return !responseListener.terminated;
     }
 
-    /**
-     * Interface for collecting responses from a specific request
-     */
     interface ResponseCollector {
-        /**
-         * Collect a response.
-         *
-         * @param response the next response for this collector to collect.
-         * @return true if this is the last response, false if more responses are expected.
-         */
         boolean onResponse(Response response);
     }
 
-    /**
-     * Simple response collector for when a single result is expected.
-     */
     private static class SingleResponseCollector implements ResponseCollector {
         private volatile Response response;
         private final CountDownLatch latch = new CountDownLatch(1);
@@ -175,11 +145,6 @@ public class RPCTransceiver implements AutoCloseable {
         }
     }
 
-    /**
-     * Advanced abstract multi-response collector. The {@link #isLastResponse(Res)} method must be
-     * overridden in a sub-class because the last response must be known by the GRPC response receiving thread in order
-     * to keep it from blocking other collectors for later responses.
-     */
     public static abstract class MultiResponseCollector implements ResponseCollector {
         private volatile boolean started;
         private final BlockingQueue<Response> received = new LinkedBlockingQueue<>();
@@ -210,19 +175,9 @@ public class RPCTransceiver implements AutoCloseable {
             return started;
         }
 
-        /**
-         * Implement to inform the GRPC thread when it has received the last response.
-         * This is called from the GRPC thread, not the main client thread.
-         *
-         * @param response The next response.
-         * @return true if this is the last response, false if more responses are expected.
-         */
         protected abstract boolean isLastResponse(Res response);
     }
 
-    /**
-     * A StreamObserver that pushes received responses to the corresponding collector.
-     */
     private static class ResponseListener implements StreamObserver<Res> {
 
         private volatile ResponseCollector currentCollector;
@@ -283,10 +238,6 @@ public class RPCTransceiver implements AutoCloseable {
         }
     }
 
-    /**
-     * A response from the gRPC server, that may be a successful response #ok(Transaction.Res), an error
-     * {#error(StatusRuntimeException)} or a "completed" message #completed().
-     */
     public static class Response {
 
         private final Res nullableOk;
@@ -336,11 +287,6 @@ public class RPCTransceiver implements AutoCloseable {
             }
         }
 
-        /**
-         * If this is a successful response, retrieve it.
-         *
-         * @throws GraknException if this is not a successful response
-         */
         public final Res ok() {
             if (nullableOk != null) {
                 return nullableOk;
@@ -380,9 +326,6 @@ public class RPCTransceiver implements AutoCloseable {
             return h;
         }
 
-        /**
-         * Enum indicating the type of Response.
-         */
         public enum Type {
             OK, ERROR, COMPLETED
         }
