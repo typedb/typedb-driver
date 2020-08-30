@@ -21,7 +21,7 @@ public class MavenApplicationTest {
                 try (Transaction tx = session.transaction(Transaction.Type.WRITE)) {
                     ThingType root = tx.concepts().getRootThingType();
                     assertNotNull(root);
-                    assertEquals(4, root.asRemote(tx.concepts()).getSubtypes().count());
+                    assertEquals(4, root.asRemote(tx).getSubtypes().count());
                 }
             }
         }
