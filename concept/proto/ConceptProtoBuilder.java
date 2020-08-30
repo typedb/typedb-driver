@@ -69,7 +69,7 @@ public abstract class ConceptProtoBuilder {
                 .setSchema(schema(type));
 
         if (type instanceof RoleType) {
-            builder.setScopedLabel(type.asRoleType().getScopedLabel());
+            builder.setScope(type.asRoleType().getScope());
         }
 
         return builder.build();

@@ -38,7 +38,7 @@ public abstract class ThingTypeImpl {
     public static class Local extends TypeImpl.Local implements ThingType.Local {
 
         public Local(final ConceptProto.Type type) {
-            super(type);
+            super(type.getLabel(), type.getScope() != null && !type.getScope().isEmpty() ? type.getScope() : null, type.getRoot());
         }
 
         @Override
@@ -50,7 +50,11 @@ public abstract class ThingTypeImpl {
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
         public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, isRoot);
+            super(transaction, label, null, isRoot);
+        }
+
+        public static ThingTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
+            return new ThingTypeImpl.Remote(transaction, type.getLabel(), type.getRoot());
         }
 
         @Override

@@ -70,7 +70,7 @@ public class ThingSteps {
 
     @Then("{root_label} {var} has type: {type_label}")
     public void thing_has_type(RootLabel rootLabel, String var, String typeLabel) {
-        ThingType.Remote type = get_thing_type(rootLabel, typeLabel);
+        ThingType.Local type = get_thing_type(rootLabel, typeLabel);
         assertEquals(type, get(var).getType());
     }
 
@@ -176,7 +176,7 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")
     public void thing_get_relations_contain(String var1, ScopedLabel scopedLabel, String var2) {
-        assertTrue(get(var1).getRelations(tx().concepts().getRelationType(scopedLabel.scope()).getRelates(scopedLabel.role()))
+        assertTrue(get(var1).getRelations(tx().concepts().getRelationType(scopedLabel.scope()).asRemote(tx()).getRelates(scopedLabel.role()))
                            .anyMatch(k -> k.equals(get(var2))));
     }
 
@@ -187,7 +187,7 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")
     public void thing_get_relations_do_not_contain(String var1, ScopedLabel scopedLabel, String var2) {
-        assertTrue(get(var1).getRelations(tx().concepts().getRelationType(scopedLabel.scope()).getRelates(scopedLabel.role()))
+        assertTrue(get(var1).getRelations(tx().concepts().getRelationType(scopedLabel.scope()).asRemote(tx()).getRelates(scopedLabel.role()))
                            .noneMatch(k -> k.equals(get(var2))));
     }
 
@@ -198,17 +198,17 @@ public class ThingSteps {
 
     @Then("root\\( ?thing ?) get instances count: {int}")
     public void root_thing_type_get_instances_contain(int count) {
-        assertEquals(count, tx().concepts().getRootThingType().getInstances().count());
+        assertEquals(count, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
     }
 
     @Then("root\\( ?thing ?) get instances contain: {var}")
     public void root_thing_type_get_instances_contain(String var) {
-        assertTrue(tx().concepts().getRootThingType().getInstances().anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().concepts().getRootThingType().asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("root\\( ?thing ?) get instances is empty")
     public void root_thing_type_get_instances_is_empty() {
-        assertEquals(0, tx().concepts().getRootThingType().getInstances().count());
+        assertEquals(0, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
     }
 
     @After

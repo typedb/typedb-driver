@@ -63,11 +63,6 @@ public abstract class AttributeImpl {
             }
         }
 
-        @Override
-        public AttributeType.Local getType() {
-            return super.getType().asAttributeType();
-        }
-
         public abstract VALUE getValue();
     }
 
@@ -113,7 +108,7 @@ public abstract class AttributeImpl {
         }
 
         @Override
-        public AttributeType.Remote getType() {
+        public AttributeType.Local getType() {
             return super.getType().asAttributeType();
         }
 
@@ -162,7 +157,7 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Boolean.Remote getType() {
+            public AttributeType.Boolean.Local getType() {
                 return super.getType().asBoolean();
             }
         }
@@ -210,7 +205,7 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Long.Remote getType() {
+            public AttributeType.Long.Local getType() {
                 return super.getType().asLong();
             }
         }
@@ -258,7 +253,7 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Double.Remote getType() {
+            public AttributeType.Double.Local getType() {
                 return super.getType().asDouble();
             }
         }
@@ -306,7 +301,7 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.String.Remote getType() {
+            public AttributeType.String.Local getType() {
                 return super.getType().asString();
             }
         }
@@ -358,7 +353,7 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.DateTime.Remote getType() {
+            public AttributeType.DateTime.Local getType() {
                 return super.getType().asDateTime();
             }
         }

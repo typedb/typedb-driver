@@ -22,7 +22,6 @@ package grakn.client.concept.thing.impl;
 import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.protocol.ConceptProto;
 
 public abstract class EntityImpl {
@@ -30,10 +29,6 @@ public abstract class EntityImpl {
 
         public Local(final ConceptProto.Thing thing) {
             super(thing);
-        }
-
-        public EntityType.Local getType() {
-            return super.getType().asEntityType();
         }
 
         @Override
@@ -49,7 +44,7 @@ public abstract class EntityImpl {
         }
 
         @Override
-        public final EntityType.Remote getType() {
+        public EntityType.Local getType() {
             return super.getType().asEntityType();
         }
     }

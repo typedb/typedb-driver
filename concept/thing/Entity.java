@@ -25,9 +25,6 @@ import grakn.client.concept.type.EntityType;
 public interface Entity extends Thing {
 
     @Override
-    EntityType getType();
-
-    @Override
     Entity.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Thing.Local, Entity {
@@ -44,7 +41,7 @@ public interface Entity extends Thing {
     interface Remote extends Thing.Remote, Entity {
 
         @Override
-        EntityType.Remote getType();
+        EntityType.Local getType();
 
         @Override
         default Entity.Remote asRemote(Grakn.Transaction transaction) {

@@ -29,14 +29,15 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.TypeImpl;
+import grakn.common.collection.Bytes;
 import grakn.protocol.ConceptProto;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL;
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
@@ -47,17 +48,14 @@ public abstract class ThingImpl {
     public abstract static class Local implements Thing.Local {
 
         private final String iid;
-        private final ThingType.Local type;
+        // TODO: private final ThingType.Local type;
+        // We (probably) need to storae the concept Type, but we should have a better way of retrieving it.
+        // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
+        // not actually prefilled when using the Concept API - only when using the Query API.
+        // We should probably create a dedicated Proto class for Graql (AnswerProto or QueryProto) and keep the code clean.
 
         protected Local(final ConceptProto.Thing thing) {
-            // TODO we (probably) do need the Type, but we should have a better way of retrieving it.
-            // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
-            // not actually prefilled when using the Concept API - only when using the Query API.
-            // We should probably create a dedicated Proto class for Graql (AnswerProto or QueryProto) and keep the code clean.
-            throw new GraknException(new UnsupportedOperationException());
-            //this.iid = thing.getIid();
-            //this.type = Type.Local.of(thing.getType()).asThingType();
-            //this.inferred = thing.getInferredRes().getInferred();
+            this.iid = Bytes.bytesToHexString(thing.getIid().toByteArray());
         }
 
         public static ThingImpl.Local of(final ConceptProto.Thing thing) {
@@ -82,8 +80,17 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public ThingType.Local getType() {
-            return type;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final ThingImpl.Local that = (ThingImpl.Local) o;
+            return (this.iid.equals(that.iid));
+        }
+
+        @Override
+        public final int hashCode() {
+            return iid.hashCode();
         }
     }
 
@@ -91,16 +98,14 @@ public abstract class ThingImpl {
 
         private final Grakn.Transaction transaction;
         private final String iid;
+        private final int hash;
 
         protected Remote(final Grakn.Transaction transaction, final String iid) {
-            if (transaction == null) {
-                throw new GraknException(ILLEGAL_ARGUMENT_NULL.message("concepts"));
-            }
+            if (transaction == null) throw new GraknException(MISSING_ARGUMENT.message("concepts"));
+            else if (iid == null || iid.isEmpty()) throw new GraknException(MISSING_ARGUMENT.message("iid"));
             this.transaction = transaction;
-            if (iid == null || iid.isEmpty()) {
-                throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("iid"));
-            }
             this.iid = iid;
+            this.hash = Objects.hash(this.transaction, this.iid);
         }
 
         public static ThingImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thing) {
@@ -123,12 +128,11 @@ public abstract class ThingImpl {
             return iid;
         }
 
-        @Override
-        public ThingType.Remote getType() {
+        public ThingType.Local getType() {
             final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance()).build();
 
-            return TypeImpl.Remote.of(transaction, runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
+            return TypeImpl.Local.of(runMethod(method).getThingGetTypeRes().getThingType()).asThingType();
         }
 
         @Override
@@ -223,32 +227,6 @@ public abstract class ThingImpl {
             return transaction.concepts().getThing(getIID()) == null;
         }
 
-        @Override
-        public String toString() {
-            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", iid=" + iid + "}";
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ThingImpl.Remote that = (ThingImpl.Remote) o;
-
-            return this.transaction.equals(that.transaction) &&
-                    this.iid.equals(that.iid);
-        }
-
-        @Override
-        public int hashCode() {
-            int h = 1;
-            h *= 1000003;
-            h ^= transaction.hashCode();
-            h *= 1000003;
-            h ^= iid.hashCode();
-            return h;
-        }
-
         protected final Grakn.Transaction tx() {
             return transaction;
         }
@@ -263,6 +241,25 @@ public abstract class ThingImpl {
 
         protected ConceptProto.ThingMethod.Res runMethod(final ConceptProto.ThingMethod.Req method) {
             return transaction.concepts().runThingMethod(iid, method).getConceptMethodThingRes().getResponse();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", iid=" + iid + "}";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ThingImpl.Remote that = (ThingImpl.Remote) o;
+            return (this.transaction.equals(that.transaction) && this.iid.equals(that.iid));
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
         }
     }
 }

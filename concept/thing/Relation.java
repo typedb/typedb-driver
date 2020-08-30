@@ -30,9 +30,6 @@ import java.util.stream.Stream;
 public interface Relation extends Thing {
 
     @Override
-    RelationType getType();
-
-    @Override
     Relation.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Thing.Local, Relation {
@@ -49,7 +46,7 @@ public interface Relation extends Thing {
     interface Remote extends Thing.Remote, Relation {
 
         @Override
-        RelationType.Remote getType();
+        RelationType.Local getType();
 
         void addPlayer(RoleType roleType, Thing player);
 

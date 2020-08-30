@@ -39,28 +39,32 @@ public class RoleTypeImpl {
         private final String scopedLabel;
 
         public Local(ConceptProto.Type type) {
-            super(type);
-            scopedLabel = type.getScopedLabel();
+            super(type.getLabel(), type.getScope() != null && !type.getScope().isEmpty() ? type.getScope() : null, type.getRoot());
+            scopedLabel = type.getScope();
         }
 
         @Override
-        public final String getScopedLabel() {
+        public final String getScope() {
             return scopedLabel;
         }
 
         @Override
         public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
-            return new RoleTypeImpl.Remote(transaction, getLabel(), getScopedLabel(), isRoot());
+            return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
     }
 
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        private final String scopedLabel;
+        private final String scope;
 
-        public Remote(final Grakn.Transaction transaction, final String label, final String scopedLabel, final boolean isRoot) {
-            super(transaction, label, isRoot);
-            this.scopedLabel = scopedLabel;
+        public Remote(final Grakn.Transaction transaction, final String label, final String scope, final boolean isRoot) {
+            super(transaction, label, scope, isRoot);
+            this.scope = scope;
+        }
+
+        public static RoleTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+            return new RoleTypeImpl.Remote(transaction, proto.getLabel(), proto.getScope(), proto.getRoot());
         }
 
         @Nullable
@@ -85,8 +89,8 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public String getScopedLabel() {
-            return scopedLabel;
+        public String getScope() {
+            return scope;
         }
 
         @Override
@@ -115,17 +119,17 @@ public class RoleTypeImpl {
 
         @Override
         protected Stream<Thing.Remote> thingStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return tx().concepts().iterateTypeMethod(scopedLabel, request, response -> ThingImpl.Remote.of(tx(), thingGetter.apply(response)));
+            return tx().concepts().iterateTypeMethod(getLabel(), getScope(), request, response -> ThingImpl.Remote.of(tx(), thingGetter.apply(response)));
         }
 
         @Override
         protected Stream<Type.Remote> typeStream(ConceptProto.TypeMethod.Iter.Req request, Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return tx().concepts().iterateTypeMethod(scopedLabel, request, response -> TypeImpl.Remote.of(tx(), typeGetter.apply(response)));
+            return tx().concepts().iterateTypeMethod(getLabel(), getScope(), request, response -> TypeImpl.Remote.of(tx(), typeGetter.apply(response)));
         }
 
         @Override
         protected ConceptProto.TypeMethod.Res runMethod(ConceptProto.TypeMethod.Req typeMethod) {
-            return tx().concepts().runTypeMethod(scopedLabel, typeMethod).getConceptMethodTypeRes().getResponse();
+            return tx().concepts().runTypeMethod(getLabel(), getScope(), typeMethod).getConceptMethodTypeRes().getResponse();
         }
     }
 }

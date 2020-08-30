@@ -231,11 +231,10 @@ public abstract class AttributeTypeImpl {
             // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
             // because it is possible to compare a attribute root types wrapped in different type classes
             // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
+            // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
 
             AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
-
-            return tx().concepts().equals(that.tx().concepts()) &&
-                    this.getLabel().equals(that.getLabel());
+            return (this.tx().equals(that.tx()) && this.getLabel().equals(that.getLabel()));
         }
     }
 
@@ -300,7 +299,6 @@ public abstract class AttributeTypeImpl {
             public AttributeType.Boolean.Remote asBoolean() {
                 return this;
             }
-
         }
     }
 

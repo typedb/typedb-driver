@@ -40,59 +40,59 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}")
     public void relation_type_set_relates_role(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).setRelates(roleLabel);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}; throws exception")
     public void thing_set_relates_role_throws_exception(String relationLabel, String roleLabel) {
-        assertThrows(() -> tx().concepts().getRelationType(relationLabel).setRelates(roleLabel));
+        assertThrows(() -> tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel));
     }
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}")
     public void relation_type_unset_related_role(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).unsetRelates(roleLabel);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).unsetRelates(roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")
     public void relation_type_set_relates_role_type_as(String relationLabel, String roleLabel, String superRole) {
-        tx().concepts().getRelationType(relationLabel).setRelates(roleLabel, superRole);
-        tx().concepts().getRelationType(relationLabel).setRelates(roleLabel);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel, superRole);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")
     public void thing_set_relates_role_type_as_throws_exception(String relationLabel, String roleLabel, String superRole) {
-        assertThrows(() -> tx().concepts().getRelationType(relationLabel).setRelates(roleLabel, superRole));
+        assertThrows(() -> tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel, superRole));
     }
 
     @When("relation\\( ?{type_label} ?) remove related role: {type_label}")
     public void relation_type_remove_related_role(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).delete();
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).delete();
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is null: {bool}")
     public void relation_type_get_role_type_is_null(String relationLabel, String roleLabel, boolean isNull) {
-        assertEquals(isNull, isNull(tx().concepts().getRelationType(relationLabel).getRelates(roleLabel)));
+        assertEquals(isNull, isNull(tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel)));
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")
     public void relation_type_get_role_type_set_label(String relationLabel, String roleLabel, String newLabel) {
-        tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).setLabel(newLabel);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).setLabel(newLabel);
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
     public void relation_type_get_role_type_get_label(String relationLabel, String roleLabel, String getLabel) {
-        assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).getLabel());
+        assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getLabel());
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")
     public void relation_type_get_role_type_is_abstract(String relationLabel, String roleLabel, boolean isAbstract) {
-        assertEquals(isAbstract, tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).isAbstract());
+        assertEquals(isAbstract, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).isAbstract());
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_related_roles_actuals(String relationLabel) {
-        return tx().concepts().getRelationType(relationLabel).getRelates()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
-                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates()
+                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
+                                                        role.getScope().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related roles contain:")
@@ -111,14 +111,14 @@ public class RelationTypeSteps {
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertype: {scoped_label}")
     public void relation_type_get_role_type_get_supertype(String relationLabel, String roleLabel, Parameters.ScopedLabel superLabel) {
-        RoleType superType = tx().concepts().getRelationType(superLabel.scope()).getRelates(superLabel.role());
-        assertEquals(superType, tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).getSupertype());
+        RoleType superType = tx().concepts().getRelationType(superLabel.scope()).asRemote(tx()).getRelates(superLabel.role());
+        assertEquals(superType, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSupertype());
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_supertypes_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).getSupertypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
-                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSupertypes()
+                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
+                                                        role.getScope().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")
@@ -136,7 +136,7 @@ public class RelationTypeSteps {
     }
 
     private Set<String> relation_type_get_role_type_players_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).getPlayers().map(Type::getLabel).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getPlayers().map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players contain:")
@@ -154,9 +154,9 @@ public class RelationTypeSteps {
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_subtypes_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).getRelates(roleLabel).getSubtypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScopedLabel().split(":")[0],
-                                                        role.getScopedLabel().split(":")[1])).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSubtypes()
+                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
+                                                        role.getScope().split(":")[1])).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes contain:")

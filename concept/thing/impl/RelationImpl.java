@@ -47,10 +47,6 @@ public abstract class RelationImpl {
             super(thing);
         }
 
-        public RelationType.Local getType() {
-            return super.getType().asRelationType();
-        }
-
         @Override
         public Relation.Remote asRemote(Grakn.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());
@@ -64,8 +60,8 @@ public abstract class RelationImpl {
         }
 
         @Override
-        public RelationType.Remote getType() {
-            return (RelationType.Remote) super.getType();
+        public RelationType.Local getType() {
+            return super.getType().asRelationType();
         }
 
         @Override

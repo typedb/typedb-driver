@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 public interface RoleType extends Type {
 
-    String getScopedLabel();
+    String getScope();
 
     @Override
     RoleType.Remote asRemote(Grakn.Transaction transaction);

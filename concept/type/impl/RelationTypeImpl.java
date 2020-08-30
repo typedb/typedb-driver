@@ -51,6 +51,10 @@ public class RelationTypeImpl {
             super(transaction, label, isRoot);
         }
 
+        public static RelationTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+            return new RelationTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
+        }
+
         @Override
         public final Stream<Relation.Remote> getInstances() {
             return super.getInstances().map(Thing.Remote::asRelation);

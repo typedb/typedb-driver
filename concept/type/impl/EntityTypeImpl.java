@@ -50,6 +50,10 @@ public class EntityTypeImpl {
             super(transaction, label, isRoot);
         }
 
+        public static EntityTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+            return new EntityTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
+        }
+
         @Override
         public EntityType.Remote getSupertype() {
             return getSupertypeInternal(Type.Remote::asEntityType);

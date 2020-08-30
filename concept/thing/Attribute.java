@@ -31,9 +31,6 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 
 public interface Attribute<VALUE> extends Thing {
 
-    @Override
-    AttributeType getType();
-
     VALUE getValue();
 
     Attribute.Boolean asBoolean();
@@ -84,9 +81,6 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
-        @Override
-        AttributeType.Remote getType();
-
         Stream<? extends Thing.Remote> getOwners();
 
         Stream<? extends Thing.Remote> getOwners(ThingType ownerType);
@@ -95,6 +89,9 @@ public interface Attribute<VALUE> extends Thing {
         default Attribute.Remote<VALUE> asRemote(Grakn.Transaction transaction) {
             return this;
         }
+
+        @Override
+        AttributeType.Local getType();
 
         @Override
         default Attribute.Remote<VALUE> asAttribute() {

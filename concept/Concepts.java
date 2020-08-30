@@ -52,27 +52,27 @@ public final class Concepts {
         this.transaction = transaction;
     }
 
-    public ThingType.Remote getRootThingType() {
+    public ThingType.Local getRootThingType() {
         return getType(GraqlToken.Type.THING.toString()).asThingType();
     }
 
-    public EntityType.Remote getRootEntityType() {
+    public EntityType.Local getRootEntityType() {
         return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
     }
 
-    public RelationType.Remote getRootRelationType() {
+    public RelationType.Local getRootRelationType() {
         return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
     }
 
-    public AttributeType.Remote getRootAttributeType() {
+    public AttributeType.Local getRootAttributeType() {
         return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
 
-    public RoleType.Remote getRootRoleType() {
+    public RoleType.Local getRootRoleType() {
         return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
     }
 
-    public Rule.Remote getRootRule() {
+    public Rule.Local getRootRule() {
         return getType(GraqlToken.Type.RULE.toString()).asRule();
     }
 
@@ -87,13 +87,10 @@ public final class Concepts {
     }
 
     @Nullable
-    public EntityType.Remote getEntityType(final String label) {
-        final Type.Remote concept = getType(label);
-        if (concept instanceof ThingType.Remote) {
-            return (EntityType.Remote) concept;
-        } else {
-            return null;
-        }
+    public EntityType.Local getEntityType(final String label) {
+        final Type.Local concept = getType(label);
+        if (concept instanceof EntityType) return concept.asEntityType();
+        else return null;
     }
 
     public RelationType.Remote putRelationType(final String label) {
@@ -106,33 +103,27 @@ public final class Concepts {
     }
 
     @Nullable
-    public RelationType.Remote getRelationType(final String label) {
-        final Type.Remote concept = getType(label);
-        if (concept instanceof RelationType.Remote) {
-            return (RelationType.Remote) concept;
-        } else {
-            return null;
-        }
+    public RelationType.Local getRelationType(final String label) {
+        final Type.Local concept = getType(label);
+        if (concept instanceof RelationType) return concept.asRelationType();
+        else return null;
     }
 
-    public AttributeType.Remote putAttributeType(final String label, final AttributeType.ValueType valueType) {
+    public AttributeType.Local putAttributeType(final String label, final AttributeType.ValueType valueType) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                                                 .setLabel(label)
                                                 .setValueType(valueType(valueType))).build();
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Remote.of(transaction, res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
+        return TypeImpl.Local.of(res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }
 
     @Nullable
-    public AttributeType.Remote getAttributeType(final String label) {
-        final Type.Remote concept = getType(label);
-        if (concept instanceof AttributeType.Remote) {
-            return (AttributeType.Remote) concept;
-        } else {
-            return null;
-        }
+    public AttributeType.Local getAttributeType(final String label) {
+        final Type.Local concept = getType(label);
+        if (concept instanceof AttributeType) return concept.asAttributeType();
+        else return null;
     }
 
     public Rule.Remote putRule(final String label, final Pattern when, final Pattern then) {
@@ -149,17 +140,14 @@ public final class Concepts {
     }
 
     @Nullable
-    public Rule.Remote getRule(String label) {
-        Type.Remote concept = getType(label);
-        if (concept instanceof Rule.Remote) {
-            return (Rule.Remote) concept;
-        } else {
-            return null;
-        }
+    public Rule.Local getRule(String label) {
+        Type.Local concept = getType(label);
+        if (concept instanceof Rule) return concept.asRule();
+        else return null;
     }
 
     @Nullable
-    public Type.Remote getType(final String label) {
+    public Type.Local getType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
@@ -167,7 +155,7 @@ public final class Concepts {
         final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
-                return TypeImpl.Remote.of(transaction, response.getGetTypeRes().getType());
+                return TypeImpl.Local.of(response.getGetTypeRes().getType());
             default:
             case RES_NOT_SET:
                 return null;
@@ -175,7 +163,7 @@ public final class Concepts {
     }
 
     @Nullable
-    public Thing.Remote getThing(final String iid) {
+    public Thing.Local getThing(final String iid) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
@@ -183,7 +171,7 @@ public final class Concepts {
         final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
         switch (response.getGetThingRes().getResCase()) {
             case THING:
-                return ThingImpl.Remote.of(transaction, response.getGetThingRes().getThing());
+                return ThingImpl.Local.of(response.getGetThingRes().getThing());
             default:
             case RES_NOT_SET:
                 return null;
@@ -199,11 +187,13 @@ public final class Concepts {
         return transaction.transceiver().sendAndReceiveOrThrow(request);
     }
 
-    public TransactionProto.Transaction.Res runTypeMethod(final String label, final ConceptProto.TypeMethod.Req typeMethod) {
+    public TransactionProto.Transaction.Res runTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Req method) {
+        final TransactionProto.Transaction.ConceptMethod.Type.Req.Builder typeMethod =
+                TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder().setLabel(label).setMethod(method);
+        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
+
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodTypeReq(TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder()
-                                                 .setLabel(label)
-                                                 .setMethod(typeMethod)).build();
+                .setConceptMethodTypeReq(typeMethod.build()).build();
 
         return transaction.transceiver().sendAndReceiveOrThrow(request);
     }
@@ -218,12 +208,14 @@ public final class Concepts {
         return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
     }
 
-    public <T> Stream<T> iterateTypeMethod(final String label, final ConceptProto.TypeMethod.Iter.Req method,
+    public <T> Stream<T> iterateTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Iter.Req method,
                                            final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
+        final TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.Builder typeMethod =
+                TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder().setLabel(label).setMethod(method);
+        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
+
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodTypeIterReq(TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder()
-                                                     .setLabel(label)
-                                                     .setMethod(method)).build();
+                .setConceptMethodTypeIterReq(typeMethod.build()).build();
 
         return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }

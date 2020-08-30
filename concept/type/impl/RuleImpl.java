@@ -34,7 +34,7 @@ public class RuleImpl {
     public static class Local extends TypeImpl.Local implements Rule.Local {
 
         public Local(ConceptProto.Type type) {
-            super(type);
+            super(type.getLabel(), type.getScope() != null && !type.getScope().isEmpty() ? type.getScope() : null, type.getRoot());
         }
 
         @Override
@@ -46,7 +46,7 @@ public class RuleImpl {
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
         public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, isRoot);
+            super(transaction, label, null, isRoot);
         }
 
         @Nullable

@@ -34,8 +34,6 @@ public interface Thing extends Concept {
 
     String getIID();
 
-    ThingType getType();
-
     Entity asEntity();
 
     Attribute<?> asAttribute();
@@ -70,12 +68,11 @@ public interface Thing extends Concept {
 
     interface Remote extends Concept.Remote, Thing {
 
+        ThingType.Local getType();
+
         void setHas(Attribute<?> attribute);
 
         void unsetHas(Attribute<?> attribute);
-
-        @Override
-        ThingType.Remote getType();
 
         boolean isInferred();
 
