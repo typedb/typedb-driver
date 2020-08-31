@@ -44,9 +44,6 @@ import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CO
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.stream.Collectors.toList;
 
-/**
- * An RPC Request Builder class for Concept messages
- */
 public abstract class ConceptProtoBuilder {
 
     public static ConceptProto.Concept concept(Concept concept) {
@@ -72,7 +69,7 @@ public abstract class ConceptProtoBuilder {
                 .setSchema(schema(type));
 
         if (type instanceof RoleType) {
-            builder.setScopedLabel(type.asRoleType().getScopedLabel());
+            builder.setScope(type.asRoleType().getScope());
         }
 
         return builder.build();

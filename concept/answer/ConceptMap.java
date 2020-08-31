@@ -22,11 +22,12 @@ package grakn.client.concept.answer;
 import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknException;
 import grakn.client.concept.Concept;
+import grakn.client.concept.thing.impl.ThingImpl;
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,9 +41,6 @@ import static grakn.client.common.exception.ErrorMessage.Query.NO_EXPLANATION;
 import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
 
-/**
- * A type of Answer object that contains a Map of Concepts.
- */
 public class ConceptMap implements Answer {
 
     private final Map<String, Concept> map;
@@ -59,17 +57,18 @@ public class ConceptMap implements Answer {
 
     public static ConceptMap of(final Transaction tx, final AnswerProto.ConceptMap res) {
         final Map<String, Concept> variableMap = new HashMap<>();
-        res.getMapMap().forEach((resVar, resConcept) -> variableMap.put(resVar, Concept.Local.of(resConcept)));
+        res.getMapMap().forEach((resVar, resConcept) -> {
+            Concept.Local concept;
+            if (resConcept.hasThing()) concept = ThingImpl.Local.of(resConcept.getThing());
+            else concept = TypeImpl.Local.of(resConcept.getType());
+            variableMap.put(resVar, concept);
+        });
         boolean hasExplanation = res.getHasExplanation();
         Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
         return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
     }
 
-    /**
-     * @return all explanations taking part in the derivation of this answer
-     */
     @Nullable
-    @CheckReturnValue
     public Set<Explanation> explanations() {
         if (this.explanation() == null) return Collections.emptySet();
         Set<Explanation> explanations = new HashSet<>();
@@ -83,7 +82,6 @@ public class ConceptMap implements Answer {
         return explanations;
     }
 
-    @CheckReturnValue
     public Explanation explanation() {
         if (hasExplanation) {
             return tx.getExplanation(this);
@@ -92,7 +90,6 @@ public class ConceptMap implements Answer {
         }
     }
 
-    @CheckReturnValue
     public Pattern queryPattern() {
         return queryPattern;
     }
@@ -102,17 +99,14 @@ public class ConceptMap implements Answer {
         return hasExplanation;
     }
 
-    @CheckReturnValue
     public Map<String, Concept> map() {
         return map;
     }
 
-    @CheckReturnValue
     public Collection<Concept> concepts() {
         return map.values();
     }
 
-    @CheckReturnValue
     public Concept get(String variable) {
         Concept concept = map.get(variable);
         if (concept == null) throw new GraknException(VARIABLE_DOES_NOT_EXIST.message(variable));

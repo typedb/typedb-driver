@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -30,39 +30,43 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class RuleImpl {
-    /**
-     * Client implementation of Rule
-     */
+
     public static class Local extends TypeImpl.Local implements Rule.Local {
 
-        public Local(ConceptProto.Type type) {
-            super(type);
+        Local(final String label, final boolean root) {
+            super(label, null, root);
+        }
+
+        public static RuleImpl.Local of(final ConceptProto.Type typeProto) {
+            return new RuleImpl.Local(typeProto.getLabel(), typeProto.getRoot());
+        }
+
+        @Override
+        public Rule.Remote asRemote(final Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
         }
     }
 
-    /**
-     * Client implementation of Rule
-     */
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, null, isRoot);
         }
 
         @Nullable
         @Override
-        public Type.Remote getSupertype() {
-            return getSupertypeInternal(Type.Remote::asRule);
+        public Type.Local getSupertype() {
+            return getSupertype(Type.Local::asRule);
         }
 
         @Override
-        public final Stream<Rule.Remote> getSupertypes() {
-            return super.getSupertypes().map(Type.Remote::asRule);
+        public final Stream<Rule.Local> getSupertypes() {
+            return super.getSupertypes(Type.Local::asRule);
         }
 
         @Override
-        public final Stream<Rule.Remote> getSubtypes() {
-            return super.getSubtypes().map(Type.Remote::asRule);
+        public final Stream<Rule.Local> getSubtypes() {
+            return super.getSubtypes(Type.Local::asRule);
         }
 
         @Override
@@ -72,12 +76,12 @@ public class RuleImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
 
-            ConceptProto.Rule.When.Res response = runMethod(method).getRuleWhenRes();
+            ConceptProto.Rule.When.Res response = execute(method).getRuleWhenRes();
             switch (response.getResCase()) {
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
-                default:
                 case RES_NOT_SET:
+                default:
                     return null;
             }
         }
@@ -89,14 +93,19 @@ public class RuleImpl {
             ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
 
-            ConceptProto.Rule.Then.Res response = runMethod(method).getRuleThenRes();
+            ConceptProto.Rule.Then.Res response = execute(method).getRuleThenRes();
             switch (response.getResCase()) {
                 case PATTERN:
                     return Graql.parsePattern(response.getPattern());
-                default:
                 case RES_NOT_SET:
+                default:
                     return null;
             }
+        }
+
+        @Override
+        public Rule.Remote asRemote(Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, label, isRoot);
         }
     }
 }

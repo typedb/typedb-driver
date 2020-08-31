@@ -19,145 +19,175 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
+import grakn.client.common.exception.GraknException;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.ConceptProto.ThingType.GetInstances;
+import grakn.protocol.ConceptProto.ThingType.GetOwns;
+import grakn.protocol.ConceptProto.ThingType.GetPlays;
+import grakn.protocol.ConceptProto.ThingType.SetAbstract;
+import grakn.protocol.ConceptProto.ThingType.SetOwns;
+import grakn.protocol.ConceptProto.ThingType.SetPlays;
+import grakn.protocol.ConceptProto.ThingType.UnsetAbstract;
+import grakn.protocol.ConceptProto.ThingType.UnsetOwns;
+import grakn.protocol.ConceptProto.ThingType.UnsetPlays;
+import grakn.protocol.ConceptProto.TypeMethod;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public abstract class ThingTypeImpl {
-    /**
-     * Client implementation of ThingType
-     */
+
     public static class Local extends TypeImpl.Local implements ThingType.Local {
 
-        public Local(final ConceptProto.Type type) {
-            super(type);
+        Local(final String label, final boolean isRoot) {
+            super(label, null, isRoot);
+        }
+
+        public static TypeImpl.Local of(ConceptProto.Type typeProto) {
+            switch (typeProto.getSchema()) {
+                case ENTITY_TYPE:
+                    return EntityTypeImpl.Local.of(typeProto);
+                case RELATION_TYPE:
+                    return RelationTypeImpl.Local.of(typeProto);
+                case ATTRIBUTE_TYPE:
+                    return AttributeTypeImpl.Local.of(typeProto);
+                case THING_TYPE:
+                    assert typeProto.getRoot();
+                    return new ThingTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
+                case UNRECOGNIZED:
+                default:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), typeProto.getSchema()));
+            }
+        }
+
+        @Override
+        public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
     }
 
-    /**
-     * Client implementation of ThingType
-     */
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        public Remote(final Concepts concepts, final String label, final boolean isRoot) {
-            super(concepts, label, isRoot);
+        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+            super(transaction, label, null, isRoot);
+        }
+
+        public static ThingTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
+            return new ThingTypeImpl.Remote(transaction, type.getLabel(), type.getRoot());
         }
 
         @Override
-        public ThingType.Remote getSupertype() {
-            return getSupertypeInternal(Type.Remote::asThingType);
+        public ThingType.Local getSupertype() {
+            return super.getSupertype(Type.Local::asThingType);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote> getSupertypes() {
-            return super.getSupertypes().map(Type.Remote::asThingType);
+        public Stream<? extends ThingType.Local> getSupertypes() {
+            return super.getSupertypes(Type.Local::asThingType);
         }
 
         @Override
-        public Stream<? extends ThingType.Remote> getSubtypes() {
-            return super.getSubtypes().map(Type.Remote::asThingType);
+        public Stream<? extends ThingType.Local> getSubtypes() {
+            return super.getSubtypes(Type.Local::asThingType);
+        }
+
+        <THING extends Thing.Local> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
+            return tx().concepts().iterateTypeMethod(
+                    label, scope,
+                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
+                            GetInstances.Iter.Req.getDefaultInstance()).build(),
+                    response -> thingConstructor.apply(response.getThingTypeGetInstancesIterRes().getThing())
+            );
         }
 
         @Override
-        public Stream<? extends Thing.Remote> getInstances() {
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
-                    .setThingTypeGetInstancesIterReq(ConceptProto.ThingType.GetInstances.Iter.Req.getDefaultInstance()).build();
-
-            return thingStream(method, res -> res.getThingTypeGetInstancesIterRes().getThing());
+        public Stream<? extends Thing.Local> getInstances() {
+            return getInstances(ThingImpl.Local::of);
         }
 
         @Override
         public final void setAbstract() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeSetAbstractReq(ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetAbstractReq(
+                    SetAbstract.Req.getDefaultInstance()
+            ).build());
         }
 
         @Override
         public final void unsetAbstract() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeUnsetAbstractReq(ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeUnsetAbstractReq(
+                    UnsetAbstract.Req.getDefaultInstance()
+            ).build());
         }
 
         @Override
-        public final Stream<AttributeType.Remote> getOwns(final ValueType valueType, final boolean keysOnly) {
-            final ConceptProto.ThingType.GetOwns.Iter.Req.Builder req = ConceptProto.ThingType.GetOwns.Iter.Req.newBuilder()
-                    .setKeysOnly(keysOnly);
-
-            if (valueType != null) {
-                req.setValueType(valueType(valueType));
-            }
-
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build();
-
-            return typeStream(method, res -> res.getThingTypeGetOwnsIterRes().getAttributeType()).map(Type.Remote::asAttributeType);
+        public final Stream<AttributeType.Local> getOwns(final ValueType valueType, final boolean keysOnly) {
+            final GetOwns.Iter.Req.Builder req = GetOwns.Iter.Req.newBuilder().setKeysOnly(keysOnly);
+            if (valueType != null) req.setValueType(valueType(valueType));
+            return stream(
+                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build(),
+                    res -> res.getThingTypeGetOwnsIterRes().getAttributeType()
+            ).map(Type.Local::asAttributeType);
         }
 
         @Override
-        public final Stream<RoleType.Remote> getPlays() {
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
-                    .setThingTypeGetPlaysIterReq(ConceptProto.ThingType.GetPlays.Iter.Req.getDefaultInstance()).build();
-
-            return typeStream(method, res -> res.getThingTypeGetPlaysIterRes().getRole()).map(Type.Remote::asRoleType);
+        public final Stream<RoleType.Local> getPlays() {
+            return stream(
+                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetPlaysIterReq(
+                            GetPlays.Iter.Req.getDefaultInstance()).build(),
+                    res -> res.getThingTypeGetPlaysIterRes().getRole()
+            ).map(Type.Local::asRoleType);
         }
 
         @Override
         public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
-                    .setAttributeType(type(attributeType))
-                    .setIsKey(isKey);
-
-            if (overriddenType != null) {
-                req.setOverriddenType(type(overriddenType));
-            }
-
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeSetOwnsReq(req).build();
-            runMethod(method);
+            final SetOwns.Req.Builder req = SetOwns.Req.newBuilder().setAttributeType(type(attributeType)).setIsKey(isKey);
+            if (overriddenType != null) req.setOverriddenType(type(overriddenType));
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetOwnsReq(req).build());
         }
 
         @Override
         public final void setPlays(final RoleType role) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
-                                                     .setRole(type(role))).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetPlaysReq(
+                    SetPlays.Req.newBuilder().setRole(type(role))
+            ).build());
         }
 
         @Override
         public final void setPlays(final RoleType role, final RoleType overriddenRole) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeSetPlaysReq(ConceptProto.ThingType.SetPlays.Req.newBuilder()
-                                                     .setRole(type(role))
-                                                     .setOverriddenRole(type(overriddenRole))).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetPlaysReq(
+                    SetPlays.Req.newBuilder().setRole(type(role)).setOverriddenRole(type(overriddenRole))
+            ).build());
         }
 
         @Override
         public final void unsetOwns(final AttributeType attributeType) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeUnsetOwnsReq(ConceptProto.ThingType.UnsetOwns.Req.newBuilder()
-                                                      .setAttributeType(type(attributeType))).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeUnsetOwnsReq(
+                    UnsetOwns.Req.newBuilder().setAttributeType(type(attributeType))
+            ).build());
         }
 
         @Override
         public final void unsetPlays(final RoleType role) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setThingTypeUnsetPlaysReq(ConceptProto.ThingType.UnsetPlays.Req.newBuilder()
-                                                       .setRole(type(role))).build();
-            runMethod(method);
+            execute(TypeMethod.Req.newBuilder().setThingTypeUnsetPlaysReq(
+                    UnsetPlays.Req.newBuilder().setRole(type(role))
+            ).build());
+        }
+
+        @Override
+        public ThingType.Remote asRemote(Grakn.Transaction transaction) {
+            return new ThingTypeImpl.Remote(transaction, label, isRoot);
         }
     }
 }

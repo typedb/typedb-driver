@@ -1,19 +1,20 @@
 /*
- * Copyright (C) 2020 Grakn Labs
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package grakn.client.test.behaviour.concept.thing.entity;
@@ -36,66 +37,66 @@ public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance")
     public void entity_type_create_new_instance(String var, String typeLabel) {
-        put(var, tx().concepts().getEntityType(typeLabel).create());
+        put(var, tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
     }
 
     @When("entity\\( ?{type_label} ?) create new instance; throws exception")
     public void entity_type_create_new_instance_throws_exception(String typeLabel) {
-        assertThrows(() -> tx().concepts().getEntityType(typeLabel).create());
+        assertThrows(() -> tx().concepts().getEntityType(typeLabel).asRemote(tx()).create());
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        final Attribute.Long.Remote key = tx().concepts().getAttributeType(keyType).asLong().put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).create();
-        entity.setHas(key);
+        final Attribute.Long.Local key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        final Attribute.String.Remote key = tx().concepts().getAttributeType(keyType).asString().put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).create();
-        entity.setHas(key);
+        final Attribute.String.Local key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        final Attribute.DateTime.Remote key = tx().concepts().getAttributeType(keyType).asDateTime().put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).create();
-        entity.setHas(key);
+        final Attribute.DateTime.Local key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asLong().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asString().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")
     public void entity_type_get_instances_contain(String typeLabel, String var) {
-        assertTrue(tx().concepts().getEntityType(typeLabel).getInstances().anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("entity\\( ?{type_label} ?) get instances is empty")
     public void entity_type_get_instances_is_empty(String typeLabel) {
-        assertEquals(0, tx().concepts().getEntityType(typeLabel).getInstances().count());
+        assertEquals(0, tx().concepts().getEntityType(typeLabel).asRemote(tx()).getInstances().count());
     }
 }

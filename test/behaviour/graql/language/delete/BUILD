@@ -49,6 +49,6 @@ checkstyle_test(
     name = "checkstyle",
     targets = [
         ":test-core",
-],
+    ],
     license_type = "apache",
 )

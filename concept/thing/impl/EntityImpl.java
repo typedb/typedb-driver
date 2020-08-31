@@ -19,38 +19,47 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.type.EntityType;
+import grakn.common.collection.Bytes;
 import grakn.protocol.ConceptProto;
 
 public abstract class EntityImpl {
-    /**
-     * Client implementation of Entity
-     */
     public static class Local extends ThingImpl.Local implements Entity.Local {
 
-        public Local(final ConceptProto.Thing thing) {
-            super(thing);
+        Local(String iid) {
+            super(iid);
         }
 
-        public EntityType.Local getType() {
-            return super.getType().asEntityType();
-        }
-    }
-
-    /**
-     * Client implementation of Entity
-     */
-    public static class Remote extends ThingImpl.Remote implements Entity.Remote {
-
-        public Remote(final Concepts concepts, final String iid) {
-            super(concepts, iid);
+        public static EntityImpl.Local of(final ConceptProto.Thing protoThing) {
+            return new EntityImpl.Local(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
         }
 
         @Override
-        public final EntityType.Remote getType() {
-            return (EntityType.Remote) super.getType();
+        public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new EntityImpl.Remote(transaction, getIID());
+        }
+    }
+
+    public static class Remote extends ThingImpl.Remote implements Entity.Remote {
+
+        public Remote(final Grakn.Transaction transaction, final String iid) {
+            super(transaction, iid);
+        }
+
+        public static EntityImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
+            return new EntityImpl.Remote(transaction, Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
+        }
+
+        @Override
+        public Entity.Remote asRemote(Grakn.Transaction transaction) {
+            return new EntityImpl.Remote(transaction, iid);
+        }
+
+        @Override
+        public EntityType.Local getType() {
+            return super.getType().asEntityType();
         }
     }
 }

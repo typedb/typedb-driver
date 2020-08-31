@@ -19,95 +19,42 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
-import grakn.client.concept.type.impl.EntityTypeImpl;
 
-import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-/**
- * Type used to represent entities.
- * An ontological element which represents entity instances can fall within.
- * Any instance of a Entity Type is called an Entity.
- */
 public interface EntityType extends ThingType {
 
-    @CheckReturnValue
     @Override
-    EntityType.Remote asRemote(Concepts concepts);
+    EntityType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends ThingType.Local, EntityType {
 
-        @CheckReturnValue
         @Override
         default EntityType.Local asEntityType() {
             return this;
         }
-
-        @CheckReturnValue
-        @Override
-        default EntityType.Remote asRemote(final Concepts concepts) {
-            return EntityType.Remote.of(concepts, getLabel(), isRoot());
-        }
     }
 
-    /**
-     * Type used to represent entities.
-     * An ontological element which represents entity instances can fall within.
-     * Any instance of a Entity Type is called an Entity.
-     */
     interface Remote extends ThingType.Remote, EntityType {
 
-        static EntityType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
-            return new EntityTypeImpl.Remote(concepts, label, isRoot);
-        }
+        Entity.Local create();
 
-        /**
-         * Creates and returns a new Entity instance, whose direct type will be this type.
-         *
-         * @return a new empty entity.
-         * @see Entity.Remote
-         */
-        Entity.Remote create();
-
-        /**
-         * Sets the supertype of this instance to the given type.
-         */
         void setSupertype(EntityType superEntityType);
 
-        /**
-         * Returns a collection of supertypes of this EntityType.
-         *
-         * @return All the super classes of this EntityType
-         */
         @Override
-        Stream<? extends EntityType.Remote> getSupertypes();
+        EntityType.Local getSupertype();
 
-        /**
-         * Returns a collection of subtypes of this EntityType.
-         *
-         * @return All the sub classes of this EntityType
-         */
         @Override
-        Stream<? extends EntityType.Remote> getSubtypes();
+        Stream<? extends EntityType.Local> getSupertypes();
 
-        /**
-         * Returns a collection of all Entity instances for this EntityType.
-         *
-         * @return All the instances of this EntityType.
-         * @see Entity.Remote
-         */
         @Override
-        Stream<? extends Entity.Remote> getInstances();
+        Stream<? extends EntityType.Local> getSubtypes();
 
-        @CheckReturnValue
         @Override
-        default EntityType.Remote asRemote(Concepts concepts) {
-            return this;
-        }
+        Stream<? extends Entity.Local> getInstances();
 
-        @CheckReturnValue
         @Override
         default EntityType.Remote asEntityType() {
             return this;

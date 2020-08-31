@@ -28,10 +28,9 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     public static class ClientInternal extends ErrorMessage {
         public static final ClientInternal UNRECOGNISED_VALUE =
                 new ClientInternal(1, "Unrecognised schema value!");
-        public static final ClientInternal ILLEGAL_ARGUMENT_NULL =
-                new ClientInternal(2, "'%s' can not be null.");
-        public static final ClientInternal ILLEGAL_ARGUMENT_NULL_OR_EMPTY =
-                new ClientInternal(3, "'%s' can not be null or empty.");
+        // TODO: variable error messages like this (below) is not good as the error code no longer uniquely identifies the problem for users
+        public static final ClientInternal MISSING_ARGUMENT =
+                new ClientInternal(2, "'%s' can not be null or empty.");
 
         private static final String codePrefix = "CIN";
         private static final String messagePrefix = "Invalid Internal State (Client)";

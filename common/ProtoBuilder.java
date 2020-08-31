@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.rpc;
+package grakn.client.common;
 
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grakn.client.GraknOptions;
@@ -30,9 +30,9 @@ import java.util.Map;
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
 
-abstract class RPCProtoBuilder {
+public abstract class ProtoBuilder {
 
-    static OptionsProto.Options options(final GraknOptions options) {
+    public static OptionsProto.Options options(final GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
         options.infer().ifPresent(builder::setInfer);
         options.explain().ifPresent(builder::setExplain);
@@ -40,7 +40,7 @@ abstract class RPCProtoBuilder {
         return builder.build();
     }
 
-    static Map<String, String> tracingData() {
+    public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {
             final GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) {

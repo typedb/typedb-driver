@@ -28,9 +28,6 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Entry-point which communicates with a running Grakn server using gRPC.
- */
 public class RPCClient implements Client {
 
     public static final String DEFAULT_URI = "localhost:48555";

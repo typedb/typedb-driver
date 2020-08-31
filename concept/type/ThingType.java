@@ -19,111 +19,49 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concepts;
+import grakn.client.Grakn;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.type.impl.ThingTypeImpl;
 
-import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
-/**
- * A ThingType represents any ontological element in the graph.
- * ThingTypes are used to model the behaviour of Thing and how they relate to each other.
- * They also aid in categorising Thing to different types.
- */
 public interface ThingType extends Type {
 
-    @CheckReturnValue
     @Override
-    ThingType.Remote asRemote(Concepts concepts);
+    ThingType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Type.Local, ThingType {
 
-        @CheckReturnValue
         @Override
         default ThingType.Local asThingType() {
             return this;
         }
-
-        @CheckReturnValue
-        @Override
-        default ThingType.Remote asRemote(final Concepts concepts) {
-            return ThingType.Remote.of(concepts, getLabel(), isRoot());
-        }
     }
 
-    /**
-     * A ThingType represents any ontological element in the graph.
-     * ThingTypes are used to model the behaviour of Thing and how they relate to each other.
-     * They also aid in categorising Thing to different types.
-     */
     interface Remote extends Type.Remote, ThingType {
 
-        static ThingType.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
-            return new ThingTypeImpl.Remote(concepts, label, isRoot);
-        }
-
-        /**
-         * @return The direct supertype of this concept
-         */
         @Override
-        ThingType.Remote getSupertype();
+        ThingType.Local getSupertype();
 
-        /**
-         * @return All the the super-types of this Type
-         */
         @Override
-        Stream<? extends ThingType.Remote> getSupertypes();
+        Stream<? extends ThingType.Local> getSupertypes();
 
-        /**
-         * Get all indirect sub-types of this type.
-         * The indirect sub-types are the type itself and all indirect sub-types of direct sub-types.
-         *
-         * @return All the indirect sub-types of this Type
-         */
         @Override
-        @CheckReturnValue
-        Stream<? extends ThingType.Remote> getSubtypes();
+        Stream<? extends ThingType.Local> getSubtypes();
 
-        /**
-         * Get all indirect instances of this type.
-         * The indirect instances are the direct instances and all indirect instances of direct sub-types.
-         *
-         * @return All the indirect instances of this type.
-         */
-        @CheckReturnValue
-        Stream<? extends Thing.Remote> getInstances();
+        Stream<? extends Thing.Local> getInstances();
 
-        /**
-         * Changes the Label of this Concept to a new one.
-         *
-         * @param label The new Label.
-         */
+        @Override
         void setLabel(String label);
 
-        /**
-         * Sets the ThingType to be abstract - which prevents it from having any instances.
-         */
         void setAbstract();
 
-        /**
-         * Sets the ThingType to be not abstract - which allows it to have instances.
-         */
         void unsetAbstract();
 
-        /**
-         * @param role Set the RoleType which the instances of this Type are allowed to play.
-         */
         void setPlays(RoleType role);
 
         void setPlays(RoleType roleType, RoleType overriddenType);
 
-        /**
-         * Creates a connection which allows this type and an AttributeType to be linked.
-         *
-         * @param attributeType The AttributeType  which instances of this type should be allowed to play.
-         */
         void setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
 
         default void setOwns(AttributeType attributeType, AttributeType overriddenType) {
@@ -138,54 +76,26 @@ public interface ThingType extends Type {
             setOwns(attributeType, false);
         }
 
-        /**
-         * @return A list of RoleTypes which instances of this Type can indirectly play.
-         */
-        Stream<RoleType.Remote> getPlays();
+        Stream<RoleType.Local> getPlays();
 
-        /**
-         * @param keysOnly If true, only returns keys.
-         * @return The AttributeTypes which this Type is linked with, optionally only keys.
-         */
-        @CheckReturnValue
-        Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
-
-        @CheckReturnValue
-        default Stream<? extends AttributeType.Remote> getOwns(ValueType valueType) {
-            return getOwns(valueType, false);
-        }
-
-        @CheckReturnValue
-        default Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
-            return getOwns(null, keysOnly);
-        }
-
-        @CheckReturnValue
-        default Stream<? extends AttributeType.Remote> getOwns() {
+        default Stream<? extends AttributeType.Local> getOwns() {
             return getOwns(false);
         }
 
-        /**
-         * Removes the ability of this Type to play a specific RoleType.
-         *
-         * @param role The RoleType which the Things of this Type should no longer be allowed to play.
-         */
-        void unsetPlays(RoleType role);
-
-        /**
-         * Removes the ability for Things of this Type to have Attributes of type AttributeType
-         *
-         * @param attributeType the AttributeType which this Type can no longer have
-         */
-        void unsetOwns(AttributeType attributeType);
-
-        @CheckReturnValue
-        @Override
-        default ThingType.Remote asRemote(Concepts concepts) {
-            return this;
+        default Stream<? extends AttributeType.Local> getOwns(ValueType valueType) {
+            return getOwns(valueType, false);
         }
 
-        @CheckReturnValue
+        default Stream<? extends AttributeType.Local> getOwns(boolean keysOnly) {
+            return getOwns(null, keysOnly);
+        }
+
+        Stream<? extends AttributeType.Local> getOwns(ValueType valueType, boolean keysOnly);
+
+        void unsetPlays(RoleType role);
+
+        void unsetOwns(AttributeType attributeType);
+
         @Override
         default ThingType.Remote asThingType() {
             return this;

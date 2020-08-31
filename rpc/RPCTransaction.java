@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grabl.tracing.client.GrablTracingThreadStatic;
+import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
@@ -39,13 +39,12 @@ import grakn.client.concept.answer.Void;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
-import grakn.protocol.OptionsProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
+import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
 
@@ -58,10 +57,10 @@ import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
+import static grakn.client.common.ProtoBuilder.options;
+import static grakn.client.common.ProtoBuilder.tracingData;
 import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
 import static grakn.client.concept.proto.ConceptProtoBuilder.concept;
-import static grakn.client.rpc.RPCProtoBuilder.options;
-import static grakn.client.rpc.RPCProtoBuilder.tracingData;
 
 public class RPCTransaction implements Transaction {
 
@@ -71,11 +70,11 @@ public class RPCTransaction implements Transaction {
     private final RPCTransceiver transceiver;
 
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
+        try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.transceiver = RPCTransceiver.create(GraknGrpc.newStub(session.getChannel()));
             this.session = session;
             this.type = type;
-            this.concepts = new RPCConcepts(this.transceiver);
+            this.concepts = new Concepts(this);
 
             final TransactionProto.Transaction.Req openTxReq = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -86,6 +85,10 @@ public class RPCTransaction implements Transaction {
 
             this.transceiver.sendAndReceiveOrThrow(openTxReq);
         }
+    }
+
+    public RPCTransceiver transceiver() {
+        return transceiver;
     }
 
     @Override
@@ -105,21 +108,21 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlDefine query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.define")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.define")) {
             return executeInternal(query, new GraknOptions());
         }
     }
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlUndefine query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.undefine")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.undefine")) {
             return executeInternal(query, new GraknOptions());
         }
     }
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlInsert query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.insert")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.insert")) {
             return executeInternal(query, options);
         }
     }
@@ -131,7 +134,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<Void>> execute(GraqlDelete query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.delete")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.delete")) {
             return executeInternal(query, options);
         }
     }
@@ -143,7 +146,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<ConceptMap>> execute(GraqlMatch query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.get")) {
             return executeInternal(query, options);
         }
     }
@@ -155,21 +158,21 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.define")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.define")) {
             return streamInternal(query, new GraknOptions());
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.undefine")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.undefine")) {
             return streamInternal(query, new GraknOptions());
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.insert")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.insert")) {
             return streamInternal(query, options);
         }
     }
@@ -181,7 +184,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<Void>> stream(GraqlDelete query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.delete")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.delete")) {
             return streamInternal(query, options);
         }
     }
@@ -193,7 +196,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.get")) {
             return streamInternal(query, options);
         }
     }
@@ -212,7 +215,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.aggregate")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.get.aggregate")) {
             return executeInternal(query, options);
         }
     }
@@ -224,7 +227,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.aggregate")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.get.aggregate")) {
             return streamInternal(query, options);
         }
     }
@@ -238,7 +241,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.get.group")) {
             return executeInternal(query, options);
         }
     }
@@ -250,7 +253,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.get.group")) {
             return streamInternal(query, options);
         }
     }
@@ -264,7 +267,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.get.group.aggregate")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.get.group.aggregate")) {
             return executeInternal(query, options);
         }
     }
@@ -276,7 +279,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query, GraknOptions options) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.get.group.aggregate")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.get.group.aggregate")) {
             return streamInternal(query, options);
         }
     }
@@ -285,56 +288,56 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.compute.statistics")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.compute.statistics")) {
             return executeInternal(query);
         }
     }
 
     @Override
     public QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.compute.statistics")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.compute.statistics")) {
             return streamInternal(query);
         }
     }
 
     @Override
     public QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.compute.path")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.compute.path")) {
             return executeInternal(query);
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.compute.path")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.compute.path")) {
             return streamInternal(query);
         }
     }
 
     @Override
     public QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.compute.centrality")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.compute.centrality")) {
             return executeInternal(query);
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.compute.centrality")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.compute.centrality")) {
             return streamInternal(query);
         }
     }
 
     @Override
     public QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.execute.compute.cluster")) {
+        try (ThreadTrace ignored = traceOnThread("tx.execute.compute.cluster")) {
             return executeInternal(query);
         }
     }
 
     @Override
     public QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query) {
-        try (GrablTracingThreadStatic.ThreadTrace trace = traceOnThread("tx.stream.compute.cluster")) {
+        try (ThreadTrace ignored = traceOnThread("tx.stream.compute.cluster")) {
             return streamInternal(query);
         }
     }
@@ -441,8 +444,8 @@ public class RPCTransaction implements Transaction {
     private <T extends Answer> RPCIterator<T> getQueryIterator(final GraqlQuery query, final GraknOptions options) {
         final TransactionProto.Transaction.Iter.Req.Builder reqBuilder = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setQueryIterReq(TransactionProto.Transaction.Query.Iter.Req.newBuilder()
-                        .setQuery(query.toString())
-                        .setOptions(options(options)));
+                                         .setQuery(query.toString())
+                                         .setOptions(options(options)));
 
         final TransactionProto.Transaction.Iter.Req iterReq = reqBuilder.build();
         return new RPCIterator<>(transceiver, iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));

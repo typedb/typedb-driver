@@ -1,18 +1,20 @@
 /*
- * Copyright (C) 2020 Grakn Labs
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package grakn.client.test.integration;
@@ -28,8 +30,8 @@ import graql.lang.common.GraqlArg;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlInsert;
+import graql.lang.query.GraqlMatch;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -53,27 +55,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
-/**
- * Performs various queries:
- * - define a schema with a rule
- * - match; get;
- * - match; get of an inferred relation
- * - match; insert;
- * - match; delete;
- * - match; aggregate;
- * - and compute count
- * <p>
- * The tests are highly interconnected hence why they are grouped into a single test.
- * If you split them into multiple tests, there is no guarantee that they are ran in the order they are defined,
- * and there is a chance that the match; get; test is performed before the define a schema test, which would cause it to fail.
- * <p>
- * The schema describes a lion family which consists of a lion, lioness, and the offspring - three young lions. The mating
- * relation captures the mating act between the male and female partners (ie., the lion and lioness). The child-bearing
- * relation captures the child-bearing act which results from the mating act.
- * <p>
- * The rule is one such that if there is an offspring which is the result of a certain child-bearing act, then
- * that offspring is the child of the male and female partners which are involved in the mating act.
- */
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);

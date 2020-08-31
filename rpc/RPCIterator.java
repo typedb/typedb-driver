@@ -29,12 +29,6 @@ import java.util.function.Function;
 
 import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
 
-/**
- * A client-side iterator over gRPC messages. Will send TransactionProto.Transaction.Iter.Req messages until
- * TransactionProto.Transaction.Iter.Res returns done as a message.
- *
- * @param <T> class type of objects being iterated
- */
 class RPCIterator<T> extends AbstractIterator<T> {
 
     private Batch currentBatch;

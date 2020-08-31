@@ -19,72 +19,27 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.concept.Concepts;
-import grakn.client.concept.thing.impl.EntityImpl;
+import grakn.client.Grakn;
 import grakn.client.concept.type.EntityType;
 
-import javax.annotation.CheckReturnValue;
-
-/**
- * An instance of Entity Type EntityType
- * This represents an entity in the graph.
- * Entities are objects which are defined by their Attribute and their links to
- * other entities via Relation
- */
 public interface Entity extends Thing {
 
-    /**
-     * @return The EntityType of this Entity
-     * @see EntityType
-     */
     @Override
-    EntityType getType();
-
-    @CheckReturnValue
-    @Override
-    Entity.Remote asRemote(Concepts concepts);
+    Entity.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Thing.Local, Entity {
 
-        @CheckReturnValue
         @Override
         default Entity.Local asEntity() {
             return this;
         }
-
-        @CheckReturnValue
-        @Override
-        default Entity.Remote asRemote(final Concepts concepts) {
-            return Entity.Remote.of(concepts, getIID());
-        }
     }
 
-    /**
-     * An instance of Entity Type EntityType
-     * This represents an entity in the graph.
-     * Entities are objects which are defined by their Attribute and their links to
-     * other entities via Relation
-     */
     interface Remote extends Thing.Remote, Entity {
 
-        static Entity.Remote of(Concepts concepts, String iid) {
-            return new EntityImpl.Remote(concepts, iid);
-        }
-
-        /**
-         * @return The EntityType of this Entity
-         * @see EntityType.Remote
-         */
         @Override
-        EntityType.Remote getType();
+        EntityType.Local getType();
 
-        @CheckReturnValue
-        @Override
-        default Entity.Remote asRemote(Concepts concepts) {
-            return this;
-        }
-
-        @CheckReturnValue
         @Override
         default Entity.Remote asEntity() {
             return this;

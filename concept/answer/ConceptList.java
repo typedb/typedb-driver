@@ -26,9 +26,6 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * A type of Answer object that contains a List of Concepts.
- */
 public class ConceptList implements Answer {
 
     // TODO: change to store List<Concept> once we are able to construct Concept without a database look up
@@ -39,7 +36,7 @@ public class ConceptList implements Answer {
     }
 
     public static ConceptList of(final AnswerProto.ConceptList res) {
-        return new ConceptList(res.getIidsList().stream().map(AnswerMessageReader::iid).collect(toList()));
+        return new ConceptList(res.getIidsList().stream().map(AnswerProtoReader::iid).collect(toList()));
     }
 
     public boolean hasExplanation() {

@@ -19,90 +19,44 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.concept.Concepts;
-import grakn.client.concept.type.impl.RuleImpl;
+import grakn.client.Grakn;
 import graql.lang.pattern.Pattern;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-/**
- * A SchemaConcept used to model and categorise Rules.
- */
 public interface Rule extends Type {
 
-    @CheckReturnValue
     @Override
-    Rule.Remote asRemote(Concepts concepts);
+    Rule.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Type.Local, Rule {
 
-        @CheckReturnValue
         @Override
         default Rule.Local asRule() {
             return this;
         }
-
-        @Override
-        default Rule.Remote asRemote(final Concepts concepts) {
-            return Rule.Remote.of(concepts, getLabel(), isRoot());
-        }
     }
 
-    /**
-     * A SchemaConcept used to model and categorise Rules.
-     */
     interface Remote extends Type.Remote, Rule {
-
-        static Rule.Remote of(final Concepts concepts, final String label, final boolean isRoot) {
-            return new RuleImpl.Remote(concepts, label, isRoot);
-        }
 
         @Override
         default boolean isAbstract() {
             return false;
         }
 
-        /**
-         * Retrieves the when part of the Rule
-         * When this query is satisfied the "then" part of the rule is executed.
-         *
-         * @return A string representing the left hand side Graql query.
-         */
-        @CheckReturnValue
         @Nullable
         Pattern getWhen();
 
-        /**
-         * Retrieves the then part of the Rule.
-         * This query is executed when the "when" part of the rule is satisfied
-         *
-         * @return A string representing the right hand side Graql query.
-         */
-        @CheckReturnValue
         @Nullable
         Pattern getThen();
 
-        /**
-         * @return All the super-types of this this Rule
-         */
         @Override
-        Stream<Rule.Remote> getSupertypes();
+        Stream<? extends Rule.Local> getSupertypes();
 
-        /**
-         * @return All the sub of this Rule
-         */
         @Override
-        Stream<Rule.Remote> getSubtypes();
+        Stream<? extends Rule.Local> getSubtypes();
 
-        @CheckReturnValue
-        @Override
-        default Rule.Remote asRemote(Concepts concepts) {
-            return this;
-        }
-
-        @CheckReturnValue
         @Override
         default Rule.Remote asRule() {
             return this;

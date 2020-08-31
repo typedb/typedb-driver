@@ -22,7 +22,7 @@ package grakn.client.rpc;
 import grakn.client.Grakn.Database;
 import grakn.client.common.exception.GraknException;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.ILLEGAL_ARGUMENT_NULL_OR_EMPTY;
+import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
 
 public class RPCDatabase implements Database {
     private static final long serialVersionUID = 2726154016735929123L;
@@ -36,7 +36,7 @@ public class RPCDatabase implements Database {
 
     public RPCDatabase(String name) {
         if (name == null || name.isEmpty()) {
-            throw new GraknException(ILLEGAL_ARGUMENT_NULL_OR_EMPTY.message("name"));
+            throw new GraknException(MISSING_ARGUMENT.message("name"));
         }
         this.name = name;
     }

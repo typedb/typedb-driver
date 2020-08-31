@@ -69,5 +69,5 @@ checkstyle_test(
         ":steps",
         ":test-core",
     ],
-    license_type = "apache"
+    license_type = "apache",
 )
