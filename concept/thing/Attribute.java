@@ -121,6 +121,9 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Boolean extends Attribute<java.lang.Boolean> {
 
+        @Override
+        Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction);
+
         interface Local extends Attribute.Boolean, Attribute.Local<java.lang.Boolean> {
 
             @Override
@@ -139,6 +142,9 @@ public interface Attribute<VALUE> extends Thing {
     }
 
     interface Long extends Attribute<java.lang.Long> {
+
+        @Override
+        Attribute.Long.Remote asRemote(Grakn.Transaction transaction);
 
         interface Local extends Attribute.Long, Attribute.Local<java.lang.Long> {
 
@@ -159,6 +165,9 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Double extends Attribute<java.lang.Double> {
 
+        @Override
+        Attribute.Double.Remote asRemote(Grakn.Transaction transaction);
+
         interface Local extends Attribute.Double, Attribute.Local<java.lang.Double> {
 
             @Override
@@ -178,6 +187,9 @@ public interface Attribute<VALUE> extends Thing {
 
     interface String extends Attribute<java.lang.String> {
 
+        @Override
+        Attribute.String.Remote asRemote(Grakn.Transaction transaction);
+
         interface Local extends Attribute.String, Attribute.Local<java.lang.String> {
 
             @Override
@@ -196,6 +208,9 @@ public interface Attribute<VALUE> extends Thing {
     }
 
     interface DateTime extends Attribute<LocalDateTime> {
+
+        @Override
+        Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction);
 
         interface Local extends Attribute.DateTime, Attribute.Local<LocalDateTime> {
 

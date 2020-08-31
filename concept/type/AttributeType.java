@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.UNRECOGNISED_VALUE;
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 
 public interface AttributeType extends ThingType {
@@ -122,47 +121,29 @@ public interface AttributeType extends ThingType {
     interface Local extends ThingType.Local, AttributeType {
 
         @Override
-        AttributeType.Remote asRemote(Grakn.Transaction transaction);
-
-        @Override
         default AttributeType.Local asAttributeType() {
             return this;
         }
 
         @Override
-        default AttributeType.Boolean.Local asBoolean() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
-        }
+        AttributeType.Boolean.Local asBoolean();
 
         @Override
-        default AttributeType.Long.Local asLong() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
-        }
+        AttributeType.Long.Local asLong();
 
         @Override
-        default AttributeType.Double.Local asDouble() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
-        }
+        AttributeType.Double.Local asDouble();
 
         @Override
-        default AttributeType.String.Local asString() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
-        }
+        AttributeType.String.Local asString();
 
         @Override
-        default AttributeType.DateTime.Local asDateTime() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
-        }
+        AttributeType.DateTime.Local asDateTime();
     }
 
     interface Remote extends ThingType.Remote, AttributeType {
 
         void setSupertype(AttributeType type);
-
-        @Override
-        default AttributeType.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
 
         @Override
         default AttributeType.Remote asAttributeType() {
@@ -212,6 +193,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
+            void setSupertype(AttributeType.Boolean type);
+
             @Override
             AttributeType.Boolean.Local getSupertype();
 
@@ -224,17 +207,10 @@ public interface AttributeType extends ThingType {
             @Override
             Stream<? extends Attribute.Boolean.Local> getInstances();
 
-            void setSupertype(AttributeType.Boolean type);
-
             Attribute.Boolean.Local put(boolean value);
 
             @Nullable
             Attribute.Boolean.Local get(boolean value);
-
-            @Override
-            default AttributeType.Boolean.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default AttributeType.Boolean.Remote asBoolean() {
@@ -263,6 +239,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
+            void setSupertype(AttributeType.Long type);
+
             @Override
             AttributeType.Long.Local getSupertype();
 
@@ -275,17 +253,10 @@ public interface AttributeType extends ThingType {
             @Override
             Stream<? extends Attribute.Long.Local> getInstances();
 
-            void setSupertype(AttributeType.Long type);
-
             Attribute.Long.Local put(long value);
 
             @Nullable
             Attribute.Long.Local get(long value);
-
-            @Override
-            default AttributeType.Long.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default AttributeType.Long.Remote asLong() {
@@ -314,6 +285,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
+            void setSupertype(AttributeType.Double type);
+
             @Override
             AttributeType.Double.Local getSupertype();
 
@@ -326,17 +299,10 @@ public interface AttributeType extends ThingType {
             @Override
             Stream<? extends Attribute.Double.Local> getInstances();
 
-            void setSupertype(AttributeType.Double type);
-
             Attribute.Double.Local put(double value);
 
             @Nullable
             Attribute.Double.Local get(double value);
-
-            @Override
-            default AttributeType.Double.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default AttributeType.Double.Remote asDouble() {
@@ -365,6 +331,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
+            void setSupertype(AttributeType.String type);
+
             @Override
             AttributeType.String.Local getSupertype();
 
@@ -377,8 +345,6 @@ public interface AttributeType extends ThingType {
             @Override
             Stream<? extends Attribute.String.Local> getInstances();
 
-            void setSupertype(AttributeType.String type);
-
             Attribute.String.Local put(java.lang.String value);
 
             @Nullable
@@ -388,11 +354,6 @@ public interface AttributeType extends ThingType {
             java.lang.String getRegex();
 
             void setRegex(java.lang.String regex);
-
-            @Override
-            default AttributeType.String.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default AttributeType.String.Remote asString() {
@@ -421,6 +382,8 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
+            void setSupertype(AttributeType.DateTime type);
+
             @Override
             AttributeType.DateTime.Local getSupertype();
 
@@ -433,17 +396,10 @@ public interface AttributeType extends ThingType {
             @Override
             Stream<? extends Attribute.DateTime.Local> getInstances();
 
-            void setSupertype(AttributeType.DateTime type);
-
             Attribute.DateTime.Local put(LocalDateTime value);
 
             @Nullable
             Attribute.DateTime.Local get(LocalDateTime value);
-
-            @Override
-            default AttributeType.DateTime.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default AttributeType.DateTime.Remote asDateTime() {

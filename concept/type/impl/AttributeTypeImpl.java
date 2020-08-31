@@ -72,7 +72,7 @@ public abstract class AttributeTypeImpl {
 
         @Override
         public AttributeTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.Remote(transaction, label, isRoot);
         }
 
         @Override
@@ -131,7 +131,7 @@ public abstract class AttributeTypeImpl {
 
     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
+        Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -156,6 +156,15 @@ public abstract class AttributeTypeImpl {
                             ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), typeProto.getValueType())
                     );
             }
+        }
+
+        @Override
+        public AttributeTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.Remote(transaction, label, isRoot);
+        }
+
+        public final void setSupertype(AttributeType type) {
+            this.setSupertypeExecute(type);
         }
 
         @Nullable
@@ -222,10 +231,6 @@ public abstract class AttributeTypeImpl {
             }
         }
 
-        public final void setSupertype(AttributeType type) {
-            this.setSupertypeExecute(type);
-        }
-
         @Override
         public AttributeType.Boolean.Remote asBoolean() {
             if (isRoot()) {
@@ -290,7 +295,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public AttributeTypeImpl.Boolean.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Boolean.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -303,6 +308,11 @@ public abstract class AttributeTypeImpl {
 
             public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
                 super(transaction, label, isRoot);
+            }
+
+            @Override
+            public AttributeTypeImpl.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeTypeImpl.Boolean.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -359,7 +369,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public AttributeTypeImpl.Long.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Long.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -372,6 +382,11 @@ public abstract class AttributeTypeImpl {
 
             public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
                 super(transaction, label, isRoot);
+            }
+
+            @Override
+            public AttributeTypeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeTypeImpl.Long.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -428,7 +443,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public AttributeTypeImpl.Double.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Double.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -441,6 +456,11 @@ public abstract class AttributeTypeImpl {
 
             public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
                 super(transaction, label, isRoot);
+            }
+
+            @Override
+            public AttributeTypeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeTypeImpl.Double.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -497,7 +517,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public AttributeTypeImpl.String.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.String.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -510,6 +530,11 @@ public abstract class AttributeTypeImpl {
 
             public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
                 super(transaction, label, isRoot);
+            }
+
+            @Override
+            public AttributeTypeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeTypeImpl.String.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -584,7 +609,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public AttributeTypeImpl.DateTime.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.DateTime.Remote(transaction, label, isRoot);
             }
 
             @Override
@@ -597,6 +622,11 @@ public abstract class AttributeTypeImpl {
 
             public Remote(final Grakn.Transaction transaction, final java.lang.String label, final boolean isRoot) {
                 super(transaction, label, isRoot);
+            }
+
+            @Override
+            public AttributeTypeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeTypeImpl.DateTime.Remote(transaction, label, isRoot);
             }
 
             @Override

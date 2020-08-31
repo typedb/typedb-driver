@@ -58,11 +58,6 @@ public interface Rule extends Type {
         Stream<? extends Rule.Local> getSubtypes();
 
         @Override
-        default Rule.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default Rule.Remote asRule() {
             return this;
         }

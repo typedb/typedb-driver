@@ -184,5 +184,10 @@ public abstract class ThingTypeImpl {
                     UnsetPlays.Req.newBuilder().setRole(type(role))
             ).build());
         }
+
+        @Override
+        public ThingType.Remote asRemote(Grakn.Transaction transaction) {
+            return new ThingTypeImpl.Remote(transaction, label, isRoot);
+        }
     }
 }

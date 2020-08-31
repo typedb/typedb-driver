@@ -65,11 +65,6 @@ public interface RelationType extends ThingType {
         Stream<? extends Relation.Local> getInstances();
 
         @Override
-        default RelationType.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default RelationType.Remote asRelationType() {
             return this;
         }

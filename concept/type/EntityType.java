@@ -56,11 +56,6 @@ public interface EntityType extends ThingType {
         Stream<? extends Entity.Local> getInstances();
 
         @Override
-        default EntityType.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default EntityType.Remote asEntityType() {
             return this;
         }

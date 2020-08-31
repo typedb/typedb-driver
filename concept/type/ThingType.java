@@ -97,11 +97,6 @@ public interface ThingType extends Type {
         void unsetOwns(AttributeType attributeType);
 
         @Override
-        default ThingType.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default ThingType.Remote asThingType() {
             return this;
         }

@@ -94,11 +94,6 @@ public interface Type extends Concept {
         Stream<? extends Type.Local> getSubtypes();
 
         @Override
-        default Type.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default Type.Remote asType() {
             return this;
         }

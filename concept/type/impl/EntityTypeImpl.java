@@ -75,6 +75,11 @@ public class EntityTypeImpl {
         }
 
         @Override
+        public EntityType.Remote asRemote(Grakn.Transaction transaction) {
+            return new EntityTypeImpl.Remote(transaction, label, isRoot);
+        }
+
+        @Override
         public final Stream<EntityType.Local> getSupertypes() {
             return super.getSupertypes(Type.Local::asEntityType);
         }

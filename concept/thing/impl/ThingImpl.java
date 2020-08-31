@@ -83,6 +83,11 @@ public abstract class ThingImpl {
         }
 
         @Override
+        public String toString() {
+            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -246,7 +251,7 @@ public abstract class ThingImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", iid=" + iid + "}";
+            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
         }
 
         @Override

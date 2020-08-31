@@ -102,5 +102,10 @@ public class RuleImpl {
                     return null;
             }
         }
+
+        @Override
+        public Rule.Remote asRemote(Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, label, isRoot);
+        }
     }
 }

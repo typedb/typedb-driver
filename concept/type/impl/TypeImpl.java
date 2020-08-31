@@ -39,9 +39,9 @@ public abstract class TypeImpl {
 
     public abstract static class Local implements Type.Local {
 
-        private final String label;
+        final String label;
         final String scope;
-        private final boolean isRoot;
+        final boolean isRoot;
         private final int hash;
 
         Local(final String label, final @Nullable String scope, final boolean isRoot) {
@@ -76,6 +76,11 @@ public abstract class TypeImpl {
         }
 
         @Override
+        public String toString() {
+            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -95,7 +100,7 @@ public abstract class TypeImpl {
         private final Grakn.Transaction transaction;
         final String label;
         final String scope;
-        private final boolean isRoot;
+        final boolean isRoot;
         private final int hash;
 
         Remote(final Grakn.Transaction transaction, final String label, @Nullable String scope, final boolean isRoot) {

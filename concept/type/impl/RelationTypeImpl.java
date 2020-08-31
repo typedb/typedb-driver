@@ -69,6 +69,11 @@ public class RelationTypeImpl {
         }
 
         @Override
+        public RelationType.Remote asRemote(Grakn.Transaction transaction) {
+            return new RelationTypeImpl.Remote(transaction, label, isRoot);
+        }
+
+        @Override
         public RelationType.Local getSupertype() {
             return super.getSupertype(Type.Local::asRelationType);
         }

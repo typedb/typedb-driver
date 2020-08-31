@@ -92,6 +92,11 @@ public class RoleTypeImpl {
         }
 
         @Override
+        public RoleType.Remote asRemote(Grakn.Transaction transaction) {
+            return new RoleTypeImpl.Remote(transaction, label, scope, isRoot);
+        }
+
+        @Override
         public final RelationType.Local getRelation() {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setRoleTypeGetRelationReq(GetRelation.Req.getDefaultInstance()).build();
