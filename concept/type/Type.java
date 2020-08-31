@@ -87,11 +87,11 @@ public interface Type extends Concept {
         boolean isAbstract();
 
         @Nullable
-        Type.Remote getSupertype();
+        Type.Local getSupertype();
 
-        Stream<? extends Type.Remote> getSupertypes();
+        Stream<? extends Type.Local> getSupertypes();
 
-        Stream<? extends Type.Remote> getSubtypes();
+        Stream<? extends Type.Local> getSubtypes();
 
         @Override
         default Type.Remote asRemote(Grakn.Transaction transaction) {

@@ -52,10 +52,10 @@ public interface Rule extends Type {
         Pattern getThen();
 
         @Override
-        Stream<Rule.Remote> getSupertypes();
+        Stream<? extends Rule.Local> getSupertypes();
 
         @Override
-        Stream<Rule.Remote> getSubtypes();
+        Stream<? extends Rule.Local> getSubtypes();
 
         @Override
         default Rule.Remote asRemote(Grakn.Transaction transaction) {

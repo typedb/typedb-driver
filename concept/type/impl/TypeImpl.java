@@ -20,12 +20,11 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknException;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.ConceptProto.Type.SetSupertype;
+import grakn.protocol.ConceptProto.TypeMethod;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -41,34 +40,28 @@ public abstract class TypeImpl {
     public abstract static class Local implements Type.Local {
 
         private final String label;
-        private final String scope;
+        final String scope;
         private final boolean isRoot;
         private final int hash;
 
-        Local(String label, @Nullable String scope, boolean isRoot) {
+        Local(final String label, final @Nullable String scope, final boolean isRoot) {
             this.label = label;
             this.scope = scope;
             this.isRoot = isRoot;
             this.hash = Objects.hash(this.scope, this.label);
         }
 
-        public static TypeImpl.Local of(ConceptProto.Type type) {
-            switch (type.getSchema()) {
-                case ENTITY_TYPE:
-                    return new EntityTypeImpl.Local(type);
-                case RELATION_TYPE:
-                    return new RelationTypeImpl.Local(type);
-                case ATTRIBUTE_TYPE:
-                    return AttributeTypeImpl.Local.of(type);
+        public static TypeImpl.Local of(final ConceptProto.Type typeProto) {
+            switch (typeProto.getSchema()) {
                 case ROLE_TYPE:
-                    return new RoleTypeImpl.Local(type);
+                    return RoleTypeImpl.Local.of(typeProto);
                 case RULE:
-                    return new RuleImpl.Local(type);
-                case THING_TYPE:
-                    return new ThingTypeImpl.Local(type);
+                    return RuleImpl.Local.of(typeProto);
                 case UNRECOGNIZED:
+                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), typeProto.getSchema()));
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+                    return ThingTypeImpl.Local.of(typeProto);
+
             }
         }
 
@@ -100,8 +93,8 @@ public abstract class TypeImpl {
     public abstract static class Remote implements Type.Remote {
 
         private final Grakn.Transaction transaction;
-        private final String label;
-        private final String scope;
+        final String label;
+        final String scope;
         private final boolean isRoot;
         private final int hash;
 
@@ -147,61 +140,57 @@ public abstract class TypeImpl {
 
         @Override
         public final void setLabel(String label) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
                                                 .setLabel(label)).build();
-            runMethod(method);
+            execute(method);
         }
 
         @Override
         public final boolean isAbstract() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()).build();
 
-            return runMethod(method).getTypeIsAbstractRes().getAbstract();
+            return execute(method).getTypeIsAbstractRes().getAbstract();
+        }
+
+        void setSupertypeExecute(Type type) {
+            execute(TypeMethod.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))).build());
         }
 
         @Nullable
-        protected <TYPE extends Type.Remote> TYPE getSupertypeInternal(final Function<Type.Remote, TYPE> typeConverter) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+        <TYPE extends Type.Local> TYPE getSupertype(final Function<Type.Local, TYPE> typeConstructor) {
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
-            final ConceptProto.Type.GetSupertype.Res response = runMethod(method).getTypeGetSupertypeRes();
+            final ConceptProto.Type.GetSupertype.Res response = execute(method).getTypeGetSupertypeRes();
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return typeConverter.apply(of(transaction, response.getType()));
-                default:
+                    return typeConstructor.apply(TypeImpl.Local.of(response.getType()));
                 case RES_NOT_SET:
+                default:
                     return null;
             }
         }
 
-        @Override
-        public Stream<? extends Type.Remote> getSupertypes() {
-            if (isRoot()) {
-                return Stream.of(this);
-            }
-
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+        <TYPE extends Type.Local> Stream<TYPE> getSupertypes(final Function<Type.Local, TYPE> typeConstructor) {
+            final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
-
-            return typeStream(method, res -> res.getTypeGetSupertypesIterRes().getType());
+            return stream(method, res -> res.getTypeGetSupertypesIterRes().getType()).map(typeConstructor);
         }
 
-        @Override
-        public Stream<? extends Type.Remote> getSubtypes() {
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+        <TYPE extends Type.Local> Stream<TYPE> getSubtypes(final Function<Type.Local, TYPE> typeConstructor) {
+            final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
-
-            return typeStream(method, res -> res.getTypeGetSubtypesIterRes().getType());
+            return stream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(typeConstructor);
         }
 
         @Override
         public final void delete() {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeDeleteReq(ConceptProto.Type.Delete.Req.getDefaultInstance()).build();
-            runMethod(method);
+            execute(method);
         }
 
         @Override
@@ -213,28 +202,21 @@ public abstract class TypeImpl {
             return transaction;
         }
 
-        protected void setSupertypeInternal(Type type) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder()
-                                                    .setType(type(type))).build();
-            runMethod(method);
+        protected Stream<Type.Local> stream(final TypeMethod.Iter.Req request,
+                                            final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return transaction.concepts().iterateTypeMethod(
+                    label, scope, request, response -> TypeImpl.Local.of(typeGetter.apply(response))
+            );
         }
 
-        protected Stream<Thing.Remote> thingStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            return transaction.concepts().iterateTypeMethod(label, scope, request, response -> ThingImpl.Remote.of(transaction, thingGetter.apply(response)));
-        }
-
-        protected Stream<Type.Remote> typeStream(final ConceptProto.TypeMethod.Iter.Req request, final Function<ConceptProto.TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return transaction.concepts().iterateTypeMethod(label, scope, request, response -> of(transaction, typeGetter.apply(response)));
-        }
-
-        protected ConceptProto.TypeMethod.Res runMethod(final ConceptProto.TypeMethod.Req typeMethod) {
-            return transaction.concepts().runTypeMethod(label, scope, typeMethod).getConceptMethodTypeRes().getResponse();
+        protected TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
+            return transaction.concepts().runTypeMethod(label, scope, typeMethod)
+                    .getConceptMethodTypeRes().getResponse();
         }
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "{concepts=" + transaction + ", label=" + label + "}";
+            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override

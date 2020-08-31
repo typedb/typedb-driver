@@ -26,6 +26,8 @@ import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.ConceptProto.Attribute.GetOwners;
+import grakn.protocol.ConceptProto.ThingMethod;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -34,27 +36,28 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
+import static grakn.common.collection.Bytes.bytesToHexString;
 
 public abstract class AttributeImpl {
 
     public abstract static class Local<VALUE> extends ThingImpl.Local implements Attribute.Local<VALUE> {
 
-        public Local(final ConceptProto.Thing thing) {
-            super(thing);
+        Local(final java.lang.String iid) {
+            super(iid);
         }
 
-        public static AttributeImpl.Local of(ConceptProto.Thing thing) {
+        public static AttributeImpl.Local<?> of(ConceptProto.Thing thing) {
             switch (thing.getValueType()) {
                 case BOOLEAN:
-                    return new AttributeImpl.Boolean.Local(thing);
+                    return AttributeImpl.Boolean.Local.of(thing);
                 case LONG:
-                    return new AttributeImpl.Long.Local(thing);
+                    return AttributeImpl.Long.Local.of(thing);
                 case DOUBLE:
-                    return new AttributeImpl.Double.Local(thing);
+                    return AttributeImpl.Double.Local.of(thing);
                 case STRING:
-                    return new AttributeImpl.String.Local(thing);
+                    return AttributeImpl.String.Local.of(thing);
                 case DATETIME:
-                    return new AttributeImpl.DateTime.Local(thing);
+                    return AttributeImpl.DateTime.Local.of(thing);
                 case UNRECOGNIZED:
                 default:
                     throw new GraknException(UNRECOGNISED_FIELD.message(
@@ -68,43 +71,46 @@ public abstract class AttributeImpl {
 
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
-        public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+        Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
             super(transaction, iid);
         }
 
-        public static AttributeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thing, java.lang.String iid) {
-            switch (thing.getValueType()) {
+        public static AttributeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
+            switch (thingProto.getValueType()) {
                 case BOOLEAN:
-                    return new AttributeImpl.Boolean.Remote(transaction, iid);
+                    return AttributeImpl.Boolean.Remote.of(transaction, thingProto);
                 case LONG:
-                    return new AttributeImpl.Long.Remote(transaction, iid);
+                    return AttributeImpl.Long.Remote.of(transaction, thingProto);
                 case DOUBLE:
-                    return new AttributeImpl.Double.Remote(transaction, iid);
+                    return AttributeImpl.Double.Remote.of(transaction, thingProto);
                 case STRING:
-                    return new AttributeImpl.String.Remote(transaction, iid);
+                    return AttributeImpl.String.Remote.of(transaction, thingProto);
                 case DATETIME:
-                    return new AttributeImpl.DateTime.Remote(transaction, iid);
+                    return AttributeImpl.DateTime.Remote.of(transaction, thingProto);
                 case UNRECOGNIZED:
                 default:
                     throw new GraknException(UNRECOGNISED_FIELD.message(
-                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), thing.getValueType())
+                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), thingProto.getValueType())
                     );
             }
         }
 
         @Override
-        public final Stream<Thing.Remote> getOwners() {
-            ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
-                    .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.getDefaultInstance()).build();
-            return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
+        public final Stream<? extends Thing.Local> getOwners() {
+            return stream(
+                    ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
+                            GetOwners.Iter.Req.getDefaultInstance()).build(),
+                    res -> res.getAttributeGetOwnersIterRes().getThing()
+            );
         }
 
         @Override
-        public Stream<? extends Thing.Remote> getOwners(ThingType ownerType) {
-            ConceptProto.ThingMethod.Iter.Req method = ConceptProto.ThingMethod.Iter.Req.newBuilder()
-                    .setAttributeGetOwnersIterReq(ConceptProto.Attribute.GetOwners.Iter.Req.newBuilder()
-                                                          .setThingType(type(ownerType))).build();
-            return thingStream(method, res -> res.getAttributeGetOwnersIterRes().getThing());
+        public Stream<? extends Thing.Local> getOwners(ThingType ownerType) {
+            return stream(
+                    ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
+                            GetOwners.Iter.Req.newBuilder().setThingType(type(ownerType))).build(),
+                    res -> res.getAttributeGetOwnersIterRes().getThing()
+            );
         }
 
         @Override
@@ -121,9 +127,16 @@ public abstract class AttributeImpl {
 
             private final java.lang.Boolean value;
 
-            public Local(final ConceptProto.Thing thing) {
-                super(thing);
-                this.value = thing.getValue().getBoolean();
+            Local(final java.lang.String iid, boolean value) {
+                super(iid);
+                this.value = value;
+            }
+
+            public static AttributeImpl.Boolean.Local of(final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Boolean.Local(
+                        bytesToHexString(thingProto.getIid().toByteArray()),
+                        thingProto.getValue().getBoolean()
+                );
             }
 
             @Override
@@ -144,16 +157,20 @@ public abstract class AttributeImpl {
 
         public static class Remote extends AttributeImpl.Remote<java.lang.Boolean> implements Attribute.Boolean.Remote {
 
-            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
                 super(transaction, iid);
+            }
+
+            public static AttributeImpl.Boolean.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Boolean.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
             }
 
             @Override
             public final java.lang.Boolean getValue() {
-                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+                final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-                return runMethod(method).getAttributeGetValueRes().getValue().getBoolean();
+                return execute(method).getAttributeGetValueRes().getValue().getBoolean();
             }
 
             @Override
@@ -169,9 +186,16 @@ public abstract class AttributeImpl {
 
             private final long value;
 
-            public Local(final ConceptProto.Thing thing) {
-                super(thing);
-                this.value = thing.getValue().getLong();
+            Local(final java.lang.String iid, long value) {
+                super(iid);
+                this.value = value;
+            }
+
+            public static AttributeImpl.Long.Local of(final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Long.Local(
+                        bytesToHexString(thingProto.getIid().toByteArray()),
+                        thingProto.getValue().getLong()
+                );
             }
 
             @Override
@@ -192,16 +216,20 @@ public abstract class AttributeImpl {
 
         public static class Remote extends AttributeImpl.Remote<java.lang.Long> implements Attribute.Long.Remote {
 
-            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
                 super(transaction, iid);
+            }
+
+            public static AttributeImpl.Long.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Long.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
             }
 
             @Override
             public final java.lang.Long getValue() {
-                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+                final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-                return runMethod(method).getAttributeGetValueRes().getValue().getLong();
+                return execute(method).getAttributeGetValueRes().getValue().getLong();
             }
 
             @Override
@@ -217,9 +245,16 @@ public abstract class AttributeImpl {
 
             private final double value;
 
-            public Local(final ConceptProto.Thing thing) {
-                super(thing);
-                this.value = thing.getValue().getDouble();
+            Local(final java.lang.String iid, double value) {
+                super(iid);
+                this.value = value;
+            }
+
+            public static AttributeImpl.Double.Local of(final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Double.Local(
+                        bytesToHexString(thingProto.getIid().toByteArray()),
+                        thingProto.getValue().getDouble()
+                );
             }
 
             @Override
@@ -240,16 +275,20 @@ public abstract class AttributeImpl {
 
         public static class Remote extends AttributeImpl.Remote<java.lang.Double> implements Attribute.Double.Remote {
 
-            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
                 super(transaction, iid);
+            }
+
+            public static AttributeImpl.Double.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.Double.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
             }
 
             @Override
             public final java.lang.Double getValue() {
-                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+                final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-                return runMethod(method).getAttributeGetValueRes().getValue().getDouble();
+                return execute(method).getAttributeGetValueRes().getValue().getDouble();
             }
 
             @Override
@@ -265,9 +304,16 @@ public abstract class AttributeImpl {
 
             private final java.lang.String value;
 
-            public Local(final ConceptProto.Thing thing) {
-                super(thing);
-                this.value = thing.getValue().getString();
+            Local(final java.lang.String iid, java.lang.String value) {
+                super(iid);
+                this.value = value;
+            }
+
+            public static AttributeImpl.String.Local of(final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.String.Local(
+                        bytesToHexString(thingProto.getIid().toByteArray()),
+                        thingProto.getValue().getString()
+                );
             }
 
             @Override
@@ -288,16 +334,20 @@ public abstract class AttributeImpl {
 
         public static class Remote extends AttributeImpl.Remote<java.lang.String> implements Attribute.String.Remote {
 
-            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
                 super(transaction, iid);
+            }
+
+            public static AttributeImpl.String.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.String.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
             }
 
             @Override
             public final java.lang.String getValue() {
-                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+                final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-                return runMethod(method).getAttributeGetValueRes().getValue().getString();
+                return execute(method).getAttributeGetValueRes().getValue().getString();
             }
 
             @Override
@@ -317,9 +367,16 @@ public abstract class AttributeImpl {
 
             private final LocalDateTime value;
 
-            public Local(final ConceptProto.Thing thing) {
-                super(thing);
-                this.value = toLocalDateTime(thing.getValue().getDatetime());
+            Local(final java.lang.String iid, LocalDateTime value) {
+                super(iid);
+                this.value = value;
+            }
+
+            public static AttributeImpl.DateTime.Local of(final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.DateTime.Local(
+                        bytesToHexString(thingProto.getIid().toByteArray()),
+                        toLocalDateTime(thingProto.getValue().getDatetime())
+                );
             }
 
             @Override
@@ -340,16 +397,20 @@ public abstract class AttributeImpl {
 
         public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {
 
-            public Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
+            Remote(final Grakn.Transaction transaction, final java.lang.String iid) {
                 super(transaction, iid);
+            }
+
+            public static AttributeImpl.DateTime.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
+                return new AttributeImpl.DateTime.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
             }
 
             @Override
             public final LocalDateTime getValue() {
-                final ConceptProto.ThingMethod.Req method = ConceptProto.ThingMethod.Req.newBuilder()
+                final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
-                return toLocalDateTime(runMethod(method).getAttributeGetValueRes().getValue().getDatetime());
+                return toLocalDateTime(execute(method).getAttributeGetValueRes().getValue().getDatetime());
             }
 
             @Override

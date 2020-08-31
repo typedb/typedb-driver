@@ -66,7 +66,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) remove related role: {type_label}")
     public void relation_type_remove_related_role(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).delete();
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).delete();
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is null: {bool}")
@@ -76,7 +76,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")
     public void relation_type_get_role_type_set_label(String relationLabel, String roleLabel, String newLabel) {
-        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).setLabel(newLabel);
+        tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).setLabel(newLabel);
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
@@ -86,7 +86,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")
     public void relation_type_get_role_type_is_abstract(String relationLabel, String roleLabel, boolean isAbstract) {
-        assertEquals(isAbstract, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).isAbstract());
+        assertEquals(isAbstract, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).isAbstract());
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_related_roles_actuals(String relationLabel) {
@@ -112,11 +112,11 @@ public class RelationTypeSteps {
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertype: {scoped_label}")
     public void relation_type_get_role_type_get_supertype(String relationLabel, String roleLabel, Parameters.ScopedLabel superLabel) {
         RoleType superType = tx().concepts().getRelationType(superLabel.scope()).asRemote(tx()).getRelates(superLabel.role());
-        assertEquals(superType, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSupertype());
+        assertEquals(superType, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getSupertype());
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_supertypes_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSupertypes()
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getSupertypes()
                 .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
                                                         role.getScope().split(":")[1])).collect(toSet());
     }
@@ -136,7 +136,7 @@ public class RelationTypeSteps {
     }
 
     private Set<String> relation_type_get_role_type_players_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getPlayers().map(Type::getLabel).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getPlayers().map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players contain:")
@@ -154,7 +154,7 @@ public class RelationTypeSteps {
     }
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_subtypes_actuals(String relationLabel, String roleLabel) {
-        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getSubtypes()
+        return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getSubtypes()
                 .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
                                                         role.getScope().split(":")[1])).collect(toSet());
     }

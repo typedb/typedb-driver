@@ -76,26 +76,31 @@ public interface Thing extends Concept {
 
         boolean isInferred();
 
-        Stream<? extends Attribute.Remote<?>> getHas(boolean onlyKey);
+        Stream<? extends Attribute.Local<?>> getHas(boolean onlyKey);
 
-        Stream<? extends Attribute.Boolean.Remote> getHas(AttributeType.Boolean attributeType);
+        Stream<? extends Attribute.Boolean.Local> getHas(AttributeType.Boolean attributeType);
 
-        Stream<? extends Attribute.Long.Remote> getHas(AttributeType.Long attributeType);
+        Stream<? extends Attribute.Long.Local> getHas(AttributeType.Long attributeType);
 
-        Stream<? extends Attribute.Double.Remote> getHas(AttributeType.Double attributeType);
+        Stream<? extends Attribute.Double.Local> getHas(AttributeType.Double attributeType);
 
-        Stream<? extends Attribute.String.Remote> getHas(AttributeType.String attributeType);
+        Stream<? extends Attribute.String.Local> getHas(AttributeType.String attributeType);
 
-        Stream<? extends Attribute.DateTime.Remote> getHas(AttributeType.DateTime attributeType);
+        Stream<? extends Attribute.DateTime.Local> getHas(AttributeType.DateTime attributeType);
 
-        Stream<? extends Attribute.Remote<?>> getHas(AttributeType... attributeTypes);
+        Stream<? extends Attribute.Local<?>> getHas(AttributeType... attributeTypes);
 
-        Stream<? extends RoleType.Remote> getPlays();
+        Stream<? extends RoleType.Local> getPlays();
 
         Stream<? extends Relation> getRelations(RoleType... roleTypes);
 
         @Override
         default Thing.Remote asThing() {
+            return this;
+        }
+
+        @Override
+        default Thing.Remote asRemote(Grakn.Transaction transaction) {
             return this;
         }
 
@@ -107,11 +112,6 @@ public interface Thing extends Concept {
         @Override
         default Relation.Remote asRelation() {
             throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
-        }
-
-        @Override
-        default Thing.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
         }
 
         @Override

@@ -39,18 +39,21 @@ public interface EntityType extends ThingType {
 
     interface Remote extends ThingType.Remote, EntityType {
 
-        Entity.Remote create();
+        Entity.Local create();
 
         void setSupertype(EntityType superEntityType);
 
         @Override
-        Stream<? extends EntityType.Remote> getSupertypes();
+        EntityType.Local getSupertype();
 
         @Override
-        Stream<? extends EntityType.Remote> getSubtypes();
+        Stream<? extends EntityType.Local> getSupertypes();
 
         @Override
-        Stream<? extends Entity.Remote> getInstances();
+        Stream<? extends EntityType.Local> getSubtypes();
+
+        @Override
+        Stream<? extends Entity.Local> getInstances();
 
         @Override
         default EntityType.Remote asRemote(Grakn.Transaction transaction) {

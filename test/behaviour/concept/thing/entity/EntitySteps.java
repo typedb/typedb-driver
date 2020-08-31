@@ -47,46 +47,46 @@ public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        final Attribute.Long.Remote key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-        entity.setHas(key);
+        final Attribute.Long.Local key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        final Attribute.String.Remote key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-        entity.setHas(key);
+        final Attribute.String.Local key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        final Attribute.DateTime.Remote key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-        final Entity.Remote entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
-        entity.setHas(key);
+        final Attribute.DateTime.Local key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
+        final Entity.Local entity = tx().concepts().getEntityType(type).asRemote(tx()).create();
+        entity.asRemote(tx()).setHas(key);
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getEntityType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getEntityType(type)))
                 .findFirst().orElse(null));
     }
 

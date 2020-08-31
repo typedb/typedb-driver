@@ -52,9 +52,9 @@ public interface Relation extends Thing {
 
         void removePlayer(RoleType roleType, Thing player);
 
-        Stream<? extends Thing.Remote> getPlayers(RoleType... roleTypes);
+        Stream<? extends Thing.Local> getPlayers(RoleType... roleTypes);
 
-        Map<? extends RoleType.Remote, List<? extends Thing.Remote>> getPlayersByRoleType();
+        Map<? extends RoleType.Local, List<? extends Thing.Local>> getPlayersByRoleType();
 
         @Override
         default Relation.Remote asRemote(Grakn.Transaction transaction) {

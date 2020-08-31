@@ -41,17 +41,17 @@ public class AttributeSteps {
 
     @Then("attribute {var} get owners contain: {var}")
     public void attribute_get_owners_contain(String var1, String var2) {
-        assertTrue(get(var1).asAttribute().getOwners().anyMatch(o -> o.equals(get(var2))));
+        assertTrue(get(var1).asAttribute().asRemote(tx()).getOwners().anyMatch(o -> o.equals(get(var2))));
     }
 
     @Then("attribute {var} get owners do not contain: {var}")
     public void attribute_get_owners_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asAttribute().getOwners().noneMatch(o -> o.equals(get(var2))));
+        assertTrue(get(var1).asAttribute().asRemote(tx()).getOwners().noneMatch(o -> o.equals(get(var2))));
     }
 
     @Then("attribute {var} has value type: {value_type}")
     public void attribute_has_value_type(String var, ValueType valueType) {
-        assertEquals(valueType, get(var).asAttribute().getType().getValueType());
+        assertEquals(valueType, get(var).asAttribute().asRemote(tx()).getType().getValueType());
     }
 
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")

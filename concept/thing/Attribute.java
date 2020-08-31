@@ -81,9 +81,9 @@ public interface Attribute<VALUE> extends Thing {
 
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
-        Stream<? extends Thing.Remote> getOwners();
+        Stream<? extends Thing.Local> getOwners();
 
-        Stream<? extends Thing.Remote> getOwners(ThingType ownerType);
+        Stream<? extends Thing.Local> getOwners(ThingType ownerType);
 
         @Override
         default Attribute.Remote<VALUE> asRemote(Grakn.Transaction transaction) {

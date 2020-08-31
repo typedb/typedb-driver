@@ -41,16 +41,17 @@ public interface ThingType extends Type {
     interface Remote extends Type.Remote, ThingType {
 
         @Override
-        ThingType.Remote getSupertype();
+        ThingType.Local getSupertype();
 
         @Override
-        Stream<? extends ThingType.Remote> getSupertypes();
+        Stream<? extends ThingType.Local> getSupertypes();
 
         @Override
-        Stream<? extends ThingType.Remote> getSubtypes();
+        Stream<? extends ThingType.Local> getSubtypes();
 
-        Stream<? extends Thing.Remote> getInstances();
+        Stream<? extends Thing.Local> getInstances();
 
+        @Override
         void setLabel(String label);
 
         void setAbstract();
@@ -75,21 +76,21 @@ public interface ThingType extends Type {
             setOwns(attributeType, false);
         }
 
-        Stream<RoleType.Remote> getPlays();
+        Stream<RoleType.Local> getPlays();
 
-        Stream<? extends AttributeType.Remote> getOwns(ValueType valueType, boolean keysOnly);
+        default Stream<? extends AttributeType.Local> getOwns() {
+            return getOwns(false);
+        }
 
-        default Stream<? extends AttributeType.Remote> getOwns(ValueType valueType) {
+        default Stream<? extends AttributeType.Local> getOwns(ValueType valueType) {
             return getOwns(valueType, false);
         }
 
-        default Stream<? extends AttributeType.Remote> getOwns(boolean keysOnly) {
+        default Stream<? extends AttributeType.Local> getOwns(boolean keysOnly) {
             return getOwns(null, keysOnly);
         }
 
-        default Stream<? extends AttributeType.Remote> getOwns() {
-            return getOwns(false);
-        }
+        Stream<? extends AttributeType.Local> getOwns(ValueType valueType, boolean keysOnly);
 
         void unsetPlays(RoleType role);
 

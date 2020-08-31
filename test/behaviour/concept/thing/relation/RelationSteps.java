@@ -51,46 +51,46 @@ public class RelationSteps {
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute.Long.Remote key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-        final Relation.Remote relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-        relation.setHas(key);
+        Attribute.Long.Local key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
+        final Relation.Local relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute.String.Remote key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-        final Relation.Remote relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-        relation.setHas(key);
+        Attribute.String.Local key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
+        final Relation.Local relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute.DateTime.Remote key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-        final Relation.Remote relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
-        relation.setHas(key);
+        Attribute.DateTime.Local key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
+        final Relation.Local relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
     @When("{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).getOwners()
-                .filter(owner -> owner.getType().equals(tx().concepts().getRelationType(type)))
+        put(var1, tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).get(keyValue).asRemote(tx()).getOwners()
+                .filter(owner -> owner.asRemote(tx()).getType().equals(tx().concepts().getRelationType(type)))
                 .findFirst().orElse(null));
     }
 
@@ -111,26 +111,26 @@ public class RelationSteps {
 
     @When("relation {var} add player for role\\( ?{type_label} ?): {var}")
     public void relation_add_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().addPlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
+        get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
     }
 
     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
-        get(var1).asRelation().removePlayer(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
+        get(var1).asRelation().asRemote(tx()).removePlayer(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
     }
 
     @Then("relation {var} get players contain:")
     public void relation_get_players_contain(String var, Map<String, String> players) {
-        Relation.Remote relation = get(var).asRelation();
-        players.forEach((rt, var2) -> assertTrue(relation.getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt)).contains(get(var2.substring(1)))));
+        Relation.Local relation = get(var).asRelation();
+        players.forEach((rt, var2) -> assertTrue(relation.asRemote(tx()).getPlayersByRoleType().get(relation.asRemote(tx()).getType().asRemote(tx()).getRelates(rt)).contains(get(var2.substring(1)))));
     }
 
     @Then("relation {var} get players do not contain:")
     public void relation_get_players_do_not_contain(String var, Map<String, String> players) {
-        Relation.Remote relation = get(var).asRelation();
+        Relation.Local relation = get(var).asRelation();
         players.forEach((rt, var2) -> {
-            List<? extends Thing.Remote> p;
-            if ((p = relation.getPlayersByRoleType().get(relation.getType().asRemote(tx()).getRelates(rt))) != null) {
+            List<? extends Thing.Local> p;
+            if ((p = relation.asRemote(tx()).getPlayersByRoleType().get(relation.asRemote(tx()).getType().asRemote(tx()).getRelates(rt))) != null) {
                 assertFalse(p.contains(get(var2.substring(1))));
             }
         });
@@ -138,25 +138,25 @@ public class RelationSteps {
 
     @Then("relation {var} get players contain: {var}")
     public void relation_get_players_contain(String var1, String var2) {
-        assertTrue(get(var1).asRelation().getPlayers().anyMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players do not contain: {var}")
     public void relation_get_players_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRelation().getPlayers().noneMatch(p -> p.equals(get(var2))));
+        assertTrue(get(var1).asRelation().asRemote(tx()).getPlayers().noneMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
     public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation()
-                           .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
+        assertTrue(get(var1).asRelation().asRemote(tx())
+                           .getPlayers(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel))
                            .anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
     public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
-        assertTrue(get(var1).asRelation()
-                           .getPlayers(get(var1).asRelation().getType().asRemote(tx()).getRelates(roleTypeLabel))
+        assertTrue(get(var1).asRelation().asRemote(tx())
+                           .getPlayers(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel))
                            .noneMatch(p -> p.equals(get(var2))));
     }
 }
