@@ -100,11 +100,6 @@ public interface Thing extends Concept {
         }
 
         @Override
-        default Thing.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default Entity.Remote asEntity() {
             throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
         }

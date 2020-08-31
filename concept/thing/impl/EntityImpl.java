@@ -53,6 +53,11 @@ public abstract class EntityImpl {
         }
 
         @Override
+        public Entity.Remote asRemote(Grakn.Transaction transaction) {
+            return new EntityImpl.Remote(transaction, iid);
+        }
+
+        @Override
         public EntityType.Local getType() {
             return super.getType().asEntityType();
         }

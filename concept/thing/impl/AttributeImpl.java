@@ -166,6 +166,11 @@ public abstract class AttributeImpl {
             }
 
             @Override
+            public Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Boolean.Remote(transaction, iid);
+            }
+
+            @Override
             public final java.lang.Boolean getValue() {
                 final ThingMethod.Req method = ThingMethod.Req.newBuilder()
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
@@ -199,6 +204,11 @@ public abstract class AttributeImpl {
             }
 
             @Override
+            public AttributeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Long.Remote(transaction, getIID());
+            }
+
+            @Override
             public final java.lang.Long getValue() {
                 return value;
             }
@@ -206,11 +216,6 @@ public abstract class AttributeImpl {
             @Override
             public final AttributeImpl.Long.Local asLong() {
                 return this;
-            }
-
-            @Override
-            public AttributeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.Long.Remote(transaction, getIID());
             }
         }
 
@@ -222,6 +227,11 @@ public abstract class AttributeImpl {
 
             public static AttributeImpl.Long.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
                 return new AttributeImpl.Long.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
+            }
+
+            @Override
+            public Attribute.Long.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Long.Remote(transaction, iid);
             }
 
             @Override
@@ -258,6 +268,11 @@ public abstract class AttributeImpl {
             }
 
             @Override
+            public AttributeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Double.Remote(transaction, getIID());
+            }
+
+            @Override
             public final java.lang.Double getValue() {
                 return value;
             }
@@ -265,11 +280,6 @@ public abstract class AttributeImpl {
             @Override
             public final AttributeImpl.Double.Local asDouble() {
                 return this;
-            }
-
-            @Override
-            public AttributeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.Double.Remote(transaction, getIID());
             }
         }
 
@@ -281,6 +291,11 @@ public abstract class AttributeImpl {
 
             public static AttributeImpl.Double.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
                 return new AttributeImpl.Double.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
+            }
+
+            @Override
+            public Attribute.Double.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.Double.Remote(transaction, iid);
             }
 
             @Override
@@ -317,6 +332,11 @@ public abstract class AttributeImpl {
             }
 
             @Override
+            public AttributeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.String.Remote(transaction, getIID());
+            }
+
+            @Override
             public final java.lang.String getValue() {
                 return value;
             }
@@ -324,11 +344,6 @@ public abstract class AttributeImpl {
             @Override
             public final AttributeImpl.String.Local asString() {
                 return this;
-            }
-
-            @Override
-            public AttributeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.String.Remote(transaction, getIID());
             }
         }
 
@@ -348,6 +363,11 @@ public abstract class AttributeImpl {
                         .setAttributeGetValueReq(ConceptProto.Attribute.GetValue.Req.getDefaultInstance()).build();
 
                 return execute(method).getAttributeGetValueRes().getValue().getString();
+            }
+
+            @Override
+            public Attribute.String.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.String.Remote(transaction, iid);
             }
 
             @Override
@@ -380,6 +400,11 @@ public abstract class AttributeImpl {
             }
 
             @Override
+            public AttributeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.DateTime.Remote(transaction, getIID());
+            }
+
+            @Override
             public final LocalDateTime getValue() {
                 return value;
             }
@@ -387,11 +412,6 @@ public abstract class AttributeImpl {
             @Override
             public final AttributeImpl.DateTime.Local asDateTime() {
                 return this;
-            }
-
-            @Override
-            public AttributeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.DateTime.Remote(transaction, getIID());
             }
         }
 
@@ -403,6 +423,11 @@ public abstract class AttributeImpl {
 
             public static AttributeImpl.DateTime.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
                 return new AttributeImpl.DateTime.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()));
+            }
+
+            @Override
+            public Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+                return new AttributeImpl.DateTime.Remote(transaction, iid);
             }
 
             @Override

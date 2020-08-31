@@ -216,7 +216,7 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} get relations do not contain: {var}")
     public void thing_get_relations_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getRelations().noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).asRemote(tx()).asRemote(tx()).getRelations().noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("root\\( ?thing ?) get instances count: {int}")

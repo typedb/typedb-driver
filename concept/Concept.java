@@ -92,11 +92,6 @@ public interface Concept {
         }
 
         @Override
-        default Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         default boolean isRemote() {
             return true;
         }

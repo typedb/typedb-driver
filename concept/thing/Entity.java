@@ -33,20 +33,12 @@ public interface Entity extends Thing {
         default Entity.Local asEntity() {
             return this;
         }
-
-        @Override
-        Entity.Remote asRemote(final Grakn.Transaction transaction);
     }
 
     interface Remote extends Thing.Remote, Entity {
 
         @Override
         EntityType.Local getType();
-
-        @Override
-        default Entity.Remote asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
 
         @Override
         default Entity.Remote asEntity() {

@@ -86,11 +86,6 @@ public interface Attribute<VALUE> extends Thing {
         Stream<? extends Thing.Local> getOwners(ThingType ownerType);
 
         @Override
-        default Attribute.Remote<VALUE> asRemote(Grakn.Transaction transaction) {
-            return this;
-        }
-
-        @Override
         AttributeType.Local getType();
 
         @Override
@@ -132,17 +127,9 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Boolean.Local asBoolean() {
                 return this;
             }
-
-            @Override
-            Boolean.Remote asRemote(final Grakn.Transaction transaction);
         }
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
-
-            @Override
-            default Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default Attribute.Boolean.Remote asBoolean() {
@@ -159,17 +146,9 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Long.Local asLong() {
                 return this;
             }
-
-            @Override
-            Long.Remote asRemote(final Grakn.Transaction transaction);
         }
 
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
-
-            @Override
-            default Attribute.Long.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default Attribute.Long.Remote asLong() {
@@ -186,17 +165,9 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.Double.Local asDouble() {
                 return this;
             }
-
-            @Override
-            Double.Remote asRemote(final Grakn.Transaction transaction);
         }
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
-
-            @Override
-            default Attribute.Double.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default Attribute.Double.Remote asDouble() {
@@ -213,17 +184,9 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.String.Local asString() {
                 return this;
             }
-
-            @Override
-            String.Remote asRemote(final Grakn.Transaction transaction);
         }
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
-
-            @Override
-            default Attribute.String.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default Attribute.String.Remote asString() {
@@ -240,17 +203,9 @@ public interface Attribute<VALUE> extends Thing {
             default Attribute.DateTime.Local asDateTime() {
                 return this;
             }
-
-            @Override
-            DateTime.Remote asRemote(final Grakn.Transaction transaction);
         }
 
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
-
-            @Override
-            default Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction) {
-                return this;
-            }
 
             @Override
             default Attribute.DateTime.Remote asDateTime() {
