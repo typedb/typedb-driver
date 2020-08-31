@@ -56,7 +56,6 @@ public class RelationTypeSteps {
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")
     public void relation_type_set_relates_role_type_as(String relationLabel, String roleLabel, String superRole) {
         tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel, superRole);
-        tx().concepts().getRelationType(relationLabel).asRemote(tx()).setRelates(roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")
@@ -91,8 +90,7 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_related_roles_actuals(String relationLabel) {
         return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates()
-                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
-                                                        role.getScope().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScope(), role.getLabel())).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related roles contain:")
@@ -117,8 +115,7 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_supertypes_actuals(String relationLabel, String roleLabel) {
         return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getSupertypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
-                                                        role.getScope().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScope(), role.getLabel())).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")
@@ -155,8 +152,7 @@ public class RelationTypeSteps {
 
     private Set<Parameters.ScopedLabel> relation_type_get_role_type_subtypes_actuals(String relationLabel, String roleLabel) {
         return tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).getSubtypes()
-                .map(role -> new Parameters.ScopedLabel(role.getScope().split(":")[0],
-                                                        role.getScope().split(":")[1])).collect(toSet());
+                .map(role -> new Parameters.ScopedLabel(role.getScope(), role.getLabel())).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes contain:")

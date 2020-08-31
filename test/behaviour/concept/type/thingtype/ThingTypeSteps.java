@@ -337,19 +337,17 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get playing roles contain:")
     public void thing_type_get_playing_roles_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
-        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(r -> {
-            String[] labels = r.getScope().split(":");
-            return new Parameters.ScopedLabel(labels[0], labels[1]);
-        }).collect(toSet());
+        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(
+                r -> new Parameters.ScopedLabel(r.getScope(), r.getLabel())
+        ).collect(toSet());
         assertTrue(actuals.containsAll(roleLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get playing roles do not contain:")
     public void thing_type_get_playing_roles_do_not_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
-        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(r -> {
-            String[] labels = r.getScope().split(":");
-            return new Parameters.ScopedLabel(labels[0], labels[1]);
-        }).collect(toSet());
+        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(
+                r -> new Parameters.ScopedLabel(r.getScope(), r.getLabel())
+        ).collect(toSet());
         for (Parameters.ScopedLabel roleLabel : roleLabels) {
             assertFalse(actuals.contains(roleLabel));
         }
