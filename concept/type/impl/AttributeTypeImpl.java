@@ -171,7 +171,7 @@ public abstract class AttributeTypeImpl {
         @Nullable
         @Override
         public AttributeType.Local getSupertype() {
-            return getSupertype(Type.Local::asAttributeType);
+            return getSupertypeExecute(Type.Local::asAttributeType);
         }
 
         @Override
@@ -318,7 +318,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final AttributeType.Boolean.Local getSupertype() {
-                return getSupertype(t -> t.asAttributeType().asBoolean());
+                return getSupertypeExecute(t -> t.asAttributeType().asBoolean());
             }
 
             @Override
@@ -392,7 +392,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final AttributeType.Long.Local getSupertype() {
-                return getSupertype(t -> t.asAttributeType().asLong());
+                return getSupertypeExecute(t -> t.asAttributeType().asLong());
             }
 
             @Override
@@ -466,7 +466,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final AttributeType.Double.Local getSupertype() {
-                return getSupertype(t -> t.asAttributeType().asDouble());
+                return getSupertypeExecute(t -> t.asAttributeType().asDouble());
             }
 
             @Override
@@ -540,7 +540,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final AttributeType.String.Local getSupertype() {
-                return getSupertype(t -> t.asAttributeType().asString());
+                return getSupertypeExecute(t -> t.asAttributeType().asString());
             }
 
             @Override
@@ -632,7 +632,7 @@ public abstract class AttributeTypeImpl {
 
             @Override
             public final AttributeType.DateTime.Local getSupertype() {
-                return getSupertype(t -> t.asAttributeType().asDateTime());
+                return getSupertypeExecute(t -> t.asAttributeType().asDateTime());
             }
 
             @Override

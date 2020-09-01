@@ -91,7 +91,7 @@ public abstract class ThingTypeImpl {
 
         @Override
         public ThingType.Local getSupertype() {
-            return super.getSupertype(Type.Local::asThingType);
+            return super.getSupertypeExecute(Type.Local::asThingType);
         }
 
         @Override

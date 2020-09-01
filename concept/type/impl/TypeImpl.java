@@ -165,7 +165,7 @@ public abstract class TypeImpl {
         }
 
         @Nullable
-        <TYPE extends Type.Local> TYPE getSupertype(final Function<Type.Local, TYPE> typeConstructor) {
+        <TYPE extends Type.Local> TYPE getSupertypeExecute(final Function<Type.Local, TYPE> typeConstructor) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 

@@ -56,7 +56,7 @@ public class RuleImpl {
         @Nullable
         @Override
         public Type.Local getSupertype() {
-            return getSupertype(Type.Local::asRule);
+            return getSupertypeExecute(Type.Local::asRule);
         }
 
         @Override
