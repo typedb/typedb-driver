@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
+import static grakn.common.util.Objects.className;
 
 public abstract class TypeImpl {
 
@@ -58,7 +59,7 @@ public abstract class TypeImpl {
                 case RULE:
                     return RuleImpl.Local.of(typeProto);
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), typeProto.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.SCHEMA.class), typeProto.getSchema()));
                 default:
                     return ThingTypeImpl.Local.of(typeProto);
 
@@ -77,7 +78,7 @@ public abstract class TypeImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override
@@ -129,7 +130,7 @@ public abstract class TypeImpl {
                     return RuleImpl.Remote.of(transaction, type);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.SCHEMA.class), type.getSchema()));
             }
         }
 
@@ -221,7 +222,7 @@ public abstract class TypeImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override

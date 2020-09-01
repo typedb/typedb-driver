@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.common.util.Objects.className;
 
 public interface Type extends Concept {
 
@@ -56,27 +57,27 @@ public interface Type extends Concept {
 
         @Override
         default ThingType.Local asThingType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
         }
 
         @Override
         default EntityType.Local asEntityType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
         }
 
         @Override
         default AttributeType.Local asAttributeType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
         }
 
         @Override
         default RelationType.Local asRelationType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
         }
 
         @Override
         default RoleType.Local asRoleType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
         }
     }
 
@@ -100,27 +101,27 @@ public interface Type extends Concept {
 
         @Override
         default ThingType.Remote asThingType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, ThingType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
         }
 
         @Override
         default EntityType.Remote asEntityType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, EntityType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
         }
 
         @Override
         default RelationType.Remote asRelationType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RelationType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
         }
 
         @Override
         default AttributeType.Remote asAttributeType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
         }
 
         @Override
         default RoleType.Remote asRoleType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, RoleType.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
         }
     }
 }

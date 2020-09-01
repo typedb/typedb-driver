@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
+import static grakn.common.util.Objects.className;
 
 public abstract class AttributeTypeImpl {
 
@@ -80,7 +81,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Boolean.Local(ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
         }
 
         @Override
@@ -88,7 +89,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Long.Local(ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
         }
 
         @Override
@@ -96,7 +97,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Double.Local(ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
         }
 
         @Override
@@ -104,7 +105,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.String.Local(ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
         }
 
         @Override
@@ -112,7 +113,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.DateTime.Local(ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
         }
 
         @Override
@@ -236,7 +237,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
         }
 
         @Override
@@ -244,7 +245,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
         }
 
         @Override
@@ -252,7 +253,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
         }
 
         @Override
@@ -260,7 +261,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
         }
 
         @Override
@@ -268,7 +269,7 @@ public abstract class AttributeTypeImpl {
             if (isRoot()) {
                 return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, AttributeType.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
         }
 
         @Override

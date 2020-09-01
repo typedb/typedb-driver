@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.ClientInternal.UNRECOGNISED_VALUE;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.common.util.Objects.className;
 
 public interface AttributeType extends ThingType {
 
@@ -96,7 +97,7 @@ public interface AttributeType extends ThingType {
                     return AttributeType.ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.AttributeType.VALUE_TYPE.class.getCanonicalName(), valueType));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.AttributeType.VALUE_TYPE.class), valueType));
             }
         }
 

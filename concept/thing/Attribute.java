@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.common.util.Objects.className;
 
 public interface Attribute<VALUE> extends Thing {
 
@@ -55,27 +56,27 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         default Attribute.Boolean.Local asBoolean() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
         }
 
         @Override
         default Attribute.Long.Local asLong() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
         }
 
         @Override
         default Attribute.Double.Local asDouble() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
         }
 
         @Override
         default Attribute.String.Local asString() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
         }
 
         @Override
         default Attribute.DateTime.Local asDateTime() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
         }
     }
 
@@ -95,27 +96,27 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         default Attribute.Boolean.Remote asBoolean() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Boolean.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
         }
 
         @Override
         default Attribute.Long.Remote asLong() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Long.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
         }
 
         @Override
         default Attribute.Double.Remote asDouble() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.Double.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
         }
 
         @Override
         default Attribute.String.Remote asString() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.String.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
         }
 
         @Override
         default Attribute.DateTime.Remote asDateTime() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.DateTime.class.getCanonicalName()));
+            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
         }
     }
 

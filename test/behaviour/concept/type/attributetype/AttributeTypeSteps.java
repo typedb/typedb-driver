@@ -32,6 +32,7 @@ import java.util.Set;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.common.util.Objects.className;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -72,7 +73,7 @@ public class AttributeTypeSteps {
             case DATETIME:
                 return attributeType.asDateTime();
             default:
-                throw new GraknException(UNRECOGNISED_CONCEPT.message(ValueType.class.getCanonicalName(), valueType));
+                throw new GraknException(UNRECOGNISED_CONCEPT.message(className(ValueType.class), valueType));
         }
     }
 

@@ -45,6 +45,7 @@ import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
+import static grakn.common.util.Objects.className;
 
 public abstract class ThingImpl {
 
@@ -72,7 +73,7 @@ public abstract class ThingImpl {
                 case UNRECOGNIZED:
                 default:
                     throw new GraknException(UNRECOGNISED_FIELD.message(
-                            ConceptProto.Thing.SCHEMA.class.getSimpleName(), thingProto.getSchema())
+                            className(ConceptProto.Thing.SCHEMA.class), thingProto.getSchema())
                     );
             }
         }
@@ -84,7 +85,7 @@ public abstract class ThingImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
+            return className(this.getClass()) + "[iid:" + iid + "]";
         }
 
         @Override
@@ -127,7 +128,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Remote.of(transaction, protoThing);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Thing.SCHEMA.class.getCanonicalName(), protoThing.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Thing.SCHEMA.class), protoThing.getSchema()));
             }
         }
 
@@ -251,7 +252,7 @@ public abstract class ThingImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
+            return className(this.getClass()) + "[iid:" + iid + "]";
         }
 
         @Override
