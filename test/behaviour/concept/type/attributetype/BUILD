@@ -27,6 +27,8 @@ java_library(
         "AttributeTypeSteps.java"
     ],
     deps = [
+        "@graknlabs_common//:common",
+        
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/connection:steps",
