@@ -53,10 +53,9 @@ public abstract class ThingImpl {
 
         private final String iid;
         // TODO: private final ThingType.Local type;
-        // We (probably) need to storae the concept Type, but we should have a better way of retrieving it.
-        // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
+        // We need to store the concept Type, but we need a better way of retrieving it (currently requires a 2nd roundtrip)
+        // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was confusing as it was
         // not actually prefilled when using the Concept API - only when using the Query API.
-        // We should probably create a dedicated Proto class for Graql (AnswerProto or QueryProto) and keep the code clean.
 
         Local(final String iid) {
             this.iid = iid;
