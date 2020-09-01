@@ -200,7 +200,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final Stream<? extends Relation> getRelations(RoleType... roleTypes) {
+        public final Stream<? extends Relation.Local> getRelations(RoleType... roleTypes) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setThingGetRelationsIterReq(
                             GetRelations.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))).build(),

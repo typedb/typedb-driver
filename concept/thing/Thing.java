@@ -92,7 +92,7 @@ public interface Thing extends Concept {
 
         Stream<? extends RoleType.Local> getPlays();
 
-        Stream<? extends Relation> getRelations(RoleType... roleTypes);
+        Stream<? extends Relation.Local> getRelations(RoleType... roleTypes);
 
         @Override
         default Thing.Remote asThing() {
