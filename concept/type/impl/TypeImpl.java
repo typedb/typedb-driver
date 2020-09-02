@@ -31,7 +31,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
+import static grakn.client.common.exception.ErrorMessage.Concept.NULL_OR_EMPTY_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.NULL_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
@@ -105,8 +106,8 @@ public abstract class TypeImpl {
         private final int hash;
 
         Remote(final Grakn.Transaction transaction, final String label, @Nullable String scope, final boolean isRoot) {
-            if (transaction == null) throw new GraknException(MISSING_ARGUMENT.message("concept"));
-            else if (label == null || label.isEmpty()) throw new GraknException(MISSING_ARGUMENT.message("label"));
+            if (transaction == null) throw new GraknException(NULL_TRANSACTION);
+            else if (label == null || label.isEmpty()) throw new GraknException(NULL_OR_EMPTY_IID);
             this.transaction = transaction;
             this.label = label;
             this.scope = scope;

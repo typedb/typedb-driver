@@ -28,9 +28,6 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     public static class ClientInternal extends ErrorMessage {
         public static final ClientInternal UNRECOGNISED_VALUE =
                 new ClientInternal(1, "Unrecognised schema value!");
-        // TODO: variable error messages like this (below) is not good as the error code no longer uniquely identifies the problem for users
-        public static final ClientInternal MISSING_ARGUMENT =
-                new ClientInternal(2, "'%s' can not be null or empty.");
 
         private static final String codePrefix = "CIN";
         private static final String messagePrefix = "Invalid Internal State (Client)";
@@ -56,11 +53,27 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         }
     }
 
+    public static class DatabaseManager extends ErrorMessage {
+        public static final DatabaseManager NULL_OR_EMPTY_DB_NAME =
+                new DatabaseManager(1, "Database name cannot be null or empty.");
+
+        private static final String codePrefix = "CDB";
+        private static final String messagePrefix = "Invalid Database Operations (Client)";
+
+        DatabaseManager(int number, String message) {
+            super(codePrefix, number, messagePrefix, message);
+        }
+    }
+
     public static class Concept extends ErrorMessage {
         public static final Concept UNRECOGNISED_CONCEPT =
                 new Concept(1, "The %s '%s' was not recognised.");
         public static final Concept INVALID_CONCEPT_CASTING =
                 new Concept(2, "Invalid concept conversion from '%s' to '%s'.");
+        public static final Concept NULL_TRANSACTION =
+                new Concept(3, "Transaction can not be null.");
+        public static final Concept NULL_OR_EMPTY_IID =
+                new Concept(4, "IID cannot be null or empty.");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";

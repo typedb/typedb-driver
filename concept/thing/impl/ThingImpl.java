@@ -41,7 +41,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
+import static grakn.client.common.exception.ErrorMessage.Concept.NULL_OR_EMPTY_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.NULL_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
@@ -109,8 +110,8 @@ public abstract class ThingImpl {
         private final int hash;
 
         protected Remote(final Grakn.Transaction transaction, final String iid) {
-            if (transaction == null) throw new GraknException(MISSING_ARGUMENT.message("concepts"));
-            else if (iid == null || iid.isEmpty()) throw new GraknException(MISSING_ARGUMENT.message("iid"));
+            if (transaction == null) throw new GraknException(NULL_TRANSACTION);
+            else if (iid == null || iid.isEmpty()) throw new GraknException(NULL_OR_EMPTY_IID);
             this.transaction = transaction;
             this.iid = iid;
             this.hash = Objects.hash(this.transaction, this.iid);
