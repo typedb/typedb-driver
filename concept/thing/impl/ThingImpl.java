@@ -105,7 +105,7 @@ public abstract class ThingImpl {
     public abstract static class Remote implements Thing.Remote {
 
         private final Grakn.Transaction transaction;
-        final String iid;
+        private final String iid;
         private final int hash;
 
         protected Remote(final Grakn.Transaction transaction, final String iid) {

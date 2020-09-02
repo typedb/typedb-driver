@@ -171,7 +171,7 @@ public abstract class AttributeImpl {
 
             @Override
             public Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.Boolean.Remote(transaction, iid, value);
+                return new AttributeImpl.Boolean.Remote(transaction, getIID(), value);
             }
 
             @Override
@@ -235,7 +235,7 @@ public abstract class AttributeImpl {
 
             @Override
             public Attribute.Long.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.Long.Remote(transaction, iid, value);
+                return new AttributeImpl.Long.Remote(transaction, getIID(), value);
             }
 
             @Override
@@ -299,7 +299,7 @@ public abstract class AttributeImpl {
 
             @Override
             public Attribute.Double.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.Double.Remote(transaction, iid, value);
+                return new AttributeImpl.Double.Remote(transaction, getIID(), value);
             }
 
             @Override
@@ -368,7 +368,7 @@ public abstract class AttributeImpl {
 
             @Override
             public Attribute.String.Remote asRemote(Grakn.Transaction transaction) {
-                return new AttributeImpl.String.Remote(transaction, iid, value);
+                return new AttributeImpl.String.Remote(transaction, getIID(), value);
             }
 
             @Override
@@ -431,7 +431,7 @@ public abstract class AttributeImpl {
 
             @Override
             public Attribute.DateTime.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeImpl.DateTime.Remote(transaction, iid, value);
+                return new AttributeImpl.DateTime.Remote(transaction, getIID(), value);
             }
 
             @Override
