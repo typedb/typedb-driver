@@ -209,7 +209,7 @@ public class Transceiver implements AutoCloseable {
         private final BlockingQueue<ResponseCollector> collectorQueue = new LinkedBlockingQueue<>();
         private final AtomicBoolean terminated = new AtomicBoolean(false);
 
-        void addCollector(ResponseCollector collector) {
+        synchronized void addCollector(ResponseCollector collector) {
             collectorQueue.add(collector);
         }
 
@@ -230,12 +230,12 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Override
-        public void onNext(Transaction.Res value) {
+        public synchronized void onNext(Transaction.Res value) {
             dispatchResponse(Response.ok(value));
         }
 
         @Override
-        public void onError(Throwable throwable) {
+        public synchronized void onError(Throwable throwable) {
             terminated.set(true);
             assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
 
@@ -246,7 +246,7 @@ public class Transceiver implements AutoCloseable {
         }
 
         @Override
-        public void onCompleted() {
+        public synchronized void onCompleted() {
             terminated.set(true);
 
             // Exhaust the queue
