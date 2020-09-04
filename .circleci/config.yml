@@ -21,9 +21,9 @@ version: 2.1
 commands:
   install-bazel:
     steps:
-      - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/master/tool/bazelinstall/linux.sh
+      - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/1f7e4a696cc7b7492354750c337ae3f67ff39f06/tool/bazelinstall/linux.sh
       - run: bash ./linux.sh && rm ./linux.sh
-      - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/master/tool/bazelinstall/rbe.sh
+      - run: curl -OL https://raw.githubusercontent.com/graknlabs/dependencies/1f7e4a696cc7b7492354750c337ae3f67ff39f06/tool/bazelinstall/rbe.sh
       - run: bash ./rbe.sh && rm ./rbe.sh          
 
   run-bazel:
@@ -230,7 +230,7 @@ workflows:
       - deploy-maven-snapshot:
           filters:
             branches:
-              only: master
+              only: 1.8.3
           requires:
             - build
             - build-checkstyle
@@ -240,19 +240,19 @@ workflows:
       - test-deployment-maven:
           filters:
             branches:
-              only: master
+              only: 1.8.3
           requires:
             - deploy-maven-snapshot
       - sync-dependencies-snapshot:
           filters:
             branches:
-              only: master
+              only: 1.8.3
           requires:
             - test-deployment-maven
       - release-approval:
           filters:
             branches:
-              only: master
+              only: 1.8.3
           requires:
             - sync-dependencies-snapshot
   client-java-release:
