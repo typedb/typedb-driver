@@ -75,6 +75,7 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [":client-java"],
+    files = ["BUILD", "deployment.bzl"],
     license_type = "apache",
 )
 

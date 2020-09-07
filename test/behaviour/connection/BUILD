@@ -42,5 +42,6 @@ checkstyle_test(
     targets = [
         ":steps",
     ],
+    files = ["BUILD"],
     license_type = "apache",
 )

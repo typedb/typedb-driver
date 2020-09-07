@@ -34,5 +34,6 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [":parameters"],
+    files = ["BUILD"],
     license_type = "apache",
 )

@@ -43,5 +43,6 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     targets = [":steps"],
+    files = ["BUILD"],
     license_type = "apache",
 )
