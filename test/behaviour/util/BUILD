@@ -41,5 +41,6 @@ checkstyle_test(
     targets = [
         ":util",
     ],
+    files = ["BUILD"],
     license_type = "apache",
 )

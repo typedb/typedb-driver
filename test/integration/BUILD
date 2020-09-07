@@ -45,5 +45,6 @@ checkstyle_test(
     targets = [
         ":test-client-query",
     ],
+    files = ["BUILD"],
     license_type = "apache",
 )

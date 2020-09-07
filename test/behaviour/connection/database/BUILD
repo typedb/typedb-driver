@@ -69,5 +69,6 @@ checkstyle_test(
         ":steps",
         ":test-core",
     ],
+    files = ["BUILD"],
     license_type = "apache",
 )

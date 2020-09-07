@@ -50,5 +50,6 @@ checkstyle_test(
     targets = [
         ":test-core",
     ],
+    files = ["BUILD"],
     license_type = "apache",
 )
