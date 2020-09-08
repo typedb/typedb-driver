@@ -91,8 +91,8 @@ build:
       # - test-integration
       - test-behaviour
       - deploy-maven-snapshot:
-          depends: [build, test-behaviour]
-        # depends: [build, test-integration, test-behaviour]
+          depends: [build, build-dependency, test-behaviour]
+        # depends: [build, build-dependency, test-integration, test-behaviour]
       - test-deployment-maven:
           depends: [deploy-maven-snapshot]
 

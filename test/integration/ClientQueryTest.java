@@ -167,13 +167,13 @@ public class ClientQueryTest {
             assertThat(insertedNames, containsInAnyOrder(lionNames()));
 
             LOG.info("clientJavaE2E() - execute match get on the mating relations...");
-            GraqlMatch getMatingQuery = Graql.match(var().isa("mating"));
+            GraqlMatch getMatingQuery = Graql.match(var("m").isa("mating"));
             LOG.info("clientJavaE2E() - '" + getMatingQuery + "'");
             List<ConceptMap> insertedMating = tx.execute(getMatingQuery).get();
             assertThat(insertedMating, hasSize(1));
 
             LOG.info("clientJavaE2E() - execute match get on the child-bearing...");
-            GraqlMatch getChildBearingQuery = Graql.match(var().isa("child-bearing"));
+            GraqlMatch getChildBearingQuery = Graql.match(var("cb").isa("child-bearing"));
             LOG.info("clientJavaE2E() - '" + getChildBearingQuery + "'");
             List<ConceptMap> insertedChildBearing = tx.execute(getChildBearingQuery).get();
             assertThat(insertedChildBearing, hasSize(1));
