@@ -20,17 +20,25 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def graknlabs_graql():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_graql",
+#        remote = "https://github.com/graknlabs/graql",
+#        commit = "5ec4fc0e5acc2582fedd2e3f9fe1259b9d08f341" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
+#    )
+    native.local_repository(
         name = "graknlabs_graql",
-        remote = "https://github.com/graknlabs/graql",
-        commit = "5ec4fc0e5acc2582fedd2e3f9fe1259b9d08f341" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
+        path = "../graql",
     )
 
 def graknlabs_common():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_common",
+#        remote = "https://github.com/graknlabs/common",
+#        commit = "182d9769d8b6e6fb922fe93cb6d874ddea45df86" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+#    )
+    native.local_repository(
         name = "graknlabs_common",
-        remote = "https://github.com/graknlabs/common",
-        commit = "182d9769d8b6e6fb922fe93cb6d874ddea45df86" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        path = "../common",
     )
 
 def graknlabs_bazel_distribution():
@@ -41,10 +49,14 @@ def graknlabs_bazel_distribution():
     )
 
 def graknlabs_dependencies():
-    git_repository(
+#    git_repository(
+#        name = "graknlabs_dependencies",
+#        remote = "https://github.com/graknlabs/dependencies",
+#        commit = "a6dd66c50b77153b11473919e39e4a687534d126", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+#    )
+    native.local_repository(
         name = "graknlabs_dependencies",
-        remote = "https://github.com/graknlabs/dependencies",
-        commit = "a6dd66c50b77153b11473919e39e4a687534d126", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+        path = "../dependencies",
     )
 
 def graknlabs_protocol():

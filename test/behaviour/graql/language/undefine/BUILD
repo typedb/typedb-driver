@@ -47,8 +47,6 @@ grakn_test(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":test-core",
-    ],
+    include = glob(["*"]),
     license_type = "apache",
 )

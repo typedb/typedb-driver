@@ -33,6 +33,6 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":parameters"],
+    include = glob(["*"]),
     license_type = "apache",
 )
