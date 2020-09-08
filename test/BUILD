@@ -17,7 +17,14 @@
 # under the License.
 #
 
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache",
+)
 
 artifact_extractor(
     name = "grakn-extractor",
