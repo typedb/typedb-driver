@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
+import static grakn.client.common.exception.ErrorMessage.Protocol.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
 class RPCIterator<T> extends AbstractIterator<T> {
@@ -107,7 +107,7 @@ class RPCIterator<T> extends AbstractIterator<T> {
             case DONE:
                 return endOfData();
             case RES_NOT_SET:
-                throw new GraknException(REQUIRED_FIELD_NOT_SET.message(className(TransactionProto.Transaction.Iter.Res.class)));
+                throw new GraknException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
             default:
                 return responseReader.apply(res);
         }

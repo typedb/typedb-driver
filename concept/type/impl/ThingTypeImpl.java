@@ -43,7 +43,7 @@ import grakn.protocol.ConceptProto.TypeMethod;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 import static grakn.common.util.Objects.className;
@@ -69,7 +69,7 @@ public abstract class ThingTypeImpl {
                     return new ThingTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.ENCODING.class), typeProto.getEncoding()));
+                    throw new GraknException(BAD_ENCODING.message(typeProto.getEncoding()));
             }
         }
 

@@ -23,8 +23,8 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknException;
 import grakn.protocol.AnswerProto;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_ANSWER_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Protocol.MISSING_ANSWER;
 import static grakn.common.util.Objects.className;
 
 public interface Answer {
@@ -48,9 +48,9 @@ public interface Answer {
             case VOID:
                 return Void.of(res.getVoid());
             case ANSWER_NOT_SET:
-                throw new GraknException(REQUIRED_FIELD_NOT_SET.message(className(AnswerProto.Answer.AnswerCase.class)));
+                throw new GraknException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
             default:
-                throw new GraknException(UNRECOGNISED_FIELD.message(className(AnswerProto.Answer.AnswerCase.class), res.getAnswerCase()));
+                throw new GraknException(BAD_ANSWER_TYPE.message(res.getAnswerCase()));
         }
     }
 }

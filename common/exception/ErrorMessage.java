@@ -100,10 +100,16 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     }
 
     public static class Protocol extends ErrorMessage {
-        public static final Protocol UNRECOGNISED_FIELD =
-                new Protocol(1, "The %s '%s' was not recognised.");
-        public static final Protocol REQUIRED_FIELD_NOT_SET =
-                new Protocol(2, "The required field '%s' was not set.");
+        public static final Protocol BAD_VALUE_TYPE =
+                new Protocol(1, "The value type '%s' was not recognised.");
+        public static final Protocol BAD_ANSWER_TYPE =
+                new Protocol(2, "The answer type '%s' was not recognised.");
+        public static final Protocol BAD_ENCODING =
+                new Protocol(3, "The encoding '%s' was not recognised.");
+        public static final Protocol MISSING_RESPONSE =
+                new Protocol(4, "The required field 'res' of type '%s' was not set.");
+        public static final Protocol MISSING_ANSWER =
+                new Protocol(5, "The required field 'answer' of type '%s' was not set.");
 
         private static final String codePrefix = "PRO";
         private static final String messagePrefix = "Protocol Error";

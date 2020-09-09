@@ -34,7 +34,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_VALUE_TYPE;
 import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
 import static grakn.common.util.Objects.className;
 
@@ -65,9 +65,7 @@ public abstract class AttributeTypeImpl {
                     return new AttributeTypeImpl.Local(type.getLabel(), type.getRoot());
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(
-                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), type.getValueType())
-                    );
+                    throw new GraknException(BAD_VALUE_TYPE.message(type.getValueType()));
             }
         }
 
@@ -153,9 +151,7 @@ public abstract class AttributeTypeImpl {
                     return new AttributeTypeImpl.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(
-                            ConceptProto.AttributeType.VALUE_TYPE.class.getSimpleName(), typeProto.getValueType())
-                    );
+                    throw new GraknException(BAD_VALUE_TYPE.message(typeProto.getValueType()));
             }
         }
 

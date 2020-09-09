@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.NULL_OR_EMPTY_IID;
 import static grakn.client.common.exception.ErrorMessage.Concept.NULL_TRANSACTION;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 import static grakn.common.util.Objects.className;
@@ -72,9 +72,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Local.of(thingProto);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(
-                            className(ConceptProto.Thing.ENCODING.class), thingProto.getEncoding())
-                    );
+                    throw new GraknException(BAD_ENCODING.message(thingProto.getEncoding()));
             }
         }
 
@@ -128,7 +126,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Remote.of(transaction, protoThing);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Thing.ENCODING.class), protoThing.getEncoding()));
+                    throw new GraknException(BAD_ENCODING.message(protoThing.getEncoding()));
             }
         }
 
