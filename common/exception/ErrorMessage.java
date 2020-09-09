@@ -25,55 +25,39 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         super(codePrefix, codeNumber, messagePrefix, messageBody);
     }
 
-    public static class ClientInternal extends ErrorMessage {
-        public static final ClientInternal UNRECOGNISED_VALUE =
-                new ClientInternal(1, "Unrecognised schema value!");
+    public static class Client extends ErrorMessage {
+        public static final Client CONNECTION_CLOSED =
+                new Client(1, "The connection to the database is closed.");
+        public static final Client TRANSACTION_LISTENER_TERMINATED =
+                new Client(2, "Transaction listener was terminated");
+        public static final Client NEGATIVE_BATCH_SIZE =
+                new Client(3, "Batch size cannot be less than 1, was: '%d'.");
+        public static final Client MISSING_DB_NAME =
+                new Client(4, "Database name cannot be null or empty.");
+        public static final Client MISSING_RESPONSE =
+                new Client(5, "The required field 'res' of type '%s' was not set.");
 
-        private static final String codePrefix = "CIN";
-        private static final String messagePrefix = "Invalid Internal State (Client)";
+        private static final String codePrefix = "CLI";
+        private static final String messagePrefix = "Illegal Client State";
 
-        ClientInternal(int number, String message) {
-            super(codePrefix, number, messagePrefix, message);
-        }
-    }
-
-    public static class Connection extends ErrorMessage {
-        public static final Connection CONNECTION_CLOSED =
-                new Connection(1, "The connection to the database is closed.");
-        public static final Connection TRANSACTION_LISTENER_TERMINATED =
-                new Connection(2, "Transaction listener was terminated");
-        public static final Connection NEGATIVE_BATCH_SIZE =
-                new Connection(3, "Batch size cannot be less than 1, was: '%d'.");
-
-        private static final String codePrefix = "CNN";
-        private static final String messagePrefix = "Database Connection Error";
-
-        Connection(int number, String message) {
-            super(codePrefix, number, messagePrefix, message);
-        }
-    }
-
-    public static class DatabaseManager extends ErrorMessage {
-        public static final DatabaseManager NULL_OR_EMPTY_DB_NAME =
-                new DatabaseManager(1, "Database name cannot be null or empty.");
-
-        private static final String codePrefix = "CDB";
-        private static final String messagePrefix = "Invalid Database Operations (Client)";
-
-        DatabaseManager(int number, String message) {
+        Client(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }
 
     public static class Concept extends ErrorMessage {
-        public static final Concept UNRECOGNISED_CONCEPT =
-                new Concept(1, "The %s '%s' was not recognised.");
         public static final Concept INVALID_CONCEPT_CASTING =
-                new Concept(2, "Invalid concept conversion from '%s' to '%s'.");
-        public static final Concept NULL_TRANSACTION =
-                new Concept(3, "Transaction can not be null.");
-        public static final Concept NULL_OR_EMPTY_IID =
-                new Concept(4, "IID cannot be null or empty.");
+                new Concept(1, "Invalid concept conversion from '%s' to '%s'.");
+        public static final Concept MISSING_TRANSACTION =
+                new Concept(2, "Transaction can not be null.");
+        public static final Concept MISSING_IID =
+                new Concept(3, "IID cannot be null or empty.");
+        public static final Concept BAD_ENCODING =
+                new Concept(4, "The encoding '%s' was not recognised.");
+        public static final Concept BAD_VALUE_TYPE =
+                new Concept(5, "The value type '%s' was not recognised.");
+        public static final Concept BAD_ATTRIBUTE_VALUE =
+                new Concept(6, "The attribute value '%s' was not recognised.");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";
@@ -88,33 +72,17 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Query(1, "The variable '%s' does not exist.");
         public static final Query NO_EXPLANATION =
                 new Query(2, "No explanation was found.");
-        public static final Query UNRECOGNISED_QUERY_OBJECT =
+        public static final Query BAD_QUERY_OBJECT =
                 new Query(3, "The query object '%s' was not recognised.");
+        public static final Query BAD_ANSWER_TYPE =
+                new Query(4, "The answer type '%s' was not recognised.");
+        public static final Query MISSING_ANSWER =
+                new Query(5, "The required field 'answer' of type '%s' was not set.");
 
         private static final String codePrefix = "QRY";
         private static final String messagePrefix = "Query Error";
 
         Query(int number, String message) {
-            super(codePrefix, number, messagePrefix, message);
-        }
-    }
-
-    public static class Protocol extends ErrorMessage {
-        public static final Protocol BAD_VALUE_TYPE =
-                new Protocol(1, "The value type '%s' was not recognised.");
-        public static final Protocol BAD_ANSWER_TYPE =
-                new Protocol(2, "The answer type '%s' was not recognised.");
-        public static final Protocol BAD_ENCODING =
-                new Protocol(3, "The encoding '%s' was not recognised.");
-        public static final Protocol MISSING_RESPONSE =
-                new Protocol(4, "The required field 'res' of type '%s' was not set.");
-        public static final Protocol MISSING_ANSWER =
-                new Protocol(5, "The required field 'answer' of type '%s' was not set.");
-
-        private static final String codePrefix = "PRO";
-        private static final String messagePrefix = "Protocol Error";
-
-        Protocol(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

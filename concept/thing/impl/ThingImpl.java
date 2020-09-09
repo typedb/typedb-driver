@@ -20,7 +20,7 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -41,9 +41,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.NULL_OR_EMPTY_IID;
-import static grakn.client.common.exception.ErrorMessage.Concept.NULL_TRANSACTION;
-import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_ENCODING;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 import static grakn.common.util.Objects.className;
@@ -72,7 +72,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Local.of(thingProto);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(BAD_ENCODING.message(thingProto.getEncoding()));
+                    throw new GraknClientException(BAD_ENCODING.message(thingProto.getEncoding()));
             }
         }
 
@@ -108,8 +108,8 @@ public abstract class ThingImpl {
         private final int hash;
 
         protected Remote(final Grakn.Transaction transaction, final String iid) {
-            if (transaction == null) throw new GraknException(NULL_TRANSACTION);
-            else if (iid == null || iid.isEmpty()) throw new GraknException(NULL_OR_EMPTY_IID);
+            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
+            else if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
             this.iid = iid;
             this.hash = Objects.hash(this.transaction, this.iid);
@@ -126,7 +126,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Remote.of(transaction, protoThing);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(BAD_ENCODING.message(protoThing.getEncoding()));
+                    throw new GraknClientException(BAD_ENCODING.message(protoThing.getEncoding()));
             }
         }
 

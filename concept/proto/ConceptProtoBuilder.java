@@ -20,7 +20,7 @@
 package grakn.client.concept.proto;
 
 import com.google.protobuf.ByteString;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -40,7 +40,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ATTRIBUTE_VALUE;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.stream.Collectors.toList;
 
@@ -92,7 +92,7 @@ public abstract class ConceptProtoBuilder {
         } else if (value instanceof LocalDateTime) {
             builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
         } else {
-            throw new GraknException(UNRECOGNISED_CONCEPT.message("attribute value", value));
+            throw new GraknClientException(BAD_ATTRIBUTE_VALUE.message(value));
         }
         return builder.build();
     }

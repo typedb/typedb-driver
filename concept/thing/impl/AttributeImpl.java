@@ -20,7 +20,7 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
@@ -34,7 +34,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.collection.Bytes.bytesToHexString;
 
@@ -60,7 +60,7 @@ public abstract class AttributeImpl {
                     return AttributeImpl.DateTime.Local.of(thingProto);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
+                    throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
             }
         }
 
@@ -87,7 +87,7 @@ public abstract class AttributeImpl {
                     return AttributeImpl.DateTime.Remote.of(transaction, thingProto);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
+                    throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
             }
         }
 

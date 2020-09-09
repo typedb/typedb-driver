@@ -20,9 +20,9 @@
 package grakn.client.rpc;
 
 import grakn.client.Grakn.Database;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 
-import static grakn.client.common.exception.ErrorMessage.DatabaseManager.NULL_OR_EMPTY_DB_NAME;
+import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 
 public class RPCDatabase implements Database {
     private static final long serialVersionUID = 2726154016735929123L;
@@ -36,7 +36,7 @@ public class RPCDatabase implements Database {
 
     public RPCDatabase(String name) {
         if (name == null || name.isEmpty()) {
-            throw new GraknException(NULL_OR_EMPTY_DB_NAME);
+            throw new GraknClientException(MISSING_DB_NAME);
         }
         this.name = name;
     }

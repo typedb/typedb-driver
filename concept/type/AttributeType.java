@@ -20,7 +20,7 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.protocol.ConceptProto;
 
@@ -28,8 +28,7 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.UNRECOGNISED_VALUE;
-import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface AttributeType extends ThingType {
 
@@ -79,7 +78,7 @@ public interface AttributeType extends ThingType {
                     return t;
                 }
             }
-            throw new GraknException(UNRECOGNISED_VALUE);
+            throw new GraknClientException(BAD_VALUE_TYPE);
         }
 
         public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
@@ -96,7 +95,7 @@ public interface AttributeType extends ThingType {
                     return AttributeType.ValueType.DATETIME;
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(BAD_VALUE_TYPE.message(valueType));
+                    throw new GraknClientException(BAD_VALUE_TYPE.message(valueType));
             }
         }
 

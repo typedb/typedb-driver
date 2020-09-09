@@ -20,7 +20,7 @@
 package grakn.client.concept.answer;
 
 import com.google.protobuf.ByteString;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 
 import java.text.NumberFormat;
@@ -38,7 +38,7 @@ abstract class AnswerProtoReader {
         try {
             return NumberFormat.getInstance().parse(res.getValue());
         } catch (ParseException e) {
-            throw new GraknException(e);
+            throw new GraknClientException(e);
         }
     }
 }

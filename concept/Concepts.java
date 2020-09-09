@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
@@ -127,7 +127,7 @@ public final class Concepts {
     }
 
     public Rule.Local putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknException(new UnsupportedOperationException());
+        throw new GraknClientException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()

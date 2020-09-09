@@ -20,7 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Type.SetSupertype;
@@ -31,9 +31,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.NULL_OR_EMPTY_IID;
-import static grakn.client.common.exception.ErrorMessage.Concept.NULL_TRANSACTION;
-import static grakn.client.common.exception.ErrorMessage.Protocol.BAD_ENCODING;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
@@ -60,7 +60,7 @@ public abstract class TypeImpl {
                 case RULE:
                     return RuleImpl.Local.of(typeProto);
                 case UNRECOGNIZED:
-                    throw new GraknException(BAD_ENCODING.message(typeProto.getEncoding()));
+                    throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
                 default:
                     return ThingTypeImpl.Local.of(typeProto);
 
@@ -106,8 +106,8 @@ public abstract class TypeImpl {
         private final int hash;
 
         Remote(final Grakn.Transaction transaction, final String label, @Nullable String scope, final boolean isRoot) {
-            if (transaction == null) throw new GraknException(NULL_TRANSACTION);
-            else if (label == null || label.isEmpty()) throw new GraknException(NULL_OR_EMPTY_IID);
+            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
+            else if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
             this.label = label;
             this.scope = scope;
@@ -131,7 +131,7 @@ public abstract class TypeImpl {
                     return RuleImpl.Remote.of(transaction, type);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(BAD_ENCODING.message(type.getEncoding()));
+                    throw new GraknClientException(BAD_ENCODING.message(type.getEncoding()));
             }
         }
 

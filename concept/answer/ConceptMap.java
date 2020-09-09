@@ -20,7 +20,7 @@
 package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.impl.TypeImpl;
@@ -86,7 +86,7 @@ public class ConceptMap implements Answer {
         if (hasExplanation) {
             return tx.getExplanation(this);
         } else {
-            throw new GraknException(NO_EXPLANATION);
+            throw new GraknClientException(NO_EXPLANATION);
         }
     }
 
@@ -109,7 +109,7 @@ public class ConceptMap implements Answer {
 
     public Concept get(String variable) {
         Concept concept = map.get(variable);
-        if (concept == null) throw new GraknException(VARIABLE_DOES_NOT_EXIST.message(variable));
+        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST.message(variable));
         return concept;
     }
 

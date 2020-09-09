@@ -20,7 +20,7 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
@@ -52,17 +52,17 @@ public interface Thing extends Concept {
 
         @Override
         default Entity.Local asEntity() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
         }
 
         @Override
         default Attribute.Local<?> asAttribute() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
         }
 
         @Override
         default Relation.Local asRelation() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
         }
     }
 
@@ -101,17 +101,17 @@ public interface Thing extends Concept {
 
         @Override
         default Entity.Remote asEntity() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
         }
 
         @Override
         default Relation.Remote asRelation() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
         }
 
         @Override
         default Attribute.Remote<?> asAttribute() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
         }
     }
 }
