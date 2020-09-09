@@ -54,13 +54,13 @@ public abstract class TypeImpl {
         }
 
         public static TypeImpl.Local of(final ConceptProto.Type typeProto) {
-            switch (typeProto.getSchema()) {
+            switch (typeProto.getEncoding()) {
                 case ROLE_TYPE:
                     return RoleTypeImpl.Local.of(typeProto);
                 case RULE:
                     return RuleImpl.Local.of(typeProto);
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.SCHEMA.class), typeProto.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.ENCODING.class), typeProto.getEncoding()));
                 default:
                     return ThingTypeImpl.Local.of(typeProto);
 
@@ -116,7 +116,7 @@ public abstract class TypeImpl {
         }
 
         public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
-            switch (type.getSchema()) {
+            switch (type.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Remote.of(transaction, type);
                 case RELATION_TYPE:
@@ -131,7 +131,7 @@ public abstract class TypeImpl {
                     return RuleImpl.Remote.of(transaction, type);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.SCHEMA.class), type.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.ENCODING.class), type.getEncoding()));
             }
         }
 
