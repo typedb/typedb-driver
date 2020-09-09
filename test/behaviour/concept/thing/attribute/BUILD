@@ -68,10 +68,6 @@ grakn_test(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":steps",
-        ":test",
-    ],
-    files = ["BUILD"],
+    include = glob(["*"]),
     license_type = "apache",
 )

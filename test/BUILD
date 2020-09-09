@@ -17,16 +17,20 @@
 # under the License.
 #
 
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob([
+        "*",
+        "deployment/pom.xml",
+        "deployment/src/test/**/*",
+    ]),
+    license_type = "apache",
+)
 
 artifact_extractor(
     name = "grakn-extractor",
     artifact = "@graknlabs_grakn_core_artifact//file",
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    files = ["BUILD"],
-    license_type = "apache",
 )

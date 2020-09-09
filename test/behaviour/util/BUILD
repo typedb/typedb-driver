@@ -38,9 +38,6 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":util",
-    ],
-    files = ["BUILD"],
+    include = glob(["*"]),
     license_type = "apache",
 )

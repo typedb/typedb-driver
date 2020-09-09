@@ -39,9 +39,6 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [
-        ":steps",
-    ],
-    files = ["BUILD"],
+    include = glob(["*"]),
     license_type = "apache",
 )

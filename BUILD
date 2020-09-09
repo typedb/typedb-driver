@@ -74,11 +74,16 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    targets = [":client-java"],
-    files = ["BUILD", "deployment.bzl"],
+    include = glob([
+        "*",
+        ".grabl/automation.yml",
+        "common/**/*",
+        "concept/**/*",
+        "rpc/**/*",
+        "test/*",
+    ]),
     license_type = "apache",
 )
-
 
 assemble_maven(
     name = "assemble-maven",
