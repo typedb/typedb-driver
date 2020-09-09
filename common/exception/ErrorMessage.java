@@ -104,8 +104,6 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Protocol(1, "The %s '%s' was not recognised.");
         public static final Protocol REQUIRED_FIELD_NOT_SET =
                 new Protocol(2, "The required field '%s' was not set.");
-        public static final Protocol ILLEGAL_COMBINATION_OF_FIELDS =
-                new Protocol(3, "'%s' cannot be [%s] while '%s' is [%s].");
 
         private static final String codePrefix = "PRO";
         private static final String messagePrefix = "Protocol Error";
