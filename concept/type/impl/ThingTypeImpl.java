@@ -57,7 +57,7 @@ public abstract class ThingTypeImpl {
         }
 
         public static TypeImpl.Local of(ConceptProto.Type typeProto) {
-            switch (typeProto.getSchema()) {
+            switch (typeProto.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Local.of(typeProto);
                 case RELATION_TYPE:
@@ -69,7 +69,7 @@ public abstract class ThingTypeImpl {
                     return new ThingTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.SCHEMA.class), typeProto.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Type.ENCODING.class), typeProto.getEncoding()));
             }
         }
 

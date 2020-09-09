@@ -63,7 +63,7 @@ public abstract class ThingImpl {
         }
 
         public static ThingImpl.Local of(final ConceptProto.Thing thingProto) {
-            switch (thingProto.getSchema()) {
+            switch (thingProto.getEncoding()) {
                 case ENTITY:
                     return EntityImpl.Local.of(thingProto);
                 case RELATION:
@@ -73,7 +73,7 @@ public abstract class ThingImpl {
                 case UNRECOGNIZED:
                 default:
                     throw new GraknException(UNRECOGNISED_FIELD.message(
-                            className(ConceptProto.Thing.SCHEMA.class), thingProto.getSchema())
+                            className(ConceptProto.Thing.ENCODING.class), thingProto.getEncoding())
                     );
             }
         }
@@ -119,7 +119,7 @@ public abstract class ThingImpl {
 
         public static ThingImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
 
-            switch (protoThing.getSchema()) {
+            switch (protoThing.getEncoding()) {
                 case ENTITY:
                     return EntityImpl.Remote.of(transaction, protoThing);
                 case RELATION:
@@ -128,7 +128,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Remote.of(transaction, protoThing);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Thing.SCHEMA.class), protoThing.getSchema()));
+                    throw new GraknException(UNRECOGNISED_FIELD.message(className(ConceptProto.Thing.ENCODING.class), protoThing.getEncoding()));
             }
         }
 

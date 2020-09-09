@@ -59,14 +59,14 @@ public abstract class ConceptProtoBuilder {
     public static ConceptProto.Thing thing(Thing thing) {
         return ConceptProto.Thing.newBuilder()
                 .setIid(iid(thing.getIID()))
-                .setSchema(schema(thing))
+                .setEncoding(encoding(thing))
                 .build();
     }
 
     public static ConceptProto.Type type(Type type) {
         final ConceptProto.Type.Builder builder = ConceptProto.Type.newBuilder()
                 .setLabel(type.getLabel())
-                .setSchema(schema(type));
+                .setEncoding(encoding(type));
 
         if (type instanceof RoleType) {
             builder.setScope(type.asRoleType().getScope());
@@ -120,33 +120,33 @@ public abstract class ConceptProtoBuilder {
         return ByteString.copyFrom(hexStringToBytes(iid));
     }
 
-    private static ConceptProto.Thing.SCHEMA schema(final Thing thing) {
+    private static ConceptProto.Thing.ENCODING encoding(final Thing thing) {
         if (thing instanceof Entity) {
-            return ConceptProto.Thing.SCHEMA.ENTITY;
+            return ConceptProto.Thing.ENCODING.ENTITY;
         } else if (thing instanceof Relation) {
-            return ConceptProto.Thing.SCHEMA.RELATION;
+            return ConceptProto.Thing.ENCODING.RELATION;
         } else if (thing instanceof Attribute) {
-            return ConceptProto.Thing.SCHEMA.ATTRIBUTE;
+            return ConceptProto.Thing.ENCODING.ATTRIBUTE;
         } else {
-            return ConceptProto.Thing.SCHEMA.UNRECOGNIZED;
+            return ConceptProto.Thing.ENCODING.UNRECOGNIZED;
         }
     }
 
-    private static ConceptProto.Type.SCHEMA schema(final Type type) {
+    private static ConceptProto.Type.ENCODING encoding(final Type type) {
         if (type instanceof EntityType) {
-            return ConceptProto.Type.SCHEMA.ENTITY_TYPE;
+            return ConceptProto.Type.ENCODING.ENTITY_TYPE;
         } else if (type instanceof RelationType) {
-            return ConceptProto.Type.SCHEMA.RELATION_TYPE;
+            return ConceptProto.Type.ENCODING.RELATION_TYPE;
         } else if (type instanceof AttributeType) {
-            return ConceptProto.Type.SCHEMA.ATTRIBUTE_TYPE;
+            return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleType) {
-            return ConceptProto.Type.SCHEMA.ROLE_TYPE;
+            return ConceptProto.Type.ENCODING.ROLE_TYPE;
         } else if (type instanceof Rule) {
-            return ConceptProto.Type.SCHEMA.RULE;
+            return ConceptProto.Type.ENCODING.RULE;
         } else if (type instanceof ThingType) {
-            return ConceptProto.Type.SCHEMA.THING_TYPE;
+            return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
-            return ConceptProto.Type.SCHEMA.UNRECOGNIZED;
+            return ConceptProto.Type.ENCODING.UNRECOGNIZED;
         }
     }
 }
