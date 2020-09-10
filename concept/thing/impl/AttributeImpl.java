@@ -22,9 +22,8 @@ package grakn.client.concept.thing.impl;
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Attribute.GetOwners;
 import grakn.protocol.ConceptProto.ThingMethod;
@@ -35,8 +34,10 @@ import java.time.ZoneId;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.collection.Bytes.bytesToHexString;
+import static grakn.common.util.Objects.className;
 
 public abstract class AttributeImpl {
 
@@ -62,6 +63,36 @@ public abstract class AttributeImpl {
                 default:
                     throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
             }
+        }
+
+        @Override
+        public AttributeImpl.Local<VALUE> asAttribute() {
+            return this;
+        }
+
+        @Override
+        public AttributeImpl.Boolean.Local asBoolean() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
+        }
+
+        @Override
+        public AttributeImpl.Long.Local asLong() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
+        }
+
+        @Override
+        public AttributeImpl.Double.Local asDouble() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
+        }
+
+        @Override
+        public AttributeImpl.String.Local asString() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
+        }
+
+        @Override
+        public AttributeImpl.DateTime.Local asDateTime() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
         }
 
         public abstract VALUE getValue();
@@ -92,7 +123,7 @@ public abstract class AttributeImpl {
         }
 
         @Override
-        public final Stream<? extends Thing.Local> getOwners() {
+        public final Stream<ThingImpl.Local> getOwners() {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
                             GetOwners.Iter.Req.getDefaultInstance()).build(),
@@ -101,7 +132,7 @@ public abstract class AttributeImpl {
         }
 
         @Override
-        public Stream<? extends Thing.Local> getOwners(ThingType ownerType) {
+        public Stream<ThingImpl.Local> getOwners(ThingType ownerType) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
                             GetOwners.Iter.Req.newBuilder().setThingType(type(ownerType))).build(),
@@ -110,8 +141,38 @@ public abstract class AttributeImpl {
         }
 
         @Override
-        public AttributeType.Local getType() {
+        public AttributeTypeImpl.Local getType() {
             return super.getType().asAttributeType();
+        }
+
+        @Override
+        public AttributeImpl.Remote<VALUE> asAttribute() {
+            return this;
+        }
+
+        @Override
+        public AttributeImpl.Boolean.Remote asBoolean() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
+        }
+
+        @Override
+        public AttributeImpl.Long.Remote asLong() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
+        }
+
+        @Override
+        public AttributeImpl.Double.Remote asDouble() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
+        }
+
+        @Override
+        public AttributeImpl.String.Remote asString() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
+        }
+
+        @Override
+        public AttributeImpl.DateTime.Remote asDateTime() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
         }
 
         public abstract VALUE getValue();
@@ -175,8 +236,13 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Boolean.Local getType() {
+            public AttributeTypeImpl.Boolean.Local getType() {
                 return super.getType().asBoolean();
+            }
+
+            @Override
+            public final AttributeImpl.Boolean.Remote asBoolean() {
+                return this;
             }
         }
     }
@@ -239,8 +305,13 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Long.Local getType() {
+            public AttributeTypeImpl.Long.Local getType() {
                 return super.getType().asLong();
+            }
+
+            @Override
+            public final AttributeImpl.Long.Remote asLong() {
+                return this;
             }
         }
     }
@@ -303,8 +374,13 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.Double.Local getType() {
+            public AttributeTypeImpl.Double.Local getType() {
                 return super.getType().asDouble();
+            }
+
+            @Override
+            public final AttributeImpl.Double.Remote asDouble() {
+                return this;
             }
         }
     }
@@ -367,8 +443,13 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.String.Local getType() {
+            public AttributeTypeImpl.String.Local getType() {
                 return super.getType().asString();
+            }
+
+            @Override
+            public final AttributeImpl.String.Remote asString() {
+                return this;
             }
         }
     }
@@ -435,8 +516,13 @@ public abstract class AttributeImpl {
             }
 
             @Override
-            public AttributeType.DateTime.Local getType() {
+            public AttributeTypeImpl.DateTime.Local getType() {
                 return super.getType().asDateTime();
+            }
+
+            @Override
+            public final AttributeImpl.DateTime.Remote asDateTime() {
+                return this;
             }
         }
     }

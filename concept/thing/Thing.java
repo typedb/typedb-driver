@@ -46,24 +46,16 @@ public interface Thing extends Concept {
     interface Local extends Concept.Local, Thing {
 
         @Override
-        default Thing.Local asThing() {
-            return this;
-        }
+        Thing.Local asThing();
 
         @Override
-        default Entity.Local asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
-        }
+        Entity.Local asEntity();
 
         @Override
-        default Attribute.Local<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
-        }
+        Attribute.Local<?> asAttribute();
 
         @Override
-        default Relation.Local asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
-        }
+        Relation.Local asRelation();
     }
 
     interface Remote extends Concept.Remote, Thing {
@@ -95,23 +87,15 @@ public interface Thing extends Concept {
         Stream<? extends Relation.Local> getRelations(RoleType... roleTypes);
 
         @Override
-        default Thing.Remote asThing() {
-            return this;
-        }
+        Thing.Remote asThing();
 
         @Override
-        default Entity.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
-        }
+        Entity.Remote asEntity();
 
         @Override
-        default Relation.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
-        }
+        Relation.Remote asRelation();
 
         @Override
-        default Attribute.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
-        }
+        Attribute.Remote<?> asAttribute();
     }
 }

@@ -24,6 +24,8 @@ import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.impl.RelationTypeImpl;
+import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.common.collection.Bytes;
 import grakn.protocol.ConceptProto;
@@ -57,7 +59,7 @@ public abstract class RelationImpl {
         }
 
         @Override
-        public Relation.Remote asRemote(Grakn.Transaction transaction) {
+        public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());
         }
     }
@@ -73,26 +75,26 @@ public abstract class RelationImpl {
         }
 
         @Override
-        public Relation.Remote asRemote(final Grakn.Transaction transaction) {
+        public RelationImpl.Remote asRemote(final Grakn.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());
         }
 
         @Override
-        public RelationType.Local getType() {
+        public RelationTypeImpl.Local getType() {
             return super.getType().asRelationType();
         }
 
         @Override
-        public Map<? extends RoleType.Local, List<? extends Thing.Local>> getPlayersByRoleType() {
+        public Map<RoleTypeImpl.Local, List<ThingImpl.Local>> getPlayersByRoleType() {
             final ThingMethod.Iter.Req method = ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
 
             final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().concepts().iterateThingMethod(getIID(), method, ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
-            final Map<RoleType.Local, List<Thing.Local>> rolePlayerMap = new HashMap<>();
+            final Map<RoleTypeImpl.Local, List<ThingImpl.Local>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleType.Local role = TypeImpl.Local.of(rolePlayer.getRoleType()).asRoleType();
-                final Thing.Local player = ThingImpl.Local.of(rolePlayer.getPlayer());
+                final RoleTypeImpl.Local role = TypeImpl.Local.of(rolePlayer.getRoleType()).asRoleType();
+                final ThingImpl.Local player = ThingImpl.Local.of(rolePlayer.getPlayer());
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {
@@ -100,15 +102,15 @@ public abstract class RelationImpl {
                 }
             });
 
-            final Map<RoleType.Local, List<? extends Thing.Local>> result = new HashMap<>();
-            for (Map.Entry<RoleType.Local, List<Thing.Local>> entry : rolePlayerMap.entrySet()) {
+            final Map<RoleTypeImpl.Local, List<ThingImpl.Local>> result = new HashMap<>();
+            for (Map.Entry<RoleTypeImpl.Local, List<ThingImpl.Local>> entry : rolePlayerMap.entrySet()) {
                 result.put(entry.getKey(), entry.getValue());
             }
             return result;
         }
 
         @Override
-        public Stream<? extends Thing.Local> getPlayers(RoleType... roleTypes) {
+        public Stream<ThingImpl.Local> getPlayers(RoleType... roleTypes) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setRelationGetPlayersIterReq(
                             GetPlayers.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))).build(),

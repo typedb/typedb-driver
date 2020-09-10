@@ -21,13 +21,11 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.ThingType.GetInstances;
 import grakn.protocol.ConceptProto.ThingType.GetOwns;
@@ -55,7 +53,7 @@ public abstract class ThingTypeImpl {
             super(label, null, isRoot);
         }
 
-        public static TypeImpl.Local of(ConceptProto.Type typeProto) {
+        public static TypeImpl.Local of(final ConceptProto.Type typeProto) {
             switch (typeProto.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Local.of(typeProto);
@@ -73,8 +71,13 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+        public ThingTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
             return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
+
+        @Override
+        public ThingTypeImpl.Local asThingType() {
+            return this;
         }
     }
 
@@ -89,23 +92,23 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Local getSupertype() {
-            return super.getSupertypeExecute(Type.Local::asThingType);
+        public ThingTypeImpl.Local getSupertype() {
+            return super.getSupertypeExecute(TypeImpl.Local::asThingType);
         }
 
         @Override
-        public Stream<? extends ThingType.Local> getSupertypes() {
-            return super.getSupertypes(Type.Local::asThingType);
+        public Stream<? extends ThingTypeImpl.Local> getSupertypes() {
+            return super.getSupertypes(TypeImpl.Local::asThingType);
         }
 
         @Override
-        public Stream<? extends ThingType.Local> getSubtypes() {
-            return super.getSubtypes(Type.Local::asThingType);
+        public Stream<? extends ThingTypeImpl.Local> getSubtypes() {
+            return super.getSubtypes(TypeImpl.Local::asThingType);
         }
 
-        <THING extends Thing.Local> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
+        <THING extends ThingImpl.Local> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
             return tx().concepts().iterateTypeMethod(
-                    label, scope,
+                    getLabel(), getScope(),
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
                             GetInstances.Iter.Req.getDefaultInstance()).build(),
                     response -> thingConstructor.apply(response.getThingTypeGetInstancesIterRes().getThing())
@@ -113,7 +116,7 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public Stream<? extends Thing.Local> getInstances() {
+        public Stream<? extends ThingImpl.Local> getInstances() {
             return getInstances(ThingImpl.Local::of);
         }
 
@@ -132,26 +135,26 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final Stream<AttributeType.Local> getOwns(final ValueType valueType, final boolean keysOnly) {
+        public final Stream<AttributeTypeImpl.Local> getOwns(final ValueType valueType, final boolean keysOnly) {
             final GetOwns.Iter.Req.Builder req = GetOwns.Iter.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) req.setValueType(valueType(valueType));
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build(),
                     res -> res.getThingTypeGetOwnsIterRes().getAttributeType()
-            ).map(Type.Local::asAttributeType);
+            ).map(TypeImpl.Local::asAttributeType);
         }
 
         @Override
-        public final Stream<RoleType.Local> getPlays() {
+        public final Stream<RoleTypeImpl.Local> getPlays() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetPlaysIterReq(
                             GetPlays.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getThingTypeGetPlaysIterRes().getRole()
-            ).map(Type.Local::asRoleType);
+            ).map(TypeImpl.Local::asRoleType);
         }
 
         @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
+        public final void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
             final SetOwns.Req.Builder req = SetOwns.Req.newBuilder().setAttributeType(type(attributeType)).setIsKey(isKey);
             if (overriddenType != null) req.setOverriddenType(type(overriddenType));
             execute(TypeMethod.Req.newBuilder().setThingTypeSetOwnsReq(req).build());
@@ -186,8 +189,13 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public ThingType.Remote asRemote(Grakn.Transaction transaction) {
-            return new ThingTypeImpl.Remote(transaction, label, isRoot);
+        public ThingTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
+
+        @Override
+        public ThingTypeImpl.Remote asThingType() {
+            return this;
         }
     }
 }

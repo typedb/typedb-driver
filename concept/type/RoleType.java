@@ -31,11 +31,6 @@ public interface RoleType extends Type {
     RoleType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Type.Local, RoleType {
-
-        @Override
-        default RoleType.Local asRoleType() {
-            return this;
-        }
     }
 
     interface Remote extends Type.Remote, RoleType {
@@ -54,10 +49,5 @@ public interface RoleType extends Type {
         Stream<? extends RelationType.Local> getRelations();
 
         Stream<? extends ThingType.Local> getPlayers();
-
-        @Override
-        default RoleType.Remote asRoleType() {
-            return this;
-        }
     }
 }

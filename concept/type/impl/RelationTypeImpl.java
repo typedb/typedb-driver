@@ -20,12 +20,9 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RelationType.GetRelates;
 import grakn.protocol.ConceptProto.RelationType.GetRelatesForRoleLabel;
@@ -43,13 +40,18 @@ public class RelationTypeImpl {
             super(label, isRoot);
         }
 
-        public static RelationTypeImpl.Local of(ConceptProto.Type typeProto) {
+        public static RelationTypeImpl.Local of(final ConceptProto.Type typeProto) {
             return new RelationTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
         }
 
         @Override
         public RelationTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
             return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
+
+        @Override
+        public RelationTypeImpl.Local asRelationType() {
+            return this;
         }
     }
 
@@ -64,28 +66,28 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Stream<Relation.Local> getInstances() {
+        public final Stream<RelationImpl.Local> getInstances() {
             return super.getInstances(RelationImpl.Local::of);
         }
 
         @Override
-        public RelationType.Remote asRemote(Grakn.Transaction transaction) {
-            return new RelationTypeImpl.Remote(transaction, label, isRoot);
+        public RelationTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+            return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
         @Override
-        public RelationType.Local getSupertype() {
-            return super.getSupertypeExecute(Type.Local::asRelationType);
+        public RelationTypeImpl.Local getSupertype() {
+            return super.getSupertypeExecute(TypeImpl.Local::asRelationType);
         }
 
         @Override
-        public final Stream<RelationType.Local> getSupertypes() {
-            return super.getSupertypes(Type.Local::asRelationType);
+        public final Stream<RelationTypeImpl.Local> getSupertypes() {
+            return super.getSupertypes(TypeImpl.Local::asRelationType);
         }
 
         @Override
-        public final Stream<RelationType.Local> getSubtypes() {
-            return super.getSubtypes(Type.Local::asRelationType);
+        public final Stream<RelationTypeImpl.Local> getSubtypes() {
+            return super.getSubtypes(TypeImpl.Local::asRelationType);
         }
 
         @Override
@@ -94,14 +96,14 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Relation.Local create() {
-            TypeMethod.Req method = TypeMethod.Req.newBuilder().setRelationTypeCreateReq(
+        public final RelationImpl.Local create() {
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder().setRelationTypeCreateReq(
                     ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
             return ThingImpl.Local.of(execute(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
-        public final RoleType.Local getRelates(final String roleLabel) {
+        public final RoleTypeImpl.Local getRelates(final String roleLabel) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
                     GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)).build();
             final GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
@@ -110,12 +112,12 @@ public class RelationTypeImpl {
         }
 
         @Override
-        public final Stream<RoleType.Local> getRelates() {
+        public final Stream<RoleTypeImpl.Local> getRelates() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRelationTypeGetRelatesIterReq(
                             GetRelates.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getRelationTypeGetRelatesIterRes().getRole()
-            ).map(Type.Local::asRoleType);
+            ).map(TypeImpl.Local::asRoleType);
         }
 
         @Override
@@ -137,6 +139,11 @@ public class RelationTypeImpl {
             execute(TypeMethod.Req.newBuilder().setRelationTypeUnsetRelatesReq(
                     UnsetRelates.Req.newBuilder().setLabel(roleLabel)
             ).build());
+        }
+
+        @Override
+        public RelationTypeImpl.Remote asRelationType() {
+            return this;
         }
     }
 }

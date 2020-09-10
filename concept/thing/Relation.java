@@ -35,9 +35,7 @@ public interface Relation extends Thing {
     interface Local extends Thing.Local, Relation {
 
         @Override
-        default Relation.Local asRelation() {
-            return this;
-        }
+        Relation.Local asRelation();
     }
 
     interface Remote extends Thing.Remote, Relation {
@@ -51,11 +49,9 @@ public interface Relation extends Thing {
 
         Stream<? extends Thing.Local> getPlayers(RoleType... roleTypes);
 
-        Map<? extends RoleType.Local, List<? extends Thing.Local>> getPlayersByRoleType();
+        Map<? extends RoleType.Local, ? extends List<? extends Thing.Local>> getPlayersByRoleType();
 
         @Override
-        default Relation.Remote asRelation() {
-            return this;
-        }
+        Relation.Remote asRelation();
     }
 }

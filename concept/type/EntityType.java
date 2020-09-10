@@ -30,11 +30,6 @@ public interface EntityType extends ThingType {
     EntityType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends ThingType.Local, EntityType {
-
-        @Override
-        default EntityType.Local asEntityType() {
-            return this;
-        }
     }
 
     interface Remote extends ThingType.Remote, EntityType {
@@ -54,10 +49,5 @@ public interface EntityType extends ThingType {
 
         @Override
         Stream<? extends Entity.Local> getInstances();
-
-        @Override
-        default EntityType.Remote asEntityType() {
-            return this;
-        }
     }
 }

@@ -21,6 +21,11 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Type.SetSupertype;
@@ -31,6 +36,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
@@ -41,9 +47,9 @@ public abstract class TypeImpl {
 
     public abstract static class Local implements Type.Local {
 
-        final String label;
-        final String scope;
-        final boolean isRoot;
+        private final String label;
+        private final String scope;
+        private final boolean isRoot;
         private final int hash;
 
         Local(final String label, final @Nullable String scope, final boolean isRoot) {
@@ -78,12 +84,42 @@ public abstract class TypeImpl {
         }
 
         @Override
+        public TypeImpl.Local asType() {
+            return this;
+        }
+
+        @Override
+        public ThingTypeImpl.Local asThingType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
+        }
+
+        @Override
+        public EntityTypeImpl.Local asEntityType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
+        }
+
+        @Override
+        public AttributeTypeImpl.Local asAttributeType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
+        }
+
+        @Override
+        public RelationTypeImpl.Local asRelationType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
+        }
+
+        @Override
+        public RoleTypeImpl.Local asRoleType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
+        }
+
+        @Override
         public String toString() {
             return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -95,17 +131,20 @@ public abstract class TypeImpl {
         public int hashCode() {
             return hash;
         }
+
+        // TODO: surely this should just not exist here, and be declared in RoleTypeImpl?
+        String getScope() { return scope; }
     }
 
     public abstract static class Remote implements Type.Remote {
 
         private final Grakn.Transaction transaction;
-        final String label;
-        final String scope;
-        final boolean isRoot;
+        private final String label;
+        private final String scope;
+        private final boolean isRoot;
         private final int hash;
 
-        Remote(final Grakn.Transaction transaction, final String label, @Nullable String scope, final boolean isRoot) {
+        Remote(final Grakn.Transaction transaction, final String label, @Nullable final String scope, final boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             else if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
@@ -146,10 +185,10 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final void setLabel(String label) {
+        public final void setLabel(final String label) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder()
-                                                .setLabel(label)).build();
+                            .setLabel(label)).build();
             execute(method);
         }
 
@@ -161,12 +200,45 @@ public abstract class TypeImpl {
             return execute(method).getTypeIsAbstractRes().getAbstract();
         }
 
-        void setSupertypeExecute(Type type) {
+        @Override
+        public TypeImpl.Remote asType() {
+            return this;
+        }
+
+        @Override
+        public ThingTypeImpl.Remote asThingType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
+        }
+
+        @Override
+        public EntityTypeImpl.Remote asEntityType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
+        }
+
+        @Override
+        public RelationTypeImpl.Remote asRelationType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
+        }
+
+        @Override
+        public AttributeTypeImpl.Remote asAttributeType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
+        }
+
+        @Override
+        public RoleTypeImpl.Remote asRoleType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
+        }
+
+        // TODO: surely this method should not be here, but in RoleTypeImpl?
+        String getScope() { return scope; }
+
+        void setSupertypeExecute(final Type type) {
             execute(TypeMethod.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))).build());
         }
 
         @Nullable
-        <TYPE extends Type.Local> TYPE getSupertypeExecute(final Function<Type.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl.Local> TYPE getSupertypeExecute(final Function<TypeImpl.Local, TYPE> typeConstructor) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -181,13 +253,13 @@ public abstract class TypeImpl {
             }
         }
 
-        <TYPE extends Type.Local> Stream<TYPE> getSupertypes(final Function<Type.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl.Local> Stream<TYPE> getSupertypes(final Function<TypeImpl.Local, TYPE> typeConstructor) {
             final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
             return stream(method, res -> res.getTypeGetSupertypesIterRes().getType()).map(typeConstructor);
         }
 
-        <TYPE extends Type.Local> Stream<TYPE> getSubtypes(final Function<Type.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl.Local> Stream<TYPE> getSubtypes(final Function<TypeImpl.Local, TYPE> typeConstructor) {
             final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
             return stream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(typeConstructor);
@@ -209,8 +281,7 @@ public abstract class TypeImpl {
             return transaction;
         }
 
-        protected Stream<Type.Local> stream(final TypeMethod.Iter.Req request,
-                                            final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+        protected Stream<TypeImpl.Local> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             return transaction.concepts().iterateTypeMethod(
                     label, scope, request, response -> TypeImpl.Local.of(typeGetter.apply(response))
             );

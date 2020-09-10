@@ -31,11 +31,6 @@ public interface RelationType extends ThingType {
     RelationType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends ThingType.Local, RelationType {
-
-        @Override
-        default RelationType.Local asRelationType() {
-            return this;
-        }
     }
 
     interface Remote extends ThingType.Remote, RelationType {
@@ -47,7 +42,7 @@ public interface RelationType extends ThingType {
         @Nullable
         RoleType.Local getRelates(String roleLabel);
 
-        Stream<RoleType.Local> getRelates();
+        Stream<? extends RoleType.Local> getRelates();
 
         void setRelates(String roleLabel);
 
@@ -63,10 +58,5 @@ public interface RelationType extends ThingType {
 
         @Override
         Stream<? extends Relation.Local> getInstances();
-
-        @Override
-        default RelationType.Remote asRelationType() {
-            return this;
-        }
     }
 }

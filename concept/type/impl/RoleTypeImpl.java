@@ -20,10 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RoleType.GetPlayers;
 import grakn.protocol.ConceptProto.RoleType.GetRelation;
@@ -47,12 +44,17 @@ public class RoleTypeImpl {
 
         @Override
         public final String getScope() {
-            return scope;
+            return super.getScope();
         }
 
         @Override
         public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
+        }
+
+        @Override
+        public RoleTypeImpl.Local asRoleType() {
+            return this;
         }
     }
 
@@ -72,32 +74,32 @@ public class RoleTypeImpl {
 
         @Nullable
         @Override
-        public RoleType.Local getSupertype() {
-            return getSupertypeExecute(Type.Local::asRoleType);
+        public RoleTypeImpl.Local getSupertype() {
+            return getSupertypeExecute(TypeImpl.Local::asRoleType);
         }
 
         @Override
-        public final Stream<RoleType.Local> getSupertypes() {
-            return super.getSupertypes(Type.Local::asRoleType);
+        public final Stream<RoleTypeImpl.Local> getSupertypes() {
+            return super.getSupertypes(TypeImpl.Local::asRoleType);
         }
 
         @Override
-        public final Stream<RoleType.Local> getSubtypes() {
-            return super.getSubtypes(Type.Local::asRoleType);
+        public final Stream<RoleTypeImpl.Local> getSubtypes() {
+            return super.getSubtypes(TypeImpl.Local::asRoleType);
         }
 
         @Override
-        public String getScope() {
-            return scope;
+        public final String getScope() {
+            return super.getScope();
         }
 
         @Override
-        public RoleType.Remote asRemote(Grakn.Transaction transaction) {
-            return new RoleTypeImpl.Remote(transaction, label, scope, isRoot);
+        public RoleType.Remote asRemote(final Grakn.Transaction transaction) {
+            return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
 
         @Override
-        public final RelationType.Local getRelation() {
+        public final RelationTypeImpl.Local getRelation() {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setRoleTypeGetRelationReq(GetRelation.Req.getDefaultInstance()).build();
             final GetRelation.Res response = execute(method).getRoleTypeGetRelationRes();
@@ -105,21 +107,26 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public final Stream<RelationType.Local> getRelations() {
+        public final Stream<RelationTypeImpl.Local> getRelations() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetRelationsIterReq(
                             GetRelations.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getRoleTypeGetRelationsIterRes().getRelationType()
-            ).map(Type.Local::asRelationType);
+            ).map(TypeImpl.Local::asRelationType);
         }
 
         @Override
-        public final Stream<ThingType.Local> getPlayers() {
+        public final Stream<ThingTypeImpl.Local> getPlayers() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetPlayersIterReq(
                             GetPlayers.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getRoleTypeGetPlayersIterRes().getThingType()
-            ).map(Type.Local::asThingType);
+            ).map(TypeImpl.Local::asThingType);
+        }
+
+        @Override
+        public RoleTypeImpl.Remote asRoleType() {
+            return this;
         }
     }
 }

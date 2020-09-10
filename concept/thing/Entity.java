@@ -30,9 +30,7 @@ public interface Entity extends Thing {
     interface Local extends Thing.Local, Entity {
 
         @Override
-        default Entity.Local asEntity() {
-            return this;
-        }
+        Entity.Local asEntity();
     }
 
     interface Remote extends Thing.Remote, Entity {
@@ -41,8 +39,6 @@ public interface Entity extends Thing {
         EntityType.Local getType();
 
         @Override
-        default Entity.Remote asEntity() {
-            return this;
-        }
+        Entity.Remote asEntity();
     }
 }

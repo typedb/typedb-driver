@@ -51,34 +51,22 @@ public interface Type extends Concept {
     interface Local extends Type, Concept.Local {
 
         @Override
-        default Type.Local asType() {
-            return this;
-        }
+        Type.Local asType();
 
         @Override
-        default ThingType.Local asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
-        }
+        ThingType.Local asThingType();
 
         @Override
-        default EntityType.Local asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
-        }
+        EntityType.Local asEntityType();
 
         @Override
-        default AttributeType.Local asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
-        }
+        AttributeType.Local asAttributeType();
 
         @Override
-        default RelationType.Local asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
-        }
+        RelationType.Local asRelationType();
 
         @Override
-        default RoleType.Local asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
-        }
+        RoleType.Local asRoleType();
     }
 
     interface Remote extends Type, Concept.Remote {
@@ -95,33 +83,21 @@ public interface Type extends Concept {
         Stream<? extends Type.Local> getSubtypes();
 
         @Override
-        default Type.Remote asType() {
-            return this;
-        }
+        Type.Remote asType();
 
         @Override
-        default ThingType.Remote asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
-        }
+        ThingType.Remote asThingType();
 
         @Override
-        default EntityType.Remote asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
-        }
+        EntityType.Remote asEntityType();
 
         @Override
-        default RelationType.Remote asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
-        }
+        RelationType.Remote asRelationType();
 
         @Override
-        default AttributeType.Remote asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
-        }
+        AttributeType.Remote asAttributeType();
 
         @Override
-        default RoleType.Remote asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
-        }
+        RoleType.Remote asRoleType();
     }
 }

@@ -31,19 +31,9 @@ public interface Rule extends Type {
     Rule.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Type.Local, Rule {
-
-        @Override
-        default Rule.Local asRule() {
-            return this;
-        }
     }
 
     interface Remote extends Type.Remote, Rule {
-
-        @Override
-        default boolean isAbstract() {
-            return false;
-        }
 
         @Nullable
         Pattern getWhen();
@@ -56,10 +46,5 @@ public interface Rule extends Type {
 
         @Override
         Stream<? extends Rule.Local> getSubtypes();
-
-        @Override
-        default Rule.Remote asRule() {
-            return this;
-        }
     }
 }

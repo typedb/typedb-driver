@@ -31,11 +31,6 @@ public interface ThingType extends Type {
     ThingType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Local extends Type.Local, ThingType {
-
-        @Override
-        default ThingType.Local asThingType() {
-            return this;
-        }
     }
 
     interface Remote extends Type.Remote, ThingType {
@@ -76,7 +71,7 @@ public interface ThingType extends Type {
             setOwns(attributeType, false);
         }
 
-        Stream<RoleType.Local> getPlays();
+        Stream<? extends RoleType.Local> getPlays();
 
         default Stream<? extends AttributeType.Local> getOwns() {
             return getOwns(false);
@@ -95,10 +90,5 @@ public interface ThingType extends Type {
         void unsetPlays(RoleType role);
 
         void unsetOwns(AttributeType attributeType);
-
-        @Override
-        default ThingType.Remote asThingType() {
-            return this;
-        }
     }
 }
