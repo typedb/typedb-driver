@@ -20,7 +20,7 @@
 package grakn.client.concept;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.Rule;
@@ -48,17 +48,17 @@ public interface Concept {
 
         @Override
         default Type.Local asType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
         }
 
         @Override
         default Thing.Local asThing() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
         }
 
         @Override
         default Rule.Local asRule() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
         }
     }
 
@@ -78,17 +78,17 @@ public interface Concept {
 
         @Override
         default Type.Remote asType() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
         }
 
         @Override
         default Thing.Remote asThing() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
         }
 
         @Override
         default Rule.Remote asRule() {
-            throw new GraknException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
         }
 
         @Override

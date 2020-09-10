@@ -73,7 +73,7 @@ public class RoleTypeImpl {
         @Nullable
         @Override
         public RoleType.Local getSupertype() {
-            return getSupertype(Type.Local::asRoleType);
+            return getSupertypeExecute(Type.Local::asRoleType);
         }
 
         @Override

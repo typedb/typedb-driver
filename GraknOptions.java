@@ -19,11 +19,11 @@
 
 package grakn.client;
 
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 
 import java.util.Optional;
 
-import static grakn.client.common.exception.ErrorMessage.Connection.NEGATIVE_BATCH_SIZE;
+import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_BATCH_SIZE;
 
 public class GraknOptions {
 
@@ -55,7 +55,7 @@ public class GraknOptions {
 
     public GraknOptions batchSize(final int batchSize) {
         if (batchSize < 1) {
-            throw new GraknException(NEGATIVE_BATCH_SIZE.message(batchSize));
+            throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(batchSize));
         }
         this.batchSize = batchSize;
         return this;

@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.util;
 
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -30,7 +30,7 @@ public class Util {
         try {
             function.run();
             fail();
-        } catch (GraknException e) {
+        } catch (GraknClientException e) {
             assertTrue(true);
         }
     }

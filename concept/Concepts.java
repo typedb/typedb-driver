@@ -19,7 +19,7 @@
 
 package grakn.client.concept;
 
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
@@ -76,14 +76,14 @@ public final class Concepts {
         return getType(GraqlToken.Type.RULE.toString()).asRule();
     }
 
-    public EntityType.Remote putEntityType(final String label) {
+    public EntityType.Local putEntityType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
                                              .setLabel(label)).build();
 
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Remote.of(transaction, res.getPutEntityTypeRes().getEntityType()).asEntityType();
+        return TypeImpl.Local.of(res.getPutEntityTypeRes().getEntityType()).asEntityType();
     }
 
     @Nullable
@@ -93,13 +93,13 @@ public final class Concepts {
         else return null;
     }
 
-    public RelationType.Remote putRelationType(final String label) {
+    public RelationType.Local putRelationType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
                                                .setLabel(label)).build();
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Remote.of(transaction, res.getPutRelationTypeRes().getRelationType()).asRelationType();
+        return TypeImpl.Local.of(res.getPutRelationTypeRes().getRelationType()).asRelationType();
     }
 
     @Nullable
@@ -126,8 +126,8 @@ public final class Concepts {
         else return null;
     }
 
-    public Rule.Remote putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknException(new UnsupportedOperationException());
+    public Rule.Local putRule(final String label, final Pattern when, final Pattern then) {
+        throw new GraknClientException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()

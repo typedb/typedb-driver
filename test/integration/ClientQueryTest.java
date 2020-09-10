@@ -24,6 +24,7 @@ import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.answer.ConceptMap;
+import grakn.client.rpc.GraknClient;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -65,7 +66,7 @@ public class ClientQueryTest {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
-        graknClient = Grakn.client(grakn.address());
+        graknClient = new GraknClient(grakn.address());
     }
 
     @AfterClass

@@ -73,8 +73,8 @@ public abstract class RelationImpl {
         }
 
         @Override
-        public Relation.Remote asRemote(Grakn.Transaction transaction) {
-            return new RelationImpl.Remote(transaction, iid);
+        public Relation.Remote asRemote(final Grakn.Transaction transaction) {
+            return new RelationImpl.Remote(transaction, getIID());
         }
 
         @Override

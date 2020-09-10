@@ -23,25 +23,25 @@ import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
-public class GraknException extends RuntimeException {
+public class GraknClientException extends RuntimeException {
 
     private String statusCode;
 
-    public GraknException(String error) {
+    public GraknClientException(final String error) {
         super(error);
     }
 
-    public GraknException(ErrorMessage error) {
+    public GraknClientException(final ErrorMessage error) {
         super(error.toString());
         assert !getMessage().contains("%s");
     }
 
-    public GraknException(StatusRuntimeException statusRuntimeException) {
+    public GraknClientException(final StatusRuntimeException statusRuntimeException) {
         super(statusRuntimeException.getMessage(), statusRuntimeException);
         this.statusCode = statusRuntimeException.getStatus().getCode().name();
     }
 
-    public GraknException(Exception e) {
+    public GraknClientException(final Exception e) {
         super(e);
     }
 

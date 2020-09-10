@@ -75,7 +75,7 @@ public class RelationTypeImpl {
 
         @Override
         public RelationType.Local getSupertype() {
-            return super.getSupertype(Type.Local::asRelationType);
+            return super.getSupertypeExecute(Type.Local::asRelationType);
         }
 
         @Override

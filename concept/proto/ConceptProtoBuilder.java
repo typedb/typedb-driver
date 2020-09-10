@@ -20,7 +20,7 @@
 package grakn.client.concept.proto;
 
 import com.google.protobuf.ByteString;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
@@ -40,7 +40,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_CONCEPT;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ATTRIBUTE_VALUE;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.stream.Collectors.toList;
 
@@ -59,14 +59,14 @@ public abstract class ConceptProtoBuilder {
     public static ConceptProto.Thing thing(Thing thing) {
         return ConceptProto.Thing.newBuilder()
                 .setIid(iid(thing.getIID()))
-                .setSchema(schema(thing))
+                .setEncoding(encoding(thing))
                 .build();
     }
 
     public static ConceptProto.Type type(Type type) {
         final ConceptProto.Type.Builder builder = ConceptProto.Type.newBuilder()
                 .setLabel(type.getLabel())
-                .setSchema(schema(type));
+                .setEncoding(encoding(type));
 
         if (type instanceof RoleType) {
             builder.setScope(type.asRoleType().getScope());
@@ -92,7 +92,7 @@ public abstract class ConceptProtoBuilder {
         } else if (value instanceof LocalDateTime) {
             builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
         } else {
-            throw new GraknException(UNRECOGNISED_CONCEPT.message("attribute value", value));
+            throw new GraknClientException(BAD_ATTRIBUTE_VALUE.message(value));
         }
         return builder.build();
     }
@@ -120,33 +120,33 @@ public abstract class ConceptProtoBuilder {
         return ByteString.copyFrom(hexStringToBytes(iid));
     }
 
-    private static ConceptProto.Thing.SCHEMA schema(final Thing thing) {
+    private static ConceptProto.Thing.ENCODING encoding(final Thing thing) {
         if (thing instanceof Entity) {
-            return ConceptProto.Thing.SCHEMA.ENTITY;
+            return ConceptProto.Thing.ENCODING.ENTITY;
         } else if (thing instanceof Relation) {
-            return ConceptProto.Thing.SCHEMA.RELATION;
+            return ConceptProto.Thing.ENCODING.RELATION;
         } else if (thing instanceof Attribute) {
-            return ConceptProto.Thing.SCHEMA.ATTRIBUTE;
+            return ConceptProto.Thing.ENCODING.ATTRIBUTE;
         } else {
-            return ConceptProto.Thing.SCHEMA.UNRECOGNIZED;
+            return ConceptProto.Thing.ENCODING.UNRECOGNIZED;
         }
     }
 
-    private static ConceptProto.Type.SCHEMA schema(final Type type) {
+    private static ConceptProto.Type.ENCODING encoding(final Type type) {
         if (type instanceof EntityType) {
-            return ConceptProto.Type.SCHEMA.ENTITY_TYPE;
+            return ConceptProto.Type.ENCODING.ENTITY_TYPE;
         } else if (type instanceof RelationType) {
-            return ConceptProto.Type.SCHEMA.RELATION_TYPE;
+            return ConceptProto.Type.ENCODING.RELATION_TYPE;
         } else if (type instanceof AttributeType) {
-            return ConceptProto.Type.SCHEMA.ATTRIBUTE_TYPE;
+            return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleType) {
-            return ConceptProto.Type.SCHEMA.ROLE_TYPE;
+            return ConceptProto.Type.ENCODING.ROLE_TYPE;
         } else if (type instanceof Rule) {
-            return ConceptProto.Type.SCHEMA.RULE;
+            return ConceptProto.Type.ENCODING.RULE;
         } else if (type instanceof ThingType) {
-            return ConceptProto.Type.SCHEMA.THING_TYPE;
+            return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
-            return ConceptProto.Type.SCHEMA.UNRECOGNIZED;
+            return ConceptProto.Type.ENCODING.UNRECOGNIZED;
         }
     }
 }

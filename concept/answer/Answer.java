@@ -20,11 +20,12 @@
 package grakn.client.concept.answer;
 
 import grakn.client.Grakn.Transaction;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.REQUIRED_FIELD_NOT_SET;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Query.MISSING_ANSWER;
+import static grakn.common.util.Objects.className;
 
 public interface Answer {
 
@@ -47,9 +48,9 @@ public interface Answer {
             case VOID:
                 return Void.of(res.getVoid());
             case ANSWER_NOT_SET:
-                throw new GraknException(REQUIRED_FIELD_NOT_SET.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName()));
+                throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
             default:
-                throw new GraknException(UNRECOGNISED_FIELD.message(AnswerProto.Answer.AnswerCase.class.getCanonicalName(), res.getAnswerCase()));
+                throw new GraknClientException(BAD_ANSWER_TYPE.message(res.getAnswerCase()));
         }
     }
 }

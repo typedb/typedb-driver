@@ -29,7 +29,6 @@ import grakn.client.concept.answer.ConceptSetMeasure;
 import grakn.client.concept.answer.Explanation;
 import grakn.client.concept.answer.Numeric;
 import grakn.client.concept.answer.Void;
-import grakn.client.rpc.RPCClient;
 import graql.lang.query.GraqlCompute;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
@@ -48,14 +47,6 @@ import java.util.stream.Stream;
 import static grakn.client.Grakn.Session.Type.DATA;
 
 public interface Grakn {
-
-    static Client client() {
-        return new RPCClient();
-    }
-
-    static Client client(String address) {
-        return new RPCClient(address);
-    }
 
     interface Client extends AutoCloseable {
 

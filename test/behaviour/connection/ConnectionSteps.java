@@ -23,6 +23,7 @@ import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import grakn.client.rpc.GraknClient;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
@@ -60,7 +61,7 @@ public class ConnectionSteps {
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
-        client = Grakn.client(address);
+        client = new GraknClient(address);
 
         System.out.println("Connection to Grakn Core established");
 

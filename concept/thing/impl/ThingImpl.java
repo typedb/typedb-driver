@@ -20,7 +20,7 @@
 package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
@@ -41,10 +41,12 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
+import static grakn.common.util.Objects.className;
 
 public abstract class ThingImpl {
 
@@ -52,17 +54,16 @@ public abstract class ThingImpl {
 
         private final String iid;
         // TODO: private final ThingType.Local type;
-        // We (probably) need to storae the concept Type, but we should have a better way of retrieving it.
-        // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was highly confusing as it was
+        // We need to store the concept Type, but we need a better way of retrieving it (currently requires a 2nd roundtrip)
+        // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was confusing as it was
         // not actually prefilled when using the Concept API - only when using the Query API.
-        // We should probably create a dedicated Proto class for Graql (AnswerProto or QueryProto) and keep the code clean.
 
         Local(final String iid) {
             this.iid = iid;
         }
 
         public static ThingImpl.Local of(final ConceptProto.Thing thingProto) {
-            switch (thingProto.getSchema()) {
+            switch (thingProto.getEncoding()) {
                 case ENTITY:
                     return EntityImpl.Local.of(thingProto);
                 case RELATION:
@@ -71,9 +72,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Local.of(thingProto);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(
-                            ConceptProto.Thing.SCHEMA.class.getSimpleName(), thingProto.getSchema())
-                    );
+                    throw new GraknClientException(BAD_ENCODING.message(thingProto.getEncoding()));
             }
         }
 
@@ -84,7 +83,7 @@ public abstract class ThingImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
+            return className(this.getClass()) + "[iid:" + iid + "]";
         }
 
         @Override
@@ -105,12 +104,12 @@ public abstract class ThingImpl {
     public abstract static class Remote implements Thing.Remote {
 
         private final Grakn.Transaction transaction;
-        final String iid;
+        private final String iid;
         private final int hash;
 
         protected Remote(final Grakn.Transaction transaction, final String iid) {
-            if (transaction == null) throw new GraknException(MISSING_ARGUMENT.message("concepts"));
-            else if (iid == null || iid.isEmpty()) throw new GraknException(MISSING_ARGUMENT.message("iid"));
+            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
+            else if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
             this.iid = iid;
             this.hash = Objects.hash(this.transaction, this.iid);
@@ -118,7 +117,7 @@ public abstract class ThingImpl {
 
         public static ThingImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
 
-            switch (protoThing.getSchema()) {
+            switch (protoThing.getEncoding()) {
                 case ENTITY:
                     return EntityImpl.Remote.of(transaction, protoThing);
                 case RELATION:
@@ -127,7 +126,7 @@ public abstract class ThingImpl {
                     return AttributeImpl.Remote.of(transaction, protoThing);
                 default:
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Thing.SCHEMA.class.getCanonicalName(), protoThing.getSchema()));
+                    throw new GraknClientException(BAD_ENCODING.message(protoThing.getEncoding()));
             }
         }
 
@@ -199,7 +198,7 @@ public abstract class ThingImpl {
         }
 
         @Override
-        public final Stream<? extends Relation> getRelations(RoleType... roleTypes) {
+        public final Stream<? extends Relation.Local> getRelations(RoleType... roleTypes) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setThingGetRelationsIterReq(
                             GetRelations.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))).build(),
@@ -251,7 +250,7 @@ public abstract class ThingImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[iid:" + iid + "]";
+            return className(this.getClass()) + "[iid:" + iid + "]";
         }
 
         @Override

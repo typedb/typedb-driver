@@ -28,18 +28,18 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class RPCClient implements Client {
+public class GraknClient implements Client {
 
     public static final String DEFAULT_URI = "localhost:48555";
 
     private final ManagedChannel channel;
     private final DatabaseManager databases;
 
-    public RPCClient() {
+    public GraknClient() {
         this(DEFAULT_URI);
     }
 
-    public RPCClient(final String address) {
+    public GraknClient(final String address) {
         channel = ManagedChannelBuilder.forTarget(address)
                 .usePlaintext().build();
         databases = new RPCDatabaseManager(channel);

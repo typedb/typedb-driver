@@ -66,7 +66,7 @@ public class EntityTypeImpl {
 
         @Override
         public EntityType.Local getSupertype() {
-            return super.getSupertype(Type.Local::asEntityType);
+            return super.getSupertypeExecute(Type.Local::asEntityType);
         }
 
         @Override

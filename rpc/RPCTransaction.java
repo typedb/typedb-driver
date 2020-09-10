@@ -25,7 +25,7 @@ import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.answer.Answer;
 import grakn.client.concept.answer.AnswerGroup;
@@ -59,7 +59,7 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.ProtoBuilder.options;
 import static grakn.client.common.ProtoBuilder.tracingData;
-import static grakn.client.common.exception.ErrorMessage.Query.UNRECOGNISED_QUERY_OBJECT;
+import static grakn.client.common.exception.ErrorMessage.Query.BAD_QUERY_OBJECT;
 import static grakn.client.concept.proto.ConceptProtoBuilder.concept;
 
 public class RPCTransaction implements Transaction {
@@ -388,7 +388,7 @@ public class RPCTransaction implements Transaction {
             return execute((GraqlCompute.Cluster) query);
 
         } else {
-            throw new GraknException(UNRECOGNISED_QUERY_OBJECT.message(query));
+            throw new GraknClientException(BAD_QUERY_OBJECT.message(query));
         }
     }
 
@@ -436,7 +436,7 @@ public class RPCTransaction implements Transaction {
             return stream((GraqlCompute.Cluster) query);
 
         } else {
-            throw new GraknException(UNRECOGNISED_QUERY_OBJECT.message(query));
+            throw new GraknClientException(BAD_QUERY_OBJECT.message(query));
         }
     }
 
@@ -539,9 +539,9 @@ public class RPCTransaction implements Transaction {
                 getIterator().waitForStart(timeout, unit);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-                throw new GraknException(ex);
+                throw new GraknClientException(ex);
             } catch (TimeoutException ex) {
-                throw new GraknException(ex);
+                throw new GraknClientException(ex);
             }
             return getInternal();
         }

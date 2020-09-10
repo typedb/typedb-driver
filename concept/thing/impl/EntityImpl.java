@@ -54,7 +54,7 @@ public abstract class EntityImpl {
 
         @Override
         public Entity.Remote asRemote(Grakn.Transaction transaction) {
-            return new EntityImpl.Remote(transaction, iid);
+            return new EntityImpl.Remote(transaction, getIID());
         }
 
         @Override

@@ -20,7 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Type.SetSupertype;
@@ -31,9 +31,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.ClientInternal.MISSING_ARGUMENT;
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
+import static grakn.common.util.Objects.className;
 
 public abstract class TypeImpl {
 
@@ -52,13 +54,13 @@ public abstract class TypeImpl {
         }
 
         public static TypeImpl.Local of(final ConceptProto.Type typeProto) {
-            switch (typeProto.getSchema()) {
+            switch (typeProto.getEncoding()) {
                 case ROLE_TYPE:
                     return RoleTypeImpl.Local.of(typeProto);
                 case RULE:
                     return RuleImpl.Local.of(typeProto);
                 case UNRECOGNIZED:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), typeProto.getSchema()));
+                    throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
                 default:
                     return ThingTypeImpl.Local.of(typeProto);
 
@@ -77,7 +79,7 @@ public abstract class TypeImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override
@@ -104,8 +106,8 @@ public abstract class TypeImpl {
         private final int hash;
 
         Remote(final Grakn.Transaction transaction, final String label, @Nullable String scope, final boolean isRoot) {
-            if (transaction == null) throw new GraknException(MISSING_ARGUMENT.message("concept"));
-            else if (label == null || label.isEmpty()) throw new GraknException(MISSING_ARGUMENT.message("label"));
+            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
+            else if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
             this.label = label;
             this.scope = scope;
@@ -114,7 +116,7 @@ public abstract class TypeImpl {
         }
 
         public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
-            switch (type.getSchema()) {
+            switch (type.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Remote.of(transaction, type);
                 case RELATION_TYPE:
@@ -129,7 +131,7 @@ public abstract class TypeImpl {
                     return RuleImpl.Remote.of(transaction, type);
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), type.getSchema()));
+                    throw new GraknClientException(BAD_ENCODING.message(type.getEncoding()));
             }
         }
 
@@ -164,7 +166,7 @@ public abstract class TypeImpl {
         }
 
         @Nullable
-        <TYPE extends Type.Local> TYPE getSupertype(final Function<Type.Local, TYPE> typeConstructor) {
+        <TYPE extends Type.Local> TYPE getSupertypeExecute(final Function<Type.Local, TYPE> typeConstructor) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -221,7 +223,7 @@ public abstract class TypeImpl {
 
         @Override
         public String toString() {
-            return this.getClass().getCanonicalName() + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override

@@ -20,7 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
@@ -43,7 +43,7 @@ import grakn.protocol.ConceptProto.TypeMethod;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Protocol.UNRECOGNISED_FIELD;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
@@ -56,7 +56,7 @@ public abstract class ThingTypeImpl {
         }
 
         public static TypeImpl.Local of(ConceptProto.Type typeProto) {
-            switch (typeProto.getSchema()) {
+            switch (typeProto.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Local.of(typeProto);
                 case RELATION_TYPE:
@@ -68,7 +68,7 @@ public abstract class ThingTypeImpl {
                     return new ThingTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
                 case UNRECOGNIZED:
                 default:
-                    throw new GraknException(UNRECOGNISED_FIELD.message(ConceptProto.Type.SCHEMA.class.getCanonicalName(), typeProto.getSchema()));
+                    throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
             }
         }
 
@@ -90,7 +90,7 @@ public abstract class ThingTypeImpl {
 
         @Override
         public ThingType.Local getSupertype() {
-            return super.getSupertype(Type.Local::asThingType);
+            return super.getSupertypeExecute(Type.Local::asThingType);
         }
 
         @Override

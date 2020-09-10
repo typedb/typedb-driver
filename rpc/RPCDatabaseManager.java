@@ -21,7 +21,7 @@ package grakn.client.rpc;
 
 import com.google.common.collect.ImmutableList;
 import grakn.client.Grakn.DatabaseManager;
-import grakn.client.common.exception.GraknException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 import io.grpc.ManagedChannel;
@@ -61,7 +61,7 @@ class RPCDatabaseManager implements DatabaseManager {
         try {
             return req.get();
         } catch (StatusRuntimeException e) {
-            throw new GraknException(e);
+            throw new GraknClientException(e);
         }
     }
 }
