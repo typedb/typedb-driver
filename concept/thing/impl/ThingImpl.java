@@ -89,17 +89,17 @@ public abstract class ThingImpl implements Thing {
 
     @Override
     public EntityImpl asEntity() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Entity.class)));
     }
 
     @Override
     public AttributeImpl<?> asAttribute() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.class)));
     }
 
     @Override
     public RelationImpl asRelation() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Relation.class)));
     }
 
     @Override
@@ -257,17 +257,17 @@ public abstract class ThingImpl implements Thing {
 
         @Override
         public EntityImpl.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Entity.class)));
         }
 
         @Override
         public RelationImpl.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Relation.class)));
         }
 
         @Override
         public AttributeImpl.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.class)));
         }
 
         final Grakn.Transaction tx() {
