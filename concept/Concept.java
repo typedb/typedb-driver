@@ -34,15 +34,15 @@ import static grakn.common.util.Objects.className;
 public interface Concept {
 
     default Type asType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Type.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
     }
 
     default Thing asThing() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Thing.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
     }
 
     default Rule asRule() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Rule.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
     }
 
     Remote asRemote(Grakn.Transaction transaction);
@@ -67,17 +67,17 @@ public interface Concept {
 
         @Override
         default Type.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Type.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
         }
 
         @Override
         default Thing.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Thing.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
         }
 
         @Override
         default Rule.Remote asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Rule.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
         }
 
         @Override

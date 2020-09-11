@@ -70,27 +70,27 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
     @Override
     public AttributeImpl.Boolean asBoolean() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Boolean.class)));
     }
 
     @Override
     public AttributeImpl.Long asLong() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Long.class)));
     }
 
     @Override
     public AttributeImpl.Double asDouble() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Double.class)));
     }
 
     @Override
     public AttributeImpl.String asString() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.String.class)));
     }
 
     @Override
     public AttributeImpl.DateTime asDateTime() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.DateTime.class)));
     }
 
     public abstract VALUE getValue();
@@ -149,27 +149,27 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public AttributeImpl.Boolean.Remote asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Boolean.class)));
         }
 
         @Override
         public AttributeImpl.Long.Remote asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Long.class)));
         }
 
         @Override
         public AttributeImpl.Double.Remote asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.Double.class)));
         }
 
         @Override
         public AttributeImpl.String.Remote asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.String.class)));
         }
 
         @Override
         public AttributeImpl.DateTime.Remote asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.DateTime.class)));
         }
 
         public abstract VALUE getValue();

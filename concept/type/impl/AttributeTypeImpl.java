@@ -89,7 +89,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (isRoot()) {
             return new AttributeTypeImpl.Boolean(ROOT_LABEL, true);
         }
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Boolean.class)));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (isRoot()) {
             return new AttributeTypeImpl.Long(ROOT_LABEL, true);
         }
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Long.class)));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (isRoot()) {
             return new AttributeTypeImpl.Double(ROOT_LABEL, true);
         }
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Double.class)));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (isRoot()) {
             return new AttributeTypeImpl.String(ROOT_LABEL, true);
         }
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.String.class)));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (isRoot()) {
             return new AttributeTypeImpl.DateTime(ROOT_LABEL, true);
         }
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.DateTime.class)));
     }
 
     @Override
@@ -257,7 +257,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             if (isRoot()) {
                 return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Boolean.class)));
         }
 
         @Override
@@ -265,7 +265,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             if (isRoot()) {
                 return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Long.class)));
         }
 
         @Override
@@ -273,7 +273,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             if (isRoot()) {
                 return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.Double.class)));
         }
 
         @Override
@@ -281,7 +281,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             if (isRoot()) {
                 return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.String.class)));
         }
 
         @Override
@@ -289,7 +289,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             if (isRoot()) {
                 return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true);
             }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.DateTime.class)));
         }
 
         @Override

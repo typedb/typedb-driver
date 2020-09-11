@@ -89,17 +89,17 @@ public abstract class ThingImpl implements Thing {
 
     @Override
     public EntityImpl asEntity() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Entity.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
     }
 
     @Override
     public AttributeImpl<?> asAttribute() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.class)));
     }
 
     @Override
     public RelationImpl asRelation() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Relation.class)));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Relation.class)));
     }
 
     @Override
@@ -257,17 +257,17 @@ public abstract class ThingImpl implements Thing {
 
         @Override
         public EntityImpl.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Entity.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
         }
 
         @Override
         public RelationImpl.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Relation.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Relation.class)));
         }
 
         @Override
         public AttributeImpl.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.class)));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.class)));
         }
 
         final Grakn.Transaction tx() {
