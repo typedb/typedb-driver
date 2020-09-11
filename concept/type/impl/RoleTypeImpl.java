@@ -20,6 +20,7 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RoleType.GetPlayers;
@@ -28,12 +29,21 @@ import grakn.protocol.ConceptProto.RoleType.GetRelations;
 import grakn.protocol.ConceptProto.TypeMethod;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static grakn.common.util.Objects.className;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
+    private final String scope;
+    private final int hash;
+
     public RoleTypeImpl(final String label, final String scope, final boolean root) {
-        super(label, scope, root);
+        super(label, root);
+        this.scope = scope;
+        this.hash = Objects.hash(this.scope, label);
     }
 
     public static RoleTypeImpl of(final ConceptProto.Type typeProto) {
@@ -42,7 +52,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
     @Override
     public final String getScope() {
-        return super.getScope();
+        return scope;
     }
 
     @Override
@@ -55,14 +65,35 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + getLabel() + "]";
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final RoleTypeImpl that = (RoleTypeImpl) o;
+        return (this.getLabel().equals(that.getLabel()) && Objects.equals(this.scope, that.scope));
+    }
+
+    @Override
+    public int hashCode() {
+        return hash;
+    }
+
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
         private final String scope;
+        private final int hash;
 
         public Remote(final Grakn.Transaction transaction, final String label,
                       final String scope, final boolean isRoot) {
-            super(transaction, label, scope, isRoot);
+            super(transaction, label, isRoot);
             this.scope = scope;
+            this.hash = Objects.hash(transaction, label, scope);
         }
 
         public static RoleTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
@@ -87,7 +118,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final String getScope() {
-            return super.getScope();
+            return scope;
         }
 
         @Override
@@ -124,6 +155,40 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Override
         public RoleTypeImpl.Remote asRoleType() {
             return this;
+        }
+
+        @Override
+        Stream<TypeImpl> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return tx().concepts().iterateTypeMethod(
+                    getLabel(), scope, request, response -> TypeImpl.of(typeGetter.apply(response))
+            );
+        }
+
+        @Override
+        TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
+            return tx().concepts().runTypeMethod(getLabel(), scope, typeMethod)
+                    .getConceptMethodTypeRes().getResponse();
+        }
+
+        @Override
+        public String toString() {
+            return className(this.getClass()) + "[label: " + scope + ":" + getLabel() + "]";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final RoleTypeImpl.Remote that = (RoleTypeImpl.Remote) o;
+            return (this.tx().equals(that.tx()) &&
+                    this.getLabel().equals(that.getLabel()) &&
+                    Objects.equals(this.getScope(), that.getScope()));
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
         }
     }
 }

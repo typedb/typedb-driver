@@ -46,16 +46,14 @@ import static grakn.common.util.Objects.className;
 public abstract class TypeImpl implements Type {
 
     private final String label;
-    private final String scope;
     private final boolean isRoot;
     private final int hash;
 
-    TypeImpl(final String label, final @Nullable String scope, final boolean isRoot) {
+    TypeImpl(final String label, final boolean isRoot) {
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
         this.label = label;
-        this.scope = scope;
         this.isRoot = isRoot;
-        this.hash = Objects.hash(this.scope, this.label);
+        this.hash = Objects.hash(this.label);
     }
 
     public static TypeImpl of(final ConceptProto.Type typeProto) {
@@ -114,7 +112,7 @@ public abstract class TypeImpl implements Type {
 
     @Override
     public String toString() {
-        return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+        return className(this.getClass()) + "[label: " + label + "]";
     }
 
     @Override
@@ -123,7 +121,7 @@ public abstract class TypeImpl implements Type {
         if (o == null || getClass() != o.getClass()) return false;
 
         final TypeImpl that = (TypeImpl) o;
-        return (this.label.equals(that.label) && Objects.equals(this.scope, that.scope));
+        return this.label.equals(that.label);
     }
 
     @Override
@@ -131,24 +129,19 @@ public abstract class TypeImpl implements Type {
         return hash;
     }
 
-    // TODO: surely this should just not exist here, and be declared in RoleTypeImpl?
-    String getScope() { return scope; }
-
     public abstract static class Remote implements Type.Remote {
 
         private final Grakn.Transaction transaction;
         private final String label;
-        private final String scope;
         private final boolean isRoot;
         private final int hash;
 
-        Remote(final Grakn.Transaction transaction, final String label, @Nullable final String scope, final boolean isRoot) {
+        Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             this.transaction = transaction;
             this.label = label;
-            this.scope = scope;
             this.isRoot = isRoot;
-            this.hash = Objects.hash(this.transaction, this.getLabel(), this.getScope());
+            this.hash = Objects.hash(transaction, label);
         }
 
         public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
@@ -227,9 +220,6 @@ public abstract class TypeImpl implements Type {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
         }
 
-        // TODO: surely this method should not be here, but in RoleTypeImpl?
-        String getScope() { return scope; }
-
         void setSupertypeExecute(final Type type) {
             execute(TypeMethod.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))).build());
         }
@@ -280,13 +270,18 @@ public abstract class TypeImpl implements Type {
 
         Stream<TypeImpl> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             return transaction.concepts().iterateTypeMethod(
-                    getLabel(), getScope(), request, response -> TypeImpl.of(typeGetter.apply(response))
+                    getLabel(), null, request, response -> TypeImpl.of(typeGetter.apply(response))
             );
         }
 
         TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
-            return transaction.concepts().runTypeMethod(getLabel(), getScope(), typeMethod)
+            return transaction.concepts().runTypeMethod(getLabel(), null, typeMethod)
                     .getConceptMethodTypeRes().getResponse();
+        }
+
+        @Override
+        public String toString() {
+            return className(this.getClass()) + "[label: " + label + "]";
         }
 
         @Override
@@ -296,8 +291,7 @@ public abstract class TypeImpl implements Type {
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
             return (this.transaction.equals(that.transaction) &&
-                    this.getLabel().equals(that.getLabel()) &&
-                    Objects.equals(this.getScope(), that.getScope()));
+                    this.getLabel().equals(that.getLabel()));
         }
 
         @Override

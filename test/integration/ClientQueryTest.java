@@ -68,7 +68,6 @@ public class ClientQueryTest {
         grakn = new GraknCoreRunner();
         grakn.start();
         graknClient = new GraknClient(grakn.address());
-        graknClient.databases().create("grakn");
     }
 
     @AfterClass
@@ -80,11 +79,6 @@ public class ClientQueryTest {
     @Test
     public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
-
-        localhostGraknTx(tx -> {
-            final EntityType entity = tx.concepts().getRootEntityType();
-            entity.asRelationType();
-        });
 
         localhostGraknTx(tx -> {
             GraqlDefine defineQuery = Graql.define(

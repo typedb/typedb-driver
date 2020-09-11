@@ -48,7 +48,7 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     ThingTypeImpl(final String label, final boolean isRoot) {
-        super(label, null, isRoot);
+        super(label, isRoot);
     }
 
     public static ThingTypeImpl of(final ConceptProto.Type typeProto) {
@@ -81,7 +81,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
         public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, null, isRoot);
+            super(transaction, label, isRoot);
         }
 
         public static ThingTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
@@ -105,7 +105,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         <THING extends ThingImpl> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
             return tx().concepts().iterateTypeMethod(
-                    getLabel(), getScope(),
+                    getLabel(), null,
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
                             GetInstances.Iter.Req.getDefaultInstance()).build(),
                     response -> thingConstructor.apply(response.getThingTypeGetInstancesIterRes().getThing())

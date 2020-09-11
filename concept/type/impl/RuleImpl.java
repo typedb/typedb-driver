@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 public class RuleImpl extends TypeImpl implements Rule {
 
     RuleImpl(final String label, final boolean root) {
-        super(label, null, root);
+        super(label, root);
     }
 
     public static RuleImpl of(final ConceptProto.Type typeProto) {
@@ -51,7 +51,7 @@ public class RuleImpl extends TypeImpl implements Rule {
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
         public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, null, isRoot);
+            super(transaction, label, isRoot);
         }
 
         @Nullable
