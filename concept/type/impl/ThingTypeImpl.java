@@ -135,6 +135,15 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
+        public final Stream<RoleTypeImpl.Local> getPlays() {
+            return stream(
+                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetPlaysIterReq(
+                            GetPlays.Iter.Req.getDefaultInstance()).build(),
+                    res -> res.getThingTypeGetPlaysIterRes().getRole()
+            ).map(TypeImpl.Local::asRoleType);
+        }
+
+        @Override
         public final Stream<AttributeTypeImpl.Local> getOwns(final ValueType valueType, final boolean keysOnly) {
             final GetOwns.Iter.Req.Builder req = GetOwns.Iter.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) req.setValueType(valueType(valueType));
@@ -145,12 +154,18 @@ public abstract class ThingTypeImpl {
         }
 
         @Override
-        public final Stream<RoleTypeImpl.Local> getPlays() {
-            return stream(
-                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetPlaysIterReq(
-                            GetPlays.Iter.Req.getDefaultInstance()).build(),
-                    res -> res.getThingTypeGetPlaysIterRes().getRole()
-            ).map(TypeImpl.Local::asRoleType);
+        public Stream<? extends AttributeType.Local> getOwns() {
+            return getOwns(null, false);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Local> getOwns(final ValueType valueType) {
+            return getOwns(valueType, false);
+        }
+
+        @Override
+        public Stream<? extends AttributeType.Local> getOwns(final boolean keysOnly) {
+            return getOwns(null, keysOnly);
         }
 
         @Override
@@ -158,6 +173,21 @@ public abstract class ThingTypeImpl {
             final SetOwns.Req.Builder req = SetOwns.Req.newBuilder().setAttributeType(type(attributeType)).setIsKey(isKey);
             if (overriddenType != null) req.setOverriddenType(type(overriddenType));
             execute(TypeMethod.Req.newBuilder().setThingTypeSetOwnsReq(req).build());
+        }
+
+        @Override
+        public void setOwns(final AttributeType attributeType, final AttributeType overriddenType) {
+            setOwns(attributeType, overriddenType, false);
+        }
+
+        @Override
+        public void setOwns(final AttributeType attributeType, final boolean isKey) {
+            setOwns(attributeType, null, isKey);
+        }
+
+        @Override
+        public void setOwns(final AttributeType attributeType) {
+            setOwns(attributeType, null, false);
         }
 
         @Override

@@ -59,31 +59,19 @@ public interface ThingType extends Type {
 
         void setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
 
-        default void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            setOwns(attributeType, overriddenType, false);
-        }
+        void setOwns(AttributeType attributeType, AttributeType overriddenType);
 
-        default void setOwns(AttributeType attributeType, boolean isKey) {
-            setOwns(attributeType, null, isKey);
-        }
+        void setOwns(AttributeType attributeType, boolean isKey);
 
-        default void setOwns(AttributeType attributeType) {
-            setOwns(attributeType, false);
-        }
+        void setOwns(AttributeType attributeType);
 
         Stream<? extends RoleType.Local> getPlays();
 
-        default Stream<? extends AttributeType.Local> getOwns() {
-            return getOwns(false);
-        }
+        Stream<? extends AttributeType.Local> getOwns();
 
-        default Stream<? extends AttributeType.Local> getOwns(ValueType valueType) {
-            return getOwns(valueType, false);
-        }
+        Stream<? extends AttributeType.Local> getOwns(ValueType valueType);
 
-        default Stream<? extends AttributeType.Local> getOwns(boolean keysOnly) {
-            return getOwns(null, keysOnly);
-        }
+        Stream<? extends AttributeType.Local> getOwns(boolean keysOnly);
 
         Stream<? extends AttributeType.Local> getOwns(ValueType valueType, boolean keysOnly);
 
