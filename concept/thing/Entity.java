@@ -27,18 +27,9 @@ public interface Entity extends Thing {
     @Override
     Entity.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Thing.Local, Entity {
-
-        @Override
-        Entity.Local asEntity();
-    }
-
     interface Remote extends Thing.Remote, Entity {
 
         @Override
-        EntityType.Local getType();
-
-        @Override
-        Entity.Remote asEntity();
+        EntityType getType();
     }
 }

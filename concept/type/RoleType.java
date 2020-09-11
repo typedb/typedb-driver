@@ -30,24 +30,21 @@ public interface RoleType extends Type {
     @Override
     RoleType.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Type.Local, RoleType {
-    }
-
     interface Remote extends Type.Remote, RoleType {
 
         @Override
-        RoleType.Local getSupertype();
+        RoleType getSupertype();
 
         @Override
-        Stream<? extends RoleType.Local> getSupertypes();
+        Stream<? extends RoleType> getSupertypes();
 
         @Override
-        Stream<? extends RoleType.Local> getSubtypes();
+        Stream<? extends RoleType> getSubtypes();
 
-        RelationType.Local getRelation();
+        RelationType getRelation();
 
-        Stream<? extends RelationType.Local> getRelations();
+        Stream<? extends RelationType> getRelations();
 
-        Stream<? extends ThingType.Local> getPlayers();
+        Stream<? extends ThingType> getPlayers();
     }
 }

@@ -40,13 +40,13 @@ import static org.junit.Assert.assertTrue;
 
 public class ThingSteps {
 
-    private static Map<String, Thing.Local> things = new HashMap<>();
+    private static Map<String, Thing> things = new HashMap<>();
 
-    public static Thing.Local get(String variable) {
+    public static Thing get(String variable) {
         return things.get(variable);
     }
 
-    public static void put(String variable, Thing.Local thing) {
+    public static void put(String variable, Thing thing) {
         things.put(variable, thing);
     }
 
@@ -67,7 +67,7 @@ public class ThingSteps {
 
     @Then("{root_label} {var} has type: {type_label}")
     public void thing_has_type(RootLabel rootLabel, String var, String typeLabel) {
-        ThingType.Local type = get_thing_type(rootLabel, typeLabel);
+        ThingType type = get_thing_type(rootLabel, typeLabel);
         assertEquals(type, get(var).asRemote(tx()).getType());
     }
 

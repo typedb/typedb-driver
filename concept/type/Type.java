@@ -20,14 +20,10 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.common.util.Objects.className;
 
 public interface Type extends Concept {
 
@@ -48,27 +44,6 @@ public interface Type extends Concept {
     @Override
     Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Type, Concept.Local {
-
-        @Override
-        Type.Local asType();
-
-        @Override
-        ThingType.Local asThingType();
-
-        @Override
-        EntityType.Local asEntityType();
-
-        @Override
-        AttributeType.Local asAttributeType();
-
-        @Override
-        RelationType.Local asRelationType();
-
-        @Override
-        RoleType.Local asRoleType();
-    }
-
     interface Remote extends Type, Concept.Remote {
 
         void setLabel(String label);
@@ -76,11 +51,11 @@ public interface Type extends Concept {
         boolean isAbstract();
 
         @Nullable
-        Type.Local getSupertype();
+        Type getSupertype();
 
-        Stream<? extends Type.Local> getSupertypes();
+        Stream<? extends Type> getSupertypes();
 
-        Stream<? extends Type.Local> getSubtypes();
+        Stream<? extends Type> getSubtypes();
 
         @Override
         Type.Remote asType();

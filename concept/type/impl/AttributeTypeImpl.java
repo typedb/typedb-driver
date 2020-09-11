@@ -35,109 +35,106 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
 import static grakn.common.util.Objects.className;
 
-public abstract class AttributeTypeImpl {
+public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     private static final java.lang.String ROOT_LABEL = "attribute";
 
-    public static class Local extends ThingTypeImpl.Local implements AttributeType.Local {
+    AttributeTypeImpl(final java.lang.String label, final boolean isRoot) {
+        super(label, isRoot);
+    }
 
-        Local(final java.lang.String label, final boolean isRoot) {
-            super(label, isRoot);
+    public static AttributeTypeImpl of(ConceptProto.Type type) {
+        switch (type.getValueType()) {
+            case BOOLEAN:
+                return new AttributeTypeImpl.Boolean(type.getLabel(), type.getRoot());
+            case LONG:
+                return new AttributeTypeImpl.Long(type.getLabel(), type.getRoot());
+            case DOUBLE:
+                return new AttributeTypeImpl.Double(type.getLabel(), type.getRoot());
+            case STRING:
+                return new AttributeTypeImpl.String(type.getLabel(), type.getRoot());
+            case DATETIME:
+                return new AttributeTypeImpl.DateTime(type.getLabel(), type.getRoot());
+            case OBJECT:
+                assert type.getRoot();
+                return new AttributeTypeImpl(type.getLabel(), type.getRoot());
+            case UNRECOGNIZED:
+            default:
+                throw new GraknClientException(BAD_VALUE_TYPE.message(type.getValueType()));
         }
+    }
 
-        public static AttributeTypeImpl.Local of(ConceptProto.Type type) {
-            switch (type.getValueType()) {
-                case BOOLEAN:
-                    return new AttributeTypeImpl.Boolean.Local(type.getLabel(), type.getRoot());
-                case LONG:
-                    return new AttributeTypeImpl.Long.Local(type.getLabel(), type.getRoot());
-                case DOUBLE:
-                    return new AttributeTypeImpl.Double.Local(type.getLabel(), type.getRoot());
-                case STRING:
-                    return new AttributeTypeImpl.String.Local(type.getLabel(), type.getRoot());
-                case DATETIME:
-                    return new AttributeTypeImpl.DateTime.Local(type.getLabel(), type.getRoot());
-                case OBJECT:
-                    assert type.getRoot();
-                    return new AttributeTypeImpl.Local(type.getLabel(), type.getRoot());
-                case UNRECOGNIZED:
-                default:
-                    throw new GraknClientException(BAD_VALUE_TYPE.message(type.getValueType()));
-            }
+    @Override
+    public ValueType getValueType() {
+        return ValueType.OBJECT;
+    }
+
+    @Override
+    public final boolean isKeyable() {
+        return getValueType().isKeyable();
+    }
+
+    @Override
+    public AttributeTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
+    }
+
+    @Override
+    public AttributeTypeImpl asAttributeType() {
+        return this;
+    }
+
+    @Override
+    public AttributeTypeImpl.Boolean asBoolean() {
+        if (isRoot()) {
+            return new AttributeTypeImpl.Boolean(ROOT_LABEL, true);
         }
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
+    }
 
-        @Override
-        public ValueType getValueType() {
-            return ValueType.OBJECT;
+    @Override
+    public AttributeTypeImpl.Long asLong() {
+        if (isRoot()) {
+            return new AttributeTypeImpl.Long(ROOT_LABEL, true);
         }
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
+    }
 
-        @Override
-        public final boolean isKeyable() {
-            return getValueType().isKeyable();
+    @Override
+    public AttributeTypeImpl.Double asDouble() {
+        if (isRoot()) {
+            return new AttributeTypeImpl.Double(ROOT_LABEL, true);
         }
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
+    }
 
-        @Override
-        public AttributeTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
+    @Override
+    public AttributeTypeImpl.String asString() {
+        if (isRoot()) {
+            return new AttributeTypeImpl.String(ROOT_LABEL, true);
         }
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
+    }
 
-        @Override
-        public AttributeTypeImpl.Local asAttributeType() {
-            return this;
+    @Override
+    public AttributeTypeImpl.DateTime asDateTime() {
+        if (isRoot()) {
+            return new AttributeTypeImpl.DateTime(ROOT_LABEL, true);
         }
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
+    }
 
-        @Override
-        public AttributeTypeImpl.Boolean.Local asBoolean() {
-            if (isRoot()) {
-                return new AttributeTypeImpl.Boolean.Local(ROOT_LABEL, true);
-            }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Boolean.class)));
-        }
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AttributeTypeImpl)) return false;
+        // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
+        // because it is possible to compare a attribute root types wrapped in different type classes
+        // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
+        // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
 
-        @Override
-        public AttributeTypeImpl.Long.Local asLong() {
-            if (isRoot()) {
-                return new AttributeTypeImpl.Long.Local(ROOT_LABEL, true);
-            }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Long.class)));
-        }
-
-        @Override
-        public AttributeTypeImpl.Double.Local asDouble() {
-            if (isRoot()) {
-                return new AttributeTypeImpl.Double.Local(ROOT_LABEL, true);
-            }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.Double.class)));
-        }
-
-        @Override
-        public AttributeTypeImpl.String.Local asString() {
-            if (isRoot()) {
-                return new AttributeTypeImpl.String.Local(ROOT_LABEL, true);
-            }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.String.class)));
-        }
-
-        @Override
-        public AttributeTypeImpl.DateTime.Local asDateTime() {
-            if (isRoot()) {
-                return new AttributeTypeImpl.DateTime.Local(ROOT_LABEL, true);
-            }
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.DateTime.class)));
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (!(o instanceof AttributeTypeImpl.Local)) return false;
-            // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
-            // because it is possible to compare a attribute root types wrapped in different type classes
-            // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
-            // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
-
-            final AttributeTypeImpl.Local that = (AttributeTypeImpl.Local) o;
-            return this.getLabel().equals(that.getLabel());
-        }
+        final AttributeTypeImpl that = (AttributeTypeImpl) o;
+        return this.getLabel().equals(that.getLabel());
     }
 
     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
@@ -188,18 +185,18 @@ public abstract class AttributeTypeImpl {
 
         @Nullable
         @Override
-        public AttributeTypeImpl.Local getSupertype() {
-            return getSupertypeExecute(TypeImpl.Local::asAttributeType);
+        public AttributeTypeImpl getSupertype() {
+            return getSupertypeExecute(TypeImpl::asAttributeType);
         }
 
         @Override
-        public Stream<? extends AttributeTypeImpl.Local> getSupertypes() {
-            return super.getSupertypes().map(TypeImpl.Local::asAttributeType);
+        public Stream<? extends AttributeTypeImpl> getSupertypes() {
+            return super.getSupertypes().map(TypeImpl::asAttributeType);
         }
 
         @Override
-        public Stream<? extends AttributeTypeImpl.Local> getSubtypes() {
-            final Stream<AttributeTypeImpl.Local> stream = super.getSubtypes().map(TypeImpl.Local::asAttributeType);
+        public Stream<? extends AttributeTypeImpl> getSubtypes() {
+            final Stream<AttributeTypeImpl> stream = super.getSubtypes().map(TypeImpl::asAttributeType);
 
             if (isRoot() && getValueType() != ValueType.OBJECT) {
                 // Get all attribute types of this value type
@@ -210,40 +207,40 @@ public abstract class AttributeTypeImpl {
         }
 
         @Override
-        public Stream<? extends AttributeImpl.Local<?>> getInstances() {
-            return super.getInstances(AttributeImpl.Local::of);
+        public Stream<? extends AttributeImpl<?>> getInstances() {
+            return super.getInstances(AttributeImpl::of);
         }
 
         @Override
-        public Stream<ThingTypeImpl.Local> getOwners() {
+        public Stream<ThingTypeImpl> getOwners() {
             return getOwners(false);
         }
 
         @Override
-        public Stream<ThingTypeImpl.Local> getOwners(final boolean onlyKey) {
+        public Stream<ThingTypeImpl> getOwners(final boolean onlyKey) {
             final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setAttributeTypeGetOwnersIterReq(ConceptProto.AttributeType.GetOwners.Iter.Req.newBuilder()
                             .setOnlyKey(onlyKey)).build();
 
-            return stream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(TypeImpl.Local::asThingType);
+            return stream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(TypeImpl::asThingType);
         }
 
-        protected final AttributeImpl.Local<?> put(final Object value) {
+        protected final AttributeImpl<?> put(final Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                             .setValue(attributeValue(value))).build();
-            return ThingImpl.Local.of(execute(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            return ThingImpl.of(execute(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @Nullable
-        protected final AttributeImpl.Local<?> get(final Object value) {
+        protected final AttributeImpl<?> get(final Object value) {
             final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
                             .setValue(attributeValue(value))).build();
             final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
-                    return ThingImpl.Local.of(response.getAttribute()).asAttribute();
+                    return ThingImpl.of(response.getAttribute()).asAttribute();
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -309,28 +306,25 @@ public abstract class AttributeTypeImpl {
         }
     }
 
-    public static abstract class Boolean implements AttributeType.Boolean {
+    public static class Boolean extends AttributeTypeImpl implements AttributeType.Boolean {
 
-        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Boolean.Local {
+        Boolean(final java.lang.String label, final boolean isRoot) {
+            super(label, isRoot);
+        }
 
-            Local(final java.lang.String label, final boolean isRoot) {
-                super(label, isRoot);
-            }
+        @Override
+        public ValueType getValueType() {
+            return ValueType.BOOLEAN;
+        }
 
-            @Override
-            public ValueType getValueType() {
-                return ValueType.BOOLEAN;
-            }
+        @Override
+        public AttributeTypeImpl.Boolean.Remote asRemote(final Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
+        }
 
-            @Override
-            public AttributeTypeImpl.Boolean.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public AttributeTypeImpl.Boolean.Local asBoolean() {
-                return this;
-            }
+        @Override
+        public AttributeTypeImpl.Boolean asBoolean() {
+            return this;
         }
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
@@ -350,23 +344,23 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeTypeImpl.Boolean.Local getSupertype() {
+            public final AttributeTypeImpl.Boolean getSupertype() {
                 return getSupertypeExecute(t -> t.asAttributeType().asBoolean());
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Boolean.Local> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl.Local::asBoolean);
+            public final Stream<AttributeTypeImpl.Boolean> getSupertypes() {
+                return super.getSupertypes().map(AttributeTypeImpl::asBoolean);
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Boolean.Local> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl.Local::asBoolean);
+            public final Stream<AttributeTypeImpl.Boolean> getSubtypes() {
+                return super.getSubtypes().map(AttributeTypeImpl::asBoolean);
             }
 
             @Override
-            public final Stream<AttributeImpl.Boolean.Local> getInstances() {
-                return super.getInstances().map(AttributeImpl.Local::asBoolean);
+            public final Stream<AttributeImpl.Boolean> getInstances() {
+                return super.getInstances().map(AttributeImpl::asBoolean);
             }
 
             @Override
@@ -375,14 +369,14 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeImpl.Boolean.Local put(final boolean value) {
+            public final AttributeImpl.Boolean put(final boolean value) {
                 return super.put(value).asBoolean();
             }
 
             @Nullable
             @Override
-            public final AttributeImpl.Boolean.Local get(final boolean value) {
-                final AttributeImpl.Local<?> attr = super.get(value);
+            public final AttributeImpl.Boolean get(final boolean value) {
+                final AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asBoolean() : null;
             }
 
@@ -393,28 +387,25 @@ public abstract class AttributeTypeImpl {
         }
     }
 
-    public static abstract class Long implements AttributeType.Long {
+    public static class Long extends AttributeTypeImpl implements AttributeType.Long {
 
-        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Long.Local {
+        Long(final java.lang.String label, final boolean isRoot) {
+            super(label, isRoot);
+        }
 
-            Local(final java.lang.String label, final boolean isRoot) {
-                super(label, isRoot);
-            }
+        @Override
+        public ValueType getValueType() {
+            return ValueType.LONG;
+        }
 
-            @Override
-            public ValueType getValueType() {
-                return ValueType.LONG;
-            }
+        @Override
+        public AttributeTypeImpl.Long.Remote asRemote(final Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
+        }
 
-            @Override
-            public AttributeTypeImpl.Long.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public AttributeTypeImpl.Long.Local asLong() {
-                return this;
-            }
+        @Override
+        public AttributeTypeImpl.Long asLong() {
+            return this;
         }
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
@@ -434,23 +425,23 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeTypeImpl.Long.Local getSupertype() {
+            public final AttributeTypeImpl.Long getSupertype() {
                 return getSupertypeExecute(t -> t.asAttributeType().asLong());
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Long.Local> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl.Local::asLong);
+            public final Stream<AttributeTypeImpl.Long> getSupertypes() {
+                return super.getSupertypes().map(AttributeTypeImpl::asLong);
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Long.Local> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl.Local::asLong);
+            public final Stream<AttributeTypeImpl.Long> getSubtypes() {
+                return super.getSubtypes().map(AttributeTypeImpl::asLong);
             }
 
             @Override
-            public final Stream<AttributeImpl.Long.Local> getInstances() {
-                return super.getInstances().map(AttributeImpl.Local::asLong);
+            public final Stream<AttributeImpl.Long> getInstances() {
+                return super.getInstances().map(AttributeImpl::asLong);
             }
 
             @Override
@@ -459,14 +450,14 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeImpl.Long.Local put(final long value) {
+            public final AttributeImpl.Long put(final long value) {
                 return super.put(value).asLong();
             }
 
             @Nullable
             @Override
-            public final AttributeImpl.Long.Local get(final long value) {
-                final AttributeImpl.Local<?> attr = super.get(value);
+            public final AttributeImpl.Long get(final long value) {
+                final AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asLong() : null;
             }
 
@@ -477,28 +468,25 @@ public abstract class AttributeTypeImpl {
         }
     }
 
-    public static abstract class Double implements AttributeType.Double {
+    public static class Double extends AttributeTypeImpl implements AttributeType.Double {
 
-        public static class Local extends AttributeTypeImpl.Local implements AttributeType.Double.Local {
+        Double(final java.lang.String label, final boolean isRoot) {
+            super(label, isRoot);
+        }
 
-            Local(final java.lang.String label, final boolean isRoot) {
-                super(label, isRoot);
-            }
+        @Override
+        public ValueType getValueType() {
+            return ValueType.DOUBLE;
+        }
 
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DOUBLE;
-            }
+        @Override
+        public AttributeTypeImpl.Double.Remote asRemote(final Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
+        }
 
-            @Override
-            public AttributeTypeImpl.Double.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public AttributeTypeImpl.Double.Local asDouble() {
-                return this;
-            }
+        @Override
+        public AttributeTypeImpl.Double asDouble() {
+            return this;
         }
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
@@ -518,23 +506,23 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeTypeImpl.Double.Local getSupertype() {
+            public final AttributeTypeImpl.Double getSupertype() {
                 return getSupertypeExecute(t -> t.asAttributeType().asDouble());
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Double.Local> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl.Local::asDouble);
+            public final Stream<AttributeTypeImpl.Double> getSupertypes() {
+                return super.getSupertypes().map(AttributeTypeImpl::asDouble);
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Double.Local> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl.Local::asDouble);
+            public final Stream<AttributeTypeImpl.Double> getSubtypes() {
+                return super.getSubtypes().map(AttributeTypeImpl::asDouble);
             }
 
             @Override
-            public final Stream<AttributeImpl.Double.Local> getInstances() {
-                return super.getInstances().map(AttributeImpl.Local::asDouble);
+            public final Stream<AttributeImpl.Double> getInstances() {
+                return super.getInstances().map(AttributeImpl::asDouble);
             }
 
             @Override
@@ -543,14 +531,14 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeImpl.Double.Local put(final double value) {
+            public final AttributeImpl.Double put(final double value) {
                 return super.put(value).asDouble();
             }
 
             @Nullable
             @Override
-            public final AttributeImpl.Double.Local get(final double value) {
-                final AttributeImpl.Local<?> attr = super.get(value);
+            public final AttributeImpl.Double get(final double value) {
+                final AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asDouble() : null;
             }
 
@@ -561,28 +549,25 @@ public abstract class AttributeTypeImpl {
         }
     }
 
-    public static abstract class String implements AttributeType.String {
+    public static class String extends AttributeTypeImpl implements AttributeType.String {
 
-        public static class Local extends AttributeTypeImpl.Local implements AttributeType.String.Local {
+        String(final java.lang.String label, final boolean isRoot) {
+            super(label, isRoot);
+        }
 
-            Local(final java.lang.String label, final boolean isRoot) {
-                super(label, isRoot);
-            }
+        @Override
+        public ValueType getValueType() {
+            return ValueType.STRING;
+        }
 
-            @Override
-            public ValueType getValueType() {
-                return ValueType.STRING;
-            }
+        @Override
+        public AttributeTypeImpl.String.Remote asRemote(final Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
+        }
 
-            @Override
-            public AttributeTypeImpl.String.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public AttributeTypeImpl.String.Local asString() {
-                return this;
-            }
+        @Override
+        public AttributeTypeImpl.String asString() {
+            return this;
         }
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
@@ -602,23 +587,23 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeTypeImpl.String.Local getSupertype() {
+            public final AttributeTypeImpl.String getSupertype() {
                 return getSupertypeExecute(t -> t.asAttributeType().asString());
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.String.Local> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl.Local::asString);
+            public final Stream<AttributeTypeImpl.String> getSupertypes() {
+                return super.getSupertypes().map(AttributeTypeImpl::asString);
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.String.Local> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl.Local::asString);
+            public final Stream<AttributeTypeImpl.String> getSubtypes() {
+                return super.getSubtypes().map(AttributeTypeImpl::asString);
             }
 
             @Override
-            public final Stream<AttributeImpl.String.Local> getInstances() {
-                return super.getInstances().map(AttributeImpl.Local::asString);
+            public final Stream<AttributeImpl.String> getInstances() {
+                return super.getInstances().map(AttributeImpl::asString);
             }
 
             @Override
@@ -627,14 +612,14 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeImpl.String.Local put(final java.lang.String value) {
+            public final AttributeImpl.String put(final java.lang.String value) {
                 return super.put(value).asString();
             }
 
             @Nullable
             @Override
-            public final AttributeImpl.String.Local get(final java.lang.String value) {
-                final AttributeImpl.Local<?> attr = super.get(value);
+            public final AttributeImpl.String get(final java.lang.String value) {
+                final AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asString() : null;
             }
 
@@ -663,28 +648,25 @@ public abstract class AttributeTypeImpl {
         }
     }
 
-    public static abstract class DateTime implements AttributeType.DateTime {
+    public static class DateTime extends AttributeTypeImpl implements AttributeType.DateTime {
 
-        public static class Local extends AttributeTypeImpl.Local implements AttributeType.DateTime.Local {
+        DateTime(final java.lang.String label, final boolean isRoot) {
+            super(label, isRoot);
+        }
 
-            Local(final java.lang.String label, final boolean isRoot) {
-                super(label, isRoot);
-            }
+        @Override
+        public ValueType getValueType() {
+            return ValueType.DATETIME;
+        }
 
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DATETIME;
-            }
+        @Override
+        public AttributeTypeImpl.DateTime.Remote asRemote(final Grakn.Transaction transaction) {
+            return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
+        }
 
-            @Override
-            public AttributeTypeImpl.DateTime.Remote asRemote(final Grakn.Transaction transaction) {
-                return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public AttributeTypeImpl.DateTime.Local asDateTime() {
-                return this;
-            }
+        @Override
+        public AttributeTypeImpl.DateTime asDateTime() {
+            return this;
         }
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
@@ -704,23 +686,23 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeTypeImpl.DateTime.Local getSupertype() {
+            public final AttributeTypeImpl.DateTime getSupertype() {
                 return getSupertypeExecute(t -> t.asAttributeType().asDateTime());
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.DateTime.Local> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl.Local::asDateTime);
+            public final Stream<AttributeTypeImpl.DateTime> getSupertypes() {
+                return super.getSupertypes().map(AttributeTypeImpl::asDateTime);
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.DateTime.Local> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl.Local::asDateTime);
+            public final Stream<AttributeTypeImpl.DateTime> getSubtypes() {
+                return super.getSubtypes().map(AttributeTypeImpl::asDateTime);
             }
 
             @Override
-            public final Stream<AttributeImpl.DateTime.Local> getInstances() {
-                return super.getInstances().map(AttributeImpl.Local::asDateTime);
+            public final Stream<AttributeImpl.DateTime> getInstances() {
+                return super.getInstances().map(AttributeImpl::asDateTime);
             }
 
             @Override
@@ -729,14 +711,14 @@ public abstract class AttributeTypeImpl {
             }
 
             @Override
-            public final AttributeImpl.DateTime.Local put(final LocalDateTime value) {
+            public final AttributeImpl.DateTime put(final LocalDateTime value) {
                 return super.put(value).asDateTime();
             }
 
             @Nullable
             @Override
-            public final AttributeImpl.DateTime.Local get(final LocalDateTime value) {
-                final AttributeImpl.Local<?> attr = super.get(value);
+            public final AttributeImpl.DateTime get(final LocalDateTime value) {
+                final AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asDateTime() : null;
             }
 

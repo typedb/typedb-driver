@@ -32,11 +32,17 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 
 public interface Concept {
 
-    Type asType();
+    default Type asType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
+    }
 
-    Thing asThing();
+    default Thing asThing() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
+    }
 
-    Rule asRule();
+    default Rule asRule() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
+    }
 
     Remote asRemote(Grakn.Transaction transaction);
 
@@ -44,27 +50,9 @@ public interface Concept {
         return false;
     }
 
-    interface Local extends Concept {
-
-        @Override
-        default Type.Local asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
-        }
-
-        @Override
-        default Thing.Local asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
-        }
-
-        @Override
-        default Rule.Local asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
-        }
-    }
-
     interface Remote extends Concept {
 
-        static Concept.Remote of(final Grakn.Transaction transaction, ConceptProto.Concept concept) {
+        static Concept.Remote of(final Grakn.Transaction transaction, final ConceptProto.Concept concept) {
             if (concept.hasThing()) {
                 return ThingImpl.Remote.of(transaction, concept.getThing());
             } else {

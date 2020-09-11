@@ -43,98 +43,96 @@ import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
-public abstract class TypeImpl {
+public abstract class TypeImpl implements Type {
 
-    public abstract static class Local implements Type.Local {
+    private final String label;
+    private final String scope;
+    private final boolean isRoot;
+    private final int hash;
 
-        private final String label;
-        private final String scope;
-        private final boolean isRoot;
-        private final int hash;
-
-        Local(final String label, final @Nullable String scope, final boolean isRoot) {
-            this.label = label;
-            this.scope = scope;
-            this.isRoot = isRoot;
-            this.hash = Objects.hash(this.scope, this.label);
-        }
-
-        public static TypeImpl.Local of(final ConceptProto.Type typeProto) {
-            switch (typeProto.getEncoding()) {
-                case ROLE_TYPE:
-                    return RoleTypeImpl.Local.of(typeProto);
-                case RULE:
-                    return RuleImpl.Local.of(typeProto);
-                case UNRECOGNIZED:
-                    throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
-                default:
-                    return ThingTypeImpl.Local.of(typeProto);
-
-            }
-        }
-
-        @Override
-        public final String getLabel() {
-            return label;
-        }
-
-        @Override
-        public final boolean isRoot() {
-            return isRoot;
-        }
-
-        @Override
-        public TypeImpl.Local asType() {
-            return this;
-        }
-
-        @Override
-        public ThingTypeImpl.Local asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
-        }
-
-        @Override
-        public EntityTypeImpl.Local asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
-        }
-
-        @Override
-        public AttributeTypeImpl.Local asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
-        }
-
-        @Override
-        public RelationTypeImpl.Local asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
-        }
-
-        @Override
-        public RoleTypeImpl.Local asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
-        }
-
-        @Override
-        public String toString() {
-            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            final TypeImpl.Local that = (TypeImpl.Local) o;
-            return (this.label.equals(that.label) && Objects.equals(this.scope, that.scope));
-        }
-
-        @Override
-        public int hashCode() {
-            return hash;
-        }
-
-        // TODO: surely this should just not exist here, and be declared in RoleTypeImpl?
-        String getScope() { return scope; }
+    TypeImpl(final String label, final @Nullable String scope, final boolean isRoot) {
+        if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
+        this.label = label;
+        this.scope = scope;
+        this.isRoot = isRoot;
+        this.hash = Objects.hash(this.scope, this.label);
     }
+
+    public static TypeImpl of(final ConceptProto.Type typeProto) {
+        switch (typeProto.getEncoding()) {
+            case ROLE_TYPE:
+                return RoleTypeImpl.of(typeProto);
+            case RULE:
+                return RuleImpl.of(typeProto);
+            case UNRECOGNIZED:
+                throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
+            default:
+                return ThingTypeImpl.of(typeProto);
+
+        }
+    }
+
+    @Override
+    public final String getLabel() {
+        return label;
+    }
+
+    @Override
+    public final boolean isRoot() {
+        return isRoot;
+    }
+
+    @Override
+    public TypeImpl asType() {
+        return this;
+    }
+
+    @Override
+    public ThingTypeImpl asThingType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
+    }
+
+    @Override
+    public EntityTypeImpl asEntityType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
+    }
+
+    @Override
+    public AttributeTypeImpl asAttributeType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
+    }
+
+    @Override
+    public RelationTypeImpl asRelationType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
+    }
+
+    @Override
+    public RoleTypeImpl asRoleType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
+    }
+
+    @Override
+    public String toString() {
+        return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final TypeImpl that = (TypeImpl) o;
+        return (this.label.equals(that.label) && Objects.equals(this.scope, that.scope));
+    }
+
+    @Override
+    public int hashCode() {
+        return hash;
+    }
+
+    // TODO: surely this should just not exist here, and be declared in RoleTypeImpl?
+    String getScope() { return scope; }
 
     public abstract static class Remote implements Type.Remote {
 
@@ -146,12 +144,11 @@ public abstract class TypeImpl {
 
         Remote(final Grakn.Transaction transaction, final String label, @Nullable final String scope, final boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            else if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.transaction = transaction;
             this.label = label;
             this.scope = scope;
             this.isRoot = isRoot;
-            this.hash = Objects.hash(this.transaction, this.label, this.scope);
+            this.hash = Objects.hash(this.transaction, this.getLabel(), this.getScope());
         }
 
         public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
@@ -175,13 +172,13 @@ public abstract class TypeImpl {
         }
 
         @Override
-        public final boolean isRoot() {
-            return isRoot;
+        public final String getLabel() {
+            return label;
         }
 
         @Override
-        public final String getLabel() {
-            return label;
+        public boolean isRoot() {
+            return isRoot;
         }
 
         @Override
@@ -238,7 +235,7 @@ public abstract class TypeImpl {
         }
 
         @Nullable
-        <TYPE extends TypeImpl.Local> TYPE getSupertypeExecute(final Function<TypeImpl.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> TYPE getSupertypeExecute(final Function<TypeImpl, TYPE> typeConstructor) {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()).build();
 
@@ -246,20 +243,20 @@ public abstract class TypeImpl {
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return typeConstructor.apply(TypeImpl.Local.of(response.getType()));
+                    return typeConstructor.apply(TypeImpl.of(response.getType()));
                 case RES_NOT_SET:
                 default:
                     return null;
             }
         }
 
-        <TYPE extends TypeImpl.Local> Stream<TYPE> getSupertypes(final Function<TypeImpl.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(final Function<TypeImpl, TYPE> typeConstructor) {
             final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance()).build();
             return stream(method, res -> res.getTypeGetSupertypesIterRes().getType()).map(typeConstructor);
         }
 
-        <TYPE extends TypeImpl.Local> Stream<TYPE> getSubtypes(final Function<TypeImpl.Local, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(final Function<TypeImpl, TYPE> typeConstructor) {
             final TypeMethod.Iter.Req method = TypeMethod.Iter.Req.newBuilder()
                     .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance()).build();
             return stream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(typeConstructor);
@@ -277,24 +274,19 @@ public abstract class TypeImpl {
             return transaction.concepts().getType(getLabel()) == null;
         }
 
-        protected final Grakn.Transaction tx() {
+        final Grakn.Transaction tx() {
             return transaction;
         }
 
-        protected Stream<TypeImpl.Local> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             return transaction.concepts().iterateTypeMethod(
-                    label, scope, request, response -> TypeImpl.Local.of(typeGetter.apply(response))
+                    getLabel(), getScope(), request, response -> TypeImpl.of(typeGetter.apply(response))
             );
         }
 
-        protected TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
-            return transaction.concepts().runTypeMethod(label, scope, typeMethod)
+        TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
+            return transaction.concepts().runTypeMethod(getLabel(), getScope(), typeMethod)
                     .getConceptMethodTypeRes().getResponse();
-        }
-
-        @Override
-        public String toString() {
-            return className(this.getClass()) + "[label: " + (scope != null ? scope + ":" : "") + label + "]";
         }
 
         @Override
@@ -304,8 +296,8 @@ public abstract class TypeImpl {
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
             return (this.transaction.equals(that.transaction) &&
-                    this.label.equals(that.label) &&
-                    Objects.equals(this.scope, that.scope));
+                    this.getLabel().equals(that.getLabel()) &&
+                    Objects.equals(this.getScope(), that.getScope()));
         }
 
         @Override

@@ -28,27 +28,24 @@ import graql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class RuleImpl {
+public class RuleImpl extends TypeImpl implements Rule {
 
-    public static class Local extends TypeImpl.Local implements Rule.Local {
+    RuleImpl(final String label, final boolean root) {
+        super(label, null, root);
+    }
 
-        Local(final String label, final boolean root) {
-            super(label, null, root);
-        }
+    public static RuleImpl of(final ConceptProto.Type typeProto) {
+        return new RuleImpl(typeProto.getLabel(), typeProto.getRoot());
+    }
 
-        public static RuleImpl.Local of(final ConceptProto.Type typeProto) {
-            return new RuleImpl.Local(typeProto.getLabel(), typeProto.getRoot());
-        }
+    @Override
+    public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+    }
 
-        @Override
-        public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
-        }
-
-        @Override
-        public RuleImpl.Local asRule() {
-            return this;
-        }
+    @Override
+    public RuleImpl asRule() {
+        return this;
     }
 
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
@@ -59,17 +56,17 @@ public class RuleImpl {
 
         @Nullable
         @Override
-        public RuleImpl.Local getSupertype() {
+        public RuleImpl getSupertype() {
             return null;
         }
 
         @Override
-        public final Stream<Rule.Local> getSupertypes() {
+        public final Stream<Rule> getSupertypes() {
             return Stream.empty();
         }
 
         @Override
-        public final Stream<Rule.Local> getSubtypes() {
+        public final Stream<Rule> getSubtypes() {
             return Stream.empty();
         }
 

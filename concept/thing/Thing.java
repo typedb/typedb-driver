@@ -20,15 +20,12 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 
 import java.util.stream.Stream;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 public interface Thing extends Concept {
 
@@ -43,24 +40,9 @@ public interface Thing extends Concept {
     @Override
     Thing.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Concept.Local, Thing {
-
-        @Override
-        Thing.Local asThing();
-
-        @Override
-        Entity.Local asEntity();
-
-        @Override
-        Attribute.Local<?> asAttribute();
-
-        @Override
-        Relation.Local asRelation();
-    }
-
     interface Remote extends Concept.Remote, Thing {
 
-        ThingType.Local getType();
+        ThingType getType();
 
         void setHas(Attribute<?> attribute);
 
@@ -68,23 +50,23 @@ public interface Thing extends Concept {
 
         boolean isInferred();
 
-        Stream<? extends Attribute.Local<?>> getHas(boolean onlyKey);
+        Stream<? extends Attribute<?>> getHas(boolean onlyKey);
 
-        Stream<? extends Attribute.Boolean.Local> getHas(AttributeType.Boolean attributeType);
+        Stream<? extends Attribute.Boolean> getHas(AttributeType.Boolean attributeType);
 
-        Stream<? extends Attribute.Long.Local> getHas(AttributeType.Long attributeType);
+        Stream<? extends Attribute.Long> getHas(AttributeType.Long attributeType);
 
-        Stream<? extends Attribute.Double.Local> getHas(AttributeType.Double attributeType);
+        Stream<? extends Attribute.Double> getHas(AttributeType.Double attributeType);
 
-        Stream<? extends Attribute.String.Local> getHas(AttributeType.String attributeType);
+        Stream<? extends Attribute.String> getHas(AttributeType.String attributeType);
 
-        Stream<? extends Attribute.DateTime.Local> getHas(AttributeType.DateTime attributeType);
+        Stream<? extends Attribute.DateTime> getHas(AttributeType.DateTime attributeType);
 
-        Stream<? extends Attribute.Local<?>> getHas(AttributeType... attributeTypes);
+        Stream<? extends Attribute<?>> getHas(AttributeType... attributeTypes);
 
-        Stream<? extends RoleType.Local> getPlays();
+        Stream<? extends RoleType> getPlays();
 
-        Stream<? extends Relation.Local> getRelations(RoleType... roleTypes);
+        Stream<? extends Relation> getRelations(RoleType... roleTypes);
 
         @Override
         Thing.Remote asThing();

@@ -30,21 +30,18 @@ public interface ThingType extends Type {
     @Override
     ThingType.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Type.Local, ThingType {
-    }
-
     interface Remote extends Type.Remote, ThingType {
 
         @Override
-        ThingType.Local getSupertype();
+        ThingType getSupertype();
 
         @Override
-        Stream<? extends ThingType.Local> getSupertypes();
+        Stream<? extends ThingType> getSupertypes();
 
         @Override
-        Stream<? extends ThingType.Local> getSubtypes();
+        Stream<? extends ThingType> getSubtypes();
 
-        Stream<? extends Thing.Local> getInstances();
+        Stream<? extends Thing> getInstances();
 
         @Override
         void setLabel(String label);
@@ -65,15 +62,15 @@ public interface ThingType extends Type {
 
         void setOwns(AttributeType attributeType);
 
-        Stream<? extends RoleType.Local> getPlays();
+        Stream<? extends RoleType> getPlays();
 
-        Stream<? extends AttributeType.Local> getOwns();
+        Stream<? extends AttributeType> getOwns();
 
-        Stream<? extends AttributeType.Local> getOwns(ValueType valueType);
+        Stream<? extends AttributeType> getOwns(ValueType valueType);
 
-        Stream<? extends AttributeType.Local> getOwns(boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(boolean keysOnly);
 
-        Stream<? extends AttributeType.Local> getOwns(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
 
         void unsetPlays(RoleType role);
 

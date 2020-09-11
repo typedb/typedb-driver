@@ -30,9 +30,6 @@ public interface Rule extends Type {
     @Override
     Rule.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Type.Local, Rule {
-    }
-
     interface Remote extends Type.Remote, Rule {
 
         @Nullable
@@ -42,9 +39,9 @@ public interface Rule extends Type {
         Pattern getThen();
 
         @Override
-        Stream<? extends Rule.Local> getSupertypes();
+        Stream<? extends Rule> getSupertypes();
 
         @Override
-        Stream<? extends Rule.Local> getSubtypes();
+        Stream<? extends Rule> getSubtypes();
     }
 }

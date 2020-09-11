@@ -29,27 +29,24 @@ import grakn.protocol.ConceptProto.TypeMethod;
 
 import java.util.stream.Stream;
 
-public class EntityTypeImpl {
+public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    public static class Local extends ThingTypeImpl.Local implements EntityType.Local {
+    public EntityTypeImpl(final String label, final boolean isRoot) {
+        super(label, isRoot);
+    }
 
-        public Local(final String label, final boolean isRoot) {
-            super(label, isRoot);
-        }
+    public static EntityTypeImpl of(final ConceptProto.Type typeProto) {
+        return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+    }
 
-        public static EntityTypeImpl.Local of(final ConceptProto.Type typeProto) {
-            return new EntityTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
-        }
+    @Override
+    public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+    }
 
-        @Override
-        public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
-        }
-
-        @Override
-        public EntityTypeImpl.Local asEntityType() {
-            return this;
-        }
+    @Override
+    public EntityTypeImpl asEntityType() {
+        return this;
     }
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
@@ -68,13 +65,13 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public EntityTypeImpl.Local getSupertype() {
-            return super.getSupertypeExecute(TypeImpl.Local::asEntityType);
+        public EntityTypeImpl getSupertype() {
+            return super.getSupertypeExecute(TypeImpl::asEntityType);
         }
 
         @Override
-        public final Stream<EntityImpl.Local> getInstances() {
-            return super.getInstances(EntityImpl.Local::of);
+        public final Stream<EntityImpl> getInstances() {
+            return super.getInstances(EntityImpl::of);
         }
 
         @Override
@@ -83,20 +80,20 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final Stream<EntityTypeImpl.Local> getSupertypes() {
-            return super.getSupertypes(TypeImpl.Local::asEntityType);
+        public final Stream<EntityTypeImpl> getSupertypes() {
+            return super.getSupertypes(TypeImpl::asEntityType);
         }
 
         @Override
-        public final Stream<EntityTypeImpl.Local> getSubtypes() {
-            return super.getSubtypes(TypeImpl.Local::asEntityType);
+        public final Stream<EntityTypeImpl> getSubtypes() {
+            return super.getSubtypes(TypeImpl::asEntityType);
         }
 
         @Override
-        public final EntityImpl.Local create() {
+        public final EntityImpl create() {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setEntityTypeCreateReq(Create.Req.getDefaultInstance()).build();
-            return ThingImpl.Local.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
+            return ThingImpl.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 
         @Override

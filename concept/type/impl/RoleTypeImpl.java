@@ -30,32 +30,29 @@ import grakn.protocol.ConceptProto.TypeMethod;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class RoleTypeImpl {
+public class RoleTypeImpl extends TypeImpl implements RoleType {
 
-    public static class Local extends TypeImpl.Local implements RoleType.Local {
+    public RoleTypeImpl(final String label, final String scope, final boolean root) {
+        super(label, scope, root);
+    }
 
-        public Local(String label, String scope, boolean root) {
-            super(label, scope, root);
-        }
+    public static RoleTypeImpl of(final ConceptProto.Type typeProto) {
+        return new RoleTypeImpl(typeProto.getLabel(), typeProto.getScope(), typeProto.getRoot());
+    }
 
-        public static RoleTypeImpl.Local of(ConceptProto.Type typeProto) {
-            return new RoleTypeImpl.Local(typeProto.getLabel(), typeProto.getScope(), typeProto.getRoot());
-        }
+    @Override
+    public final String getScope() {
+        return super.getScope();
+    }
 
-        @Override
-        public final String getScope() {
-            return super.getScope();
-        }
+    @Override
+    public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+        return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
+    }
 
-        @Override
-        public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
-            return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
-        }
-
-        @Override
-        public RoleTypeImpl.Local asRoleType() {
-            return this;
-        }
+    @Override
+    public RoleTypeImpl asRoleType() {
+        return this;
     }
 
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
@@ -74,18 +71,18 @@ public class RoleTypeImpl {
 
         @Nullable
         @Override
-        public RoleTypeImpl.Local getSupertype() {
-            return getSupertypeExecute(TypeImpl.Local::asRoleType);
+        public RoleTypeImpl getSupertype() {
+            return getSupertypeExecute(TypeImpl::asRoleType);
         }
 
         @Override
-        public final Stream<RoleTypeImpl.Local> getSupertypes() {
-            return super.getSupertypes(TypeImpl.Local::asRoleType);
+        public final Stream<RoleTypeImpl> getSupertypes() {
+            return super.getSupertypes(TypeImpl::asRoleType);
         }
 
         @Override
-        public final Stream<RoleTypeImpl.Local> getSubtypes() {
-            return super.getSubtypes(TypeImpl.Local::asRoleType);
+        public final Stream<RoleTypeImpl> getSubtypes() {
+            return super.getSubtypes(TypeImpl::asRoleType);
         }
 
         @Override
@@ -99,29 +96,29 @@ public class RoleTypeImpl {
         }
 
         @Override
-        public final RelationTypeImpl.Local getRelation() {
+        public final RelationTypeImpl getRelation() {
             final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setRoleTypeGetRelationReq(GetRelation.Req.getDefaultInstance()).build();
             final GetRelation.Res response = execute(method).getRoleTypeGetRelationRes();
-            return TypeImpl.Local.of(response.getRelationType()).asRelationType();
+            return TypeImpl.of(response.getRelationType()).asRelationType();
         }
 
         @Override
-        public final Stream<RelationTypeImpl.Local> getRelations() {
+        public final Stream<RelationTypeImpl> getRelations() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetRelationsIterReq(
                             GetRelations.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getRoleTypeGetRelationsIterRes().getRelationType()
-            ).map(TypeImpl.Local::asRelationType);
+            ).map(TypeImpl::asRelationType);
         }
 
         @Override
-        public final Stream<ThingTypeImpl.Local> getPlayers() {
+        public final Stream<ThingTypeImpl> getPlayers() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetPlayersIterReq(
                             GetPlayers.Iter.Req.getDefaultInstance()).build(),
                     res -> res.getRoleTypeGetPlayersIterRes().getThingType()
-            ).map(TypeImpl.Local::asThingType);
+            ).map(TypeImpl::asThingType);
         }
 
         @Override

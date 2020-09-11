@@ -31,18 +31,18 @@ import static java.util.stream.Collectors.toList;
 
 public class AnswerGroup<T extends Answer> implements Answer {
 
-    private final Concept.Local owner;
+    private final Concept owner;
     private final List<T> answers;
 
-    public AnswerGroup(Concept.Local owner, List<T> answers) {
+    public AnswerGroup(Concept owner, List<T> answers) {
         this.owner = owner;
         this.answers = answers;
     }
 
     public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
-        Concept.Local concept;
-        if (res.getOwner().hasThing()) concept = ThingImpl.Local.of(res.getOwner().getThing());
-        else concept = TypeImpl.Local.of(res.getOwner().getType());
+        Concept concept;
+        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
+        else concept = TypeImpl.of(res.getOwner().getType());
         return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
     }
 
@@ -51,7 +51,7 @@ public class AnswerGroup<T extends Answer> implements Answer {
         return false;
     }
 
-    public Concept.Local owner() {
+    public Concept owner() {
         return this.owner;
     }
 

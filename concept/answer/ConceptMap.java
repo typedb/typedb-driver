@@ -58,9 +58,9 @@ public class ConceptMap implements Answer {
     public static ConceptMap of(final Transaction tx, final AnswerProto.ConceptMap res) {
         final Map<String, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach((resVar, resConcept) -> {
-            Concept.Local concept;
-            if (resConcept.hasThing()) concept = ThingImpl.Local.of(resConcept.getThing());
-            else concept = TypeImpl.Local.of(resConcept.getType());
+            Concept concept;
+            if (resConcept.hasThing()) concept = ThingImpl.of(resConcept.getThing());
+            else concept = TypeImpl.of(resConcept.getType());
             variableMap.put(resVar, concept);
         });
         boolean hasExplanation = res.getHasExplanation();
