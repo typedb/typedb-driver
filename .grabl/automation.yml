@@ -75,8 +75,6 @@ build:
         branch: master
       machine: graknlabs-ubuntu-20.04
       script: |
-        sudo apt-get update
-        sudo apt-get -y install maven
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
