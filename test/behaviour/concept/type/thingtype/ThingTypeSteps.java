@@ -45,7 +45,7 @@ public class ThingTypeSteps {
 
     private static final String UNRECOGNISED_VALUE = "Unrecognized value";
 
-    public static ThingType.Local get_thing_type(RootLabel rootLabel, String typeLabel) {
+    public static ThingType get_thing_type(RootLabel rootLabel, String typeLabel) {
         switch (rootLabel) {
             case ENTITY:
                 return tx().concepts().getEntityType(typeLabel);
@@ -66,7 +66,7 @@ public class ThingTypeSteps {
 
     @Then("thing type root get supertypes do not contain:")
     public void thing_type_root_get_supertypes_do_not_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).asRemote(tx()).getSupertypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         for (String superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
@@ -74,13 +74,13 @@ public class ThingTypeSteps {
 
     @Then("thing type root get subtypes contain:")
     public void thing_type_root_get_subtypes_contain(List<String> subLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("thing type root get subtypes do not contain:")
     public void thing_type_root_get_subtypes_do_not_contain(List<String> subLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -127,7 +127,7 @@ public class ThingTypeSteps {
 
     @When("{root_label}\\( ?{type_label} ?) set abstract: {bool}")
     public void thing_type_set_abstract(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
-        final ThingType.Local thingType = get_thing_type(rootLabel, typeLabel);
+        final ThingType thingType = get_thing_type(rootLabel, typeLabel);
         if (isAbstract) {
             thingType.asRemote(tx()).setAbstract();
         } else {
@@ -184,13 +184,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes contain:")
     public void thing_type_get_supertypes_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes do not contain:")
     public void thing_type_get_supertypes_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         for (String superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
@@ -198,13 +198,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get subtypes contain:")
     public void thing_type_get_subtypes_contain(RootLabel rootLabel, String typeLabel, List<String> subLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get subtypes do not contain:")
     public void thing_type_get_subtypes_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> subLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -244,13 +244,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types contain:")
     public void thing_type_get_has_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types do not contain:")
     public void thing_type_get_has_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type::getLabel).collect(toSet());
         for (String attributeLabel : attributeLabels) {
             assertFalse(actuals.contains(attributeLabel));
         }
@@ -290,13 +290,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types contain:")
     public void thing_type_get_has_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")
     public void thing_type_get_has_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type.Local::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type::getLabel).collect(toSet());
         for (String attributeLabel : attributeLabels) {
             assertFalse(actuals.contains(attributeLabel));
         }

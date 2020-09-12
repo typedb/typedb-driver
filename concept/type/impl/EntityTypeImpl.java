@@ -20,33 +20,33 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.EntityType.Create;
 import grakn.protocol.ConceptProto.TypeMethod;
 
 import java.util.stream.Stream;
 
-public class EntityTypeImpl {
+public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    public static class Local extends ThingTypeImpl.Local implements EntityType.Local {
+    public EntityTypeImpl(final String label, final boolean isRoot) {
+        super(label, isRoot);
+    }
 
-        public Local(final String label, final boolean isRoot) {
-            super(label, isRoot);
-        }
+    public static EntityTypeImpl of(final ConceptProto.Type typeProto) {
+        return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+    }
 
-        public static EntityTypeImpl.Local of(ConceptProto.Type typeProto) {
-            return new EntityTypeImpl.Local(typeProto.getLabel(), typeProto.getRoot());
-        }
+    @Override
+    public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+    }
 
-        @Override
-        public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
-        }
+    @Override
+    public EntityTypeImpl asEntityType() {
+        return this;
     }
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
@@ -60,40 +60,45 @@ public class EntityTypeImpl {
         }
 
         @Override
-        public final void setSupertype(EntityType superEntityType) {
+        public final void setSupertype(final EntityType superEntityType) {
             this.setSupertypeExecute(superEntityType);
         }
 
         @Override
-        public EntityType.Local getSupertype() {
-            return super.getSupertypeExecute(Type.Local::asEntityType);
+        public EntityTypeImpl getSupertype() {
+            return super.getSupertypeExecute(TypeImpl::asEntityType);
         }
 
         @Override
-        public final Stream<Entity.Local> getInstances() {
-            return super.getInstances(EntityImpl.Local::of);
+        public final Stream<EntityImpl> getInstances() {
+            return super.getInstances(EntityImpl::of);
         }
 
         @Override
-        public EntityType.Remote asRemote(Grakn.Transaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, label, isRoot);
+        public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
         @Override
-        public final Stream<EntityType.Local> getSupertypes() {
-            return super.getSupertypes(Type.Local::asEntityType);
+        public final Stream<EntityTypeImpl> getSupertypes() {
+            return super.getSupertypes(TypeImpl::asEntityType);
         }
 
         @Override
-        public final Stream<EntityType.Local> getSubtypes() {
-            return super.getSubtypes(Type.Local::asEntityType);
+        public final Stream<EntityTypeImpl> getSubtypes() {
+            return super.getSubtypes(TypeImpl::asEntityType);
         }
 
         @Override
-        public final Entity.Local create() {
-            TypeMethod.Req method = TypeMethod.Req.newBuilder()
+        public final EntityImpl create() {
+            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
                     .setEntityTypeCreateReq(Create.Req.getDefaultInstance()).build();
-            return ThingImpl.Local.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
+            return ThingImpl.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
+        }
+
+        @Override
+        public EntityTypeImpl.Remote asEntityType() {
+            return this;
         }
     }
 }

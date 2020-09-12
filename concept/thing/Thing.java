@@ -20,15 +20,12 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 
 import java.util.stream.Stream;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 public interface Thing extends Concept {
 
@@ -43,32 +40,9 @@ public interface Thing extends Concept {
     @Override
     Thing.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Concept.Local, Thing {
-
-        @Override
-        default Thing.Local asThing() {
-            return this;
-        }
-
-        @Override
-        default Entity.Local asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
-        }
-
-        @Override
-        default Attribute.Local<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
-        }
-
-        @Override
-        default Relation.Local asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
-        }
-    }
-
     interface Remote extends Concept.Remote, Thing {
 
-        ThingType.Local getType();
+        ThingType getType();
 
         void setHas(Attribute<?> attribute);
 
@@ -76,42 +50,34 @@ public interface Thing extends Concept {
 
         boolean isInferred();
 
-        Stream<? extends Attribute.Local<?>> getHas(boolean onlyKey);
+        Stream<? extends Attribute<?>> getHas(boolean onlyKey);
 
-        Stream<? extends Attribute.Boolean.Local> getHas(AttributeType.Boolean attributeType);
+        Stream<? extends Attribute.Boolean> getHas(AttributeType.Boolean attributeType);
 
-        Stream<? extends Attribute.Long.Local> getHas(AttributeType.Long attributeType);
+        Stream<? extends Attribute.Long> getHas(AttributeType.Long attributeType);
 
-        Stream<? extends Attribute.Double.Local> getHas(AttributeType.Double attributeType);
+        Stream<? extends Attribute.Double> getHas(AttributeType.Double attributeType);
 
-        Stream<? extends Attribute.String.Local> getHas(AttributeType.String attributeType);
+        Stream<? extends Attribute.String> getHas(AttributeType.String attributeType);
 
-        Stream<? extends Attribute.DateTime.Local> getHas(AttributeType.DateTime attributeType);
+        Stream<? extends Attribute.DateTime> getHas(AttributeType.DateTime attributeType);
 
-        Stream<? extends Attribute.Local<?>> getHas(AttributeType... attributeTypes);
+        Stream<? extends Attribute<?>> getHas(AttributeType... attributeTypes);
 
-        Stream<? extends RoleType.Local> getPlays();
+        Stream<? extends RoleType> getPlays();
 
-        Stream<? extends Relation.Local> getRelations(RoleType... roleTypes);
-
-        @Override
-        default Thing.Remote asThing() {
-            return this;
-        }
+        Stream<? extends Relation> getRelations(RoleType... roleTypes);
 
         @Override
-        default Entity.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Entity.class.getSimpleName()));
-        }
+        Thing.Remote asThing();
 
         @Override
-        default Relation.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Relation.class.getSimpleName()));
-        }
+        Entity.Remote asEntity();
 
         @Override
-        default Attribute.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Attribute.class.getSimpleName()));
-        }
+        Relation.Remote asRelation();
+
+        @Override
+        Attribute.Remote<?> asAttribute();
     }
 }

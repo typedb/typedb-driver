@@ -21,7 +21,6 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.concept.type.Rule;
-import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
@@ -29,44 +28,46 @@ import graql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class RuleImpl {
+public class RuleImpl extends TypeImpl implements Rule {
 
-    public static class Local extends TypeImpl.Local implements Rule.Local {
+    RuleImpl(final String label, final boolean root) {
+        super(label, root);
+    }
 
-        Local(final String label, final boolean root) {
-            super(label, null, root);
-        }
+    public static RuleImpl of(final ConceptProto.Type typeProto) {
+        return new RuleImpl(typeProto.getLabel(), typeProto.getRoot());
+    }
 
-        public static RuleImpl.Local of(final ConceptProto.Type typeProto) {
-            return new RuleImpl.Local(typeProto.getLabel(), typeProto.getRoot());
-        }
+    @Override
+    public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+    }
 
-        @Override
-        public Rule.Remote asRemote(final Grakn.Transaction transaction) {
-            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
-        }
+    @Override
+    public RuleImpl asRule() {
+        return this;
     }
 
     public static class Remote extends TypeImpl.Remote implements Rule.Remote {
 
         public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, null, isRoot);
+            super(transaction, label, isRoot);
         }
 
         @Nullable
         @Override
-        public Type.Local getSupertype() {
-            return getSupertypeExecute(Type.Local::asRule);
+        public RuleImpl getSupertype() {
+            return null;
         }
 
         @Override
-        public final Stream<Rule.Local> getSupertypes() {
-            return super.getSupertypes(Type.Local::asRule);
+        public final Stream<Rule> getSupertypes() {
+            return Stream.empty();
         }
 
         @Override
-        public final Stream<Rule.Local> getSubtypes() {
-            return super.getSubtypes(Type.Local::asRule);
+        public final Stream<Rule> getSubtypes() {
+            return Stream.empty();
         }
 
         @Override
@@ -104,8 +105,13 @@ public class RuleImpl {
         }
 
         @Override
-        public Rule.Remote asRemote(Grakn.Transaction transaction) {
-            return new RuleImpl.Remote(transaction, label, isRoot);
+        public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+        }
+
+        @Override
+        public RuleImpl.Remote asRule() {
+            return this;
         }
     }
 }

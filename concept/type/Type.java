@@ -20,14 +20,10 @@
 package grakn.client.concept.type;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.common.util.Objects.className;
 
 public interface Type extends Concept {
 
@@ -48,39 +44,6 @@ public interface Type extends Concept {
     @Override
     Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Type, Concept.Local {
-
-        @Override
-        default Type.Local asType() {
-            return this;
-        }
-
-        @Override
-        default ThingType.Local asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
-        }
-
-        @Override
-        default EntityType.Local asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
-        }
-
-        @Override
-        default AttributeType.Local asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
-        }
-
-        @Override
-        default RelationType.Local asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
-        }
-
-        @Override
-        default RoleType.Local asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
-        }
-    }
-
     interface Remote extends Type, Concept.Remote {
 
         void setLabel(String label);
@@ -88,40 +51,28 @@ public interface Type extends Concept {
         boolean isAbstract();
 
         @Nullable
-        Type.Local getSupertype();
+        Type getSupertype();
 
-        Stream<? extends Type.Local> getSupertypes();
+        Stream<? extends Type> getSupertypes();
 
-        Stream<? extends Type.Local> getSubtypes();
-
-        @Override
-        default Type.Remote asType() {
-            return this;
-        }
+        Stream<? extends Type> getSubtypes();
 
         @Override
-        default ThingType.Remote asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(ThingType.class)));
-        }
+        Type.Remote asType();
 
         @Override
-        default EntityType.Remote asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(EntityType.class)));
-        }
+        ThingType.Remote asThingType();
 
         @Override
-        default RelationType.Remote asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RelationType.class)));
-        }
+        EntityType.Remote asEntityType();
 
         @Override
-        default AttributeType.Remote asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(AttributeType.class)));
-        }
+        RelationType.Remote asRelationType();
 
         @Override
-        default RoleType.Remote asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(RoleType.class)));
-        }
+        AttributeType.Remote asAttributeType();
+
+        @Override
+        RoleType.Remote asRoleType();
     }
 }

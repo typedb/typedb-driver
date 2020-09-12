@@ -42,6 +42,7 @@ import java.util.stream.StreamSupport;
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.common.exception.ErrorMessage.Client.CONNECTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_LISTENER_TERMINATED;
+import static grakn.common.util.Objects.className;
 import static grakn.protocol.TransactionProto.Transaction.Req;
 import static grakn.protocol.TransactionProto.Transaction.Res;
 
@@ -300,7 +301,7 @@ public class RPCTransceiver implements AutoCloseable {
 
         @Override
         public String toString() {
-            return getClass().getSimpleName() + "{nullableOk=" + nullableOk + ", nullableError=" + nullableError + "}";
+            return className(getClass()) + "{nullableOk=" + nullableOk + ", nullableError=" + nullableError + "}";
         }
 
         @Override

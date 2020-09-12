@@ -29,14 +29,21 @@ import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.common.util.Objects.className;
 
 public interface Concept {
 
-    Type asType();
+    default Type asType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
+    }
 
-    Thing asThing();
+    default Thing asThing() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
+    }
 
-    Rule asRule();
+    default Rule asRule() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
+    }
 
     Remote asRemote(Grakn.Transaction transaction);
 
@@ -44,27 +51,9 @@ public interface Concept {
         return false;
     }
 
-    interface Local extends Concept {
-
-        @Override
-        default Type.Local asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
-        }
-
-        @Override
-        default Thing.Local asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
-        }
-
-        @Override
-        default Rule.Local asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
-        }
-    }
-
     interface Remote extends Concept {
 
-        static Concept.Remote of(final Grakn.Transaction transaction, ConceptProto.Concept concept) {
+        static Concept.Remote of(final Grakn.Transaction transaction, final ConceptProto.Concept concept) {
             if (concept.hasThing()) {
                 return ThingImpl.Remote.of(transaction, concept.getThing());
             } else {
@@ -78,17 +67,17 @@ public interface Concept {
 
         @Override
         default Type.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Type.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
         }
 
         @Override
         default Thing.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Thing.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
         }
 
         @Override
         default Rule.Remote asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, Rule.class.getSimpleName()));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
         }
 
         @Override

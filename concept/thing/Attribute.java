@@ -20,15 +20,11 @@
 package grakn.client.concept.thing;
 
 import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.common.util.Objects.className;
 
 public interface Attribute<VALUE> extends Thing {
 
@@ -47,77 +43,32 @@ public interface Attribute<VALUE> extends Thing {
     @Override
     Attribute.Remote<VALUE> asRemote(Grakn.Transaction transaction);
 
-    interface Local<VALUE> extends Thing.Local, Attribute<VALUE> {
-
-        @Override
-        default Attribute.Local<VALUE> asAttribute() {
-            return this;
-        }
-
-        @Override
-        default Attribute.Boolean.Local asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
-        }
-
-        @Override
-        default Attribute.Long.Local asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
-        }
-
-        @Override
-        default Attribute.Double.Local asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
-        }
-
-        @Override
-        default Attribute.String.Local asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
-        }
-
-        @Override
-        default Attribute.DateTime.Local asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
-        }
-    }
-
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
-        Stream<? extends Thing.Local> getOwners();
+        Stream<? extends Thing> getOwners();
 
-        Stream<? extends Thing.Local> getOwners(ThingType ownerType);
-
-        @Override
-        AttributeType.Local getType();
+        Stream<? extends Thing> getOwners(ThingType ownerType);
 
         @Override
-        default Attribute.Remote<VALUE> asAttribute() {
-            return this;
-        }
+        AttributeType getType();
 
         @Override
-        default Attribute.Boolean.Remote asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Boolean.class)));
-        }
+        Attribute.Remote<VALUE> asAttribute();
 
         @Override
-        default Attribute.Long.Remote asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Long.class)));
-        }
+        Attribute.Boolean.Remote asBoolean();
 
         @Override
-        default Attribute.Double.Remote asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.Double.class)));
-        }
+        Attribute.Long.Remote asLong();
 
         @Override
-        default Attribute.String.Remote asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.String.class)));
-        }
+        Attribute.Double.Remote asDouble();
 
         @Override
-        default Attribute.DateTime.Remote asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(this, className(Attribute.DateTime.class)));
-        }
+        Attribute.String.Remote asString();
+
+        @Override
+        Attribute.DateTime.Remote asDateTime();
     }
 
     interface Boolean extends Attribute<java.lang.Boolean> {
@@ -125,20 +76,7 @@ public interface Attribute<VALUE> extends Thing {
         @Override
         Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction);
 
-        interface Local extends Attribute.Boolean, Attribute.Local<java.lang.Boolean> {
-
-            @Override
-            default Attribute.Boolean.Local asBoolean() {
-                return this;
-            }
-        }
-
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
-
-            @Override
-            default Attribute.Boolean.Remote asBoolean() {
-                return this;
-            }
         }
     }
 
@@ -147,20 +85,7 @@ public interface Attribute<VALUE> extends Thing {
         @Override
         Attribute.Long.Remote asRemote(Grakn.Transaction transaction);
 
-        interface Local extends Attribute.Long, Attribute.Local<java.lang.Long> {
-
-            @Override
-            default Attribute.Long.Local asLong() {
-                return this;
-            }
-        }
-
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
-
-            @Override
-            default Attribute.Long.Remote asLong() {
-                return this;
-            }
         }
     }
 
@@ -169,20 +94,7 @@ public interface Attribute<VALUE> extends Thing {
         @Override
         Attribute.Double.Remote asRemote(Grakn.Transaction transaction);
 
-        interface Local extends Attribute.Double, Attribute.Local<java.lang.Double> {
-
-            @Override
-            default Attribute.Double.Local asDouble() {
-                return this;
-            }
-        }
-
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
-
-            @Override
-            default Attribute.Double.Remote asDouble() {
-                return this;
-            }
         }
     }
 
@@ -191,20 +103,7 @@ public interface Attribute<VALUE> extends Thing {
         @Override
         Attribute.String.Remote asRemote(Grakn.Transaction transaction);
 
-        interface Local extends Attribute.String, Attribute.Local<java.lang.String> {
-
-            @Override
-            default Attribute.String.Local asString() {
-                return this;
-            }
-        }
-
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
-
-            @Override
-            default Attribute.String.Remote asString() {
-                return this;
-            }
         }
     }
 
@@ -213,20 +112,7 @@ public interface Attribute<VALUE> extends Thing {
         @Override
         Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction);
 
-        interface Local extends Attribute.DateTime, Attribute.Local<LocalDateTime> {
-
-            @Override
-            default Attribute.DateTime.Local asDateTime() {
-                return this;
-            }
-        }
-
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
-
-            @Override
-            default Attribute.DateTime.Remote asDateTime() {
-                return this;
-            }
         }
     }
 }

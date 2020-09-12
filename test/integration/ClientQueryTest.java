@@ -24,6 +24,7 @@ import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.type.EntityType;
 import grakn.client.rpc.GraknClient;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;

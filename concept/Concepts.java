@@ -52,81 +52,81 @@ public final class Concepts {
         this.transaction = transaction;
     }
 
-    public ThingType.Local getRootThingType() {
+    public ThingType getRootThingType() {
         return getType(GraqlToken.Type.THING.toString()).asThingType();
     }
 
-    public EntityType.Local getRootEntityType() {
+    public EntityType getRootEntityType() {
         return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
     }
 
-    public RelationType.Local getRootRelationType() {
+    public RelationType getRootRelationType() {
         return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
     }
 
-    public AttributeType.Local getRootAttributeType() {
+    public AttributeType getRootAttributeType() {
         return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
 
-    public RoleType.Local getRootRoleType() {
+    public RoleType getRootRoleType() {
         return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
     }
 
-    public Rule.Local getRootRule() {
+    public Rule getRootRule() {
         return getType(GraqlToken.Type.RULE.toString()).asRule();
     }
 
-    public EntityType.Local putEntityType(final String label) {
+    public EntityType putEntityType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
                                              .setLabel(label)).build();
 
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Local.of(res.getPutEntityTypeRes().getEntityType()).asEntityType();
+        return TypeImpl.of(res.getPutEntityTypeRes().getEntityType()).asEntityType();
     }
 
     @Nullable
-    public EntityType.Local getEntityType(final String label) {
-        final Type.Local concept = getType(label);
+    public EntityType getEntityType(final String label) {
+        final Type concept = getType(label);
         if (concept instanceof EntityType) return concept.asEntityType();
         else return null;
     }
 
-    public RelationType.Local putRelationType(final String label) {
+    public RelationType putRelationType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
                                                .setLabel(label)).build();
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Local.of(res.getPutRelationTypeRes().getRelationType()).asRelationType();
+        return TypeImpl.of(res.getPutRelationTypeRes().getRelationType()).asRelationType();
     }
 
     @Nullable
-    public RelationType.Local getRelationType(final String label) {
-        final Type.Local concept = getType(label);
+    public RelationType getRelationType(final String label) {
+        final Type concept = getType(label);
         if (concept instanceof RelationType) return concept.asRelationType();
         else return null;
     }
 
-    public AttributeType.Local putAttributeType(final String label, final AttributeType.ValueType valueType) {
+    public AttributeType putAttributeType(final String label, final AttributeType.ValueType valueType) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                                                 .setLabel(label)
                                                 .setValueType(valueType(valueType))).build();
         final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.Local.of(res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
+        return TypeImpl.of(res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
     }
 
     @Nullable
-    public AttributeType.Local getAttributeType(final String label) {
-        final Type.Local concept = getType(label);
+    public AttributeType getAttributeType(final String label) {
+        final Type concept = getType(label);
         if (concept instanceof AttributeType) return concept.asAttributeType();
         else return null;
     }
 
-    public Rule.Local putRule(final String label, final Pattern when, final Pattern then) {
+    public Rule putRule(final String label, final Pattern when, final Pattern then) {
         throw new GraknClientException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
@@ -140,14 +140,14 @@ public final class Concepts {
     }
 
     @Nullable
-    public Rule.Local getRule(String label) {
-        Type.Local concept = getType(label);
+    public Rule getRule(String label) {
+        Type concept = getType(label);
         if (concept instanceof Rule) return concept.asRule();
         else return null;
     }
 
     @Nullable
-    public Type.Local getType(final String label) {
+    public Type getType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
@@ -155,7 +155,7 @@ public final class Concepts {
         final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
-                return TypeImpl.Local.of(response.getGetTypeRes().getType());
+                return TypeImpl.of(response.getGetTypeRes().getType());
             default:
             case RES_NOT_SET:
                 return null;
@@ -163,7 +163,7 @@ public final class Concepts {
     }
 
     @Nullable
-    public Thing.Local getThing(final String iid) {
+    public Thing getThing(final String iid) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
@@ -171,7 +171,7 @@ public final class Concepts {
         final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
         switch (response.getGetThingRes().getResCase()) {
             case THING:
-                return ThingImpl.Local.of(response.getGetThingRes().getThing());
+                return ThingImpl.of(response.getGetThingRes().getThing());
             default:
             case RES_NOT_SET:
                 return null;

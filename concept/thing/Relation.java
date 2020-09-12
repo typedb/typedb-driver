@@ -32,30 +32,20 @@ public interface Relation extends Thing {
     @Override
     Relation.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Local extends Thing.Local, Relation {
-
-        @Override
-        default Relation.Local asRelation() {
-            return this;
-        }
-    }
-
     interface Remote extends Thing.Remote, Relation {
 
         @Override
-        RelationType.Local getType();
+        RelationType getType();
 
         void addPlayer(RoleType roleType, Thing player);
 
         void removePlayer(RoleType roleType, Thing player);
 
-        Stream<? extends Thing.Local> getPlayers(RoleType... roleTypes);
+        Stream<? extends Thing> getPlayers(RoleType... roleTypes);
 
-        Map<? extends RoleType.Local, List<? extends Thing.Local>> getPlayersByRoleType();
+        Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType();
 
         @Override
-        default Relation.Remote asRelation() {
-            return this;
-        }
+        Relation.Remote asRelation();
     }
 }

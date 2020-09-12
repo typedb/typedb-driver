@@ -32,13 +32,9 @@ import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface AttributeType extends ThingType {
 
-    default ValueType getValueType() {
-        return ValueType.OBJECT;
-    }
+    ValueType getValueType();
 
-    default boolean isKeyable() {
-        return getValueType().isKeyable();
-    }
+    boolean isKeyable();
 
     @Override
     AttributeType.Remote asRemote(Grakn.Transaction transaction);
@@ -117,37 +113,28 @@ public interface AttributeType extends ThingType {
         }
     }
 
-    interface Local extends ThingType.Local, AttributeType {
-
-        @Override
-        default AttributeType.Local asAttributeType() {
-            return this;
-        }
-
-        @Override
-        AttributeType.Boolean.Local asBoolean();
-
-        @Override
-        AttributeType.Long.Local asLong();
-
-        @Override
-        AttributeType.Double.Local asDouble();
-
-        @Override
-        AttributeType.String.Local asString();
-
-        @Override
-        AttributeType.DateTime.Local asDateTime();
-    }
-
     interface Remote extends ThingType.Remote, AttributeType {
 
         void setSupertype(AttributeType type);
 
         @Override
-        default AttributeType.Remote asAttributeType() {
-            return this;
-        }
+        AttributeType getSupertype();
+
+        @Override
+        Stream<? extends AttributeType> getSupertypes();
+
+        @Override
+        Stream<? extends AttributeType> getSubtypes();
+
+        @Override
+        Stream<? extends Attribute<?>> getInstances();
+
+        Stream<? extends ThingType> getOwners();
+
+        Stream<? extends ThingType> getOwners(boolean onlyKey);
+
+        @Override
+        AttributeType.Remote asAttributeType();
 
         @Override
         AttributeType.Boolean.Remote asBoolean();
@@ -163,247 +150,150 @@ public interface AttributeType extends ThingType {
 
         @Override
         AttributeType.DateTime.Remote asDateTime();
-
-        @Override
-        Stream<? extends Attribute.Local<?>> getInstances();
-
-        Stream<? extends ThingType> getOwners();
-
-        Stream<? extends ThingType> getOwners(boolean onlyKey);
     }
 
     interface Boolean extends AttributeType {
 
         @Override
-        default ValueType getValueType() {
-            return ValueType.BOOLEAN;
-        }
-
-        @Override
         AttributeType.Boolean.Remote asRemote(Grakn.Transaction transaction);
-
-        interface Local extends AttributeType.Boolean, AttributeType.Local {
-
-            @Override
-            default AttributeType.Boolean.Local asBoolean() {
-                return this;
-            }
-        }
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
             void setSupertype(AttributeType.Boolean type);
 
             @Override
-            AttributeType.Boolean.Local getSupertype();
+            AttributeType.Boolean getSupertype();
 
             @Override
-            Stream<? extends AttributeType.Boolean.Local> getSupertypes();
+            Stream<? extends AttributeType.Boolean> getSupertypes();
 
             @Override
-            Stream<? extends AttributeType.Boolean.Local> getSubtypes();
+            Stream<? extends AttributeType.Boolean> getSubtypes();
 
             @Override
-            Stream<? extends Attribute.Boolean.Local> getInstances();
+            Stream<? extends Attribute.Boolean> getInstances();
 
-            Attribute.Boolean.Local put(boolean value);
+            Attribute.Boolean put(boolean value);
 
             @Nullable
-            Attribute.Boolean.Local get(boolean value);
-
-            @Override
-            default AttributeType.Boolean.Remote asBoolean() {
-                return this;
-            }
+            Attribute.Boolean get(boolean value);
         }
     }
 
     interface Long extends AttributeType {
 
         @Override
-        default ValueType getValueType() {
-            return ValueType.LONG;
-        }
-
-        @Override
         AttributeType.Long.Remote asRemote(Grakn.Transaction transaction);
-
-        interface Local extends AttributeType.Long, AttributeType.Local {
-
-            @Override
-            default AttributeType.Long.Local asLong() {
-                return this;
-            }
-        }
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
             void setSupertype(AttributeType.Long type);
 
             @Override
-            AttributeType.Long.Local getSupertype();
+            AttributeType.Long getSupertype();
 
             @Override
-            Stream<? extends AttributeType.Long.Local> getSupertypes();
+            Stream<? extends AttributeType.Long> getSupertypes();
 
             @Override
-            Stream<? extends AttributeType.Long.Local> getSubtypes();
+            Stream<? extends AttributeType.Long> getSubtypes();
 
             @Override
-            Stream<? extends Attribute.Long.Local> getInstances();
+            Stream<? extends Attribute.Long> getInstances();
 
-            Attribute.Long.Local put(long value);
+            Attribute.Long put(long value);
 
             @Nullable
-            Attribute.Long.Local get(long value);
-
-            @Override
-            default AttributeType.Long.Remote asLong() {
-                return this;
-            }
+            Attribute.Long get(long value);
         }
     }
 
     interface Double extends AttributeType {
 
         @Override
-        default ValueType getValueType() {
-            return ValueType.DOUBLE;
-        }
-
-        @Override
         AttributeType.Double.Remote asRemote(Grakn.Transaction transaction);
-
-        interface Local extends AttributeType.Double, AttributeType.Local {
-
-            @Override
-            default AttributeType.Double.Local asDouble() {
-                return this;
-            }
-        }
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
             void setSupertype(AttributeType.Double type);
 
             @Override
-            AttributeType.Double.Local getSupertype();
+            AttributeType.Double getSupertype();
 
             @Override
-            Stream<? extends AttributeType.Double.Local> getSupertypes();
+            Stream<? extends AttributeType.Double> getSupertypes();
 
             @Override
-            Stream<? extends AttributeType.Double.Local> getSubtypes();
+            Stream<? extends AttributeType.Double> getSubtypes();
 
             @Override
-            Stream<? extends Attribute.Double.Local> getInstances();
+            Stream<? extends Attribute.Double> getInstances();
 
-            Attribute.Double.Local put(double value);
+            Attribute.Double put(double value);
 
             @Nullable
-            Attribute.Double.Local get(double value);
-
-            @Override
-            default AttributeType.Double.Remote asDouble() {
-                return this;
-            }
+            Attribute.Double get(double value);
         }
     }
 
     interface String extends AttributeType {
 
         @Override
-        default ValueType getValueType() {
-            return ValueType.STRING;
-        }
-
-        @Override
         AttributeType.String.Remote asRemote(Grakn.Transaction transaction);
-
-        interface Local extends AttributeType.String, AttributeType.Local {
-
-            @Override
-            default AttributeType.String.Local asString() {
-                return this;
-            }
-        }
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
             void setSupertype(AttributeType.String type);
 
             @Override
-            AttributeType.String.Local getSupertype();
+            AttributeType.String getSupertype();
 
             @Override
-            Stream<? extends AttributeType.String.Local> getSupertypes();
+            Stream<? extends AttributeType.String> getSupertypes();
 
             @Override
-            Stream<? extends AttributeType.String.Local> getSubtypes();
+            Stream<? extends AttributeType.String> getSubtypes();
 
             @Override
-            Stream<? extends Attribute.String.Local> getInstances();
+            Stream<? extends Attribute.String> getInstances();
 
-            Attribute.String.Local put(java.lang.String value);
+            Attribute.String put(java.lang.String value);
 
             @Nullable
-            Attribute.String.Local get(java.lang.String value);
+            Attribute.String get(java.lang.String value);
 
             @Nullable
             java.lang.String getRegex();
 
             void setRegex(java.lang.String regex);
-
-            @Override
-            default AttributeType.String.Remote asString() {
-                return this;
-            }
         }
     }
 
     interface DateTime extends AttributeType {
 
         @Override
-        default ValueType getValueType() {
-            return ValueType.DATETIME;
-        }
-
-        @Override
         AttributeType.DateTime.Remote asRemote(Grakn.Transaction transaction);
-
-        interface Local extends AttributeType.DateTime, AttributeType.Local {
-
-            @Override
-            default AttributeType.DateTime.Local asDateTime() {
-                return this;
-            }
-        }
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
             void setSupertype(AttributeType.DateTime type);
 
             @Override
-            AttributeType.DateTime.Local getSupertype();
+            AttributeType.DateTime getSupertype();
 
             @Override
-            Stream<? extends AttributeType.DateTime.Local> getSupertypes();
+            Stream<? extends AttributeType.DateTime> getSupertypes();
 
             @Override
-            Stream<? extends AttributeType.DateTime.Local> getSubtypes();
+            Stream<? extends AttributeType.DateTime> getSubtypes();
 
             @Override
-            Stream<? extends Attribute.DateTime.Local> getInstances();
+            Stream<? extends Attribute.DateTime> getInstances();
 
-            Attribute.DateTime.Local put(LocalDateTime value);
+            Attribute.DateTime put(LocalDateTime value);
 
             @Nullable
-            Attribute.DateTime.Local get(LocalDateTime value);
-
-            @Override
-            default AttributeType.DateTime.Remote asDateTime() {
-                return this;
-            }
+            Attribute.DateTime get(LocalDateTime value);
         }
     }
 }

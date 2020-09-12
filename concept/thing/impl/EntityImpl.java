@@ -21,25 +21,28 @@ package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn;
 import grakn.client.concept.thing.Entity;
-import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.common.collection.Bytes;
 import grakn.protocol.ConceptProto;
 
-public abstract class EntityImpl {
-    public static class Local extends ThingImpl.Local implements Entity.Local {
+public class EntityImpl extends ThingImpl implements Entity {
 
-        Local(String iid) {
-            super(iid);
-        }
+    EntityImpl(final String iid) {
+        super(iid);
+    }
 
-        public static EntityImpl.Local of(final ConceptProto.Thing protoThing) {
-            return new EntityImpl.Local(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
-        }
+    public static EntityImpl of(final ConceptProto.Thing protoThing) {
+        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
+    }
 
-        @Override
-        public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new EntityImpl.Remote(transaction, getIID());
-        }
+    @Override
+    public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        return new EntityImpl.Remote(transaction, getIID());
+    }
+
+    @Override
+    public final EntityImpl asEntity() {
+        return this;
     }
 
     public static class Remote extends ThingImpl.Remote implements Entity.Remote {
@@ -53,13 +56,18 @@ public abstract class EntityImpl {
         }
 
         @Override
-        public Entity.Remote asRemote(Grakn.Transaction transaction) {
+        public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
             return new EntityImpl.Remote(transaction, getIID());
         }
 
         @Override
-        public EntityType.Local getType() {
+        public EntityTypeImpl getType() {
             return super.getType().asEntityType();
+        }
+
+        @Override
+        public final EntityImpl.Remote asEntity() {
+            return this;
         }
     }
 }
