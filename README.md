@@ -1,6 +1,6 @@
 # Grakn Client for Java
 
-[![CircleCI](https://circleci.com/gh/graknlabs/client-java/tree/master.svg?style=shield)](https://circleci.com/gh/graknlabs/client-java/tree/master)
+[![CircleCI](https://grabl.io/api/status/graknlabs/client-java/badge.svg)](https://grabl.io/graknlabs/client-java)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://grakn.ai/discord)
 [![Discussion Forum](https://img.shields.io/discourse/https/discuss.grakn.ai/topics.svg)](https://discuss.grakn.ai)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-grakn-796de3.svg)](https://stackoverflow.com/questions/tagged/grakn)
