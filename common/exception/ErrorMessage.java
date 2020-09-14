@@ -52,12 +52,14 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Concept(2, "Transaction can not be null.");
         public static final Concept MISSING_IID =
                 new Concept(3, "IID cannot be null or empty.");
+        public static final Concept MISSING_LABEL =
+                new Concept(4, "Label cannot be null or empty.");
         public static final Concept BAD_ENCODING =
-                new Concept(4, "The encoding '%s' was not recognised.");
+                new Concept(5, "The encoding '%s' was not recognised.");
         public static final Concept BAD_VALUE_TYPE =
-                new Concept(5, "The value type '%s' was not recognised.");
+                new Concept(6, "The value type '%s' was not recognised.");
         public static final Concept BAD_ATTRIBUTE_VALUE =
-                new Concept(6, "The attribute value '%s' was not recognised.");
+                new Concept(7, "The attribute value '%s' was not recognised.");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";

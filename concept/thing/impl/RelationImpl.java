@@ -87,10 +87,11 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType() {
-            final ThingMethod.Iter.Req method = ThingMethod.Iter.Req.newBuilder()
-                    .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance()).build();
+            final ThingMethod.Iter.Req.Builder method = ThingMethod.Iter.Req.newBuilder()
+                    .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance());
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().concepts().iterateThingMethod(getIID(), method, ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().concepts().iterateThingMethod(
+                    method, ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
@@ -114,23 +115,20 @@ public class RelationImpl extends ThingImpl implements Relation {
         public Stream<ThingImpl> getPlayers(final RoleType... roleTypes) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setRelationGetPlayersIterReq(
-                            GetPlayers.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))).build(),
-                    res -> res.getRelationGetPlayersIterRes().getThing()
-            );
+                            GetPlayers.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
+                    res -> res.getRelationGetPlayersIterRes().getThing());
         }
 
         @Override
         public void addPlayer(final RoleType roleType, final Thing player) {
             execute(ThingMethod.Req.newBuilder().setRelationAddPlayerReq(
-                    AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))
-            ).build());
+                    AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override
         public void removePlayer(final RoleType roleType, final Thing player) {
             execute(ThingMethod.Req.newBuilder().setRelationRemovePlayerReq(
-                    RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))
-            ).build());
+                    RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override

@@ -20,7 +20,6 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
-import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RoleType.GetPlayers;
@@ -128,8 +127,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final RelationTypeImpl getRelation() {
-            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
-                    .setRoleTypeGetRelationReq(GetRelation.Req.getDefaultInstance()).build();
+            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder()
+                    .setRoleTypeGetRelationReq(GetRelation.Req.getDefaultInstance());
             final GetRelation.Res response = execute(method).getRoleTypeGetRelationRes();
             return TypeImpl.of(response.getRelationType()).asRelationType();
         }
@@ -138,7 +137,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         public final Stream<RelationTypeImpl> getRelations() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetRelationsIterReq(
-                            GetRelations.Iter.Req.getDefaultInstance()).build(),
+                            GetRelations.Iter.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetRelationsIterRes().getRelationType()
             ).map(TypeImpl::asRelationType);
         }
@@ -147,7 +146,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         public final Stream<ThingTypeImpl> getPlayers() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRoleTypeGetPlayersIterReq(
-                            GetPlayers.Iter.Req.getDefaultInstance()).build(),
+                            GetPlayers.Iter.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetPlayersIterRes().getThingType()
             ).map(TypeImpl::asThingType);
         }
@@ -158,16 +157,13 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> stream(final TypeMethod.Iter.Req request, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return tx().concepts().iterateTypeMethod(
-                    getLabel(), scope, request, response -> TypeImpl.of(typeGetter.apply(response))
-            );
+        Stream<TypeImpl> stream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
+            return super.stream(method.setScope(scope), typeGetter);
         }
 
         @Override
-        TypeMethod.Res execute(final TypeMethod.Req typeMethod) {
-            return tx().concepts().runTypeMethod(getLabel(), scope, typeMethod)
-                    .getConceptMethodTypeRes().getResponse();
+        TypeMethod.Res execute(final TypeMethod.Req.Builder method) {
+            return super.execute(method.setScope(scope));
         }
 
         @Override

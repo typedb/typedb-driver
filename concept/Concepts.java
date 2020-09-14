@@ -127,7 +127,8 @@ public final class Concepts {
     }
 
     public Rule putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknClientException(new UnsupportedOperationException());
+        // TODO
+        thow new GraknClientException(new UnsupportedOperationException());
         /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
@@ -141,8 +142,9 @@ public final class Concepts {
 
     @Nullable
     public Rule getRule(String label) {
+        // TODO
         Type concept = getType(label);
-        if (concept instanceof Rule) return concept.asRule();
+        if (concept instancof Rule) return concept.asRule();
         else return null;
     }
 
@@ -178,45 +180,33 @@ public final class Concepts {
         }
     }
 
-    public TransactionProto.Transaction.Res runThingMethod(final String iid, final ConceptProto.ThingMethod.Req thingMethod) {
+    public TransactionProto.Transaction.Res runThingMethod(final ConceptProto.ThingMethod.Req.Builder method) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodThingReq(TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
-                                                  .setIid(iid(iid))
-                                                  .setMethod(thingMethod)).build();
+                .setThingMethodReq(method).build();
 
         return transaction.transceiver().sendAndReceiveOrThrow(request);
     }
 
-    public TransactionProto.Transaction.Res runTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Req method) {
-        final TransactionProto.Transaction.ConceptMethod.Type.Req.Builder typeMethod =
-                TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder().setLabel(label).setMethod(method);
-        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
-
+    public TransactionProto.Transaction.Res runTypeMethod(final ConceptProto.TypeMethod.Req.Builder method) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodTypeReq(typeMethod.build()).build();
+                .setTypeMethodReq(method).build();
 
         return transaction.transceiver().sendAndReceiveOrThrow(request);
     }
 
-    public <T> Stream<T> iterateThingMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method,
+    public <T> Stream<T> iterateThingMethod(final ConceptProto.ThingMethod.Iter.Req.Builder method,
                                             final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodThingIterReq(TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
-                                                      .setIid(iid(iid))
-                                                      .setMethod(method)).build();
+                .setThingMethodIterReq(method).build();
 
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
+        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes()));
     }
 
-    public <T> Stream<T> iterateTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Iter.Req method,
+    public <T> Stream<T> iterateTypeMethod(final ConceptProto.TypeMethod.Iter.Req.Builder method,
                                            final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.Builder typeMethod =
-                TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder().setLabel(label).setMethod(method);
-        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
-
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodTypeIterReq(typeMethod.build()).build();
+                .setTypeMethodIterReq(method).build();
 
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
+        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes()));
     }
 }

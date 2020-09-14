@@ -105,9 +105,8 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         <THING extends ThingImpl> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
             return tx().concepts().iterateTypeMethod(
-                    getLabel(), null,
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
-                            GetInstances.Iter.Req.getDefaultInstance()).build(),
+                            GetInstances.Iter.Req.getDefaultInstance()),
                     response -> thingConstructor.apply(response.getThingTypeGetInstancesIterRes().getThing())
             );
         }
@@ -119,23 +118,19 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void setAbstract() {
-            execute(TypeMethod.Req.newBuilder().setThingTypeSetAbstractReq(
-                    SetAbstract.Req.getDefaultInstance()
-            ).build());
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetAbstractReq(SetAbstract.Req.getDefaultInstance()));
         }
 
         @Override
         public final void unsetAbstract() {
-            execute(TypeMethod.Req.newBuilder().setThingTypeUnsetAbstractReq(
-                    UnsetAbstract.Req.getDefaultInstance()
-            ).build());
+            execute(TypeMethod.Req.newBuilder().setThingTypeUnsetAbstractReq(UnsetAbstract.Req.getDefaultInstance()));
         }
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setThingTypeGetPlaysIterReq(
-                            GetPlays.Iter.Req.getDefaultInstance()).build(),
+                            GetPlays.Iter.Req.getDefaultInstance()),
                     res -> res.getThingTypeGetPlaysIterRes().getRole()
             ).map(TypeImpl::asRoleType);
         }
@@ -145,7 +140,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             final GetOwns.Iter.Req.Builder req = GetOwns.Iter.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) req.setValueType(valueType(valueType));
             return stream(
-                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req).build(),
+                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetOwnsIterReq(req),
                     res -> res.getThingTypeGetOwnsIterRes().getAttributeType()
             ).map(TypeImpl::asAttributeType);
         }
@@ -169,7 +164,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         public final void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
             final SetOwns.Req.Builder req = SetOwns.Req.newBuilder().setAttributeType(type(attributeType)).setIsKey(isKey);
             if (overriddenType != null) req.setOverriddenType(type(overriddenType));
-            execute(TypeMethod.Req.newBuilder().setThingTypeSetOwnsReq(req).build());
+            execute(TypeMethod.Req.newBuilder().setThingTypeSetOwnsReq(req));
         }
 
         @Override
@@ -190,29 +185,25 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public final void setPlays(final RoleType role) {
             execute(TypeMethod.Req.newBuilder().setThingTypeSetPlaysReq(
-                    SetPlays.Req.newBuilder().setRole(type(role))
-            ).build());
+                    SetPlays.Req.newBuilder().setRole(type(role))));
         }
 
         @Override
         public final void setPlays(final RoleType role, final RoleType overriddenRole) {
             execute(TypeMethod.Req.newBuilder().setThingTypeSetPlaysReq(
-                    SetPlays.Req.newBuilder().setRole(type(role)).setOverriddenRole(type(overriddenRole))
-            ).build());
+                    SetPlays.Req.newBuilder().setRole(type(role)).setOverriddenRole(type(overriddenRole))));
         }
 
         @Override
         public final void unsetOwns(final AttributeType attributeType) {
             execute(TypeMethod.Req.newBuilder().setThingTypeUnsetOwnsReq(
-                    UnsetOwns.Req.newBuilder().setAttributeType(type(attributeType))
-            ).build());
+                    UnsetOwns.Req.newBuilder().setAttributeType(type(attributeType))));
         }
 
         @Override
         public final void unsetPlays(final RoleType role) {
             execute(TypeMethod.Req.newBuilder().setThingTypeUnsetPlaysReq(
-                    UnsetPlays.Req.newBuilder().setRole(type(role))
-            ).build());
+                    UnsetPlays.Req.newBuilder().setRole(type(role))));
         }
 
         @Override

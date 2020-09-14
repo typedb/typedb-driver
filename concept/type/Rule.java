@@ -25,23 +25,26 @@ import graql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public interface Rule extends Type {
+public interface Rule {
 
-    @Override
+    String getLabel();
+
+    Pattern getWhen();
+
+    Pattern getThen();
+
     Rule.Remote asRemote(Grakn.Transaction transaction);
 
-    interface Remote extends Type.Remote, Rule {
+    interface Remote extends Rule {
 
-        @Nullable
-        Pattern getWhen();
+        void setLabel(String label);
 
-        @Nullable
-        Pattern getThen();
+        void setWhen(Pattern when);
 
-        @Override
-        Stream<? extends Rule> getSupertypes();
+        void setThen(Pattern then);
 
-        @Override
-        Stream<? extends Rule> getSubtypes();
+        void delete();
+
+        boolean isDeleted();
     }
 }
