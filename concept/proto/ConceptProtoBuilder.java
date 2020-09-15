@@ -31,7 +31,6 @@ import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
@@ -141,8 +140,6 @@ public abstract class ConceptProtoBuilder {
             return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleType) {
             return ConceptProto.Type.ENCODING.ROLE_TYPE;
-        } else if (type instanceof Rule) {
-            return ConceptProto.Type.ENCODING.RULE;
         } else if (type instanceof ThingType) {
             return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {

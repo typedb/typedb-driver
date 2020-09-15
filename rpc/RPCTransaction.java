@@ -79,9 +79,9 @@ public class RPCTransaction implements Transaction {
             final TransactionProto.Transaction.Req openTxReq = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                                        .setSessionID(sessionId)
-                                        .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                                        .setOptions(options(options))).build();
+                            .setSessionID(sessionId)
+                            .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
+                            .setOptions(options(options))).build();
 
             this.transceiver.sendAndReceiveOrThrow(openTxReq);
         }

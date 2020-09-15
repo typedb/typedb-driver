@@ -251,7 +251,7 @@ public abstract class TypeImpl implements Type {
 
         @Override
         public final boolean isDeleted() {
-            return transaction.concepts().getType(getLabel()) == null;
+            return transaction.concepts().getType(label) == null;
         }
 
         final Grakn.Transaction tx() {

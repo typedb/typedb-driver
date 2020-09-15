@@ -21,6 +21,7 @@ package grakn.client.concept.answer;
 
 import grakn.client.Grakn;
 import grakn.client.concept.type.Rule;
+import grakn.client.concept.type.impl.RuleImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.AnswerProto;
 
@@ -40,10 +41,12 @@ public class Explanation {
     }
 
     public static Explanation of(final Grakn.Transaction transaction, final AnswerProto.Explanation.Res res) {
-        final Rule.Remote rule = res.hasRule() ? TypeImpl.Remote.of(transaction, res.getRule()).asRule() : null;
-        final List<ConceptMap> answers = new ArrayList<>();
-        res.getExplanationList().forEach(explanationMap -> answers.add(ConceptMap.of(transaction, explanationMap)));
-        return new Explanation(answers, rule);
+        // TODO
+        throw new UnsupportedOperationException();
+//        final Rule.Remote rule = res.hasRule() ? RuleImpl.Remote.of(transaction, res.getRule()) : null;
+//        final List<ConceptMap> answers = new ArrayList<>();
+//        res.getExplanationList().forEach(explanationMap -> answers.add(ConceptMap.of(transaction, explanationMap)));
+//        return new Explanation(answers, rule);
     }
 
     public List<ConceptMap> getAnswers() { return answers;}

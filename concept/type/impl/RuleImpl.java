@@ -23,14 +23,12 @@ import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Rule;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.ConceptProto.RuleMethod;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.common.util.Objects.className;
@@ -132,34 +130,27 @@ public class RuleImpl implements Rule {
 
         @Override
         public void setLabel(final String label) {
-            final ConceptProto.RuleMethod.Req method = ConceptProto.RuleMethod.Req.newBuilder()
-                    .setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder()
-                            .setLabel(label)).build();
-            execute(method);
+            execute(RuleMethod.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
         }
 
         @Override
         public void setWhen(final Pattern when) {
-            // TODO
-            implement this method
+            execute(RuleMethod.Req.newBuilder().setRuleSetWhenReq(ConceptProto.Rule.SetWhen.Req.newBuilder().setPattern(when.toString())));
         }
 
         @Override
         public void setThen(final Pattern then) {
-            // TODO
-            implement this method
+            execute(RuleMethod.Req.newBuilder().setRuleSetThenReq(ConceptProto.Rule.SetThen.Req.newBuilder().setPattern(then.toString())));
         }
 
         @Override
         public void delete() {
-            // TODO
-            implement this method
+            execute(RuleMethod.Req.newBuilder().setRuleDeleteReq(ConceptProto.Rule.Delete.Req.getDefaultInstance()));
         }
 
         @Override
-        public boolean isDeleted() {
-            // TODO
-            implement this method
+        public final boolean isDeleted() {
+            return transaction.concepts().getRule(label) != null;
         }
 
         @Override
@@ -167,12 +158,31 @@ public class RuleImpl implements Rule {
             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
         }
 
-        Grakn.Transaction tx() {
+        @Override
+        public String toString() {
+            return className(this.getClass()) + "[label: " + label + "]";
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final RuleImpl.Remote that = (RuleImpl.Remote) o;
+            return this.label.equals(that.label);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        final Grakn.Transaction tx() {
             return transaction;
         }
 
-        ConceptProto.RuleMethod.Res execute(final ConceptProto.RuleMethod.Req ruleMethod) {
-            return transaction.concepts().runRuleMethod(getLabel(), ruleMethod).getTypeMethodRes();
+        ConceptProto.RuleMethod.Res execute(final ConceptProto.RuleMethod.Req.Builder method) {
+            return transaction.concepts().runRuleMethod(method.setLabel(label)).getRuleMethodRes();
         }
     }
 }
