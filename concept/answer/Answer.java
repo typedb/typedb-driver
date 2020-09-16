@@ -31,6 +31,10 @@ public interface Answer {
 
     boolean hasExplanation();
 
+    default ConceptMap asConceptMap() {
+        throw new UnsupportedOperationException();
+    }
+
     static Answer of(final Transaction tx, final AnswerProto.Answer res) {
         switch (res.getAnswerCase()) {
             case ANSWERGROUP:
