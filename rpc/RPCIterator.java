@@ -25,23 +25,20 @@ import grakn.protocol.TransactionProto;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-class RPCIterator<T> extends AbstractIterator<T> {
+public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
 
     private Batch currentBatch;
     private volatile boolean started;
     private TransactionProto.Transaction.Iter.Res first;
 
     private final RPCTransceiver transceiver;
-    private final Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
 
-    RPCIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
+    public RPCIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req) {
         this.transceiver = transceiver;
-        this.responseReader = responseReader;
         sendRequest(req);
     }
 
@@ -85,11 +82,11 @@ class RPCIterator<T> extends AbstractIterator<T> {
     }
 
     @Override
-    protected T computeNext() {
+    protected TransactionProto.Transaction.Iter.Res computeNext() {
         if (first != null) {
             final TransactionProto.Transaction.Iter.Res iterRes = first;
             first = null;
-            return responseReader.apply(iterRes);
+            return iterRes;
         }
 
         final TransactionProto.Transaction.Iter.Res res;
@@ -109,7 +106,7 @@ class RPCIterator<T> extends AbstractIterator<T> {
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
             default:
-                return responseReader.apply(res);
+                return res;
         }
     }
 }

@@ -80,6 +80,7 @@ checkstyle_test(
         ".grabl/automation.yml",
         "common/**/*",
         "concept/**/*",
+        "query/*",
         "rpc/**/*",
         "test/*",
     ]),

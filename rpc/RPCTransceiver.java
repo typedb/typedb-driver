@@ -35,7 +35,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -64,7 +63,7 @@ public class RPCTransceiver implements AutoCloseable {
         return new RPCTransceiver(requestSender, responseListener);
     }
 
-    public TransactionProto.Transaction.Res sendAndReceiveOrThrow(final TransactionProto.Transaction.Req request) {
+    public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req request) {
         try {
             return sendAndReceive(request);
         } catch (InterruptedException e) {
@@ -73,8 +72,8 @@ public class RPCTransceiver implements AutoCloseable {
         }
     }
 
-    public <T> Stream<T> iterate(TransactionProto.Transaction.Iter.Req request, Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        return StreamSupport.stream(((Iterable<T>) () -> new RPCIterator<>(this, request, responseReader)).spliterator(), false);
+    public Stream<TransactionProto.Transaction.Iter.Res> iterate(TransactionProto.Transaction.Iter.Req request) {
+        return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> new RPCIterator(this, request)).spliterator(), false);
     }
 
     private void send(final Req request, final ResponseCollector collector) {

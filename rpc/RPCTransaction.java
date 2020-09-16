@@ -29,13 +29,7 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
 import grakn.client.concept.answer.Answer;
 import grakn.client.concept.answer.AnswerGroup;
-import grakn.client.concept.answer.ConceptList;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.answer.ConceptSet;
-import grakn.client.concept.answer.ConceptSetMeasure;
-import grakn.client.concept.answer.Explanation;
-import grakn.client.concept.answer.Numeric;
-import grakn.client.concept.answer.Void;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.GraknGrpc;
@@ -83,7 +77,7 @@ public class RPCTransaction implements Transaction {
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
                             .setOptions(options(options))).build();
 
-            this.transceiver.sendAndReceiveOrThrow(openTxReq);
+            this.transceiver.execute(openTxReq);
         }
     }
 
@@ -448,7 +442,7 @@ public class RPCTransaction implements Transaction {
                                          .setOptions(options(options)));
 
         final TransactionProto.Transaction.Iter.Req iterReq = reqBuilder.build();
-        return new RPCIterator<>(transceiver, iterReq, response -> (T) Answer.of(this, response.getQueryIterRes().getAnswer()));
+        return new RPCIterator<>(transceiver, iterReq);
     }
 
     private <T extends Answer> QueryFuture<List<T>> executeInternal(GraqlQuery query) {
@@ -487,7 +481,7 @@ public class RPCTransaction implements Transaction {
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance()).build();
 
-        transceiver.sendAndReceiveOrThrow(commitReq);
+        transceiver.execute(commitReq);
         close();
     }
 
@@ -496,7 +490,7 @@ public class RPCTransaction implements Transaction {
         AnswerProto.ConceptMap conceptMapProto = conceptMap(explainable);
         AnswerProto.Explanation.Req explanationReq = AnswerProto.Explanation.Req.newBuilder().setExplainable(conceptMapProto).build();
         TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder().setExplanationReq(explanationReq).build();
-        TransactionProto.Transaction.Res response = transceiver.sendAndReceiveOrThrow(request);
+        TransactionProto.Transaction.Res response = transceiver.execute(request);
         return Explanation.of(this, response.getExplanationRes());
     }
 
@@ -509,83 +503,5 @@ public class RPCTransaction implements Transaction {
         conceptMapProto.setHasExplanation(conceptMap.hasExplanation());
         conceptMapProto.setPattern(conceptMap.queryPattern().toString());
         return conceptMapProto.build();
-    }
-
-    private abstract static class QueryFutureBase<T> implements QueryFuture<T> {
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isDone() {
-            return getIterator().isStarted();
-        }
-
-        @Override
-        public T get() {
-            getIterator().waitForStart();
-            return getInternal();
-        }
-
-        @Override
-        public T get(long timeout, TimeUnit unit) {
-            try {
-                getIterator().waitForStart(timeout, unit);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                throw new GraknClientException(ex);
-            } catch (TimeoutException ex) {
-                throw new GraknClientException(ex);
-            }
-            return getInternal();
-        }
-
-        protected abstract RPCIterator<?> getIterator();
-
-        protected abstract T getInternal();
-    }
-
-    private static class QueryStreamFuture<T> extends QueryFutureBase<Stream<T>> {
-        private RPCIterator<T> iterator;
-
-        protected QueryStreamFuture(RPCIterator<T> iterator) {
-            this.iterator = iterator;
-        }
-
-        @Override
-        protected RPCIterator<?> getIterator() {
-            return iterator;
-        }
-
-        @Override
-        protected Stream<T> getInternal() {
-            return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
-        }
-    }
-
-    private static class QueryExecuteFuture<T> extends QueryFutureBase<List<T>> {
-        private RPCIterator<T> iterator;
-
-        protected QueryExecuteFuture(RPCIterator<T> iterator) {
-            this.iterator = iterator;
-        }
-
-        @Override
-        protected RPCIterator<?> getIterator() {
-            return iterator;
-        }
-
-        @Override
-        protected List<T> getInternal() {
-            List<T> result = new ArrayList<>();
-            iterator.forEachRemaining(result::add);
-            return result;
-        }
     }
 }

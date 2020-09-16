@@ -28,30 +28,24 @@ import grakn.protocol.AnswerProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static grakn.client.common.exception.ErrorMessage.Query.NO_EXPLANATION;
 import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
 
 public class ConceptMap implements Answer {
 
     private final Map<String, Concept> map;
-    private final boolean hasExplanation;
-    private final Transaction tx;
+    private final Transaction tx; // was used by getExplanation
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<String, Concept> map, Pattern queryPattern, boolean hasExplanation, Transaction tx) {
+    public ConceptMap(Map<String, Concept> map, Pattern queryPattern, Transaction tx) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
-        this.hasExplanation = hasExplanation;
         this.tx = tx;
     }
 
@@ -63,40 +57,12 @@ public class ConceptMap implements Answer {
             else concept = TypeImpl.of(resConcept.getType());
             variableMap.put(resVar, concept);
         });
-        boolean hasExplanation = res.getHasExplanation();
         Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
-        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, hasExplanation, tx);
-    }
-
-    @Nullable
-    public Set<Explanation> explanations() {
-        if (this.explanation() == null) return Collections.emptySet();
-        Set<Explanation> explanations = new HashSet<>();
-        explanations.add(this.explanation());
-        this.explanation().getAnswers().forEach(conceptMap -> {
-            Set<Explanation> subexplanations = conceptMap.explanations();
-            if (subexplanations != null) {
-                explanations.addAll(subexplanations);
-            }
-        });
-        return explanations;
-    }
-
-    public Explanation explanation() {
-        if (hasExplanation) {
-            return tx.getExplanation(this);
-        } else {
-            throw new GraknClientException(NO_EXPLANATION);
-        }
+        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, tx);
     }
 
     public Pattern queryPattern() {
         return queryPattern;
-    }
-
-    @Override
-    public boolean hasExplanation() {
-        return hasExplanation;
     }
 
     public Map<String, Concept> map() {

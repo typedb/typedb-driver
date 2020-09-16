@@ -20,29 +20,15 @@
 package grakn.client;
 
 import grakn.client.concept.Concepts;
-import grakn.client.concept.answer.Answer;
-import grakn.client.concept.answer.AnswerGroup;
-import grakn.client.concept.answer.ConceptList;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.answer.ConceptSet;
-import grakn.client.concept.answer.ConceptSetMeasure;
-import grakn.client.concept.answer.Explanation;
-import grakn.client.concept.answer.Numeric;
-import grakn.client.concept.answer.Void;
-import graql.lang.query.GraqlCompute;
+import grakn.client.query.Query;
 import graql.lang.query.GraqlDefine;
-import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlInsert;
-import graql.lang.query.GraqlMatch;
-import graql.lang.query.GraqlQuery;
-import graql.lang.query.GraqlUndefine;
 
 import javax.annotation.CheckReturnValue;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 import static grakn.client.Grakn.Session.Type.DATA;
 
@@ -143,91 +129,13 @@ public interface Grakn {
 
         QueryFuture<List<ConceptMap>> execute(GraqlDefine query);
 
-        QueryFuture<List<ConceptMap>> execute(GraqlUndefine query);
-
-        QueryFuture<List<ConceptMap>> execute(GraqlInsert query, GraknOptions options);
-
-        QueryFuture<List<ConceptMap>> execute(GraqlInsert query);
-
-        QueryFuture<List<Void>> execute(GraqlDelete query, GraknOptions options);
-
-        QueryFuture<List<Void>> execute(GraqlDelete query);
-
-        QueryFuture<List<ConceptMap>> execute(GraqlMatch query, GraknOptions options);
-
-        QueryFuture<List<ConceptMap>> execute(GraqlMatch query);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlDefine query);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlUndefine query);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query, GraknOptions options);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlInsert query);
-
-        QueryFuture<Stream<Void>> stream(GraqlDelete query, GraknOptions options);
-
-        QueryFuture<Stream<Void>> stream(GraqlDelete query);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query, GraknOptions options);
-
-        QueryFuture<Stream<ConceptMap>> stream(GraqlMatch query);
-
-        QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query);
-
-        QueryFuture<List<Numeric>> execute(GraqlMatch.Aggregate query, GraknOptions options);
-
-        QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query);
-
-        QueryFuture<Stream<Numeric>> stream(GraqlMatch.Aggregate query, GraknOptions options);
-
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query);
-
-        QueryFuture<List<AnswerGroup<ConceptMap>>> execute(GraqlMatch.Group query, GraknOptions options);
-
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query);
-
-        QueryFuture<Stream<AnswerGroup<ConceptMap>>> stream(GraqlMatch.Group query, GraknOptions options);
-
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query);
-
-        QueryFuture<List<AnswerGroup<Numeric>>> execute(GraqlMatch.Group.Aggregate query, GraknOptions options);
-
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query);
-
-        QueryFuture<Stream<AnswerGroup<Numeric>>> stream(GraqlMatch.Group.Aggregate query, GraknOptions options);
-
-        QueryFuture<List<Numeric>> execute(GraqlCompute.Statistics query);
-
-        QueryFuture<Stream<Numeric>> stream(GraqlCompute.Statistics query);
-
-        QueryFuture<List<ConceptList>> execute(GraqlCompute.Path query);
-
-        QueryFuture<Stream<ConceptList>> stream(GraqlCompute.Path query);
-
-        QueryFuture<List<ConceptSetMeasure>> execute(GraqlCompute.Centrality query);
-
-        QueryFuture<Stream<ConceptSetMeasure>> stream(GraqlCompute.Centrality query);
-
-        QueryFuture<List<ConceptSet>> execute(GraqlCompute.Cluster query);
-
-        QueryFuture<Stream<ConceptSet>> stream(GraqlCompute.Cluster query);
-
-        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query);
-
-        QueryFuture<? extends List<? extends Answer>> execute(GraqlQuery query, GraknOptions options);
-
-        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query);
-
-        QueryFuture<? extends Stream<? extends Answer>> stream(GraqlQuery query, GraknOptions options);
-
         boolean isOpen();
 
         Concepts concepts();
 
-        void commit();
+        Query query();
 
-        Explanation getExplanation(ConceptMap explainable);
+        void commit();
 
         enum Type {
             READ(0),
@@ -256,14 +164,5 @@ public interface Grakn {
 
             public boolean isWrite() { return isWrite; }
         }
-
-        interface QueryFuture<T> extends Future<T> {
-            @Override
-            T get();
-
-            @Override
-            T get(long timeout, TimeUnit unit);
-        }
     }
-
 }

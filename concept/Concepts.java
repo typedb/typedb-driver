@@ -83,7 +83,7 @@ public final class Concepts {
                 .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
                         .setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res res = transaction.transceiver().execute(req);
         return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
@@ -99,7 +99,7 @@ public final class Concepts {
                 .putAllMetadata(tracingData())
                 .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
                         .setLabel(label)).build();
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res res = transaction.transceiver().execute(req);
         return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
     }
 
@@ -116,7 +116,7 @@ public final class Concepts {
                 .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
                         .setLabel(label)
                         .setValueType(valueType(valueType))).build();
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res res = transaction.transceiver().execute(req);
         return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
@@ -134,7 +134,7 @@ public final class Concepts {
                         .setLabel(label)
                         .setWhen(when.toString())
                         .setThen(then.toString())).build();
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res res = transaction.transceiver().execute(req);
         return RuleImpl.of(res.getPutRuleRes().getRule());
     }
 
@@ -144,7 +144,7 @@ public final class Concepts {
                 .putAllMetadata(tracingData())
                 .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
-        final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res response = transaction.transceiver().execute(req);
         switch (response.getGetThingRes().getResCase()) {
             case THING:
                 return ThingImpl.of(response.getGetThingRes().getThing());
@@ -160,7 +160,7 @@ public final class Concepts {
                 .putAllMetadata(tracingData())
                 .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res response = transaction.transceiver().execute(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
                 return TypeImpl.of(response.getGetTypeRes().getType());
@@ -176,7 +176,7 @@ public final class Concepts {
                 .putAllMetadata(tracingData())
                 .setGetRuleReq(TransactionProto.Transaction.GetRule.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res response = transaction.transceiver().execute(req);
         switch (response.getGetRuleRes().getResCase()) {
             case RULE:
                 return RuleImpl.of(response.getGetRuleRes().getRule());
@@ -191,21 +191,21 @@ public final class Concepts {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                 .setThingMethodReq(method).build();
 
-        return transaction.transceiver().sendAndReceiveOrThrow(request);
+        return transaction.transceiver().execute(request);
     }
 
     public TransactionProto.Transaction.Res runTypeMethod(final ConceptProto.TypeMethod.Req.Builder method) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                 .setTypeMethodReq(method).build();
 
-        return transaction.transceiver().sendAndReceiveOrThrow(request);
+        return transaction.transceiver().execute(request);
     }
 
     public TransactionProto.Transaction.Res runRuleMethod(final ConceptProto.RuleMethod.Req.Builder method) {
         final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                 .setRuleMethodReq(method).build();
 
-        return transaction.transceiver().sendAndReceiveOrThrow(request);
+        return transaction.transceiver().execute(request);
     }
 
     public <T> Stream<T> iterateThingMethod(final ConceptProto.ThingMethod.Iter.Req.Builder method,
@@ -213,7 +213,7 @@ public final class Concepts {
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setThingMethodIterReq(method).build();
 
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes()));
+        return transaction.transceiver().iterate(request).map(res -> responseReader.apply(res.getConceptMethodThingIterRes()));
     }
 
     public <T> Stream<T> iterateTypeMethod(final ConceptProto.TypeMethod.Iter.Req.Builder method,
@@ -221,6 +221,6 @@ public final class Concepts {
         final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setTypeMethodIterReq(method).build();
 
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes()));
+        return transaction.transceiver().iterate(request).map(res -> responseReader.apply(res.getConceptMethodTypeIterRes()));
     }
 }

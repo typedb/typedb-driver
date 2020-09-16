@@ -26,8 +26,6 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.answer.Answer;
 import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.answer.Explanation;
-import grakn.client.concept.answer.Numeric;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.Rule;
