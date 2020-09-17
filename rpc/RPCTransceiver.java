@@ -19,9 +19,9 @@
 
 package grakn.client.rpc;
 
-import grabl.tracing.client.GrablTracingThreadStatic;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.query.QueryIterator;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
@@ -73,7 +73,7 @@ public class RPCTransceiver implements AutoCloseable {
     }
 
     public Stream<TransactionProto.Transaction.Iter.Res> iterate(TransactionProto.Transaction.Iter.Req request) {
-        return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> new RPCIterator(this, request)).spliterator(), false);
+        return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> new QueryIterator(this, request)).spliterator(), false);
     }
 
     private void send(final Req request, final ResponseCollector collector) {
@@ -92,7 +92,7 @@ public class RPCTransceiver implements AutoCloseable {
         }
     }
 
-    Res sendAndReceive(Req request) throws InterruptedException {
+    Res sendAndReceive(final Req request) throws InterruptedException {
         try (ThreadTrace trace = traceOnThread("sendAndReceive")) {
             SingleResponseCollector collector = new SingleResponseCollector();
             send(request, collector);
@@ -100,8 +100,14 @@ public class RPCTransceiver implements AutoCloseable {
         }
     }
 
-    void sendAndReceiveMultipleAsync(Req request, MultiResponseCollector collector) {
-        try (ThreadTrace trace = GrablTracingThreadStatic.traceOnThread("sendAndReceiveMultipleAsync")) {
+    public void sendSingleAsync(final Req request, final SingleResponseCollector collector) {
+        try (ThreadTrace trace = traceOnThread("sendAndReceive")) {
+            send(request, collector);
+        }
+    }
+
+    public void sendMultipleAsync(final Req request, final MultiResponseCollector collector) {
+        try (ThreadTrace trace = traceOnThread("sendAndReceiveMultipleAsync")) {
             send(request, collector);
         }
     }
@@ -128,7 +134,7 @@ public class RPCTransceiver implements AutoCloseable {
         boolean onResponse(Response response);
     }
 
-    private static class SingleResponseCollector implements ResponseCollector {
+    public static class SingleResponseCollector implements ResponseCollector {
         private volatile Response response;
         private final CountDownLatch latch = new CountDownLatch(1);
 
@@ -139,8 +145,17 @@ public class RPCTransceiver implements AutoCloseable {
             return true;
         }
 
+        public boolean isDone() {
+            return response != null;
+        }
+
         public Res receive() throws InterruptedException {
             latch.await();
+            return response.ok();
+        }
+
+        public Res receive(final long timeout, final TimeUnit unit) throws InterruptedException {
+            latch.await(timeout, unit);
             return response.ok();
         }
     }
@@ -159,6 +174,15 @@ public class RPCTransceiver implements AutoCloseable {
 
         public Res take() throws InterruptedException {
             return received.take().ok();
+        }
+
+        public Res poll() throws TimeoutException {
+            Response response = received.poll();
+            if (response == null) {
+                throw new TimeoutException();
+            } else {
+                return response.ok();
+            }
         }
 
         public Res poll(long timeout, TimeUnit unit) throws InterruptedException,

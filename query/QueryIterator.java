@@ -17,19 +17,24 @@
  * under the License.
  */
 
-package grakn.client.rpc;
+package grakn.client.query;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.rpc.RPCTransceiver;
+import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
+public class QueryIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
 
     private Batch currentBatch;
     private volatile boolean started;
@@ -37,7 +42,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
 
     private final RPCTransceiver transceiver;
 
-    public RPCIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req) {
+    public QueryIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req) {
         this.transceiver = transceiver;
         sendRequest(req);
     }
@@ -48,7 +53,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
         final TransactionProto.Transaction.Req transactionReq = TransactionProto.Transaction.Req.newBuilder()
                 .setIterReq(req).build();
 
-        transceiver.sendAndReceiveMultipleAsync(transactionReq, currentBatch);
+        transceiver.sendMultipleAsync(transactionReq, currentBatch);
     }
 
     private void nextBatch(int iteratorID) {
@@ -72,13 +77,22 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
 
     public void waitForStart(final long timeout, final TimeUnit unit) throws InterruptedException, TimeoutException {
         if (first != null) {
-            throw new GraknClientException(new IllegalStateException("Should not poll RpcIterator multiple times"));
+            throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         }
 
         first = currentBatch.poll(timeout, unit).getIterRes();
     }
 
-    public void waitForStart() {
+    public void waitForStart() throws TimeoutException {
+        if (first != null) {
+            throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
+        }
+
+        first = currentBatch.poll().getIterRes();
+    }
+
+    public <T> QueryFuture<Stream<T>> await(final Function<QueryProto.Query.Iter.Res, T> responseReader) {
+        return new QueryStreamFuture<>(this, responseReader);
     }
 
     @Override
@@ -107,6 +121,59 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
             default:
                 return res;
+        }
+    }
+
+    private static class QueryStreamFuture<T> implements QueryFuture<Stream<T>> {
+        private final QueryIterator iterator;
+        private final Function<QueryProto.Query.Iter.Res, T> responseReader;
+
+        public QueryStreamFuture(final QueryIterator iterator, final Function<QueryProto.Query.Iter.Res, T> responseReader) {
+            this.iterator = iterator;
+            this.responseReader = responseReader;
+        }
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return false; // Can't cancel
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false; // Can't cancel
+        }
+
+        @Override
+        public boolean isDone() {
+            return iterator.isStarted();
+        }
+
+        @Override
+        public Stream<T> get() {
+            try {
+                iterator.waitForStart();
+            } catch (TimeoutException e) {
+                throw new GraknClientException(e);
+            }
+            return getInternal();
+        }
+
+        @Override
+        public Stream<T> get(long timeout, TimeUnit unit) {
+            try {
+                iterator.waitForStart(timeout, unit);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                throw new GraknClientException(ex);
+            } catch (TimeoutException ex) {
+                throw new GraknClientException(ex);
+            }
+            return getInternal();
+        }
+
+        protected Stream<T> getInternal() {
+            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
+                    .map(res -> responseReader.apply(res.getQueryIterRes()));
         }
     }
 }

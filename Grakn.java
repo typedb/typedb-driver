@@ -127,8 +127,6 @@ public interface Grakn {
 
         void close();
 
-        QueryFuture<List<ConceptMap>> execute(GraqlDefine query);
-
         boolean isOpen();
 
         Concepts concepts();

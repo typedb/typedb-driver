@@ -255,7 +255,7 @@ public class TransactionSteps {
         for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
-                    transaction.execute(Graql.parse(defineQueryStatements).asDefine()).get();
+                    transaction.query().define(Graql.parse(defineQueryStatements).asDefine()).get();
                     fail();
                 } catch (Exception e) {
                     assertThat(e.getMessage(), Matchers.containsString(expectedException));
