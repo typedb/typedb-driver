@@ -1,4 +1,4 @@
-package grakn.client.query;
+package grakn.client.rpc;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;

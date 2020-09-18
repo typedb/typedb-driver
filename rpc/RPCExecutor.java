@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.query;
+package grakn.client.rpc;
 
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCTransceiver;
+import grakn.client.rpc.response.SingleResponseCollector;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 
@@ -28,20 +28,13 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-public class QueryExecutor {
+public class RPCExecutor {
 
-    private RPCTransceiver.SingleResponseCollector collector;
+    private final SingleResponseCollector collector;
 
-    private final RPCTransceiver transceiver;
-
-    public QueryExecutor(final RPCTransceiver transceiver, final TransactionProto.Transaction.Req req) {
-        this.transceiver = transceiver;
-        sendRequest(req);
-    }
-
-    private void sendRequest(final TransactionProto.Transaction.Req req) {
-        collector = new RPCTransceiver.SingleResponseCollector();
-        transceiver.sendSingleAsync(req, collector);
+    public RPCExecutor(final RPCTransaction rpcTransaction, final TransactionProto.Transaction.Req req) {
+        collector = new SingleResponseCollector();
+        rpcTransaction.executeAsync(req, collector);
     }
 
     public boolean isDone() {
@@ -65,10 +58,10 @@ public class QueryExecutor {
     }
 
     private static class QueryExecuteFuture<T> implements QueryFuture<T> {
-        private final QueryExecutor executor;
+        private final RPCExecutor executor;
         private final Function<QueryProto.Query.Res, T> responseReader;
 
-        public QueryExecuteFuture(final QueryExecutor executor, @Nullable final Function<QueryProto.Query.Res, T> responseReader) {
+        public QueryExecuteFuture(final RPCExecutor executor, @Nullable final Function<QueryProto.Query.Res, T> responseReader) {
             this.executor = executor;
             this.responseReader = responseReader;
         }

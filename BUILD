@@ -38,7 +38,7 @@ java_library(
         "common/**/*.java",
         "concept/**/*.java",
         "query/**/*.java",
-        "rpc/*.java",
+        "rpc/**/*.java",
         "test/*.java",
         "*.java"
     ]),
@@ -81,7 +81,7 @@ checkstyle_test(
         "common/**/*",
         "concept/**/*",
         "query/**/*",
-        "rpc/*",
+        "rpc/**/*",
         "test/*",
     ]),
     license_type = "apache",

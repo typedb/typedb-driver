@@ -32,6 +32,7 @@ import grakn.protocol.ConceptProto.Relation.AddPlayer;
 import grakn.protocol.ConceptProto.Relation.GetPlayers;
 import grakn.protocol.ConceptProto.Relation.RemovePlayer;
 import grakn.protocol.ConceptProto.ThingMethod;
+import grakn.protocol.TransactionProto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
@@ -90,8 +92,10 @@ public class RelationImpl extends ThingImpl implements Relation {
             final ThingMethod.Iter.Req.Builder method = ThingMethod.Iter.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance());
 
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = tx().concepts().iterateThingMethod(
-                    method, ThingMethod.Iter.Res::getRelationGetPlayersByRoleTypeIterRes);
+            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setThingMethodIterReq(method.setIid(iid(getIID()))).build();
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = rpcTransaction.iterate(request)
+                    .map(res -> res.getConceptMethodThingIterRes().getRelationGetPlayersByRoleTypeIterRes());
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {

@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.query;
+package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCTransceiver;
+import grakn.client.rpc.response.BatchResponseCollector;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 
@@ -34,41 +34,28 @@ import java.util.stream.StreamSupport;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-public class QueryIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
+public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
 
-    private Batch currentBatch;
+    private BatchResponseCollector currentBatchCollector;
     private volatile boolean started;
     private TransactionProto.Transaction.Iter.Res first;
 
-    private final RPCTransceiver transceiver;
+    private final RPCTransaction rpcTransaction;
 
-    public QueryIterator(final RPCTransceiver transceiver, final TransactionProto.Transaction.Iter.Req req) {
-        this.transceiver = transceiver;
-        sendRequest(req);
+    public RPCIterator(final RPCTransaction rpcTransaction, final TransactionProto.Transaction.Iter.Req req) {
+        this.rpcTransaction = rpcTransaction;
+        sendAsync(req);
     }
 
-    private void sendRequest(final TransactionProto.Transaction.Iter.Req req) {
-        currentBatch = new Batch();
-
-        final TransactionProto.Transaction.Req transactionReq = TransactionProto.Transaction.Req.newBuilder()
-                .setIterReq(req).build();
-
-        transceiver.sendMultipleAsync(transactionReq, currentBatch);
+    private void sendAsync(final TransactionProto.Transaction.Iter.Req req) {
+        currentBatchCollector = new BatchResponseCollector();
+        rpcTransaction.iterateAsync(req, currentBatchCollector);
     }
 
-    private void nextBatch(int iteratorID) {
+    private void nextBatch(final int iteratorID) {
         final TransactionProto.Transaction.Iter.Req iterReq = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setIteratorID(iteratorID).build();
-
-        sendRequest(iterReq);
-    }
-
-    private static class Batch extends RPCTransceiver.MultiResponseCollector {
-        @Override
-        protected boolean isLastResponse(final TransactionProto.Transaction.Res response) {
-            final TransactionProto.Transaction.Iter.Res iterRes = response.getIterRes();
-            return iterRes.getIteratorID() != 0 || iterRes.getDone();
-        }
+        sendAsync(iterReq);
     }
 
     public boolean isStarted() {
@@ -80,7 +67,7 @@ public class QueryIterator extends AbstractIterator<TransactionProto.Transaction
             throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         }
 
-        first = currentBatch.poll(timeout, unit).getIterRes();
+        first = currentBatchCollector.poll(timeout, unit).getIterRes();
     }
 
     public void waitForStart() throws TimeoutException {
@@ -88,7 +75,7 @@ public class QueryIterator extends AbstractIterator<TransactionProto.Transaction
             throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         }
 
-        first = currentBatch.poll().getIterRes();
+        first = currentBatchCollector.poll().getIterRes();
     }
 
     public <T> QueryFuture<Stream<T>> await(final Function<QueryProto.Query.Iter.Res, T> responseReader) {
@@ -105,7 +92,7 @@ public class QueryIterator extends AbstractIterator<TransactionProto.Transaction
 
         final TransactionProto.Transaction.Iter.Res res;
         try {
-            res = currentBatch.take().getIterRes();
+            res = currentBatchCollector.take().getIterRes();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new GraknClientException(e);
@@ -125,10 +112,10 @@ public class QueryIterator extends AbstractIterator<TransactionProto.Transaction
     }
 
     private static class QueryStreamFuture<T> implements QueryFuture<Stream<T>> {
-        private final QueryIterator iterator;
+        private final RPCIterator iterator;
         private final Function<QueryProto.Query.Iter.Res, T> responseReader;
 
-        public QueryStreamFuture(final QueryIterator iterator, final Function<QueryProto.Query.Iter.Res, T> responseReader) {
+        public QueryStreamFuture(final RPCIterator iterator, final Function<QueryProto.Query.Iter.Res, T> responseReader) {
             this.iterator = iterator;
             this.responseReader = responseReader;
         }

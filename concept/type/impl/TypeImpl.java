@@ -27,9 +27,11 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Type.SetSupertype;
 import grakn.protocol.ConceptProto.TypeMethod;
+import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -128,7 +130,7 @@ public abstract class TypeImpl implements Type {
 
     public abstract static class Remote implements Type.Remote {
 
-        private final Grakn.Transaction transaction;
+        final RPCTransaction rpcTransaction;
         private final String label;
         private final boolean isRoot;
         private final int hash;
@@ -136,7 +138,7 @@ public abstract class TypeImpl implements Type {
         Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.transaction = transaction;
+            this.rpcTransaction = (RPCTransaction) transaction;
             this.label = label;
             this.isRoot = isRoot;
             this.hash = Objects.hash(transaction, label);
@@ -251,19 +253,23 @@ public abstract class TypeImpl implements Type {
 
         @Override
         public final boolean isDeleted() {
-            return transaction.concepts().getType(label) == null;
+            return rpcTransaction.concepts().getType(label) == null;
         }
 
         final Grakn.Transaction tx() {
-            return transaction;
+            return rpcTransaction;
         }
 
         Stream<TypeImpl> stream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            return transaction.concepts().iterateTypeMethod(method.setLabel(label), response -> TypeImpl.of(typeGetter.apply(response)));
+            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setTypeMethodIterReq(method.setLabel(label)).build();
+            return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
         TypeMethod.Res execute(final TypeMethod.Req.Builder method) {
-            return transaction.concepts().runTypeMethod(method.setLabel(label)).getTypeMethodRes();
+            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeMethodReq(method.setLabel(label)).build();
+            return rpcTransaction.execute(request).getTypeMethodRes();
         }
 
         @Override
@@ -277,7 +283,7 @@ public abstract class TypeImpl implements Type {
             if (o == null || getClass() != o.getClass()) return false;
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
-            return (this.transaction.equals(that.transaction) &&
+            return (this.rpcTransaction.equals(that.rpcTransaction) &&
                     this.getLabel().equals(that.getLabel()));
         }
 

@@ -125,8 +125,6 @@ public interface Grakn {
 
         Database database();
 
-        void close();
-
         boolean isOpen();
 
         Concepts concepts();
@@ -134,6 +132,8 @@ public interface Grakn {
         Query query();
 
         void commit();
+
+        void close();
 
         enum Type {
             READ(0),

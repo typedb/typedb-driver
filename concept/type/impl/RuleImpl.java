@@ -22,8 +22,10 @@ package grakn.client.concept.type.impl;
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Rule;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RuleMethod;
+import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Pattern;
 
@@ -93,7 +95,7 @@ public class RuleImpl implements Rule {
 
     public static class Remote implements Rule.Remote {
 
-        private final Grakn.Transaction transaction;
+        final RPCTransaction rpcTransaction;
         private final String label;
         private final Pattern when;
         private final Pattern then;
@@ -102,7 +104,7 @@ public class RuleImpl implements Rule {
         public Remote(final Grakn.Transaction transaction, final String label, final Pattern when, final Pattern then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.transaction = transaction;
+            this.rpcTransaction = (RPCTransaction) transaction;
             this.label = label;
             this.when = when;
             this.then = then;
@@ -150,7 +152,7 @@ public class RuleImpl implements Rule {
 
         @Override
         public final boolean isDeleted() {
-            return transaction.concepts().getRule(label) != null;
+            return rpcTransaction.concepts().getRule(label) != null;
         }
 
         @Override
@@ -178,11 +180,14 @@ public class RuleImpl implements Rule {
         }
 
         final Grakn.Transaction tx() {
-            return transaction;
+            return rpcTransaction;
         }
 
         ConceptProto.RuleMethod.Res execute(final ConceptProto.RuleMethod.Req.Builder method) {
-            return transaction.concepts().runRuleMethod(method.setLabel(label)).getRuleMethodRes();
+            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                    .setRuleMethodReq(method.setLabel(label)).build();
+
+            return rpcTransaction.execute(request).getRuleMethodRes();
         }
     }
 }

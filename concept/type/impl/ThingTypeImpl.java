@@ -37,6 +37,7 @@ import grakn.protocol.ConceptProto.ThingType.UnsetAbstract;
 import grakn.protocol.ConceptProto.ThingType.UnsetOwns;
 import grakn.protocol.ConceptProto.ThingType.UnsetPlays;
 import grakn.protocol.ConceptProto.TypeMethod;
+import grakn.protocol.TransactionProto;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -80,7 +81,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+        Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -104,11 +105,12 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         <THING extends ThingImpl> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
-            return tx().concepts().iterateTypeMethod(
-                    TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
-                            GetInstances.Iter.Req.getDefaultInstance()),
-                    response -> thingConstructor.apply(response.getThingTypeGetInstancesIterRes().getThing())
-            );
+            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setTypeMethodIterReq(TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
+                            GetInstances.Iter.Req.getDefaultInstance())).build();
+
+            return rpcTransaction.iterate(request).map(res -> thingConstructor.apply(
+                    res.getConceptMethodTypeIterRes().getThingTypeGetInstancesIterRes().getThing()));
         }
 
         @Override

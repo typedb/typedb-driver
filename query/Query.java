@@ -23,6 +23,9 @@ import grakn.client.GraknOptions;
 import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.impl.ThingTypeImpl;
+import grakn.client.rpc.QueryFuture;
+import grakn.client.rpc.RPCExecutor;
+import grakn.client.rpc.RPCIterator;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
@@ -42,10 +45,10 @@ import static grakn.client.common.ProtoBuilder.options;
 
 public final class Query {
 
-    private final RPCTransaction transaction;
+    private final RPCTransaction rpcTransaction;
 
-    public Query(final RPCTransaction transaction) {
-        this.transaction = transaction;
+    public Query(final RPCTransaction rpcTransaction) {
+        this.rpcTransaction = rpcTransaction;
     }
 
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query) {
@@ -54,7 +57,7 @@ public final class Query {
 
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(QueryProto.Graql.Match.Iter.Req.getDefaultInstance());
-        return iterateQuery(request, query, options, res -> ConceptMap.of(transaction, res.getMatchIterRes().getAnswer()));
+        return iterateQuery(request, query, options, res -> ConceptMap.of(rpcTransaction, res.getMatchIterRes().getAnswer()));
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
@@ -63,7 +66,7 @@ public final class Query {
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(QueryProto.Graql.Insert.Iter.Req.getDefaultInstance());
-        return iterateQuery(request, query, options, res -> ConceptMap.of(transaction, res.getInsertIterRes().getAnswer()));
+        return iterateQuery(request, query, options, res -> ConceptMap.of(rpcTransaction, res.getInsertIterRes().getAnswer()));
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query) {
@@ -103,23 +106,23 @@ public final class Query {
     private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraqlQuery query, final GraknOptions options) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setQuery(query.toString()).setOptions(options(options))).build();
-        final QueryExecutor queryExecutor = new QueryExecutor(transaction.transceiver(), req);
-        return queryExecutor.await();
+        final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
+        return rpcExecutor.await();
     }
 
     private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraqlQuery query, final GraknOptions options,
                                         final Function<QueryProto.Query.Res, T> responseReader) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setQuery(query.toString()).setOptions(options(options))).build();
-        final QueryExecutor queryExecutor = new QueryExecutor(transaction.transceiver(), req);
-        return queryExecutor.await(responseReader);
+        final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
+        return rpcExecutor.await(responseReader);
     }
 
     private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraqlQuery query, final GraknOptions options,
                                                     final Function<QueryProto.Query.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req req = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setQueryIterReq(request.setQuery(query.toString()).setOptions(options(options))).build();
-        final QueryIterator queryIterator = new QueryIterator(transaction.transceiver(), req);
-        return queryIterator.await(responseReader);
+        final RPCIterator rpcIterator = new RPCIterator(rpcTransaction, req);
+        return rpcIterator.await(responseReader);
     }
 }
