@@ -133,6 +133,8 @@ public interface Grakn {
 
         void commit();
 
+        void rollback();
+
         void close();
 
         enum Type {

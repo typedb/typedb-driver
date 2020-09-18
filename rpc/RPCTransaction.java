@@ -117,6 +117,15 @@ public class RPCTransaction implements Transaction {
     }
 
     @Override
+    public void rollback() {
+        final TransactionProto.Transaction.Req rollbackReq = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData())
+                .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance()).build();
+
+        execute(rollbackReq);
+    }
+
+    @Override
     public void close() {
         try {
             requestSender.onCompleted();

@@ -33,7 +33,6 @@ import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlMatch;
-import graql.lang.query.GraqlQuery;
 import graql.lang.query.GraqlUndefine;
 
 import java.util.List;
@@ -56,8 +55,9 @@ public final class Query {
     }
 
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
-        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(QueryProto.Graql.Match.Iter.Req.getDefaultInstance());
-        return iterateQuery(request, query, options, res -> ConceptMap.of(rpcTransaction, res.getMatchIterRes().getAnswer()));
+        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(
+                QueryProto.Graql.Match.Iter.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> ConceptMap.of(rpcTransaction, res.getMatchIterRes().getAnswer()));
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
@@ -65,8 +65,9 @@ public final class Query {
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
-        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(QueryProto.Graql.Insert.Iter.Req.getDefaultInstance());
-        return iterateQuery(request, query, options, res -> ConceptMap.of(rpcTransaction, res.getInsertIterRes().getAnswer()));
+        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(
+                QueryProto.Graql.Insert.Iter.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> ConceptMap.of(rpcTransaction, res.getInsertIterRes().getAnswer()));
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query) {
@@ -74,7 +75,7 @@ public final class Query {
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query, final GraknOptions options) {
-        return runQuery(newRequest().setDeleteReq(QueryProto.Graql.Delete.Req.getDefaultInstance()), query, options);
+        return runQuery(newRequest().setDeleteReq(QueryProto.Graql.Delete.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     public QueryFuture<List<ThingType>> define(final GraqlDefine query) {
@@ -82,8 +83,9 @@ public final class Query {
     }
 
     public QueryFuture<List<ThingType>> define(final GraqlDefine query, final GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = newRequest().setDefineReq(QueryProto.Graql.Define.Req.getDefaultInstance());
-        return runQuery(request, query, options, res -> res.getDefineRes().getThingTypeList().stream()
+        final QueryProto.Query.Req.Builder request = newRequest().setDefineReq(
+                QueryProto.Graql.Define.Req.newBuilder().setQuery(query.toString()));
+        return runQuery(request, options, res -> res.getDefineRes().getThingTypeList().stream()
                 .map(ThingTypeImpl::of).collect(Collectors.toList()));
     }
 
@@ -92,7 +94,7 @@ public final class Query {
     }
 
     public QueryFuture<Void> undefine(final GraqlUndefine query, final GraknOptions options) {
-        return runQuery(newRequest().setUndefineReq(QueryProto.Graql.Undefine.Req.getDefaultInstance()), query, options);
+        return runQuery(newRequest().setUndefineReq(QueryProto.Graql.Undefine.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     private static QueryProto.Query.Req.Builder newRequest() {
@@ -103,25 +105,25 @@ public final class Query {
         return QueryProto.Query.Iter.Req.newBuilder();
     }
 
-    private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraqlQuery query, final GraknOptions options) {
+    private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .setQueryReq(request.setQuery(query.toString()).setOptions(options(options))).build();
+                .setQueryReq(request.setOptions(options(options))).build();
         final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
         return rpcExecutor.await();
     }
 
-    private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraqlQuery query, final GraknOptions options,
+    private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
                                         final Function<QueryProto.Query.Res, T> responseReader) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .setQueryReq(request.setQuery(query.toString()).setOptions(options(options))).build();
+                .setQueryReq(request.setOptions(options(options))).build();
         final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
         return rpcExecutor.await(responseReader);
     }
 
-    private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraqlQuery query, final GraknOptions options,
+    private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraknOptions options,
                                                     final Function<QueryProto.Query.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req req = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setQueryIterReq(request.setQuery(query.toString()).setOptions(options(options))).build();
+                .setQueryIterReq(request.setOptions(options(options))).build();
         final RPCIterator rpcIterator = new RPCIterator(rpcTransaction, req);
         return rpcIterator.await(responseReader);
     }
