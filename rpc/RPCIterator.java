@@ -70,14 +70,6 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
         first = currentBatchCollector.poll(timeout, unit).getIterRes();
     }
 
-    public void waitForStart() throws TimeoutException {
-        if (first != null) {
-            throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        }
-
-        first = currentBatchCollector.poll().getIterRes();
-    }
-
     public <T> QueryFuture<Stream<T>> await(final Function<QueryProto.Query.Iter.Res, T> responseReader) {
         return new QueryStreamFuture<>(this, responseReader);
     }
@@ -137,12 +129,8 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
 
         @Override
         public Stream<T> get() {
-            try {
-                iterator.waitForStart();
-            } catch (TimeoutException e) {
-                throw new GraknClientException(e);
-            }
-            return getInternal();
+            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
+                    .map(res -> responseReader.apply(res.getQueryIterRes()));
         }
 
         @Override
@@ -155,12 +143,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
             } catch (TimeoutException ex) {
                 throw new GraknClientException(ex);
             }
-            return getInternal();
-        }
-
-        protected Stream<T> getInternal() {
-            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
-                    .map(res -> responseReader.apply(res.getQueryIterRes()));
+            return get();
         }
     }
 }
