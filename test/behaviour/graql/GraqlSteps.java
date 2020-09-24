@@ -71,7 +71,7 @@ public class GraqlSteps {
 
     @Given("graql define")
     public QueryFuture<List<ThingType>> graql_define(final String defineQueryStatements) {
-        final GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements)).asDefine();
+        final GraqlDefine graqlQuery = Graql.parse(String.join("\n", defineQueryStatements));
         return tx().query().define(graqlQuery);
     }
 
@@ -82,7 +82,7 @@ public class GraqlSteps {
 
     @Given("graql undefine")
     public QueryFuture<Void> graql_undefine(final String undefineQueryStatements) {
-        final GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements)).asUndefine();
+        final GraqlUndefine graqlQuery = Graql.parse(String.join("\n", undefineQueryStatements));
         return tx().query().undefine(graqlQuery);
     }
 
@@ -93,7 +93,7 @@ public class GraqlSteps {
 
     @Given("graql insert")
     public QueryFuture<Stream<ConceptMap>> graql_insert(final String insertQueryStatements) {
-        final GraqlInsert graqlQuery = Graql.parse(String.join("\n", insertQueryStatements)).asInsert();
+        final GraqlInsert graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
         return tx().query().insert(graqlQuery);
     }
 
@@ -104,7 +104,7 @@ public class GraqlSteps {
 
     @Given("graql delete")
     public QueryFuture<Void> graql_delete(final String deleteQueryStatements) {
-        final GraqlDelete graqlQuery = Graql.parse(String.join("\n", deleteQueryStatements)).asDelete();
+        final GraqlDelete graqlQuery = Graql.parse(String.join("\n", deleteQueryStatements));
         return tx().query().delete(graqlQuery);
     }
 
@@ -115,7 +115,7 @@ public class GraqlSteps {
 
     @When("get answers of graql insert")
     public void get_answers_of_graql_insert(final String graqlQueryStatements) {
-        final GraqlInsert graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements)).asInsert();
+        final GraqlInsert graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
         // Erase answers from previous steps to avoid polluting the result space
         answers = null;
         numericAnswer = null;

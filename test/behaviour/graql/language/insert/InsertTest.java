@@ -36,7 +36,8 @@ import java.util.concurrent.TimeoutException;
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
         features = "external/graknlabs_behaviour/graql/language/insert.feature",
-        tags = "not @ignore and not @ignore-client-java"
+        //tags = "not @ignore and not @ignore-client-java"
+        tags = "not @ignore"
 )
 public class InsertTest {
     // ATTENTION:
@@ -66,13 +67,13 @@ public class InsertTest {
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner();
-        runner.start();
-        GraknSingleton.setGraknRunner(runner);
+//        runner = new GraknCoreRunner();
+//        runner.start();
+//        GraknSingleton.setGraknRunner(runner);
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        runner.stop();
+//        runner.stop();
     }
 }

@@ -66,13 +66,13 @@ public class DefineTest {
 
     @BeforeClass
     public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner();
-        runner.start();
-        GraknSingleton.setGraknRunner(runner);
+//        runner = new GraknCoreRunner();
+//        runner.start();
+//        GraknSingleton.setGraknRunner(runner);
     }
 
     @AfterClass
     public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        runner.stop();
+//        runner.stop();
     }
 }

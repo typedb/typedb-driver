@@ -19,6 +19,7 @@
 
 package grakn.client.test.integration;
 
+import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
@@ -44,6 +45,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static grakn.client.Grakn.Session.Type.DATA;
+import static grakn.client.Grakn.Session.Type.SCHEMA;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
@@ -53,6 +56,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
@@ -62,15 +67,87 @@ public class ClientQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        grakn = new GraknCoreRunner();
-        grakn.start();
-        graknClient = new GraknClient(grakn.address());
+//        grakn = new GraknCoreRunner();
+//        grakn.start();
+//        graknClient = new GraknClient(grakn.address());
+//        graknClient = new GraknClient("localhost:48555");
     }
 
     @AfterClass
     public static void closeSession() throws Exception {
-        graknClient.close();
-        grakn.stop();
+//        graknClient.close();
+//        grakn.stop();
+    }
+
+    @Test
+    public void segfaultTest() {
+        for (int i = 0; i < 30; i++) {
+
+            // Given connection has been opened
+            System.out.println("Connecting to Grakn ... (" + (i+1) + ")");
+
+            System.out.println("Establishing Connection to Grakn Core");
+            String address = "localhost:48555";
+//        String address = GraknSingleton.getGraknRunner().address();
+            assertNotNull(address);
+
+            Client client = new GraknClient(address);
+
+            System.out.println("Connection to Grakn Core established");
+
+            assertNotNull(client);
+
+            // Given connection delete all databases
+            for (String database : client.databases().all()) {
+                client.databases().delete(database);
+            }
+
+            // Given connection does not have any database
+            assertTrue(client.databases().all().isEmpty());
+
+            // Given connection create database: grakn
+            client.databases().create("grakn");
+
+            // Given connection open schema session for database: grakn
+            Grakn.Session session = client.session("grakn", SCHEMA);
+
+            // Given session opens transaction of type: write
+            Grakn.Transaction transaction = session.transaction(WRITE);
+
+            // Given graql define
+            GraqlDefine query = Graql.parse("define person sub entity;");
+            transaction.query().define(query);
+
+            // Given transaction commits
+            transaction.commit();
+
+            // Given connection close all sessions
+            transaction.close();
+            session.close();
+
+            // Given connection open data session for database: grakn
+            session = client.session("grakn", DATA);
+
+            // Given session opens transaction of type: write
+            transaction = session.transaction(WRITE);
+
+            // When get answers of graql insert
+            GraqlInsert query2 = Graql.parse("insert $n isa person;");
+            transaction.query().insert(query2);
+
+            // ConnectionSteps.after
+            transaction.close();
+            session.close();
+
+            // Given connection has been opened
+            assertNotNull(client);
+            assertTrue(client.isOpen());
+
+            // Given connection delete all databases
+            for (String database : client.databases().all()) {
+                client.databases().delete(database);
+            }
+        }
     }
 
     @Test

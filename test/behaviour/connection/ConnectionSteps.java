@@ -35,8 +35,10 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.isNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -58,7 +60,8 @@ public class ConnectionSteps {
         System.out.println("Connecting to Grakn ...");
 
         System.out.println("Establishing Connection to Grakn Core");
-        String address = GraknSingleton.getGraknRunner().address();
+        String address = "localhost:48555";
+//        String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
         client = new GraknClient(address);
@@ -97,11 +100,18 @@ public class ConnectionSteps {
     @After
     public void close_session_and_transactions() throws Exception {
         System.out.println("ConnectionSteps.after");
+//        sessions.parallelStream().forEach(Session::close);
+//        sessions.clear();
+//        sessionsParallel.clear();
+//        sessionsToTransactions.clear();
+//        sessionsToTransactionsParallel.clear();
+//        sessionsParallelToTransactionsParallel.clear();
         if (sessions != null) {
             for (Session session : sessions) {
                 if (sessionsToTransactions.containsKey(session)) {
                     for (Transaction transaction : sessionsToTransactions.get(session)) {
                         transaction.close();
+                        assertFalse(transaction.isOpen());
                     }
                     sessionsToTransactions.remove(session);
                 }
@@ -114,6 +124,7 @@ public class ConnectionSteps {
                 }
 
                 session.close();
+                assertFalse(session.isOpen());
             }
             assertTrue(sessionsToTransactions.isEmpty());
             assertTrue(sessionsToTransactionsParallel.isEmpty());
