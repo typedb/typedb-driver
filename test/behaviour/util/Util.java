@@ -30,7 +30,7 @@ public class Util {
         try {
             function.run();
             fail();
-        } catch (GraknClientException e) {
+        } catch (RuntimeException e) {
             assertTrue(true);
         }
     }
