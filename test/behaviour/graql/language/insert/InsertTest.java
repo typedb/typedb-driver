@@ -36,8 +36,7 @@ import java.util.concurrent.TimeoutException;
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
         features = "external/graknlabs_behaviour/graql/language/insert.feature",
-        //tags = "not @ignore and not @ignore-client-java"
-        tags = "not @ignore"
+        tags = "not @ignore and not @ignore-client-java"
 )
 public class InsertTest {
     // ATTENTION:
