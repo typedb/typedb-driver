@@ -23,23 +23,8 @@ public class BatchResponseCollector implements ResponseCollector {
         return received.take().ok();
     }
 
-    public TransactionProto.Transaction.Res poll() throws TimeoutException {
-        Response response = received.poll();
-        if (response == null) {
-            throw new TimeoutException();
-        } else {
-            return response.ok();
-        }
-    }
-
-    public TransactionProto.Transaction.Res poll(long timeout, TimeUnit unit) throws InterruptedException,
-            TimeoutException {
-        Response response = received.poll(timeout, unit);
-        if (response == null) {
-            throw new TimeoutException();
-        } else {
-            return response.ok();
-        }
+    public TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException {
+        return received.poll(timeout, unit).ok();
     }
 
     public boolean isStarted() {

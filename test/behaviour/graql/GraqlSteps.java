@@ -92,14 +92,14 @@ public class GraqlSteps {
     }
 
     @Given("graql insert")
-    public QueryFuture<Stream<ConceptMap>> graql_insert(final String insertQueryStatements) {
+    public Stream<ConceptMap> graql_insert(final String insertQueryStatements) {
         final GraqlInsert graqlQuery = Graql.parse(String.join("\n", insertQueryStatements));
-        return tx().query().insert(graqlQuery);
+        return tx().query().insert(graqlQuery).get();
     }
 
     @Given("graql insert; throws exception")
     public void graql_insert_throws(final String insertQueryStatements) {
-        assertThrows(() -> graql_insert(insertQueryStatements).get());
+        assertThrows(() -> graql_insert(insertQueryStatements));
     }
 
     @Given("graql delete")
