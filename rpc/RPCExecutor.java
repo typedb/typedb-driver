@@ -49,11 +49,11 @@ public class RPCExecutor {
         return collector.receive(timeout, unit);
     }
 
-    public <T> QueryFuture<T> await() {
+    public <T> QueryFuture<T> getFuture() {
         return new QueryExecuteFuture<>(this, null);
     }
 
-    public <T> QueryFuture<T> await(final Function<QueryProto.Query.Res, T> responseReader) {
+    public <T> QueryFuture<T> getFuture(final Function<QueryProto.Query.Res, T> responseReader) {
         return new QueryExecuteFuture<>(this, responseReader);
     }
 

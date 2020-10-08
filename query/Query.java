@@ -109,7 +109,7 @@ public final class Query {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options))).build();
         final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
-        return rpcExecutor.await();
+        return rpcExecutor.getFuture();
     }
 
     private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
@@ -117,7 +117,7 @@ public final class Query {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options))).build();
         final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
-        return rpcExecutor.await(responseReader);
+        return rpcExecutor.getFuture(responseReader);
     }
 
     private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraknOptions options,
@@ -125,6 +125,6 @@ public final class Query {
         final TransactionProto.Transaction.Iter.Req req = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setQueryIterReq(request.setOptions(options(options))).build();
         final RPCIterator rpcIterator = new RPCIterator(rpcTransaction, req);
-        return rpcIterator.await(responseReader);
+        return rpcIterator.getFuture(responseReader);
     }
 }
