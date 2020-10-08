@@ -19,7 +19,6 @@
 
 package grakn.client.concept.answer;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.thing.impl.ThingImpl;
@@ -36,20 +35,17 @@ import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
-
 public class ConceptMap implements Answer {
 
     private final Map<String, Concept> map;
-    private final Transaction tx; // was used by getExplanation
     private final Pattern queryPattern;
 
-    public ConceptMap(Map<String, Concept> map, Pattern queryPattern, Transaction tx) {
+    public ConceptMap(Map<String, Concept> map, Pattern queryPattern) {
         this.map = Collections.unmodifiableMap(map);
         this.queryPattern = queryPattern;
-        this.tx = tx;
     }
 
-    public static ConceptMap of(final Transaction tx, final AnswerProto.ConceptMap res) {
+    public static ConceptMap of(final AnswerProto.ConceptMap res) {
         final Map<String, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach((resVar, resConcept) -> {
             Concept concept;
@@ -58,7 +54,7 @@ public class ConceptMap implements Answer {
             variableMap.put(resVar, concept);
         });
         Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
-        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern, tx);
+        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern);
     }
 
     public Pattern queryPattern() {

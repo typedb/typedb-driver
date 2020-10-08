@@ -41,7 +41,7 @@ public interface Answer {
             case ANSWERGROUP:
                 return AnswerGroup.of(tx, res.getAnswerGroup());
             case CONCEPTMAP:
-                return ConceptMap.of(tx, res.getConceptMap());
+                return ConceptMap.of(res.getConceptMap());
             case ANSWER_NOT_SET:
                 throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
             case NUMBER:

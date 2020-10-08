@@ -57,7 +57,7 @@ public final class Query {
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(
                 QueryProto.Graql.Match.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(rpcTransaction, res.getMatchIterRes().getAnswer()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getMatchIterRes().getAnswer()));
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
@@ -67,7 +67,7 @@ public final class Query {
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(
                 QueryProto.Graql.Insert.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(rpcTransaction, res.getInsertIterRes().getAnswer()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getInsertIterRes().getAnswer()));
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query) {
