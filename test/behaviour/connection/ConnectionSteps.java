@@ -100,52 +100,11 @@ public class ConnectionSteps {
     @After
     public void close_session_and_transactions() throws Exception {
         System.out.println("ConnectionSteps.after");
-//        sessions.parallelStream().forEach(Session::close);
-//        sessions.clear();
-//        sessionsParallel.clear();
-//        sessionsToTransactions.clear();
-//        sessionsToTransactionsParallel.clear();
-//        sessionsParallelToTransactionsParallel.clear();
-        if (sessions != null) {
-            for (Session session : sessions) {
-                if (sessionsToTransactions.containsKey(session)) {
-                    for (Transaction transaction : sessionsToTransactions.get(session)) {
-                        transaction.close();
-                        assertFalse(transaction.isOpen());
-                    }
-                    sessionsToTransactions.remove(session);
-                }
-
-                if (sessionsToTransactionsParallel.containsKey(session)) {
-                    for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
-                        futureTransaction.get().close();
-                    }
-                    sessionsToTransactionsParallel.remove(session);
-                }
-
-                session.close();
-                assertFalse(session.isOpen());
-            }
-            assertTrue(sessionsToTransactions.isEmpty());
-            assertTrue(sessionsToTransactionsParallel.isEmpty());
-            sessions = new ArrayList<>();
-            sessionsToTransactions = new HashMap<>();
-            sessionsToTransactionsParallel = new HashMap<>();
-        }
-
-        if (sessionsParallel != null) {
-            for (CompletableFuture<Session> futureSession : sessionsParallel) {
-                if (sessionsParallelToTransactionsParallel.containsKey(futureSession)) {
-                    for (CompletableFuture<Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
-                        futureTransaction.get().close();
-                    }
-                    sessionsParallelToTransactionsParallel.remove(futureSession);
-                }
-                futureSession.get().close();
-            }
-            assertTrue(sessionsParallelToTransactionsParallel.isEmpty());
-            sessionsParallel = new ArrayList<>();
-            sessionsParallelToTransactionsParallel = new HashMap<>();
-        }
+        sessions.parallelStream().forEach(Session::close);
+        sessions.clear();
+        sessionsParallel.clear();
+        sessionsToTransactions.clear();
+        sessionsToTransactionsParallel.clear();
+        sessionsParallelToTransactionsParallel.clear();
     }
 }
