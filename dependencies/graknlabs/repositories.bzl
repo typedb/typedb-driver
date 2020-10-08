@@ -55,14 +55,11 @@ def graknlabs_protocol():
     )
 
 def graknlabs_behaviour():
-#    git_repository(
-#        name = "graknlabs_behaviour",
-#        remote = "https://github.com/alexjpwalker/behaviour",
-#        commit = "7428dcaf5a29b38e375a2f76b6c680b953a91f4c"
-#    )
-    native.local_repository(
+    git_repository(
         name = "graknlabs_behaviour",
-        path = "../behaviour",
+        remote = "https://github.com/alexjpwalker/behaviour",
+        commit = "6fd31adc47281abf4ba9ba53e3400395615c88d3",
+"
     )
 
 def graknlabs_grabl_tracing():
