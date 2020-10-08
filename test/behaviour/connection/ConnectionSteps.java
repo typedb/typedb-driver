@@ -19,7 +19,6 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
@@ -35,10 +34,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.isNull;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -60,8 +57,7 @@ public class ConnectionSteps {
         System.out.println("Connecting to Grakn ...");
 
         System.out.println("Establishing Connection to Grakn Core");
-        String address = "localhost:48555";
-//        String address = GraknSingleton.getGraknRunner().address();
+        String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
         client = new GraknClient(address);
@@ -98,7 +94,7 @@ public class ConnectionSteps {
     }
 
     @After
-    public void close_session_and_transactions() throws Exception {
+    public void close_session_and_transactions() {
         System.out.println("ConnectionSteps.after");
         sessions.parallelStream().forEach(Session::close);
         sessions.clear();

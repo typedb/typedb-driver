@@ -149,7 +149,6 @@ public abstract class ConceptProtoBuilder {
         }
     }
 
-    // TODO: review (but it's not used anywhere right now)
     public static AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
         AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
         conceptMap.map().forEach((var, concept) -> {
