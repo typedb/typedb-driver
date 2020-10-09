@@ -17,7 +17,6 @@
 # under the License.
 #
 
-# TODO: update to latest version
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_file")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment_private")
 def graknlabs_grakn_core_artifact():
@@ -27,5 +26,5 @@ def graknlabs_grakn_core_artifact():
         artifact_name = "grakn-core-server-linux-{version}.tar.gz",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
-        commit = "fb00f90fb6faa701121da533562b6cc3d80a731c",
+        commit = "7578e6b458d8d517760ade0ac2622db3aa4905a8",
     )
