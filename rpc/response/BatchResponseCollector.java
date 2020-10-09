@@ -33,8 +33,8 @@ public class BatchResponseCollector implements ResponseCollector {
     public boolean onResponse(Response response) {
         started = true;
         received.add(response);
-        TransactionProto.Transaction.Res nullableRes = response.nullableOk();
-        return nullableRes == null || isLastResponse(nullableRes);
+        TransactionProto.Transaction.Res res = response.response();
+        return res == null || isLastResponse(res);
     }
 
     public TransactionProto.Transaction.Res take() throws InterruptedException {

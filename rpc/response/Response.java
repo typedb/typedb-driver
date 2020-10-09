@@ -24,52 +24,44 @@ import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 import static grakn.common.util.Objects.className;
 
 public class Response {
 
-    private final TransactionProto.Transaction.Res nullableOk;
-    private final StatusRuntimeException nullableError;
+    private final TransactionProto.Transaction.Res response;
+    private final StatusRuntimeException error;
 
-    Response(@Nullable TransactionProto.Transaction.Res nullableOk, @Nullable StatusRuntimeException nullableError) {
-        this.nullableOk = nullableOk;
-        this.nullableError = nullableError;
-    }
-
-    private static Response create(@Nullable TransactionProto.Transaction.Res response, @Nullable StatusRuntimeException error) {
+    private Response(@Nullable TransactionProto.Transaction.Res response, @Nullable StatusRuntimeException error) {
         if (!(response == null || error == null)) {
             throw new GraknClientException(new IllegalArgumentException("One of Transaction.Res or StatusRuntimeException must be null"));
         }
-        return new Response(response, error);
+        this.response = response;
+        this.error = error;
     }
 
     static Response completed() {
-        return create(null, null);
+        return new Response(null, null);
     }
 
     static Response error(StatusRuntimeException error) {
-        return create(null, error);
+        return new Response(null, error);
     }
 
     static Response ok(TransactionProto.Transaction.Res response) {
-        return create(response, null);
+        return new Response(response, null);
     }
 
     @Nullable
-    public TransactionProto.Transaction.Res nullableOk() {
-        return nullableOk;
-    }
-
-    @Nullable
-    StatusRuntimeException nullableError() {
-        return nullableError;
+    public TransactionProto.Transaction.Res response() {
+        return response;
     }
 
     public final Type type() {
-        if (nullableOk() != null) {
+        if (response != null) {
             return Type.OK;
-        } else if (nullableError() != null) {
+        } else if (error != null) {
             return Type.ERROR;
         } else {
             return Type.COMPLETED;
@@ -77,11 +69,11 @@ public class Response {
     }
 
     public final TransactionProto.Transaction.Res ok() {
-        if (nullableOk != null) {
-            return nullableOk;
-        } else if (nullableError != null) {
+        if (response != null) {
+            return response;
+        } else if (error != null) {
             // TODO: parse different GRPC errors into specific GraknClientException
-            throw new GraknClientException(nullableError);
+            throw new GraknClientException(error);
         } else {
             throw new GraknClientException("Transaction interrupted, all running queries have been stopped.");
         }
@@ -89,7 +81,7 @@ public class Response {
 
     @Override
     public String toString() {
-        return className(getClass()) + "{nullableOk=" + nullableOk + ", nullableError=" + nullableError + "}";
+        return className(getClass()) + "{response=" + response + ", error=" + error + "}";
     }
 
     @Override
@@ -98,21 +90,16 @@ public class Response {
             return true;
         }
         if (o instanceof Response) {
-            Response that = (Response) o;
-            return ((this.nullableOk == null) ? (that.nullableOk() == null) : this.nullableOk.equals(that.nullableOk()))
-                    && ((this.nullableError == null) ? (that.nullableError() == null) : this.nullableError.equals(that.nullableError()));
+            final Response that = (Response) o;
+            return Objects.equals(this.response, that.response)
+                    && Objects.equals(this.error, that.error);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        int h = 1;
-        h *= 1000003;
-        h ^= (nullableOk == null) ? 0 : this.nullableOk.hashCode();
-        h *= 1000003;
-        h ^= (nullableError == null) ? 0 : this.nullableError.hashCode();
-        return h;
+        return Objects.hash(response, error);
     }
 
     public enum Type {
