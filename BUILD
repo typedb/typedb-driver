@@ -85,6 +85,7 @@ checkstyle_test(
         "test/*",
     ]),
     license_type = "apache",
+    size = "small",
 )
 
 assemble_maven(
