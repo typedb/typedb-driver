@@ -93,18 +93,19 @@ public class ClientQueryTest {
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
 
-            final GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
-                     .when(and(
-                             rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
-                     ))
-                     .then(and(
-                             rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
-                     )));
+            // TODO: re-enable when defining rules is supported
+//            final GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
+//                     .when(and(
+//                             rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+//                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
+//                     ))
+//                     .then(and(
+//                             rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
+//                     )));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
-            tx.query().define(ruleQuery);
+//            tx.query().define(ruleQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
         });
