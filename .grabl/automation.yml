@@ -59,11 +59,6 @@ build:
         bazel test //test/behaviour/connection/... --test_output=streamed
         bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
       # TODO: revert above tests to //test/behaviour/...
-    test-hello-world:
-      machine: graknlabs-ubuntu-20.04
-      script: |
-        echo 'Hello World'
-        sleep 1800
     deploy-maven-snapshot:
       filter:
         owner: graknlabs
