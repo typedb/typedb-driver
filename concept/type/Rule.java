@@ -39,10 +39,6 @@ public interface Rule {
 
         void setLabel(String label);
 
-        void setWhen(Pattern when);
-
-        void setThen(Pattern then);
-
         void delete();
 
         boolean isDeleted();

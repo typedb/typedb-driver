@@ -27,7 +27,9 @@ import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.RuleMethod;
 import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
+import graql.lang.pattern.Conjunction;
 import graql.lang.pattern.Pattern;
+import graql.lang.pattern.variable.ThingVariable;
 
 import java.util.Objects;
 
@@ -38,11 +40,11 @@ import static grakn.common.util.Objects.className;
 public class RuleImpl implements Rule {
 
     private final String label;
-    private final Pattern when;
-    private final Pattern then;
+    private final Conjunction<? extends Pattern> when;
+    private final ThingVariable<?> then;
     private final int hash;
 
-    RuleImpl(final String label, final Pattern when, final Pattern then) {
+    RuleImpl(final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
         this.label = label;
         this.when = when;
@@ -51,7 +53,7 @@ public class RuleImpl implements Rule {
     }
 
     public static RuleImpl of(final ConceptProto.Rule ruleProto) {
-        return new RuleImpl(ruleProto.getLabel(), Graql.parsePattern(ruleProto.getWhen()), Graql.parsePattern(ruleProto.getThen()));
+        return new RuleImpl(ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
     }
 
     @Override
@@ -60,12 +62,12 @@ public class RuleImpl implements Rule {
     }
 
     @Override
-    public Pattern getWhen() {
+    public Conjunction<? extends Pattern> getWhen() {
         return when;
     }
 
     @Override
-    public Pattern getThen() {
+    public ThingVariable<?> getThen() {
         return then;
     }
 
@@ -97,11 +99,11 @@ public class RuleImpl implements Rule {
 
         final RPCTransaction rpcTransaction;
         private final String label;
-        private final Pattern when;
-        private final Pattern then;
+        private final Conjunction<? extends Pattern> when;
+        private final ThingVariable<?> then;
         private final int hash;
 
-        public Remote(final Grakn.Transaction transaction, final String label, final Pattern when, final Pattern then) {
+        public Remote(final Grakn.Transaction transaction, final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
             this.rpcTransaction = (RPCTransaction) transaction;
@@ -112,7 +114,7 @@ public class RuleImpl implements Rule {
         }
 
         public static RuleImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Rule ruleProto) {
-            return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.parsePattern(ruleProto.getWhen()), Graql.parsePattern(ruleProto.getThen()));
+            return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
         }
 
         @Override
@@ -121,28 +123,18 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public Pattern getWhen() {
+        public Conjunction<? extends Pattern> getWhen() {
             return when;
         }
 
         @Override
-        public Pattern getThen() {
+        public ThingVariable<?> getThen() {
             return then;
         }
 
         @Override
         public void setLabel(final String label) {
             execute(RuleMethod.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
-        }
-
-        @Override
-        public void setWhen(final Pattern when) {
-            execute(RuleMethod.Req.newBuilder().setRuleSetWhenReq(ConceptProto.Rule.SetWhen.Req.newBuilder().setPattern(when.toString())));
-        }
-
-        @Override
-        public void setThen(final Pattern then) {
-            execute(RuleMethod.Req.newBuilder().setRuleSetThenReq(ConceptProto.Rule.SetThen.Req.newBuilder().setPattern(then.toString())));
         }
 
         @Override
