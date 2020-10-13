@@ -41,7 +41,7 @@ grakn_test(
         "@graknlabs_behaviour//graql/language:define.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "enormous",
+    size = "medium",
     visibility = ["//visibility:public"],
 )
 

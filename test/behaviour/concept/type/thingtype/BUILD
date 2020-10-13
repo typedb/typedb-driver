@@ -66,7 +66,7 @@ grakn_test(
         "@graknlabs_behaviour//concept/type:thingtype.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "medium",
+    size = "small",
 )
 
 checkstyle_test(
