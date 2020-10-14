@@ -21,6 +21,7 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
@@ -42,6 +43,7 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
@@ -266,11 +268,23 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
+        Stream<ThingImpl> thingStream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
+            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setTypeMethodIterReq(method.setLabel(label)).build();
+            return rpcTransaction.iterate(request).map(res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
+        }
+
         TypeMethod.Res execute(final TypeMethod.Req.Builder method) {
             final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeMethodReq(method.setLabel(label)).build();
             return rpcTransaction.execute(request).getTypeMethodRes();
         }
+
+        /*TypeMethod.Res iterate(final TypeMethod.Iter.Req.Builder method) {
+            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
+                    .setTypeMethodIterReq(method.setLabel(label)).build();
+            return rpcTransaction.iterate(request).
+        }*/
 
         @Override
         public String toString() {

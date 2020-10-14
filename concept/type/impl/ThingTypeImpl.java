@@ -37,7 +37,6 @@ import grakn.protocol.ConceptProto.ThingType.UnsetAbstract;
 import grakn.protocol.ConceptProto.ThingType.UnsetOwns;
 import grakn.protocol.ConceptProto.ThingType.UnsetPlays;
 import grakn.protocol.ConceptProto.TypeMethod;
-import grakn.protocol.TransactionProto;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -104,18 +103,16 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             return super.getSubtypes(TypeImpl::asThingType);
         }
 
-        <THING extends ThingImpl> Stream<THING> getInstances(Function<ConceptProto.Thing, THING> thingConstructor) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setTypeMethodIterReq(TypeMethod.Iter.Req.newBuilder().setThingTypeGetInstancesIterReq(
-                            GetInstances.Iter.Req.getDefaultInstance())).build();
+        <THING extends ThingImpl> Stream<THING> getInstances(Function<ThingImpl, THING> thingConstructor) {
+            final TypeMethod.Iter.Req.Builder request = TypeMethod.Iter.Req.newBuilder()
+                    .setThingTypeGetInstancesIterReq(GetInstances.Iter.Req.getDefaultInstance());
 
-            return rpcTransaction.iterate(request).map(res -> thingConstructor.apply(
-                    res.getConceptMethodTypeIterRes().getThingTypeGetInstancesIterRes().getThing()));
+            return thingStream(request, res -> res.getThingTypeGetInstancesIterRes().getThing()).map(thingConstructor);
         }
 
         @Override
         public Stream<? extends ThingImpl> getInstances() {
-            return getInstances(ThingImpl::of);
+            return getInstances(x -> x);
         }
 
         @Override

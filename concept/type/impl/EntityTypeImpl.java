@@ -71,7 +71,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final Stream<EntityImpl> getInstances() {
-            return super.getInstances(EntityImpl::of);
+            return super.getInstances(ThingImpl::asEntity);
         }
 
         @Override

@@ -64,7 +64,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final Stream<RelationImpl> getInstances() {
-            return super.getInstances(RelationImpl::of);
+            return super.getInstances(ThingImpl::asRelation);
         }
 
         @Override
