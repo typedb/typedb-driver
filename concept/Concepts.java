@@ -19,26 +19,25 @@
 
 package grakn.client.concept;
 
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
+import grakn.client.concept.type.impl.AttributeTypeImpl;
+import grakn.client.concept.type.impl.EntityTypeImpl;
+import grakn.client.concept.type.impl.RelationTypeImpl;
+import grakn.client.concept.type.impl.RuleImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.rpc.RPCTransaction;
-import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static grakn.client.common.ProtoBuilder.tracingData;
 import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
@@ -46,10 +45,10 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public final class Concepts {
 
-    private final RPCTransaction transaction;
+    private final RPCTransaction rpcTransaction;
 
-    public Concepts(final RPCTransaction transaction) {
-        this.transaction = transaction;
+    public Concepts(final RPCTransaction rpcTransaction) {
+        this.rpcTransaction = rpcTransaction;
     }
 
     public ThingType getRootThingType() {
@@ -68,22 +67,14 @@ public final class Concepts {
         return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
 
-    public RoleType getRootRoleType() {
-        return getType(GraqlToken.Type.ROLE.toString()).asRoleType();
-    }
-
-    public Rule getRootRule() {
-        return getType(GraqlToken.Type.RULE.toString()).asRule();
-    }
-
     public EntityType putEntityType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
-                                             .setLabel(label)).build();
+                        .setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.of(res.getPutEntityTypeRes().getEntityType()).asEntityType();
+        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
     @Nullable
@@ -97,9 +88,9 @@ public final class Concepts {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
-                                               .setLabel(label)).build();
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.of(res.getPutRelationTypeRes().getRelationType()).asRelationType();
+                        .setLabel(label)).build();
+        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
     }
 
     @Nullable
@@ -113,10 +104,10 @@ public final class Concepts {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
-                                                .setLabel(label)
-                                                .setValueType(valueType(valueType))).build();
-        final TransactionProto.Transaction.Res res = transaction.transceiver().sendAndReceiveOrThrow(req);
-        return TypeImpl.of(res.getPutAttributeTypeRes().getAttributeType()).asAttributeType();
+                        .setLabel(label)
+                        .setValueType(valueType(valueType))).build();
+        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
     @Nullable
@@ -127,23 +118,30 @@ public final class Concepts {
     }
 
     public Rule putRule(final String label, final Pattern when, final Pattern then) {
-        throw new GraknClientException(new UnsupportedOperationException());
-        /*final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
                         .setLabel(label)
                         .setWhen(when.toString())
                         .setThen(then.toString())).build();
-
-        final TransactionProto.Transaction.Res res = sendAndReceiveOrThrow(req);
-        return Type.Remote.of(this, res.getPutRuleRes().getRule()).asRule();*/
+        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        return RuleImpl.of(res.getPutRuleRes().getRule());
     }
 
     @Nullable
-    public Rule getRule(String label) {
-        Type concept = getType(label);
-        if (concept instanceof Rule) return concept.asRule();
-        else return null;
+    public Thing getThing(final String iid) {
+        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData())
+                .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
+
+        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
+        switch (response.getGetThingRes().getResCase()) {
+            case THING:
+                return ThingImpl.of(response.getGetThingRes().getThing());
+            default:
+            case RES_NOT_SET:
+                return null;
+        }
     }
 
     @Nullable
@@ -152,7 +150,7 @@ public final class Concepts {
                 .putAllMetadata(tracingData())
                 .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
+        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
                 return TypeImpl.of(response.getGetTypeRes().getType());
@@ -163,60 +161,18 @@ public final class Concepts {
     }
 
     @Nullable
-    public Thing getThing(final String iid) {
+    public Rule getRule(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
+                .setGetRuleReq(TransactionProto.Transaction.GetRule.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = transaction.transceiver().sendAndReceiveOrThrow(req);
-        switch (response.getGetThingRes().getResCase()) {
-            case THING:
-                return ThingImpl.of(response.getGetThingRes().getThing());
+        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
+        switch (response.getGetRuleRes().getResCase()) {
+            case RULE:
+                return RuleImpl.of(response.getGetRuleRes().getRule());
             default:
             case RES_NOT_SET:
                 return null;
         }
-    }
-
-    public TransactionProto.Transaction.Res runThingMethod(final String iid, final ConceptProto.ThingMethod.Req thingMethod) {
-        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodThingReq(TransactionProto.Transaction.ConceptMethod.Thing.Req.newBuilder()
-                                                  .setIid(iid(iid))
-                                                  .setMethod(thingMethod)).build();
-
-        return transaction.transceiver().sendAndReceiveOrThrow(request);
-    }
-
-    public TransactionProto.Transaction.Res runTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Req method) {
-        final TransactionProto.Transaction.ConceptMethod.Type.Req.Builder typeMethod =
-                TransactionProto.Transaction.ConceptMethod.Type.Req.newBuilder().setLabel(label).setMethod(method);
-        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
-
-        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setConceptMethodTypeReq(typeMethod.build()).build();
-
-        return transaction.transceiver().sendAndReceiveOrThrow(request);
-    }
-
-    public <T> Stream<T> iterateThingMethod(final String iid, final ConceptProto.ThingMethod.Iter.Req method,
-                                            final Function<ConceptProto.ThingMethod.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodThingIterReq(TransactionProto.Transaction.ConceptMethod.Thing.Iter.Req.newBuilder()
-                                                      .setIid(iid(iid))
-                                                      .setMethod(method)).build();
-
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodThingIterRes().getResponse()));
-    }
-
-    public <T> Stream<T> iterateTypeMethod(final String label, @Nullable final String scope, final ConceptProto.TypeMethod.Iter.Req method,
-                                           final Function<ConceptProto.TypeMethod.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.Builder typeMethod =
-                TransactionProto.Transaction.ConceptMethod.Type.Iter.Req.newBuilder().setLabel(label).setMethod(method);
-        if (scope != null && !scope.isEmpty()) typeMethod.setScope(scope);
-
-        final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setConceptMethodTypeIterReq(typeMethod.build()).build();
-
-        return transaction.transceiver().iterate(request, res -> responseReader.apply(res.getConceptMethodTypeIterRes().getResponse()));
     }
 }

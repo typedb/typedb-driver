@@ -23,7 +23,6 @@ import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
-import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
@@ -39,10 +38,6 @@ public interface Concept {
 
     default Thing asThing() {
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-    }
-
-    default Rule asRule() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
     }
 
     Remote asRemote(Grakn.Transaction transaction);
@@ -73,11 +68,6 @@ public interface Concept {
         @Override
         default Thing.Remote asThing() {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-        }
-
-        @Override
-        default Rule.Remote asRule() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Rule.class)));
         }
 
         @Override

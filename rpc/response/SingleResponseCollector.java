@@ -17,41 +17,35 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package grakn.client.rpc.response;
 
-import grakn.protocol.AnswerProto;
+import grakn.protocol.TransactionProto;
 
-public class Numeric implements Answer {
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-    private final Number number;
-
-    public Numeric(Number number) {
-        this.number = number;
-    }
-
-    public static Numeric of(final AnswerProto.Value res) {
-        return new Numeric(AnswerProtoReader.number(res.getNumber()));
-    }
+public class SingleResponseCollector implements ResponseCollector {
+    private volatile Response response;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override
-    public boolean hasExplanation() {
-        return false;
+    public boolean onResponse(Response response) {
+        this.response = response;
+        latch.countDown();
+        return true;
     }
 
-    public Number number() {
-        return number;
+    public boolean isDone() {
+        return response != null;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Numeric a2 = (Numeric) obj;
-        return this.number.toString().equals(a2.number.toString());
+    public TransactionProto.Transaction.Res receive() throws InterruptedException {
+        latch.await();
+        return response.ok();
     }
 
-    @Override
-    public int hashCode() {
-        return number.hashCode();
+    public TransactionProto.Transaction.Res receive(final long timeout, final TimeUnit unit) throws InterruptedException {
+        latch.await(timeout, unit);
+        return response.ok();
     }
 }

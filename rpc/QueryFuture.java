@@ -17,27 +17,15 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package grakn.client.rpc;
 
-import grakn.protocol.AnswerProto;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-public class Void implements Answer {
-    private final String message;
-
-    public Void(String message) {
-        this.message = message;
-    }
-
-    public static Void of(final AnswerProto.Void res) {
-        return new Void(res.getMessage());
-    }
+public interface QueryFuture<T> extends Future<T> {
+    @Override
+    T get();
 
     @Override
-    public boolean hasExplanation() {
-        return false;
-    }
-
-    public String message() {
-        return message;
-    }
+    T get(long timeout, TimeUnit unit);
 }

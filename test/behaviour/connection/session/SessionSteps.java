@@ -79,22 +79,8 @@ public class SessionSteps {
     }
 
     @When("connection close all sessions")
-    public void connection_close_all_sessions() throws ExecutionException, InterruptedException {
+    public void connection_close_all_sessions() {
         for (Session session : sessions) {
-            if (sessionsToTransactions.containsKey(session)) {
-                for (Transaction transaction : sessionsToTransactions.get(session)) {
-                    transaction.close();
-                }
-                sessionsToTransactions.remove(session);
-            }
-
-            if (sessionsToTransactionsParallel.containsKey(session)) {
-                for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
-                    futureTransaction.get().close();
-                }
-                sessionsToTransactionsParallel.remove(session);
-            }
-
             session.close();
         }
         sessions.clear();

@@ -283,9 +283,14 @@ public class ThingTypeSteps {
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
-    public void thing_type_remove_has_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
+    public void thing_type_unset_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).unsetOwns(attributeType);
+    }
+
+    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")
+    public void thing_type_unset_owns_attribute_type_throws_exception(final RootLabel rootLabel, final String typeLabel, final String attributeLabel) {
+        assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types contain:")
@@ -330,9 +335,14 @@ public class ThingTypeSteps {
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")
-    public void thing_type_remove_plays_role(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
+    public void thing_type_unset_plays_role(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).unsetPlays(roleType);
+    }
+
+    @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")
+    public void thing_type_unset_plays_role_throws_exception(final RootLabel rootLabel, final String typeLabel, final Parameters.ScopedLabel roleLabel) {
+        assertThrows(() -> thing_type_unset_plays_role(rootLabel, typeLabel, roleLabel));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get playing roles contain:")

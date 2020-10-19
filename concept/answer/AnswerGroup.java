@@ -29,7 +29,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class AnswerGroup<T extends Answer> implements Answer {
+public class AnswerGroup<T> implements Answer {
 
     private final Concept owner;
     private final List<T> answers;
@@ -44,11 +44,6 @@ public class AnswerGroup<T extends Answer> implements Answer {
         if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
         else concept = TypeImpl.of(res.getOwner().getType());
         return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
-    }
-
-    @Override
-    public boolean hasExplanation() {
-        return false;
     }
 
     public Concept owner() {

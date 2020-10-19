@@ -37,6 +37,7 @@ java_library(
     srcs = glob([
         "common/**/*.java",
         "concept/**/*.java",
+        "query/**/*.java",
         "rpc/**/*.java",
         "test/*.java",
         "*.java"
@@ -79,10 +80,12 @@ checkstyle_test(
         ".grabl/automation.yml",
         "common/**/*",
         "concept/**/*",
+        "query/**/*",
         "rpc/**/*",
         "test/*",
     ]),
     license_type = "apache",
+    size = "small",
 )
 
 assemble_maven(

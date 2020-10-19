@@ -64,7 +64,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final Stream<RelationImpl> getInstances() {
-            return super.getInstances(RelationImpl::of);
+            return super.getInstances(ThingImpl::asRelation);
         }
 
         @Override
@@ -94,15 +94,15 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final RelationImpl create() {
-            final TypeMethod.Req method = TypeMethod.Req.newBuilder().setRelationTypeCreateReq(
-                    ConceptProto.RelationType.Create.Req.getDefaultInstance()).build();
+            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder().setRelationTypeCreateReq(
+                    ConceptProto.RelationType.Create.Req.getDefaultInstance());
             return ThingImpl.of(execute(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
         public final RoleTypeImpl getRelates(final String roleLabel) {
-            final TypeMethod.Req method = TypeMethod.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
-                    GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)).build();
+            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
+                    GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
             final GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) return TypeImpl.of(res.getRoleType()).asRoleType();
             else return null;
@@ -112,7 +112,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         public final Stream<RoleTypeImpl> getRelates() {
             return stream(
                     TypeMethod.Iter.Req.newBuilder().setRelationTypeGetRelatesIterReq(
-                            GetRelates.Iter.Req.getDefaultInstance()).build(),
+                            GetRelates.Iter.Req.getDefaultInstance()),
                     res -> res.getRelationTypeGetRelatesIterRes().getRole()
             ).map(TypeImpl::asRoleType);
         }
@@ -120,22 +120,19 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final void setRelates(final String roleLabel) {
             execute(TypeMethod.Req.newBuilder().setRelationTypeSetRelatesReq(
-                    SetRelates.Req.newBuilder().setLabel(roleLabel)
-            ).build());
+                    SetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 
         @Override
         public final void setRelates(final String roleLabel, final String overriddenLabel) {
             execute(TypeMethod.Req.newBuilder().setRelationTypeSetRelatesReq(
-                    SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)
-            ).build());
+                    SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)));
         }
 
         @Override
         public final void unsetRelates(String roleLabel) {
             execute(TypeMethod.Req.newBuilder().setRelationTypeUnsetRelatesReq(
-                    UnsetRelates.Req.newBuilder().setLabel(roleLabel)
-            ).build());
+                    UnsetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 
         @Override

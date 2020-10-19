@@ -22,6 +22,7 @@ package grakn.client.concept.proto;
 import com.google.protobuf.ByteString;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
+import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
@@ -31,9 +32,9 @@ import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
+import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
 
 import java.time.LocalDateTime;
@@ -141,12 +142,20 @@ public abstract class ConceptProtoBuilder {
             return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleType) {
             return ConceptProto.Type.ENCODING.ROLE_TYPE;
-        } else if (type instanceof Rule) {
-            return ConceptProto.Type.ENCODING.RULE;
         } else if (type instanceof ThingType) {
             return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
             return ConceptProto.Type.ENCODING.UNRECOGNIZED;
         }
+    }
+
+    public static AnswerProto.ConceptMap conceptMap(ConceptMap conceptMap) {
+        AnswerProto.ConceptMap.Builder conceptMapProto = AnswerProto.ConceptMap.newBuilder();
+        conceptMap.map().forEach((var, concept) -> {
+            ConceptProto.Concept conceptProto = concept(concept);
+            conceptMapProto.putMap(var, conceptProto);
+        });
+        conceptMapProto.setPattern(conceptMap.queryPattern().toString());
+        return conceptMapProto.build();
     }
 }

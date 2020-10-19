@@ -208,7 +208,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeImpl<?>> getInstances() {
-            return super.getInstances(AttributeImpl::of);
+            return super.getInstances(ThingImpl::asAttribute);
         }
 
         @Override
@@ -218,25 +218,25 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<ThingTypeImpl> getOwners(final boolean onlyKey) {
-            final ConceptProto.TypeMethod.Iter.Req method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
+            final ConceptProto.TypeMethod.Iter.Req.Builder method = ConceptProto.TypeMethod.Iter.Req.newBuilder()
                     .setAttributeTypeGetOwnersIterReq(ConceptProto.AttributeType.GetOwners.Iter.Req.newBuilder()
-                            .setOnlyKey(onlyKey)).build();
+                            .setOnlyKey(onlyKey));
 
             return stream(method, res -> res.getAttributeTypeGetOwnersIterRes().getOwner()).map(TypeImpl::asThingType);
         }
 
         protected final AttributeImpl<?> put(final Object value) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req.Builder method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                            .setValue(attributeValue(value))).build();
+                            .setValue(attributeValue(value)));
             return ThingImpl.of(execute(method).getAttributeTypePutRes().getAttribute()).asAttribute();
         }
 
         @Nullable
         protected final AttributeImpl<?> get(final Object value) {
-            final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+            final ConceptProto.TypeMethod.Req.Builder method = ConceptProto.TypeMethod.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                            .setValue(attributeValue(value))).build();
+                            .setValue(attributeValue(value)));
             final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
@@ -626,8 +626,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final java.lang.String getRegex() {
-                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                        .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()).build();
+                final ConceptProto.TypeMethod.Req.Builder method = ConceptProto.TypeMethod.Req.newBuilder()
+                        .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance());
                 final java.lang.String regex = execute(method).getAttributeTypeGetRegexRes().getRegex();
                 return regex.isEmpty() ? null : regex;
             }
@@ -635,9 +635,9 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Override
             public final void setRegex(java.lang.String regex) {
                 if (regex == null) regex = "";
-                final ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
+                final ConceptProto.TypeMethod.Req.Builder method = ConceptProto.TypeMethod.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                .setRegex(regex)).build();
+                                .setRegex(regex));
                 execute(method);
             }
 

@@ -19,7 +19,6 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.Grakn;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
@@ -57,10 +56,10 @@ public class ConnectionSteps {
 
         System.out.println("Connecting to Grakn ...");
 
-        System.out.println("Establishing Connection to Grakn Core");
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
+        System.out.println("Establishing Connection to Grakn Core at " + address);
         client = new GraknClient(address);
 
         System.out.println("Connection to Grakn Core established");
@@ -95,46 +94,13 @@ public class ConnectionSteps {
     }
 
     @After
-    public void close_session_and_transactions() throws Exception {
+    public void close_session_and_transactions() {
         System.out.println("ConnectionSteps.after");
-        if (sessions != null) {
-            for (Session session : sessions) {
-                if (sessionsToTransactions.containsKey(session)) {
-                    for (Transaction transaction : sessionsToTransactions.get(session)) {
-                        transaction.close();
-                    }
-                    sessionsToTransactions.remove(session);
-                }
-
-                if (sessionsToTransactionsParallel.containsKey(session)) {
-                    for (CompletableFuture<Transaction> futureTransaction : sessionsToTransactionsParallel.get(session)) {
-                        futureTransaction.get().close();
-                    }
-                    sessionsToTransactionsParallel.remove(session);
-                }
-
-                session.close();
-            }
-            assertTrue(sessionsToTransactions.isEmpty());
-            assertTrue(sessionsToTransactionsParallel.isEmpty());
-            sessions = new ArrayList<>();
-            sessionsToTransactions = new HashMap<>();
-            sessionsToTransactionsParallel = new HashMap<>();
-        }
-
-        if (sessionsParallel != null) {
-            for (CompletableFuture<Session> futureSession : sessionsParallel) {
-                if (sessionsParallelToTransactionsParallel.containsKey(futureSession)) {
-                    for (CompletableFuture<Transaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
-                        futureTransaction.get().close();
-                    }
-                    sessionsParallelToTransactionsParallel.remove(futureSession);
-                }
-                futureSession.get().close();
-            }
-            assertTrue(sessionsParallelToTransactionsParallel.isEmpty());
-            sessionsParallel = new ArrayList<>();
-            sessionsParallelToTransactionsParallel = new HashMap<>();
-        }
+        sessions.parallelStream().forEach(Session::close);
+        sessions.clear();
+        sessionsParallel.clear();
+        sessionsToTransactions.clear();
+        sessionsToTransactionsParallel.clear();
+        sessionsParallelToTransactionsParallel.clear();
     }
 }

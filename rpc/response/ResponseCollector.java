@@ -17,30 +17,14 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package grakn.client.rpc.response;
 
-import grakn.client.Grakn;
-import graql.lang.pattern.Pattern;
-
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
-
-public interface Rule {
-
-    String getLabel();
-
-    Pattern getWhen();
-
-    Pattern getThen();
-
-    Rule.Remote asRemote(Grakn.Transaction transaction);
-
-    interface Remote extends Rule {
-
-        void setLabel(String label);
-
-        void delete();
-
-        boolean isDeleted();
-    }
+public interface ResponseCollector {
+    /**
+     * Callback function called when a response is received. The return value determines whether this ResponseCollector
+     * is done and should be cleaned up.
+     * @param response The response.
+     * @return 'true' if this ResponseCollector is done receiving responses, otherwise, 'false'.
+     */
+    boolean onResponse(Response response);
 }

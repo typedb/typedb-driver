@@ -123,7 +123,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         public final Stream<ThingImpl> getOwners() {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
-                            GetOwners.Iter.Req.getDefaultInstance()).build(),
+                            GetOwners.Iter.Req.getDefaultInstance()),
                     res -> res.getAttributeGetOwnersIterRes().getThing()
             );
         }
@@ -132,7 +132,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         public Stream<ThingImpl> getOwners(ThingType ownerType) {
             return stream(
                     ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
-                            GetOwners.Iter.Req.newBuilder().setThingType(type(ownerType))).build(),
+                            GetOwners.Iter.Req.newBuilder().setThingType(type(ownerType))),
                     res -> res.getAttributeGetOwnersIterRes().getThing()
             );
         }

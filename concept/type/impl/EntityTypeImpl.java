@@ -71,7 +71,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final Stream<EntityImpl> getInstances() {
-            return super.getInstances(EntityImpl::of);
+            return super.getInstances(ThingImpl::asEntity);
         }
 
         @Override
@@ -91,8 +91,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final EntityImpl create() {
-            final TypeMethod.Req method = TypeMethod.Req.newBuilder()
-                    .setEntityTypeCreateReq(Create.Req.getDefaultInstance()).build();
+            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder()
+                    .setEntityTypeCreateReq(Create.Req.getDefaultInstance());
             return ThingImpl.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }
 

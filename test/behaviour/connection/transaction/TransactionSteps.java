@@ -74,12 +74,7 @@ public class TransactionSteps {
     public void for_each_session_open_transactions_of_type_throws_exception(List<Transaction.Type> types) {
         for (Session session : sessions) {
             for (Transaction.Type type : types) {
-                try {
-                    Transaction transaction = session.transaction(type);
-                    fail();
-                } catch (Exception e) {
-                    // successfully threw
-                }
+                assertThrows(() -> session.transaction(type));
             }
         }
     }
@@ -255,7 +250,7 @@ public class TransactionSteps {
         for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
                 try {
-                    transaction.execute(Graql.parse(defineQueryStatements).asDefine()).get();
+                    transaction.query().define(Graql.parseQuery(defineQueryStatements).asDefine()).get();
                     fail();
                 } catch (Exception e) {
                     assertThat(e.getMessage(), Matchers.containsString(expectedException));

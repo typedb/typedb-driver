@@ -34,6 +34,7 @@ abstract class AnswerProtoReader {
         return bytesToHexString(res.toByteArray());
     }
 
+    // We will probably need this in the future when aggregates are implemented
     static Number number(final AnswerProto.Number res) {
         try {
             return NumberFormat.getInstance().parse(res.getValue());

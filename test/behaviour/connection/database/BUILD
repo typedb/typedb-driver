@@ -60,7 +60,7 @@ grakn_test(
         "@graknlabs_behaviour//connection:database.feature",
     ],
     grakn_artifact = "@graknlabs_grakn_core_artifact//file",
-    size = "large",
+    size = "small",
 )
 
 checkstyle_test(

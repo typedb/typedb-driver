@@ -20,98 +20,166 @@
 package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Rule;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.ConceptProto.RuleMethod;
+import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
+import graql.lang.pattern.Conjunction;
 import graql.lang.pattern.Pattern;
+import graql.lang.pattern.variable.ThingVariable;
 
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
+import java.util.Objects;
 
-public class RuleImpl extends TypeImpl implements Rule {
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
+import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.common.util.Objects.className;
 
-    RuleImpl(final String label, final boolean root) {
-        super(label, root);
+public class RuleImpl implements Rule {
+
+    private final String label;
+    private final Conjunction<? extends Pattern> when;
+    private final ThingVariable<?> then;
+    private final int hash;
+
+    RuleImpl(final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
+        if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+        this.label = label;
+        this.when = when;
+        this.then = then;
+        this.hash = Objects.hash(this.label);
     }
 
-    public static RuleImpl of(final ConceptProto.Type typeProto) {
-        return new RuleImpl(typeProto.getLabel(), typeProto.getRoot());
+    public static RuleImpl of(final ConceptProto.Rule ruleProto) {
+        return new RuleImpl(ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
+    }
+
+    @Override
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public Conjunction<? extends Pattern> getWhen() {
+        return when;
+    }
+
+    @Override
+    public ThingVariable<?> getThen() {
+        return then;
     }
 
     @Override
     public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
-        return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+        return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
     }
 
     @Override
-    public RuleImpl asRule() {
-        return this;
+    public String toString() {
+        return className(this.getClass()) + "[label: " + label + "]";
     }
 
-    public static class Remote extends TypeImpl.Remote implements Rule.Remote {
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
-            super(transaction, label, isRoot);
+        final RuleImpl that = (RuleImpl) o;
+        return this.label.equals(that.label);
+    }
+
+    @Override
+    public int hashCode() {
+        return hash;
+    }
+
+    public static class Remote implements Rule.Remote {
+
+        final RPCTransaction rpcTransaction;
+        private final String label;
+        private final Conjunction<? extends Pattern> when;
+        private final ThingVariable<?> then;
+        private final int hash;
+
+        public Remote(final Grakn.Transaction transaction, final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
+            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
+            if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+            this.rpcTransaction = (RPCTransaction) transaction;
+            this.label = label;
+            this.when = when;
+            this.then = then;
+            this.hash = Objects.hash(transaction, label);
         }
 
-        @Nullable
-        @Override
-        public RuleImpl getSupertype() {
-            return null;
-        }
-
-        @Override
-        public final Stream<Rule> getSupertypes() {
-            return Stream.empty();
-        }
-
-        @Override
-        public final Stream<Rule> getSubtypes() {
-            return Stream.empty();
-        }
-
-        @Override
-        @Nullable
-        @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern getWhen() {
-            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setRuleWhenReq(ConceptProto.Rule.When.Req.getDefaultInstance()).build();
-
-            ConceptProto.Rule.When.Res response = execute(method).getRuleWhenRes();
-            switch (response.getResCase()) {
-                case PATTERN:
-                    return Graql.parsePattern(response.getPattern());
-                case RES_NOT_SET:
-                default:
-                    return null;
-            }
+        public static RuleImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Rule ruleProto) {
+            return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
         }
 
         @Override
-        @Nullable
-        @SuppressWarnings("Duplicates") // response.getResCase() does not return the same type
-        public final Pattern getThen() {
-            ConceptProto.TypeMethod.Req method = ConceptProto.TypeMethod.Req.newBuilder()
-                    .setRuleThenReq(ConceptProto.Rule.Then.Req.getDefaultInstance()).build();
-
-            ConceptProto.Rule.Then.Res response = execute(method).getRuleThenRes();
-            switch (response.getResCase()) {
-                case PATTERN:
-                    return Graql.parsePattern(response.getPattern());
-                case RES_NOT_SET:
-                default:
-                    return null;
-            }
+        public String getLabel() {
+            return label;
         }
 
         @Override
-        public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
-            return new RuleImpl.Remote(transaction, getLabel(), isRoot());
+        public Conjunction<? extends Pattern> getWhen() {
+            return when;
         }
 
         @Override
-        public RuleImpl.Remote asRule() {
-            return this;
+        public ThingVariable<?> getThen() {
+            return then;
+        }
+
+        @Override
+        public void setLabel(final String label) {
+            execute(RuleMethod.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
+        }
+
+        @Override
+        public void delete() {
+            execute(RuleMethod.Req.newBuilder().setRuleDeleteReq(ConceptProto.Rule.Delete.Req.getDefaultInstance()));
+        }
+
+        @Override
+        public final boolean isDeleted() {
+            return rpcTransaction.concepts().getRule(label) != null;
+        }
+
+        @Override
+        public Remote asRemote(final Grakn.Transaction transaction) {
+            return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
+        }
+
+        @Override
+        public String toString() {
+            return className(this.getClass()) + "[label: " + label + "]";
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final RuleImpl.Remote that = (RuleImpl.Remote) o;
+            return this.label.equals(that.label);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        final Grakn.Transaction tx() {
+            return rpcTransaction;
+        }
+
+        ConceptProto.RuleMethod.Res execute(final ConceptProto.RuleMethod.Req.Builder method) {
+            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                    .setRuleMethodReq(method.setLabel(label)).build();
+
+            return rpcTransaction.execute(request).getRuleMethodRes();
         }
     }
 }

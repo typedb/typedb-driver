@@ -29,26 +29,22 @@ import static grakn.common.util.Objects.className;
 
 public interface Answer {
 
-    boolean hasExplanation();
+    // TODO
+    default AnswerGroup<?> asAnswerGroup() { throw new UnsupportedOperationException(); }
+
+    default ConceptMap asConceptMap() {
+        throw new UnsupportedOperationException();
+    }
 
     static Answer of(final Transaction tx, final AnswerProto.Answer res) {
         switch (res.getAnswerCase()) {
             case ANSWERGROUP:
                 return AnswerGroup.of(tx, res.getAnswerGroup());
             case CONCEPTMAP:
-                return ConceptMap.of(tx, res.getConceptMap());
-            case CONCEPTLIST:
-                return ConceptList.of(res.getConceptList());
-            case CONCEPTSET:
-                return ConceptSet.of(res.getConceptSet());
-            case CONCEPTSETMEASURE:
-                return ConceptSetMeasure.of(res.getConceptSetMeasure());
-            case VALUE:
-                return Numeric.of(res.getValue());
-            case VOID:
-                return Void.of(res.getVoid());
+                return ConceptMap.of(res.getConceptMap());
             case ANSWER_NOT_SET:
                 throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
+            case NUMBER:
             default:
                 throw new GraknClientException(BAD_ANSWER_TYPE.message(res.getAnswerCase()));
         }
