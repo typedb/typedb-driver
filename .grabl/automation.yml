@@ -58,6 +58,7 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
         bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
+        bazel test --config=rbe //test/behaviour/graql/language/define/... --test_output=errors
       # TODO: revert above tests to //test/behaviour/...
     deploy-maven-snapshot:
       filter:
