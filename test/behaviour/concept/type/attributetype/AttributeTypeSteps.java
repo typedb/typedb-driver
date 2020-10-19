@@ -35,6 +35,7 @@ import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -99,11 +100,25 @@ public class AttributeTypeSteps {
         attributeType.asString().asRemote(tx()).setRegex(regex);
     }
 
+    @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")
+    public void attribute_type_as_value_type_unset_regex(final String typeLabel, final AttributeType.ValueType valueType) {
+        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
+        final AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
+        attributeType.asString().asRemote(tx()).setRegex(null);
+    }
+
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
         assertEquals(regex, attributeType.asString().asRemote(tx()).getRegex());
+    }
+
+    @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
+    public void attribute_type_as_value_type_does_not_have_any_regex(final String typeLabel, final AttributeType.ValueType valueType) {
+        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
+        final AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
+        assertNull(attributeType.asString().asRemote(tx()).getRegex());
     }
 
     @Then("attribute\\( ?{type_label} ?) get key owners contain:")
