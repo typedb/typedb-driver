@@ -34,22 +34,21 @@ public class RPCSession implements Session {
 
     private final ManagedChannel channel;
     private final String databaseName;
-    private final GraknGrpc.GraknBlockingStub sessionStub;
+    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
+//    private final GraknGrpc.GraknStub asyncGrpcStub;
     private final ByteString sessionId;
     private boolean isOpen;
 
     RPCSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final GraknOptions options) {
         this.databaseName = databaseName;
         this.channel = channel;
-        this.sessionStub = GraknGrpc.newBlockingStub(channel);
+        this.blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
+//        this.asyncGrpcStub = GraknGrpc.newStub(channel);
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                .setDatabase(databaseName)
-                .setType(sessionType(type))
-                .setOptions(options(options)).build();
+                .setDatabase(databaseName).setType(sessionType(type)).setOptions(options(options)).build();
 
-        final SessionProto.Session.Open.Res response = sessionStub.sessionOpen(openReq);
-        sessionId = response.getSessionID();
+        sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionID();
         isOpen = true;
     }
 
@@ -65,11 +64,11 @@ public class RPCSession implements Session {
 
     public void close() {
         if (!isOpen) return;
+        // TODO: this is dangerous - we can call close() on two concurrent threads and cause havoc, right?
+        //       isOpen should be changed to an AtomicBoolean that we update at the start of this method
+        final SessionProto.Session.Close.Req closeReq = SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build();
 
-        final SessionProto.Session.Close.Req closeReq = SessionProto.Session.Close.Req.newBuilder()
-                .setSessionID(sessionId).build();
-
-        sessionStub.sessionClose(closeReq);
+        blockingGrpcStub.sessionClose(closeReq);
         isOpen = false;
     }
 
