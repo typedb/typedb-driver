@@ -45,11 +45,10 @@ build:
         dependencies/maven/update.sh
         git diff --exit-code dependencies/maven/artifacts.snapshot
         bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
-      # TODO: re-enable when fixed
-#    test-integration:
-#      machine: graknlabs-ubuntu-20.04
-#      script: |
-#        bazel test --config=rbe //test/integration/... --test_output=errors
+    test-integration:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        bazel test --config=rbe //test/integration/... --test_output=errors
     test-behaviour:
       machine: graknlabs-ubuntu-20.04
       script: |
