@@ -20,17 +20,9 @@
 package grakn.client;
 
 import grakn.client.concept.Concepts;
-import grakn.client.concept.answer.ConceptMap;
 import grakn.client.query.Query;
-import graql.lang.query.GraqlDefine;
 
-import javax.annotation.CheckReturnValue;
-import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import static grakn.client.Grakn.Session.Type.DATA;
 
 public interface Grakn {
 
@@ -58,29 +50,19 @@ public interface Grakn {
         List<String> all();
     }
 
-    interface Database extends Serializable {
-
-        @CheckReturnValue
-        String name();
-    }
-
     interface Session extends AutoCloseable {
 
-        default Transaction transaction() {
-            return transaction(Transaction.Type.READ);
-        }
-
-        default Transaction transaction(Transaction.Type type) {
-            return transaction(type, new GraknOptions());
-        }
+        Transaction transaction(Transaction.Type type);
 
         Transaction transaction(Transaction.Type type, GraknOptions options);
+
+        Session.Type type();
 
         boolean isOpen();
 
         void close();
 
-        Database database();
+        String databaseName();
 
         enum Type {
             DATA(0),
@@ -114,10 +96,6 @@ public interface Grakn {
     interface Transaction extends AutoCloseable {
 
         Transaction.Type type();
-
-        Session session();
-
-        Database database();
 
         boolean isOpen();
 

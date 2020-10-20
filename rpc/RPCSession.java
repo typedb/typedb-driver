@@ -53,6 +53,11 @@ public class RPCSession implements Session {
     }
 
     @Override
+    public Transaction transaction(final Transaction.Type type) {
+        return transaction(type, new GraknOptions());
+    }
+
+    @Override
     public Transaction transaction(final Transaction.Type type, final GraknOptions options) {
         return new RPCTransaction(this, sessionId, type, options);
     }
