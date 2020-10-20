@@ -28,8 +28,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_LISTENER_TERMINATED;
-
 public class ResponseListener implements StreamObserver<TransactionProto.Transaction.Res> {
 
     private volatile ResponseCollector currentCollector;
@@ -71,7 +69,7 @@ public class ResponseListener implements StreamObserver<TransactionProto.Transac
     }
 
     public synchronized void addCollector(ResponseCollector collector) {
-        if (terminated) throw new GraknClientException(TRANSACTION_LISTENER_TERMINATED);
+//        if (terminated) throw new GraknClientException(TRANSACTION_LISTENER_TERMINATED);
         collectorQueue.add(collector);
     }
 
