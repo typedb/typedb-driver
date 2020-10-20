@@ -21,12 +21,11 @@ package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.response.BatchResponseCollector;
+import grakn.client.rpc.response.ResponseCollector;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -36,7 +35,7 @@ import static grakn.common.util.Objects.className;
 
 public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
 
-    private BatchResponseCollector currentBatchCollector;
+    private ResponseCollector currentBatchCollector;
     private volatile boolean started;
     private TransactionProto.Transaction.Iter.Res first;
 
@@ -48,7 +47,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
     }
 
     private void sendAsync(final TransactionProto.Transaction.Iter.Req req) {
-        currentBatchCollector = new BatchResponseCollector();
+        currentBatchCollector = new ResponseCollector();
         rpcTransaction.iterateAsync(req, currentBatchCollector);
     }
 

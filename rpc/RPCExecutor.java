@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.response.SingleResponseCollector;
+import grakn.client.rpc.response.ResponseCollector;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 
@@ -30,10 +30,10 @@ import java.util.function.Function;
 
 public class RPCExecutor {
 
-    private final SingleResponseCollector collector;
+    private final ResponseCollector collector;
 
     public RPCExecutor(final RPCTransaction rpcTransaction, final TransactionProto.Transaction.Req req) {
-        collector = new SingleResponseCollector();
+        collector = new ResponseCollector();
         rpcTransaction.executeAsync(req, collector);
     }
 
@@ -41,12 +41,12 @@ public class RPCExecutor {
         return collector.isDone();
     }
 
-    public TransactionProto.Transaction.Res receive() throws InterruptedException {
-        return collector.receive();
+    public TransactionProto.Transaction.Res take() throws InterruptedException {
+        return collector.take();
     }
 
-    public TransactionProto.Transaction.Res receive(final long timeout, final TimeUnit unit) throws InterruptedException {
-        return collector.receive(timeout, unit);
+    public TransactionProto.Transaction.Res take(final long timeout, final TimeUnit unit) throws InterruptedException {
+        return collector.take(timeout, unit);
     }
 
     public <T> QueryFuture<T> getFuture() {
@@ -84,7 +84,7 @@ public class RPCExecutor {
         @Override
         public T get() {
             try {
-                final TransactionProto.Transaction.Res res = executor.receive();
+                final TransactionProto.Transaction.Res res = executor.take();
                 return responseReader == null ? null : responseReader.apply(res.getQueryRes());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -95,7 +95,7 @@ public class RPCExecutor {
         @Override
         public T get(final long timeout, final TimeUnit unit) {
             try {
-                final TransactionProto.Transaction.Res res = executor.receive(timeout, unit);
+                final TransactionProto.Transaction.Res res = executor.take(timeout, unit);
                 return responseReader == null ? null : responseReader.apply(res.getQueryRes());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

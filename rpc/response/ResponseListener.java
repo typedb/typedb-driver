@@ -90,7 +90,8 @@ public class ResponseListener implements StreamObserver<TransactionProto.Transac
             }
         }
 
-        if (currentCollector.onResponse(res)) {
+        currentCollector.onResponse(res);
+        if (currentCollector.isDone()) {
             currentCollector = null;
         }
     }
