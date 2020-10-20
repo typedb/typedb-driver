@@ -40,23 +40,13 @@ public class GraknClient implements Client {
     }
 
     public GraknClient(final String address) {
-        channel = ManagedChannelBuilder.forTarget(address)
-                .usePlaintext().build();
+        channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new RPCDatabaseManager(channel);
     }
 
-    public void close() {
-        channel.shutdown();
-        try {
-            channel.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
     @Override
-    public boolean isOpen() {
-        return !channel.isShutdown() && !channel.isTerminated();
+    public Session session(final String databaseName, final Session.Type type) {
+        return session(databaseName, type, new GraknOptions());
     }
 
     @Override
@@ -68,4 +58,19 @@ public class GraknClient implements Client {
     public DatabaseManager databases() {
         return databases;
     }
+
+    @Override
+    public boolean isOpen() {
+        return !channel.isShutdown();
+    }
+
+    @Override
+    public void close() {
+        try {
+            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }

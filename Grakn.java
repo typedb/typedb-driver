@@ -36,21 +36,15 @@ public interface Grakn {
 
     interface Client extends AutoCloseable {
 
-        boolean isOpen();
-
-        void close();
-
-        default Session session(String databaseName) {
-            return session(databaseName, DATA);
-        }
-
-        default Session session(String databaseName, Session.Type type) {
-            return session(databaseName, type, new GraknOptions());
-        }
+        Session session(String databaseName, Session.Type type);
 
         Session session(String databaseName, Session.Type type, GraknOptions options);
 
         DatabaseManager databases();
+
+        boolean isOpen();
+
+        void close();
     }
 
     interface DatabaseManager {
