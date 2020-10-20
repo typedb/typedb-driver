@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GraknClient implements Client {
 
-    public static final String DEFAULT_URI = "localhost:48555";
+    public static final String DEFAULT_URI = "localhost:1729";
 
     private final ManagedChannel channel;
     private final DatabaseManager databases;
