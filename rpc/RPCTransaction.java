@@ -171,7 +171,6 @@ public class RPCTransaction implements Transaction {
     }
 
     private void dispatch(final TransactionProto.Transaction.Req request, final ResponseCollector collector) {
-
         // We must add the response collectors in exact the same order we send the requests
         synchronized (this) {
             synchronized (responseListener) {
@@ -183,4 +182,5 @@ public class RPCTransaction implements Transaction {
             requestSender.onNext(request);
         }
     }
+
 }

@@ -33,22 +33,22 @@ import java.util.function.Supplier;
 class RPCDatabaseManager implements DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingStub;
 
-    RPCDatabaseManager(ManagedChannel channel) {
+    RPCDatabaseManager(final ManagedChannel channel) {
         blockingStub = GraknGrpc.newBlockingStub(channel);
     }
 
     @Override
-    public boolean contains(String name) {
+    public boolean contains(final String name) {
         return request(() -> blockingStub.databaseContains(DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build()).getContains());
     }
 
     @Override
-    public void create(String name) {
+    public void create(final String name) {
         request(() -> blockingStub.databaseCreate(DatabaseProto.Database.Create.Req.newBuilder().setName(name).build()));
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(final String name) {
         request(() -> blockingStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build()));
     }
 
