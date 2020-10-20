@@ -20,7 +20,6 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grakn.client.Grakn.Database;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
@@ -32,22 +31,24 @@ import static grakn.client.common.ProtoBuilder.options;
 
 public class RPCSession implements Session {
 
-    private final ManagedChannel channel;
     private final String databaseName;
+    private final Type type;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
-//    private final GraknGrpc.GraknStub asyncGrpcStub;
+    private final GraknGrpc.GraknStub asyncGrpcStub;
     private final ByteString sessionId;
     private boolean isOpen;
 
-    RPCSession(final ManagedChannel channel, final String databaseName, final Session.Type type, final GraknOptions options) {
+    RPCSession(final ManagedChannel channel, final String databaseName, final Type type, final GraknOptions options) {
         this.databaseName = databaseName;
-        this.channel = channel;
+        this.type = type;
         this.blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
-//        this.asyncGrpcStub = GraknGrpc.newStub(channel);
+        this.asyncGrpcStub = GraknGrpc.newStub(channel);
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(databaseName).setType(sessionType(type)).setOptions(options(options)).build();
 
+        // TODO: In theory we could generate a client-side session ID and remove the need to block here to wait for
+        //       the server-side session ID to be generated.
         sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionID();
         isOpen = true;
     }
@@ -60,6 +61,11 @@ public class RPCSession implements Session {
     @Override
     public Transaction transaction(final Transaction.Type type, final GraknOptions options) {
         return new RPCTransaction(this, sessionId, type, options);
+    }
+
+    @Override
+    public Type type() {
+        return type;
     }
 
     @Override
@@ -78,12 +84,12 @@ public class RPCSession implements Session {
     }
 
     @Override
-    public Database database() {
-        return new RPCDatabase(databaseName);
+    public String databaseName() {
+        return databaseName;
     }
 
-    ManagedChannel getChannel() {
-        return channel;
+    GraknGrpc.GraknStub getAsyncGrpcStub() {
+        return asyncGrpcStub;
     }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {

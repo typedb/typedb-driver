@@ -20,23 +20,20 @@
 package grakn.client.test.behaviour.connection.session;
 
 import grakn.client.Grakn.Session;
-import grakn.client.Grakn.Transaction;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
+import static grakn.client.Grakn.Session.Type.DATA;
 import static grakn.client.Grakn.Session.Type.SCHEMA;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessions;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactions;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactionsParallel;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
 import static grakn.common.collection.Collections.list;
 import static java.util.Objects.isNull;
@@ -65,7 +62,7 @@ public class SessionSteps {
     @When("connection open (data )session(s) for database(s):")
     public void connection_open_data_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name));
+            sessions.add(client.session(name, DATA));
         }
     }
 
@@ -74,7 +71,7 @@ public class SessionSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
-            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name), threadPool));
+            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name, DATA), threadPool));
         }
     }
 
@@ -128,7 +125,7 @@ public class SessionSteps {
         Iterator<Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().database().name());
+            assertEquals(name, sessionIter.next().databaseName());
         }
     }
 
@@ -141,7 +138,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database().name());
+                assertEquals(name, session.databaseName());
                 return null;
             });
         }
