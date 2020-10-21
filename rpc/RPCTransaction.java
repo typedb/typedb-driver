@@ -23,17 +23,17 @@ import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
-import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concepts;
 import grakn.client.query.Query;
-import grakn.client.rpc.response.ResponseCollector;
-import grakn.client.rpc.response.ResponseListener;
 import grakn.protocol.TransactionProto;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
@@ -46,7 +46,7 @@ public class RPCTransaction implements Transaction {
     private final Concepts concepts;
     private final Query query;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final ResponseListener responseObserver;
+    private final BlockingQueue<RPCResponseAccumulator> collectorQueue;
     private final AtomicBoolean isOpen;
 
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
@@ -54,20 +54,41 @@ public class RPCTransaction implements Transaction {
             this.type = type;
             concepts = new Concepts(this);
             query = new Query(this);
+            collectorQueue = new LinkedBlockingQueue<>();
 
-            responseObserver = new ResponseListener();
+            final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
             requestObserver = session.getAsyncGrpcStub().transaction(responseObserver);
 
-            final TransactionProto.Transaction.Req openTxReq = TransactionProto.Transaction.Req.newBuilder()
+            final TransactionProto.Transaction.Req openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
                             .setSessionID(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
                             .setOptions(options(options))).build();
-
-            execute(openTxReq);
+            execute(openRequest);
             isOpen = new AtomicBoolean(true);
         }
+    }
+
+    private StreamObserver<TransactionProto.Transaction.Res> createResponseObserver() {
+        return new StreamObserver<TransactionProto.Transaction.Res>() {
+            @Override
+            public synchronized void onNext(final TransactionProto.Transaction.Res value) {
+                processResponse(new RPCResponse.Ok(value));
+            }
+
+            @Override
+            public void onError(final Throwable throwable) {
+                assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
+                while (collectorQueue.peek() != null)
+                    processResponse(new RPCResponse.Error((StatusRuntimeException) throwable));
+            }
+
+            @Override
+            public void onCompleted() {
+                while (collectorQueue.peek() != null) processResponse(new RPCResponse.Completed());
+            }
+        };
     }
 
     @Override
@@ -95,7 +116,6 @@ public class RPCTransaction implements Transaction {
         final TransactionProto.Transaction.Req commitReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance()).build();
-
         execute(commitReq);
         close();
     }
@@ -105,26 +125,15 @@ public class RPCTransaction implements Transaction {
         final TransactionProto.Transaction.Req rollbackReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance()).build();
-
         execute(rollbackReq);
     }
 
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            try {
-                requestObserver.onCompleted();
-                // TODO: do we need this second line?
-//            responseObserver.onCompleted();
-            } catch (IllegalStateException e) {
-                // TODO: do we still need to catch this?
-                //IGNORED
-                //This is needed to handle the fact that:
-                //1. Commits can lead to transaction closures and
-                //2. Error can lead to connection closures but the transaction may stay open
-                //When this occurs a "half-closed" state is thrown which we can safely ignore
-            }
+            requestObserver.onCompleted();
         }
+    }
 
     public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req request) {
         return executeAsync(request, res -> res).get();
@@ -153,19 +162,18 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    private synchronized void dispatch(final TransactionProto.Transaction.Req request, final ResponseCollector collector) {
-        // We must add the response collectors in exact the same order we send the requests
-        responseObserver.addCollector(collector); // Must add collector first to be watertight
+    private synchronized void dispatchRequest(final TransactionProto.Transaction.Req request, final RPCResponseAccumulator collector) {
+        // We must add the response collectors in the exact same order we send the requests
+        // TODO: this doesn't seem like it should be true
+        collectorQueue.add(collector);
         requestObserver.onNext(request);
-//        synchronized (this) {
-//            synchronized (responseObserver) {
-//                if (responseObserver.isTerminated()) {
-//                    throw new GraknClientException(CONNECTION_CLOSED);
-//                }
-//                responseObserver.addCollector(collector); // Must add collector first to be watertight
-//            }
-//            requestObserver.onNext(request);
-//        }
     }
 
+    private void processResponse(final RPCResponse res) {
+        // TODO: This probably doesn't work if we send a slow query followed by a fast query down the same transaction.
+        final RPCResponseAccumulator currentCollector = collectorQueue.peek();
+        assert currentCollector != null;
+        currentCollector.onResponse(res);
+        if (currentCollector.isDone()) collectorQueue.poll();
+    }
 }
