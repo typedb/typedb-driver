@@ -134,46 +134,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
             default:
-                return res;
-        }
-    }
-
-    public static class QueryStreamFuture<T> implements QueryFuture<Stream<T>> {
-        private final RPCIterator iterator;
-        private final Function<QueryProto.Query.Iter.Res, T> responseReader;
-
-        public QueryStreamFuture(final RPCIterator iterator, final Function<QueryProto.Query.Iter.Res, T> responseReader) {
-            this.iterator = iterator;
-            this.responseReader = responseReader;
-        }
-
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isDone() {
-            return iterator.isStarted();
-        }
-
-        @Override
-        public Stream<T> get() {
-            iterator.waitForStart();
-            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
-                    .map(res -> responseReader.apply(res.getQueryIterRes()));
-        }
-
-        @Override
-        public Stream<T> get(long timeout, TimeUnit unit) {
-            iterator.waitForStart(timeout, unit);
-            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
-                    .map(res -> responseReader.apply(res.getQueryIterRes()));
+                return responseReader.apply(res);
         }
     }
 }
