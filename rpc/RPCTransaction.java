@@ -125,36 +125,31 @@ public class RPCTransaction implements Transaction {
                 //When this occurs a "half-closed" state is thrown which we can safely ignore
             }
         }
-    }
 
     public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req request) {
-        try {
-            try (ThreadTrace trace = traceOnThread("execute")) {
-                ResponseCollector collector = new ResponseCollector();
-                dispatch(request, collector);
-                return collector.take();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new GraknClientException(e);
-        }
+        return executeAsync(request, res -> res).get();
     }
 
-    public Stream<TransactionProto.Transaction.Iter.Res> iterate(final TransactionProto.Transaction.Iter.Req request) {
-        return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> new RPCIterator(this, request)).spliterator(), false);
-    }
-
-    void executeAsync(final TransactionProto.Transaction.Req request, final ResponseCollector collector) {
+    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("executeAsync")) {
-            dispatch(request, collector);
+            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
+            dispatchRequest(request, collector);
+            return new QueryFuture.Execute<>(collector, responseReader);
         }
     }
 
-    void iterateAsync(final TransactionProto.Transaction.Iter.Req iterRequest, final ResponseCollector collector) {
+    public <T> Stream<T> iterate(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
+        return iterateAsync(iterRequest, responseReader).get();
+    }
+
+    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("iterateAsync")) {
             final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                     .setIterReq(iterRequest).build();
-            dispatch(request, collector);
+            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
+            final RPCIterator<T> iterator = new RPCIterator<>(request, responseReader, requestObserver, collector);
+            collectorQueue.add(collector);
+            return new QueryFuture.Stream<>(iterator);
         }
     }
 

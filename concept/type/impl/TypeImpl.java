@@ -43,7 +43,6 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
@@ -265,13 +264,13 @@ public abstract class TypeImpl implements Type {
         Stream<TypeImpl> stream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
+            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
         Stream<ThingImpl> thingStream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).map(res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
+            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
         TypeMethod.Res execute(final TypeMethod.Req.Builder method) {

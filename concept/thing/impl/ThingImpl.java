@@ -280,13 +280,13 @@ public abstract class ThingImpl implements Thing {
         Stream<ThingImpl> stream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request).map(res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodThingIterRes())));
+            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodThingIterRes())));
         }
 
         Stream<TypeImpl> typeStream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodThingIterRes())));
+            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodThingIterRes())));
         }
 
         ThingMethod.Res execute(final ThingMethod.Req.Builder method) {

@@ -24,8 +24,6 @@ import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.rpc.QueryFuture;
-import grakn.client.rpc.RPCExecutor;
-import grakn.client.rpc.RPCIterator;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
@@ -57,7 +55,7 @@ public final class Query {
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(
                 QueryProto.Graql.Match.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getMatchIterRes().getAnswer()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryIterRes().getMatchIterRes().getAnswer()));
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
@@ -67,7 +65,7 @@ public final class Query {
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
         final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(
                 QueryProto.Graql.Insert.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getInsertIterRes().getAnswer()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryIterRes().getInsertIterRes().getAnswer()));
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query) {
@@ -85,7 +83,7 @@ public final class Query {
     public QueryFuture<List<ThingType>> define(final GraqlDefine query, final GraknOptions options) {
         final QueryProto.Query.Req.Builder request = newRequest().setDefineReq(
                 QueryProto.Graql.Define.Req.newBuilder().setQuery(query.toString()));
-        return runQuery(request, options, res -> res.getDefineRes().getThingTypeList().stream()
+        return runQuery(request, options, res -> res.getQueryRes().getDefineRes().getThingTypeList().stream()
                 .map(ThingTypeImpl::of).collect(Collectors.toList()));
     }
 
@@ -108,23 +106,20 @@ public final class Query {
     private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options))).build();
-        final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
-        return rpcExecutor.getFuture();
+        return rpcTransaction.executeAsync(req, res -> null);
     }
 
     private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
-                                        final Function<QueryProto.Query.Res, T> responseReader) {
+                                        final Function<TransactionProto.Transaction.Res, T> responseReader) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options))).build();
-        final RPCExecutor rpcExecutor = new RPCExecutor(rpcTransaction, req);
-        return rpcExecutor.getFuture(responseReader);
+        return rpcTransaction.executeAsync(req, responseReader);
     }
 
     private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraknOptions options,
-                                                    final Function<QueryProto.Query.Iter.Res, T> responseReader) {
+                                                    final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
         final TransactionProto.Transaction.Iter.Req req = TransactionProto.Transaction.Iter.Req.newBuilder()
                 .setQueryIterReq(request.setOptions(options(options))).build();
-        final RPCIterator rpcIterator = new RPCIterator(rpcTransaction, req);
-        return rpcIterator.getFuture(responseReader);
+        return rpcTransaction.iterateAsync(req, responseReader);
     }
 }
