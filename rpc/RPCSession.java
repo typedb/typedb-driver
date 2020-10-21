@@ -27,6 +27,8 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.ManagedChannel;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static grakn.client.common.ProtoBuilder.options;
 
 public class RPCSession implements Session {
@@ -36,7 +38,7 @@ public class RPCSession implements Session {
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
     private final GraknGrpc.GraknStub asyncGrpcStub;
     private final ByteString sessionId;
-    private boolean isOpen;
+    private final AtomicBoolean isOpen;
 
     RPCSession(final ManagedChannel channel, final String databaseName, final Type type, final GraknOptions options) {
         this.databaseName = databaseName;
@@ -47,10 +49,8 @@ public class RPCSession implements Session {
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(databaseName).setType(sessionType(type)).setOptions(options(options)).build();
 
-        // TODO: In theory we could generate a client-side session ID and remove the need to block here to wait for
-        //       the server-side session ID to be generated.
         sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionID();
-        isOpen = true;
+        isOpen = new AtomicBoolean(true);
     }
 
     @Override
@@ -70,17 +70,14 @@ public class RPCSession implements Session {
 
     @Override
     public boolean isOpen() {
-        return isOpen;
+        return isOpen.get();
     }
 
+    @Override
     public void close() {
-        if (!isOpen) return;
-        // TODO: this is dangerous - we can call close() on two concurrent threads and cause havoc, right?
-        //       isOpen should be changed to an AtomicBoolean that we update at the start of this method
-        final SessionProto.Session.Close.Req closeReq = SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build();
-
-        blockingGrpcStub.sessionClose(closeReq);
-        isOpen = false;
+        if (isOpen.compareAndSet(true, false)) {
+            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build());
+        }
     }
 
     @Override
