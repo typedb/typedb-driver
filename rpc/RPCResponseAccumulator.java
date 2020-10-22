@@ -36,7 +36,7 @@ class RPCResponseAccumulator {
 
     void onResponse(final RPCResponse rpcResponse) {
         received.add(rpcResponse);
-        if (!(rpcResponse instanceof RPCResponse.Ok) || isLastResponse(rpcResponse.get())) isDone.compareAndSet(false, true);
+        if (!(rpcResponse instanceof RPCResponse.Ok) || isLastResponse(rpcResponse.read())) isDone.compareAndSet(false, true);
     }
 
     boolean isDone() {
@@ -44,11 +44,11 @@ class RPCResponseAccumulator {
     }
 
     TransactionProto.Transaction.Res take() throws InterruptedException {
-        return received.take().get();
+        return received.take().read();
     }
 
     TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException {
-        return received.poll(timeout, unit).get();
+        return received.poll(timeout, unit).read();
     }
 
     private boolean isLastResponse(final TransactionProto.Transaction.Res response) {

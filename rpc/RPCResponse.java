@@ -30,7 +30,7 @@ import static grakn.common.util.Objects.className;
 
 abstract class RPCResponse {
 
-    abstract TransactionProto.Transaction.Res get();
+    abstract TransactionProto.Transaction.Res read();
 
     static class Ok extends RPCResponse {
         private final TransactionProto.Transaction.Res response;
@@ -40,7 +40,7 @@ abstract class RPCResponse {
         }
 
         @Override
-        TransactionProto.Transaction.Res get() {
+        TransactionProto.Transaction.Res read() {
             return response;
         }
 
@@ -58,7 +58,7 @@ abstract class RPCResponse {
         }
 
         @Override
-        TransactionProto.Transaction.Res get() {
+        TransactionProto.Transaction.Res read() {
             // TODO: parse different GRPC errors into specific GraknClientException
             throw new GraknClientException(error);
         }
@@ -72,7 +72,7 @@ abstract class RPCResponse {
     static class Completed extends RPCResponse {
 
         @Override
-        TransactionProto.Transaction.Res get() {
+        TransactionProto.Transaction.Res read() {
             // TODO: I'm not sure this is right.
             return null;
         }
