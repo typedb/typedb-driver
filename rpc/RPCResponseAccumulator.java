@@ -53,7 +53,6 @@ public class RPCResponseAccumulator {
 
     boolean isLastResponse(final TransactionProto.Transaction.Res response) {
         if (!response.hasIterRes()) return true;
-        final TransactionProto.Transaction.Iter.Res iterRes = response.getIterRes();
-        return iterRes.getIteratorID() != 0 || iterRes.getDone();
+        return response.getIterRes().getDone();
     }
 }
