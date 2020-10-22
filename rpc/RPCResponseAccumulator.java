@@ -26,32 +26,32 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class RPCResponseAccumulator {
+class RPCResponseAccumulator {
     private final AtomicBoolean isDone;
     private final BlockingQueue<RPCResponse> received = new LinkedBlockingQueue<>();
 
-    public RPCResponseAccumulator() {
+    RPCResponseAccumulator() {
         isDone = new AtomicBoolean(false);
     }
 
-    public void onResponse(final RPCResponse rpcResponse) {
+    void onResponse(final RPCResponse rpcResponse) {
         received.add(rpcResponse);
         if (!(rpcResponse instanceof RPCResponse.Ok) || isLastResponse(rpcResponse.get())) isDone.compareAndSet(false, true);
     }
 
-    public boolean isDone() {
+    boolean isDone() {
         return isDone.get();
     }
 
-    public TransactionProto.Transaction.Res take() throws InterruptedException {
+    TransactionProto.Transaction.Res take() throws InterruptedException {
         return received.take().get();
     }
 
-    public TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException {
+    TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException {
         return received.poll(timeout, unit).get();
     }
 
-    boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+    private boolean isLastResponse(final TransactionProto.Transaction.Res response) {
         if (!response.hasIterRes()) return true;
         return response.getIterRes().getDone();
     }
