@@ -23,8 +23,8 @@ import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
-import grakn.client.concept.Concepts;
-import grakn.client.query.Query;
+import grakn.client.concept.ConceptManager;
+import grakn.client.query.QueryManager;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -43,8 +43,8 @@ import static grakn.client.common.ProtoBuilder.tracingData;
 public class RPCTransaction implements Transaction {
 
     private final Transaction.Type type;
-    private final Concepts concepts;
-    private final Query query;
+    private final ConceptManager conceptManager;
+    private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final BlockingQueue<RPCResponseAccumulator> collectorQueue;
     private final AtomicBoolean isOpen;
@@ -52,8 +52,8 @@ public class RPCTransaction implements Transaction {
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.type = type;
-            concepts = new Concepts(this);
-            query = new Query(this);
+            conceptManager = new ConceptManager(this);
+            queryManager = new QueryManager(this);
             collectorQueue = new LinkedBlockingQueue<>();
 
             final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
@@ -102,13 +102,13 @@ public class RPCTransaction implements Transaction {
     }
 
     @Override
-    public Concepts concepts() {
-        return concepts;
+    public ConceptManager concepts() {
+        return conceptManager;
     }
 
     @Override
-    public Query query() {
-        return query;
+    public QueryManager query() {
+        return queryManager;
     }
 
     @Override

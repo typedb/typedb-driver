@@ -44,11 +44,11 @@ import static grakn.client.common.ProtoBuilder.tracingData;
 import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
-public final class Concepts {
+public final class ConceptManager {
 
     private final RPCTransaction rpcTransaction;
 
-    public Concepts(final RPCTransaction rpcTransaction) {
+    public ConceptManager(final RPCTransaction rpcTransaction) {
         this.rpcTransaction = rpcTransaction;
     }
 

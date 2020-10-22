@@ -40,11 +40,11 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.ProtoBuilder.options;
 
-public final class Query {
+public final class QueryManager {
 
     private final RPCTransaction rpcTransaction;
 
-    public Query(final RPCTransaction rpcTransaction) {
+    public QueryManager(final RPCTransaction rpcTransaction) {
         this.rpcTransaction = rpcTransaction;
     }
 
