@@ -226,7 +226,7 @@ public class ClientQueryTest {
 
     private void localhostGraknTx(Consumer<Transaction> fn) {
         String database = "grakn";
-        try (Session session = graknClient.session(database)) {
+        try (Session session = graknClient.session(database, Session.Type.DATA)) {
             try (Transaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }
