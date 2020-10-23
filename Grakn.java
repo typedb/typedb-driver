@@ -62,7 +62,7 @@ public interface Grakn {
 
         void close();
 
-        String databaseName();
+        String database();
 
         enum Type {
             DATA(0),

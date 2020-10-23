@@ -81,7 +81,7 @@ public class RPCSession implements Session {
     }
 
     @Override
-    public String databaseName() {
+    public String database() {
         return databaseName;
     }
 
