@@ -27,6 +27,7 @@ import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
@@ -88,6 +89,11 @@ public abstract class ThingImpl implements Thing {
     @Override
     public ThingImpl asThing() {
         return this;
+    }
+
+    @Override
+    public final TypeImpl asType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
     }
 
     @Override
@@ -256,6 +262,11 @@ public abstract class ThingImpl implements Thing {
         @Override
         public final ThingImpl.Remote asThing() {
             return this;
+        }
+
+        @Override
+        public final TypeImpl.Remote asType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
         }
 
         @Override
