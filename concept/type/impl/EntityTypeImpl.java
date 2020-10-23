@@ -25,7 +25,6 @@ import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.EntityType.Create;
-import grakn.protocol.ConceptProto.TypeMethod;
 
 import java.util.stream.Stream;
 
@@ -91,7 +90,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final EntityImpl create() {
-            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder()
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setEntityTypeCreateReq(Create.Req.getDefaultInstance());
             return ThingImpl.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
         }

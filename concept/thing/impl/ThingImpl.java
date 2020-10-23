@@ -36,7 +36,6 @@ import grakn.protocol.ConceptProto.Thing.Delete;
 import grakn.protocol.ConceptProto.Thing.GetPlays;
 import grakn.protocol.ConceptProto.Thing.GetRelations;
 import grakn.protocol.ConceptProto.Thing.UnsetHas;
-import grakn.protocol.ConceptProto.ThingMethod;
 import grakn.protocol.TransactionProto;
 
 import java.util.Arrays;
@@ -159,24 +158,24 @@ public abstract class ThingImpl implements Thing {
         }
 
         public ThingTypeImpl getType() {
-            final ThingMethod.Req.Builder method = ThingMethod.Req.newBuilder()
+            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance());
             return TypeImpl.of(execute(method).getThingGetTypeRes().getThingType()).asThingType();
         }
 
         @Override
         public final boolean isInferred() {
-            final ThingMethod.Req.Builder method = ThingMethod.Req.newBuilder()
+            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingIsInferredReq(ConceptProto.Thing.IsInferred.Req.getDefaultInstance());
             return execute(method).getThingIsInferredRes().getInferred();
         }
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(AttributeType... attributeTypes) {
-            final ThingMethod.Iter.Req.Builder method = ThingMethod.Iter.Req.newBuilder()
-                    .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder()
+            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+                    .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder()
                             .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
-            return stream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(ThingImpl::asAttribute);
+            return stream(method, res -> res.getThingGetHasRes().getAttribute()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -206,46 +205,46 @@ public abstract class ThingImpl implements Thing {
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
-            final ThingMethod.Iter.Req.Builder method = ThingMethod.Iter.Req.newBuilder()
-                    .setThingGetHasIterReq(ConceptProto.Thing.GetHas.Iter.Req.newBuilder().setKeysOnly(onlyKey));
-            return stream(method, res -> res.getThingGetHasIterRes().getAttribute()).map(ThingImpl::asAttribute);
+            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+                    .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey));
+            return stream(method, res -> res.getThingGetHasRes().getAttribute()).map(ThingImpl::asAttribute);
         }
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
             return typeStream(
-                    ThingMethod.Iter.Req.newBuilder().setThingGetPlaysIterReq(
-                            GetPlays.Iter.Req.getDefaultInstance()),
-                    res -> res.getThingGetPlaysIterRes().getRoleType()
+                    ConceptProto.Thing.Req.newBuilder().setThingGetPlaysReq(
+                            GetPlays.Req.getDefaultInstance()),
+                    res -> res.getThingGetPlaysRes().getRoleType()
             ).map(TypeImpl::asRoleType);
         }
 
         @Override
         public final Stream<RelationImpl> getRelations(final RoleType... roleTypes) {
             return stream(
-                    ThingMethod.Iter.Req.newBuilder().setThingGetRelationsIterReq(
-                            GetRelations.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getThingGetRelationsIterRes().getRelation()
+                    ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
+                            GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
+                    res -> res.getThingGetRelationsRes().getRelation()
             ).map(ThingImpl::asRelation);
         }
 
         @Override
         public final void setHas(Attribute<?> attribute) {
-            execute(ThingMethod.Req.newBuilder().setThingSetHasReq(
+            execute(ConceptProto.Thing.Req.newBuilder().setThingSetHasReq(
                     ConceptProto.Thing.SetHas.Req.newBuilder().setAttribute(thing(attribute))
             ));
         }
 
         @Override
         public final void unsetHas(Attribute<?> attribute) {
-            execute(ThingMethod.Req.newBuilder().setThingUnsetHasReq(
+            execute(ConceptProto.Thing.Req.newBuilder().setThingUnsetHasReq(
                     UnsetHas.Req.newBuilder().setAttribute(thing(attribute))
             ));
         }
 
         @Override
         public final void delete() {
-            execute(ThingMethod.Req.newBuilder().setThingDeleteReq(Delete.Req.getDefaultInstance()));
+            execute(ConceptProto.Thing.Req.newBuilder().setThingDeleteReq(Delete.Req.getDefaultInstance()));
         }
 
         @Override
@@ -277,22 +276,22 @@ public abstract class ThingImpl implements Thing {
             return rpcTransaction;
         }
 
-        Stream<ThingImpl> stream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodThingIterRes())));
-        }
-
-        Stream<TypeImpl> typeStream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodThingIterRes())));
-        }
-
-        ThingMethod.Res execute(final ThingMethod.Req.Builder method) {
+        Stream<ThingImpl> stream(final ConceptProto.Thing.Req.Builder method, final Function<ConceptProto.Thing.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setThingMethodReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.execute(request).getThingMethodRes();
+                    .setThingReq(method.setIid(iid(iid))).build();
+            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getThingRes())));
+        }
+
+        Stream<TypeImpl> typeStream(final ConceptProto.Thing.Req.Builder method, final Function<ConceptProto.Thing.Res, ConceptProto.Type> typeGetter) {
+            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                    .setThingReq(method.setIid(iid(iid))).build();
+            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getThingRes())));
+        }
+
+        ConceptProto.Thing.Res execute(final ConceptProto.Thing.Req.Builder method) {
+            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                    .setThingReq(method.setIid(iid(iid))).build();
+            return rpcTransaction.execute(request).getThingRes();
         }
 
         @Override

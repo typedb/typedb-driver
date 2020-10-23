@@ -35,24 +35,22 @@ class RPCIterator<T> extends AbstractIterator<T> {
     private volatile boolean started;
     private T first;
 
-    private final TransactionProto.Transaction.Req request;
-    private final Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
+    private final TransactionProto.Transaction.Req initialRequest;
+    private final Function<TransactionProto.Transaction.Res, T> responseReader;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final RPCResponseAccumulator responseCollector;
+    private final RPCResponseCollector.Multiple responseCollector;
 
-    RPCIterator(final TransactionProto.Transaction.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader,
-                       final StreamObserver<TransactionProto.Transaction.Req> requestObserver, final RPCResponseAccumulator responseCollector) {
-        this.request = req;
+    RPCIterator(final TransactionProto.Transaction.Req initialRequest, final Function<TransactionProto.Transaction.Res, T> responseReader,
+                       final StreamObserver<TransactionProto.Transaction.Req> requestObserver, final RPCResponseCollector.Multiple responseCollector) {
+        this.initialRequest = initialRequest;
         this.responseReader = responseReader;
         this.requestObserver = requestObserver;
         this.responseCollector = responseCollector;
     }
 
-    private void nextBatch(final int iteratorID) {
-        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                .setIterReq(TransactionProto.Transaction.Iter.Req.newBuilder()
-                        .setIteratorID(iteratorID)).build();
-        requestObserver.onNext(request);
+    private void nextBatch(final String requestId) {
+        final TransactionProto.Transaction.Req nextRequest = TransactionProto.Transaction.Req.newBuilder().setId(requestId).build();
+        requestObserver.onNext(nextRequest);
     }
 
     boolean isStarted() {
@@ -61,18 +59,19 @@ class RPCIterator<T> extends AbstractIterator<T> {
 
     synchronized void startIterating() {
         if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        requestObserver.onNext(request);
+        requestObserver.onNext(initialRequest);
         first = computeNext();
     }
 
     synchronized void startIterating(final long timeout, final TimeUnit unit) {
         if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        requestObserver.onNext(request);
+        requestObserver.onNext(initialRequest);
         first = computeNext(timeout, unit);
     }
 
     @Override
     protected T computeNext() {
+        // TODO: This is horrible
         return computeNextInternal(collector -> {
             try {
                 return collector.take();
@@ -94,23 +93,25 @@ class RPCIterator<T> extends AbstractIterator<T> {
         });
     }
 
-    private T computeNextInternal(Function<RPCResponseAccumulator, TransactionProto.Transaction.Res> awaiter) {
+    private T computeNextInternal(Function<RPCResponseCollector, TransactionProto.Transaction.Res> awaiter) {
         if (first != null) {
             final T value = first;
             first = null;
             return value;
         }
 
-        final TransactionProto.Transaction.Iter.Res res = awaiter.apply(responseCollector).getIterRes();
+        final TransactionProto.Transaction.Res res = awaiter.apply(responseCollector);
         started = true;
         switch (res.getResCase()) {
-            case ITERATORID:
-                nextBatch(res.getIteratorID());
-                return computeNext();
             case DONE:
-                return endOfData();
+                if (res.getDone()) {
+                    return endOfData();
+                } else {
+                    nextBatch(initialRequest.getId());
+                    return computeNext();
+                }
             case RES_NOT_SET:
-                throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
+                throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
                 return responseReader.apply(res);
         }

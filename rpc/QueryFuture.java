@@ -35,10 +35,10 @@ public abstract class QueryFuture<T> implements Future<T> {
     public abstract T get(long timeout, TimeUnit unit);
 
     static class Execute<T> extends QueryFuture<T> {
-        private final RPCResponseAccumulator collector;
+        private final RPCResponseCollector collector;
         private final Function<TransactionProto.Transaction.Res, T> responseReader;
 
-        public Execute(final RPCResponseAccumulator collector, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+        public Execute(final RPCResponseCollector collector, final Function<TransactionProto.Transaction.Res, T> responseReader) {
             this.collector = collector;
             this.responseReader = responseReader;
         }

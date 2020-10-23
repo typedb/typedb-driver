@@ -26,6 +26,7 @@ import grakn.client.GraknOptions;
 import grakn.client.concept.ConceptManager;
 import grakn.client.query.QueryManager;
 import grakn.protocol.TransactionProto;
+import grakn.protocol.TransactionServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
@@ -46,7 +47,7 @@ public class RPCTransaction implements Transaction {
     private final ConceptManager conceptManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final BlockingQueue<RPCResponseAccumulator> collectorQueue;
+    private final BlockingQueue<RPCResponseCollector> collectorQueue;
     private final AtomicBoolean isOpen;
 
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
@@ -57,7 +58,7 @@ public class RPCTransaction implements Transaction {
             collectorQueue = new LinkedBlockingQueue<>();
 
             final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
-            requestObserver = session.getAsyncGrpcStub().transaction(responseObserver);
+            requestObserver = TransactionServiceGrpc.newStub(session.getChannel()).stream(responseObserver);
 
             final TransactionProto.Transaction.Req openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -141,28 +142,26 @@ public class RPCTransaction implements Transaction {
 
     public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("executeAsync")) {
-            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
+            final RPCResponseCollector collector = new RPCResponseCollector.Single();
             dispatchRequest(request, collector);
             return new QueryFuture.Execute<>(collector, responseReader);
         }
     }
 
-    public <T> Stream<T> iterate(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        return iterateAsync(iterRequest, responseReader).get();
+    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+        return iterateAsync(request, responseReader).get();
     }
 
-    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
+    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("iterateAsync")) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setIterReq(iterRequest).build();
-            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
+            final RPCResponseCollector.Multiple collector = new RPCResponseCollector.Multiple();
             final RPCIterator<T> iterator = new RPCIterator<>(request, responseReader, requestObserver, collector);
             collectorQueue.add(collector);
             return new QueryFuture.Stream<>(iterator);
         }
     }
 
-    private synchronized void dispatchRequest(final TransactionProto.Transaction.Req request, final RPCResponseAccumulator collector) {
+    private synchronized void dispatchRequest(final TransactionProto.Transaction.Req request, final RPCResponseCollector collector) {
         // We must add the response collectors in the exact same order we send the requests
         // TODO: this doesn't seem like it should be true
         collectorQueue.add(collector);
@@ -171,7 +170,7 @@ public class RPCTransaction implements Transaction {
 
     private void processResponse(final RPCResponse res) {
         // TODO: This probably doesn't work if we send a slow query followed by a fast query down the same transaction.
-        final RPCResponseAccumulator currentCollector = collectorQueue.peek();
+        final RPCResponseCollector currentCollector = collectorQueue.peek();
         assert currentCollector != null;
         currentCollector.onResponse(res);
         if (currentCollector.isDone()) collectorQueue.poll();

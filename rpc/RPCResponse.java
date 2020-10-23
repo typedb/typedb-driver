@@ -23,9 +23,6 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 
-import javax.annotation.Nullable;
-import java.util.Objects;
-
 import static grakn.common.util.Objects.className;
 
 abstract class RPCResponse {

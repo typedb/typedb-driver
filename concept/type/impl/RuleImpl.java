@@ -24,7 +24,6 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.Rule;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.RuleMethod;
 import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -134,12 +133,12 @@ public class RuleImpl implements Rule {
 
         @Override
         public void setLabel(final String label) {
-            execute(RuleMethod.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
+            execute(ConceptProto.Rule.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
         }
 
         @Override
         public void delete() {
-            execute(RuleMethod.Req.newBuilder().setRuleDeleteReq(ConceptProto.Rule.Delete.Req.getDefaultInstance()));
+            execute(ConceptProto.Rule.Req.newBuilder().setRuleDeleteReq(ConceptProto.Rule.Delete.Req.getDefaultInstance()));
         }
 
         @Override
@@ -175,10 +174,10 @@ public class RuleImpl implements Rule {
             return rpcTransaction;
         }
 
-        ConceptProto.RuleMethod.Res execute(final ConceptProto.RuleMethod.Req.Builder method) {
+        ConceptProto.Rule.Res execute(final ConceptProto.Rule.Req.Builder method) {
             final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setRuleMethodReq(method.setLabel(label)).build();
-            return rpcTransaction.execute(request).getRuleMethodRes();
+                    .setRuleReq(method.setLabel(label)).build();
+            return rpcTransaction.execute(request).getRuleRes();
         }
     }
 }

@@ -23,8 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
-import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
+import grakn.protocol.SessionServiceGrpc;
 import io.grpc.ManagedChannel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,23 +33,23 @@ import static grakn.client.common.ProtoBuilder.options;
 
 public class RPCSession implements Session {
 
-    private final String databaseName;
+    private final String database;
     private final Type type;
-    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
-    private final GraknGrpc.GraknStub asyncGrpcStub;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
+    private final SessionServiceGrpc.SessionServiceBlockingStub sessionService;
+    private final ManagedChannel channel;
 
-    RPCSession(final ManagedChannel channel, final String databaseName, final Type type, final GraknOptions options) {
-        this.databaseName = databaseName;
+    RPCSession(final ManagedChannel channel, final String database, final Type type, final GraknOptions options) {
+        this.database = database;
         this.type = type;
-        this.blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
-        this.asyncGrpcStub = GraknGrpc.newStub(channel);
+        this.channel = channel;
+        sessionService = SessionServiceGrpc.newBlockingStub(channel);
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                .setDatabase(databaseName).setType(sessionType(type)).setOptions(options(options)).build();
+                .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
-        sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionID();
+        sessionId = sessionService.open(openReq).getSessionID();
         isOpen = new AtomicBoolean(true);
     }
 
@@ -76,17 +76,17 @@ public class RPCSession implements Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build());
+            sessionService.close(SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build());
         }
     }
 
     @Override
     public String database() {
-        return databaseName;
+        return database;
     }
 
-    GraknGrpc.GraknStub getAsyncGrpcStub() {
-        return asyncGrpcStub;
+    ManagedChannel getChannel() {
+        return channel;
     }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {

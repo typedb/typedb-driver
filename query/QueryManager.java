@@ -53,9 +53,9 @@ public final class QueryManager {
     }
 
     public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
-        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setMatchIterReq(
-                QueryProto.Graql.Match.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryIterRes().getMatchIterRes().getAnswer()));
+        final QueryProto.Query.Req.Builder request = newIterRequest().setMatchReq(
+                QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getMatchRes().getAnswer()));
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
@@ -63,9 +63,9 @@ public final class QueryManager {
     }
 
     public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
-        final QueryProto.Query.Iter.Req.Builder request = newIterRequest().setInsertIterReq(
-                QueryProto.Graql.Insert.Iter.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryIterRes().getInsertIterRes().getAnswer()));
+        final QueryProto.Query.Req.Builder request = newIterRequest().setInsertReq(
+                QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getInsertRes().getAnswer()));
     }
 
     public QueryFuture<Void> delete(final GraqlDelete query) {
@@ -99,8 +99,8 @@ public final class QueryManager {
         return QueryProto.Query.Req.newBuilder();
     }
 
-    private static QueryProto.Query.Iter.Req.Builder newIterRequest() {
-        return QueryProto.Query.Iter.Req.newBuilder();
+    private static QueryProto.Query.Req.Builder newIterRequest() {
+        return QueryProto.Query.Req.newBuilder();
     }
 
     private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options) {
@@ -116,10 +116,10 @@ public final class QueryManager {
         return rpcTransaction.executeAsync(req, responseReader);
     }
 
-    private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Iter.Req.Builder request, final GraknOptions options,
-                                                    final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        final TransactionProto.Transaction.Iter.Req req = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setQueryIterReq(request.setOptions(options(options))).build();
+    private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
+                                                    final Function<TransactionProto.Transaction.Res, T> responseReader) {
+        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
+                .setQueryReq(request.setOptions(options(options))).build();
         return rpcTransaction.iterateAsync(req, responseReader);
     }
 }

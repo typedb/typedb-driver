@@ -26,11 +26,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class RPCResponseAccumulator {
+abstract class RPCResponseCollector {
     private final AtomicBoolean isDone;
     private final BlockingQueue<RPCResponse> received = new LinkedBlockingQueue<>();
 
-    RPCResponseAccumulator() {
+    RPCResponseCollector() {
         isDone = new AtomicBoolean(false);
     }
 
@@ -51,8 +51,22 @@ class RPCResponseAccumulator {
         return received.poll(timeout, unit).read();
     }
 
-    private boolean isLastResponse(final TransactionProto.Transaction.Res response) {
-        if (!response.hasIterRes()) return true;
-        return response.getIterRes().getDone();
+    abstract boolean isLastResponse(final TransactionProto.Transaction.Res response);
+
+    static class Single extends RPCResponseCollector {
+
+        @Override
+        boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+            return true;
+        }
+    }
+
+    // TODO: Maybe we can pull the RPCIterator into this thing?
+    static class Multiple extends RPCResponseCollector {
+
+        @Override
+        boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+            return response.getDone();
+        }
     }
 }
