@@ -104,22 +104,22 @@ public final class QueryManager {
     }
 
     private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .setQueryReq(request.setOptions(options(options))).build();
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+                .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.executeAsync(req, res -> null);
     }
 
     private <T> QueryFuture<T> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
                                         final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .setQueryReq(request.setOptions(options(options))).build();
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+                .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.executeAsync(req, responseReader);
     }
 
     private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
                                                     final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .setQueryReq(request.setOptions(options(options))).build();
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+                .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.iterateAsync(req, responseReader);
     }
 }

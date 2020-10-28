@@ -273,20 +273,20 @@ public abstract class TypeImpl implements Type {
         }
 
         Stream<TypeImpl> stream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setTypeReq(method.setLabel(label)).build();
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
             return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getTypeRes())));
         }
 
         Stream<ThingImpl> thingStream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Thing> thingGetter) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setTypeReq(method.setLabel(label)).build();
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
             return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getTypeRes())));
         }
 
         ConceptProto.Type.Res execute(final ConceptProto.Type.Req.Builder method) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setTypeReq(method.setLabel(label)).build();
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
             return rpcTransaction.execute(request).getTypeRes();
         }
 

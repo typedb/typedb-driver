@@ -24,7 +24,9 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.TransactionProto;
 import io.grpc.stub.StreamObserver;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
@@ -36,6 +38,7 @@ class RPCIterator<T> extends AbstractIterator<T> {
     private T first;
 
     private final TransactionProto.Transaction.Req initialRequest;
+    private final UUID requestId;
     private final Function<TransactionProto.Transaction.Res, T> responseReader;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final RPCResponseCollector.Multiple responseCollector;
@@ -43,13 +46,14 @@ class RPCIterator<T> extends AbstractIterator<T> {
     RPCIterator(final TransactionProto.Transaction.Req initialRequest, final Function<TransactionProto.Transaction.Res, T> responseReader,
                        final StreamObserver<TransactionProto.Transaction.Req> requestObserver, final RPCResponseCollector.Multiple responseCollector) {
         this.initialRequest = initialRequest;
+        this.requestId = UUID.fromString(initialRequest.getId());
         this.responseReader = responseReader;
         this.requestObserver = requestObserver;
         this.responseCollector = responseCollector;
     }
 
-    private void nextBatch(final String requestId) {
-        final TransactionProto.Transaction.Req nextRequest = TransactionProto.Transaction.Req.newBuilder().setId(requestId).build();
+    private void nextBatch() {
+        final TransactionProto.Transaction.Req nextRequest = TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).build();
         requestObserver.onNext(nextRequest);
     }
 
@@ -58,9 +62,11 @@ class RPCIterator<T> extends AbstractIterator<T> {
     }
 
     synchronized void startIterating() {
-        if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        requestObserver.onNext(initialRequest);
-        first = computeNext();
+        synchronized (this) {
+            if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
+            requestObserver.onNext(initialRequest);
+            first = computeNext();
+        }
     }
 
     synchronized void startIterating(final long timeout, final TimeUnit unit) {
@@ -71,43 +77,31 @@ class RPCIterator<T> extends AbstractIterator<T> {
 
     @Override
     protected T computeNext() {
-        // TODO: This is horrible
-        return computeNextInternal(collector -> {
-            try {
-                return collector.take();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new GraknClientException(e);
-            }
-        });
+        return computeNext(null, null);
     }
 
-    protected T computeNext(final long timeout, final TimeUnit unit) {
-        return computeNextInternal(collector -> {
-            try {
-                return collector.take(timeout, unit);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new GraknClientException(e);
-            }
-        });
-    }
-
-    private T computeNextInternal(Function<RPCResponseCollector, TransactionProto.Transaction.Res> awaiter) {
+    protected T computeNext(final Long timeout, final TimeUnit unit) {
         if (first != null) {
             final T value = first;
             first = null;
             return value;
         }
 
-        final TransactionProto.Transaction.Res res = awaiter.apply(responseCollector);
+        final TransactionProto.Transaction.Res res;
+        try {
+            res = timeout == null ? responseCollector.take() : responseCollector.take(timeout, unit);
+        } catch (InterruptedException | TimeoutException e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+            throw new GraknClientException(e);
+        }
+
         started = true;
         switch (res.getResCase()) {
             case DONE:
                 if (res.getDone()) {
                     return endOfData();
                 } else {
-                    nextBatch(initialRequest.getId());
+                    nextBatch();
                     return computeNext();
                 }
             case RES_NOT_SET:

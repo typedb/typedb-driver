@@ -36,6 +36,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Client(4, "Database name cannot be null or empty.");
         public static final Client MISSING_RESPONSE =
                 new Client(5, "The required field 'res' of type '%s' was not set.");
+        public static final Client UNKNOWN_REQUEST_ID =
+                new Client(6, "Received a response with unknown request id '%s'.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";

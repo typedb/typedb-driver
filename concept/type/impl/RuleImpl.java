@@ -175,8 +175,8 @@ public class RuleImpl implements Rule {
         }
 
         ConceptProto.Rule.Res execute(final ConceptProto.Rule.Req.Builder method) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setRuleReq(method.setLabel(label)).build();
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setRuleReq(method.setLabel(label));
             return rpcTransaction.execute(request).getRuleRes();
         }
     }

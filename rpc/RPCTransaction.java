@@ -23,15 +23,18 @@ import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
 import grakn.client.query.QueryManager;
 import grakn.protocol.TransactionProto;
 import grakn.protocol.TransactionServiceGrpc;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -40,6 +43,7 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.ProtoBuilder.options;
 import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 
 public class RPCTransaction implements Transaction {
 
@@ -47,7 +51,7 @@ public class RPCTransaction implements Transaction {
     private final ConceptManager conceptManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final BlockingQueue<RPCResponseCollector> collectorQueue;
+    private final ConcurrentMap<UUID, RPCResponseCollector> collectors;
     private final AtomicBoolean isOpen;
 
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
@@ -55,17 +59,17 @@ public class RPCTransaction implements Transaction {
             this.type = type;
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
-            collectorQueue = new LinkedBlockingQueue<>();
+            collectors = new ConcurrentHashMap<>();
 
             final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
             requestObserver = TransactionServiceGrpc.newStub(session.getChannel()).stream(responseObserver);
 
-            final TransactionProto.Transaction.Req openRequest = TransactionProto.Transaction.Req.newBuilder()
+            final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
                             .setSessionID(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                            .setOptions(options(options))).build();
+                            .setOptions(options(options)));
             execute(openRequest);
             isOpen = new AtomicBoolean(true);
         }
@@ -74,20 +78,19 @@ public class RPCTransaction implements Transaction {
     private StreamObserver<TransactionProto.Transaction.Res> createResponseObserver() {
         return new StreamObserver<TransactionProto.Transaction.Res>() {
             @Override
-            public synchronized void onNext(final TransactionProto.Transaction.Res value) {
+            public void onNext(final TransactionProto.Transaction.Res value) {
                 processResponse(new RPCResponse.Ok(value));
             }
 
             @Override
             public void onError(final Throwable throwable) {
                 assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
-                while (collectorQueue.peek() != null)
-                    processResponse(new RPCResponse.Error((StatusRuntimeException) throwable));
+                processResponse(new RPCResponse.Error((StatusRuntimeException) throwable));
             }
 
             @Override
             public void onCompleted() {
-                while (collectorQueue.peek() != null) processResponse(new RPCResponse.Completed());
+                processResponse(new RPCResponse.Completed());
             }
         };
     }
@@ -114,18 +117,18 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void commit() {
-        final TransactionProto.Transaction.Req commitReq = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance()).build();
+                .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         execute(commitReq);
         close();
     }
 
     @Override
     public void rollback() {
-        final TransactionProto.Transaction.Req rollbackReq = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req.Builder rollbackReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance()).build();
+                .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance());
         execute(rollbackReq);
     }
 
@@ -136,11 +139,11 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req request) {
+    public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req.Builder request) {
         return executeAsync(request, res -> res).get();
     }
 
-    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("executeAsync")) {
             final RPCResponseCollector collector = new RPCResponseCollector.Single();
             dispatchRequest(request, collector);
@@ -148,31 +151,40 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         return iterateAsync(request, responseReader).get();
     }
 
-    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
         try (ThreadTrace trace = traceOnThread("iterateAsync")) {
             final RPCResponseCollector.Multiple collector = new RPCResponseCollector.Multiple();
-            final RPCIterator<T> iterator = new RPCIterator<>(request, responseReader, requestObserver, collector);
-            collectorQueue.add(collector);
-            return new QueryFuture.Stream<>(iterator);
+            final UUID requestId = UUID.randomUUID();
+            request.setId(requestId.toString());
+            collectors.put(requestId, collector);
+            return new QueryFuture.Stream<>(new RPCIterator<>(request.build(), responseReader, requestObserver, collector));
         }
     }
 
-    private synchronized void dispatchRequest(final TransactionProto.Transaction.Req request, final RPCResponseCollector collector) {
-        // We must add the response collectors in the exact same order we send the requests
-        // TODO: this doesn't seem like it should be true
-        collectorQueue.add(collector);
-        requestObserver.onNext(request);
+    private void dispatchRequest(final TransactionProto.Transaction.Req.Builder request, final RPCResponseCollector collector) {
+        final UUID requestId = UUID.randomUUID();
+        request.setId(requestId.toString());
+        collectors.put(requestId, collector);
+        requestObserver.onNext(request.build());
     }
 
     private void processResponse(final RPCResponse res) {
-        // TODO: This probably doesn't work if we send a slow query followed by a fast query down the same transaction.
-        final RPCResponseCollector currentCollector = collectorQueue.peek();
-        assert currentCollector != null;
-        currentCollector.onResponse(res);
-        if (currentCollector.isDone()) collectorQueue.poll();
+        if (res instanceof RPCResponse.Ok) {
+            final UUID requestId = UUID.fromString(res.read().getId());
+            final RPCResponseCollector collector = collectors.get(requestId);
+            if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
+            collector.onResponse(res);
+            if (collector.isDone()) collectors.remove(requestId);
+        } else if (res instanceof RPCResponse.Error) {
+            // TODO: is it desirable behaviour to kill all the pending requests?
+            // TODO: this isn't nice in any case - the error for other pending requests is misleading
+            collectors.values().parallelStream().forEach(x -> x.onResponse(res));
+            collectors.clear();
+            close();
+        }
     }
 }

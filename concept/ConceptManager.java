@@ -181,9 +181,9 @@ public final class ConceptManager {
     }
 
     private ConceptProto.ConceptManager.Res execute(final ConceptProto.ConceptManager.Req request) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setConceptManagerReq(request).build();
+                .setConceptManagerReq(request);
         return rpcTransaction.execute(req).getConceptManagerRes();
     }
 }

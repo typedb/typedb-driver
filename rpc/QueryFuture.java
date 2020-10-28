@@ -24,6 +24,7 @@ import grakn.protocol.TransactionProto;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
@@ -74,8 +75,8 @@ public abstract class QueryFuture<T> implements Future<T> {
             try {
                 final TransactionProto.Transaction.Res res = collector.take(timeout, unit);
                 return responseReader.apply(res);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+            } catch (InterruptedException | TimeoutException e) {
+                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
                 throw new GraknClientException(e);
             }
         }

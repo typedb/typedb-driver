@@ -24,6 +24,7 @@ import grakn.protocol.TransactionProto;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class RPCResponseCollector {
@@ -47,8 +48,10 @@ abstract class RPCResponseCollector {
         return received.take().read();
     }
 
-    TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException {
-        return received.poll(timeout, unit).read();
+    TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+        final RPCResponse response = received.poll(timeout, unit);
+        if (response != null) return response.read();
+        else throw new TimeoutException();
     }
 
     abstract boolean isLastResponse(final TransactionProto.Transaction.Res response);
