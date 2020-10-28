@@ -26,7 +26,6 @@ import grakn.client.GraknOptions;
 import grakn.protocol.SessionProto;
 import grakn.protocol.SessionServiceGrpc;
 import io.grpc.Channel;
-import io.grpc.ManagedChannel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,9 +38,9 @@ public class RPCSession implements Session {
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
     private final SessionServiceGrpc.SessionServiceBlockingStub sessionService;
-    private final ManagedChannel channel;
+    private final Channel channel;
 
-    RPCSession(final ManagedChannel channel, final String database, final Type type, final GraknOptions options) {
+    RPCSession(final Channel channel, final String database, final Type type, final GraknOptions options) {
         this.database = database;
         this.type = type;
         this.channel = channel;
