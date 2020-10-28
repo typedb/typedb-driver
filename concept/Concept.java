@@ -35,14 +35,10 @@ import static grakn.common.util.Objects.className;
 public interface Concept {
 
     @CheckReturnValue
-    default Type asType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-    }
+    Type asType();
 
     @CheckReturnValue
-    default Thing asThing() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-    }
+    Thing asThing();
 
     @CheckReturnValue
     Remote asRemote(Grakn.Transaction transaction);
@@ -68,14 +64,10 @@ public interface Concept {
         boolean isDeleted();
 
         @Override
-        default Type.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-        }
+        Type.Remote asType();
 
         @Override
-        default Thing.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-        }
+        Thing.Remote asThing();
 
         @Override
         default boolean isRemote() {

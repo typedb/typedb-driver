@@ -85,8 +85,8 @@ public class RPCSession implements Session {
         return database;
     }
 
-    ManagedChannel getChannel() {
-        return channel;
+    GraknGrpc.GraknStub getAsyncGrpcStub() {
+        return asyncGrpcStub;
     }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {
