@@ -52,6 +52,7 @@ public abstract class TypeImpl implements Type {
     private final int hash;
 
     TypeImpl(final String label, final boolean isRoot) {
+        // TODO: replace with label.isBlank() when upgraded to Java 11
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
         this.label = label;
         this.isRoot = isRoot;
@@ -281,7 +282,7 @@ public abstract class TypeImpl implements Type {
         /*TypeMethod.Res iterate(final ConceptProto.Type.Req.Builder method) {
             final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeMethodReq(method.setLabel(label)).build();
-            return rpcTransactionate(request).
+            return rpcTransaction.iterate(request).
         }*/
 
         @Override
@@ -295,8 +296,8 @@ public abstract class TypeImpl implements Type {
             if (o == null || getClass() != o.getClass()) return false;
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
-            return (this.rpcTransaction.equals(that.rpcTransaction) &&
-                    this.getLabel().equals(that.getLabel()));
+            return this.rpcTransaction.equals(that.rpcTransaction) &&
+                    this.getLabel().equals(that.getLabel());
         }
 
         @Override

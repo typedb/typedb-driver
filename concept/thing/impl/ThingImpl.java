@@ -305,7 +305,7 @@ public abstract class ThingImpl implements Thing {
             if (o == null || getClass() != o.getClass()) return false;
 
             final ThingImpl.Remote that = (ThingImpl.Remote) o;
-            return (this.rpcTransaction.equals(that.rpcTransaction) && this.iid.equals(that.iid));
+            return this.rpcTransaction.equals(that.rpcTransaction) && this.iid.equals(that.iid);
         }
 
         @Override
