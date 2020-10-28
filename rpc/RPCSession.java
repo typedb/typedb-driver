@@ -25,6 +25,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
 import grakn.protocol.SessionProto;
 import grakn.protocol.SessionServiceGrpc;
+import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -80,13 +81,13 @@ public class RPCSession implements Session {
         }
     }
 
+    Channel getChannel() {
+        return channel;
+    }
+
     @Override
     public String database() {
         return database;
-    }
-
-    GraknGrpc.GraknStub getAsyncGrpcStub() {
-        return asyncGrpcStub;
     }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {
