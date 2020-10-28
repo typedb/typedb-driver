@@ -27,21 +27,23 @@ import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
 
+import javax.annotation.CheckReturnValue;
+
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.common.util.Objects.className;
 
 public interface Concept {
 
-    default Type asType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-    }
+    @CheckReturnValue
+    Type asType();
 
-    default Thing asThing() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-    }
+    @CheckReturnValue
+    Thing asThing();
 
+    @CheckReturnValue
     Remote asRemote(Grakn.Transaction transaction);
 
+    @CheckReturnValue
     default boolean isRemote() {
         return false;
     }
@@ -58,17 +60,14 @@ public interface Concept {
 
         void delete();
 
+        @CheckReturnValue
         boolean isDeleted();
 
         @Override
-        default Type.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-        }
+        Type.Remote asType();
 
         @Override
-        default Thing.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-        }
+        Thing.Remote asThing();
 
         @Override
         default boolean isRemote() {

@@ -22,23 +22,31 @@ package grakn.client.concept.type;
 import grakn.client.Grakn;
 import grakn.client.concept.Concept;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface Type extends Concept {
 
+    @CheckReturnValue
     String getLabel();
 
+    @CheckReturnValue
     boolean isRoot();
 
+    @CheckReturnValue
     ThingType asThingType();
 
+    @CheckReturnValue
     EntityType asEntityType();
 
+    @CheckReturnValue
     AttributeType asAttributeType();
 
+    @CheckReturnValue
     RelationType asRelationType();
 
+    @CheckReturnValue
     RoleType asRoleType();
 
     @Override
@@ -48,13 +56,17 @@ public interface Type extends Concept {
 
         void setLabel(String label);
 
+        @CheckReturnValue
         boolean isAbstract();
 
         @Nullable
+        @CheckReturnValue
         Type getSupertype();
 
+        @CheckReturnValue
         Stream<? extends Type> getSupertypes();
 
+        @CheckReturnValue
         Stream<? extends Type> getSubtypes();
 
         @Override

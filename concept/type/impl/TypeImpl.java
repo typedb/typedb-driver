@@ -21,6 +21,7 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
@@ -43,7 +44,6 @@ import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
@@ -84,6 +84,11 @@ public abstract class TypeImpl implements Type {
     @Override
     public TypeImpl asType() {
         return this;
+    }
+
+    @Override
+    public ThingImpl asThing() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
     }
 
     @Override
@@ -193,6 +198,11 @@ public abstract class TypeImpl implements Type {
         }
 
         @Override
+        public ThingImpl.Remote asThing() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
+        }
+
+        @Override
         public ThingTypeImpl.Remote asThingType() {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(ThingType.class)));
         }
@@ -265,13 +275,13 @@ public abstract class TypeImpl implements Type {
         Stream<TypeImpl> stream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
+            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
         Stream<ThingImpl> thingStream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).map(res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
+            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
         }
 
         TypeMethod.Res execute(final TypeMethod.Req.Builder method) {

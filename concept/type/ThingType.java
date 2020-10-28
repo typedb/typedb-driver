@@ -23,6 +23,7 @@ import grakn.client.Grakn;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType.ValueType;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface ThingType extends Type {
@@ -41,6 +42,7 @@ public interface ThingType extends Type {
         @Override
         Stream<? extends ThingType> getSubtypes();
 
+        @CheckReturnValue
         Stream<? extends Thing> getInstances();
 
         @Override
@@ -62,14 +64,19 @@ public interface ThingType extends Type {
 
         void setOwns(AttributeType attributeType);
 
+        @CheckReturnValue
         Stream<? extends RoleType> getPlays();
 
+        @CheckReturnValue
         Stream<? extends AttributeType> getOwns();
 
+        @CheckReturnValue
         Stream<? extends AttributeType> getOwns(ValueType valueType);
 
+        @CheckReturnValue
         Stream<? extends AttributeType> getOwns(boolean keysOnly);
 
+        @CheckReturnValue
         Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
 
         void unsetPlays(RoleType role);

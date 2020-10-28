@@ -27,6 +27,7 @@ import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
@@ -88,6 +89,11 @@ public abstract class ThingImpl implements Thing {
     @Override
     public ThingImpl asThing() {
         return this;
+    }
+
+    @Override
+    public final TypeImpl asType() {
+        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
     }
 
     @Override
@@ -259,6 +265,11 @@ public abstract class ThingImpl implements Thing {
         }
 
         @Override
+        public final TypeImpl.Remote asType() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
+        }
+
+        @Override
         public EntityImpl.Remote asEntity() {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
         }
@@ -280,13 +291,13 @@ public abstract class ThingImpl implements Thing {
         Stream<ThingImpl> stream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request).map(res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodThingIterRes())));
+            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodThingIterRes())));
         }
 
         Stream<TypeImpl> typeStream(final ThingMethod.Iter.Req.Builder method, final Function<ThingMethod.Iter.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
                     .setThingMethodIterReq(method.setIid(iid(iid))).build();
-            return rpcTransaction.iterate(request).map(res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodThingIterRes())));
+            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodThingIterRes())));
         }
 
         ThingMethod.Res execute(final ThingMethod.Req.Builder method) {

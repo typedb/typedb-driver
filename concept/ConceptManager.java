@@ -37,32 +37,37 @@ import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
 import graql.lang.pattern.Pattern;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 import static grakn.client.common.ProtoBuilder.tracingData;
 import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
-public final class Concepts {
+public final class ConceptManager {
 
     private final RPCTransaction rpcTransaction;
 
-    public Concepts(final RPCTransaction rpcTransaction) {
+    public ConceptManager(final RPCTransaction rpcTransaction) {
         this.rpcTransaction = rpcTransaction;
     }
 
+    @CheckReturnValue
     public ThingType getRootThingType() {
         return getType(GraqlToken.Type.THING.toString()).asThingType();
     }
 
+    @CheckReturnValue
     public EntityType getRootEntityType() {
         return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
     }
 
+    @CheckReturnValue
     public RelationType getRootRelationType() {
         return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
     }
 
+    @CheckReturnValue
     public AttributeType getRootAttributeType() {
         return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
@@ -78,6 +83,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public EntityType getEntityType(final String label) {
         final Type concept = getType(label);
         if (concept instanceof EntityType) return concept.asEntityType();
@@ -94,6 +100,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public RelationType getRelationType(final String label) {
         final Type concept = getType(label);
         if (concept instanceof RelationType) return concept.asRelationType();
@@ -111,6 +118,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public AttributeType getAttributeType(final String label) {
         final Type concept = getType(label);
         if (concept instanceof AttributeType) return concept.asAttributeType();
@@ -129,6 +137,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public Thing getThing(final String iid) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
@@ -145,6 +154,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public Type getType(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
@@ -161,6 +171,7 @@ public final class Concepts {
     }
 
     @Nullable
+    @CheckReturnValue
     public Rule getRule(final String label) {
         final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())

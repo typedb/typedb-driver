@@ -21,82 +21,87 @@ package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.response.BatchResponseCollector;
-import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
+import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.Iter.Res> {
+class RPCIterator<T> extends AbstractIterator<T> {
 
-    private BatchResponseCollector currentBatchCollector;
     private volatile boolean started;
-    private TransactionProto.Transaction.Iter.Res first;
+    private T first;
 
-    private final RPCTransaction rpcTransaction;
+    private final TransactionProto.Transaction.Req request;
+    private final Function<TransactionProto.Transaction.Iter.Res, T> responseReader;
+    private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
+    private final RPCResponseAccumulator responseCollector;
 
-    public RPCIterator(final RPCTransaction rpcTransaction, final TransactionProto.Transaction.Iter.Req req) {
-        this.rpcTransaction = rpcTransaction;
-        sendAsync(req);
-    }
-
-    private void sendAsync(final TransactionProto.Transaction.Iter.Req req) {
-        currentBatchCollector = new BatchResponseCollector();
-        rpcTransaction.iterateAsync(req, currentBatchCollector);
+    RPCIterator(final TransactionProto.Transaction.Req req, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader,
+                       final StreamObserver<TransactionProto.Transaction.Req> requestObserver, final RPCResponseAccumulator responseCollector) {
+        this.request = req;
+        this.responseReader = responseReader;
+        this.requestObserver = requestObserver;
+        this.responseCollector = responseCollector;
     }
 
     private void nextBatch(final int iteratorID) {
-        final TransactionProto.Transaction.Iter.Req iterReq = TransactionProto.Transaction.Iter.Req.newBuilder()
-                .setIteratorID(iteratorID).build();
-        sendAsync(iterReq);
+        final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
+                .setIterReq(TransactionProto.Transaction.Iter.Req.newBuilder()
+                        .setIteratorID(iteratorID)).build();
+        requestObserver.onNext(request);
     }
 
-    public boolean isStarted() {
+    boolean isStarted() {
         return started;
     }
 
-    public void waitForStart() {
-        if (first != null) {
-            throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        }
-
+    synchronized void startIterating() {
+        if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
+        requestObserver.onNext(request);
         first = computeNext();
     }
 
-    public void waitForStart(final long timeout, final TimeUnit unit) {
-        if (first != null) {
-            throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-        }
-
+    synchronized void startIterating(final long timeout, final TimeUnit unit) {
+        if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
+        requestObserver.onNext(request);
         first = computeNext(timeout, unit);
     }
 
-    public <T> QueryFuture<Stream<T>> getFuture(final Function<QueryProto.Query.Iter.Res, T> responseReader) {
-        return new QueryStreamFuture<>(this, responseReader);
-    }
-
     @Override
-    protected TransactionProto.Transaction.Iter.Res computeNext() {
+    protected T computeNext() {
+        return computeNextInternal(collector -> {
+            try {
+                return collector.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new GraknClientException(e);
+            }
+        });
+    }
+
+    protected T computeNext(final long timeout, final TimeUnit unit) {
+        return computeNextInternal(collector -> {
+            try {
+                return collector.take(timeout, unit);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new GraknClientException(e);
+            }
+        });
+    }
+
+    private T computeNextInternal(Function<RPCResponseAccumulator, TransactionProto.Transaction.Res> awaiter) {
         if (first != null) {
-            final TransactionProto.Transaction.Iter.Res iterRes = first;
+            final T value = first;
             first = null;
-            return iterRes;
+            return value;
         }
 
-        final TransactionProto.Transaction.Iter.Res res;
-        try {
-            res = currentBatchCollector.take().getIterRes();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new GraknClientException(e);
-        }
+        final TransactionProto.Transaction.Iter.Res res = awaiter.apply(responseCollector).getIterRes();
         started = true;
         switch (res.getResCase()) {
             case ITERATORID:
@@ -107,74 +112,7 @@ public class RPCIterator extends AbstractIterator<TransactionProto.Transaction.I
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
             default:
-                return res;
-        }
-    }
-
-    protected TransactionProto.Transaction.Iter.Res computeNext(final long timeout, final TimeUnit unit) {
-        if (first != null) {
-            final TransactionProto.Transaction.Iter.Res iterRes = first;
-            first = null;
-            return iterRes;
-        }
-
-        final TransactionProto.Transaction.Iter.Res res;
-        try {
-            res = currentBatchCollector.take(timeout, unit).getIterRes();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new GraknClientException(e);
-        }
-        started = true;
-        switch (res.getResCase()) {
-            case ITERATORID:
-                nextBatch(res.getIteratorID());
-                return computeNext();
-            case DONE:
-                return endOfData();
-            case RES_NOT_SET:
-                throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Iter.Res.class)));
-            default:
-                return res;
-        }
-    }
-
-    public static class QueryStreamFuture<T> implements QueryFuture<Stream<T>> {
-        private final RPCIterator iterator;
-        private final Function<QueryProto.Query.Iter.Res, T> responseReader;
-
-        public QueryStreamFuture(final RPCIterator iterator, final Function<QueryProto.Query.Iter.Res, T> responseReader) {
-            this.iterator = iterator;
-            this.responseReader = responseReader;
-        }
-
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return false; // Can't cancel
-        }
-
-        @Override
-        public boolean isDone() {
-            return iterator.isStarted();
-        }
-
-        @Override
-        public Stream<T> get() {
-            iterator.waitForStart();
-            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
-                    .map(res -> responseReader.apply(res.getQueryIterRes()));
-        }
-
-        @Override
-        public Stream<T> get(long timeout, TimeUnit unit) {
-            iterator.waitForStart(timeout, unit);
-            return StreamSupport.stream(((Iterable<TransactionProto.Transaction.Iter.Res>) () -> iterator).spliterator(), false)
-                    .map(res -> responseReader.apply(res.getQueryIterRes()));
+                return responseReader.apply(res);
         }
     }
 }

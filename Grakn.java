@@ -19,38 +19,24 @@
 
 package grakn.client;
 
-import grakn.client.concept.Concepts;
-import grakn.client.concept.answer.ConceptMap;
-import grakn.client.query.Query;
-import graql.lang.query.GraqlDefine;
+import grakn.client.concept.ConceptManager;
+import grakn.client.query.QueryManager;
 
-import javax.annotation.CheckReturnValue;
-import java.io.Serializable;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import static grakn.client.Grakn.Session.Type.DATA;
 
 public interface Grakn {
 
     interface Client extends AutoCloseable {
 
-        boolean isOpen();
-
-        void close();
-
-        default Session session(String databaseName) {
-            return session(databaseName, DATA);
-        }
-
-        default Session session(String databaseName, Session.Type type) {
-            return session(databaseName, type, new GraknOptions());
-        }
+        Session session(String databaseName, Session.Type type);
 
         Session session(String databaseName, Session.Type type, GraknOptions options);
 
         DatabaseManager databases();
+
+        boolean isOpen();
+
+        void close();
     }
 
     interface DatabaseManager {
@@ -64,29 +50,19 @@ public interface Grakn {
         List<String> all();
     }
 
-    interface Database extends Serializable {
-
-        @CheckReturnValue
-        String name();
-    }
-
     interface Session extends AutoCloseable {
 
-        default Transaction transaction() {
-            return transaction(Transaction.Type.READ);
-        }
-
-        default Transaction transaction(Transaction.Type type) {
-            return transaction(type, new GraknOptions());
-        }
+        Transaction transaction(Transaction.Type type);
 
         Transaction transaction(Transaction.Type type, GraknOptions options);
+
+        Session.Type type();
 
         boolean isOpen();
 
         void close();
 
-        Database database();
+        String database();
 
         enum Type {
             DATA(0),
@@ -121,15 +97,11 @@ public interface Grakn {
 
         Transaction.Type type();
 
-        Session session();
-
-        Database database();
-
         boolean isOpen();
 
-        Concepts concepts();
+        ConceptManager concepts();
 
-        Query query();
+        QueryManager query();
 
         void commit();
 
