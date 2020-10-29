@@ -82,6 +82,11 @@ public abstract class TypeImpl implements Type {
     }
 
     @Override
+    public boolean isRemote() {
+        return false;
+    }
+
+    @Override
     public TypeImpl asType() {
         return this;
     }
@@ -177,6 +182,11 @@ public abstract class TypeImpl implements Type {
         @Override
         public boolean isRoot() {
             return isRoot;
+        }
+
+        @Override
+        public final boolean isRemote() {
+            return true;
         }
 
         @Override

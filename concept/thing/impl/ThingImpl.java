@@ -86,6 +86,11 @@ public abstract class ThingImpl implements Thing {
     }
 
     @Override
+    public boolean isRemote() {
+        return false;
+    }
+
+    @Override
     public ThingImpl asThing() {
         return this;
     }
@@ -256,6 +261,11 @@ public abstract class ThingImpl implements Thing {
         @Override
         public final boolean isDeleted() {
             return rpcTransaction.concepts().getThing(getIID()) == null;
+        }
+
+        @Override
+        public final boolean isRemote() {
+            return true;
         }
 
         @Override

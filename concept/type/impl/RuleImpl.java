@@ -76,6 +76,11 @@ public class RuleImpl implements Rule {
     }
 
     @Override
+    public boolean isRemote() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return className(this.getClass()) + "[label: " + label + "]";
     }
@@ -149,6 +154,11 @@ public class RuleImpl implements Rule {
         @Override
         public Remote asRemote(final Grakn.Transaction transaction) {
             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
+        }
+
+        @Override
+        public boolean isRemote() {
+            return true;
         }
 
         @Override
