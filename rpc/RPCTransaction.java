@@ -34,8 +34,12 @@ import io.grpc.stub.StreamObserver;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -44,7 +48,9 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.ProtoBuilder.options;
 import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.common.exception.ErrorMessage.Client.CONNECTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static grakn.common.util.Objects.className;
 
 public class RPCTransaction implements Transaction {
 
@@ -52,7 +58,7 @@ public class RPCTransaction implements Transaction {
     private final ConceptManager conceptManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final ConcurrentMap<UUID, RPCResponseCollector> collectors;
+    private final ConcurrentMap<UUID, ResponseCollector> collectors;
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
@@ -77,26 +83,6 @@ public class RPCTransaction implements Transaction {
             System.out.println("Network latency is " + networkLatencyMillis + "ms");
             isOpen = new AtomicBoolean(true);
         }
-    }
-
-    private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
-        return new StreamObserver<TransactionProto.Transaction.Res>() {
-            @Override
-            public void onNext(final TransactionProto.Transaction.Res value) {
-                processResponse(new RPCResponse.Ok(value));
-            }
-
-            @Override
-            public void onError(final Throwable throwable) {
-                assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
-                processResponse(new RPCResponse.Error((StatusRuntimeException) throwable));
-            }
-
-            @Override
-            public void onCompleted() {
-                processResponse(new RPCResponse.Completed());
-            }
-        };
     }
 
     @Override
@@ -147,45 +133,159 @@ public class RPCTransaction implements Transaction {
         return executeAsync(request, res -> res).get();
     }
 
-    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
         try (ThreadTrace ignored = traceOnThread("executeAsync")) {
-            final RPCResponseCollector.Single collector = new RPCResponseCollector.Single();
+            final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
-            collectors.put(requestId, collector);
-            requestObserver.onNext(request.build());
-            return new QueryFuture.Execute<>(collector, responseReader);
+            collectors.put(requestId, responseCollector);
+            return new QueryFuture.Execute<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
 
-    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        return iterateAsync(request, responseReader).get();
+    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        return iterateAsync(request, transformResponse).get();
     }
 
-    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
         try (ThreadTrace ignored = traceOnThread("iterateAsync")) {
-            final RPCResponseCollector.Multiple collector = new RPCResponseCollector.Multiple();
+            final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             request.setLatencyMillis(networkLatencyMillis);
-            collectors.put(requestId, collector);
-            return new QueryFuture.Stream<>(new RPCIterator<>(request.build(), responseReader, requestObserver, collector));
+            collectors.put(requestId, responseCollector);
+            return new QueryFuture.Stream<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
 
-    private void processResponse(final RPCResponse res) {
-        if (res instanceof RPCResponse.Ok) {
-            final UUID requestId = UUID.fromString(res.read().getId());
-            final RPCResponseCollector collector = collectors.get(requestId);
-            if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
-            collector.onResponse(res);
-            if (collector.isDone()) collectors.remove(requestId);
-        } else if (res instanceof RPCResponse.Error) {
-            // TODO: is it desirable behaviour to kill all the pending requests?
-            // TODO: this isn't nice in any case - the error for other pending requests is misleading
-            collectors.values().parallelStream().forEach(x -> x.onResponse(res));
-            collectors.clear();
-            close();
+    private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
+        return new StreamObserver<TransactionProto.Transaction.Res>() {
+            @Override
+            public void onNext(final TransactionProto.Transaction.Res res) {
+                final UUID requestId = UUID.fromString(res.getId());
+                final ResponseCollector collector = collectors.get(requestId);
+                if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
+                collector.onResponse(new Response.Ok(res));
+                if (collector.isDone()) collectors.remove(requestId);
+            }
+
+            @Override
+            public void onError(final Throwable error) {
+                assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
+                final Response res = new Response.Error((StatusRuntimeException) error);
+                // TODO: is it desirable behaviour to kill all the pending requests?
+                // TODO: this isn't nice in any case - the error for other pending requests is misleading
+                collectors.values().parallelStream().forEach(x -> x.onResponse(res));
+                collectors.clear();
+                close();
+            }
+
+            @Override
+            public void onCompleted() {
+                final Response res = new Response.ConnectionClosed();
+                collectors.values().parallelStream().forEach(x -> x.onResponse(res));
+                collectors.clear();
+                // TODO: maybe this should just be close()? But if the server terminates abruptly...
+                isOpen.set(false);
+            }
+        };
+    }
+
+    abstract static class Response {
+
+        abstract TransactionProto.Transaction.Res read();
+
+        static class Ok extends Response {
+            private final TransactionProto.Transaction.Res response;
+
+            Ok(final TransactionProto.Transaction.Res response) {
+                this.response = response;
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                return response;
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + response + "}";
+            }
+        }
+
+        static class Error extends Response {
+            private final StatusRuntimeException error;
+
+            Error(final StatusRuntimeException error) {
+                this.error = error;
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                // TODO: parse different GRPC errors into specific GraknClientException
+                throw new GraknClientException(error);
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + error + "}";
+            }
+        }
+
+        static class ConnectionClosed extends Response {
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                throw new GraknClientException(CONNECTION_CLOSED);
+            }
+        }
+    }
+
+    abstract static class ResponseCollector {
+        private final AtomicBoolean isDone;
+        /** gRPC response messages, errors, and notifications of abrupt termination are all sent to this blocking queue. */
+        private final BlockingQueue<Response> responseBuffer;
+
+        ResponseCollector() {
+            isDone = new AtomicBoolean(false);
+            responseBuffer = new LinkedBlockingQueue<>();
+        }
+
+        void onResponse(final Response response) {
+            responseBuffer.add(response);
+            if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
+        }
+
+        boolean isDone() {
+            return isDone.get();
+        }
+
+        TransactionProto.Transaction.Res take() throws InterruptedException {
+            return responseBuffer.take().read();
+        }
+
+        TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+            final Response response = responseBuffer.poll(timeout, unit);
+            if (response != null) return response.read();
+            else throw new TimeoutException();
+        }
+
+        abstract boolean isLastResponse(final TransactionProto.Transaction.Res response);
+
+        static class Single extends ResponseCollector {
+
+            @Override
+            boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+                return true;
+            }
+        }
+
+        static class Multiple extends ResponseCollector {
+
+            @Override
+            boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+                return response.getDone();
+            }
         }
     }
 }

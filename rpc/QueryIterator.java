@@ -32,22 +32,22 @@ import java.util.function.Function;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-class RPCIterator<T> extends AbstractIterator<T> {
+class QueryIterator<T> extends AbstractIterator<T> {
 
     private volatile boolean started;
     private T first;
 
-    private final TransactionProto.Transaction.Req initialRequest;
     private final UUID requestId;
-    private final Function<TransactionProto.Transaction.Res, T> responseReader;
+    private final TransactionProto.Transaction.Req initialRequest;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final RPCResponseCollector.Multiple responseCollector;
+    private final RPCTransaction.ResponseCollector.Multiple responseCollector;
+    private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-    RPCIterator(final TransactionProto.Transaction.Req initialRequest, final Function<TransactionProto.Transaction.Res, T> responseReader,
-                       final StreamObserver<TransactionProto.Transaction.Req> requestObserver, final RPCResponseCollector.Multiple responseCollector) {
-        this.initialRequest = initialRequest;
-        this.requestId = UUID.fromString(initialRequest.getId());
-        this.responseReader = responseReader;
+    QueryIterator(final TransactionProto.Transaction.Req request, final StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+                  final RPCTransaction.ResponseCollector.Multiple responseCollector, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        this.initialRequest = request;
+        this.requestId = UUID.fromString(request.getId());
+        this.transformResponse = transformResponse;
         this.requestObserver = requestObserver;
         this.responseCollector = responseCollector;
     }
@@ -62,15 +62,11 @@ class RPCIterator<T> extends AbstractIterator<T> {
         return started;
     }
 
-    synchronized void startIterating() {
-        synchronized (this) {
-            if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
-            requestObserver.onNext(initialRequest);
-            first = computeNext();
-        }
+    void startIterating() {
+        startIterating(null, null);
     }
 
-    synchronized void startIterating(final long timeout, final TimeUnit unit) {
+    synchronized void startIterating(final Long timeout, final TimeUnit unit) {
         if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         requestObserver.onNext(initialRequest);
         first = computeNext(timeout, unit);
@@ -106,7 +102,7 @@ class RPCIterator<T> extends AbstractIterator<T> {
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
-                return responseReader.apply(res);
+                return transformResponse.apply(res);
         }
     }
 }
