@@ -52,9 +52,10 @@ class RPCIterator<T> extends AbstractIterator<T> {
         this.responseCollector = responseCollector;
     }
 
-    private void nextBatch() {
-        final TransactionProto.Transaction.Req nextRequest = TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).build();
-        requestObserver.onNext(nextRequest);
+    private void fetchNextBatchAsync() {
+        final TransactionProto.Transaction.Req fetchReq = TransactionProto.Transaction.Req.newBuilder()
+                .setId(requestId.toString()).setFetchReq(TransactionProto.Fetch.Req.getDefaultInstance()).build();
+        requestObserver.onNext(fetchReq);
     }
 
     boolean isStarted() {
@@ -98,12 +99,10 @@ class RPCIterator<T> extends AbstractIterator<T> {
         started = true;
         switch (res.getResCase()) {
             case DONE:
-                if (res.getDone()) {
-                    return endOfData();
-                } else {
-                    nextBatch();
-                    return computeNext();
-                }
+                return endOfData();
+            case CONTINUE:
+                fetchNextBatchAsync();
+                return computeNext();
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:

@@ -28,10 +28,11 @@ import grakn.client.concept.ConceptManager;
 import grakn.client.query.QueryManager;
 import grakn.protocol.TransactionProto;
 import grakn.protocol.TransactionServiceGrpc;
-import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -52,6 +53,7 @@ public class RPCTransaction implements Transaction {
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ConcurrentMap<UUID, RPCResponseCollector> collectors;
+    private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
     RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
@@ -60,9 +62,7 @@ public class RPCTransaction implements Transaction {
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
             collectors = new ConcurrentHashMap<>();
-
-            final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
-            requestObserver = TransactionServiceGrpc.newStub(session.getChannel()).stream(responseObserver);
+            requestObserver = TransactionServiceGrpc.newStub(session.client().channel()).stream(responseObserver());
 
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -70,12 +70,16 @@ public class RPCTransaction implements Transaction {
                             .setSessionID(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
                             .setOptions(options(options)));
-            execute(openRequest);
+            final Instant startTime = Instant.now();
+            final TransactionProto.Transaction.Res res = execute(openRequest);
+            final Instant endTime = Instant.now();
+            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getOpenRes().getProcessingTimeMillis();
+            System.out.println("Network latency is " + networkLatencyMillis + "ms");
             isOpen = new AtomicBoolean(true);
         }
     }
 
-    private StreamObserver<TransactionProto.Transaction.Res> createResponseObserver() {
+    private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
         return new StreamObserver<TransactionProto.Transaction.Res>() {
             @Override
             public void onNext(final TransactionProto.Transaction.Res value) {
@@ -144,9 +148,12 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        try (ThreadTrace trace = traceOnThread("executeAsync")) {
-            final RPCResponseCollector collector = new RPCResponseCollector.Single();
-            dispatchRequest(request, collector);
+        try (ThreadTrace ignored = traceOnThread("executeAsync")) {
+            final RPCResponseCollector.Single collector = new RPCResponseCollector.Single();
+            final UUID requestId = UUID.randomUUID();
+            request.setId(requestId.toString());
+            collectors.put(requestId, collector);
+            requestObserver.onNext(request.build());
             return new QueryFuture.Execute<>(collector, responseReader);
         }
     }
@@ -156,20 +163,14 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        try (ThreadTrace trace = traceOnThread("iterateAsync")) {
+        try (ThreadTrace ignored = traceOnThread("iterateAsync")) {
             final RPCResponseCollector.Multiple collector = new RPCResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
+            request.setLatencyMillis(networkLatencyMillis);
             collectors.put(requestId, collector);
             return new QueryFuture.Stream<>(new RPCIterator<>(request.build(), responseReader, requestObserver, collector));
         }
-    }
-
-    private void dispatchRequest(final TransactionProto.Transaction.Req.Builder request, final RPCResponseCollector collector) {
-        final UUID requestId = UUID.randomUUID();
-        request.setId(requestId.toString());
-        collectors.put(requestId, collector);
-        requestObserver.onNext(request.build());
     }
 
     private void processResponse(final RPCResponse res) {

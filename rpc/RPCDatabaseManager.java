@@ -24,7 +24,7 @@ import grakn.client.Grakn.DatabaseManager;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.DatabaseProto;
 import grakn.protocol.DatabaseServiceGrpc;
-import io.grpc.ManagedChannel;
+import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 class RPCDatabaseManager implements DatabaseManager {
     private final DatabaseServiceGrpc.DatabaseServiceBlockingStub databaseService;
 
-    RPCDatabaseManager(final ManagedChannel channel) {
+    RPCDatabaseManager(final Channel channel) {
         databaseService = DatabaseServiceGrpc.newBlockingStub(channel);
     }
 

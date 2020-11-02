@@ -53,7 +53,6 @@ public abstract class TypeImpl implements Type {
     private final int hash;
 
     TypeImpl(final String label, final boolean isRoot) {
-        // TODO: replace with label.isBlank() when upgraded to Java 11
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
         this.label = label;
         this.isRoot = isRoot;

@@ -23,6 +23,7 @@ import grakn.client.Grakn.Client;
 import grakn.client.Grakn.DatabaseManager;
 import grakn.client.Grakn.Session;
 import grakn.client.GraknOptions;
+import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -45,13 +46,13 @@ public class GraknClient implements Client {
     }
 
     @Override
-    public Session session(final String databaseName, final Session.Type type) {
-        return session(databaseName, type, new GraknOptions());
+    public Session session(final String database, final Session.Type type) {
+        return session(database, type, new GraknOptions());
     }
 
     @Override
-    public Session session(final String databaseName, final Session.Type type, final GraknOptions options) {
-        return new RPCSession(channel, databaseName, type, options);
+    public Session session(final String database, final Session.Type type, final GraknOptions options) {
+        return new RPCSession(this, database, type, options);
     }
 
     @Override
@@ -73,4 +74,7 @@ public class GraknClient implements Client {
         }
     }
 
+    Channel channel() {
+        return channel;
+    }
 }

@@ -29,14 +29,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class RPCResponseCollector {
     private final AtomicBoolean isDone;
-    private final BlockingQueue<RPCResponse> received = new LinkedBlockingQueue<>();
+    private final BlockingQueue<RPCResponse> responseBuffer;
 
     RPCResponseCollector() {
         isDone = new AtomicBoolean(false);
+        responseBuffer = new LinkedBlockingQueue<>();
     }
 
     void onResponse(final RPCResponse rpcResponse) {
-        received.add(rpcResponse);
+        responseBuffer.add(rpcResponse);
         if (!(rpcResponse instanceof RPCResponse.Ok) || isLastResponse(rpcResponse.read())) isDone.compareAndSet(false, true);
     }
 
@@ -45,11 +46,11 @@ abstract class RPCResponseCollector {
     }
 
     TransactionProto.Transaction.Res take() throws InterruptedException {
-        return received.take().read();
+        return responseBuffer.take().read();
     }
 
     TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-        final RPCResponse response = received.poll(timeout, unit);
+        final RPCResponse response = responseBuffer.poll(timeout, unit);
         if (response != null) return response.read();
         else throw new TimeoutException();
     }
