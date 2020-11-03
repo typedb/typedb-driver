@@ -43,8 +43,8 @@ class QueryIterator<T> extends AbstractIterator<T> {
     private final RPCTransaction.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-    QueryIterator(final TransactionProto.Transaction.Req request, final StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                  final RPCTransaction.ResponseCollector.Multiple responseCollector, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    QueryIterator(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+                  RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         this.initialRequest = request;
         this.requestId = UUID.fromString(request.getId());
         this.transformResponse = transformResponse;
@@ -62,14 +62,10 @@ class QueryIterator<T> extends AbstractIterator<T> {
         return started;
     }
 
-    void startIterating() {
-        startIterating(null, null);
-    }
-
-    synchronized void startIterating(final Long timeout, final TimeUnit unit) {
+    synchronized void startIterating() {
         if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         requestObserver.onNext(initialRequest);
-        first = computeNext(timeout, unit);
+        first = computeNext();
     }
 
     @Override
@@ -77,7 +73,7 @@ class QueryIterator<T> extends AbstractIterator<T> {
         return computeNext(null, null);
     }
 
-    protected T computeNext(final Long timeout, final TimeUnit unit) {
+    protected T computeNext(Long timeout, TimeUnit unit) {
         if (first != null) {
             final T value = first;
             first = null;

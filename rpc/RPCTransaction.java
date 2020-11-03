@@ -62,7 +62,7 @@ public class RPCTransaction implements Transaction {
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
-    RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
+    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.type = type;
             conceptManager = new ConceptManager(this);
@@ -129,11 +129,11 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req.Builder request) {
+    public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
         return executeAsync(request, res -> res).get();
     }
 
-    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         try (ThreadTrace ignored = traceOnThread("executeAsync")) {
             final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
             final UUID requestId = UUID.randomUUID();
@@ -143,11 +143,11 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    public <T> Stream<T> iterate(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    public <T> Stream<T> iterate(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         return iterateAsync(request, transformResponse).get();
     }
 
-    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Req.Builder request, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    public <T> QueryFuture<Stream<T>> iterateAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         try (ThreadTrace ignored = traceOnThread("iterateAsync")) {
             final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
@@ -161,7 +161,7 @@ public class RPCTransaction implements Transaction {
     private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
         return new StreamObserver<TransactionProto.Transaction.Res>() {
             @Override
-            public void onNext(final TransactionProto.Transaction.Res res) {
+            public void onNext(TransactionProto.Transaction.Res res) {
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
                 if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
@@ -170,7 +170,7 @@ public class RPCTransaction implements Transaction {
             }
 
             @Override
-            public void onError(final Throwable error) {
+            public void onError(Throwable error) {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
                 final Response res = new Response.Error((StatusRuntimeException) error);
                 // TODO: is it desirable behaviour to kill all the pending requests?
@@ -198,7 +198,7 @@ public class RPCTransaction implements Transaction {
         static class Ok extends Response {
             private final TransactionProto.Transaction.Res response;
 
-            Ok(final TransactionProto.Transaction.Res response) {
+            Ok(TransactionProto.Transaction.Res response) {
                 this.response = response;
             }
 
@@ -216,7 +216,7 @@ public class RPCTransaction implements Transaction {
         static class Error extends Response {
             private final StatusRuntimeException error;
 
-            Error(final StatusRuntimeException error) {
+            Error(StatusRuntimeException error) {
                 this.error = error;
             }
 
@@ -251,7 +251,7 @@ public class RPCTransaction implements Transaction {
             responseBuffer = new LinkedBlockingQueue<>();
         }
 
-        void onResponse(final Response response) {
+        void onResponse(Response response) {
             responseBuffer.add(response);
             if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
         }
@@ -270,12 +270,12 @@ public class RPCTransaction implements Transaction {
             else throw new TimeoutException();
         }
 
-        abstract boolean isLastResponse(final TransactionProto.Transaction.Res response);
+        abstract boolean isLastResponse(TransactionProto.Transaction.Res response);
 
         static class Single extends ResponseCollector {
 
             @Override
-            boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+            boolean isLastResponse(TransactionProto.Transaction.Res response) {
                 return true;
             }
         }
@@ -283,7 +283,7 @@ public class RPCTransaction implements Transaction {
         static class Multiple extends ResponseCollector {
 
             @Override
-            boolean isLastResponse(final TransactionProto.Transaction.Res response) {
+            boolean isLastResponse(TransactionProto.Transaction.Res response) {
                 return response.getDone();
             }
         }

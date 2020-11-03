@@ -31,7 +31,7 @@ import java.util.stream.StreamSupport;
 
 public abstract class QueryFuture<T> implements Future<T> {
     @Override
-    public boolean cancel(final boolean mayInterruptIfRunning) {
+    public boolean cancel(boolean mayInterruptIfRunning) {
         return false; // Can't cancel
     }
 
@@ -47,17 +47,14 @@ public abstract class QueryFuture<T> implements Future<T> {
     public abstract T get(long timeout, TimeUnit unit);
 
     static class Execute<T> extends QueryFuture<T> {
-        private final TransactionProto.Transaction.Req request;
-        private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-        private final RPCTransaction.ResponseCollector collector;
+        private final RPCTransaction.ResponseCollector.Single collector;
         private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-        public Execute(final TransactionProto.Transaction.Req request, final StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                       final RPCTransaction.ResponseCollector collector, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
-            this.request = request;
-            this.requestObserver = requestObserver;
+        public Execute(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+                       RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
             this.collector = collector;
             this.transformResponse = transformResponse;
+            requestObserver.onNext(request);
         }
 
         @Override
@@ -68,7 +65,6 @@ public abstract class QueryFuture<T> implements Future<T> {
         @Override
         public T get() {
             try {
-                requestObserver.onNext(request);
                 final TransactionProto.Transaction.Res res = collector.take();
                 return transformResponse.apply(res);
             } catch (InterruptedException e) {
@@ -78,9 +74,8 @@ public abstract class QueryFuture<T> implements Future<T> {
         }
 
         @Override
-        public T get(final long timeout, final TimeUnit unit) {
+        public T get(long timeout, TimeUnit unit) {
             try {
-                requestObserver.onNext(request);
                 final TransactionProto.Transaction.Res res = collector.take(timeout, unit);
                 return transformResponse.apply(res);
             } catch (InterruptedException | TimeoutException e) {
@@ -93,9 +88,10 @@ public abstract class QueryFuture<T> implements Future<T> {
     static class Stream<T> extends QueryFuture<java.util.stream.Stream<T>> {
         private final QueryIterator<T> iterator;
 
-        public Stream(final TransactionProto.Transaction.Req request, final StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                      final RPCTransaction.ResponseCollector.Multiple responseCollector, final Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        public Stream(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+                      RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
             this.iterator = new QueryIterator<>(request, requestObserver, responseCollector, transformResponse);
+            iterator.startIterating();
         }
 
         @Override
@@ -105,14 +101,12 @@ public abstract class QueryFuture<T> implements Future<T> {
 
         @Override
         public java.util.stream.Stream<T> get() {
-            iterator.startIterating();
             return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
         }
 
         @Override
-        public java.util.stream.Stream<T> get(final long timeout, final TimeUnit unit) {
-            iterator.startIterating(timeout, unit);
-            return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
+        public java.util.stream.Stream<T> get(long timeout, TimeUnit unit) {
+            return get();
         }
     }
 }
