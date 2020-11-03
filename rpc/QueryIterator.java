@@ -52,28 +52,24 @@ class QueryIterator<T> extends AbstractIterator<T> {
         this.responseCollector = responseCollector;
     }
 
-    private void fetchNextBatchAsync() {
-        final TransactionProto.Transaction.Req fetchReq = TransactionProto.Transaction.Req.newBuilder()
-                .setId(requestId.toString()).setFetchReq(TransactionProto.Fetch.Req.getDefaultInstance()).build();
-        requestObserver.onNext(fetchReq);
-    }
-
     boolean isStarted() {
         return started;
     }
 
-    synchronized void startIterating() {
+    synchronized void fetchFirstBatch() {
         if (first != null) throw new GraknClientException(new IllegalStateException("Should not poll RPCIterator multiple times"));
         requestObserver.onNext(initialRequest);
         first = computeNext();
     }
 
-    @Override
-    protected T computeNext() {
-        return computeNext(null, null);
+    private void fetchNextBatchAsync() {
+        final TransactionProto.Transaction.Req fetchReq = TransactionProto.Transaction.Req.newBuilder()
+                .setId(requestId.toString()).setContinue(true).build();
+        requestObserver.onNext(fetchReq);
     }
 
-    protected T computeNext(Long timeout, TimeUnit unit) {
+    @Override
+    protected T computeNext() {
         if (first != null) {
             final T value = first;
             first = null;
@@ -82,9 +78,9 @@ class QueryIterator<T> extends AbstractIterator<T> {
 
         final TransactionProto.Transaction.Res res;
         try {
-            res = timeout == null ? responseCollector.take() : responseCollector.take(timeout, unit);
-        } catch (InterruptedException | TimeoutException e) {
-            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+            res = responseCollector.take();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new GraknClientException(e);
         }
 

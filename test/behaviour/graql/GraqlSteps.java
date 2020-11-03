@@ -70,7 +70,7 @@ public class GraqlSteps {
     }
 
     @Given("graql define")
-    public QueryFuture<List<ThingType>> graql_define(final String defineQueryStatements) {
+    public QueryFuture<Void> graql_define(String defineQueryStatements) {
         final GraqlDefine graqlQuery = Graql.parseQuery(String.join("\n", defineQueryStatements));
         return tx().query().define(graqlQuery);
     }

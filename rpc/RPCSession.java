@@ -48,7 +48,7 @@ public class RPCSession implements Session {
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
-        sessionId = sessionService.open(openReq).getSessionID();
+        sessionId = sessionService.open(openReq).getSessionId();
         isOpen = new AtomicBoolean(true);
     }
 
@@ -75,7 +75,7 @@ public class RPCSession implements Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            sessionService.close(SessionProto.Session.Close.Req.newBuilder().setSessionID(sessionId).build());
+            sessionService.close(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
         }
     }
 

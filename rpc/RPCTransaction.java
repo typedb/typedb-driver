@@ -73,7 +73,7 @@ public class RPCTransaction implements Transaction {
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                            .setSessionID(sessionId)
+                            .setSessionId(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
                             .setOptions(options(options)));
             final Instant startTime = Instant.now();
