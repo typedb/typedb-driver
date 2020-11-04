@@ -80,7 +80,6 @@ public class RPCTransaction implements Transaction {
             final TransactionProto.Transaction.Res res = execute(openRequest);
             final Instant endTime = Instant.now();
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getOpenRes().getProcessingTimeMillis();
-            System.out.println("Network latency is " + networkLatencyMillis + "ms");
             isOpen = new AtomicBoolean(true);
         }
     }
