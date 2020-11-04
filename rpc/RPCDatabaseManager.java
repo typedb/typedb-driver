@@ -30,6 +30,8 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
+
 class RPCDatabaseManager implements DatabaseManager {
     private final DatabaseServiceGrpc.DatabaseServiceBlockingStub databaseService;
 
@@ -39,22 +41,27 @@ class RPCDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean contains(final String name) {
-        return request(() -> databaseService.contains(DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build()).getContains());
+        return request(() -> databaseService.contains(DatabaseProto.Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
     }
 
     @Override
     public void create(final String name) {
-        request(() -> databaseService.create(DatabaseProto.Database.Create.Req.newBuilder().setName(name).build()));
+        request(() -> databaseService.create(DatabaseProto.Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public void delete(final String name) {
-        request(() -> databaseService.delete(DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build()));
+        request(() -> databaseService.delete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public List<String> all() {
         return request(() -> ImmutableList.copyOf(databaseService.all(DatabaseProto.Database.All.Req.getDefaultInstance()).getNamesList().iterator()));
+    }
+
+    private String nonNull(String name) {
+        if (name == null) throw new GraknClientException(MISSING_DB_NAME);
+        return name;
     }
 
     private static <RES> RES request(final Supplier<RES> req) {

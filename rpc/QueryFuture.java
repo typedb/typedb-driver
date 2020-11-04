@@ -91,12 +91,11 @@ public abstract class QueryFuture<T> implements Future<T> {
         public Stream(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
                       RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
             this.iterator = new QueryIterator<>(request, requestObserver, responseCollector, transformResponse);
-            iterator.fetchFirstBatch();
         }
 
         @Override
         public boolean isDone() {
-            return iterator.isStarted();
+            return true;
         }
 
         @Override
