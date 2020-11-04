@@ -58,8 +58,5 @@ public interface Concept {
 
         @Override
         Thing.Remote asThing();
-
-        @Override
-        boolean isRemote();
     }
 }

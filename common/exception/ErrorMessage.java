@@ -28,16 +28,14 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     public static class Client extends ErrorMessage {
         public static final Client CONNECTION_CLOSED =
                 new Client(1, "The connection to the database is closed.");
-        public static final Client TRANSACTION_LISTENER_TERMINATED =
-                new Client(2, "Transaction listener was terminated");
         public static final Client NEGATIVE_BATCH_SIZE =
-                new Client(3, "Batch size cannot be less than 1, was: '%d'.");
+                new Client(2, "Batch size cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
-                new Client(4, "Database name cannot be null or empty.");
+                new Client(3, "Database name cannot be null.");
         public static final Client MISSING_RESPONSE =
-                new Client(5, "The required field 'res' of type '%s' was not set.");
+                new Client(4, "The required field 'res' of type '%s' was not set.");
         public static final Client UNKNOWN_REQUEST_ID =
-                new Client(6, "Received a response with unknown request id '%s'.");
+                new Client(5, "Received a response with unknown request id '%s'.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";
@@ -76,12 +74,10 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Query(1, "The variable '%s' does not exist.");
         public static final Query NO_EXPLANATION =
                 new Query(2, "No explanation was found.");
-        public static final Query BAD_QUERY_OBJECT =
-                new Query(3, "The query object '%s' was not recognised.");
         public static final Query BAD_ANSWER_TYPE =
-                new Query(4, "The answer type '%s' was not recognised.");
+                new Query(3, "The answer type '%s' was not recognised.");
         public static final Query MISSING_ANSWER =
-                new Query(5, "The required field 'answer' of type '%s' was not set.");
+                new Query(4, "The required field 'answer' of type '%s' was not set.");
 
         private static final String codePrefix = "QRY";
         private static final String messagePrefix = "Query Error";

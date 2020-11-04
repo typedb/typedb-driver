@@ -299,10 +299,10 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction.execute(request).getTypeRes();
         }
 
-        /*TypeMethod.Res iterate(final ConceptProto.Type.Req.Builder method) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setTypeMethodReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).
+        /*ConceptProto.Type.Res iterate(final ConceptProto.Type.Req.Builder method) {
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
+            return rpcTransaction.iterate(request).getTypeRes();
         }*/
 
         @Override
