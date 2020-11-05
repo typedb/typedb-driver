@@ -23,8 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
+import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
-import grakn.protocol.SessionServiceGrpc;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,18 +37,18 @@ public class RPCSession implements Session {
     private final Type type;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
-    private final SessionServiceGrpc.SessionServiceBlockingStub sessionService;
+    private final GraknGrpc.GraknBlockingStub graknRPCService;
 
     RPCSession(final GraknClient client, final String database, final Type type, final GraknOptions options) {
         this.client = client;
         this.database = database;
         this.type = type;
-        sessionService = SessionServiceGrpc.newBlockingStub(client.channel());
+        graknRPCService = GraknGrpc.newBlockingStub(client.channel());
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
-        sessionId = sessionService.open(openReq).getSessionId();
+        sessionId = graknRPCService.sessionOpen(openReq).getSessionId();
         isOpen = new AtomicBoolean(true);
     }
 
@@ -75,7 +75,7 @@ public class RPCSession implements Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            sessionService.close(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            graknRPCService.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
         }
     }
 

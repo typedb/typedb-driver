@@ -22,8 +22,8 @@ package grakn.client.rpc;
 import com.google.common.collect.ImmutableList;
 import grakn.client.Grakn.DatabaseManager;
 import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.DatabaseProto;
-import grakn.protocol.DatabaseServiceGrpc;
+import grakn.protocol.DatabaseProto.Database;
+import grakn.protocol.GraknGrpc;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
@@ -33,30 +33,30 @@ import java.util.function.Supplier;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 
 class RPCDatabaseManager implements DatabaseManager {
-    private final DatabaseServiceGrpc.DatabaseServiceBlockingStub databaseService;
+    private final GraknGrpc.GraknBlockingStub graknRPCService;
 
     RPCDatabaseManager(final Channel channel) {
-        databaseService = DatabaseServiceGrpc.newBlockingStub(channel);
+        graknRPCService = GraknGrpc.newBlockingStub(channel);
     }
 
     @Override
     public boolean contains(final String name) {
-        return request(() -> databaseService.contains(DatabaseProto.Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
+        return request(() -> graknRPCService.databaseContains(Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
     }
 
     @Override
     public void create(final String name) {
-        request(() -> databaseService.create(DatabaseProto.Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
+        request(() -> graknRPCService.databaseCreate(Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public void delete(final String name) {
-        request(() -> databaseService.delete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
+        request(() -> graknRPCService.databaseDelete(Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public List<String> all() {
-        return request(() -> ImmutableList.copyOf(databaseService.all(DatabaseProto.Database.All.Req.getDefaultInstance()).getNamesList().iterator()));
+        return request(() -> ImmutableList.copyOf(graknRPCService.databaseAll(Database.All.Req.getDefaultInstance()).getNamesList()));
     }
 
     private String nonNull(String name) {

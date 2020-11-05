@@ -23,11 +23,12 @@ import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
 import grakn.client.query.QueryManager;
+import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
-import grakn.protocol.TransactionServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
@@ -68,7 +69,7 @@ public class RPCTransaction implements Transaction {
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
             collectors = new ConcurrentHashMap<>();
-            requestObserver = TransactionServiceGrpc.newStub(session.client().channel()).stream(responseObserver());
+            requestObserver = GraknGrpc.newStub(session.client().channel()).transaction(responseObserver());
 
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -181,7 +182,7 @@ public class RPCTransaction implements Transaction {
 
             @Override
             public void onCompleted() {
-                final Response res = new Response.ConnectionClosed();
+                final Response res = new Response.Error(CONNECTION_CLOSED);
                 collectors.values().parallelStream().forEach(x -> x.onResponse(res));
                 collectors.clear();
                 // TODO: maybe this should just be close()? But if the server terminates abruptly...
@@ -213,29 +214,25 @@ public class RPCTransaction implements Transaction {
         }
 
         static class Error extends Response {
-            private final StatusRuntimeException error;
+            private final GraknClientException error;
 
             Error(StatusRuntimeException error) {
-                this.error = error;
+                // TODO: parse different gRPC errors into specific GraknClientException
+                this.error = new GraknClientException(error);
+            }
+
+            Error(ErrorMessage error) {
+                this.error = new GraknClientException(error);
             }
 
             @Override
             TransactionProto.Transaction.Res read() {
-                // TODO: parse different GRPC errors into specific GraknClientException
-                throw new GraknClientException(error);
+                throw error;
             }
 
             @Override
             public String toString() {
                 return className(getClass()) + "{" + error + "}";
-            }
-        }
-
-        static class ConnectionClosed extends Response {
-
-            @Override
-            TransactionProto.Transaction.Res read() {
-                throw new GraknClientException(CONNECTION_CLOSED);
             }
         }
     }
