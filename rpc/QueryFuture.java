@@ -50,7 +50,7 @@ public abstract class QueryFuture<T> implements Future<T> {
         private final RPCTransaction.ResponseCollector.Single collector;
         private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-        public Execute(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+        Execute(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
                        RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
             this.collector = collector;
             this.transformResponse = transformResponse;
@@ -88,7 +88,7 @@ public abstract class QueryFuture<T> implements Future<T> {
     static class Stream<T> extends QueryFuture<java.util.stream.Stream<T>> {
         private final QueryIterator<T> iterator;
 
-        public Stream(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+        Stream(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
                       RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
             this.iterator = new QueryIterator<>(request, requestObserver, responseCollector, transformResponse);
         }

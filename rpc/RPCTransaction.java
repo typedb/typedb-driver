@@ -69,7 +69,7 @@ public class RPCTransaction implements Transaction {
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
             collectors = new ConcurrentHashMap<>();
-            requestObserver = GraknGrpc.newStub(session.client().channel()).transaction(responseObserver());
+            requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
 
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -78,9 +78,9 @@ public class RPCTransaction implements Transaction {
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
                             .setOptions(options(options)));
             final Instant startTime = Instant.now();
-            final TransactionProto.Transaction.Res res = execute(openRequest);
+            final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
             final Instant endTime = Instant.now();
-            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getOpenRes().getProcessingTimeMillis();
+            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
             isOpen = new AtomicBoolean(true);
         }
     }
@@ -165,25 +165,23 @@ public class RPCTransaction implements Transaction {
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
                 if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
-                collector.onResponse(new Response.Ok(res));
+                collector.put(new Response.Ok(res));
                 if (collector.isDone()) collectors.remove(requestId);
             }
 
             @Override
             public void onError(Throwable error) {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
-                final Response res = new Response.Error((StatusRuntimeException) error);
                 // TODO: is it desirable behaviour to kill all the pending requests?
                 // TODO: this isn't nice in any case - the error for other pending requests is misleading
-                collectors.values().parallelStream().forEach(x -> x.onResponse(res));
+                collectors.values().parallelStream().forEach(x -> x.put(new Response.Error((StatusRuntimeException) error)));
                 collectors.clear();
                 close();
             }
 
             @Override
             public void onCompleted() {
-                final Response res = new Response.Error(CONNECTION_CLOSED);
-                collectors.values().parallelStream().forEach(x -> x.onResponse(res));
+                collectors.values().parallelStream().forEach(x -> x.put(new Response.Error(CONNECTION_CLOSED)));
                 collectors.clear();
                 // TODO: maybe this should just be close()? But if the server terminates abruptly...
                 isOpen.set(false);
@@ -247,7 +245,7 @@ public class RPCTransaction implements Transaction {
             responseBuffer = new LinkedBlockingQueue<>();
         }
 
-        void onResponse(Response response) {
+        void put(Response response) {
             responseBuffer.add(response);
             if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
         }

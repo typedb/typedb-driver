@@ -60,9 +60,9 @@ class QueryIterator<T> extends AbstractIterator<T> {
             case DONE:
                 return endOfData();
             case CONTINUE:
-                final TransactionProto.Transaction.Req fetchReq = TransactionProto.Transaction.Req.newBuilder()
+                final TransactionProto.Transaction.Req continueReq = TransactionProto.Transaction.Req.newBuilder()
                         .setId(requestId.toString()).setContinue(true).build();
-                requestObserver.onNext(fetchReq);
+                requestObserver.onNext(continueReq);
                 return computeNext();
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));

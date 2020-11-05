@@ -25,6 +25,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
+import io.grpc.Channel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,23 +33,23 @@ import static grakn.client.common.ProtoBuilder.options;
 
 public class RPCSession implements Session {
 
-    private final GraknClient client;
+    private final Channel channel;
     private final String database;
     private final Type type;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
-    private final GraknGrpc.GraknBlockingStub graknRPCService;
+    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
     RPCSession(final GraknClient client, final String database, final Type type, final GraknOptions options) {
-        this.client = client;
+        this.channel = client.channel();
         this.database = database;
         this.type = type;
-        graknRPCService = GraknGrpc.newBlockingStub(client.channel());
+        blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
 
         final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                 .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
-        sessionId = graknRPCService.sessionOpen(openReq).getSessionId();
+        sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
         isOpen = new AtomicBoolean(true);
     }
 
@@ -75,7 +76,7 @@ public class RPCSession implements Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            graknRPCService.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
         }
     }
 
@@ -84,7 +85,7 @@ public class RPCSession implements Session {
         return database;
     }
 
-    GraknClient client() { return client; }
+    Channel channel() { return channel; }
 
     private static SessionProto.Session.Type sessionType(final Session.Type type) {
         switch (type) {

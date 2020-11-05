@@ -33,30 +33,30 @@ import java.util.function.Supplier;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 
 class RPCDatabaseManager implements DatabaseManager {
-    private final GraknGrpc.GraknBlockingStub graknRPCService;
+    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
     RPCDatabaseManager(final Channel channel) {
-        graknRPCService = GraknGrpc.newBlockingStub(channel);
+        blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
     }
 
     @Override
     public boolean contains(final String name) {
-        return request(() -> graknRPCService.databaseContains(Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
+        return request(() -> blockingGrpcStub.databaseContains(Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
     }
 
     @Override
     public void create(final String name) {
-        request(() -> graknRPCService.databaseCreate(Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
+        request(() -> blockingGrpcStub.databaseCreate(Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public void delete(final String name) {
-        request(() -> graknRPCService.databaseDelete(Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
+        request(() -> blockingGrpcStub.databaseDelete(Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
     public List<String> all() {
-        return request(() -> ImmutableList.copyOf(graknRPCService.databaseAll(Database.All.Req.getDefaultInstance()).getNamesList()));
+        return request(() -> ImmutableList.copyOf(blockingGrpcStub.databaseAll(Database.All.Req.getDefaultInstance()).getNamesList()));
     }
 
     private String nonNull(String name) {
