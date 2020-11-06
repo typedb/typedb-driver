@@ -49,7 +49,7 @@ import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.ProtoBuilder.options;
 import static grakn.client.common.ProtoBuilder.tracingData;
-import static grakn.client.common.exception.ErrorMessage.Client.CONNECTION_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import static grakn.common.util.Objects.className;
 
@@ -172,18 +172,16 @@ public class RPCTransaction implements Transaction {
             @Override
             public void onError(Throwable error) {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
-                // TODO: is it desirable behaviour to kill all the pending requests?
-                // TODO: this isn't nice in any case - the error for other pending requests is misleading
+                // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
                 collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
                 collectors.clear();
-                close();
+                isOpen.set(false);
             }
 
             @Override
             public void onCompleted() {
-                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(CONNECTION_CLOSED)));
+                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
                 collectors.clear();
-                // TODO: maybe this should just be close()? But if the server terminates abruptly...
                 isOpen.set(false);
             }
         };

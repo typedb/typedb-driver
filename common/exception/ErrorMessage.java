@@ -26,8 +26,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     }
 
     public static class Client extends ErrorMessage {
-        public static final Client CONNECTION_CLOSED =
-                new Client(1, "The connection to the database is closed.");
+        public static final Client TRANSACTION_CLOSED =
+                new Client(1, "The transaction has been closed and no further operation is allowed.");
         public static final Client NEGATIVE_BATCH_SIZE =
                 new Client(2, "Batch size cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
