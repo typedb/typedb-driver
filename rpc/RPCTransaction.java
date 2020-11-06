@@ -165,7 +165,7 @@ public class RPCTransaction implements Transaction {
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
                 if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
-                collector.put(new Response.Ok(res));
+                collector.add(new Response.Ok(res));
                 if (collector.isDone()) collectors.remove(requestId);
             }
 
@@ -174,14 +174,14 @@ public class RPCTransaction implements Transaction {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
                 // TODO: is it desirable behaviour to kill all the pending requests?
                 // TODO: this isn't nice in any case - the error for other pending requests is misleading
-                collectors.values().parallelStream().forEach(x -> x.put(new Response.Error((StatusRuntimeException) error)));
+                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
                 collectors.clear();
                 close();
             }
 
             @Override
             public void onCompleted() {
-                collectors.values().parallelStream().forEach(x -> x.put(new Response.Error(CONNECTION_CLOSED)));
+                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(CONNECTION_CLOSED)));
                 collectors.clear();
                 // TODO: maybe this should just be close()? But if the server terminates abruptly...
                 isOpen.set(false);
@@ -245,7 +245,7 @@ public class RPCTransaction implements Transaction {
             responseBuffer = new LinkedBlockingQueue<>();
         }
 
-        void put(Response response) {
+        void add(Response response) {
             responseBuffer.add(response);
             if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
         }
