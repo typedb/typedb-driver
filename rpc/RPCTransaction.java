@@ -61,7 +61,10 @@ public class RPCTransaction implements Transaction {
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ConcurrentMap<UUID, ResponseCollector> collectors;
     private final int networkLatencyMillis;
-    private final AtomicBoolean isOpen;
+    private final AtomicBoolean streamIsOpen;
+    // Technically nothing prevents open and close being triggered out of order, so we record both events
+    private final AtomicBoolean transactionWasOpened;
+    private final AtomicBoolean transactionWasClosed;
 
     RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
@@ -69,7 +72,13 @@ public class RPCTransaction implements Transaction {
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
             collectors = new ConcurrentHashMap<>();
+
+            // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
+            streamIsOpen = new AtomicBoolean(false);
+            transactionWasOpened = new AtomicBoolean(false);
+            transactionWasClosed = new AtomicBoolean(false);
             requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
+            streamIsOpen.set(true);
 
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -80,8 +89,8 @@ public class RPCTransaction implements Transaction {
             final Instant startTime = Instant.now();
             final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
             final Instant endTime = Instant.now();
+            transactionWasOpened.set(true);
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
-            isOpen = new AtomicBoolean(true);
         }
     }
 
@@ -92,7 +101,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public boolean isOpen() {
-        return isOpen.get();
+        return transactionWasOpened.get() && !transactionWasClosed.get();
     }
 
     @Override
@@ -124,9 +133,10 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void close() {
-        if (isOpen.compareAndSet(true, false)) {
+        if (streamIsOpen.compareAndSet(true, false)) {
             requestObserver.onCompleted();
         }
+        transactionWasClosed.set(true);
     }
 
     public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
@@ -175,14 +185,16 @@ public class RPCTransaction implements Transaction {
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
                 collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
                 collectors.clear();
-                isOpen.set(false);
+                streamIsOpen.set(false);
+                transactionWasClosed.set(true);
             }
 
             @Override
             public void onCompleted() {
                 collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
                 collectors.clear();
-                isOpen.set(false);
+                streamIsOpen.set(false);
+                transactionWasClosed.set(true);
             }
         };
     }
