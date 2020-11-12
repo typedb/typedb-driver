@@ -19,6 +19,26 @@
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
+java_library(
+    name = "behaviour",
+    srcs = glob(["*.java"]),
+    deps = [
+        # Internal Package Dependencies
+        "//:client-java",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/util:util",
+        "//test/behaviour/connection:steps",
+
+        # Grakn Labs Dependencies
+        "@graknlabs_common//test/server:grakn-setup",
+
+        # External Maven Dependencies
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

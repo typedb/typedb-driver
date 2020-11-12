@@ -23,7 +23,7 @@ def graknlabs_grakn_core_artifact():
     artifact_file(
         name = "graknlabs_grakn_core_artifact",
         group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-server-linux-{version}.tar.gz",
+        artifact_name = "grakn-core-server-mac-{version}.tar.gz",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
         commit = "9c224e7688611bf4e18d9b4c45d6635be5c67366",

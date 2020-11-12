@@ -51,6 +51,9 @@ grakn_test(
     ],
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],

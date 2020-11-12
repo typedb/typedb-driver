@@ -28,6 +28,9 @@ grakn_test(
     ],
     test_class = "grakn.client.test.behaviour.graql.language.insert.InsertTest",
     deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
