@@ -120,6 +120,11 @@ public class RPCTransaction implements Transaction {
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         execute(commitReq);
+        // TODO: Currently this close request is parsed as an "unknown frame" on the server because the server
+        //  terminates the stream when commit is called. Three possible solutions are:
+        //  1) don't close the transaction, or the stream, on commit
+        //  2) let the server take full responsibility for closing the stream on commit
+        //  3) let the client take full responsibility for closing the stream on commit
         close();
     }
 
