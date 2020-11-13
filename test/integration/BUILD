@@ -18,9 +18,9 @@
 #
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
-grakn_test(
+grakn_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
     test_class = "grakn.client.test.integration.ClientQueryTest",
@@ -37,7 +37,8 @@ grakn_test(
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
 )
 
 checkstyle_test(

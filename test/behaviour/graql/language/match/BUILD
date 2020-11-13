@@ -19,9 +19,9 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
-grakn_test(
+grakn_java_test(
     name = "test-core",
     srcs = [
         "MatchTest.java",
@@ -43,7 +43,8 @@ grakn_test(
     data = [
         "@graknlabs_behaviour//graql/language:match.feature",
     ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
     size = "medium",
     visibility = ["//visibility:public"]
 )
