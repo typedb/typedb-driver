@@ -56,8 +56,7 @@ public class ConnectionSteps {
 
         System.out.println("Connecting to Grakn ...");
 
-//        String address = GraknSingleton.getGraknRunner().address();
-        String address = GraknClient.DEFAULT_URI;
+        String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
 
         System.out.println("Establishing Connection to Grakn Core at " + address);
