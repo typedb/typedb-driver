@@ -27,9 +27,19 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
-import java.util.stream.StreamSupport;
 
-public abstract class QueryFuture<T> implements Future<T> {
+public class QueryFuture<T> implements Future<T> {
+
+    private final RPCTransaction.ResponseCollector.Single collector;
+    private final Function<TransactionProto.Transaction.Res, T> transformResponse;
+
+    QueryFuture(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+            RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        this.collector = collector;
+        this.transformResponse = transformResponse;
+        requestObserver.onNext(request);
+    }
+
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         return false; // Can't cancel
@@ -41,71 +51,29 @@ public abstract class QueryFuture<T> implements Future<T> {
     }
 
     @Override
-    public abstract T get();
+    public boolean isDone() {
+        return collector.isDone();
+    }
 
     @Override
-    public abstract T get(long timeout, TimeUnit unit);
-
-    static class Execute<T> extends QueryFuture<T> {
-        private final RPCTransaction.ResponseCollector.Single collector;
-        private final Function<TransactionProto.Transaction.Res, T> transformResponse;
-
-        Execute(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                       RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-            this.collector = collector;
-            this.transformResponse = transformResponse;
-            requestObserver.onNext(request);
-        }
-
-        @Override
-        public boolean isDone() {
-            return collector.isDone();
-        }
-
-        @Override
-        public T get() {
-            try {
-                final TransactionProto.Transaction.Res res = collector.take();
-                return transformResponse.apply(res);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new GraknClientException(e);
-            }
-        }
-
-        @Override
-        public T get(long timeout, TimeUnit unit) {
-            try {
-                final TransactionProto.Transaction.Res res = collector.take(timeout, unit);
-                return transformResponse.apply(res);
-            } catch (InterruptedException | TimeoutException e) {
-                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
-                throw new GraknClientException(e);
-            }
+    public T get() {
+        try {
+            final TransactionProto.Transaction.Res res = collector.take();
+            return transformResponse.apply(res);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GraknClientException(e);
         }
     }
 
-    static class Stream<T> extends QueryFuture<java.util.stream.Stream<T>> {
-        private final QueryIterator<T> iterator;
-
-        Stream(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                      RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-            this.iterator = new QueryIterator<>(request, requestObserver, responseCollector, transformResponse);
-        }
-
-        @Override
-        public boolean isDone() {
-            return true;
-        }
-
-        @Override
-        public java.util.stream.Stream<T> get() {
-            return StreamSupport.stream(((Iterable<T>) () -> iterator).spliterator(), false);
-        }
-
-        @Override
-        public java.util.stream.Stream<T> get(long timeout, TimeUnit unit) {
-            return get();
+    @Override
+    public T get(long timeout, TimeUnit unit) {
+        try {
+            final TransactionProto.Transaction.Res res = collector.take(timeout, unit);
+            return transformResponse.apply(res);
+        } catch (InterruptedException | TimeoutException e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+            throw new GraknClientException(e);
         }
     }
 }

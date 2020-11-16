@@ -44,6 +44,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
@@ -154,22 +155,19 @@ public class RPCTransaction implements Transaction {
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             collectors.put(requestId, responseCollector);
-            return new QueryFuture.Execute<>(request.build(), requestObserver, responseCollector, transformResponse);
+            return new QueryFuture<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
 
-    public <T> Stream<T> iterate(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-        return iterateAsync(request, transformResponse).get();
-    }
-
-    public <T> QueryFuture<Stream<T>> iterateAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-        try (ThreadTrace ignored = traceOnThread("iterateAsync")) {
+    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        try (ThreadTrace ignored = traceOnThread("stream")) {
             final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             request.setLatencyMillis(networkLatencyMillis);
             collectors.put(requestId, responseCollector);
-            return new QueryFuture.Stream<>(request.build(), requestObserver, responseCollector, transformResponse);
+            final QueryIterator<T> queryIterator = new QueryIterator<>(request.build(), requestObserver, responseCollector, transformResponse);
+            return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
         }
     }
 

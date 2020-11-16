@@ -44,21 +44,21 @@ public final class QueryManager {
         this.rpcTransaction = rpcTransaction;
     }
 
-    public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query) {
+    public Stream<ConceptMap> match(final GraqlMatch query) {
         return match(query, new GraknOptions());
     }
 
-    public QueryFuture<Stream<ConceptMap>> match(final GraqlMatch query, final GraknOptions options) {
+    public Stream<ConceptMap> match(final GraqlMatch query, final GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
                 QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getMatchRes().getAnswer()));
     }
 
-    public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query) {
+    public Stream<ConceptMap> insert(final GraqlInsert query) {
         return insert(query, new GraknOptions());
     }
 
-    public QueryFuture<Stream<ConceptMap>> insert(final GraqlInsert query, final GraknOptions options) {
+    public Stream<ConceptMap> insert(final GraqlInsert query, final GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
                 QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getInsertRes().getAnswer()));
@@ -94,10 +94,10 @@ public final class QueryManager {
         return rpcTransaction.executeAsync(req, res -> null);
     }
 
-    private <T> QueryFuture<Stream<T>> iterateQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
+    private <T> Stream<T> iterateQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
                                                     final Function<TransactionProto.Transaction.Res, T> responseReader) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
-        return rpcTransaction.iterateAsync(req, responseReader);
+        return rpcTransaction.stream(req, responseReader);
     }
 }
