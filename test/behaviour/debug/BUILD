@@ -28,6 +28,9 @@ grakn_java_test(
     ],
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
+        # Internal package dependencies
+        "//test/behaviour",
+
         # TODO: Add your addition debugging dependencies here
         # e.g. "//test/behaviour/connection/steps:connection-database",
 
