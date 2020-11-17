@@ -23,12 +23,6 @@ java_library(
     name = "behaviour",
     srcs = glob(["*.java"]),
     deps = [
-        # Internal Package Dependencies
-        "//:client-java",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
-
         # Grakn Labs Dependencies
         "@graknlabs_common//test/server:grakn-setup",
 
