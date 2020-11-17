@@ -38,9 +38,9 @@ public interface Answer {
 
     static Answer of(final Transaction tx, final AnswerProto.Answer res) {
         switch (res.getAnswerCase()) {
-            case ANSWERGROUP:
+            case ANSWER_GROUP:
                 return AnswerGroup.of(tx, res.getAnswerGroup());
-            case CONCEPTMAP:
+            case CONCEPT_MAP:
                 return ConceptMap.of(res.getConceptMap());
             case ANSWER_NOT_SET:
                 throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));

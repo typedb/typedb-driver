@@ -22,6 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.Grakn;
 import graql.lang.pattern.Pattern;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -34,6 +35,9 @@ public interface Rule {
     Pattern getThen();
 
     Rule.Remote asRemote(Grakn.Transaction transaction);
+
+    @CheckReturnValue
+    boolean isRemote();
 
     interface Remote extends Rule {
 

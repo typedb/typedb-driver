@@ -19,16 +19,10 @@
 
 package grakn.client.test.behaviour.concept.type.thingtype;
 
-import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknSingleton;
+import grakn.core.test.behaviour.BehaviourTestBase;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -38,7 +32,7 @@ import java.util.concurrent.TimeoutException;
         features = "external/graknlabs_behaviour/concept/type/thingtype.feature",
         tags = "not @ignore and not @ignore-grakn"
 )
-public class ThingTypeTest {
+public class ThingTypeTest extends BehaviourTestBase {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
@@ -59,18 +53,4 @@ public class ThingTypeTest {
     //       --spawn_strategy=standalone : if you're on Mac and the tests need permission to access filesystem
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
-
-    private static GraknCoreRunner runner;
-
-    @BeforeClass
-    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner();
-        runner.start();
-        GraknSingleton.setGraknRunner(runner);
-    }
-
-    @AfterClass
-    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        runner.stop();
-    }
 }

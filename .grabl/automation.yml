@@ -52,16 +52,18 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test --config=rbe //test/integration/... --test_output=errors
+        bazel test //test/integration/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       machine: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
-        bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
-        bazel test --config=rbe //test/behaviour/graql/language/define/... --test_output=errors
+        bazel test //test/behaviour/connection/... --test_output=errors
+        bazel test //test/behaviour/concept/... --test_output=errors
+        bazel test //test/behaviour/graql/language/define/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: revert above tests to //test/behaviour/...
     deploy-maven-snapshot:
       filter:
@@ -82,7 +84,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
+        bazel run //test:grakn-extractor-linux -- dist/grakn-core-all-linux
         ./dist/grakn-core-all-linux/grakn server &
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml

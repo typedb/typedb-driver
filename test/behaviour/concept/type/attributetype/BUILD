@@ -19,7 +19,7 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
 java_library(
     name = "steps",
@@ -38,13 +38,16 @@ java_library(
     visibility = ["//visibility:public"],
 )
 
-grakn_test(
+grakn_java_test(
     name = "test",
     srcs = [
         "AttributeTypeTest.java"
     ],
     test_class = "grakn.client.test.behaviour.concept.type.attributetype.AttributeTypeTest",
     deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",
     ],
@@ -60,7 +63,8 @@ grakn_test(
     data = [
         "@graknlabs_behaviour//concept/type:attributetype.feature",
     ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
     size = "medium",
 )
 

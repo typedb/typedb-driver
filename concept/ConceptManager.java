@@ -33,6 +33,7 @@ import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.impl.RuleImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.rpc.RPCTransaction;
+import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
 import graql.lang.pattern.Pattern;
@@ -73,12 +74,10 @@ public final class ConceptManager {
     }
 
     public EntityType putEntityType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutEntityTypeReq(TransactionProto.Transaction.PutEntityType.Req.newBuilder()
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setPutEntityTypeReq(ConceptProto.ConceptManager.PutEntityType.Req.newBuilder()
                         .setLabel(label)).build();
-
-        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res res = execute(req);
         return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
@@ -91,11 +90,10 @@ public final class ConceptManager {
     }
 
     public RelationType putRelationType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutRelationTypeReq(TransactionProto.Transaction.PutRelationType.Req.newBuilder()
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setPutRelationTypeReq(ConceptProto.ConceptManager.PutRelationType.Req.newBuilder()
                         .setLabel(label)).build();
-        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res res = execute(req);
         return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
     }
 
@@ -108,12 +106,11 @@ public final class ConceptManager {
     }
 
     public AttributeType putAttributeType(final String label, final AttributeType.ValueType valueType) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutAttributeTypeReq(TransactionProto.Transaction.PutAttributeType.Req.newBuilder()
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setPutAttributeTypeReq(ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder()
                         .setLabel(label)
                         .setValueType(valueType(valueType))).build();
-        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res res = execute(req);
         return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
@@ -126,24 +123,22 @@ public final class ConceptManager {
     }
 
     public Rule putRule(final String label, final Pattern when, final Pattern then) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setPutRuleReq(TransactionProto.Transaction.PutRule.Req.newBuilder()
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setPutRuleReq(ConceptProto.ConceptManager.PutRule.Req.newBuilder()
                         .setLabel(label)
                         .setWhen(when.toString())
                         .setThen(then.toString())).build();
-        final TransactionProto.Transaction.Res res = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res res = execute(req);
         return RuleImpl.of(res.getPutRuleRes().getRule());
     }
 
     @Nullable
     @CheckReturnValue
     public Thing getThing(final String iid) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setGetThingReq(TransactionProto.Transaction.GetThing.Req.newBuilder().setIid(iid(iid))).build();
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setGetThingReq(ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
-        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res response = execute(req);
         switch (response.getGetThingRes().getResCase()) {
             case THING:
                 return ThingImpl.of(response.getGetThingRes().getThing());
@@ -156,11 +151,10 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public Type getType(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setGetTypeReq(TransactionProto.Transaction.GetType.Req.newBuilder().setLabel(label)).build();
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setGetTypeReq(ConceptProto.ConceptManager.GetType.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res response = execute(req);
         switch (response.getGetTypeRes().getResCase()) {
             case TYPE:
                 return TypeImpl.of(response.getGetTypeRes().getType());
@@ -173,11 +167,10 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public Rule getRule(final String label) {
-        final TransactionProto.Transaction.Req req = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setGetRuleReq(TransactionProto.Transaction.GetRule.Req.newBuilder().setLabel(label)).build();
+        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+                .setGetRuleReq(ConceptProto.ConceptManager.GetRule.Req.newBuilder().setLabel(label)).build();
 
-        final TransactionProto.Transaction.Res response = rpcTransaction.execute(req);
+        final ConceptProto.ConceptManager.Res response = execute(req);
         switch (response.getGetRuleRes().getResCase()) {
             case RULE:
                 return RuleImpl.of(response.getGetRuleRes().getRule());
@@ -185,5 +178,12 @@ public final class ConceptManager {
             case RES_NOT_SET:
                 return null;
         }
+    }
+
+    private ConceptProto.ConceptManager.Res execute(final ConceptProto.ConceptManager.Req request) {
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData())
+                .setConceptManagerReq(request);
+        return rpcTransaction.execute(req).getConceptManagerRes();
     }
 }

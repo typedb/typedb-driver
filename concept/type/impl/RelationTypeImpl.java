@@ -28,7 +28,6 @@ import grakn.protocol.ConceptProto.RelationType.GetRelates;
 import grakn.protocol.ConceptProto.RelationType.GetRelatesForRoleLabel;
 import grakn.protocol.ConceptProto.RelationType.SetRelates;
 import grakn.protocol.ConceptProto.RelationType.UnsetRelates;
-import grakn.protocol.ConceptProto.TypeMethod;
 
 import java.util.stream.Stream;
 
@@ -94,14 +93,14 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final RelationImpl create() {
-            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder().setRelationTypeCreateReq(
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeCreateReq(
                     ConceptProto.RelationType.Create.Req.getDefaultInstance());
             return ThingImpl.of(execute(method).getRelationTypeCreateRes().getRelation()).asRelation();
         }
 
         @Override
         public final RoleTypeImpl getRelates(final String roleLabel) {
-            final TypeMethod.Req.Builder method = TypeMethod.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
                     GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
             final GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) return TypeImpl.of(res.getRoleType()).asRoleType();
@@ -111,27 +110,27 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final Stream<RoleTypeImpl> getRelates() {
             return stream(
-                    TypeMethod.Iter.Req.newBuilder().setRelationTypeGetRelatesIterReq(
-                            GetRelates.Iter.Req.getDefaultInstance()),
-                    res -> res.getRelationTypeGetRelatesIterRes().getRole()
+                    ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesReq(
+                            GetRelates.Req.getDefaultInstance()),
+                    res -> res.getRelationTypeGetRelatesRes().getRole()
             ).map(TypeImpl::asRoleType);
         }
 
         @Override
         public final void setRelates(final String roleLabel) {
-            execute(TypeMethod.Req.newBuilder().setRelationTypeSetRelatesReq(
+            execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
                     SetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 
         @Override
         public final void setRelates(final String roleLabel, final String overriddenLabel) {
-            execute(TypeMethod.Req.newBuilder().setRelationTypeSetRelatesReq(
+            execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
                     SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)));
         }
 
         @Override
         public final void unsetRelates(String roleLabel) {
-            execute(TypeMethod.Req.newBuilder().setRelationTypeUnsetRelatesReq(
+            execute(ConceptProto.Type.Req.newBuilder().setRelationTypeUnsetRelatesReq(
                     UnsetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 

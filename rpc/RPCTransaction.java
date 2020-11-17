@@ -23,22 +23,36 @@ import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.ErrorMessage;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
 import grakn.client.query.QueryManager;
+import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.common.ProtoBuilder.options;
 import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static grakn.common.util.Objects.className;
 
 public class RPCTransaction implements Transaction {
 
@@ -46,49 +60,39 @@ public class RPCTransaction implements Transaction {
     private final ConceptManager conceptManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final BlockingQueue<RPCResponseAccumulator> collectorQueue;
-    private final AtomicBoolean isOpen;
+    private final ConcurrentMap<UUID, ResponseCollector> collectors;
+    private final int networkLatencyMillis;
+    private final AtomicBoolean streamIsOpen;
+    // Technically nothing prevents open and close being triggered out of order, so we record both events
+    private final AtomicBoolean transactionWasOpened;
+    private final AtomicBoolean transactionWasClosed;
 
-    RPCTransaction(final RPCSession session, final ByteString sessionId, final Type type, final GraknOptions options) {
+    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.type = type;
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
-            collectorQueue = new LinkedBlockingQueue<>();
+            collectors = new ConcurrentHashMap<>();
 
-            final StreamObserver<TransactionProto.Transaction.Res> responseObserver = createResponseObserver();
-            requestObserver = session.getAsyncGrpcStub().transaction(responseObserver);
+            // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
+            streamIsOpen = new AtomicBoolean(false);
+            transactionWasOpened = new AtomicBoolean(false);
+            transactionWasClosed = new AtomicBoolean(false);
+            requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
+            streamIsOpen.set(true);
 
-            final TransactionProto.Transaction.Req openRequest = TransactionProto.Transaction.Req.newBuilder()
+            final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                            .setSessionID(sessionId)
+                            .setSessionId(sessionId)
                             .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                            .setOptions(options(options))).build();
-            execute(openRequest);
-            isOpen = new AtomicBoolean(true);
+                            .setOptions(options(options)));
+            final Instant startTime = Instant.now();
+            final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
+            final Instant endTime = Instant.now();
+            transactionWasOpened.set(true);
+            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
         }
-    }
-
-    private StreamObserver<TransactionProto.Transaction.Res> createResponseObserver() {
-        return new StreamObserver<TransactionProto.Transaction.Res>() {
-            @Override
-            public synchronized void onNext(final TransactionProto.Transaction.Res value) {
-                processResponse(new RPCResponse.Ok(value));
-            }
-
-            @Override
-            public void onError(final Throwable throwable) {
-                assert throwable instanceof StatusRuntimeException : "The server only yields these exceptions";
-                while (collectorQueue.peek() != null)
-                    processResponse(new RPCResponse.Error((StatusRuntimeException) throwable));
-            }
-
-            @Override
-            public void onCompleted() {
-                while (collectorQueue.peek() != null) processResponse(new RPCResponse.Completed());
-            }
-        };
     }
 
     @Override
@@ -98,7 +102,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public boolean isOpen() {
-        return isOpen.get();
+        return transactionWasOpened.get() && !transactionWasClosed.get();
     }
 
     @Override
@@ -113,67 +117,182 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void commit() {
-        final TransactionProto.Transaction.Req commitReq = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance()).build();
+                .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         execute(commitReq);
+        // TODO: Currently this close request is parsed as an "unknown frame" on the server because the server
+        //  terminates the stream when commit is called. Three possible solutions are:
+        //  1) don't close the transaction, or the stream, on commit
+        //  2) let the server take full responsibility for closing the stream on commit
+        //  3) let the client take full responsibility for closing the stream on commit
         close();
     }
 
     @Override
     public void rollback() {
-        final TransactionProto.Transaction.Req rollbackReq = TransactionProto.Transaction.Req.newBuilder()
+        final TransactionProto.Transaction.Req.Builder rollbackReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
-                .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance()).build();
+                .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance());
         execute(rollbackReq);
     }
 
     @Override
     public void close() {
-        if (isOpen.compareAndSet(true, false)) {
+        if (streamIsOpen.compareAndSet(true, false)) {
             requestObserver.onCompleted();
         }
+        transactionWasClosed.set(true);
     }
 
-    public TransactionProto.Transaction.Res execute(final TransactionProto.Transaction.Req request) {
+    public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
         return executeAsync(request, res -> res).get();
     }
 
-    public <T> QueryFuture<T> executeAsync(final TransactionProto.Transaction.Req request, final Function<TransactionProto.Transaction.Res, T> responseReader) {
-        try (ThreadTrace trace = traceOnThread("executeAsync")) {
-            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
-            dispatchRequest(request, collector);
-            return new QueryFuture.Execute<>(collector, responseReader);
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        try (ThreadTrace ignored = traceOnThread("executeAsync")) {
+            final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
+            final UUID requestId = UUID.randomUUID();
+            request.setId(requestId.toString());
+            collectors.put(requestId, responseCollector);
+            return new QueryFuture<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
 
-    public <T> Stream<T> iterate(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        return iterateAsync(iterRequest, responseReader).get();
-    }
-
-    public <T> QueryFuture<Stream<T>> iterateAsync(final TransactionProto.Transaction.Iter.Req iterRequest, final Function<TransactionProto.Transaction.Iter.Res, T> responseReader) {
-        try (ThreadTrace trace = traceOnThread("iterateAsync")) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setIterReq(iterRequest).build();
-            final RPCResponseAccumulator collector = new RPCResponseAccumulator();
-            final RPCIterator<T> iterator = new RPCIterator<>(request, responseReader, requestObserver, collector);
-            collectorQueue.add(collector);
-            return new QueryFuture.Stream<>(iterator);
+    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        try (ThreadTrace ignored = traceOnThread("stream")) {
+            final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
+            final UUID requestId = UUID.randomUUID();
+            request.setId(requestId.toString());
+            request.setLatencyMillis(networkLatencyMillis);
+            collectors.put(requestId, responseCollector);
+            final QueryIterator<T> queryIterator = new QueryIterator<>(request.build(), requestObserver, responseCollector, transformResponse);
+            return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
         }
     }
 
-    private synchronized void dispatchRequest(final TransactionProto.Transaction.Req request, final RPCResponseAccumulator collector) {
-        // We must add the response collectors in the exact same order we send the requests
-        // TODO: this doesn't seem like it should be true
-        collectorQueue.add(collector);
-        requestObserver.onNext(request);
+    private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
+        return new StreamObserver<TransactionProto.Transaction.Res>() {
+            @Override
+            public void onNext(TransactionProto.Transaction.Res res) {
+                final UUID requestId = UUID.fromString(res.getId());
+                final ResponseCollector collector = collectors.get(requestId);
+                if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
+                collector.add(new Response.Ok(res));
+                if (collector.isDone()) collectors.remove(requestId);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
+                // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
+                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
+                collectors.clear();
+                streamIsOpen.set(false);
+                transactionWasClosed.set(true);
+            }
+
+            @Override
+            public void onCompleted() {
+                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
+                collectors.clear();
+                streamIsOpen.set(false);
+                transactionWasClosed.set(true);
+            }
+        };
     }
 
-    private void processResponse(final RPCResponse res) {
-        // TODO: This probably doesn't work if we send a slow query followed by a fast query down the same transaction.
-        final RPCResponseAccumulator currentCollector = collectorQueue.peek();
-        assert currentCollector != null;
-        currentCollector.onResponse(res);
-        if (currentCollector.isDone()) collectorQueue.poll();
+    abstract static class Response {
+
+        abstract TransactionProto.Transaction.Res read();
+
+        static class Ok extends Response {
+            private final TransactionProto.Transaction.Res response;
+
+            Ok(TransactionProto.Transaction.Res response) {
+                this.response = response;
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                return response;
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + response + "}";
+            }
+        }
+
+        static class Error extends Response {
+            private final GraknClientException error;
+
+            Error(StatusRuntimeException error) {
+                // TODO: parse different gRPC errors into specific GraknClientException
+                this.error = new GraknClientException(error);
+            }
+
+            Error(ErrorMessage error) {
+                this.error = new GraknClientException(error);
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                throw error;
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + error + "}";
+            }
+        }
+    }
+
+    abstract static class ResponseCollector {
+        private final AtomicBoolean isDone;
+        /** gRPC response messages, errors, and notifications of abrupt termination are all sent to this blocking queue. */
+        private final BlockingQueue<Response> responseBuffer;
+
+        ResponseCollector() {
+            isDone = new AtomicBoolean(false);
+            responseBuffer = new LinkedBlockingQueue<>();
+        }
+
+        void add(Response response) {
+            responseBuffer.add(response);
+            if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
+        }
+
+        boolean isDone() {
+            return isDone.get();
+        }
+
+        TransactionProto.Transaction.Res take() throws InterruptedException {
+            return responseBuffer.take().read();
+        }
+
+        TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
+            final Response response = responseBuffer.poll(timeout, unit);
+            if (response != null) return response.read();
+            else throw new TimeoutException();
+        }
+
+        abstract boolean isLastResponse(TransactionProto.Transaction.Res response);
+
+        static class Single extends ResponseCollector {
+
+            @Override
+            boolean isLastResponse(TransactionProto.Transaction.Res response) {
+                return true;
+            }
+        }
+
+        static class Multiple extends ResponseCollector {
+
+            @Override
+            boolean isLastResponse(TransactionProto.Transaction.Res response) {
+                return response.getDone();
+            }
+        }
     }
 }

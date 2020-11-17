@@ -26,7 +26,6 @@ import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Attribute.GetOwners;
-import grakn.protocol.ConceptProto.ThingMethod;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -122,18 +121,18 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         @Override
         public final Stream<ThingImpl> getOwners() {
             return stream(
-                    ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
-                            GetOwners.Iter.Req.getDefaultInstance()),
-                    res -> res.getAttributeGetOwnersIterRes().getThing()
+                    ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
+                            GetOwners.Req.getDefaultInstance()),
+                    res -> res.getAttributeGetOwnersRes().getThing()
             );
         }
 
         @Override
         public Stream<ThingImpl> getOwners(ThingType ownerType) {
             return stream(
-                    ThingMethod.Iter.Req.newBuilder().setAttributeGetOwnersIterReq(
-                            GetOwners.Iter.Req.newBuilder().setThingType(type(ownerType))),
-                    res -> res.getAttributeGetOwnersIterRes().getThing()
+                    ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
+                            GetOwners.Req.newBuilder().setThingType(type(ownerType))),
+                    res -> res.getAttributeGetOwnersRes().getThing()
             );
         }
 
@@ -451,7 +450,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         public static AttributeImpl.DateTime of(final ConceptProto.Thing thingProto) {
             return new AttributeImpl.DateTime(
                     bytesToHexString(thingProto.getIid().toByteArray()),
-                    toLocalDateTime(thingProto.getValue().getDatetime())
+                    toLocalDateTime(thingProto.getValue().getDateTime())
             );
         }
 
@@ -484,7 +483,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             }
 
             public static AttributeImpl.DateTime.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing thingProto) {
-                return new AttributeImpl.DateTime.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), toLocalDateTime(thingProto.getValue().getDatetime()));
+                return new AttributeImpl.DateTime.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), toLocalDateTime(thingProto.getValue().getDateTime()));
             }
 
             @Override

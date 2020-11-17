@@ -17,14 +17,15 @@
 # under the License.
 #
 
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_file")
+load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment_private")
-def graknlabs_grakn_core_artifact():
-    artifact_file(
+
+def graknlabs_grakn_core_artifacts():
+    native_artifact_files(
         name = "graknlabs_grakn_core_artifact",
         group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-server-linux-{version}.tar.gz",
+        artifact_name = "grakn-core-server-{platform}-{version}.tar.gz",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
-        commit = "eefa16ca8d80c9e621c460305d76f3c514abadbb",
+        commit = "fd7ef4a226188a582b98e36005d9c749ae835e57",
     )

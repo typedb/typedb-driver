@@ -60,7 +60,6 @@ java_library(
         "@maven//:io_grpc_grpc_core",
         "@maven//:io_grpc_grpc_stub",
         "@maven//:io_grpc_grpc_api",
-        "@maven//:org_slf4j_slf4j_api" # TODO: Do we still need this?
     ],
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",

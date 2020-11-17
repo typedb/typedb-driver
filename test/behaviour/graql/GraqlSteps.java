@@ -70,7 +70,7 @@ public class GraqlSteps {
     }
 
     @Given("graql define")
-    public QueryFuture<List<ThingType>> graql_define(final String defineQueryStatements) {
+    public QueryFuture<Void> graql_define(String defineQueryStatements) {
         final GraqlDefine graqlQuery = Graql.parseQuery(String.join("\n", defineQueryStatements));
         return tx().query().define(graqlQuery);
     }
@@ -94,7 +94,7 @@ public class GraqlSteps {
     @Given("graql insert")
     public Stream<ConceptMap> graql_insert(final String insertQueryStatements) {
         final GraqlInsert graqlQuery = Graql.parseQuery(String.join("\n", insertQueryStatements));
-        return tx().query().insert(graqlQuery).get();
+        return tx().query().insert(graqlQuery);
     }
 
     @Given("graql insert; throws exception")
@@ -122,7 +122,7 @@ public class GraqlSteps {
         answerGroups = null;
         numericAnswerGroups = null;
 
-        answers = tx().query().insert(graqlQuery).get();
+        answers = tx().query().insert(graqlQuery);
     }
 
     @When("get answers of graql query")

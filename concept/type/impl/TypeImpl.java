@@ -32,7 +32,6 @@ import grakn.client.concept.type.Type;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Type.SetSupertype;
-import grakn.protocol.ConceptProto.TypeMethod;
 import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
@@ -79,6 +78,11 @@ public abstract class TypeImpl implements Type {
     @Override
     public final boolean isRoot() {
         return isRoot;
+    }
+
+    @Override
+    public boolean isRemote() {
+        return false;
     }
 
     @Override
@@ -180,14 +184,19 @@ public abstract class TypeImpl implements Type {
         }
 
         @Override
+        public final boolean isRemote() {
+            return true;
+        }
+
+        @Override
         public final void setLabel(final String label) {
-            execute(TypeMethod.Req.newBuilder()
+            execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
         }
 
         @Override
         public final boolean isAbstract() {
-            return execute(TypeMethod.Req.newBuilder()
+            return execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()))
                     .getTypeIsAbstractRes().getAbstract();
         }
@@ -228,12 +237,12 @@ public abstract class TypeImpl implements Type {
         }
 
         void setSupertypeExecute(final Type type) {
-            execute(TypeMethod.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
+            execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
         }
 
         @Nullable
         <TYPE extends TypeImpl> TYPE getSupertypeExecute(final Function<TypeImpl, TYPE> typeConstructor) {
-            final ConceptProto.Type.GetSupertype.Res response = execute(TypeMethod.Req.newBuilder()
+            final ConceptProto.Type.GetSupertype.Res response = execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()))
                     .getTypeGetSupertypeRes();
 
@@ -247,20 +256,20 @@ public abstract class TypeImpl implements Type {
         }
 
         <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(final Function<TypeImpl, TYPE> typeConstructor) {
-            final TypeMethod.Iter.Req.Builder method = TypeMethod.Iter.Req.newBuilder()
-                    .setTypeGetSupertypesIterReq(ConceptProto.Type.GetSupertypes.Iter.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSupertypesIterRes().getType()).map(typeConstructor);
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+                    .setTypeGetSupertypesReq(ConceptProto.Type.GetSupertypes.Req.getDefaultInstance());
+            return stream(method, res -> res.getTypeGetSupertypesRes().getType()).map(typeConstructor);
         }
 
         <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(final Function<TypeImpl, TYPE> typeConstructor) {
-            final TypeMethod.Iter.Req.Builder method = TypeMethod.Iter.Req.newBuilder()
-                    .setTypeGetSubtypesIterReq(ConceptProto.Type.GetSubtypes.Iter.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSubtypesIterRes().getType()).map(typeConstructor);
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+                    .setTypeGetSubtypesReq(ConceptProto.Type.GetSubtypes.Req.getDefaultInstance());
+            return stream(method, res -> res.getTypeGetSubtypesRes().getType()).map(typeConstructor);
         }
 
         @Override
         public final void delete() {
-            execute(TypeMethod.Req.newBuilder().setTypeDeleteReq(ConceptProto.Type.Delete.Req.getDefaultInstance()));
+            execute(ConceptProto.Type.Req.newBuilder().setTypeDeleteReq(ConceptProto.Type.Delete.Req.getDefaultInstance()));
         }
 
         @Override
@@ -272,29 +281,23 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction;
         }
 
-        Stream<TypeImpl> stream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Type> typeGetter) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request, res -> TypeImpl.of(typeGetter.apply(res.getConceptMethodTypeIterRes())));
+        Stream<TypeImpl> stream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
+            return rpcTransaction.stream(request, res -> TypeImpl.of(typeGetter.apply(res.getTypeRes())));
         }
 
-        Stream<ThingImpl> thingStream(final TypeMethod.Iter.Req.Builder method, final Function<TypeMethod.Iter.Res, ConceptProto.Thing> thingGetter) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request, res -> ThingImpl.of(thingGetter.apply(res.getConceptMethodTypeIterRes())));
+        Stream<ThingImpl> thingStream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Thing> thingGetter) {
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
+            return rpcTransaction.stream(request, res -> ThingImpl.of(thingGetter.apply(res.getTypeRes())));
         }
 
-        TypeMethod.Res execute(final TypeMethod.Req.Builder method) {
-            final TransactionProto.Transaction.Req request = TransactionProto.Transaction.Req.newBuilder()
-                    .setTypeMethodReq(method.setLabel(label)).build();
-            return rpcTransaction.execute(request).getTypeMethodRes();
+        ConceptProto.Type.Res execute(final ConceptProto.Type.Req.Builder method) {
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setTypeReq(method.setLabel(label));
+            return rpcTransaction.execute(request).getTypeRes();
         }
-
-        /*TypeMethod.Res iterate(final TypeMethod.Iter.Req.Builder method) {
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setTypeMethodIterReq(method.setLabel(label)).build();
-            return rpcTransaction.iterate(request).
-        }*/
 
         @Override
         public String toString() {
@@ -307,8 +310,8 @@ public abstract class TypeImpl implements Type {
             if (o == null || getClass() != o.getClass()) return false;
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
-            return (this.rpcTransaction.equals(that.rpcTransaction) &&
-                    this.getLabel().equals(that.getLabel()));
+            return this.rpcTransaction.equals(that.rpcTransaction) &&
+                    this.getLabel().equals(that.getLabel());
         }
 
         @Override

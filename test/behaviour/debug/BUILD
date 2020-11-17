@@ -19,15 +19,18 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
-grakn_test(
+grakn_java_test(
     name = "test",
     srcs = [
         "DebugTest.java",
     ],
     test_class = "grakn.client.test.behaviour.debug.DebugTest",
     deps = [
+        # Internal package dependencies
+        "//test/behaviour",
+
         # TODO: Add your addition debugging dependencies here
         # e.g. "//test/behaviour/connection/steps:connection-database",
 
@@ -44,7 +47,8 @@ grakn_test(
     data = [
         ":debug.feature",
     ],
-    grakn_artifact = "@graknlabs_grakn_core_artifact//file",
+    grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
     size = "medium",
     tags = ["manual"]
 )

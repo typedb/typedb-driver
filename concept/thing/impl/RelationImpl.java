@@ -31,7 +31,6 @@ import grakn.protocol.ConceptProto;
 import grakn.protocol.ConceptProto.Relation.AddPlayer;
 import grakn.protocol.ConceptProto.Relation.GetPlayers;
 import grakn.protocol.ConceptProto.Relation.RemovePlayer;
-import grakn.protocol.ConceptProto.ThingMethod;
 import grakn.protocol.TransactionProto;
 
 import java.util.ArrayList;
@@ -89,13 +88,13 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType() {
-            final ThingMethod.Iter.Req.Builder method = ThingMethod.Iter.Req.newBuilder()
-                    .setRelationGetPlayersByRoleTypeIterReq(ConceptProto.Relation.GetPlayersByRoleType.Iter.Req.getDefaultInstance());
+            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+                    .setRelationGetPlayersByRoleTypeReq(ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance());
 
-            final TransactionProto.Transaction.Iter.Req request = TransactionProto.Transaction.Iter.Req.newBuilder()
-                    .setThingMethodIterReq(method.setIid(iid(getIID()))).build();
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Iter.Res> stream = rpcTransaction.iterate(
-                    request, res -> res.getConceptMethodThingIterRes().getRelationGetPlayersByRoleTypeIterRes());
+            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                    .setThingReq(method.setIid(iid(getIID())));
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Res> stream = rpcTransaction.stream(
+                    request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes());
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
@@ -118,20 +117,20 @@ public class RelationImpl extends ThingImpl implements Relation {
         @Override
         public Stream<ThingImpl> getPlayers(final RoleType... roleTypes) {
             return stream(
-                    ThingMethod.Iter.Req.newBuilder().setRelationGetPlayersIterReq(
-                            GetPlayers.Iter.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getRelationGetPlayersIterRes().getThing());
+                    ConceptProto.Thing.Req.newBuilder().setRelationGetPlayersReq(
+                            GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
+                    res -> res.getRelationGetPlayersRes().getThing());
         }
 
         @Override
         public void addPlayer(final RoleType roleType, final Thing player) {
-            execute(ThingMethod.Req.newBuilder().setRelationAddPlayerReq(
+            execute(ConceptProto.Thing.Req.newBuilder().setRelationAddPlayerReq(
                     AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override
         public void removePlayer(final RoleType roleType, final Thing player) {
-            execute(ThingMethod.Req.newBuilder().setRelationRemovePlayerReq(
+            execute(ConceptProto.Thing.Req.newBuilder().setRelationRemovePlayerReq(
                     RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 

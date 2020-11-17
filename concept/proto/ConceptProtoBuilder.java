@@ -91,7 +91,7 @@ public abstract class ConceptProtoBuilder {
         } else if (value instanceof Double) {
             builder.setDouble((double) value);
         } else if (value instanceof LocalDateTime) {
-            builder.setDatetime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
+            builder.setDateTime(((LocalDateTime) value).atZone(ZoneId.of("Z")).toInstant().toEpochMilli());
         } else {
             throw new GraknClientException(BAD_ATTRIBUTE_VALUE.message(value));
         }

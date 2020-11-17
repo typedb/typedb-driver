@@ -44,19 +44,9 @@ public interface Concept {
     Remote asRemote(Grakn.Transaction transaction);
 
     @CheckReturnValue
-    default boolean isRemote() {
-        return false;
-    }
+    boolean isRemote();
 
     interface Remote extends Concept {
-
-        static Concept.Remote of(final Grakn.Transaction transaction, final ConceptProto.Concept concept) {
-            if (concept.hasThing()) {
-                return ThingImpl.Remote.of(transaction, concept.getThing());
-            } else {
-                return TypeImpl.Remote.of(transaction, concept.getType());
-            }
-        }
 
         void delete();
 
@@ -68,10 +58,5 @@ public interface Concept {
 
         @Override
         Thing.Remote asThing();
-
-        @Override
-        default boolean isRemote() {
-            return true;
-        }
     }
 }

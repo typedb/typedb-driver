@@ -31,6 +31,6 @@ checkstyle_test(
 )
 
 artifact_extractor(
-    name = "grakn-extractor",
-    artifact = "@graknlabs_grakn_core_artifact//file",
+    name = "grakn-extractor-linux",
+    artifact = "@graknlabs_grakn_core_artifact_linux//file",
 )

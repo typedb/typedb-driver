@@ -25,8 +25,6 @@ import javax.annotation.Nullable;
 
 public class GraknClientException extends RuntimeException {
 
-    private String statusCode;
-
     public GraknClientException(final String error) {
         super(error);
     }
@@ -37,8 +35,7 @@ public class GraknClientException extends RuntimeException {
     }
 
     public GraknClientException(final StatusRuntimeException statusRuntimeException) {
-        super(statusRuntimeException.getMessage(), statusRuntimeException);
-        this.statusCode = statusRuntimeException.getStatus().getCode().name();
+        super(statusRuntimeException.getStatus().getDescription());
     }
 
     public GraknClientException(final Exception e) {
@@ -48,7 +45,4 @@ public class GraknClientException extends RuntimeException {
     public String getName() {
         return this.getClass().getName();
     }
-
-    @Nullable
-    public String getStatusCode() { return this.statusCode; }
 }
