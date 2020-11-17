@@ -68,7 +68,7 @@ grakn_java_test(
     ],
     grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
     grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    size = "medium",
+    size = "small",
 )
 
 checkstyle_test(
