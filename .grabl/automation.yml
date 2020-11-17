@@ -51,8 +51,8 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-      # TODO: use --config=rbe once Grakn Core runs in RBE
         bazel test //test/integration/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       machine: graknlabs-ubuntu-20.04
       script: |
