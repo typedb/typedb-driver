@@ -35,22 +35,22 @@ import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 class RPCDatabaseManager implements DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    RPCDatabaseManager(final Channel channel) {
+    RPCDatabaseManager(Channel channel) {
         blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
     }
 
     @Override
-    public boolean contains(final String name) {
+    public boolean contains(String name) {
         return request(() -> blockingGrpcStub.databaseContains(Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
     }
 
     @Override
-    public void create(final String name) {
+    public void create(String name) {
         request(() -> blockingGrpcStub.databaseCreate(Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
-    public void delete(final String name) {
+    public void delete(String name) {
         request(() -> blockingGrpcStub.databaseDelete(Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
@@ -64,7 +64,7 @@ class RPCDatabaseManager implements DatabaseManager {
         return name;
     }
 
-    private static <RES> RES request(final Supplier<RES> req) {
+    private static <RES> RES request(Supplier<RES> req) {
         try {
             return req.get();
         } catch (StatusRuntimeException e) {

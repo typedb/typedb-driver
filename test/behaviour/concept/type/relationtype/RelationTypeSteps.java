@@ -54,7 +54,7 @@ public class RelationTypeSteps {
     }
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}; throws exception")
-    public void relation_type_unset_related_role_throws_exception(final String relationLabel, final String roleLabel) {
+    public void relation_type_unset_related_role_throws_exception(String relationLabel, String roleLabel) {
         assertThrows(() -> relation_type_unset_related_role(relationLabel, roleLabel));
     }
 

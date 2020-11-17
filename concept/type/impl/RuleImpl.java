@@ -43,7 +43,7 @@ public class RuleImpl implements Rule {
     private final ThingVariable<?> then;
     private final int hash;
 
-    RuleImpl(final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
+    RuleImpl(String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
         this.label = label;
         this.when = when;
@@ -51,7 +51,7 @@ public class RuleImpl implements Rule {
         this.hash = Objects.hash(this.label);
     }
 
-    public static RuleImpl of(final ConceptProto.Rule ruleProto) {
+    public static RuleImpl of(ConceptProto.Rule ruleProto) {
         return new RuleImpl(ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
     }
 
@@ -71,7 +71,7 @@ public class RuleImpl implements Rule {
     }
 
     @Override
-    public RuleImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public RuleImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
     }
 
@@ -86,7 +86,7 @@ public class RuleImpl implements Rule {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -107,7 +107,7 @@ public class RuleImpl implements Rule {
         private final ThingVariable<?> then;
         private final int hash;
 
-        public Remote(final Grakn.Transaction transaction, final String label, final Conjunction<? extends Pattern> when, final ThingVariable<?> then) {
+        public Remote(Grakn.Transaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
             this.rpcTransaction = (RPCTransaction) transaction;
@@ -117,7 +117,7 @@ public class RuleImpl implements Rule {
             this.hash = Objects.hash(transaction, label);
         }
 
-        public static RuleImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Rule ruleProto) {
+        public static RuleImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Rule ruleProto) {
             return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
         }
 
@@ -137,7 +137,7 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public void setLabel(final String label) {
+        public void setLabel(String label) {
             execute(ConceptProto.Rule.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
         }
 
@@ -152,7 +152,7 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public Remote asRemote(final Grakn.Transaction transaction) {
+        public Remote asRemote(Grakn.Transaction transaction) {
             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
         }
 
@@ -167,7 +167,7 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public boolean equals(final Object o) {
+        public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
@@ -184,7 +184,7 @@ public class RuleImpl implements Rule {
             return rpcTransaction;
         }
 
-        ConceptProto.Rule.Res execute(final ConceptProto.Rule.Req.Builder method) {
+        ConceptProto.Rule.Res execute(ConceptProto.Rule.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setRuleReq(method.setLabel(label));
             return rpcTransaction.execute(request).getRuleRes();

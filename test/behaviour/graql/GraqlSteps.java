@@ -76,45 +76,45 @@ public class GraqlSteps {
     }
 
     @Given("graql define; throws exception")
-    public void graql_define_throws(final String defineQueryStatements) {
+    public void graql_define_throws(String defineQueryStatements) {
         assertThrows(() -> graql_define(defineQueryStatements).get());
     }
 
     @Given("graql undefine")
-    public QueryFuture<Void> graql_undefine(final String undefineQueryStatements) {
+    public QueryFuture<Void> graql_undefine(String undefineQueryStatements) {
         final GraqlUndefine graqlQuery = Graql.parseQuery(String.join("\n", undefineQueryStatements));
         return tx().query().undefine(graqlQuery);
     }
 
     @Given("graql undefine; throws exception")
-    public void graql_undefine_throws(final String undefineQueryStatements) {
+    public void graql_undefine_throws(String undefineQueryStatements) {
         assertThrows(() -> graql_undefine(undefineQueryStatements).get());
     }
 
     @Given("graql insert")
-    public Stream<ConceptMap> graql_insert(final String insertQueryStatements) {
+    public Stream<ConceptMap> graql_insert(String insertQueryStatements) {
         final GraqlInsert graqlQuery = Graql.parseQuery(String.join("\n", insertQueryStatements));
         return tx().query().insert(graqlQuery);
     }
 
     @Given("graql insert; throws exception")
-    public void graql_insert_throws(final String insertQueryStatements) {
+    public void graql_insert_throws(String insertQueryStatements) {
         assertThrows(() -> graql_insert(insertQueryStatements));
     }
 
     @Given("graql delete")
-    public QueryFuture<Void> graql_delete(final String deleteQueryStatements) {
+    public QueryFuture<Void> graql_delete(String deleteQueryStatements) {
         final GraqlDelete graqlQuery = Graql.parseQuery(String.join("\n", deleteQueryStatements));
         return tx().query().delete(graqlQuery);
     }
 
     @Given("graql delete; throws exception")
-    public void graql_delete_throws(final String deleteQueryStatements) {
+    public void graql_delete_throws(String deleteQueryStatements) {
         assertThrows(() -> graql_delete(deleteQueryStatements).get());
     }
 
     @When("get answers of graql insert")
-    public void get_answers_of_graql_insert(final String graqlQueryStatements) {
+    public void get_answers_of_graql_insert(String graqlQueryStatements) {
         final GraqlInsert graqlQuery = Graql.parseQuery(String.join("\n", graqlQueryStatements));
         // Erase answers from previous steps to avoid polluting the result space
         answers = null;
@@ -126,7 +126,7 @@ public class GraqlSteps {
     }
 
     @When("get answers of graql query")
-    public void graql_query(final String graqlQueryStatements) {
+    public void graql_query(String graqlQueryStatements) {
         // TODO: re-enable when match is implemented
 //        final GraqlQuery graqlQuery = Graql.parse(String.join("\n", graqlQueryStatements));
 //        // Erase answers from previous steps to avoid polluting the result space
@@ -150,12 +150,12 @@ public class GraqlSteps {
     }
 
     @When("graql match; throws exception")
-    public void graql_match_throws_exception(final String graqlQueryStatements) {
+    public void graql_match_throws_exception(String graqlQueryStatements) {
         // TODO
     }
 
     @Then("answer size is: {number}")
-    public void answer_quantity_assertion(final int expectedAnswers) {
+    public void answer_quantity_assertion(int expectedAnswers) {
         // TODO
 //        assertEquals(
 //                String.format("Expected [%d] answers, but got [%d]", expectedAnswers, answers.count()),
@@ -247,7 +247,7 @@ public class GraqlSteps {
     }
 
     @Then("group identifiers are")
-    public void group_identifiers_are(final Map<String, Map<String, String>> identifiers) {
+    public void group_identifiers_are(Map<String, Map<String, String>> identifiers) {
         for (Map.Entry<String, Map<String, String>> entry : identifiers.entrySet()) {
             String groupIdentifier = entry.getKey();
             Map<String, String> variables = entry.getValue();
@@ -342,11 +342,11 @@ public class GraqlSteps {
 
         private static final String GROUP_COLUMN_NAME = "group";
 
-        public AnswerIdentifierGroup(final List<Map<String, String>> answerIdentifierTable, final Map<String, String> groupOwnerIdentifiers) {
+        public AnswerIdentifierGroup(List<Map<String, String>> answerIdentifierTable, Map<String, String> groupOwnerIdentifiers) {
             final String groupIdentifier = answerIdentifierTable.get(0).get(GROUP_COLUMN_NAME);
             groupOwnerIdentifier = groupOwnerIdentifiers.get(groupIdentifier);
             answersIdentifiers = new ArrayList<>();
-            for (final Map<String, String> rawAnswerIdentifiers : answerIdentifierTable) {
+            for (Map<String, String> rawAnswerIdentifiers : answerIdentifierTable) {
                 answersIdentifiers.add(rawAnswerIdentifiers.entrySet().stream()
                                                .filter(e -> !e.getKey().equals(GROUP_COLUMN_NAME))
                                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
@@ -354,7 +354,7 @@ public class GraqlSteps {
         }
     }
 
-    private boolean matchAnswer(final Map<String, String> answerIdentifiers, final ConceptMap answer) {
+    private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
 
         if (!(answerIdentifiers).keySet().equals(answer.map().keySet())) {
             return false;
@@ -451,7 +451,7 @@ public class GraqlSteps {
     } */
 
     @Then("each answer satisfies")
-    public void each_answer_satisfies(final String templatedGraqlQuery) {
+    public void each_answer_satisfies(String templatedGraqlQuery) {
         // TODO
 //        final String templatedQuery = String.join("\n", templatedGraqlQuery);
 //        for (ConceptMap answer : answers.collect(Collectors.toList())) {
@@ -562,14 +562,14 @@ public class GraqlSteps {
         }
 
         @Override
-        public boolean check(final Concept concept) {
+        public boolean check(Concept concept) {
             if (!(concept instanceof Thing)) { return false; }
 
             final Set<Attribute<?>> keys = concept.asThing().asRemote(tx()).getHas(true).collect(Collectors.toSet());
 
             final HashMap<String, String> keyMap = new HashMap<>();
 
-            for (final Attribute<?> key : keys) {
+            for (Attribute<?> key : keys) {
                 keyMap.put(
                         key.asRemote(tx()).getType().getLabel(),
                         key.getValue().toString());

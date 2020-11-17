@@ -39,7 +39,7 @@ public class AnswerGroup<T> implements Answer {
         this.answers = answers;
     }
 
-    public static AnswerGroup<? extends Answer> of(final Transaction tx, final AnswerProto.AnswerGroup res) {
+    public static AnswerGroup<? extends Answer> of(Transaction tx, AnswerProto.AnswerGroup res) {
         Concept concept;
         if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
         else concept = TypeImpl.of(res.getOwner().getType());

@@ -45,7 +45,7 @@ public class ConceptMap implements Answer {
         this.queryPattern = queryPattern;
     }
 
-    public static ConceptMap of(final AnswerProto.ConceptMap res) {
+    public static ConceptMap of(AnswerProto.ConceptMap res) {
         final Map<String, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach((resVar, resConcept) -> {
             Concept concept;

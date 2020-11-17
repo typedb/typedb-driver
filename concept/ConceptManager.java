@@ -49,7 +49,7 @@ public final class ConceptManager {
 
     private final RPCTransaction rpcTransaction;
 
-    public ConceptManager(final RPCTransaction rpcTransaction) {
+    public ConceptManager(RPCTransaction rpcTransaction) {
         this.rpcTransaction = rpcTransaction;
     }
 
@@ -73,7 +73,7 @@ public final class ConceptManager {
         return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
 
-    public EntityType putEntityType(final String label) {
+    public EntityType putEntityType(String label) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutEntityTypeReq(ConceptProto.ConceptManager.PutEntityType.Req.newBuilder()
                         .setLabel(label)).build();
@@ -83,13 +83,13 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public EntityType getEntityType(final String label) {
+    public EntityType getEntityType(String label) {
         final Type concept = getType(label);
         if (concept instanceof EntityType) return concept.asEntityType();
         else return null;
     }
 
-    public RelationType putRelationType(final String label) {
+    public RelationType putRelationType(String label) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutRelationTypeReq(ConceptProto.ConceptManager.PutRelationType.Req.newBuilder()
                         .setLabel(label)).build();
@@ -99,13 +99,13 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public RelationType getRelationType(final String label) {
+    public RelationType getRelationType(String label) {
         final Type concept = getType(label);
         if (concept instanceof RelationType) return concept.asRelationType();
         else return null;
     }
 
-    public AttributeType putAttributeType(final String label, final AttributeType.ValueType valueType) {
+    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutAttributeTypeReq(ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder()
                         .setLabel(label)
@@ -116,13 +116,13 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public AttributeType getAttributeType(final String label) {
+    public AttributeType getAttributeType(String label) {
         final Type concept = getType(label);
         if (concept instanceof AttributeType) return concept.asAttributeType();
         else return null;
     }
 
-    public Rule putRule(final String label, final Pattern when, final Pattern then) {
+    public Rule putRule(String label, Pattern when, Pattern then) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutRuleReq(ConceptProto.ConceptManager.PutRule.Req.newBuilder()
                         .setLabel(label)
@@ -134,7 +134,7 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public Thing getThing(final String iid) {
+    public Thing getThing(String iid) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setGetThingReq(ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
@@ -150,7 +150,7 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public Type getType(final String label) {
+    public Type getType(String label) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setGetTypeReq(ConceptProto.ConceptManager.GetType.Req.newBuilder().setLabel(label)).build();
 
@@ -166,7 +166,7 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public Rule getRule(final String label) {
+    public Rule getRule(String label) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setGetRuleReq(ConceptProto.ConceptManager.GetRule.Req.newBuilder().setLabel(label)).build();
 
@@ -180,7 +180,7 @@ public final class ConceptManager {
         }
     }
 
-    private ConceptProto.ConceptManager.Res execute(final ConceptProto.ConceptManager.Req request) {
+    private ConceptProto.ConceptManager.Res execute(ConceptProto.ConceptManager.Req request) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setConceptManagerReq(request);

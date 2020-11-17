@@ -40,62 +40,62 @@ public final class QueryManager {
 
     private final RPCTransaction rpcTransaction;
 
-    public QueryManager(final RPCTransaction rpcTransaction) {
+    public QueryManager(RPCTransaction rpcTransaction) {
         this.rpcTransaction = rpcTransaction;
     }
 
-    public Stream<ConceptMap> match(final GraqlMatch query) {
+    public Stream<ConceptMap> match(GraqlMatch query) {
         return match(query, new GraknOptions());
     }
 
-    public Stream<ConceptMap> match(final GraqlMatch query, final GraknOptions options) {
+    public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
                 QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getMatchRes().getAnswer()));
     }
 
-    public Stream<ConceptMap> insert(final GraqlInsert query) {
+    public Stream<ConceptMap> insert(GraqlInsert query) {
         return insert(query, new GraknOptions());
     }
 
-    public Stream<ConceptMap> insert(final GraqlInsert query, final GraknOptions options) {
+    public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
                 QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getInsertRes().getAnswer()));
     }
 
-    public QueryFuture<Void> delete(final GraqlDelete query) {
+    public QueryFuture<Void> delete(GraqlDelete query) {
         return delete(query, new GraknOptions());
     }
 
-    public QueryFuture<Void> delete(final GraqlDelete query, final GraknOptions options) {
+    public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
         return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Graql.Delete.Req.newBuilder().setQuery(query.toString())), options);
     }
 
-    public QueryFuture<Void> define(final GraqlDefine query) {
+    public QueryFuture<Void> define(GraqlDefine query) {
         return define(query, new GraknOptions());
     }
 
-    public QueryFuture<Void> define(final GraqlDefine query, final GraknOptions options) {
+    public QueryFuture<Void> define(GraqlDefine query, GraknOptions options) {
         return runQuery(QueryProto.Query.Req.newBuilder().setDefineReq(QueryProto.Graql.Define.Req.newBuilder().setQuery(query.toString())), options);
     }
 
-    public QueryFuture<Void> undefine(final GraqlUndefine query) {
+    public QueryFuture<Void> undefine(GraqlUndefine query) {
         return undefine(query, new GraknOptions());
     }
 
-    public QueryFuture<Void> undefine(final GraqlUndefine query, final GraknOptions options) {
+    public QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options) {
         return runQuery(QueryProto.Query.Req.newBuilder().setUndefineReq(QueryProto.Graql.Undefine.Req.newBuilder().setQuery(query.toString())), options);
     }
 
-    private QueryFuture<Void> runQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options) {
+    private QueryFuture<Void> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.executeAsync(req, res -> null);
     }
 
-    private <T> Stream<T> iterateQuery(final QueryProto.Query.Req.Builder request, final GraknOptions options,
-                                                    final Function<TransactionProto.Transaction.Res, T> responseReader) {
+    private <T> Stream<T> iterateQuery(QueryProto.Query.Req.Builder request, GraknOptions options,
+                                       Function<TransactionProto.Transaction.Res, T> responseReader) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.stream(req, responseReader);

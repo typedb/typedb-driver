@@ -30,12 +30,12 @@ import static grakn.common.collection.Bytes.bytesToHexString;
 
 abstract class AnswerProtoReader {
 
-    static String iid(final ByteString res) {
+    static String iid(ByteString res) {
         return bytesToHexString(res.toByteArray());
     }
 
     // We will probably need this in the future when aggregates are implemented
-    static Number number(final AnswerProto.Number res) {
+    static Number number(AnswerProto.Number res) {
         try {
             return NumberFormat.getInstance().parse(res.getValue());
         } catch (ParseException e) {
