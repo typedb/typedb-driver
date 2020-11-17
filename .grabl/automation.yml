@@ -48,24 +48,21 @@ build:
     test-integration:
       machine: graknlabs-ubuntu-20.04
       script: |
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        sudo apt-get update
-        sudo apt-get install gcc-4.9
-        sudo apt-get upgrade libstdc++6
-        strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test --config=rbe //test/integration/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
+        bazel test //test/integration/... --test_output=errors
     test-behaviour:
       machine: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test --config=rbe //test/behaviour/connection/... --test_output=errors
-        bazel test --config=rbe //test/behaviour/concept/... --test_output=errors
-        bazel test --config=rbe //test/behaviour/graql/language/define/... --test_output=errors
+        bazel test //test/behaviour/connection/... --test_output=errors
+        bazel test //test/behaviour/concept/... --test_output=errors
+        bazel test //test/behaviour/graql/language/define/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: revert above tests to //test/behaviour/...
     deploy-maven-snapshot:
       filter:
