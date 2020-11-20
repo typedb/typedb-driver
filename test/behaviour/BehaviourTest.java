@@ -27,7 +27,7 @@ import org.junit.BeforeClass;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public abstract class BehaviourTestBase {
+public abstract class BehaviourTest {
     // The following code is for running the Grakn Core distribution imported as an artifact.
     // If you wish to debug locally against an instance of Grakn that is already running in
     // the background, comment out all the code in this file that references 'runner'

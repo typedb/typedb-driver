@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.graql.language.delete;
 
-import grakn.core.test.behaviour.BehaviourTestBase;
+import grakn.core.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
         features = "external/graknlabs_behaviour/graql/language/delete.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
-public class DeleteTest extends BehaviourTestBase {
+public class DeleteTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
