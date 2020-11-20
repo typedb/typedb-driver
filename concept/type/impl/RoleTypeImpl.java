@@ -35,13 +35,13 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     private final String scope;
     private final int hash;
 
-    public RoleTypeImpl(final String label, final String scope, final boolean root) {
+    public RoleTypeImpl(String label, String scope, boolean root) {
         super(label, root);
         this.scope = scope;
         this.hash = Objects.hash(this.scope, label);
     }
 
-    public static RoleTypeImpl of(final ConceptProto.Type typeProto) {
+    public static RoleTypeImpl of(ConceptProto.Type typeProto) {
         return new RoleTypeImpl(typeProto.getLabel(), typeProto.getScope(), typeProto.getRoot());
     }
 
@@ -66,7 +66,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -84,14 +84,14 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         private final String scope;
         private final int hash;
 
-        public Remote(final Grakn.Transaction transaction, final String label,
-                      final String scope, final boolean isRoot) {
+        public Remote(Grakn.Transaction transaction, String label,
+                      String scope, boolean isRoot) {
             super(transaction, label, isRoot);
             this.scope = scope;
             this.hash = Objects.hash(transaction, label, scope);
         }
 
-        public static RoleTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+        public static RoleTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
             return new RoleTypeImpl.Remote(transaction, proto.getLabel(), proto.getScope(), proto.getRoot());
         }
 
@@ -117,7 +117,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public RoleType.Remote asRemote(final Grakn.Transaction transaction) {
+        public RoleType.Remote asRemote(Grakn.Transaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
 
@@ -153,12 +153,12 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> stream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
             return super.stream(method.setScope(scope), typeGetter);
         }
 
         @Override
-        ConceptProto.Type.Res execute(final ConceptProto.Type.Req.Builder method) {
+        ConceptProto.Type.Res execute(ConceptProto.Type.Req.Builder method) {
             return super.execute(method.setScope(scope));
         }
 

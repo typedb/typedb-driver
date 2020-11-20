@@ -48,16 +48,16 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
-    RelationImpl(final String iid) {
+    RelationImpl(String iid) {
         super(iid);
     }
 
-    public static RelationImpl of(final ConceptProto.Thing protoThing) {
+    public static RelationImpl of(ConceptProto.Thing protoThing) {
         return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
     }
 
     @Override
-    public RelationImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new RelationImpl.Remote(transaction, getIID());
     }
 
@@ -68,16 +68,16 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final String iid) {
+        public Remote(Grakn.Transaction transaction, String iid) {
             super(transaction, iid);
         }
 
-        public static RelationImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
+        public static RelationImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
             return new RelationImpl.Remote(transaction, Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
         }
 
         @Override
-        public RelationImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());
         }
 
@@ -115,7 +115,7 @@ public class RelationImpl extends ThingImpl implements Relation {
         }
 
         @Override
-        public Stream<ThingImpl> getPlayers(final RoleType... roleTypes) {
+        public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setRelationGetPlayersReq(
                             GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
@@ -123,13 +123,13 @@ public class RelationImpl extends ThingImpl implements Relation {
         }
 
         @Override
-        public void addPlayer(final RoleType roleType, final Thing player) {
+        public void addPlayer(RoleType roleType, Thing player) {
             execute(ConceptProto.Thing.Req.newBuilder().setRelationAddPlayerReq(
                     AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override
-        public void removePlayer(final RoleType roleType, final Thing player) {
+        public void removePlayer(RoleType roleType, Thing player) {
             execute(ConceptProto.Thing.Req.newBuilder().setRelationRemovePlayerReq(
                     RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }

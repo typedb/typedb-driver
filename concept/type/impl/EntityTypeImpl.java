@@ -30,16 +30,16 @@ import java.util.stream.Stream;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    public EntityTypeImpl(final String label, final boolean isRoot) {
+    public EntityTypeImpl(String label, boolean isRoot) {
         super(label, isRoot);
     }
 
-    public static EntityTypeImpl of(final ConceptProto.Type typeProto) {
+    public static EntityTypeImpl of(ConceptProto.Type typeProto) {
         return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     @Override
-    public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -50,16 +50,16 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+        public Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
-        public static EntityTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+        public static EntityTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
             return new EntityTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
         }
 
         @Override
-        public final void setSupertype(final EntityType superEntityType) {
+        public final void setSupertype(EntityType superEntityType) {
             this.setSupertypeExecute(superEntityType);
         }
 
@@ -74,7 +74,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
-        public EntityTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

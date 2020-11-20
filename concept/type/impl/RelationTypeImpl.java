@@ -33,16 +33,16 @@ import java.util.stream.Stream;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    public RelationTypeImpl(final String label, final boolean isRoot) {
+    public RelationTypeImpl(String label, boolean isRoot) {
         super(label, isRoot);
     }
 
-    public static RelationTypeImpl of(final ConceptProto.Type typeProto) {
+    public static RelationTypeImpl of(ConceptProto.Type typeProto) {
         return new RelationTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
     @Override
-    public RelationTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public RelationTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -53,11 +53,11 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+        public Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
-        public static RelationTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type proto) {
+        public static RelationTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
             return new RelationTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
         }
 
@@ -87,7 +87,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final void setSupertype(final RelationType type) {
+        public final void setSupertype(RelationType type) {
             this.setSupertypeExecute(type);
         }
 
@@ -99,7 +99,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final RoleTypeImpl getRelates(final String roleLabel) {
+        public final RoleTypeImpl getRelates(String roleLabel) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
                     GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
             final GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
@@ -117,13 +117,13 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final void setRelates(final String roleLabel) {
+        public final void setRelates(String roleLabel) {
             execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
                     SetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 
         @Override
-        public final void setRelates(final String roleLabel, final String overriddenLabel) {
+        public final void setRelates(String roleLabel, String overriddenLabel) {
             execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
                     SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)));
         }

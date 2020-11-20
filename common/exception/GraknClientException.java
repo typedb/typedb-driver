@@ -25,20 +25,20 @@ import javax.annotation.Nullable;
 
 public class GraknClientException extends RuntimeException {
 
-    public GraknClientException(final String error) {
+    public GraknClientException(String error) {
         super(error);
     }
 
-    public GraknClientException(final ErrorMessage error) {
+    public GraknClientException(ErrorMessage error) {
         super(error.toString());
         assert !getMessage().contains("%s");
     }
 
-    public GraknClientException(final StatusRuntimeException statusRuntimeException) {
+    public GraknClientException(StatusRuntimeException statusRuntimeException) {
         super(statusRuntimeException.getStatus().getDescription());
     }
 
-    public GraknClientException(final Exception e) {
+    public GraknClientException(Exception e) {
         super(e);
     }
 

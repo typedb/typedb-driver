@@ -69,7 +69,7 @@ public interface AttributeType extends ThingType {
         }
 
         public static ValueType of(Class<?> valueClass) {
-            for (final ValueType t : ValueType.values()) {
+            for (ValueType t : ValueType.values()) {
                 if (t.valueClass == valueClass) {
                     return t;
                 }

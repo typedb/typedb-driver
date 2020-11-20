@@ -61,12 +61,12 @@ public abstract class ThingImpl implements Thing {
     // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was confusing as it was
     // not actually prefilled when using the Concept API - only when using the Query API.
 
-    ThingImpl(final String iid) {
+    ThingImpl(String iid) {
         if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
         this.iid = iid;
     }
 
-    public static ThingImpl of(final ConceptProto.Thing thingProto) {
+    public static ThingImpl of(ConceptProto.Thing thingProto) {
         switch (thingProto.getEncoding()) {
             case ENTITY:
                 return EntityImpl.of(thingProto);
@@ -140,7 +140,7 @@ public abstract class ThingImpl implements Thing {
         private final String iid;
         private final int hash;
 
-        Remote(final Grakn.Transaction transaction, final String iid) {
+        Remote(Grakn.Transaction transaction, String iid) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             this.rpcTransaction = (RPCTransaction) transaction;
             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
@@ -148,7 +148,7 @@ public abstract class ThingImpl implements Thing {
             this.hash = Objects.hash(this.rpcTransaction, this.getIID());
         }
 
-        public static ThingImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
+        public static ThingImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
 
             switch (protoThing.getEncoding()) {
                 case ENTITY:
@@ -231,7 +231,7 @@ public abstract class ThingImpl implements Thing {
         }
 
         @Override
-        public final Stream<RelationImpl> getRelations(final RoleType... roleTypes) {
+        public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
                             GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
@@ -297,19 +297,19 @@ public abstract class ThingImpl implements Thing {
             return rpcTransaction;
         }
 
-        Stream<ThingImpl> stream(final ConceptProto.Thing.Req.Builder method, final Function<ConceptProto.Thing.Res, ConceptProto.Thing> thingGetter) {
+        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return rpcTransaction.stream(request, res -> ThingImpl.of(thingGetter.apply(res.getThingRes())));
         }
 
-        Stream<TypeImpl> typeStream(final ConceptProto.Thing.Req.Builder method, final Function<ConceptProto.Thing.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return rpcTransaction.stream(request, res -> TypeImpl.of(typeGetter.apply(res.getThingRes())));
         }
 
-        ConceptProto.Thing.Res execute(final ConceptProto.Thing.Req.Builder method) {
+        ConceptProto.Thing.Res execute(ConceptProto.Thing.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return rpcTransaction.execute(request).getThingRes();

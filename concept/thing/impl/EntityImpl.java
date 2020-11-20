@@ -27,16 +27,16 @@ import grakn.protocol.ConceptProto;
 
 public class EntityImpl extends ThingImpl implements Entity {
 
-    EntityImpl(final String iid) {
+    EntityImpl(String iid) {
         super(iid);
     }
 
-    public static EntityImpl of(final ConceptProto.Thing protoThing) {
+    public static EntityImpl of(ConceptProto.Thing protoThing) {
         return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
     }
 
     @Override
-    public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public EntityImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new EntityImpl.Remote(transaction, getIID());
     }
 
@@ -47,16 +47,16 @@ public class EntityImpl extends ThingImpl implements Entity {
 
     public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
-        public Remote(final Grakn.Transaction transaction, final String iid) {
+        public Remote(Grakn.Transaction transaction, String iid) {
             super(transaction, iid);
         }
 
-        public static EntityImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Thing protoThing) {
+        public static EntityImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
             return new EntityImpl.Remote(transaction, Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
         }
 
         @Override
-        public EntityImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        public EntityImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new EntityImpl.Remote(transaction, getIID());
         }
 

@@ -53,7 +53,7 @@ public class GraknOptions {
         return Optional.ofNullable(batchSize);
     }
 
-    public GraknOptions batchSize(final int batchSize) {
+    public GraknOptions batchSize(int batchSize) {
         if (batchSize < 1) {
             throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(batchSize));
         }

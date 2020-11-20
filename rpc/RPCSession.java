@@ -40,7 +40,7 @@ public class RPCSession implements Session {
     private final AtomicBoolean isOpen;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    RPCSession(final GraknClient client, final String database, final Type type, final GraknOptions options) {
+    RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
         this.channel = client.channel();
         this.database = database;
         this.type = type;
@@ -54,12 +54,12 @@ public class RPCSession implements Session {
     }
 
     @Override
-    public Transaction transaction(final Transaction.Type type) {
+    public Transaction transaction(Transaction.Type type) {
         return transaction(type, new GraknOptions());
     }
 
     @Override
-    public Transaction transaction(final Transaction.Type type, final GraknOptions options) {
+    public Transaction transaction(Transaction.Type type, GraknOptions options) {
         return new RPCTransaction(this, sessionId, type, options);
     }
 
@@ -87,7 +87,7 @@ public class RPCSession implements Session {
 
     Channel channel() { return channel; }
 
-    private static SessionProto.Session.Type sessionType(final Session.Type type) {
+    private static SessionProto.Session.Type sessionType(Session.Type type) {
         switch (type) {
             case DATA:
                 return SessionProto.Session.Type.DATA;

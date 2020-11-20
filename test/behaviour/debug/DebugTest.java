@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.debug;
 
-import grakn.core.test.behaviour.BehaviourTestBase;
+import grakn.core.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
         glue = "grakn.client.test.behaviour",
         features = "test/behaviour/debug/debug.feature"
 )
-public class DebugTest extends BehaviourTestBase {
+public class DebugTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:

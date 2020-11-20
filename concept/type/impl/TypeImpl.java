@@ -52,14 +52,14 @@ public abstract class TypeImpl implements Type {
     private final boolean isRoot;
     private final int hash;
 
-    TypeImpl(final String label, final boolean isRoot) {
+    TypeImpl(String label, boolean isRoot) {
         if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
         this.label = label;
         this.isRoot = isRoot;
         this.hash = Objects.hash(this.label);
     }
 
-    public static TypeImpl of(final ConceptProto.Type typeProto) {
+    public static TypeImpl of(ConceptProto.Type typeProto) {
         switch (typeProto.getEncoding()) {
             case ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);
@@ -126,7 +126,7 @@ public abstract class TypeImpl implements Type {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -146,7 +146,7 @@ public abstract class TypeImpl implements Type {
         private final boolean isRoot;
         private final int hash;
 
-        Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+        Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
             this.rpcTransaction = (RPCTransaction) transaction;
@@ -155,7 +155,7 @@ public abstract class TypeImpl implements Type {
             this.hash = Objects.hash(transaction, label);
         }
 
-        public static TypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
+        public static TypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type type) {
             switch (type.getEncoding()) {
                 case ENTITY_TYPE:
                     return EntityTypeImpl.Remote.of(transaction, type);
@@ -189,7 +189,7 @@ public abstract class TypeImpl implements Type {
         }
 
         @Override
-        public final void setLabel(final String label) {
+        public final void setLabel(String label) {
             execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
         }
@@ -236,12 +236,12 @@ public abstract class TypeImpl implements Type {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RoleType.class)));
         }
 
-        void setSupertypeExecute(final Type type) {
+        void setSupertypeExecute(Type type) {
             execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
         }
 
         @Nullable
-        <TYPE extends TypeImpl> TYPE getSupertypeExecute(final Function<TypeImpl, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> TYPE getSupertypeExecute(Function<TypeImpl, TYPE> typeConstructor) {
             final ConceptProto.Type.GetSupertype.Res response = execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()))
                     .getTypeGetSupertypeRes();
@@ -255,13 +255,13 @@ public abstract class TypeImpl implements Type {
             }
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(final Function<TypeImpl, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(Function<TypeImpl, TYPE> typeConstructor) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypesReq(ConceptProto.Type.GetSupertypes.Req.getDefaultInstance());
             return stream(method, res -> res.getTypeGetSupertypesRes().getType()).map(typeConstructor);
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(final Function<TypeImpl, TYPE> typeConstructor) {
+        <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(Function<TypeImpl, TYPE> typeConstructor) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSubtypesReq(ConceptProto.Type.GetSubtypes.Req.getDefaultInstance());
             return stream(method, res -> res.getTypeGetSubtypesRes().getType()).map(typeConstructor);
@@ -281,19 +281,19 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction;
         }
 
-        Stream<TypeImpl> stream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
             return rpcTransaction.stream(request, res -> TypeImpl.of(typeGetter.apply(res.getTypeRes())));
         }
 
-        Stream<ThingImpl> thingStream(final ConceptProto.Type.Req.Builder method, final Function<ConceptProto.Type.Res, ConceptProto.Thing> thingGetter) {
+        Stream<ThingImpl> thingStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, ConceptProto.Thing> thingGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
             return rpcTransaction.stream(request, res -> ThingImpl.of(thingGetter.apply(res.getTypeRes())));
         }
 
-        ConceptProto.Type.Res execute(final ConceptProto.Type.Req.Builder method) {
+        ConceptProto.Type.Res execute(ConceptProto.Type.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
             return rpcTransaction.execute(request).getTypeRes();

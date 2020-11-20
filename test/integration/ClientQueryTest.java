@@ -233,7 +233,7 @@ public class ClientQueryTest {
         }
     }
 
-    private void localhostGraknTx(final Consumer<Transaction> fn, final Session.Type sessionType) {
+    private void localhostGraknTx(Consumer<Transaction> fn, Session.Type sessionType) {
         String database = "grakn";
         try (Session session = graknClient.session(database, sessionType)) {
             try (Transaction transaction = session.transaction(WRITE)) {

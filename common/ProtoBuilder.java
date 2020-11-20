@@ -32,7 +32,7 @@ import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
 
 public abstract class ProtoBuilder {
 
-    public static OptionsProto.Options options(final GraknOptions options) {
+    public static OptionsProto.Options options(GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
         options.infer().ifPresent(builder::setInfer);
         options.explain().ifPresent(builder::setExplain);

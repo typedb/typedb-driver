@@ -289,7 +289,7 @@ public class ThingTypeSteps {
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")
-    public void thing_type_unset_owns_attribute_type_throws_exception(final RootLabel rootLabel, final String typeLabel, final String attributeLabel) {
+    public void thing_type_unset_owns_attribute_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
@@ -341,7 +341,7 @@ public class ThingTypeSteps {
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")
-    public void thing_type_unset_plays_role_throws_exception(final RootLabel rootLabel, final String typeLabel, final Parameters.ScopedLabel roleLabel) {
+    public void thing_type_unset_plays_role_throws_exception(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
         assertThrows(() -> thing_type_unset_plays_role(rootLabel, typeLabel, roleLabel));
     }
 

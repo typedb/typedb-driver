@@ -46,11 +46,11 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
-    ThingTypeImpl(final String label, final boolean isRoot) {
+    ThingTypeImpl(String label, boolean isRoot) {
         super(label, isRoot);
     }
 
-    public static ThingTypeImpl of(final ConceptProto.Type typeProto) {
+    public static ThingTypeImpl of(ConceptProto.Type typeProto) {
         switch (typeProto.getEncoding()) {
             case ENTITY_TYPE:
                 return EntityTypeImpl.of(typeProto);
@@ -68,7 +68,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public ThingTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+    public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -79,11 +79,11 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        Remote(final Grakn.Transaction transaction, final String label, final boolean isRoot) {
+        Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
-        public static ThingTypeImpl.Remote of(final Grakn.Transaction transaction, final ConceptProto.Type type) {
+        public static ThingTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type type) {
             return new ThingTypeImpl.Remote(transaction, type.getLabel(), type.getRoot());
         }
 
@@ -134,7 +134,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public final Stream<AttributeTypeImpl> getOwns(final ValueType valueType, final boolean keysOnly) {
+        public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, boolean keysOnly) {
             final GetOwns.Req.Builder req = GetOwns.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) req.setValueType(valueType(valueType));
             return stream(
@@ -149,63 +149,63 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public Stream<AttributeTypeImpl> getOwns(final ValueType valueType) {
+        public Stream<AttributeTypeImpl> getOwns(ValueType valueType) {
             return getOwns(valueType, false);
         }
 
         @Override
-        public Stream<AttributeTypeImpl> getOwns(final boolean keysOnly) {
+        public Stream<AttributeTypeImpl> getOwns(boolean keysOnly) {
             return getOwns(null, keysOnly);
         }
 
         @Override
-        public final void setOwns(final AttributeType attributeType, final AttributeType overriddenType, final boolean isKey) {
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
             final SetOwns.Req.Builder req = SetOwns.Req.newBuilder().setAttributeType(type(attributeType)).setIsKey(isKey);
             if (overriddenType != null) req.setOverriddenType(type(overriddenType));
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeSetOwnsReq(req));
         }
 
         @Override
-        public void setOwns(final AttributeType attributeType, final AttributeType overriddenType) {
+        public void setOwns(AttributeType attributeType, AttributeType overriddenType) {
             setOwns(attributeType, overriddenType, false);
         }
 
         @Override
-        public void setOwns(final AttributeType attributeType, final boolean isKey) {
+        public void setOwns(AttributeType attributeType, boolean isKey) {
             setOwns(attributeType, null, isKey);
         }
 
         @Override
-        public void setOwns(final AttributeType attributeType) {
+        public void setOwns(AttributeType attributeType) {
             setOwns(attributeType, null, false);
         }
 
         @Override
-        public final void setPlays(final RoleType role) {
+        public final void setPlays(RoleType role) {
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeSetPlaysReq(
                     SetPlays.Req.newBuilder().setRole(type(role))));
         }
 
         @Override
-        public final void setPlays(final RoleType role, final RoleType overriddenRole) {
+        public final void setPlays(RoleType role, RoleType overriddenRole) {
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeSetPlaysReq(
                     SetPlays.Req.newBuilder().setRole(type(role)).setOverriddenRole(type(overriddenRole))));
         }
 
         @Override
-        public final void unsetOwns(final AttributeType attributeType) {
+        public final void unsetOwns(AttributeType attributeType) {
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeUnsetOwnsReq(
                     UnsetOwns.Req.newBuilder().setAttributeType(type(attributeType))));
         }
 
         @Override
-        public final void unsetPlays(final RoleType role) {
+        public final void unsetPlays(RoleType role) {
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeUnsetPlaysReq(
                     UnsetPlays.Req.newBuilder().setRole(type(role))));
         }
 
         @Override
-        public ThingTypeImpl.Remote asRemote(final Grakn.Transaction transaction) {
+        public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

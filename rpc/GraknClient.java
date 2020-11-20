@@ -40,18 +40,18 @@ public class GraknClient implements Client {
         this(DEFAULT_URI);
     }
 
-    public GraknClient(final String address) {
+    public GraknClient(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new RPCDatabaseManager(channel);
     }
 
     @Override
-    public Session session(final String database, final Session.Type type) {
+    public Session session(String database, Session.Type type) {
         return session(database, type, new GraknOptions());
     }
 
     @Override
-    public Session session(final String database, final Session.Type type, final GraknOptions options) {
+    public Session session(String database, Session.Type type, GraknOptions options) {
         return new RPCSession(this, database, type, options);
     }
 

@@ -36,7 +36,7 @@ public interface Answer {
         throw new UnsupportedOperationException();
     }
 
-    static Answer of(final Transaction tx, final AnswerProto.Answer res) {
+    static Answer of(Transaction tx, AnswerProto.Answer res) {
         switch (res.getAnswerCase()) {
             case ANSWER_GROUP:
                 return AnswerGroup.of(tx, res.getAnswerGroup());

@@ -117,11 +117,11 @@ public abstract class ConceptProtoBuilder {
         }
     }
 
-    public static ByteString iid(final String iid) {
+    public static ByteString iid(String iid) {
         return ByteString.copyFrom(hexStringToBytes(iid));
     }
 
-    private static ConceptProto.Thing.ENCODING encoding(final Thing thing) {
+    private static ConceptProto.Thing.ENCODING encoding(Thing thing) {
         if (thing instanceof Entity) {
             return ConceptProto.Thing.ENCODING.ENTITY;
         } else if (thing instanceof Relation) {
@@ -133,7 +133,7 @@ public abstract class ConceptProtoBuilder {
         }
     }
 
-    private static ConceptProto.Type.ENCODING encoding(final Type type) {
+    private static ConceptProto.Type.ENCODING encoding(Type type) {
         if (type instanceof EntityType) {
             return ConceptProto.Type.ENCODING.ENTITY_TYPE;
         } else if (type instanceof RelationType) {
