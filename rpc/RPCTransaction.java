@@ -62,7 +62,6 @@ public class RPCTransaction implements Transaction {
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ConcurrentMap<UUID, ResponseCollector> collectors;
     private final int networkLatencyMillis;
-    private final AtomicBoolean streamIsOpen;
     // Technically nothing prevents open and close being triggered out of order, so we record both events
     private final AtomicBoolean transactionWasOpened;
     private final AtomicBoolean transactionWasClosed;
@@ -75,11 +74,9 @@ public class RPCTransaction implements Transaction {
             collectors = new ConcurrentHashMap<>();
 
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
-            streamIsOpen = new AtomicBoolean(false);
             transactionWasOpened = new AtomicBoolean(false);
             transactionWasClosed = new AtomicBoolean(false);
             requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
-            streamIsOpen.set(true);
 
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
@@ -133,10 +130,11 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void close() {
-        if (streamIsOpen.compareAndSet(true, false)) {
+        if (transactionWasClosed.compareAndSet(false, true)) {
             requestObserver.onCompleted();
+            collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
+            collectors.clear();
         }
-        transactionWasClosed.set(true);
     }
 
     public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
@@ -148,7 +146,7 @@ public class RPCTransaction implements Transaction {
             final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
-            collectors.put(requestId, responseCollector);
+            addCollectorIfTransactionIsOpen(requestId, responseCollector);
             return new QueryFuture<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
@@ -159,10 +157,17 @@ public class RPCTransaction implements Transaction {
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             request.setLatencyMillis(networkLatencyMillis);
-            collectors.put(requestId, responseCollector);
+            addCollectorIfTransactionIsOpen(requestId, responseCollector);
             final QueryIterator<T> queryIterator = new QueryIterator<>(request.build(), requestObserver, responseCollector, transformResponse);
             return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
         }
+    }
+
+    private void addCollectorIfTransactionIsOpen(UUID requestId, ResponseCollector collector) {
+        collectors.compute(requestId, (id, col) -> {
+            if (transactionWasClosed.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+            return collector;
+        });
     }
 
     private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
@@ -180,18 +185,14 @@ public class RPCTransaction implements Transaction {
             public void onError(Throwable error) {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
+                transactionWasClosed.set(true);
                 collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
                 collectors.clear();
-                streamIsOpen.set(false);
-                transactionWasClosed.set(true);
             }
 
             @Override
             public void onCompleted() {
-                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
-                collectors.clear();
-                streamIsOpen.set(false);
-                transactionWasClosed.set(true);
+                close();
             }
         };
     }
