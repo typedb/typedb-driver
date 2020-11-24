@@ -106,7 +106,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
                     .setThingTypeGetInstancesReq(GetInstances.Req.getDefaultInstance());
 
-            return thingStream(request, res -> res.getThingTypeGetInstancesRes().getThing()).map(thingConstructor);
+            return thingStream(request, res -> res.getThingTypeGetInstancesRes().getThingList()).map(thingConstructor);
         }
 
         @Override
@@ -129,7 +129,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             return stream(
                     ConceptProto.Type.Req.newBuilder().setThingTypeGetPlaysReq(
                             GetPlays.Req.getDefaultInstance()),
-                    res -> res.getThingTypeGetPlaysRes().getRole()
+                    res -> res.getThingTypeGetPlaysRes().getRoleList()
             ).map(TypeImpl::asRoleType);
         }
 
@@ -139,7 +139,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             if (valueType != null) req.setValueType(valueType(valueType));
             return stream(
                     ConceptProto.Type.Req.newBuilder().setThingTypeGetOwnsReq(req),
-                    res -> res.getThingTypeGetOwnsRes().getAttributeType()
+                    res -> res.getThingTypeGetOwnsRes().getAttributeTypeList()
             ).map(TypeImpl::asAttributeType);
         }
 

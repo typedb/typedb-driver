@@ -123,7 +123,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
                             GetOwners.Req.getDefaultInstance()),
-                    res -> res.getAttributeGetOwnersRes().getThing()
+                    res -> res.getAttributeGetOwnersRes().getThingList()
             );
         }
 
@@ -132,7 +132,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
                             GetOwners.Req.newBuilder().setThingType(type(ownerType))),
-                    res -> res.getAttributeGetOwnersRes().getThing()
+                    res -> res.getAttributeGetOwnersRes().getThingList()
             );
         }
 

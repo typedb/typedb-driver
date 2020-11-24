@@ -51,7 +51,7 @@ public final class QueryManager {
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
                 QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getMatchRes().getAnswer()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswerList().stream().map(ConceptMap::of));
     }
 
     public Stream<ConceptMap> insert(GraqlInsert query) {
@@ -61,7 +61,7 @@ public final class QueryManager {
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
                 QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
-        return iterateQuery(request, options, res -> ConceptMap.of(res.getQueryRes().getInsertRes().getAnswer()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswerList().stream().map(ConceptMap::of));
     }
 
     public QueryFuture<Void> delete(GraqlDelete query) {
@@ -95,7 +95,7 @@ public final class QueryManager {
     }
 
     private <T> Stream<T> iterateQuery(QueryProto.Query.Req.Builder request, GraknOptions options,
-                                       Function<TransactionProto.Transaction.Res, T> responseReader) {
+                                       Function<TransactionProto.Transaction.Res, Stream<T>> responseReader) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.stream(req, responseReader);

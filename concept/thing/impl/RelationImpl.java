@@ -93,8 +93,8 @@ public class RelationImpl extends ThingImpl implements Relation {
 
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(getIID())));
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.Res> stream = rpcTransaction.stream(
-                    request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes());
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = rpcTransaction.stream(
+                    request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList().stream());
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
@@ -119,7 +119,7 @@ public class RelationImpl extends ThingImpl implements Relation {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setRelationGetPlayersReq(
                             GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getRelationGetPlayersRes().getThing());
+                    res -> res.getRelationGetPlayersRes().getThingList());
         }
 
         @Override

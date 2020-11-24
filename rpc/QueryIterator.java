@@ -24,8 +24,10 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.TransactionProto;
 import io.grpc.stub.StreamObserver;
 
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
@@ -35,10 +37,11 @@ class QueryIterator<T> extends AbstractIterator<T> {
     private final UUID requestId;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final RPCTransaction.ResponseCollector.Multiple responseCollector;
-    private final Function<TransactionProto.Transaction.Res, T> transformResponse;
+    private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
+    private Iterator<T> currIterator;
 
     QueryIterator(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                  RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+                  RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         this.requestId = UUID.fromString(request.getId());
         this.transformResponse = transformResponse;
         this.requestObserver = requestObserver;
@@ -48,6 +51,10 @@ class QueryIterator<T> extends AbstractIterator<T> {
 
     @Override
     protected T computeNext() {
+        if (currIterator != null && currIterator.hasNext()) {
+            return currIterator.next();
+        }
+
         final TransactionProto.Transaction.Res res;
         try {
             res = responseCollector.take();
@@ -67,7 +74,12 @@ class QueryIterator<T> extends AbstractIterator<T> {
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
-                return transformResponse.apply(res);
+                currIterator = transformResponse.apply(res).iterator();
+                if (currIterator.hasNext()) {
+                    return currIterator.next();
+                } else {
+                    return computeNext();
+                }
         }
     }
 }
