@@ -75,11 +75,7 @@ class QueryIterator<T> extends AbstractIterator<T> {
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
                 currIterator = transformResponse.apply(res).iterator();
-                if (currIterator.hasNext()) {
-                    return currIterator.next();
-                } else {
-                    return computeNext();
-                }
+                return computeNext();
         }
     }
 }
