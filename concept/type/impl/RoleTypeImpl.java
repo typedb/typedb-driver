@@ -24,6 +24,7 @@ import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -134,7 +135,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             return stream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetRelationTypesReq(
                             ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()),
-                    res -> res.getRoleTypeGetRelationTypesRes().getRelationType()
+                    res -> res.getRoleTypeGetRelationTypesRes().getRelationTypeList()
             ).map(TypeImpl::asRelationType);
         }
 
@@ -143,7 +144,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             return stream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetPlayersReq(
                             ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()),
-                    res -> res.getRoleTypeGetPlayersRes().getThingType()
+                    res -> res.getRoleTypeGetPlayersRes().getThingTypeList()
             ).map(TypeImpl::asThingType);
         }
 
@@ -153,7 +154,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
             return super.stream(method.setScope(scope), typeGetter);
         }
 

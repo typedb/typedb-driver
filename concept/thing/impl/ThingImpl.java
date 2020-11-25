@@ -40,6 +40,7 @@ import grakn.protocol.ConceptProto.Thing.UnsetHas;
 import grakn.protocol.TransactionProto;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -186,7 +187,7 @@ public abstract class ThingImpl implements Thing {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder()
                             .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
-            return stream(method, res -> res.getThingGetHasRes().getAttribute()).map(ThingImpl::asAttribute);
+            return stream(method, res -> res.getThingGetHasRes().getAttributeList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -218,7 +219,7 @@ public abstract class ThingImpl implements Thing {
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey));
-            return stream(method, res -> res.getThingGetHasRes().getAttribute()).map(ThingImpl::asAttribute);
+            return stream(method, res -> res.getThingGetHasRes().getAttributeList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -226,7 +227,7 @@ public abstract class ThingImpl implements Thing {
             return typeStream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetPlaysReq(
                             GetPlays.Req.getDefaultInstance()),
-                    res -> res.getThingGetPlaysRes().getRoleType()
+                    res -> res.getThingGetPlaysRes().getRoleTypeList()
             ).map(TypeImpl::asRoleType);
         }
 
@@ -235,7 +236,7 @@ public abstract class ThingImpl implements Thing {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
                             GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getThingGetRelationsRes().getRelation()
+                    res -> res.getThingGetRelationsRes().getRelationList()
             ).map(ThingImpl::asRelation);
         }
 
@@ -297,16 +298,16 @@ public abstract class ThingImpl implements Thing {
             return rpcTransaction;
         }
 
-        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, ConceptProto.Thing> thingGetter) {
+        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return rpcTransaction.stream(request, res -> ThingImpl.of(thingGetter.apply(res.getThingRes())));
+            return rpcTransaction.stream(request, res -> thingGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
         }
 
-        Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, ConceptProto.Type> typeGetter) {
+        Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Type>> typeGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return rpcTransaction.stream(request, res -> TypeImpl.of(typeGetter.apply(res.getThingRes())));
+            return rpcTransaction.stream(request, res -> typeGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
         }
 
         ConceptProto.Thing.Res execute(ConceptProto.Thing.Req.Builder method) {
