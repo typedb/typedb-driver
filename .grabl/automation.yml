@@ -31,40 +31,38 @@ build:
           --project-key=graknlabs_client_java \
           --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
   correctness:
-#    build:
-#      machine: graknlabs-ubuntu-20.04
-#      script: |
-#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-#        bazel build --config=rbe //...
-#        bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
-#        bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
-#    build-dependency:
-#      machine: graknlabs-ubuntu-20.04
-#      script: |
-#        dependencies/maven/update.sh
-#        git diff --exit-code dependencies/maven/artifacts.snapshot
-#        bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
-#    test-integration:
-#      machine: graknlabs-ubuntu-20.04
-#      script: |
-#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-#        bazel test //test/integration/... --test_output=errors
-#      # TODO: use --config=rbe once Grakn Core runs in RBE
+    build:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel build --config=rbe //...
+        bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
+        bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
+    build-dependency:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        dependencies/maven/update.sh
+        git diff --exit-code dependencies/maven/artifacts.snapshot
+        bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
+    test-integration:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel test //test/integration/... --test_output=errors
+      # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       machine: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel build //...
-        sleep 1800
-#        bazel test //test/behaviour/connection/... --test_output=errors
-#        bazel test //test/behaviour/concept/... --test_output=errors
-#        bazel test //test/behaviour/graql/language/define/... --test_output=errors
+        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/concept/... --test_output=errors
+        bazel test //test/behaviour/graql/language/define/... --test_output=errors
       # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: revert above tests to //test/behaviour/...
     deploy-maven-snapshot:
