@@ -155,7 +155,7 @@ public class RPCTransaction implements Transaction {
         }
     }
 
-    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         try (ThreadTrace ignored = traceOnThread("stream")) {
             final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
