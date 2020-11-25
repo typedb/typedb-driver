@@ -35,14 +35,12 @@ public class GraknClient implements Client {
 
     private final ManagedChannel channel;
     private final DatabaseManager databases;
-    private final String address;
 
     public GraknClient() {
         this(DEFAULT_URI);
     }
 
     public GraknClient(String address) {
-        this.address = address;
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new RPCDatabaseManager(channel);
     }
@@ -79,6 +77,4 @@ public class GraknClient implements Client {
     Channel channel() {
         return channel;
     }
-
-    String address() {return address;}
 }
