@@ -60,7 +60,7 @@ public class RPCTransaction implements Transaction {
     private final ConceptManager conceptManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final ConcurrentMap<UUID, ResponseCollector> collectors;
+    private final ResponseCollectors collectors;
     private final int networkLatencyMillis;
     private final AtomicBoolean streamIsOpen;
     // Technically nothing prevents open and close being triggered out of order, so we record both events
@@ -72,7 +72,7 @@ public class RPCTransaction implements Transaction {
             this.type = type;
             conceptManager = new ConceptManager(this);
             queryManager = new QueryManager(this);
-            collectors = new ConcurrentHashMap<>();
+            collectors = new ResponseCollectors();
 
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
             streamIsOpen = new AtomicBoolean(false);
@@ -121,12 +121,6 @@ public class RPCTransaction implements Transaction {
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         execute(commitReq);
-        // TODO: Currently this close request is parsed as an "unknown frame" on the server because the server
-        //  terminates the stream when commit is called. Three possible solutions are:
-        //  1) don't close the transaction, or the stream, on commit
-        //  2) let the server take full responsibility for closing the stream on commit
-        //  3) let the client take full responsibility for closing the stream on commit
-        close();
     }
 
     @Override
@@ -142,7 +136,9 @@ public class RPCTransaction implements Transaction {
         if (streamIsOpen.compareAndSet(true, false)) {
             requestObserver.onCompleted();
         }
-        transactionWasClosed.set(true);
+        if (transactionWasClosed.compareAndSet(false, true)) {
+            collectors.clearWithError(new Response.Error(TRANSACTION_CLOSED));
+        }
     }
 
     public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
@@ -186,65 +182,42 @@ public class RPCTransaction implements Transaction {
             public void onError(Throwable error) {
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error((StatusRuntimeException) error)));
-                collectors.clear();
-                streamIsOpen.set(false);
                 transactionWasClosed.set(true);
+                streamIsOpen.set(false);
+                collectors.clearWithError(new Response.Error((StatusRuntimeException) error));
             }
 
             @Override
             public void onCompleted() {
-                collectors.values().parallelStream().forEach(x -> x.add(new Response.Error(TRANSACTION_CLOSED)));
-                collectors.clear();
                 streamIsOpen.set(false);
-                transactionWasClosed.set(true);
+                close();
             }
         };
     }
 
-    abstract static class Response {
+    private class ResponseCollectors {
+        private final ConcurrentMap<UUID, ResponseCollector> map;
 
-        abstract TransactionProto.Transaction.Res read();
-
-        static class Ok extends Response {
-            private final TransactionProto.Transaction.Res response;
-
-            Ok(TransactionProto.Transaction.Res response) {
-                this.response = response;
-            }
-
-            @Override
-            TransactionProto.Transaction.Res read() {
-                return response;
-            }
-
-            @Override
-            public String toString() {
-                return className(getClass()) + "{" + response + "}";
-            }
+        private ResponseCollectors() {
+            map = new ConcurrentHashMap<>();
         }
 
-        static class Error extends Response {
-            private final GraknClientException error;
+        private ResponseCollector get(UUID requestId) {
+            return map.get(requestId);
+        }
 
-            Error(StatusRuntimeException error) {
-                // TODO: parse different gRPC errors into specific GraknClientException
-                this.error = new GraknClientException(error);
-            }
+        private synchronized void put(UUID requestId, ResponseCollector collector) {
+            if (transactionWasClosed.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+            map.put(requestId, collector);
+        }
 
-            Error(ErrorMessage error) {
-                this.error = new GraknClientException(error);
-            }
+        private synchronized void remove(UUID requestId) {
+            map.remove(requestId);
+        }
 
-            @Override
-            TransactionProto.Transaction.Res read() {
-                throw error;
-            }
-
-            @Override
-            public String toString() {
-                return className(getClass()) + "{" + error + "}";
-            }
+        private synchronized void clearWithError(Response.Error errorResponse) {
+            map.values().parallelStream().forEach(x -> x.add(errorResponse));
+            map.clear();
         }
     }
 
@@ -292,6 +265,52 @@ public class RPCTransaction implements Transaction {
             @Override
             boolean isLastResponse(TransactionProto.Transaction.Res response) {
                 return response.getDone();
+            }
+        }
+    }
+
+    abstract static class Response {
+
+        abstract TransactionProto.Transaction.Res read();
+
+        static class Ok extends Response {
+            private final TransactionProto.Transaction.Res response;
+
+            Ok(TransactionProto.Transaction.Res response) {
+                this.response = response;
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                return response;
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + response + "}";
+            }
+        }
+
+        static class Error extends Response {
+            private final GraknClientException error;
+
+            Error(StatusRuntimeException error) {
+                // TODO: parse different gRPC errors into specific GraknClientException
+                this.error = new GraknClientException(error);
+            }
+
+            Error(ErrorMessage error) {
+                this.error = new GraknClientException(error);
+            }
+
+            @Override
+            TransactionProto.Transaction.Res read() {
+                throw error;
+            }
+
+            @Override
+            public String toString() {
+                return className(getClass()) + "{" + error + "}";
             }
         }
     }

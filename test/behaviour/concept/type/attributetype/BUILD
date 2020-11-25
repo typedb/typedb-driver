@@ -63,8 +63,7 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//concept/type:attributetype.feature",
     ],
-    grakn_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
+    native_grakn_artifact = "//test:native-grakn-artifact",
     size = "medium",
 )
 

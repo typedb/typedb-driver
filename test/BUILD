@@ -17,8 +17,16 @@
 # under the License.
 #
 
+load("@graknlabs_common//test/server:rules.bzl", "native_grakn_artifact")
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+
+native_grakn_artifact(
+    name = "native-grakn-artifact",
+    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    visibility = ["//test:__subpackages__"],
+)
 
 checkstyle_test(
     name = "checkstyle",
