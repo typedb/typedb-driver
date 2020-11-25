@@ -146,7 +146,7 @@ public class RPCTransaction implements Transaction {
             final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
-            addCollectorIfTransactionIsOpen(requestId, responseCollector);
+            assertOpenAndAddCollector(requestId, responseCollector);
             return new QueryFuture<>(request.build(), requestObserver, responseCollector, transformResponse);
         }
     }
@@ -157,13 +157,13 @@ public class RPCTransaction implements Transaction {
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             request.setLatencyMillis(networkLatencyMillis);
-            addCollectorIfTransactionIsOpen(requestId, responseCollector);
+            assertOpenAndAddCollector(requestId, responseCollector);
             final QueryIterator<T> queryIterator = new QueryIterator<>(request.build(), requestObserver, responseCollector, transformResponse);
             return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
         }
     }
 
-    private void addCollectorIfTransactionIsOpen(UUID requestId, ResponseCollector collector) {
+    private void assertOpenAndAddCollector(UUID requestId, ResponseCollector collector) {
         collectors.compute(requestId, (id, col) -> {
             if (transactionWasClosed.get()) throw new GraknClientException(TRANSACTION_CLOSED);
             return collector;
