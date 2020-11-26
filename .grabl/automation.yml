@@ -60,7 +60,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/connection/transaction:test --test_output=errors --jobs=1
+        bazel test //test/behaviour/connection/transaction:test-core --test_output=errors --jobs=1
         sleep 1800
         bazel test //test/behaviour/concept/... --test_output=errors
         bazel test //test/behaviour/graql/language/define/... --test_output=errors
