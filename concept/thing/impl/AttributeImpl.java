@@ -100,24 +100,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             super(transaction, iid);
         }
 
-        public static AttributeImpl.Remote<?> of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-            switch (thingProto.getValueType()) {
-                case BOOLEAN:
-                    return AttributeImpl.Boolean.Remote.of(transaction, thingProto);
-                case LONG:
-                    return AttributeImpl.Long.Remote.of(transaction, thingProto);
-                case DOUBLE:
-                    return AttributeImpl.Double.Remote.of(transaction, thingProto);
-                case STRING:
-                    return AttributeImpl.String.Remote.of(transaction, thingProto);
-                case DATETIME:
-                    return AttributeImpl.DateTime.Remote.of(transaction, thingProto);
-                case UNRECOGNIZED:
-                default:
-                    throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
-            }
-        }
-
         @Override
         public final Stream<ThingImpl> getOwners() {
             return stream(

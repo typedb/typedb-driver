@@ -139,13 +139,10 @@ public final class ConceptManager {
                 .setGetThingReq(ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
         final ConceptProto.ConceptManager.Res response = execute(req);
-        switch (response.getGetThingRes().getResCase()) {
-            case THING:
-                return ThingImpl.of(response.getGetThingRes().getThing());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+        if (response.getGetThingRes().getResCase() == ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
+            return ThingImpl.of(response.getGetThingRes().getThing());
+        else
+            return null;
     }
 
     @Nullable
@@ -155,13 +152,10 @@ public final class ConceptManager {
                 .setGetTypeReq(ConceptProto.ConceptManager.GetType.Req.newBuilder().setLabel(label)).build();
 
         final ConceptProto.ConceptManager.Res response = execute(req);
-        switch (response.getGetTypeRes().getResCase()) {
-            case TYPE:
-                return TypeImpl.of(response.getGetTypeRes().getType());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+        if (response.getGetTypeRes().getResCase() == ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
+            return TypeImpl.of(response.getGetTypeRes().getType());
+        else
+            return null;
     }
 
     @Nullable
