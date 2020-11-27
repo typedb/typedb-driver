@@ -43,8 +43,8 @@ def graknlabs_bazel_distribution():
 def graknlabs_dependencies():
     git_repository(
         name = "graknlabs_dependencies",
-        remote = "https://github.com/alexjpwalker/dependencies",
-        commit = "144ca024a0a7bd8ea822bdbe8098239427c17884", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+        remote = "https://github.com/graknlabs/dependencies",
+        commit = "50e82a1d17b67c18b2593b4195e9dc3684c1749c", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
     )
 
 def graknlabs_protocol():
