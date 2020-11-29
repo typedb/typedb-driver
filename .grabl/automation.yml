@@ -18,6 +18,7 @@
 #
 config:
   version-candidate: VERSION
+
 build:
   quality:
     filter:
@@ -77,10 +78,11 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
       dependencies: [build, build-dependency, test-behaviour]
     test-deployment-maven:
+      machine: graknlabs-ubuntu-20.04
+      dependencies: [deploy-maven-snapshot]
       filter:
         owner: graknlabs
         branch: master
-      machine: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
