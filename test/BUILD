@@ -25,6 +25,7 @@ native_grakn_artifact(
     name = "native-grakn-artifact",
     mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
     visibility = ["//test:__subpackages__"],
 )
 
