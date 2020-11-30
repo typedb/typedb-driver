@@ -212,10 +212,6 @@ public class RPCTransaction implements Transaction {
             map.put(requestId, collector);
         }
 
-        private synchronized void remove(UUID requestId) {
-            map.remove(requestId);
-        }
-
         private synchronized void clearWithError(Response.Error errorResponse) {
             map.values().parallelStream().forEach(x -> x.add(errorResponse));
             map.clear();
