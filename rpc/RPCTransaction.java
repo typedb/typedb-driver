@@ -151,7 +151,8 @@ public class RPCTransaction implements Transaction {
             final UUID requestId = UUID.randomUUID();
             request.setId(requestId.toString());
             collectors.put(requestId, responseCollector);
-            return new QueryFuture<>(request.build(), requestObserver, responseCollector, transformResponse);
+            requestObserver.onNext(request.build());
+            return new QueryFuture<>(responseCollector, transformResponse);
         }
     }
 
@@ -162,7 +163,8 @@ public class RPCTransaction implements Transaction {
             request.setId(requestId.toString());
             request.setLatencyMillis(networkLatencyMillis);
             collectors.put(requestId, responseCollector);
-            final QueryIterator<T> queryIterator = new QueryIterator<>(request.build(), requestObserver, responseCollector, transformResponse);
+            requestObserver.onNext(request.build());
+            final QueryIterator<T> queryIterator = new QueryIterator<>(requestId, requestObserver, responseCollector, transformResponse);
             return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
         }
     }
@@ -175,7 +177,6 @@ public class RPCTransaction implements Transaction {
                 final ResponseCollector collector = collectors.get(requestId);
                 if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
                 collector.add(new Response.Ok(res));
-                if (collector.isDone()) collectors.remove(requestId);
             }
 
             @Override

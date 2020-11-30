@@ -38,21 +38,20 @@ class QueryIterator<T> extends AbstractIterator<T> {
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final RPCTransaction.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
-    private Iterator<T> currIterator;
+    private Iterator<T> currentIterator;
 
-    QueryIterator(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+    QueryIterator(UUID requestId, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
                   RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
-        this.requestId = UUID.fromString(request.getId());
+        this.requestId = requestId;
         this.transformResponse = transformResponse;
         this.requestObserver = requestObserver;
         this.responseCollector = responseCollector;
-        requestObserver.onNext(request);
     }
 
     @Override
     protected T computeNext() {
-        if (currIterator != null && currIterator.hasNext()) {
-            return currIterator.next();
+        if (currentIterator != null && currentIterator.hasNext()) {
+            return currentIterator.next();
         }
 
         final TransactionProto.Transaction.Res res;
@@ -74,7 +73,7 @@ class QueryIterator<T> extends AbstractIterator<T> {
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
-                currIterator = transformResponse.apply(res).iterator();
+                currentIterator = transformResponse.apply(res).iterator();
                 return computeNext();
         }
     }
