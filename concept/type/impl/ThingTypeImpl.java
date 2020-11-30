@@ -83,10 +83,6 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             super(transaction, label, isRoot);
         }
 
-        public static ThingTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type type) {
-            return new ThingTypeImpl.Remote(transaction, type.getLabel(), type.getRoot());
-        }
-
         @Override
         public ThingTypeImpl getSupertype() {
             return super.getSupertypeExecute(TypeImpl::asThingType);

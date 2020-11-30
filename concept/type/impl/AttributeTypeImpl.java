@@ -143,27 +143,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             super(transaction, label, isRoot);
         }
 
-        public static AttributeTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type typeProto) {
-            switch (typeProto.getValueType()) {
-                case BOOLEAN:
-                    return new AttributeTypeImpl.Boolean.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case LONG:
-                    return new AttributeTypeImpl.Long.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case DOUBLE:
-                    return new AttributeTypeImpl.Double.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case STRING:
-                    return new AttributeTypeImpl.String.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case DATETIME:
-                    return new AttributeTypeImpl.DateTime.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case OBJECT:
-                    assert typeProto.getRoot();
-                    return new AttributeTypeImpl.Remote(transaction, typeProto.getLabel(), typeProto.getRoot());
-                case UNRECOGNIZED:
-                default:
-                    throw new GraknClientException(BAD_VALUE_TYPE.message(typeProto.getValueType()));
-            }
-        }
-
         @Override
         public ValueType getValueType() {
             return ValueType.OBJECT;
@@ -229,7 +208,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
                             .setValue(attributeValue(value)));
-            return ThingImpl.of(execute(method).getAttributeTypePutRes().getAttribute()).asAttribute();
+            return AttributeImpl.of(execute(method).getAttributeTypePutRes().getAttribute());
         }
 
         @Nullable
@@ -240,7 +219,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
             switch (response.getResCase()) {
                 case ATTRIBUTE:
-                    return ThingImpl.of(response.getAttribute()).asAttribute();
+                    return AttributeImpl.of(response.getAttribute());
                 default:
                 case RES_NOT_SET:
                     return null;

@@ -36,7 +36,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     private final String scope;
     private final int hash;
 
-    public RoleTypeImpl(String label, String scope, boolean root) {
+    RoleTypeImpl(String label, String scope, boolean root) {
         super(label, root);
         this.scope = scope;
         this.hash = Objects.hash(this.scope, label);
@@ -90,10 +90,6 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             super(transaction, label, isRoot);
             this.scope = scope;
             this.hash = Objects.hash(transaction, label, scope);
-        }
-
-        public static RoleTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
-            return new RoleTypeImpl.Remote(transaction, proto.getLabel(), proto.getScope(), proto.getRoot());
         }
 
         @Nullable

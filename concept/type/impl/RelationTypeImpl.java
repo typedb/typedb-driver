@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    public RelationTypeImpl(String label, boolean isRoot) {
+    RelationTypeImpl(String label, boolean isRoot) {
         super(label, isRoot);
     }
 
@@ -55,10 +55,6 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         public Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
-        }
-
-        public static RelationTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
-            return new RelationTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
         }
 
         @Override
@@ -95,7 +91,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         public final RelationImpl create() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeCreateReq(
                     ConceptProto.RelationType.Create.Req.getDefaultInstance());
-            return ThingImpl.of(execute(method).getRelationTypeCreateRes().getRelation()).asRelation();
+            return RelationImpl.of(execute(method).getRelationTypeCreateRes().getRelation());
         }
 
         @Override
