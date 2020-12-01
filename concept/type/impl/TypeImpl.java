@@ -220,7 +220,9 @@ public abstract class TypeImpl implements Type {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RoleType.class)));
         }
 
-        void setSupertypeExecute(Type type) {
+        // We can't declare this in Type.Remote because then (for example) EntityTypeImpl.Remote would be expected to
+        // implement setSupertype(Type) but in fact, only implements setSupertype(EntityType).
+        void setSupertype(Type type) {
             execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
         }
 

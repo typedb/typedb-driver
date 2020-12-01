@@ -115,7 +115,7 @@ public interface AttributeType extends ThingType {
 
     interface Remote extends ThingType.Remote, AttributeType {
 
-        void setSupertype(AttributeType type);
+        void setSupertype(AttributeType attributeType);
 
         @Override
         AttributeType getSupertype();
@@ -159,7 +159,7 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
-            void setSupertype(AttributeType.Boolean type);
+            void setSupertype(AttributeType.Boolean booleanAttributeType);
 
             @Override
             AttributeType.Boolean getSupertype();
@@ -187,7 +187,7 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
-            void setSupertype(AttributeType.Long type);
+            void setSupertype(AttributeType.Long longAttributeType);
 
             @Override
             AttributeType.Long getSupertype();
@@ -215,7 +215,7 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
-            void setSupertype(AttributeType.Double type);
+            void setSupertype(AttributeType.Double doubleAttributeType);
 
             @Override
             AttributeType.Double getSupertype();
@@ -243,7 +243,7 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
-            void setSupertype(AttributeType.String type);
+            void setSupertype(AttributeType.String stringAttributeType);
 
             @Override
             AttributeType.String getSupertype();
@@ -276,7 +276,7 @@ public interface AttributeType extends ThingType {
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
-            void setSupertype(AttributeType.DateTime type);
+            void setSupertype(AttributeType.DateTime dateTimeAttributeType);
 
             @Override
             AttributeType.DateTime getSupertype();

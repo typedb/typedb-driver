@@ -85,8 +85,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         private final String scope;
         private final int hash;
 
-        public Remote(Grakn.Transaction transaction, String label,
-                      String scope, boolean isRoot) {
+        public Remote(Grakn.Transaction transaction, String label, String scope, boolean isRoot) {
             super(transaction, label, isRoot);
             this.scope = scope;
             this.hash = Objects.hash(transaction, label, scope);

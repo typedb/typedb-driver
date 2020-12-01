@@ -37,7 +37,6 @@ import grakn.protocol.ConceptProto.ThingType.UnsetAbstract;
 import grakn.protocol.ConceptProto.ThingType.UnsetOwns;
 import grakn.protocol.ConceptProto.ThingType.UnsetPlays;
 
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
@@ -81,6 +80,10 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
+        }
+
+        void setSupertype(ThingType thingType) {
+            super.setSupertype(thingType);
         }
 
         @Override

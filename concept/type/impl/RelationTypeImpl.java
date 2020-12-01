@@ -84,8 +84,8 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final void setSupertype(RelationType type) {
-            this.setSupertypeExecute(type);
+        public final void setSupertype(RelationType relationType) {
+            super.setSupertype(relationType);
         }
 
         @Override

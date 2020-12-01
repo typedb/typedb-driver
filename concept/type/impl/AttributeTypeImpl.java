@@ -158,8 +158,9 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
-        public final void setSupertype(AttributeType type) {
-            this.setSupertypeExecute(type);
+        @Override
+        public final void setSupertype(AttributeType attributeType) {
+            super.setSupertype(attributeType);
         }
 
         @Nullable
@@ -345,8 +346,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Boolean type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Boolean booleanAttributeType) {
+                super.setSupertype(booleanAttributeType);
             }
 
             @Override
@@ -427,8 +428,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Long type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Long longAttributeType) {
+                super.setSupertype(longAttributeType);
             }
 
             @Override
@@ -509,8 +510,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Double type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Double doubleAttributeType) {
+                super.setSupertype(doubleAttributeType);
             }
 
             @Override
@@ -591,8 +592,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.String type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.String stringAttributeType) {
+                super.setSupertype(stringAttributeType);
             }
 
             @Override
@@ -691,8 +692,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.DateTime type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.DateTime dateTimeAttributeType) {
+                super.setSupertype(dateTimeAttributeType);
             }
 
             @Override

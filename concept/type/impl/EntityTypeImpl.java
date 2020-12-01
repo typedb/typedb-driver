@@ -54,8 +54,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
-        public final void setSupertype(EntityType superEntityType) {
-            this.setSupertypeExecute(superEntityType);
+        public final void setSupertype(EntityType entityType) {
+            super.setSupertype(entityType);
         }
 
         @Override
