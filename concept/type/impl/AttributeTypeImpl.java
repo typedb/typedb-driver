@@ -188,7 +188,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeImpl<?>> getInstances() {
-            return super.getInstances(ThingImpl::asAttribute);
+            return super.getInstances().map(ThingImpl::asAttribute);
         }
 
         @Override

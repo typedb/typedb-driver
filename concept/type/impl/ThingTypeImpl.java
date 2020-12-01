@@ -99,16 +99,11 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             return super.getSubtypes().map(TypeImpl::asThingType);
         }
 
-        <THING extends ThingImpl> Stream<THING> getInstances(Function<ThingImpl, THING> thingConstructor) {
-            final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
-                    .setThingTypeGetInstancesReq(GetInstances.Req.getDefaultInstance());
-
-            return thingStream(request, res -> res.getThingTypeGetInstancesRes().getThingList()).map(thingConstructor);
-        }
-
         @Override
         public Stream<? extends ThingImpl> getInstances() {
-            return getInstances(x -> x);
+            final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
+                    .setThingTypeGetInstancesReq(GetInstances.Req.getDefaultInstance());
+            return thingStream(request, res -> res.getThingTypeGetInstancesRes().getThingList());
         }
 
         @Override
