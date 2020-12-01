@@ -165,7 +165,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         @Nullable
         @Override
         public AttributeTypeImpl getSupertype() {
-            return getSupertypeExecute(TypeImpl::asAttributeType);
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asAttributeType() : null;
         }
 
         @Override
@@ -201,7 +202,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                     .setAttributeTypeGetOwnersReq(ConceptProto.AttributeType.GetOwners.Req.newBuilder()
                             .setOnlyKey(onlyKey));
 
-            return stream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnerList()).map(TypeImpl::asThingType);
+            return typeStream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnerList()).map(TypeImpl::asThingType);
         }
 
         protected final AttributeImpl<?> put(Object value) {
@@ -324,7 +325,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Boolean getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asBoolean());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asBoolean() : null;
             }
 
             @Override
@@ -405,7 +407,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Long getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asLong());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asLong() : null;
             }
 
             @Override
@@ -486,7 +489,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Double getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asDouble());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asDouble() : null;
             }
 
             @Override
@@ -567,7 +571,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.String getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asString());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asString() : null;
             }
 
             @Override
@@ -666,7 +671,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.DateTime getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asDateTime());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asDateTime() : null;
             }
 
             @Override

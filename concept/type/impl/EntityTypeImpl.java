@@ -60,7 +60,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public EntityTypeImpl getSupertype() {
-            return super.getSupertypeExecute(TypeImpl::asEntityType);
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asEntityType() : null;
         }
 
         @Override

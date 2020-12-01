@@ -85,7 +85,8 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public ThingTypeImpl getSupertype() {
-            return super.getSupertypeExecute(TypeImpl::asThingType);
+            final TypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asThingType() : null;
         }
 
         @Override
@@ -122,7 +123,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setThingTypeGetPlaysReq(
                             GetPlays.Req.getDefaultInstance()),
                     res -> res.getThingTypeGetPlaysRes().getRoleList()
@@ -133,7 +134,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, boolean keysOnly) {
             final GetOwns.Req.Builder req = GetOwns.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) req.setValueType(valueType(valueType));
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setThingTypeGetOwnsReq(req),
                     res -> res.getThingTypeGetOwnsRes().getAttributeTypeList()
             ).map(TypeImpl::asAttributeType);

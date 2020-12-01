@@ -95,7 +95,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Nullable
         @Override
         public RoleTypeImpl getSupertype() {
-            return getSupertypeExecute(TypeImpl::asRoleType);
+            final TypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asRoleType() : null;
         }
 
         @Override
@@ -128,7 +129,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final Stream<RelationTypeImpl> getRelations() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetRelationTypesReq(
                             ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetRelationTypesRes().getRelationTypeList()
@@ -137,7 +138,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final Stream<ThingTypeImpl> getPlayers() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetPlayersReq(
                             ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetPlayersRes().getThingTypeList()
@@ -150,8 +151,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
-            return super.stream(method.setScope(scope), typeGetter);
+        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
+            return super.typeStream(method.setScope(scope), typeGetter);
         }
 
         @Override

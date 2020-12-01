@@ -69,7 +69,8 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public RelationTypeImpl getSupertype() {
-            return super.getSupertypeExecute(TypeImpl::asRelationType);
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asRelationType() : null;
         }
 
         @Override
@@ -105,7 +106,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final Stream<RoleTypeImpl> getRelates() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesReq(
                             GetRelates.Req.getDefaultInstance()),
                     res -> res.getRelationTypeGetRelatesRes().getRoleList()

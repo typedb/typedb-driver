@@ -225,14 +225,15 @@ public abstract class TypeImpl implements Type {
         }
 
         @Nullable
-        <TYPE extends TypeImpl> TYPE getSupertypeExecute(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public TypeImpl getSupertype() {
             final ConceptProto.Type.GetSupertype.Res response = execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()))
                     .getTypeGetSupertypeRes();
 
             switch (response.getResCase()) {
                 case TYPE:
-                    return typeConstructor.apply(TypeImpl.of(response.getType()));
+                    return TypeImpl.of(response.getType());
                 case RES_NOT_SET:
                 default:
                     return null;
@@ -242,13 +243,13 @@ public abstract class TypeImpl implements Type {
         <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(Function<TypeImpl, TYPE> typeConstructor) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypesReq(ConceptProto.Type.GetSupertypes.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSupertypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSupertypesRes().getTypeList()).map(typeConstructor);
         }
 
         <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(Function<TypeImpl, TYPE> typeConstructor) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSubtypesReq(ConceptProto.Type.GetSubtypes.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSubtypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSubtypesRes().getTypeList()).map(typeConstructor);
         }
 
         @Override
@@ -265,7 +266,7 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction;
         }
 
-        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
+        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
             return rpcTransaction.stream(request, res -> typeGetter.apply(res.getTypeRes()).stream().map(TypeImpl::of));
