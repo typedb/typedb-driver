@@ -49,7 +49,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Concept INVALID_CONCEPT_CASTING =
                 new Concept(1, "Invalid concept conversion from '%s' to '%s'.");
         public static final Concept MISSING_TRANSACTION =
-                new Concept(2, "Transaction can not be null.");
+                new Concept(2, "Transaction cannot be null.");
         public static final Concept MISSING_IID =
                 new Concept(3, "IID cannot be null or empty.");
         public static final Concept MISSING_LABEL =
