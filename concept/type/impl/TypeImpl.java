@@ -143,7 +143,7 @@ public abstract class TypeImpl implements Type {
     public abstract static class Remote implements Type.Remote {
 
         final RPCTransaction rpcTransaction;
-        private final String label;
+        private String label;
         private final boolean isRoot;
         private final int hash;
 
@@ -154,24 +154,6 @@ public abstract class TypeImpl implements Type {
             this.label = label;
             this.isRoot = isRoot;
             this.hash = Objects.hash(transaction, label);
-        }
-
-        public static TypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type type) {
-            switch (type.getEncoding()) {
-                case ENTITY_TYPE:
-                    return EntityTypeImpl.Remote.of(transaction, type);
-                case RELATION_TYPE:
-                    return RelationTypeImpl.Remote.of(transaction, type);
-                case ATTRIBUTE_TYPE:
-                    return AttributeTypeImpl.Remote.of(transaction, type);
-                case ROLE_TYPE:
-                    return RoleTypeImpl.Remote.of(transaction, type);
-                case THING_TYPE:
-                    return ThingTypeImpl.Remote.of(transaction, type);
-                case UNRECOGNIZED:
-                default:
-                    throw new GraknClientException(BAD_ENCODING.message(type.getEncoding()));
-            }
         }
 
         @Override
@@ -193,6 +175,7 @@ public abstract class TypeImpl implements Type {
         public final void setLabel(String label) {
             execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
+            this.label = label;
         }
 
         @Override

@@ -84,8 +84,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public EntityType getEntityType(String label) {
-        final Type concept = getType(label);
-        if (concept instanceof EntityType) return concept.asEntityType();
+        final Type type = getType(label);
+        if (type instanceof EntityType) return type.asEntityType();
         else return null;
     }
 
@@ -100,8 +100,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public RelationType getRelationType(String label) {
-        final Type concept = getType(label);
-        if (concept instanceof RelationType) return concept.asRelationType();
+        final Type type = getType(label);
+        if (type instanceof RelationType) return type.asRelationType();
         else return null;
     }
 
@@ -117,8 +117,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public AttributeType getAttributeType(String label) {
-        final Type concept = getType(label);
-        if (concept instanceof AttributeType) return concept.asAttributeType();
+        final Type type = getType(label);
+        if (type instanceof AttributeType) return type.asAttributeType();
         else return null;
     }
 
@@ -139,13 +139,10 @@ public final class ConceptManager {
                 .setGetThingReq(ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
         final ConceptProto.ConceptManager.Res response = execute(req);
-        switch (response.getGetThingRes().getResCase()) {
-            case THING:
-                return ThingImpl.of(response.getGetThingRes().getThing());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+        if (response.getGetThingRes().getResCase() == ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
+            return ThingImpl.of(response.getGetThingRes().getThing());
+        else
+            return null;
     }
 
     @Nullable
@@ -155,13 +152,10 @@ public final class ConceptManager {
                 .setGetTypeReq(ConceptProto.ConceptManager.GetType.Req.newBuilder().setLabel(label)).build();
 
         final ConceptProto.ConceptManager.Res response = execute(req);
-        switch (response.getGetTypeRes().getResCase()) {
-            case TYPE:
-                return TypeImpl.of(response.getGetTypeRes().getType());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+        if (response.getGetTypeRes().getResCase() == ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
+            return TypeImpl.of(response.getGetTypeRes().getType());
+        else
+            return null;
     }
 
     @Nullable

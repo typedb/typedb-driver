@@ -72,10 +72,6 @@ public class RelationImpl extends ThingImpl implements Relation {
             super(transaction, iid);
         }
 
-        public static RelationImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
-            return new RelationImpl.Remote(transaction, Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
-        }
-
         @Override
         public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());

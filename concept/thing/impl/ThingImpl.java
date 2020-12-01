@@ -149,21 +149,6 @@ public abstract class ThingImpl implements Thing {
             this.hash = Objects.hash(this.rpcTransaction, this.getIID());
         }
 
-        public static ThingImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
-
-            switch (protoThing.getEncoding()) {
-                case ENTITY:
-                    return EntityImpl.Remote.of(transaction, protoThing);
-                case RELATION:
-                    return RelationImpl.Remote.of(transaction, protoThing);
-                case ATTRIBUTE:
-                    return AttributeImpl.Remote.of(transaction, protoThing);
-                default:
-                case UNRECOGNIZED:
-                    throw new GraknClientException(BAD_ENCODING.message(protoThing.getEncoding()));
-            }
-        }
-
         @Override
         public final String getIID() {
             return iid;

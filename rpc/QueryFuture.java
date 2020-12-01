@@ -33,11 +33,9 @@ public class QueryFuture<T> implements Future<T> {
     private final RPCTransaction.ResponseCollector.Single collector;
     private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-    QueryFuture(TransactionProto.Transaction.Req request, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-            RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    QueryFuture(RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         this.collector = collector;
         this.transformResponse = transformResponse;
-        requestObserver.onNext(request);
     }
 
     @Override

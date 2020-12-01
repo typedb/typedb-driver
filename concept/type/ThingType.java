@@ -56,7 +56,7 @@ public interface ThingType extends Type {
 
         void setPlays(RoleType roleType, RoleType overriddenType);
 
-        void setOwns(AttributeType attributeType, AttributeType otherType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
 
         void setOwns(AttributeType attributeType, AttributeType overriddenType);
 

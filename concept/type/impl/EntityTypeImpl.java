@@ -24,13 +24,12 @@ import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.EntityType;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.EntityType.Create;
 
 import java.util.stream.Stream;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    public EntityTypeImpl(String label, boolean isRoot) {
+    EntityTypeImpl(String label, boolean isRoot) {
         super(label, isRoot);
     }
 
@@ -50,12 +49,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        public Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
+        Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
-        }
-
-        public static EntityTypeImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Type proto) {
-            return new EntityTypeImpl.Remote(transaction, proto.getLabel(), proto.getRoot());
         }
 
         @Override
@@ -91,8 +86,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         @Override
         public final EntityImpl create() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
-                    .setEntityTypeCreateReq(Create.Req.getDefaultInstance());
-            return ThingImpl.of(execute(method).getEntityTypeCreateRes().getEntity()).asEntity();
+                    .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance());
+            return EntityImpl.of(execute(method).getEntityTypeCreateRes().getEntity());
         }
 
         @Override

@@ -51,10 +51,6 @@ public class EntityImpl extends ThingImpl implements Entity {
             super(transaction, iid);
         }
 
-        public static EntityImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Thing protoThing) {
-            return new EntityImpl.Remote(transaction, Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
-        }
-
         @Override
         public EntityImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new EntityImpl.Remote(transaction, getIID());

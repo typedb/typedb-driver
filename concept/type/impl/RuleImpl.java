@@ -102,7 +102,7 @@ public class RuleImpl implements Rule {
     public static class Remote implements Rule.Remote {
 
         final RPCTransaction rpcTransaction;
-        private final String label;
+        private String label;
         private final Conjunction<? extends Pattern> when;
         private final ThingVariable<?> then;
         private final int hash;
@@ -139,6 +139,7 @@ public class RuleImpl implements Rule {
         @Override
         public void setLabel(String label) {
             execute(ConceptProto.Rule.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
+            this.label = label;
         }
 
         @Override

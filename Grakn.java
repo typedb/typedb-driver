@@ -28,9 +28,9 @@ public interface Grakn {
 
     interface Client extends AutoCloseable {
 
-        Session session(String databaseName, Session.Type type);
+        Session session(String database, Session.Type type);
 
-        Session session(String databaseName, Session.Type type, GraknOptions options);
+        Session session(String database, Session.Type type, GraknOptions options);
 
         DatabaseManager databases();
 
