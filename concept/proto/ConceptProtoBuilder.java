@@ -102,14 +102,14 @@ public abstract class ConceptProtoBuilder {
         switch (valueType) {
             case OBJECT:
                 return ConceptProto.AttributeType.VALUE_TYPE.OBJECT;
-            case STRING:
-                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             case BOOLEAN:
                 return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
             case LONG:
                 return ConceptProto.AttributeType.VALUE_TYPE.LONG;
             case DOUBLE:
                 return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
+            case STRING:
+                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             case DATETIME:
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             default:

@@ -31,7 +31,6 @@ import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Type.SetSupertype;
 import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
@@ -223,7 +222,7 @@ public abstract class TypeImpl implements Type {
         // We can't declare this in Type.Remote because then (for example) EntityTypeImpl.Remote would be expected to
         // implement setSupertype(Type) but in fact, only implements setSupertype(EntityType).
         void setSupertype(Type type) {
-            execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
+            execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder().setType(type(type))));
         }
 
         @Nullable
@@ -233,13 +232,7 @@ public abstract class TypeImpl implements Type {
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()))
                     .getTypeGetSupertypeRes();
 
-            switch (response.getResCase()) {
-                case TYPE:
-                    return TypeImpl.of(response.getType());
-                case RES_NOT_SET:
-                default:
-                    return null;
-            }
+            return response.getResCase() == ConceptProto.Type.GetSupertype.Res.ResCase.TYPE ? TypeImpl.of(response.getType()) : null;
         }
 
         @Override
