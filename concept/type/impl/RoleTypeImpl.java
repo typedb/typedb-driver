@@ -101,12 +101,12 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final Stream<RoleTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asRoleType);
+            return super.getSupertypes().map(TypeImpl::asRoleType);
         }
 
         @Override
         public final Stream<RoleTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asRoleType);
+            return super.getSubtypes().map(TypeImpl::asRoleType);
         }
 
         @Override

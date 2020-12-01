@@ -75,12 +75,12 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final Stream<RelationTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asRelationType);
+            return super.getSupertypes().map(ThingTypeImpl::asRelationType);
         }
 
         @Override
         public final Stream<RelationTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asRelationType);
+            return super.getSubtypes().map(ThingTypeImpl::asRelationType);
         }
 
         @Override

@@ -91,12 +91,12 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<? extends ThingTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asThingType);
+            return super.getSupertypes().map(TypeImpl::asThingType);
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asThingType);
+            return super.getSubtypes().map(TypeImpl::asThingType);
         }
 
         <THING extends ThingImpl> Stream<THING> getInstances(Function<ThingImpl, THING> thingConstructor) {

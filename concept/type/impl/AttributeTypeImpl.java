@@ -171,7 +171,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeTypeImpl> getSupertypes() {
-            return super.getSupertypes().map(TypeImpl::asAttributeType);
+            return super.getSupertypes().map(ThingTypeImpl::asAttributeType);
         }
 
         @Override

@@ -240,16 +240,18 @@ public abstract class TypeImpl implements Type {
             }
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public Stream<? extends TypeImpl> getSupertypes() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypesReq(ConceptProto.Type.GetSupertypes.Req.getDefaultInstance());
-            return typeStream(method, res -> res.getTypeGetSupertypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSupertypesRes().getTypeList());
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public Stream<? extends TypeImpl> getSubtypes() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSubtypesReq(ConceptProto.Type.GetSubtypes.Req.getDefaultInstance());
-            return typeStream(method, res -> res.getTypeGetSubtypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSubtypesRes().getTypeList());
         }
 
         @Override
