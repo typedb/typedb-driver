@@ -102,12 +102,7 @@ public class RelationImpl extends ThingImpl implements Relation {
                     rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
                 }
             });
-
-            final Map<RoleTypeImpl, List<ThingImpl>> result = new HashMap<>();
-            for (Map.Entry<RoleTypeImpl, List<ThingImpl>> entry : rolePlayerMap.entrySet()) {
-                result.put(entry.getKey(), entry.getValue());
-            }
-            return result;
+            return rolePlayerMap;
         }
 
         @Override

@@ -26,6 +26,8 @@ import grakn.client.concept.type.ThingType;
 import grakn.client.rpc.GraknClient;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -36,11 +38,12 @@ public class MavenApplicationTest {
     public void test() {
         Grakn.Client client = new GraknClient();
         client.databases().create("grakn");
-        Session session = client.session("grakn");
+        Session session = client.session("grakn", Session.Type.DATA);
         Transaction tx = session.transaction(Transaction.Type.WRITE);
         ThingType root = tx.concepts().getRootThingType();
         assertNotNull(root);
-        assertEquals(4, root.asRemote(tx).getSubtypes().count());
+
+        assertEquals(4, root.asRemote(tx).getSubtypes().collect(Collectors.toList()).size());
 
         tx.close();
         session.close();

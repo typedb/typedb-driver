@@ -113,6 +113,7 @@ deploy_github(
     release_description = "//:RELEASE_TEMPLATE.md",
     title = "Grakn Client Java",
     title_append_version = True,
+    draft = False
 )
 
 release_validate_deps(
