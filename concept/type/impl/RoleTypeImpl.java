@@ -52,6 +52,11 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
+    public final String getScopedLabel() {
+        return scope + ":" + getLabel();
+    }
+
+    @Override
     public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
     }
@@ -91,6 +96,16 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             this.hash = Objects.hash(transaction, label, scope);
         }
 
+        @Override
+        public final String getScope() {
+            return scope;
+        }
+
+        @Override
+        public final String getScopedLabel() {
+            return scope + ":" + getLabel();
+        }
+
         @Nullable
         @Override
         public RoleTypeImpl getSupertype() {
@@ -109,17 +124,12 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public final String getScope() {
-            return scope;
-        }
-
-        @Override
         public RoleType.Remote asRemote(Grakn.Transaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
 
         @Override
-        public final RelationTypeImpl getRelation() {
+        public final RelationTypeImpl getRelationType() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setRoleTypeGetRelationTypeReq(ConceptProto.RoleType.GetRelationType.Req.getDefaultInstance());
             final ConceptProto.RoleType.GetRelationType.Res response = execute(method).getRoleTypeGetRelationTypeRes();
@@ -127,7 +137,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public final Stream<RelationTypeImpl> getRelations() {
+        public final Stream<RelationTypeImpl> getRelationTypes() {
             return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetRelationTypesReq(
                             ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()),

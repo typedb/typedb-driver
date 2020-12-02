@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.concept.type.impl;
+package grakn.client.concept.schema.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.type.Rule;
+import grakn.client.concept.schema.Rule;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;

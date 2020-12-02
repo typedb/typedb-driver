@@ -17,15 +17,14 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package grakn.client.concept.schema;
 
 import grakn.client.Grakn;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
+// TODO: migrate to concept.schema package
 public interface Rule {
 
     String getLabel();

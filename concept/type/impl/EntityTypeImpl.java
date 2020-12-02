@@ -54,6 +54,18 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
+        public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+        }
+
+        @Override
+        public final EntityImpl create() {
+            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+                    .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance());
+            return EntityImpl.of(execute(method).getEntityTypeCreateRes().getEntity());
+        }
+
+        @Override
         public final void setSupertype(EntityType entityType) {
             super.setSupertype(entityType);
         }
@@ -62,16 +74,6 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         public EntityTypeImpl getSupertype() {
             final ThingTypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asEntityType() : null;
-        }
-
-        @Override
-        public final Stream<EntityImpl> getInstances() {
-            return super.getInstances().map(ThingImpl::asEntity);
-        }
-
-        @Override
-        public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
         @Override
@@ -85,10 +87,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
-        public final EntityImpl create() {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
-                    .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance());
-            return EntityImpl.of(execute(method).getEntityTypeCreateRes().getEntity());
+        public final Stream<EntityImpl> getInstances() {
+            return super.getInstances().map(ThingImpl::asEntity);
         }
 
         @Override

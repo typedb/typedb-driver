@@ -34,8 +34,6 @@ public interface RelationType extends ThingType {
 
         Relation create();
 
-        void setSupertype(RelationType superRelationType);
-
         @Nullable
         RoleType getRelates(String roleLabel);
 
@@ -46,6 +44,11 @@ public interface RelationType extends ThingType {
         void setRelates(String roleLabel, String overriddenLabel);
 
         void unsetRelates(String roleLabel);
+
+        void setSupertype(RelationType superRelationType);
+
+        @Override
+        RelationType getSupertype();
 
         @Override
         Stream<? extends RelationType> getSupertypes();
