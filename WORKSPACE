@@ -1,18 +1,20 @@
 #
-# Copyright (C) 2020 Grakn Labs
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 #
 
 workspace(
@@ -51,7 +53,26 @@ pip_repositories()
 # Load //builder/nodejs
 load("@graknlabs_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
+
+# Load //tool/checkstyle
+load("@graknlabs_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
+
+####################
+# Load npm modules #
+####################
+
+
+# Load package.json
+node_repositories(
+    preserve_symlinks = False,
+)
+npm_install(
+    name = "npm",
+    package_json = "//:package.json",
+    package_lock_json = "//:package-lock.json",
+)
 
 # Load //builder/grpc
 load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
@@ -68,6 +89,10 @@ load("@graknlabs_dependencies//tool/common:deps.bzl", "graknlabs_dependencies_ci
 graknlabs_dependencies_ci_pip()
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "pip_install")
 pip_install()
+
+# Load Unused Deps
+load("@graknlabs_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
+unuseddeps_deps()
 
 ######################################
 # Load @graknlabs_bazel_distribution #
@@ -97,19 +122,15 @@ github_deps()
 ################################
 
 # Load repositories
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_protocol")
-graknlabs_protocol()
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_behaviour")
+graknlabs_behaviour()
+
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common")
+graknlabs_common()
 
 # Load artifacts
-load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact")
-graknlabs_grakn_core_artifact()
-
-# Load package.json
-yarn_install(
-    name = "npm",
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock"
-)
+load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifacts")
+graknlabs_grakn_core_artifacts()
 
 ############################
 # Load @maven dependencies #

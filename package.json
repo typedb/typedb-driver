@@ -1,26 +1,41 @@
 {
   "name": "grakn-client",
-  "version": "0.0.0-development",
+  "version": "2.0.0",
   "description": "Grakn Client for Node.js",
-  "main": "src/GraknClient.js",
   "author": "Grakn Labs",
   "license": "Apache-2.0",
   "homepage": "https://grakn.ai",
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/graknlabs/client-nodejs"
   },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "pretest": "npm run build",
+    "test": "npm run test-concept && npm run test-connection && npm run test-query",
+    "test-concept": "node --experimental-specifier-resolution=node test/test-concept.js",
+    "test-connection": "node --experimental-specifier-resolution=node test/test-connection.js",
+    "test-query": "node --experimental-specifier-resolution=node test/test-query.js"
+  },
   "dependencies": {
-    "google-protobuf": "^3.6.0",
-    "grpc": "^1.24.3"
+    "@grpc/grpc-js": "1.2.1",
+    "google-protobuf": "3.12.4",
+    "graknlabs-grpc-protocol": "2.0.0-alpha"
   },
   "devDependencies": {
-    "@bazel/jasmine": "2.0.3",
-    "jasmine": "3.6.1",
-    "fs-extra": "^7.0.0",
-    "grpc-tools": "^1.6.6",
-    "jasmine-reporters": "^2.3.2",
-    "properties-reader": "^0.3.1",
-    "tmp": "0.1.0"
+    "@bazel/typescript": "2.3.1",
+    "@cucumber/cucumber": "7.0.0-rc.0",
+    "@types/google-protobuf": "3.7.4",
+    "@types/node": "14.14.10",
+    "fs-extra": "7.0.1",
+    "grpc_tools_node_protoc_ts": "5.0.1",
+    "grpc-tools": "1.10.0",
+    "jest": "26.6.3",
+    "properties-reader": "0.3.1",
+    "rimraf": "3.0.2",
+    "tmp": "0.1.0",
+    "typescript": "3.9.7"
   }
 }

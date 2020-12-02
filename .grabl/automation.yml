@@ -1,0 +1,114 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+config:
+  version-candidate: VERSION
+
+build:
+  correctness:
+    build:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
+        ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
+        bazel test $(bazel query 'kind(checkstyle_test, //...)')
+    test:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
+        ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
+        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+      #bazel test //...
+    deploy-npm-snapshot:
+      filter:
+        owner: graknlabs
+        branch: master
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo apt update -y
+        sudo apt install -y expect
+        export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
+        export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
+        bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
+      dependencies: [build, test]
+
+    test-deployment-npm:
+      filter:
+        owner: graknlabs
+        branch: master
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
+        ./dist/grakn-core-all-linux/grakn server &
+        # -- to be moved to image itself --
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        # -- to be moved to image itself --
+        nvm install v10.15.3
+        nvm use --delete-prefix v10.15.3
+        cd test/deployment/
+        echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
+        npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
+        npm install jest --global
+        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        kill -9 $(jps | awk '/GraknServer/ {print $1}')
+        exit $TEST_SUCCESS
+      dependencies: [deploy-npm-snapshot]
+release:
+  filter:
+    owner: graknlabs
+    branch: master
+  # TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
+  # validation:
+  #   validate-dependencies:
+  #     machine: graknlabs-ubuntu-20.04
+  #     script: bazel test //:release-validate-deps --test_output=streamed
+  deployment:
+    deploy-github:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        pip install certifi
+        export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
+        bazel run @graknlabs_dependencies//tool/release:create-notes -- client-nodejs $(cat VERSION) ./RELEASE_TEMPLATE.md
+        export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
+        bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
+    deploy-npm-release:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
+        export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
+        curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo apt update -y
+        sudo apt install -y expect
+        bazel run --define version=$(cat VERSION) //:deploy-npm -- release
+      dependencies: [deploy-github]
