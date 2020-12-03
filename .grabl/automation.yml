@@ -79,7 +79,6 @@ build:
       dependencies: [build, build-dependency, test-behaviour]
     test-deployment-maven:
       machine: graknlabs-ubuntu-20.04
-      dependencies: [deploy-maven-snapshot]
       filter:
         owner: graknlabs
         branch: master
