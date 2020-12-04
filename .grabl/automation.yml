@@ -19,8 +19,20 @@
 
 config:
   version-candidate: VERSION
+  dependencies:
+    dependencies: [build]
+    common: [build, release]
+    behaviour: [build]
 
 build:
+  quality:
+    filter:
+      owner: graknlabs
+      branch: master
+  dependency-analysis:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
       machine: graknlabs-ubuntu-20.04
