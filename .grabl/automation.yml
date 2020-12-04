@@ -29,7 +29,7 @@ build:
     filter:
       owner: graknlabs
       branch: master
-  dependency-analysis:
+    dependency-analysis:
       machine: graknlabs-ubuntu-20.04
       script: |
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
