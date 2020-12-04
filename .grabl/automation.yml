@@ -25,6 +25,7 @@ config:
     dependencies: [build]
     protocol: [build, release]
     behaviour: [build]
+    grabl-tracing: [build, release]
 
 build:
   quality:
