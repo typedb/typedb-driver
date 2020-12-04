@@ -12,12 +12,13 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run lint && npm run clean && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
-    "test-concept": "node --experimental-specifier-resolution=node test/test-concept.js",
-    "test-connection": "node --experimental-specifier-resolution=node test/test-connection.js",
-    "test-query": "node --experimental-specifier-resolution=node test/test-query.js"
+    "test-concept": "node test/test-concept.js",
+    "test-connection": "node test/test-connection.js",
+    "test-query": "node test/test-query.js",
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
@@ -29,9 +30,12 @@
     "@cucumber/cucumber": "7.0.0-rc.0",
     "@types/google-protobuf": "3.7.4",
     "@types/node": "14.14.10",
+    "@typescript-eslint/eslint-plugin": "4.9.0",
+    "@typescript-eslint/parser": "4.9.0",
+    "eslint": "7.14.0",
     "fs-extra": "7.0.1",
-    "grpc_tools_node_protoc_ts": "5.0.1",
     "grpc-tools": "1.10.0",
+    "grpc_tools_node_protoc_ts": "5.0.1",
     "jest": "26.6.3",
     "properties-reader": "0.3.1",
     "rimraf": "3.0.2",

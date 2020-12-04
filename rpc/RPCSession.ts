@@ -21,7 +21,7 @@ import {
     Grakn,
     ProtoBuilder,
     GraknOptions,
-    RPCTransaction,
+    RPCTransaction, GraknClientError, ErrorMessage,
 } from "../dependencies_internal";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
@@ -94,6 +94,6 @@ function sessionType(type: Grakn.SessionType): SessionProto.Session.Type {
         case Grakn.SessionType.SCHEMA:
             return SessionProto.Session.Type.SCHEMA;
         default:
-            throw "Unrecognized Type";
+            throw new GraknClientError(ErrorMessage.Client.UNRECOGNISED_SESSION_TYPE.message())
     }
 }

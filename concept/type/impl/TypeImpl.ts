@@ -26,6 +26,8 @@ import {
     ThingImpl,
     ConceptProtoBuilder,
     ConceptProtoReader,
+    GraknClientError,
+    ErrorMessage,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
@@ -36,7 +38,7 @@ export abstract class TypeImpl implements Type {
     private readonly _root: boolean;
 
     protected constructor(label: string, root: boolean) {
-        if (!label) throw "Label cannot be null or empty.";
+        if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
 
         this._label = label;
         this._root = root;
@@ -67,8 +69,8 @@ export abstract class RemoteTypeImpl implements RemoteType {
     private readonly _isRoot: boolean;
 
     protected constructor(transaction: Transaction, label: string, isRoot: boolean) {
-        if (!transaction) throw "Transaction can not be null.";
-        if (!label) throw "Label cannot be null or empty.";
+        if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
+        if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
         this._rpcTransaction = transaction as RPCTransaction;
         this._label = label;
         this._isRoot = isRoot;

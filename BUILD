@@ -143,6 +143,7 @@ checkstyle_test(
     exclude = glob([
         "dist/**/*.*",
         "**/*.json",
+        ".eslintrc",
     ]),
     license_type = "apache",
 )

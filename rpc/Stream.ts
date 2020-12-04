@@ -20,6 +20,8 @@
 import { ClientWritableStream } from "@grpc/grpc-js";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import {
+    ErrorMessage,
+    GraknClientError,
     ResponseCollector,
 } from "../dependencies_internal";
 
@@ -63,7 +65,7 @@ export class Stream<T> implements AsyncIterable<T> {
             case TransactionProto.Transaction.Res.ResCase.DONE:
                 return undefined;
             case TransactionProto.Transaction.Res.ResCase.RES_NOT_SET:
-                throw "Missing response";
+                throw new GraknClientError(ErrorMessage.Client.MISSING_RESPONSE.message());
             default:
                 this._receivedAnswers = this._transformResponse(res);
                 return this.next();

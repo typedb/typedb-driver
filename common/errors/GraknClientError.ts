@@ -16,19 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+import { ErrorMessage } from "../../dependencies_internal"
 
-import { GraknOptions } from "../dependencies_internal";
-import options_pb from "graknlabs-grpc-protocol/protobuf/options_pb";
-const { Options } = options_pb;
-
-export namespace ProtoBuilder {
-    export function options(options?: GraknOptions) {
-        const optionsProto = new Options();
-        if (options) {
-            if (options.infer() != null) optionsProto.setInfer(options.infer() as boolean);
-            if (options.explain() != null) optionsProto.setExplain(options.explain() as boolean);
-            if (options.batchSize() != null) optionsProto.setBatchSize(options.batchSize() as number);
+export class GraknClientError extends Error {
+    constructor(error: string | Error | ErrorMessage) {
+        if (typeof error === "string") {
+            super(error)
+        } else {
+            super(error.toString())
         }
-        return optionsProto;
+        this.name = "GraknClientError"; // Required to correctly report error type in default throw
     }
 }

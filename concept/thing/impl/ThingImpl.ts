@@ -48,7 +48,7 @@ import {
     DateTimeAttributeImpl,
     DoubleAttributeImpl,
     LongAttributeImpl,
-    StringAttributeImpl,
+    StringAttributeImpl, GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -57,11 +57,8 @@ import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
 
-    // TODO: all error messages should be extracted into ErrorMessage class or namespace
     protected constructor(iid: string) {
-        if (!iid) {
-            throw "IID Missing";
-        }
+        if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
     }
 
@@ -85,8 +82,8 @@ export abstract class RemoteThingImpl implements RemoteThing {
     private readonly _rpcTransaction: RPCTransaction;
 
     protected constructor(transaction: Transaction, iid: string) {
-        if (!transaction) throw "Transaction Missing";
-        if (!iid) throw "IID Missing";
+        if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
+        if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
         this._rpcTransaction = transaction as RPCTransaction;
     }
@@ -140,7 +137,7 @@ export abstract class RemoteThingImpl implements RemoteThing {
         if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
         if (arg instanceof StringAttributeTypeImpl) return stream as Stream<StringAttributeImpl>;
         if (arg instanceof DateTimeAttributeTypeImpl) return stream as Stream<DateTimeAttributeImpl>;
-        throw "Argument was not valid.";
+        throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(arg))
     }
 
     getPlays(): Stream<RoleTypeImpl> {

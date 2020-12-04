@@ -25,7 +25,7 @@ import {
     QueryManager,
     uuidv4,
     BlockingQueue,
-    Stream,
+    Stream, GraknClientError, ErrorMessage,
 } from "../dependencies_internal";
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
 import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
@@ -140,7 +140,7 @@ export class RPCTransaction implements Grakn.Transaction {
         this._stream.on("data", (res) => {
             const requestId = res.getId();
             const collector = this._collectors.get(requestId);
-            if (!collector) throw "Unknown request ID " + requestId;
+            if (!collector) throw new GraknClientError(ErrorMessage.Client.UNKNOWN_REQUEST_ID.message(requestId));
             collector.add(new OkResponse(res));
         });
 
@@ -169,7 +169,7 @@ class ResponseCollectors {
     }
 
     put(uuid: string, collector: ResponseCollector) {
-        if (this._transaction["_transactionWasClosed"]) throw "The transaction has been closed and no further operation is allowed."
+        if (this._transaction["_transactionWasClosed"]) throw new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED.message());
         this._map[uuid] = collector;
     }
 

@@ -25,13 +25,13 @@ import {
     Thing,
     AttributeType,
     RoleTypeImpl,
-    EntityImpl ,
+    EntityImpl,
     RelationImpl,
     AttributeImpl,
-    EntityTypeImpl ,
-    RelationTypeImpl ,
-    AttributeTypeImpl ,
-    ThingTypeImpl,
+    EntityTypeImpl,
+    RelationTypeImpl,
+    AttributeTypeImpl,
+    ThingTypeImpl, GraknClientError, ErrorMessage,
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {
@@ -94,7 +94,7 @@ export namespace ConceptProtoBuilder {
             case AttributeType.ValueType.DATETIME:
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
             default:
-                throw "Value type not recognised";
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType))
         }
     }
 
@@ -106,7 +106,7 @@ export namespace ConceptProtoBuilder {
         } else if (thing instanceof AttributeImpl) {
             return ConceptProto.Thing.ENCODING.ATTRIBUTE;
         } else {
-            throw "Unrecognised Thing class";
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
         }
     }
 
@@ -122,7 +122,7 @@ export namespace ConceptProtoBuilder {
         } else if (type instanceof ThingTypeImpl) {
             return ConceptProto.Type.ENCODING.THING_TYPE;
         } else {
-            throw "Unrecognised Type class";
+            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type))
         }
     }
 }

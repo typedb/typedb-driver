@@ -29,7 +29,7 @@ import {
     RemoteThingType,
     ThingType,
     Merge,
-    Stream,
+    Stream, GraknClientError, ErrorMessage,
 } from "../../dependencies_internal";
 import ValueType = AttributeType.ValueType;
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
@@ -162,7 +162,7 @@ export namespace AttributeType {
                 case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
                     return ValueType.DATETIME;
                 default:
-                    throw "Bad value type";
+                    throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));
             }
         }
 

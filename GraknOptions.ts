@@ -17,6 +17,11 @@
  * under the License.
  */
 
+import {
+    GraknClientError,
+    ErrorMessage,
+} from "./dependencies_internal"
+
 export class GraknOptions {
     private _infer: boolean;
     private _explain: boolean;
@@ -52,7 +57,7 @@ export class GraknOptions {
 
     setBatchSize(batchSize: number): GraknOptions {
         if (batchSize < 1) {
-            throw "Attempted to set nonpositive batch size."
+            throw new GraknClientError(ErrorMessage.Client.NONPOSITIVE_BATCH_SIZE.message(batchSize))
         }
         this._batchSize = batchSize;
         return this;

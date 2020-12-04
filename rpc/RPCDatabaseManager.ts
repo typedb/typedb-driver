@@ -19,7 +19,8 @@
 
 import { GraknClient as GraknGrpc } from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb"
 import {
-    Grakn
+    ErrorMessage,
+    Grakn, GraknClientError
 } from "../dependencies_internal";
 //import { Database } from "graknlabs-grpc-protocol/protobuf/database_pb";
 import database_pb from "graknlabs-grpc-protocol/protobuf/database_pb";
@@ -33,7 +34,7 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     contains(name: string): Promise<boolean> {
-        if (!name) throw "Database name cannot be null or empty.";
+        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = new Database.Contains.Req().setName(name);
         return new Promise((resolve, reject) => {
             this._grpcClient.database_contains(req, (err, res) => {
@@ -44,7 +45,7 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     create(name: string): Promise<void> {
-        if (!name) throw "Database name cannot be null or empty.";
+        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = new Database.Create.Req().setName(name);
         return new Promise((resolve, reject) => {
             this._grpcClient.database_create(req, (err) => {
@@ -55,7 +56,7 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     delete(name: string): Promise<void> {
-        if (!name) throw "Database name cannot be null or empty.";
+        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = new Database.Delete.Req().setName(name);
         return new Promise((resolve, reject) => {
             this._grpcClient.database_delete(req, (err) => {
