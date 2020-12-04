@@ -20,6 +20,7 @@
 const { GraknClient } = require("../dist/rpc/GraknClient");
 const { Grakn } = require("../dist/Grakn");
 const { AttributeType } = require("../dist/concept/type/AttributeType");
+const { ConceptMap } = require("../dist/concept/answer/ConceptMap");
 const { SessionType, TransactionType } = Grakn;
 const assert = require("assert");
 
@@ -182,7 +183,8 @@ async function run() {
 
     try {
         let firstLionStream = await tx.query().insert("insert $x isa lion, has name \"Steve\", has rank \"Duke\", has power-level 12;");
-        assert((await firstLionStream.collect()).length === 1);
+        let lionCollection = await firstLionStream.collect()
+        assert(lionCollection.length === 1);
         await tx.query().insert("insert $x isa lion, has name \"Chandra\", has rank \"Baron\", has power-level 7;");
         await tx.query().insert("insert $x isa lion, has name \"Asuka\", has rank \"Duchess\", has power-level 3;");
         await tx.query().insert("insert $x isa lion, has name \"Sergey\", has rank \"Lowborn\", has power-level 13;");

@@ -132,8 +132,6 @@ checkstyle_test(
     name = "checkstyle",
     include = glob([
         "*",
-        "Grakn.ts",
-        "GraknOptions.ts",
         "common/**/*.ts",
         "concept/**/*.ts",
         "query/**/*.ts",

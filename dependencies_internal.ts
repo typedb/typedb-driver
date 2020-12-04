@@ -31,6 +31,9 @@ export * from "./common/ProtoBuilder";
 export * from "./common/utils";
 
 /* concept.answer */
+export * from "./concept/answer/Answer";
+export * from "./concept/answer/AnswerGroup";
+export * from "./concept/answer/AnswerProtoReader";
 export * from "./concept/answer/ConceptMap";
 
 /* concept.schema */
