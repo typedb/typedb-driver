@@ -18,6 +18,14 @@
 #
 config:
   version-candidate: VERSION
+  dependencies:
+    graql: [build, release]
+    common: [build, release]
+    bazel-distribution: [build]
+    dependencies: [build]
+    protocol: [build, release]
+    behaviour: [build]
+    grabl-tracing: [build, release]
 
 build:
   quality:
@@ -31,6 +39,10 @@ build:
           bazel run @graknlabs_dependencies//tool/sonarcloud:code-analysis -- \
           --project-key=graknlabs_client_java \
           --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
+    dependency-analysis:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
       machine: graknlabs-ubuntu-20.04
