@@ -68,21 +68,21 @@ build:
       # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: revert above tests to //test/behaviour/...
     deploy-maven-snapshot:
+      machine: graknlabs-ubuntu-20.04
+      dependencies: [build, build-dependency, test-behaviour]
       filter:
         owner: graknlabs
         branch: master
-      machine: graknlabs-ubuntu-20.04
-      dependencies: [build, build-dependency, test-behaviour]
       script: |
         export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
     test-deployment-maven:
       machine: graknlabs-ubuntu-20.04
+      dependencies: [deploy-maven-snapshot]
       filter:
         owner: graknlabs
         branch: master
-      dependencies: [deploy-maven-snapshot]
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
