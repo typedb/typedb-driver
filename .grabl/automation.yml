@@ -72,16 +72,17 @@ build:
         owner: graknlabs
         branch: master
       machine: graknlabs-ubuntu-20.04
+      dependencies: [build, build-dependency, test-behaviour]
       script: |
         export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
-      dependencies: [build, build-dependency, test-behaviour]
     test-deployment-maven:
       machine: graknlabs-ubuntu-20.04
       filter:
         owner: graknlabs
         branch: master
+      dependencies: [deploy-maven-snapshot]
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
@@ -91,7 +92,6 @@ build:
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
-      dependencies: [deploy-maven-snapshot]
 
 release:
   filter:
@@ -112,8 +112,8 @@ release:
         bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-maven-release:
       machine: graknlabs-ubuntu-20.04
+      dependencies: [deploy-github]
       script: |
         export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run --define version=$(cat VERSION) //:deploy-maven -- release
-      dependencies: [deploy-github]
