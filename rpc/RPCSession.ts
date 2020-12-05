@@ -33,6 +33,7 @@ export class RPCSession implements Grakn.Session {
     private readonly _type: Grakn.SessionType;
     private _sessionId: string;
     private _isOpen: boolean;
+    private _pulse: NodeJS.Timeout;
 
     constructor(grpcClient: GraknGrpc, database: string, type: Grakn.SessionType) {
         this._database = database;
@@ -53,6 +54,7 @@ export class RPCSession implements Grakn.Session {
             });
         });
         this._sessionId = res.getSessionId_asB64();
+        this._pulse = setTimeout(() => this.pulse(), 5000);
         return this;
     }
 
@@ -72,6 +74,7 @@ export class RPCSession implements Grakn.Session {
     async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
+            clearTimeout(this._pulse);
             const req = new SessionProto.Session.Close.Req().setSessionId(this._sessionId);
             await new Promise((resolve, reject) => {
                 this._grpcClient.session_close(req, (err) => {
@@ -84,6 +87,15 @@ export class RPCSession implements Grakn.Session {
 
     database(): string {
         return this._database;
+    }
+
+    pulse(): void {
+        if (!this._isOpen) return;
+        const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
+        this._grpcClient.session_pulse(pulse, (err, _res) => {
+            if (err) return;// Generally means the session has been closed, which is fine
+            else this._pulse = setTimeout(() => this.pulse(), 5000);
+        });
     }
 }
 
