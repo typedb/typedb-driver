@@ -24,10 +24,6 @@ import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.RelationType;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.RelationType.GetRelates;
-import grakn.protocol.ConceptProto.RelationType.GetRelatesForRoleLabel;
-import grakn.protocol.ConceptProto.RelationType.SetRelates;
-import grakn.protocol.ConceptProto.RelationType.UnsetRelates;
 
 import java.util.stream.Stream;
 
@@ -58,33 +54,8 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final Stream<RelationImpl> getInstances() {
-            return super.getInstances(ThingImpl::asRelation);
-        }
-
-        @Override
         public RelationTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
-        }
-
-        @Override
-        public RelationTypeImpl getSupertype() {
-            return super.getSupertypeExecute(TypeImpl::asRelationType);
-        }
-
-        @Override
-        public final Stream<RelationTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asRelationType);
-        }
-
-        @Override
-        public final Stream<RelationTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asRelationType);
-        }
-
-        @Override
-        public final void setSupertype(RelationType type) {
-            this.setSupertypeExecute(type);
         }
 
         @Override
@@ -97,17 +68,17 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final RoleTypeImpl getRelates(String roleLabel) {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
-                    GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
-            final GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
+                    ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
+            final ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) return TypeImpl.of(res.getRoleType()).asRoleType();
             else return null;
         }
 
         @Override
         public final Stream<RoleTypeImpl> getRelates() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesReq(
-                            GetRelates.Req.getDefaultInstance()),
+                            ConceptProto.RelationType.GetRelates.Req.getDefaultInstance()),
                     res -> res.getRelationTypeGetRelatesRes().getRoleList()
             ).map(TypeImpl::asRoleType);
         }
@@ -115,19 +86,45 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final void setRelates(String roleLabel) {
             execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
-                    SetRelates.Req.newBuilder().setLabel(roleLabel)));
+                    ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)));
         }
 
         @Override
         public final void setRelates(String roleLabel, String overriddenLabel) {
             execute(ConceptProto.Type.Req.newBuilder().setRelationTypeSetRelatesReq(
-                    SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)));
+                    ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel).setOverriddenLabel(overriddenLabel)));
         }
 
         @Override
         public final void unsetRelates(String roleLabel) {
             execute(ConceptProto.Type.Req.newBuilder().setRelationTypeUnsetRelatesReq(
-                    UnsetRelates.Req.newBuilder().setLabel(roleLabel)));
+                    ConceptProto.RelationType.UnsetRelates.Req.newBuilder().setLabel(roleLabel)));
+        }
+
+        @Override
+        public final void setSupertype(RelationType relationType) {
+            super.setSupertype(relationType);
+        }
+
+        @Override
+        public RelationTypeImpl getSupertype() {
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asRelationType() : null;
+        }
+
+        @Override
+        public final Stream<RelationTypeImpl> getSupertypes() {
+            return super.getSupertypes().map(ThingTypeImpl::asRelationType);
+        }
+
+        @Override
+        public final Stream<RelationTypeImpl> getSubtypes() {
+            return super.getSubtypes().map(ThingTypeImpl::asRelationType);
+        }
+
+        @Override
+        public final Stream<RelationImpl> getInstances() {
+            return super.getInstances().map(ThingImpl::asRelation);
         }
 
         @Override

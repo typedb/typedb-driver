@@ -54,33 +54,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
-        public final void setSupertype(EntityType superEntityType) {
-            this.setSupertypeExecute(superEntityType);
-        }
-
-        @Override
-        public EntityTypeImpl getSupertype() {
-            return super.getSupertypeExecute(TypeImpl::asEntityType);
-        }
-
-        @Override
-        public final Stream<EntityImpl> getInstances() {
-            return super.getInstances(ThingImpl::asEntity);
-        }
-
-        @Override
         public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
-        }
-
-        @Override
-        public final Stream<EntityTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asEntityType);
-        }
-
-        @Override
-        public final Stream<EntityTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asEntityType);
         }
 
         @Override
@@ -88,6 +63,32 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance());
             return EntityImpl.of(execute(method).getEntityTypeCreateRes().getEntity());
+        }
+
+        @Override
+        public final void setSupertype(EntityType entityType) {
+            super.setSupertype(entityType);
+        }
+
+        @Override
+        public EntityTypeImpl getSupertype() {
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asEntityType() : null;
+        }
+
+        @Override
+        public final Stream<EntityTypeImpl> getSupertypes() {
+            return super.getSupertypes().map(ThingTypeImpl::asEntityType);
+        }
+
+        @Override
+        public final Stream<EntityTypeImpl> getSubtypes() {
+            return super.getSubtypes().map(ThingTypeImpl::asEntityType);
+        }
+
+        @Override
+        public final Stream<EntityImpl> getInstances() {
+            return super.getInstances().map(ThingImpl::asEntity);
         }
 
         @Override

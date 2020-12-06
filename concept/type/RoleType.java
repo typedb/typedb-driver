@@ -27,6 +27,8 @@ public interface RoleType extends Type {
 
     String getScope();
 
+    String getScopedLabel();
+
     @Override
     RoleType.Remote asRemote(Grakn.Transaction transaction);
 
@@ -41,9 +43,9 @@ public interface RoleType extends Type {
         @Override
         Stream<? extends RoleType> getSubtypes();
 
-        RelationType getRelation();
+        RelationType getRelationType();
 
-        Stream<? extends RelationType> getRelations();
+        Stream<? extends RelationType> getRelationTypes();
 
         Stream<? extends ThingType> getPlayers();
     }

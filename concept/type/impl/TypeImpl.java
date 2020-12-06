@@ -31,7 +31,6 @@ import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Type.SetSupertype;
 import grakn.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
@@ -220,35 +219,34 @@ public abstract class TypeImpl implements Type {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RoleType.class)));
         }
 
-        void setSupertypeExecute(Type type) {
-            execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(SetSupertype.Req.newBuilder().setType(type(type))));
+        // We can't declare this in Type.Remote because then (for example) EntityTypeImpl.Remote would be expected to
+        // implement setSupertype(Type) but in fact, only implements setSupertype(EntityType).
+        void setSupertype(Type type) {
+            execute(ConceptProto.Type.Req.newBuilder().setTypeSetSupertypeReq(ConceptProto.Type.SetSupertype.Req.newBuilder().setType(type(type))));
         }
 
         @Nullable
-        <TYPE extends TypeImpl> TYPE getSupertypeExecute(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public TypeImpl getSupertype() {
             final ConceptProto.Type.GetSupertype.Res response = execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypeReq(ConceptProto.Type.GetSupertype.Req.getDefaultInstance()))
                     .getTypeGetSupertypeRes();
 
-            switch (response.getResCase()) {
-                case TYPE:
-                    return typeConstructor.apply(TypeImpl.of(response.getType()));
-                case RES_NOT_SET:
-                default:
-                    return null;
-            }
+            return response.getResCase() == ConceptProto.Type.GetSupertype.Res.ResCase.TYPE ? TypeImpl.of(response.getType()) : null;
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSupertypes(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public Stream<? extends TypeImpl> getSupertypes() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSupertypesReq(ConceptProto.Type.GetSupertypes.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSupertypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSupertypesRes().getTypeList());
         }
 
-        <TYPE extends TypeImpl> Stream<TYPE> getSubtypes(Function<TypeImpl, TYPE> typeConstructor) {
+        @Override
+        public Stream<? extends TypeImpl> getSubtypes() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setTypeGetSubtypesReq(ConceptProto.Type.GetSubtypes.Req.getDefaultInstance());
-            return stream(method, res -> res.getTypeGetSubtypesRes().getTypeList()).map(typeConstructor);
+            return typeStream(method, res -> res.getTypeGetSubtypesRes().getTypeList());
         }
 
         @Override
@@ -265,7 +263,7 @@ public abstract class TypeImpl implements Type {
             return rpcTransaction;
         }
 
-        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
+        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
             return rpcTransaction.stream(request, res -> typeGetter.apply(res.getTypeRes()).stream().map(TypeImpl::of));

@@ -17,14 +17,12 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package grakn.client.concept.logic;
 
 import grakn.client.Grakn;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 public interface Rule {
 

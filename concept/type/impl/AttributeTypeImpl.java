@@ -158,19 +158,21 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
-        public final void setSupertype(AttributeType type) {
-            this.setSupertypeExecute(type);
+        @Override
+        public final void setSupertype(AttributeType attributeType) {
+            super.setSupertype(attributeType);
         }
 
         @Nullable
         @Override
         public AttributeTypeImpl getSupertype() {
-            return getSupertypeExecute(TypeImpl::asAttributeType);
+            final ThingTypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asAttributeType() : null;
         }
 
         @Override
         public Stream<? extends AttributeTypeImpl> getSupertypes() {
-            return super.getSupertypes().map(TypeImpl::asAttributeType);
+            return super.getSupertypes().map(ThingTypeImpl::asAttributeType);
         }
 
         @Override
@@ -187,7 +189,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeImpl<?>> getInstances() {
-            return super.getInstances(ThingImpl::asAttribute);
+            return super.getInstances().map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -200,8 +202,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypeGetOwnersReq(ConceptProto.AttributeType.GetOwners.Req.newBuilder()
                             .setOnlyKey(onlyKey));
-
-            return stream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnerList()).map(TypeImpl::asThingType);
+            return typeStream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnerList()).map(TypeImpl::asThingType);
         }
 
         protected final AttributeImpl<?> put(Object value) {
@@ -217,13 +218,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
                             .setValue(attributeValue(value)));
             final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
-            switch (response.getResCase()) {
-                case ATTRIBUTE:
-                    return AttributeImpl.of(response.getAttribute());
-                default:
-                case RES_NOT_SET:
-                    return null;
-            }
+            return response.getResCase() == ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? AttributeImpl.of(response.getAttribute()) : null;
         }
 
         @Override
@@ -291,6 +286,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             super(label, isRoot);
         }
 
+        public static AttributeTypeImpl.Boolean of(ConceptProto.Type typeProto) {
+            return new AttributeTypeImpl.Boolean(typeProto.getLabel(), typeProto.getRoot());
+        }
+
         @Override
         public ValueType getValueType() {
             return ValueType.BOOLEAN;
@@ -324,7 +323,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Boolean getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asBoolean());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asBoolean() : null;
             }
 
             @Override
@@ -343,8 +343,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Boolean type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Boolean booleanAttributeType) {
+                super.setSupertype(booleanAttributeType);
             }
 
             @Override
@@ -370,6 +370,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         Long(java.lang.String label, boolean isRoot) {
             super(label, isRoot);
+        }
+
+        public static AttributeTypeImpl.Long of(ConceptProto.Type typeProto) {
+            return new AttributeTypeImpl.Long(typeProto.getLabel(), typeProto.getRoot());
         }
 
         @Override
@@ -405,7 +409,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Long getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asLong());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asLong() : null;
             }
 
             @Override
@@ -424,8 +429,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Long type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Long longAttributeType) {
+                super.setSupertype(longAttributeType);
             }
 
             @Override
@@ -451,6 +456,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         Double(java.lang.String label, boolean isRoot) {
             super(label, isRoot);
+        }
+
+        public static AttributeTypeImpl.Double of(ConceptProto.Type typeProto) {
+            return new AttributeTypeImpl.Double(typeProto.getLabel(), typeProto.getRoot());
         }
 
         @Override
@@ -486,7 +495,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.Double getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asDouble());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asDouble() : null;
             }
 
             @Override
@@ -505,8 +515,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.Double type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.Double doubleAttributeType) {
+                super.setSupertype(doubleAttributeType);
             }
 
             @Override
@@ -532,6 +542,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         String(java.lang.String label, boolean isRoot) {
             super(label, isRoot);
+        }
+
+        public static AttributeTypeImpl.String of(ConceptProto.Type typeProto) {
+            return new AttributeTypeImpl.String(typeProto.getLabel(), typeProto.getRoot());
         }
 
         @Override
@@ -567,7 +581,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.String getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asString());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asString() : null;
             }
 
             @Override
@@ -586,8 +601,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.String type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.String stringAttributeType) {
+                super.setSupertype(stringAttributeType);
             }
 
             @Override
@@ -633,6 +648,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             super(label, isRoot);
         }
 
+        public static AttributeTypeImpl.DateTime of(ConceptProto.Type typeProto) {
+            return new AttributeTypeImpl.DateTime(typeProto.getLabel(), typeProto.getRoot());
+        }
+
         @Override
         public ValueType getValueType() {
             return ValueType.DATETIME;
@@ -666,7 +685,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeTypeImpl.DateTime getSupertype() {
-                return getSupertypeExecute(t -> t.asAttributeType().asDateTime());
+                final AttributeTypeImpl supertype = super.getSupertype();
+                return supertype != null ? supertype.asDateTime() : null;
             }
 
             @Override
@@ -685,8 +705,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final void setSupertype(AttributeType.DateTime type) {
-                super.setSupertype(type);
+            public final void setSupertype(AttributeType.DateTime dateTimeAttributeType) {
+                super.setSupertype(dateTimeAttributeType);
             }
 
             @Override

@@ -52,6 +52,11 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
+    public final String getScopedLabel() {
+        return scope + ":" + getLabel();
+    }
+
+    @Override
     public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
         return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
     }
@@ -85,27 +90,10 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         private final String scope;
         private final int hash;
 
-        public Remote(Grakn.Transaction transaction, String label,
-                      String scope, boolean isRoot) {
+        public Remote(Grakn.Transaction transaction, String label, String scope, boolean isRoot) {
             super(transaction, label, isRoot);
             this.scope = scope;
             this.hash = Objects.hash(transaction, label, scope);
-        }
-
-        @Nullable
-        @Override
-        public RoleTypeImpl getSupertype() {
-            return getSupertypeExecute(TypeImpl::asRoleType);
-        }
-
-        @Override
-        public final Stream<RoleTypeImpl> getSupertypes() {
-            return super.getSupertypes(TypeImpl::asRoleType);
-        }
-
-        @Override
-        public final Stream<RoleTypeImpl> getSubtypes() {
-            return super.getSubtypes(TypeImpl::asRoleType);
         }
 
         @Override
@@ -114,12 +102,34 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
+        public final String getScopedLabel() {
+            return scope + ":" + getLabel();
+        }
+
+        @Nullable
+        @Override
+        public RoleTypeImpl getSupertype() {
+            final TypeImpl supertype = super.getSupertype();
+            return supertype != null ? supertype.asRoleType() : null;
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getSupertypes() {
+            return super.getSupertypes().map(TypeImpl::asRoleType);
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getSubtypes() {
+            return super.getSubtypes().map(TypeImpl::asRoleType);
+        }
+
+        @Override
         public RoleType.Remote asRemote(Grakn.Transaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
 
         @Override
-        public final RelationTypeImpl getRelation() {
+        public final RelationTypeImpl getRelationType() {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setRoleTypeGetRelationTypeReq(ConceptProto.RoleType.GetRelationType.Req.getDefaultInstance());
             final ConceptProto.RoleType.GetRelationType.Res response = execute(method).getRoleTypeGetRelationTypeRes();
@@ -127,8 +137,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public final Stream<RelationTypeImpl> getRelations() {
-            return stream(
+        public final Stream<RelationTypeImpl> getRelationTypes() {
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetRelationTypesReq(
                             ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetRelationTypesRes().getRelationTypeList()
@@ -137,7 +147,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final Stream<ThingTypeImpl> getPlayers() {
-            return stream(
+            return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetPlayersReq(
                             ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetPlayersRes().getThingTypeList()
@@ -150,8 +160,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> stream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
-            return super.stream(method.setScope(scope), typeGetter);
+        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
+            return super.typeStream(method.setScope(scope), typeGetter);
         }
 
         @Override
