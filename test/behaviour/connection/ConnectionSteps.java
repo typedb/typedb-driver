@@ -26,6 +26,7 @@ import grakn.client.rpc.GraknClient;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,17 @@ public class ConnectionSteps {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
+    @Given("connection has been opened")
+    public void connection_has_been_opened() {
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+    }
+
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        assertTrue(client.databases().all().isEmpty());
+    }
+
     @Before
     public synchronized void before() {
         assertNull(client);
@@ -65,9 +77,6 @@ public class ConnectionSteps {
         System.out.println("Establishing Connection to Grakn Core at " + address);
         client = new GraknClient(address);
         System.out.println("Connection to Grakn Core established");
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-        assertTrue(client.databases().all().isEmpty());
     }
 
     @After
