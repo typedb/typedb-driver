@@ -43,7 +43,7 @@ import {
     ConceptProtoBuilder,
     ConceptProtoReader,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
 import ValueClass = AttributeType.ValueClass;

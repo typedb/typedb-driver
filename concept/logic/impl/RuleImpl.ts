@@ -20,10 +20,11 @@
 import {
     RemoteRule,
     Rule,
-    Grakn, RPCTransaction,
+    Grakn,
+    RPCTransaction,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import LogicProto from "graknlabs-protocol/protobuf/logic_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export class RuleImpl implements Rule {
@@ -38,7 +39,7 @@ export class RuleImpl implements Rule {
         this._then = then;
     }
 
-    static of(ruleProto: ConceptProto.Rule): RuleImpl {
+    static of(ruleProto: LogicProto.Rule): RuleImpl {
         return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
     }
 
@@ -93,16 +94,16 @@ export class RemoteRuleImpl implements RemoteRule {
     }
 
     async setLabel(label: string): Promise<void> {
-        await this.execute(new ConceptProto.Rule.Req().setRuleSetLabelReq(new ConceptProto.Rule.SetLabel.Req().setLabel(label)));
+        await this.execute(new LogicProto.Rule.Req().setRuleSetLabelReq(new LogicProto.Rule.SetLabel.Req().setLabel(label)));
         this._label = label;
     }
 
     async delete(): Promise<void> {
-        await this.execute(new ConceptProto.Rule.Req().setRuleDeleteReq(new ConceptProto.Rule.Delete.Req()));
+        await this.execute(new LogicProto.Rule.Req().setRuleDeleteReq(new LogicProto.Rule.Delete.Req()));
     }
 
     async isDeleted(): Promise<boolean> {
-        return !(await this.rpcTransaction.concepts().getRule(this._label));
+        return !(await this.rpcTransaction.logic().getRule(this._label));
     }
 
     asRemote(transaction: Transaction): RemoteRule {
@@ -113,7 +114,7 @@ export class RemoteRuleImpl implements RemoteRule {
         return true;
     }
 
-    protected execute(method: ConceptProto.Rule.Req): Promise<ConceptProto.Rule.Res> {
+    protected execute(method: LogicProto.Rule.Req): Promise<LogicProto.Rule.Res> {
         const request = new TransactionProto.Transaction.Req().setRuleReq(method);
         return this._rpcTransaction.execute(request, res => res.getRuleRes());
     }

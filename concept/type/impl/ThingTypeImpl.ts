@@ -32,7 +32,7 @@ import {
     ConceptProtoBuilder,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {

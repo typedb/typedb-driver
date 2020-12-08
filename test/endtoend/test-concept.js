@@ -17,9 +17,9 @@
  * under the License.
  */
 
-const { GraknClient } = require("../dist/rpc/GraknClient");
-const { Grakn } = require("../dist/Grakn");
-const { AttributeType } = require("../dist/concept/type/AttributeType");
+const { GraknClient } = require("../../dist/rpc/GraknClient");
+const { Grakn } = require("../../dist/Grakn");
+const { AttributeType } = require("../../dist/concept/type/AttributeType");
 const { SessionType, TransactionType } = Grakn;
 const assert = require("assert");
 
@@ -295,7 +295,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await tx.concepts().putRule("septuagenarian-rule", "{$x isa person;}", "$x has age 70");
+        await tx.logic().putRule("septuagenarian-rule", "{$x isa person;}", "$x has age 70");
         await tx.commit();
         await tx.close();
         console.log(`put rule - SUCCESS`);

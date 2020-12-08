@@ -37,35 +37,17 @@ build:
     build:
       machine: graknlabs-ubuntu-20.04
       script: |
-        ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
-        ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
-        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
-        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     test:
       machine: graknlabs-ubuntu-20.04
       script: |
-        ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME \
-        ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
-        ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
-        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel run //test:grakn-extractor -- grakn-core-all-linux
-        ./grakn-core-all-linux/grakn server &
-        # -- to be moved to image itself --
-        mkdir -p ~/client-nodejs/grakn-core-all-linux/server/data
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        # -- to be moved to image itself --
-        nvm install v10.15.3
-        nvm use --delete-prefix v10.15.3
-        npm install
-        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        kill $(jps | awk '/GraknServer/ {print $1}')
+        ./test/start-server.sh
+        source ./test/install.sh
+        ./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/stop-server.sh
         exit $TEST_SUCCESS
-      #bazel test //...
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
@@ -88,18 +70,8 @@ build:
         branch: master
       machine: graknlabs-ubuntu-20.04
       script: |
-        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel run //test:grakn-extractor -- dist/grakn-core-all-linux
-        ./dist/grakn-core-all-linux/grakn server &
-        # -- to be moved to image itself --
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        # -- to be moved to image itself --
-        nvm install v10.15.3
-        nvm use --delete-prefix v10.15.3
+        ./test/start-server.sh
+        source ./test/install.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz

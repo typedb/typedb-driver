@@ -20,6 +20,7 @@
 import { GraknOptions,
     ConceptManager,
     QueryManager,
+    LogicManager,
 } from "./dependencies_internal";
 
 export namespace Grakn {
@@ -64,6 +65,8 @@ export namespace Grakn {
         isOpen(): boolean;
 
         concepts(): ConceptManager;
+
+        logic(): LogicManager;
 
         query(): QueryManager;
 

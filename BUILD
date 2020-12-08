@@ -50,7 +50,7 @@ ts_library(
     tsconfig = "tsconfig.json",
     deps = [
         "@npm//@grpc/grpc-js",
-        "@npm//graknlabs-grpc-protocol",
+        "@npm//graknlabs-protocol",
         "@npm//@types/node",
     ],
 )
@@ -64,7 +64,7 @@ pkg_npm(
        ".npmignore",
     ]),
     deps = [
-        "@npm//graknlabs-grpc-protocol",
+        "@npm//graknlabs-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
         ":_client_nodejs",

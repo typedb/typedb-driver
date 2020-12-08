@@ -17,10 +17,10 @@
  * under the License.
  */
 
-const { GraknClient } = require("../dist/rpc/GraknClient");
-const { Grakn } = require("../dist/Grakn");
-const { AttributeType } = require("../dist/concept/type/AttributeType");
-const { ConceptMap } = require("../dist/concept/answer/ConceptMap");
+const { GraknClient } = require("../../dist/rpc/GraknClient");
+const { Grakn } = require("../../dist/Grakn");
+const { AttributeType } = require("../../dist/concept/type/AttributeType");
+const { ConceptMap } = require("../../dist/concept/answer/ConceptMap");
 const { SessionType, TransactionType } = Grakn;
 const assert = require("assert");
 

@@ -24,10 +24,10 @@ import {
     Stream,
     ConceptMap,
 } from "../dependencies_internal";
-import QueryProto from "graknlabs-grpc-protocol/protobuf/query_pb";
+import QueryProto from "graknlabs-protocol/protobuf/query_pb";
 import Query = QueryProto.Query;
 import Graql = QueryProto.Graql;
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 import Transaction = TransactionProto.Transaction;
 
 export class QueryManager {

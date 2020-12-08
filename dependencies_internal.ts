@@ -35,11 +35,11 @@ export * from "./concept/answer/Answer";
 export * from "./concept/answer/AnswerGroup";
 export * from "./concept/answer/ConceptMap";
 
-/* concept.schema */
-export * from "./concept/schema/Rule";
+/* concept.logic */
+export * from "./concept/logic/Rule";
 
-/* concept.schema.impl */
-export * from "./concept/schema/impl/RuleImpl";
+/* concept.logic.impl */
+export * from "./concept/logic/impl/RuleImpl";
 
 /* concept.thing */
 export * from "./concept/thing/Attribute";
@@ -72,6 +72,7 @@ export * from "./concept/type/impl/RoleTypeImpl";
 /* concept */
 export * from "./concept/Concept";
 export * from "./concept/ConceptManager";
+export * from "./concept/LogicManager";
 
 /* query */
 export * from "./query/QueryManager";

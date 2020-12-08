@@ -23,9 +23,9 @@ import {
     GraknOptions,
     RPCTransaction, GraknClientError, ErrorMessage,
 } from "../dependencies_internal";
-import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
+import GraknProto from "graknlabs-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
-import SessionProto from "graknlabs-grpc-protocol/protobuf/session_pb";
+import SessionProto from "graknlabs-protocol/protobuf/session_pb";
 
 export class RPCSession implements Grakn.Session {
     private readonly _grpcClient: GraknGrpc;
@@ -92,7 +92,7 @@ export class RPCSession implements Grakn.Session {
     pulse(): void {
         if (!this._isOpen) return;
         const pulse = new SessionProto.Session.Pulse.Req().setSessionId(this._sessionId);
-        this._grpcClient.session_pulse(pulse, (err, _res) => {
+        this._grpcClient.session_pulse(pulse, (err) => {
             if (err) return;// Generally means the session has been closed, which is fine
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         });

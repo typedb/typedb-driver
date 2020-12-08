@@ -19,7 +19,7 @@
 
 // TODO: Can we get rid of this?
 
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 import {
     Type,
     Thing,

@@ -46,7 +46,7 @@ import {
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {

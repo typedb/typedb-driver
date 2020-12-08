@@ -32,8 +32,8 @@ import {
     RoleTypeImpl, ConceptProtoBuilder,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {

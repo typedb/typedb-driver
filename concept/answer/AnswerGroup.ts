@@ -24,7 +24,7 @@ import {
     ConceptProtoReader,
 } from "../../dependencies_internal"
 import Transaction = Grakn.Transaction;
-import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
+import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
 
 
 

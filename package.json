@@ -15,15 +15,15 @@
     "build": "npm run clean && npm run lint && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
-    "test-concept": "node test/test-concept.js",
-    "test-connection": "node test/test-connection.js",
-    "test-query": "node test/test-query.js",
+    "test-concept": "node test/endtoend/test-concept.js",
+    "test-connection": "node test/endtoend/test-connection.js",
+    "test-query": "node test/endtoend/test-query.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.12.4",
-    "graknlabs-grpc-protocol": "https://repo.grakn.ai/repository/npm-snapshot/graknlabs-grpc-protocol/-/graknlabs-grpc-protocol-0.0.0-4a7ca2c7a0d3e13d8a9a3f7b25da0f6d01848230.tgz"
+    "graknlabs-protocol": "2.0.0-alpha-2"
   },
   "devDependencies": {
     "@bazel/typescript": "2.3.1",

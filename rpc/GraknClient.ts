@@ -24,7 +24,7 @@ import {
     RPCSession,
 } from "../dependencies_internal";
 import {ChannelCredentials, closeClient} from "@grpc/grpc-js";
-import {GraknClient as GraknGrpc} from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
+import {GraknClient as GraknGrpc} from "graknlabs-protocol/protobuf/grakn_grpc_pb";
 
 export const DEFAULT_URI = "localhost:1729";
 

@@ -29,8 +29,8 @@ import {
     GraknClientError,
     ErrorMessage,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {

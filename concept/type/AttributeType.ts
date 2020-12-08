@@ -34,7 +34,7 @@ import {
     ErrorMessage,
 } from "../../dependencies_internal";
 import ValueType = AttributeType.ValueType;
-import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
+import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
 import ValueClass = AttributeType.ValueClass;
 
 export interface AttributeType extends ThingType {

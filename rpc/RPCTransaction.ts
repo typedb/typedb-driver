@@ -25,16 +25,17 @@ import {
     QueryManager,
     uuidv4,
     BlockingQueue,
-    Stream, GraknClientError, ErrorMessage,
+    Stream, GraknClientError, ErrorMessage, LogicManager,
 } from "../dependencies_internal";
-import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
-import GraknProto from "graknlabs-grpc-protocol/protobuf/grakn_grpc_pb";
+import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import GraknProto from "graknlabs-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
 export class RPCTransaction implements Grakn.Transaction {
     private readonly _type: Grakn.TransactionType;
     private readonly _conceptManager: ConceptManager;
+    private readonly _logicManager: LogicManager;
     private readonly _queryManager: QueryManager;
     private readonly _collectors: ResponseCollectors;
     private readonly _grpcClient: GraknGrpc;
@@ -48,6 +49,7 @@ export class RPCTransaction implements Grakn.Transaction {
     constructor(grpcClient: GraknGrpc, type: Grakn.TransactionType) {
         this._type = type;
         this._conceptManager = new ConceptManager(this);
+        this._logicManager = new LogicManager(this);
         this._queryManager = new QueryManager(this);
         this._collectors = new ResponseCollectors(this);
         this._transactionWasClosed = false;
@@ -85,6 +87,10 @@ export class RPCTransaction implements Grakn.Transaction {
 
     public concepts(): ConceptManager {
         return this._conceptManager;
+    }
+
+    public logic(): LogicManager {
+        return this._logicManager;
     }
 
     public query(): QueryManager {
