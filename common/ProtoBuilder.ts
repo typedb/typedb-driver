@@ -19,10 +19,10 @@
 
 import { GraknOptions } from "../dependencies_internal";
 import options_pb from "graknlabs-grpc-protocol/protobuf/options_pb";
-const { Options } = options_pb;
+import Options = options_pb.Options;
 
 export namespace ProtoBuilder {
-    export function options(options?: GraknOptions) {
+    export function options(options?: GraknOptions): Options {
         const optionsProto = new Options();
         if (options) {
             if (options.infer() != null) optionsProto.setInfer(options.infer() as boolean);

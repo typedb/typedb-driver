@@ -21,8 +21,8 @@ import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 
 import {
-    AnswerGroup,
-    Concept, ConceptProtoReader,
+    Concept,
+    ConceptProtoReader,
     ErrorMessage,
     GraknClientError,
 } from "../../dependencies_internal";
@@ -60,7 +60,7 @@ export class ConceptMap {
 
     toString(): string {
         let output = "";
-        for (let entry of this._map.entries()) {
+        for (const entry of this._map.entries()) {
             output += `[${entry[0]}/${entry[1]}]`
         }
         return output;

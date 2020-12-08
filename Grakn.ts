@@ -17,9 +17,10 @@
  * under the License.
  */
 
-import { GraknOptions } from "./dependencies_internal";
-import { ConceptManager } from "./dependencies_internal";
-import { QueryManager } from "./dependencies_internal";
+import { GraknOptions,
+    ConceptManager,
+    QueryManager,
+} from "./dependencies_internal";
 
 export namespace Grakn {
     export interface Client {

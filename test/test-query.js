@@ -38,7 +38,7 @@ async function run() {
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
 
     let session;
@@ -51,7 +51,7 @@ async function run() {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -64,7 +64,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -75,7 +75,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -85,7 +85,7 @@ async function run() {
         console.error(`close data write tx - ERROR: ${err.stack || err}`);
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -99,7 +99,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -113,7 +113,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -128,7 +128,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     // try {
@@ -150,7 +150,7 @@ async function run() {
     //     await tx.close();
     //     await session.close();
     //     client.close();
-    //     return;
+    //     process.exit(1);
     // }
 
     try {
@@ -159,7 +159,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
     try {
         session = await client.session("grakn", SessionType.DATA);
@@ -167,7 +167,7 @@ async function run() {
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -178,7 +178,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -204,7 +204,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -215,7 +215,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -226,7 +226,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -235,7 +235,7 @@ async function run() {
     } catch (err) {
         console.error(`close data session - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -243,7 +243,7 @@ async function run() {
         console.log("client.close - SUCCESS");
     } catch (err) {
         console.error(`client.close - ERROR: ${err.stack || err}`);
-        return;
+        process.exit(1);
     }
 }
 

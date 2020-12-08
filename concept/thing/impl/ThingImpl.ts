@@ -48,11 +48,15 @@ import {
     DateTimeAttributeImpl,
     DoubleAttributeImpl,
     LongAttributeImpl,
-    StringAttributeImpl, GraknClientError, ErrorMessage,
+    StringAttributeImpl,
+    GraknClientError,
+    ErrorMessage,
 } from "../../../dependencies_internal";
 import ConceptProto from "graknlabs-grpc-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import TransactionProto from "graknlabs-grpc-protocol/protobuf/transaction_pb";
+import ValueClass = AttributeType.ValueClass;
+
 
 export abstract class ThingImpl implements Thing {
     private readonly _iid: string;
@@ -106,28 +110,28 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return true;
     }
 
-    getHas(onlyKey: boolean): Stream<AttributeImpl<any>>;
+    getHas(onlyKey: boolean): Stream<AttributeImpl<ValueClass>>;
     getHas(attributeType: BooleanAttributeType): Stream<BooleanAttributeImpl>;
     getHas(attributeType: LongAttributeType): Stream<LongAttributeImpl>;
     getHas(attributeType: DoubleAttributeType): Stream<DoubleAttributeImpl>;
     getHas(attributeType: StringAttributeType): Stream<StringAttributeImpl>;
     getHas(attributeType: DateTimeAttributeType): Stream<DateTimeAttributeImpl>;
-    getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<any>>;
-    getHas(): Stream<AttributeImpl<any>>;
-    getHas(arg?: boolean | Type | AttributeType[]): Stream<AttributeImpl<any>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
+    getHas(attributeTypes: AttributeType[]): Stream<AttributeImpl<ValueClass>>;
+    getHas(): Stream<AttributeImpl<ValueClass>>;
+    getHas(arg?: boolean | Type | AttributeType[]): Stream<AttributeImpl<ValueClass>> | Stream<BooleanAttributeImpl> | Stream<LongAttributeImpl>
         | Stream<DoubleAttributeImpl> | Stream<StringAttributeImpl> | Stream<DateTimeAttributeImpl> {
         if (typeof arg === "undefined") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req());
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
         }
         if (typeof arg === "boolean") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
         }
         if (Array.isArray(arg)) {
             const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList(ConceptProtoBuilder.types(arg)));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<any>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
         }
         const method = new ConceptProto.Thing.Req()
             .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));

@@ -42,6 +42,7 @@ export class Stream<T> implements AsyncIterable<T> {
         this._responseCollector = responseCollector;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
         while (true) {
             const next = await this.next()
@@ -58,9 +59,8 @@ export class Stream<T> implements AsyncIterable<T> {
         const res = await this._responseCollector.take();
         switch (res.getResCase()) {
             case TransactionProto.Transaction.Res.ResCase.CONTINUE:
-                const continueReq = new TransactionProto.Transaction.Req()
-                    .setId(this._requestId).setContinue(true);
-                this._writableStream.write(continueReq);
+                this._writableStream.write(new TransactionProto.Transaction.Req()
+                    .setId(this._requestId).setContinue(true));
                 return this.next();
             case TransactionProto.Transaction.Res.ResCase.DONE:
                 return undefined;

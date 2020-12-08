@@ -12,7 +12,7 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run lint && npm run clean && tsc",
+    "build": "npm run clean && npm run lint && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
     "test-concept": "node test/test-concept.js",
@@ -34,8 +34,8 @@
     "@typescript-eslint/parser": "4.9.0",
     "eslint": "7.14.0",
     "fs-extra": "7.0.1",
-    "grpc-tools": "1.10.0",
     "grpc_tools_node_protoc_ts": "5.0.1",
+    "grpc-tools": "1.10.0",
     "jest": "26.6.3",
     "properties-reader": "0.3.1",
     "rimraf": "3.0.2",

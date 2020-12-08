@@ -20,17 +20,15 @@
 import {
     Answer,
     Concept,
-    ConceptMap,
-    ErrorMessage,
-    GraknClientError,
-    Grakn, ConceptProtoReader,
+    Grakn,
+    ConceptProtoReader,
 } from "../../dependencies_internal"
 import Transaction = Grakn.Transaction;
 import AnswerProto from "graknlabs-grpc-protocol/protobuf/answer_pb";
 
 
 
-export class AnswerGroup<T> implements Answer {
+export class AnswerGroup<T> {
     private readonly _owner: Concept;
     private readonly _answers: T[];
 
@@ -43,7 +41,7 @@ export class AnswerGroup<T> implements Answer {
         let concept: Concept;
         if (res.getOwner().hasThing()) concept = ConceptProtoReader.thing(res.getOwner().getThing());
         else concept = ConceptProtoReader.type(res.getOwner().getType());
-        return new AnswerGroup<Answer>(concept, res.getAnswersList() as Answer[])
+        return new AnswerGroup<Answer>(concept, res.getAnswersList().map((ans) => Answer.of(transaction, ans)) as Answer[])
     }
 
     owner(): Concept {

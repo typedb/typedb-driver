@@ -51,6 +51,20 @@ build:
         ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD \
         ARTIFACT_EMAIL=$REPO_GRAKN_EMAIL \
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel run //test:grakn-extractor -- grakn-core-all-linux
+        ./grakn-core-all-linux/grakn server &
+        # -- to be moved to image itself --
+        mkdir -p ~/client-nodejs/grakn-core-all-linux/server/data
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        # -- to be moved to image itself --
+        nvm install v10.15.3
+        nvm use --delete-prefix v10.15.3
+        npm install
+        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        kill $(jps | awk '/GraknServer/ {print $1}')
+        exit $TEST_SUCCESS
       #bazel test //...
     deploy-npm-snapshot:
       filter:
@@ -91,7 +105,7 @@ build:
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz
         npm install jest --global
         jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        kill -9 $(jps | awk '/GraknServer/ {print $1}')
+        kill $(jps | awk '/GraknServer/ {print $1}')
         exit $TEST_SUCCESS
       dependencies: [deploy-npm-snapshot]
 release:

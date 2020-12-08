@@ -38,7 +38,7 @@ async function run() {
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
 
     ///////////////////////
@@ -59,7 +59,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -76,7 +76,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -91,7 +91,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     let stoneLion;
@@ -107,7 +107,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -120,7 +120,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -133,7 +133,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -146,7 +146,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -163,7 +163,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -184,7 +184,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     let parentship, fathership, person, man, parent, father;
@@ -214,7 +214,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     let email, workEmail, customer, age;
@@ -247,7 +247,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -270,7 +270,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     let password, shoeSize, volume, isAlive, startDate;
@@ -290,7 +290,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -304,7 +304,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -313,7 +313,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
         client.close();
-        return;
+        process.exit(1);
     }
 
     /////////////////////
@@ -359,7 +359,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -386,7 +386,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -405,7 +405,7 @@ async function run() {
         await tx.close();
         await session.close();
         client.close();
-        return;
+        process.exit(1);
     }
 
     try {
@@ -415,6 +415,7 @@ async function run() {
     } catch (err) {
         console.error(`close session and client - ERROR: ${err.stack || err}`);
         client.close();
+        process.exit(1);
     }
 }
 

@@ -93,8 +93,6 @@ export namespace ConceptProtoBuilder {
                 return ConceptProto.AttributeType.VALUE_TYPE.STRING;
             case AttributeType.ValueType.DATETIME:
                 return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
-            default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType))
         }
     }
 
