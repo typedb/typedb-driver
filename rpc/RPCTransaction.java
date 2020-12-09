@@ -26,6 +26,7 @@ import grakn.client.GraknOptions;
 import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
+import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
@@ -58,6 +59,7 @@ public class RPCTransaction implements Transaction {
 
     private final Transaction.Type type;
     private final ConceptManager conceptManager;
+    private final LogicManager logicManager;
     private final QueryManager queryManager;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ResponseCollectors collectors;
@@ -71,6 +73,7 @@ public class RPCTransaction implements Transaction {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
             this.type = type;
             conceptManager = new ConceptManager(this);
+            logicManager = new LogicManager(this);
             queryManager = new QueryManager(this);
             collectors = new ResponseCollectors();
 
@@ -108,6 +111,11 @@ public class RPCTransaction implements Transaction {
     @Override
     public ConceptManager concepts() {
         return conceptManager;
+    }
+
+    @Override
+    public LogicManager logics() {
+        return logicManager;
     }
 
     @Override
