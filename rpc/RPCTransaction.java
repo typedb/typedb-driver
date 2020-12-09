@@ -164,8 +164,8 @@ public class RPCTransaction implements Transaction {
             request.setLatencyMillis(networkLatencyMillis);
             collectors.put(requestId, responseCollector);
             requestObserver.onNext(request.build());
-            final QueryIterator<T> queryIterator = new QueryIterator<>(requestId, requestObserver, responseCollector, transformResponse);
-            return StreamSupport.stream(((Iterable<T>) () -> queryIterator).spliterator(), false);
+            final ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
+            return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
         }
     }
 
