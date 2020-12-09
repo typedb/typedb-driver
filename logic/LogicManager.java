@@ -28,7 +28,7 @@ import graql.lang.pattern.Pattern;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
-import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 
 public final class LogicManager {
 
