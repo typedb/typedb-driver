@@ -160,8 +160,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeGetter) {
-            return super.typeStream(method.setScope(scope), typeGetter);
+        Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeListGetter) {
+            return super.typeStream(method.setScope(scope), typeListGetter);
         }
 
         @Override

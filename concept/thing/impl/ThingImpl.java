@@ -283,16 +283,16 @@ public abstract class ThingImpl implements Thing {
             return rpcTransaction;
         }
 
-        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingGetter) {
+        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return rpcTransaction.stream(request, res -> thingGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
+            return rpcTransaction.stream(request, res -> thingListGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
         }
 
-        Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Type>> typeGetter) {
+        Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Type>> typeListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return rpcTransaction.stream(request, res -> typeGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
+            return rpcTransaction.stream(request, res -> typeListGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
         }
 
         ConceptProto.Thing.Res execute(ConceptProto.Thing.Req.Builder method) {
