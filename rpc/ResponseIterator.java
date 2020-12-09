@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
 import static grakn.common.util.Objects.className;
 
-class QueryIterator<T> extends AbstractIterator<T> {
+class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
@@ -40,8 +40,8 @@ class QueryIterator<T> extends AbstractIterator<T> {
     private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
     private Iterator<T> currentIterator;
 
-    QueryIterator(UUID requestId, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                  RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+    ResponseIterator(UUID requestId, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+                     RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         this.requestId = requestId;
         this.transformResponse = transformResponse;
         this.requestObserver = requestObserver;
