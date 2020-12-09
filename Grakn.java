@@ -102,7 +102,7 @@ public interface Grakn {
 
         ConceptManager concepts();
 
-        LogicManager logics();
+        LogicManager logic();
 
         QueryManager query();
 

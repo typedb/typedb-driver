@@ -149,7 +149,7 @@ public class RuleImpl implements Rule {
 
         @Override
         public final boolean isDeleted() {
-            return rpcTransaction.logics().getRule(label) != null;
+            return rpcTransaction.logic().getRule(label) != null;
         }
 
         @Override

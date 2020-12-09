@@ -114,7 +114,7 @@ public class RPCTransaction implements Transaction {
     }
 
     @Override
-    public LogicManager logics() {
+    public LogicManager logic() {
         return logicManager;
     }
 
