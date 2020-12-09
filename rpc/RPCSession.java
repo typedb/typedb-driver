@@ -27,6 +27,8 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.Channel;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grakn.client.common.ProtoBuilder.options;
@@ -38,6 +40,7 @@ public class RPCSession implements Session {
     private final Type type;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
+    private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
     RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
@@ -50,6 +53,8 @@ public class RPCSession implements Session {
                 .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
         sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
+        pulse = new Timer();
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
         isOpen = new AtomicBoolean(true);
     }
 
@@ -76,6 +81,7 @@ public class RPCSession implements Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
+            pulse.cancel();
             blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
         }
     }
@@ -95,6 +101,14 @@ public class RPCSession implements Session {
                 return SessionProto.Session.Type.SCHEMA;
             default:
                 return SessionProto.Session.Type.UNRECOGNIZED;
+        }
+    }
+
+    private class PulseTask extends TimerTask {
+        @Override
+        public void run() {
+            if (!isOpen()) return;
+            blockingGrpcStub.sessionPulse(SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build());
         }
     }
 }
