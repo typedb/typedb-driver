@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.concept.logic.impl;
+package grakn.client.logic.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.logic.Rule;
+import grakn.client.logic.Rule;
 import grakn.client.rpc.RPCTransaction;
-import grakn.protocol.ConceptProto;
+import grakn.protocol.LogicProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -51,7 +51,7 @@ public class RuleImpl implements Rule {
         this.hash = Objects.hash(this.label);
     }
 
-    public static RuleImpl of(ConceptProto.Rule ruleProto) {
+    public static RuleImpl of(LogicProto.Rule ruleProto) {
         return new RuleImpl(ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
     }
 
@@ -117,7 +117,7 @@ public class RuleImpl implements Rule {
             this.hash = Objects.hash(transaction, label);
         }
 
-        public static RuleImpl.Remote of(Grakn.Transaction transaction, ConceptProto.Rule ruleProto) {
+        public static RuleImpl.Remote of(Grakn.Transaction transaction, LogicProto.Rule ruleProto) {
             return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
         }
 
@@ -138,18 +138,18 @@ public class RuleImpl implements Rule {
 
         @Override
         public void setLabel(String label) {
-            execute(ConceptProto.Rule.Req.newBuilder().setRuleSetLabelReq(ConceptProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
+            execute(LogicProto.Rule.Req.newBuilder().setRuleSetLabelReq(LogicProto.Rule.SetLabel.Req.newBuilder().setLabel(label)));
             this.label = label;
         }
 
         @Override
         public void delete() {
-            execute(ConceptProto.Rule.Req.newBuilder().setRuleDeleteReq(ConceptProto.Rule.Delete.Req.getDefaultInstance()));
+            execute(LogicProto.Rule.Req.newBuilder().setRuleDeleteReq(LogicProto.Rule.Delete.Req.getDefaultInstance()));
         }
 
         @Override
         public final boolean isDeleted() {
-            return rpcTransaction.concepts().getRule(label) != null;
+            return rpcTransaction.logic().getRule(label) != null;
         }
 
         @Override
@@ -185,7 +185,7 @@ public class RuleImpl implements Rule {
             return rpcTransaction;
         }
 
-        ConceptProto.Rule.Res execute(ConceptProto.Rule.Req.Builder method) {
+        LogicProto.Rule.Res execute(LogicProto.Rule.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setRuleReq(method.setLabel(label));
             return rpcTransaction.execute(request).getRuleRes();

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.concept.logic;
+package grakn.client.logic;
 
 import grakn.client.Grakn;
 import graql.lang.pattern.Pattern;

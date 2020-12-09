@@ -20,6 +20,7 @@
 package grakn.client;
 
 import grakn.client.concept.ConceptManager;
+import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
 
 import java.util.List;
@@ -100,6 +101,8 @@ public interface Grakn {
         boolean isOpen();
 
         ConceptManager concepts();
+
+        LogicManager logic();
 
         QueryManager query();
 
