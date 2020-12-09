@@ -25,6 +25,7 @@ import grakn.client.Grakn.Transaction;
 import grakn.client.rpc.GraknClient;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 
 import java.util.ArrayList;
@@ -35,8 +36,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static java.util.Objects.isNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ConnectionSteps {
@@ -51,41 +53,14 @@ public class ConnectionSteps {
     public static Map<Session, List<CompletableFuture<Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
     public static Map<CompletableFuture<Session>, List<CompletableFuture<Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
-    private static synchronized void connect_to_grakn() {
-        if (!isNull(client)) return;
-
-        System.out.println("Connecting to Grakn ...");
-
-        String address = GraknSingleton.getGraknRunner().address();
-        assertNotNull(address);
-
-        System.out.println("Establishing Connection to Grakn Core at " + address);
-        client = new GraknClient(address);
-
-        System.out.println("Connection to Grakn Core established");
-
-        assertNotNull(client);
-    }
-
     public static Transaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
     @Given("connection has been opened")
     public void connection_has_been_opened() {
-        if (isNull(client)) {
-            connect_to_grakn();
-        }
-
         assertNotNull(client);
         assertTrue(client.isOpen());
-    }
-
-    @Given("connection delete all databases")
-    public void connection_delete_all_databases() {
-        for (String database : client.databases().all()) {
-            client.databases().delete(database);
-        }
     }
 
     @Given("connection does not have any database")
@@ -93,14 +68,27 @@ public class ConnectionSteps {
         assertTrue(client.databases().all().isEmpty());
     }
 
+    @Before
+    public synchronized void before() {
+        assertNull(client);
+        String address = GraknSingleton.getGraknRunner().address();
+        assertNotNull(address);
+        client = new GraknClient(address);
+        System.out.println("ConnectionSteps.before");
+    }
+
     @After
-    public void close_session_and_transactions() {
-        System.out.println("ConnectionSteps.after");
+    public synchronized void after() {
         sessions.parallelStream().forEach(Session::close);
         sessions.clear();
         sessionsParallel.clear();
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
+        client.databases().all().forEach(database -> client.databases().delete(database));
+        client.close();
+        assertFalse(client.isOpen());
+        client = null;
+        System.out.println("ConnectionSteps.after");
     }
 }

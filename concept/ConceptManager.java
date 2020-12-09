@@ -24,19 +24,16 @@ import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
-import grakn.client.concept.logic.Rule;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
-import grakn.client.concept.logic.impl.RuleImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
-import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -122,16 +119,6 @@ public final class ConceptManager {
         else return null;
     }
 
-    public Rule putRule(String label, Pattern when, Pattern then) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
-                .setPutRuleReq(ConceptProto.ConceptManager.PutRule.Req.newBuilder()
-                        .setLabel(label)
-                        .setWhen(when.toString())
-                        .setThen(then.toString())).build();
-        final ConceptProto.ConceptManager.Res res = execute(req);
-        return RuleImpl.of(res.getPutRuleRes().getRule());
-    }
-
     @Nullable
     @CheckReturnValue
     public Thing getThing(String iid) {
@@ -156,22 +143,6 @@ public final class ConceptManager {
             return TypeImpl.of(response.getGetTypeRes().getType());
         else
             return null;
-    }
-
-    @Nullable
-    @CheckReturnValue
-    public Rule getRule(String label) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
-                .setGetRuleReq(ConceptProto.ConceptManager.GetRule.Req.newBuilder().setLabel(label)).build();
-
-        final ConceptProto.ConceptManager.Res response = execute(req);
-        switch (response.getGetRuleRes().getResCase()) {
-            case RULE:
-                return RuleImpl.of(response.getGetRuleRes().getRule());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
     }
 
     private ConceptProto.ConceptManager.Res execute(ConceptProto.ConceptManager.Req request) {

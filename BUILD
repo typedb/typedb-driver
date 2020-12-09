@@ -37,6 +37,7 @@ java_library(
     srcs = glob([
         "common/**/*.java",
         "concept/**/*.java",
+        "logic/**/*.java",
         "query/**/*.java",
         "rpc/**/*.java",
         "test/*.java",
@@ -79,6 +80,7 @@ checkstyle_test(
         ".grabl/automation.yml",
         "common/**/*",
         "concept/**/*",
+        "logic/**/*",
         "query/**/*",
         "rpc/**/*",
         "test/*",
