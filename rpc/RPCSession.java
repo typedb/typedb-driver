@@ -29,7 +29,7 @@ import io.grpc.Channel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static grakn.client.common.ProtoBuilder.options;
+import static grakn.client.GraknProtoBuilder.options;
 
 public class RPCSession implements Session {
 
