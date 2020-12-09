@@ -71,17 +71,14 @@ public class ConnectionSteps {
     @Before
     public synchronized void before() {
         assertNull(client);
-        System.out.println("Connecting to Grakn ...");
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
-        System.out.println("Establishing Connection to Grakn Core at " + address);
         client = new GraknClient(address);
-        System.out.println("Connection to Grakn Core established");
+        System.out.println("ConnectionSteps.before");
     }
 
     @After
     public synchronized void after() {
-        System.out.println("ConnectionSteps.after");
         sessions.parallelStream().forEach(Session::close);
         sessions.clear();
         sessionsParallel.clear();
@@ -92,5 +89,6 @@ public class ConnectionSteps {
         client.close();
         assertFalse(client.isOpen());
         client = null;
+        System.out.println("ConnectionSteps.after");
     }
 }
