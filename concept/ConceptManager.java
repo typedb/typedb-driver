@@ -38,7 +38,7 @@ import graql.lang.common.GraqlToken;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
-import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 

@@ -17,20 +17,11 @@
  * under the License.
  */
 
-package grakn.client.common;
+package grakn.client;
 
-import grabl.tracing.client.GrablTracingThreadStatic;
-import grakn.client.GraknOptions;
 import grakn.protocol.OptionsProto;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
-import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-
-public abstract class ProtoBuilder {
+public abstract class GraknProtoBuilder {
 
     public static OptionsProto.Options options(GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
@@ -38,25 +29,5 @@ public abstract class ProtoBuilder {
         options.explain().ifPresent(builder::setExplain);
         options.batchSize().ifPresent(builder::setBatchSize);
         return builder.build();
-    }
-
-    public static Map<String, String> tracingData() {
-        if (isTracingEnabled()) {
-            final GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
-            if (threadTrace == null) {
-                return Collections.emptyMap();
-            }
-
-            if (threadTrace.getId() == null || threadTrace.getRootId() == null) {
-                return Collections.emptyMap();
-            }
-
-            final Map<String, String> metadata = new HashMap<>(2);
-            metadata.put("traceParentId", threadTrace.getId().toString());
-            metadata.put("traceRootId", threadTrace.getRootId().toString());
-            return metadata;
-        } else {
-            return Collections.emptyMap();
-        }
     }
 }

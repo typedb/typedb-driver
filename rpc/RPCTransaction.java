@@ -49,10 +49,10 @@ import java.util.stream.StreamSupport;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
 import static grakn.client.Grakn.Transaction.Type.WRITE;
-import static grakn.client.common.ProtoBuilder.options;
-import static grakn.client.common.ProtoBuilder.tracingData;
+import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
 public class RPCTransaction implements Transaction {

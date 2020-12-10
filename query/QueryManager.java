@@ -34,7 +34,7 @@ import graql.lang.query.GraqlUndefine;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.ProtoBuilder.options;
+import static grakn.client.GraknProtoBuilder.options;
 
 public final class QueryManager {
 
