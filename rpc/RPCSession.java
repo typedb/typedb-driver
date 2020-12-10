@@ -108,7 +108,12 @@ public class RPCSession implements Session {
         @Override
         public void run() {
             if (!isOpen()) return;
-            blockingGrpcStub.sessionPulse(SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build());
+            final SessionProto.Session.Pulse.Res res = blockingGrpcStub.sessionPulse(
+                    SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build());
+            if (!res.getAlive()) {
+                isOpen.set(false);
+                pulse.cancel();
+            }
         }
     }
 }
