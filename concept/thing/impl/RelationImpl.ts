@@ -27,13 +27,12 @@ import {
     RoleType,
     Grakn,
     Stream,
-    ConceptProtoReader,
     RPCTransaction,
-    RoleTypeImpl, ConceptProtoBuilder,
+    RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
     protected constructor(iid: string) {
@@ -60,7 +59,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
 
     async getType(): Promise<RelationTypeImpl> {
         const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as RelationTypeImpl;
+        return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as RelationTypeImpl;
     }
 
     async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
@@ -71,8 +70,8 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList())
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
         for await (const rolePlayer of stream) {
-            const role = ConceptProtoReader.type(rolePlayer.getRoleType()) as RoleTypeImpl;
-            const player = ConceptProtoReader.thing(rolePlayer.getPlayer());
+            const role = TypeImpl.of(rolePlayer.getRoleType()) as RoleTypeImpl;
+            const player = ThingImpl.of(rolePlayer.getPlayer());
             if (!rolePlayerMap.has(role)) {
                 rolePlayerMap.set(role, []);
             }

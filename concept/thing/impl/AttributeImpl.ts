@@ -42,11 +42,11 @@ import {
     AttributeType,
     Grakn,
     Merge,
-    Stream, ConceptProtoBuilder, ConceptProtoReader,
+    Stream, ConceptProtoBuilder, GraknClientError, ErrorMessage, ThingTypeImpl,
 } from "../../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl implements Attribute<T> {
     protected constructor(iid: string) {
@@ -72,7 +72,7 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
 
     async getType(): Promise<AttributeTypeImpl> {
         const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as AttributeTypeImpl;
+        return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as AttributeTypeImpl;
     }
 
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
@@ -294,5 +294,24 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
         return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this._value);
+    }
+}
+
+export namespace AttributeImpl {
+    export function of(thingProto: ConceptProto.Thing): AttributeImpl<ValueClass> {
+        switch (thingProto.getValueType()) {
+            case ConceptProto.AttributeType.ValueType.BOOLEAN:
+                return BooleanAttributeImpl.of(thingProto);
+            case ConceptProto.AttributeType.ValueType.LONG:
+                return LongAttributeImpl.of(thingProto);
+            case ConceptProto.AttributeType.ValueType.DOUBLE:
+                return DoubleAttributeImpl.of(thingProto);
+            case ConceptProto.AttributeType.ValueType.STRING:
+                return StringAttributeImpl.of(thingProto);
+            case ConceptProto.AttributeType.ValueType.DATETIME:
+                return DateTimeAttributeImpl.of(thingProto);
+            default:
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(thingProto.getValueType()));
+        }
     }
 }

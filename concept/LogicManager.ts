@@ -17,13 +17,13 @@
  * under the License.
  */
 
-import LogicProto from "graknlabs-protocol/protobuf/logic_pb";
+import LogicProto from "grakn-protocol/protobuf/logic_pb";
 import {
     RPCTransaction,
     Rule,
     RuleImpl,
 } from "../dependencies_internal"
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class LogicManager {
     private readonly _rpcTransaction: RPCTransaction;

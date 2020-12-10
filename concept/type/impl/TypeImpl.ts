@@ -25,12 +25,11 @@ import {
     Stream,
     ThingImpl,
     ConceptProtoBuilder,
-    ConceptProtoReader,
     GraknClientError,
-    ErrorMessage,
+    ErrorMessage, RoleTypeImpl, ThingTypeImpl,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
 export abstract class TypeImpl implements Type {
@@ -110,7 +109,7 @@ export abstract class RemoteTypeImpl implements RemoteType {
             .setTypeGetSupertypeReq(new ConceptProto.Type.GetSupertype.Req())))
             .getTypeGetSupertypeRes();
 
-        return response.getResCase() === ConceptProto.Type.GetSupertype.Res.ResCase.TYPE ? ConceptProtoReader.type(response.getType()) : null;
+        return response.getResCase() === ConceptProto.Type.GetSupertype.Res.ResCase.TYPE ? TypeImpl.of(response.getType()) : null;
     }
 
     getSupertypes(): Stream<TypeImpl> {
@@ -137,12 +136,12 @@ export abstract class RemoteTypeImpl implements RemoteType {
 
     protected typeStream(method: ConceptProto.Type.Req, typeGetter: (res: ConceptProto.Type.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
         const request = new TransactionProto.Transaction.Req().setTypeReq(method.setLabel(this._label));
-        return this._rpcTransaction.stream(request, res => typeGetter(res.getTypeRes()).map(ConceptProtoReader.type));
+        return this._rpcTransaction.stream(request, res => typeGetter(res.getTypeRes()).map(TypeImpl.of));
     }
 
     protected thingStream(method: ConceptProto.Type.Req, thingGetter: (res: ConceptProto.Type.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
         const request = new TransactionProto.Transaction.Req().setTypeReq(method.setLabel(this._label));
-        return this._rpcTransaction.stream(request, res => thingGetter(res.getTypeRes()).map(ConceptProtoReader.thing));
+        return this._rpcTransaction.stream(request, res => thingGetter(res.getTypeRes()).map(ThingImpl.of));
     }
 
     protected execute(method: ConceptProto.Type.Req): Promise<ConceptProto.Type.Res> {
@@ -155,4 +154,15 @@ export abstract class RemoteTypeImpl implements RemoteType {
     }
 
     abstract asRemote(transaction: Transaction): RemoteTypeImpl;
+}
+
+export namespace TypeImpl {
+    export function of(typeProto: ConceptProto.Type): TypeImpl {
+        switch (typeProto.getEncoding()) {
+            case ConceptProto.Type.Encoding.ROLE_TYPE:
+                return RoleTypeImpl.of(typeProto);
+            default:
+                return ThingTypeImpl.of(typeProto);
+        }
+    }
 }

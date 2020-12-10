@@ -23,7 +23,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.12.4",
-    "graknlabs-protocol": "2.0.0-alpha-2"
+    "grakn-protocol": "https://repo.grakn.ai/repository/npm-snapshot/grakn-protocol/-/grakn-protocol-0.0.0-c2e11c3b406a4736817bc50a57f6d3e3ede67a49.tgz"
   },
   "devDependencies": {
     "@bazel/typescript": "2.3.1",

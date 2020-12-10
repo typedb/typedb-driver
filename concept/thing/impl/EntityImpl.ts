@@ -23,10 +23,10 @@ import {
     Entity,
     RemoteEntity,
     EntityTypeImpl,
-    Grakn, ConceptProtoReader,
+    Grakn, ThingTypeImpl,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {
     protected constructor(iid: string) {
@@ -54,6 +54,6 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
 
     async getType(): Promise<EntityTypeImpl> {
         const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ConceptProtoReader.thingType(res.getThingGetTypeRes().getThingType()) as EntityTypeImpl;
+        return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as EntityTypeImpl;
     }
 }

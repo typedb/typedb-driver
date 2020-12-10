@@ -41,13 +41,14 @@ import {
     StringAttributeImpl,
     Stream,
     ConceptProtoBuilder,
-    ConceptProtoReader,
+    GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import ValueType = AttributeType.ValueType;
 import ValueClass = AttributeType.ValueClass;
 import isKeyable = AttributeType.ValueType.isKeyable;
+import assert from "assert";
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
@@ -113,13 +114,13 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
 
     protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<ValueClass>> {
         const method = new ConceptProto.Type.Req().setAttributeTypePutReq(new ConceptProto.AttributeType.Put.Req().setValue(valueProto));
-        return ConceptProtoReader.attribute(await this.execute(method).then(res => res.getAttributeTypePutRes().getAttribute()));
+        return AttributeImpl.of(await this.execute(method).then(res => res.getAttributeTypePutRes().getAttribute()));
     }
 
     protected async getInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<ValueClass>> {
         const method = new ConceptProto.Type.Req().setAttributeTypeGetReq(new ConceptProto.AttributeType.Get.Req().setValue(valueProto));
         const response = await this.execute(method).then(res => res.getAttributeTypeGetRes());
-        return response.getResCase() === ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? ConceptProtoReader.attribute(response.getAttribute()) : null;
+        return response.getResCase() === ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? AttributeImpl.of(response.getAttribute()) : null;
     }
 
     asRemote(transaction: Transaction): RemoteAttributeTypeImpl {
@@ -434,5 +435,27 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
 
     get(value: Date): Promise<DateTimeAttributeImpl> {
         return this.getInternal(ConceptProtoBuilder.dateTimeAttributeValue(value)) as Promise<DateTimeAttributeImpl>;
+    }
+}
+
+export namespace AttributeTypeImpl {
+    export function of(typeProto: ConceptProto.Type): AttributeTypeImpl {
+        switch (typeProto.getValueType()) {
+            case ConceptProto.AttributeType.ValueType.BOOLEAN:
+                return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            case ConceptProto.AttributeType.ValueType.LONG:
+                return new LongAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            case ConceptProto.AttributeType.ValueType.DOUBLE:
+                return new DoubleAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            case ConceptProto.AttributeType.ValueType.STRING:
+                return new StringAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            case ConceptProto.AttributeType.ValueType.DATETIME:
+                return new DateTimeAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            case ConceptProto.AttributeType.ValueType.OBJECT:
+                assert(typeProto.getRoot());
+                return new AttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+            default:
+                throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(typeProto.getValueType()));
+        }
     }
 }

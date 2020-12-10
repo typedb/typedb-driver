@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
+import AnswerProto from "grakn-protocol/protobuf/answer_pb";
 import { AnswerGroup, ConceptMap, ErrorMessage, Grakn, GraknClientError, } from "../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 

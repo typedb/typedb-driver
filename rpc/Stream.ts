@@ -18,7 +18,7 @@
  */
 
 import { ClientWritableStream } from "@grpc/grpc-js";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import {
     ErrorMessage,
     GraknClientError,

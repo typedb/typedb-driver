@@ -27,8 +27,8 @@ import {
     BlockingQueue,
     Stream, GraknClientError, ErrorMessage, LogicManager,
 } from "../dependencies_internal";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
-import GraknProto from "graknlabs-protocol/protobuf/grakn_grpc_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
+import GraknProto from "grakn-protocol/protobuf/grakn_grpc_pb";
 import GraknGrpc = GraknProto.GraknClient;
 import { ClientDuplexStream } from "@grpc/grpc-js";
 
@@ -151,7 +151,9 @@ export class RPCTransaction implements Grakn.Transaction {
         });
 
         this._stream.on("error", (err) => {
-            console.error(err);
+            this._transactionWasClosed = true;
+            this._streamIsOpen = false;
+            this._collectors.clearWithError(new ErrorResponse(err));
         });
 
         this._stream.on("end", () => {

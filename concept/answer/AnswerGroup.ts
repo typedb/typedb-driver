@@ -20,11 +20,10 @@
 import {
     Answer,
     Concept,
-    Grakn,
-    ConceptProtoReader,
+    Grakn, ThingImpl, TypeImpl,
 } from "../../dependencies_internal"
 import Transaction = Grakn.Transaction;
-import AnswerProto from "graknlabs-protocol/protobuf/answer_pb";
+import AnswerProto from "grakn-protocol/protobuf/answer_pb";
 
 
 
@@ -39,8 +38,8 @@ export class AnswerGroup<T> {
 
     public static of (transaction: Transaction, res: AnswerProto.AnswerGroup): AnswerGroup<Answer> {
         let concept: Concept;
-        if (res.getOwner().hasThing()) concept = ConceptProtoReader.thing(res.getOwner().getThing());
-        else concept = ConceptProtoReader.type(res.getOwner().getType());
+        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
+        else concept = TypeImpl.of(res.getOwner().getType());
         return new AnswerGroup<Answer>(concept, res.getAnswersList().map((ans) => Answer.of(transaction, ans)) as Answer[])
     }
 

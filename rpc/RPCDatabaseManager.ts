@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { GraknClient as GraknGrpc } from "graknlabs-protocol/protobuf/grakn_grpc_pb"
+import { GraknClient as GraknGrpc } from "grakn-protocol/protobuf/grakn_grpc_pb"
 import {
     ErrorMessage,
     Grakn, GraknClientError
 } from "../dependencies_internal";
-import database_pb from "graknlabs-protocol/protobuf/database_pb";
+import database_pb from "grakn-protocol/protobuf/database_pb";
 const { Database } = database_pb;
 
 export class RPCDatabaseManager implements Grakn.DatabaseManager {

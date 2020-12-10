@@ -19,7 +19,6 @@
 
 import {
     ConceptProtoBuilder,
-    ConceptProtoReader,
     ThingType,
     EntityType,
     RelationType,
@@ -29,10 +28,10 @@ import {
     RPCTransaction,
     RelationTypeImpl,
     AttributeTypeImpl,
-    Thing,
+    Thing, ThingImpl, TypeImpl,
 } from "../dependencies_internal";
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
-import TransactionProto from "graknlabs-protocol/protobuf/transaction_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
+import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class ConceptManager {
     private readonly _rpcTransaction: RPCTransaction;
@@ -89,7 +88,7 @@ export class ConceptManager {
                 .setLabel(label)
                 .setValueType(ConceptProtoBuilder.valueType(valueType)));
         const res = await this.execute(req);
-        return ConceptProtoReader.attributeType(res.getPutAttributeTypeRes().getAttributeType());
+        return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
     async getAttributeType(label: string): Promise<AttributeType> {
@@ -103,7 +102,7 @@ export class ConceptManager {
             .setGetThingReq(new ConceptProto.ConceptManager.GetThing.Req().setIid(iid));
         const res = await this.execute(req);
         if (res.getGetThingRes().getResCase() === ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
-            return ConceptProtoReader.thing(res.getGetThingRes().getThing());
+            return ThingImpl.of(res.getGetThingRes().getThing());
         else
             return null;
     }
@@ -113,7 +112,7 @@ export class ConceptManager {
             .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
         const res = await this.execute(req);
         if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return ConceptProtoReader.type(res.getGetTypeRes().getType());
+            return TypeImpl.of(res.getGetTypeRes().getType());
         else
             return null;
     }

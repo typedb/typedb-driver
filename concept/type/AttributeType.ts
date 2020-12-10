@@ -34,7 +34,7 @@ import {
     ErrorMessage,
 } from "../../dependencies_internal";
 import ValueType = AttributeType.ValueType;
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import ValueClass = AttributeType.ValueClass;
 
 export interface AttributeType extends ThingType {
@@ -152,17 +152,17 @@ export namespace AttributeType {
     }
 
     export namespace ValueType {
-        export function of(valueType: ConceptProto.AttributeType.VALUE_TYPE): ValueType {
+        export function of(valueType: ConceptProto.AttributeType.ValueType): ValueType {
             switch (valueType) {
-                case ConceptProto.AttributeType.VALUE_TYPE.STRING:
+                case ConceptProto.AttributeType.ValueType.STRING:
                     return ValueType.STRING;
-                case ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN:
+                case ConceptProto.AttributeType.ValueType.BOOLEAN:
                     return ValueType.BOOLEAN;
-                case ConceptProto.AttributeType.VALUE_TYPE.LONG:
+                case ConceptProto.AttributeType.ValueType.LONG:
                     return ValueType.LONG;
-                case ConceptProto.AttributeType.VALUE_TYPE.DOUBLE:
+                case ConceptProto.AttributeType.ValueType.DOUBLE:
                     return ValueType.DOUBLE;
-                case ConceptProto.AttributeType.VALUE_TYPE.DATETIME:
+                case ConceptProto.AttributeType.ValueType.DATETIME:
                     return ValueType.DATETIME;
                 default:
                     throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));

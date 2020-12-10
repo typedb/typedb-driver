@@ -19,7 +19,7 @@
 
 // TODO: Can we get rid of this?
 
-import ConceptProto from "graknlabs-protocol/protobuf/concept_pb";
+import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import {
     Type,
     Thing,
@@ -79,46 +79,46 @@ export namespace ConceptProtoBuilder {
         return new ConceptProto.Attribute.Value().setDateTime(value.getTime());
     }
 
-    export function valueType(valueType: AttributeType.ValueType): ConceptProto.AttributeType.VALUE_TYPE {
+    export function valueType(valueType: AttributeType.ValueType): ConceptProto.AttributeType.ValueType {
         switch (valueType) {
             case AttributeType.ValueType.OBJECT:
-                return ConceptProto.AttributeType.VALUE_TYPE.OBJECT;
+                return ConceptProto.AttributeType.ValueType.OBJECT;
             case AttributeType.ValueType.BOOLEAN:
-                return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
+                return ConceptProto.AttributeType.ValueType.BOOLEAN;
             case AttributeType.ValueType.LONG:
-                return ConceptProto.AttributeType.VALUE_TYPE.LONG;
+                return ConceptProto.AttributeType.ValueType.LONG;
             case AttributeType.ValueType.DOUBLE:
-                return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
+                return ConceptProto.AttributeType.ValueType.DOUBLE;
             case AttributeType.ValueType.STRING:
-                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
+                return ConceptProto.AttributeType.ValueType.STRING;
             case AttributeType.ValueType.DATETIME:
-                return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
+                return ConceptProto.AttributeType.ValueType.DATETIME;
         }
     }
 
-    export function thingEncoding(thing: Thing): ConceptProto.Thing.ENCODING {
+    export function thingEncoding(thing: Thing): ConceptProto.Thing.Encoding {
         if (thing instanceof EntityImpl) {
-            return ConceptProto.Thing.ENCODING.ENTITY;
+            return ConceptProto.Thing.Encoding.ENTITY;
         } else if (thing instanceof RelationImpl) {
-            return ConceptProto.Thing.ENCODING.RELATION;
+            return ConceptProto.Thing.Encoding.RELATION;
         } else if (thing instanceof AttributeImpl) {
-            return ConceptProto.Thing.ENCODING.ATTRIBUTE;
+            return ConceptProto.Thing.Encoding.ATTRIBUTE;
         } else {
             throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
         }
     }
 
-    export function typeEncoding(type: Type): ConceptProto.Type.ENCODING {
+    export function typeEncoding(type: Type): ConceptProto.Type.Encoding {
         if (type instanceof EntityTypeImpl) {
-            return ConceptProto.Type.ENCODING.ENTITY_TYPE;
+            return ConceptProto.Type.Encoding.ENTITY_TYPE;
         } else if (type instanceof RelationTypeImpl) {
-            return ConceptProto.Type.ENCODING.RELATION_TYPE;
+            return ConceptProto.Type.Encoding.RELATION_TYPE;
         } else if (type instanceof AttributeTypeImpl) {
-            return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
+            return ConceptProto.Type.Encoding.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleTypeImpl) {
-            return ConceptProto.Type.ENCODING.ROLE_TYPE;
+            return ConceptProto.Type.Encoding.ROLE_TYPE;
         } else if (type instanceof ThingTypeImpl) {
-            return ConceptProto.Type.ENCODING.THING_TYPE;
+            return ConceptProto.Type.Encoding.THING_TYPE;
         } else {
             throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type))
         }

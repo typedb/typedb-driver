@@ -90,4 +90,3 @@ export * from "./GraknOptions";
 
 /* concept.proto */
 export * from "./concept/proto/ConceptProtoBuilder";
-export * from "./concept/proto/ConceptProtoReader";
