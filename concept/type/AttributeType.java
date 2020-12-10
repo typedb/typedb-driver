@@ -77,7 +77,7 @@ public interface AttributeType extends ThingType {
             throw new GraknClientException(BAD_VALUE_TYPE);
         }
 
-        public static ValueType of(ConceptProto.AttributeType.VALUE_TYPE valueType) {
+        public static ValueType of(ConceptProto.AttributeType.ValueType valueType) {
             switch (valueType) {
                 case STRING:
                     return AttributeType.ValueType.STRING;

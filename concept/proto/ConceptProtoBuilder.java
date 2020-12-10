@@ -98,22 +98,22 @@ public abstract class ConceptProtoBuilder {
         return builder.build();
     }
 
-    public static ConceptProto.AttributeType.VALUE_TYPE valueType(ValueType valueType) {
+    public static ConceptProto.AttributeType.ValueType valueType(ValueType valueType) {
         switch (valueType) {
             case OBJECT:
-                return ConceptProto.AttributeType.VALUE_TYPE.OBJECT;
+                return ConceptProto.AttributeType.ValueType.OBJECT;
             case BOOLEAN:
-                return ConceptProto.AttributeType.VALUE_TYPE.BOOLEAN;
+                return ConceptProto.AttributeType.ValueType.BOOLEAN;
             case LONG:
-                return ConceptProto.AttributeType.VALUE_TYPE.LONG;
+                return ConceptProto.AttributeType.ValueType.LONG;
             case DOUBLE:
-                return ConceptProto.AttributeType.VALUE_TYPE.DOUBLE;
+                return ConceptProto.AttributeType.ValueType.DOUBLE;
             case STRING:
-                return ConceptProto.AttributeType.VALUE_TYPE.STRING;
+                return ConceptProto.AttributeType.ValueType.STRING;
             case DATETIME:
-                return ConceptProto.AttributeType.VALUE_TYPE.DATETIME;
+                return ConceptProto.AttributeType.ValueType.DATETIME;
             default:
-                return ConceptProto.AttributeType.VALUE_TYPE.UNRECOGNIZED;
+                return ConceptProto.AttributeType.ValueType.UNRECOGNIZED;
         }
     }
 
@@ -121,31 +121,31 @@ public abstract class ConceptProtoBuilder {
         return ByteString.copyFrom(hexStringToBytes(iid));
     }
 
-    private static ConceptProto.Thing.ENCODING encoding(Thing thing) {
+    private static ConceptProto.Thing.Encoding encoding(Thing thing) {
         if (thing instanceof Entity) {
-            return ConceptProto.Thing.ENCODING.ENTITY;
+            return ConceptProto.Thing.Encoding.ENTITY;
         } else if (thing instanceof Relation) {
-            return ConceptProto.Thing.ENCODING.RELATION;
+            return ConceptProto.Thing.Encoding.RELATION;
         } else if (thing instanceof Attribute) {
-            return ConceptProto.Thing.ENCODING.ATTRIBUTE;
+            return ConceptProto.Thing.Encoding.ATTRIBUTE;
         } else {
-            return ConceptProto.Thing.ENCODING.UNRECOGNIZED;
+            return ConceptProto.Thing.Encoding.UNRECOGNIZED;
         }
     }
 
-    private static ConceptProto.Type.ENCODING encoding(Type type) {
+    private static ConceptProto.Type.Encoding encoding(Type type) {
         if (type instanceof EntityType) {
-            return ConceptProto.Type.ENCODING.ENTITY_TYPE;
+            return ConceptProto.Type.Encoding.ENTITY_TYPE;
         } else if (type instanceof RelationType) {
-            return ConceptProto.Type.ENCODING.RELATION_TYPE;
+            return ConceptProto.Type.Encoding.RELATION_TYPE;
         } else if (type instanceof AttributeType) {
-            return ConceptProto.Type.ENCODING.ATTRIBUTE_TYPE;
+            return ConceptProto.Type.Encoding.ATTRIBUTE_TYPE;
         } else if (type instanceof RoleType) {
-            return ConceptProto.Type.ENCODING.ROLE_TYPE;
+            return ConceptProto.Type.Encoding.ROLE_TYPE;
         } else if (type instanceof ThingType) {
-            return ConceptProto.Type.ENCODING.THING_TYPE;
+            return ConceptProto.Type.Encoding.THING_TYPE;
         } else {
-            return ConceptProto.Type.ENCODING.UNRECOGNIZED;
+            return ConceptProto.Type.Encoding.UNRECOGNIZED;
         }
     }
 
