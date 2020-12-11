@@ -73,7 +73,7 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
 
         return this.typeStream(
             new ConceptProto.Type.Req().setRelationTypeGetRelatesReq(new ConceptProto.RelationType.GetRelates.Req()),
-            res => res.getRelationTypeGetRelatesRes().getRoleList()) as Stream<RoleTypeImpl>;
+            res => res.getRelationTypeGetRelatesRes().getRolesList()) as Stream<RoleTypeImpl>;
     }
 
     setRelates(roleLabel: string): Promise<void>;

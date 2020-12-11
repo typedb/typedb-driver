@@ -114,12 +114,12 @@ export abstract class RemoteTypeImpl implements RemoteType {
 
     getSupertypes(): Stream<TypeImpl> {
         const method = new ConceptProto.Type.Req().setTypeGetSupertypesReq(new ConceptProto.Type.GetSupertypes.Req());
-        return this.typeStream(method, res => res.getTypeGetSupertypesRes().getTypeList());
+        return this.typeStream(method, res => res.getTypeGetSupertypesRes().getTypesList());
     }
 
     getSubtypes(): Stream<TypeImpl> {
         const method = new ConceptProto.Type.Req().setTypeGetSubtypesReq(new ConceptProto.Type.GetSubtypes.Req());
-        return this.typeStream(method, res => res.getTypeGetSubtypesRes().getTypeList());
+        return this.typeStream(method, res => res.getTypeGetSubtypesRes().getTypesList());
     }
 
     async delete(): Promise<void> {

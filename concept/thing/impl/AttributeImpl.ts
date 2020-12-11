@@ -67,7 +67,7 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
         const method = new ConceptProto.Thing.Req().setAttributeGetOwnersReq(
             new ConceptProto.Attribute.GetOwners.Req().setThingType(ConceptProtoBuilder.type(ownerType))
         );
-        return this.thingStream(method, res => res.getAttributeGetOwnersRes().getThingList()) as Stream<ThingImpl>;
+        return this.thingStream(method, res => res.getAttributeGetOwnersRes().getThingsList()) as Stream<ThingImpl>;
     }
 
     async getType(): Promise<AttributeTypeImpl> {

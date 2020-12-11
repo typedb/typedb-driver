@@ -100,13 +100,13 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
     getRelationTypes(): Stream<RelationTypeImpl> {
         return this.typeStream(
             new ConceptProto.Type.Req().setRoleTypeGetRelationTypesReq(new ConceptProto.RoleType.GetRelationTypes.Req()),
-            res => res.getRoleTypeGetRelationTypesRes().getRelationTypeList()) as Stream<RelationTypeImpl>;
+            res => res.getRoleTypeGetRelationTypesRes().getRelationTypesList()) as Stream<RelationTypeImpl>;
     }
 
     getPlayers(): Stream<ThingTypeImpl> {
         return this.typeStream(
             new ConceptProto.Type.Req().setRoleTypeGetPlayersReq(new ConceptProto.RoleType.GetPlayers.Req()),
-            res => res.getRoleTypeGetPlayersRes().getThingTypeList()) as Stream<ThingTypeImpl>;
+            res => res.getRoleTypeGetPlayersRes().getThingTypesList()) as Stream<ThingTypeImpl>;
     }
 
     protected typeStream(method: ConceptProto.Type.Req, typeGetter: (res: ConceptProto.Type.Res) => ConceptProto.Type[]): Stream<TypeImpl> {

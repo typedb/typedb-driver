@@ -39,13 +39,13 @@ export class QueryManager {
     public match(query: string, options?: GraknOptions): Stream<ConceptMap> {
         const matchQuery = new Query.Req().setMatchReq(
             new Graql.Match.Req().setQuery(query));
-        return this.iterateQuery(matchQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchRes().getAnswerList().map(ConceptMap.of));
+        return this.iterateQuery(matchQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getMatchRes().getAnswersList().map(ConceptMap.of));
     }
 
     public insert(query: string, options?: GraknOptions): Stream<ConceptMap> {
         const insertQuery = new Query.Req().setInsertReq(
             new Graql.Insert.Req().setQuery(query));
-        return this.iterateQuery(insertQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getInsertRes().getAnswerList().map(ConceptMap.of));
+        return this.iterateQuery(insertQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getInsertRes().getAnswersList().map(ConceptMap.of));
     }
 
     public delete(query: string, options?: GraknOptions): Promise<void> {

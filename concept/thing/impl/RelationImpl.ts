@@ -67,7 +67,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
             .setIid(this.getIID());
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
-        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList())
+        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList())
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
         for await (const rolePlayer of stream) {
             const role = TypeImpl.of(rolePlayer.getRoleType()) as RoleTypeImpl;
@@ -84,7 +84,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
     getPlayers(roleTypes: RoleType[] = []): Stream<ThingImpl> {
         const method = new ConceptProto.Thing.Req().setRelationGetPlayersReq(
             new ConceptProto.Relation.GetPlayers.Req().setRoleTypesList(roleTypes.map(roleType => ConceptProtoBuilder.type(roleType))));
-        return this.thingStream(method, res => res.getRelationGetPlayersRes().getThingList()) as Stream<ThingImpl>;
+        return this.thingStream(method, res => res.getRelationGetPlayersRes().getThingsList()) as Stream<ThingImpl>;
     }
 
     async addPlayer(roleType: RoleType, player: Thing): Promise<void> {

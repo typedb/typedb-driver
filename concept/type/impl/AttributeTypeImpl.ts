@@ -109,7 +109,7 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
     getOwners(onlyKey?: boolean): Stream<ThingTypeImpl> {
         const method = new ConceptProto.Type.Req()
             .setAttributeTypeGetOwnersReq(new ConceptProto.AttributeType.GetOwners.Req().setOnlyKey(onlyKey || false));
-        return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnerList()) as Stream<ThingTypeImpl>;
+        return this.typeStream(method, res => res.getAttributeTypeGetOwnersRes().getOwnersList()) as Stream<ThingTypeImpl>;
     }
 
     protected async putInternal(valueProto: ConceptProto.Attribute.Value): Promise<AttributeImpl<ValueClass>> {

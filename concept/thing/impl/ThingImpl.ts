@@ -120,20 +120,20 @@ export abstract class RemoteThingImpl implements RemoteThing {
         | Stream<DoubleAttributeImpl> | Stream<StringAttributeImpl> | Stream<DateTimeAttributeImpl> {
         if (typeof arg === "undefined") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req());
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributesList()) as Stream<AttributeImpl<ValueClass>>;
         }
         if (typeof arg === "boolean") {
             const method = new ConceptProto.Thing.Req().setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setKeysOnly(arg));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributesList()) as Stream<AttributeImpl<ValueClass>>;
         }
         if (Array.isArray(arg)) {
             const method = new ConceptProto.Thing.Req()
                 .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList(ConceptProtoBuilder.types(arg)));
-            return this.thingStream(method, res => res.getThingGetHasRes().getAttributeList()) as Stream<AttributeImpl<ValueClass>>;
+            return this.thingStream(method, res => res.getThingGetHasRes().getAttributesList()) as Stream<AttributeImpl<ValueClass>>;
         }
         const method = new ConceptProto.Thing.Req()
             .setThingGetHasReq(new ConceptProto.Thing.GetHas.Req().setAttributeTypesList([ConceptProtoBuilder.type(arg)]));
-        const stream = this.thingStream(method, res => res.getThingGetHasRes().getAttributeList());
+        const stream = this.thingStream(method, res => res.getThingGetHasRes().getAttributesList());
         if (arg instanceof BooleanAttributeTypeImpl) return stream as Stream<BooleanAttributeImpl>;
         if (arg instanceof LongAttributeTypeImpl) return stream as Stream<LongAttributeImpl>;
         if (arg instanceof DoubleAttributeTypeImpl) return stream as Stream<DoubleAttributeImpl>;
@@ -144,14 +144,14 @@ export abstract class RemoteThingImpl implements RemoteThing {
 
     getPlays(): Stream<RoleTypeImpl> {
         const method = new ConceptProto.Thing.Req().setThingGetPlaysReq(new ConceptProto.Thing.GetPlays.Req());
-        return this.typeStream(method, res => res.getThingGetPlaysRes().getRoleTypeList()) as Stream<RoleTypeImpl>;
+        return this.typeStream(method, res => res.getThingGetPlaysRes().getRoleTypesList()) as Stream<RoleTypeImpl>;
     }
 
     getRelations(): Stream<RelationImpl>;
     getRelations(roleTypes: RoleType[] = []): Stream<RelationImpl> {
         const method = new ConceptProto.Thing.Req().setThingGetRelationsReq(
             new ConceptProto.Thing.GetRelations.Req().setRoleTypesList(ConceptProtoBuilder.types(roleTypes)));
-        return this.thingStream(method, res => res.getThingGetRelationsRes().getRelationList()) as Stream<RelationImpl>;
+        return this.thingStream(method, res => res.getThingGetRelationsRes().getRelationsList()) as Stream<RelationImpl>;
     }
 
     async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {

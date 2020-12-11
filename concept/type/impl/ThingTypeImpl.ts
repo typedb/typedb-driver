@@ -69,7 +69,7 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
 
     getInstances(): Stream<ThingImpl> {
         const request = new ConceptProto.Type.Req().setThingTypeGetInstancesReq(new ConceptProto.ThingType.GetInstances.Req());
-        return this.thingStream(request, res => res.getThingTypeGetInstancesRes().getThingList());
+        return this.thingStream(request, res => res.getThingTypeGetInstancesRes().getThingsList());
     }
 
     async setAbstract(): Promise<void> {
@@ -104,7 +104,7 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
 
     getPlays(): Stream<RoleTypeImpl> {
         const request = new ConceptProto.Type.Req().setThingTypeGetPlaysReq(new ConceptProto.ThingType.GetPlays.Req());
-        return this.typeStream(request, res => res.getThingTypeGetPlaysRes().getRoleList()) as Stream<RoleTypeImpl>;
+        return this.typeStream(request, res => res.getThingTypeGetPlaysRes().getRolesList()) as Stream<RoleTypeImpl>;
     }
 
     getOwns(): Stream<AttributeTypeImpl>;
@@ -117,7 +117,7 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         // Here we take advantage of the fact that AttributeType.ValueType is a string enum
         if (typeof valueTypeOrKeysOnly === "string") getOwnsReq.setValueType(ConceptProtoBuilder.valueType(valueTypeOrKeysOnly));
         const request = new ConceptProto.Type.Req().setThingTypeGetOwnsReq(getOwnsReq);
-        return this.typeStream(request, res => res.getThingTypeGetOwnsRes().getAttributeTypeList()) as Stream<AttributeTypeImpl>;
+        return this.typeStream(request, res => res.getThingTypeGetOwnsRes().getAttributeTypesList()) as Stream<AttributeTypeImpl>;
     }
 
     async unsetPlays(role: RoleType): Promise<void> {
