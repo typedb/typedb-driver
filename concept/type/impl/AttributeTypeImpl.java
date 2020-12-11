@@ -202,7 +202,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypeGetOwnersReq(ConceptProto.AttributeType.GetOwners.Req.newBuilder()
                             .setOnlyKey(onlyKey));
-            return typeStream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnerList()).map(TypeImpl::asThingType);
+            return typeStream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnersList()).map(TypeImpl::asThingType);
         }
 
         protected final AttributeImpl<?> put(Object value) {

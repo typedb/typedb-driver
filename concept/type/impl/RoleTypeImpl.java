@@ -141,7 +141,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetRelationTypesReq(
                             ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()),
-                    res -> res.getRoleTypeGetRelationTypesRes().getRelationTypeList()
+                    res -> res.getRoleTypeGetRelationTypesRes().getRelationTypesList()
             ).map(TypeImpl::asRelationType);
         }
 
@@ -150,7 +150,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRoleTypeGetPlayersReq(
                             ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()),
-                    res -> res.getRoleTypeGetPlayersRes().getThingTypeList()
+                    res -> res.getRoleTypeGetPlayersRes().getThingTypesList()
             ).map(TypeImpl::asThingType);
         }
 

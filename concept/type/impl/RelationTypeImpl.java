@@ -79,7 +79,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
             return typeStream(
                     ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesReq(
                             ConceptProto.RelationType.GetRelates.Req.getDefaultInstance()),
-                    res -> res.getRelationTypeGetRelatesRes().getRoleList()
+                    res -> res.getRelationTypeGetRelatesRes().getRolesList()
             ).map(TypeImpl::asRoleType);
         }
 

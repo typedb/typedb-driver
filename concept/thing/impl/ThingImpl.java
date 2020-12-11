@@ -172,7 +172,7 @@ public abstract class ThingImpl implements Thing {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder()
                             .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
-            return stream(method, res -> res.getThingGetHasRes().getAttributeList()).map(ThingImpl::asAttribute);
+            return stream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -204,7 +204,7 @@ public abstract class ThingImpl implements Thing {
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey));
-            return stream(method, res -> res.getThingGetHasRes().getAttributeList()).map(ThingImpl::asAttribute);
+            return stream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -212,7 +212,7 @@ public abstract class ThingImpl implements Thing {
             return typeStream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetPlaysReq(
                             GetPlays.Req.getDefaultInstance()),
-                    res -> res.getThingGetPlaysRes().getRoleTypeList()
+                    res -> res.getThingGetPlaysRes().getRoleTypesList()
             ).map(TypeImpl::asRoleType);
         }
 
@@ -221,7 +221,7 @@ public abstract class ThingImpl implements Thing {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
                             GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getThingGetRelationsRes().getRelationList()
+                    res -> res.getThingGetRelationsRes().getRelationsList()
             ).map(ThingImpl::asRelation);
         }
 
