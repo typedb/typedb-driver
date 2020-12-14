@@ -67,15 +67,20 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
             .setIid(this.getIID());
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
-        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList())
+        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
         for await (const rolePlayer of stream) {
             const role = TypeImpl.of(rolePlayer.getRoleType()) as RoleTypeImpl;
             const player = ThingImpl.of(rolePlayer.getPlayer());
-            if (!rolePlayerMap.has(role)) {
-                rolePlayerMap.set(role, []);
+            let addedToExistingEntry = false;
+            for (const roleKey of rolePlayerMap.keys()) {
+                if (roleKey.getScopedLabel() === role.getScopedLabel()) {
+                    rolePlayerMap.get(roleKey).push(player);
+                    addedToExistingEntry = true;
+                    break;
+                }
             }
-            rolePlayerMap.get(role).push(player)
+            if (!addedToExistingEntry) rolePlayerMap.set(role, [player]);
         }
         return rolePlayerMap;
     }
