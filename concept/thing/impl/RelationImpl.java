@@ -107,7 +107,7 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setRelationGetPlayersReq(
                             GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
                     res -> res.getRelationGetPlayersRes().getThingsList());

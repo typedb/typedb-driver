@@ -168,7 +168,7 @@ public abstract class ThingImpl implements Thing {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder()
                             .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
-            return stream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
+            return thingStream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -200,7 +200,7 @@ public abstract class ThingImpl implements Thing {
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
             final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey));
-            return stream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
+            return thingStream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -214,7 +214,7 @@ public abstract class ThingImpl implements Thing {
 
         @Override
         public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
                             ConceptProto.Thing.GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
                     res -> res.getThingGetRelationsRes().getRelationsList()
@@ -279,7 +279,7 @@ public abstract class ThingImpl implements Thing {
             return rpcTransaction;
         }
 
-        Stream<ThingImpl> stream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingListGetter) {
+        Stream<ThingImpl> thingStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return rpcTransaction.stream(request, res -> thingListGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));

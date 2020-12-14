@@ -102,7 +102,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public final Stream<ThingImpl> getOwners() {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
                             GetOwners.Req.getDefaultInstance()),
                     res -> res.getAttributeGetOwnersRes().getThingsList()
@@ -111,7 +111,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public Stream<ThingImpl> getOwners(ThingType ownerType) {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
                             GetOwners.Req.newBuilder().setThingType(type(ownerType))),
                     res -> res.getAttributeGetOwnersRes().getThingsList()
