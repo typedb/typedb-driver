@@ -169,7 +169,7 @@ public class RuleImpl implements Rule {
             if (o == null || getClass() != o.getClass()) return false;
 
             final RuleImpl.Remote that = (RuleImpl.Remote) o;
-            return this.label.equals(that.label);
+            return this.rpcTransaction.equals(that.rpcTransaction) && this.label.equals(that.label);
         }
 
         @Override
