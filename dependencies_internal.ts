@@ -27,6 +27,7 @@
 export * from "./common/errors/ErrorMessage";
 export * from "./common/errors/GraknClientError";
 export * from "./common/BlockingQueue";
+export * from "./common/Bytes";
 export * from "./common/ProtoBuilder";
 export * from "./common/utils";
 

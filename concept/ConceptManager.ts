@@ -28,7 +28,7 @@ import {
     RPCTransaction,
     RelationTypeImpl,
     AttributeTypeImpl,
-    Thing, ThingImpl, TypeImpl,
+    Thing, ThingImpl, TypeImpl, Bytes,
 } from "../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
@@ -99,7 +99,7 @@ export class ConceptManager {
 
     async getThing(iid: string): Promise<Thing> {
         const req = new ConceptProto.ConceptManager.Req()
-            .setGetThingReq(new ConceptProto.ConceptManager.GetThing.Req().setIid(iid));
+            .setGetThingReq(new ConceptProto.ConceptManager.GetThing.Req().setIid(Bytes.hexStringToBytes(iid)));
         const res = await this.execute(req);
         if (res.getGetThingRes().getResCase() === ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
             return ThingImpl.of(res.getGetThingRes().getThing());

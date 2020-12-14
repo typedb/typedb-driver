@@ -49,7 +49,7 @@ import {
     LongAttributeImpl,
     StringAttributeImpl,
     GraknClientError,
-    ErrorMessage, EntityImpl,
+    ErrorMessage, EntityImpl, Bytes,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -176,17 +176,17 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     protected typeStream(method: ConceptProto.Thing.Req, typeGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
-        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
         return (this._rpcTransaction).stream(request, res => typeGetter(res.getThingRes()).map(TypeImpl.of));
     }
 
     protected thingStream(method: ConceptProto.Thing.Req, thingGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
-        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
         return this._rpcTransaction.stream(request, res => thingGetter(res.getThingRes()).map(ThingImpl.of));
     }
 
     protected execute(method: ConceptProto.Thing.Req): Promise<ConceptProto.Thing.Res> {
-        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(this._iid));
+        const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
         return this._rpcTransaction.execute(request, res => res.getThingRes());
     }
 

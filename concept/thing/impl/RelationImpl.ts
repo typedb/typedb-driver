@@ -28,7 +28,7 @@ import {
     Grakn,
     Stream,
     RPCTransaction,
-    RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl,
+    RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl, Bytes,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
@@ -40,7 +40,7 @@ export class RelationImpl extends ThingImpl implements Relation {
     }
 
     static of(protoThing: ConceptProto.Thing): RelationImpl {
-        return new RelationImpl(protoThing.getIid_asB64());
+        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
     }
 
     asRemote(transaction: Transaction): RemoteRelationImpl {
@@ -65,7 +65,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
     async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
         const method = new ConceptProto.Thing.Req()
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
-            .setIid(this.getIID());
+            .setIid(Bytes.hexStringToBytes(this.getIID()));
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
         const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();

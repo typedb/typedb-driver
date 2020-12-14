@@ -31,14 +31,14 @@ import {
     EntityTypeImpl,
     RelationTypeImpl,
     AttributeTypeImpl,
-    ThingTypeImpl, GraknClientError, ErrorMessage,
+    ThingTypeImpl, GraknClientError, ErrorMessage, Bytes,
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {
 
     export function thing(thing: Thing): ConceptProto.Thing {
         return new ConceptProto.Thing()
-            .setIid(thing.getIID())
+            .setIid(Bytes.hexStringToBytes(thing.getIID()))
             .setEncoding(thingEncoding(thing));
     }
 

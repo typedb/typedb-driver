@@ -23,7 +23,7 @@ import {
     Entity,
     RemoteEntity,
     EntityTypeImpl,
-    Grakn, ThingTypeImpl,
+    Grakn, ThingTypeImpl, Bytes,
 } from "../../../dependencies_internal";
 import Transaction = Grakn.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
@@ -35,7 +35,7 @@ export class EntityImpl extends ThingImpl implements Entity {
 
     static of(protoThing: ConceptProto.Thing): EntityImpl {
         // TODO: we should probably implement Bytes.bytesToHexString from @graknlabs_common
-        return new EntityImpl(protoThing.getIid_asB64());
+        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
     }
 
     asRemote(transaction: Transaction): RemoteEntityImpl {
