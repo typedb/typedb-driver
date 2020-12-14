@@ -117,10 +117,6 @@ public class RuleImpl implements Rule {
             this.hash = Objects.hash(transaction, label);
         }
 
-        public static RuleImpl.Remote of(Grakn.Transaction transaction, LogicProto.Rule ruleProto) {
-            return new RuleImpl.Remote(transaction, ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
-        }
-
         @Override
         public String getLabel() {
             return label;
