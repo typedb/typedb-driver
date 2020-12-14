@@ -22,7 +22,7 @@ import {
     RemoteThing,
     AttributeType,
     Grakn,
-    Merge,
+    Merge, Stream, ThingType,
 } from "../../dependencies_internal";
 import ValueClass = AttributeType.ValueClass;
 import Transaction = Grakn.Transaction;
@@ -34,7 +34,10 @@ export interface Attribute<T extends ValueClass> extends Thing {
 }
 
 export interface RemoteAttribute<T extends ValueClass> extends Merge<RemoteThing, Attribute<T>> {
+    getOwners(): Stream<Thing>;
+    getOwners(ownerType: ThingType): Stream<Thing>;
     getType(): Promise<AttributeType>;
+
     asRemote(transaction: Transaction): RemoteAttribute<T>;
 }
 

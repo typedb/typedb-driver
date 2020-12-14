@@ -63,10 +63,10 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
         super(transaction, iid);
     }
 
-    getOwners(ownerType: ThingType): Stream<ThingImpl> {
-        const method = new ConceptProto.Thing.Req().setAttributeGetOwnersReq(
-            new ConceptProto.Attribute.GetOwners.Req().setThingType(ConceptProtoBuilder.type(ownerType))
-        );
+    getOwners(ownerType?: ThingType): Stream<ThingImpl> {
+        const getOwnersReq = new ConceptProto.Attribute.GetOwners.Req();
+        if (ownerType) getOwnersReq.setThingType(ConceptProtoBuilder.type(ownerType));
+        const method = new ConceptProto.Thing.Req().setAttributeGetOwnersReq(getOwnersReq);
         return this.thingStream(method, res => res.getAttributeGetOwnersRes().getThingsList()) as Stream<ThingImpl>;
     }
 
@@ -166,7 +166,7 @@ export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> impleme
     }
 }
 
-export class DoubleAttributeImpl extends AttributeImpl<number> implements Attribute<number> {
+export class DoubleAttributeImpl extends AttributeImpl<number> implements DoubleAttribute {
     private readonly _value: number;
 
     constructor(iid: string, value: number) {
@@ -210,7 +210,7 @@ export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> imple
     }
 }
 
-export class StringAttributeImpl extends AttributeImpl<string> implements Attribute<string> {
+export class StringAttributeImpl extends AttributeImpl<string> implements StringAttribute {
     private readonly _value: string;
 
     constructor(iid: string, value: string) {

@@ -80,7 +80,6 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
         return rolePlayerMap;
     }
 
-    getPlayers(): Stream<ThingImpl>;
     getPlayers(roleTypes: RoleType[] = []): Stream<ThingImpl> {
         const method = new ConceptProto.Thing.Req().setRelationGetPlayersReq(
             new ConceptProto.Relation.GetPlayers.Req().setRoleTypesList(roleTypes.map(roleType => ConceptProtoBuilder.type(roleType))));

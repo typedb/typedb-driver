@@ -147,7 +147,6 @@ export abstract class RemoteThingImpl implements RemoteThing {
         return this.typeStream(method, res => res.getThingGetPlaysRes().getRoleTypesList()) as Stream<RoleTypeImpl>;
     }
 
-    getRelations(): Stream<RelationImpl>;
     getRelations(roleTypes: RoleType[] = []): Stream<RelationImpl> {
         const method = new ConceptProto.Thing.Req().setThingGetRelationsReq(
             new ConceptProto.Thing.GetRelations.Req().setRoleTypesList(ConceptProtoBuilder.types(roleTypes)));

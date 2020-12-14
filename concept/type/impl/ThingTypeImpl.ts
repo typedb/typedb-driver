@@ -80,8 +80,6 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
         await this.execute(new ConceptProto.Type.Req().setThingTypeUnsetAbstractReq(new ConceptProto.ThingType.UnsetAbstract.Req()));
     }
 
-    async setPlays(role: RoleType): Promise<void>;
-    async setPlays(role: RoleType, overriddenType: RoleType): Promise<void>;
     async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
         const setPlaysReq = new ConceptProto.ThingType.SetPlays.Req().setRole(ConceptProtoBuilder.type(role));
         if (overriddenType) setPlaysReq.setOverriddenRole(ConceptProtoBuilder.type(overriddenType));

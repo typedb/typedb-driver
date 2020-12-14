@@ -76,8 +76,6 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
             res => res.getRelationTypeGetRelatesRes().getRolesList()) as Stream<RoleTypeImpl>;
     }
 
-    setRelates(roleLabel: string): Promise<void>;
-    setRelates(roleLabel: string, overriddenLabel: string): Promise<void>;
     async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
         const setRelatesReq = new ConceptProto.RelationType.SetRelates.Req().setLabel(roleLabel);
         if (overriddenLabel != null) setRelatesReq.setOverriddenLabel(overriddenLabel);
