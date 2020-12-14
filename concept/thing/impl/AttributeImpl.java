@@ -25,7 +25,6 @@ import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Attribute.GetOwners;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -104,7 +103,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         public final Stream<ThingImpl> getOwners() {
             return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
-                            GetOwners.Req.getDefaultInstance()),
+                            ConceptProto.Attribute.GetOwners.Req.getDefaultInstance()),
                     res -> res.getAttributeGetOwnersRes().getThingsList()
             );
         }
@@ -113,7 +112,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         public Stream<ThingImpl> getOwners(ThingType ownerType) {
             return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
-                            GetOwners.Req.newBuilder().setThingType(type(ownerType))),
+                            ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(type(ownerType))),
                     res -> res.getAttributeGetOwnersRes().getThingsList()
             );
         }
