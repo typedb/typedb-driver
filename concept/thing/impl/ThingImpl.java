@@ -33,10 +33,6 @@ import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Thing.Delete;
-import grakn.protocol.ConceptProto.Thing.GetPlays;
-import grakn.protocol.ConceptProto.Thing.GetRelations;
-import grakn.protocol.ConceptProto.Thing.UnsetHas;
 import grakn.protocol.TransactionProto;
 
 import java.util.Arrays;
@@ -211,7 +207,7 @@ public abstract class ThingImpl implements Thing {
         public final Stream<RoleTypeImpl> getPlays() {
             return typeStream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetPlaysReq(
-                            GetPlays.Req.getDefaultInstance()),
+                            ConceptProto.Thing.GetPlays.Req.getDefaultInstance()),
                     res -> res.getThingGetPlaysRes().getRoleTypesList()
             ).map(TypeImpl::asRoleType);
         }
@@ -220,7 +216,7 @@ public abstract class ThingImpl implements Thing {
         public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
             return stream(
                     ConceptProto.Thing.Req.newBuilder().setThingGetRelationsReq(
-                            GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
+                            ConceptProto.Thing.GetRelations.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
                     res -> res.getThingGetRelationsRes().getRelationsList()
             ).map(ThingImpl::asRelation);
         }
@@ -235,13 +231,13 @@ public abstract class ThingImpl implements Thing {
         @Override
         public final void unsetHas(Attribute<?> attribute) {
             execute(ConceptProto.Thing.Req.newBuilder().setThingUnsetHasReq(
-                    UnsetHas.Req.newBuilder().setAttribute(thing(attribute))
+                    ConceptProto.Thing.UnsetHas.Req.newBuilder().setAttribute(thing(attribute))
             ));
         }
 
         @Override
         public final void delete() {
-            execute(ConceptProto.Thing.Req.newBuilder().setThingDeleteReq(Delete.Req.getDefaultInstance()));
+            execute(ConceptProto.Thing.Req.newBuilder().setThingDeleteReq(ConceptProto.Thing.Delete.Req.getDefaultInstance()));
         }
 
         @Override
