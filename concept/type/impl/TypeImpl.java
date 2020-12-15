@@ -144,7 +144,7 @@ public abstract class TypeImpl implements Type {
         final RPCTransaction rpcTransaction;
         private String label;
         private final boolean isRoot;
-        private final int hash;
+        private int hash;
 
         Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
@@ -152,7 +152,7 @@ public abstract class TypeImpl implements Type {
             this.rpcTransaction = (RPCTransaction) transaction;
             this.label = label;
             this.isRoot = isRoot;
-            this.hash = Objects.hash(transaction, label);
+            this.hash = Objects.hash(this.rpcTransaction, label);
         }
 
         @Override
@@ -175,6 +175,7 @@ public abstract class TypeImpl implements Type {
             execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
             this.label = label;
+            this.hash = Objects.hash(rpcTransaction, this.label);
         }
 
         @Override
