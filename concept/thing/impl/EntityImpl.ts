@@ -34,7 +34,6 @@ export class EntityImpl extends ThingImpl implements Entity {
     }
 
     static of(protoThing: ConceptProto.Thing): EntityImpl {
-        // TODO: we should probably implement Bytes.bytesToHexString from @graknlabs_common
         return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
     }
 

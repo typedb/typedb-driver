@@ -89,7 +89,6 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
     }
 
     static of(protoThing: ConceptProto.Thing): BooleanAttributeImpl {
-        // TODO
         return new BooleanAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getBoolean());
     }
 
@@ -133,7 +132,6 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
     }
 
     static of(protoThing: ConceptProto.Thing): LongAttributeImpl {
-        // TODO
         return new LongAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getLong());
     }
 
@@ -177,7 +175,6 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Double
     }
 
     static of(protoThing: ConceptProto.Thing): DoubleAttributeImpl {
-        // TODO
         return new DoubleAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getDouble());
     }
 
@@ -222,7 +219,6 @@ export class StringAttributeImpl extends AttributeImpl<string> implements String
     }
 
     static of(protoThing: ConceptProto.Thing): StringAttributeImpl {
-        // TODO
         return new StringAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), protoThing.getValue().getString());
     }
 
@@ -266,7 +262,6 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
     }
 
     static of(protoThing: ConceptProto.Thing): DateTimeAttributeImpl {
-        // TODO
         return new DateTimeAttributeImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), new Date(protoThing.getValue().getDateTime()));
     }
 

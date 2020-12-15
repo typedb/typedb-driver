@@ -134,7 +134,6 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
     }
 
     static of(typeProto: ConceptProto.Type): BooleanAttributeTypeImpl {
-        // TODO
         return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
@@ -383,7 +382,6 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
     }
 
     static of(typeProto: ConceptProto.Type): DateTimeAttributeTypeImpl {
-        // TODO
         return new DateTimeAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
 
