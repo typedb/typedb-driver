@@ -25,7 +25,6 @@ import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Attribute.GetOwners;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -102,19 +101,19 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public final Stream<ThingImpl> getOwners() {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
-                            GetOwners.Req.getDefaultInstance()),
-                    res -> res.getAttributeGetOwnersRes().getThingList()
+                            ConceptProto.Attribute.GetOwners.Req.getDefaultInstance()),
+                    res -> res.getAttributeGetOwnersRes().getThingsList()
             );
         }
 
         @Override
         public Stream<ThingImpl> getOwners(ThingType ownerType) {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setAttributeGetOwnersReq(
-                            GetOwners.Req.newBuilder().setThingType(type(ownerType))),
-                    res -> res.getAttributeGetOwnersRes().getThingList()
+                            ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(type(ownerType))),
+                    res -> res.getAttributeGetOwnersRes().getThingsList()
             );
         }
 
@@ -196,10 +195,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
                 this.value = value;
             }
 
-            public static AttributeImpl.Boolean.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-                return new AttributeImpl.Boolean.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getBoolean());
-            }
-
             @Override
             public Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction) {
                 return new AttributeImpl.Boolean.Remote(transaction, getIID(), value);
@@ -260,10 +255,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             Remote(Grakn.Transaction transaction, java.lang.String iid, long value) {
                 super(transaction, iid);
                 this.value = value;
-            }
-
-            public static AttributeImpl.Long.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-                return new AttributeImpl.Long.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getLong());
             }
 
             @Override
@@ -328,10 +319,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
                 this.value = value;
             }
 
-            public static AttributeImpl.Double.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-                return new AttributeImpl.Double.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getDouble());
-            }
-
             @Override
             public Attribute.Double.Remote asRemote(Grakn.Transaction transaction) {
                 return new AttributeImpl.Double.Remote(transaction, getIID(), value);
@@ -392,10 +379,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             Remote(Grakn.Transaction transaction, java.lang.String iid, java.lang.String value) {
                 super(transaction, iid);
                 this.value = value;
-            }
-
-            public static AttributeImpl.String.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-                return new AttributeImpl.String.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), thingProto.getValue().getString());
             }
 
             @Override
@@ -462,10 +445,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             Remote(Grakn.Transaction transaction, java.lang.String iid, LocalDateTime value) {
                 super(transaction, iid);
                 this.value = value;
-            }
-
-            public static AttributeImpl.DateTime.Remote of(Grakn.Transaction transaction, ConceptProto.Thing thingProto) {
-                return new AttributeImpl.DateTime.Remote(transaction, bytesToHexString(thingProto.getIid().toByteArray()), toLocalDateTime(thingProto.getValue().getDateTime()));
             }
 
             @Override

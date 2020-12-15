@@ -28,9 +28,6 @@ import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.common.collection.Bytes;
 import grakn.protocol.ConceptProto;
-import grakn.protocol.ConceptProto.Relation.AddPlayer;
-import grakn.protocol.ConceptProto.Relation.GetPlayers;
-import grakn.protocol.ConceptProto.Relation.RemovePlayer;
 import grakn.protocol.TransactionProto;
 
 import java.util.ArrayList;
@@ -90,7 +87,7 @@ public class RelationImpl extends ThingImpl implements Relation {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(getIID())));
             final Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = rpcTransaction.stream(
-                    request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypeWithPlayerList().stream());
+                    request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList().stream());
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
@@ -107,22 +104,22 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
-            return stream(
+            return thingStream(
                     ConceptProto.Thing.Req.newBuilder().setRelationGetPlayersReq(
-                            GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
-                    res -> res.getRelationGetPlayersRes().getThingList());
+                            ConceptProto.Relation.GetPlayers.Req.newBuilder().addAllRoleTypes(types(Arrays.asList(roleTypes)))),
+                    res -> res.getRelationGetPlayersRes().getThingsList());
         }
 
         @Override
         public void addPlayer(RoleType roleType, Thing player) {
             execute(ConceptProto.Thing.Req.newBuilder().setRelationAddPlayerReq(
-                    AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
+                    ConceptProto.Relation.AddPlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override
         public void removePlayer(RoleType roleType, Thing player) {
             execute(ConceptProto.Thing.Req.newBuilder().setRelationRemovePlayerReq(
-                    RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
+                    ConceptProto.Relation.RemovePlayer.Req.newBuilder().setRoleType(type(roleType)).setPlayer(thing(player))));
         }
 
         @Override
