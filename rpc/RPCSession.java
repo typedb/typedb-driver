@@ -54,8 +54,8 @@ public class RPCSession implements Session {
 
         sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
         pulse = new Timer();
-        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
         isOpen = new AtomicBoolean(true);
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
     }
 
     @Override
