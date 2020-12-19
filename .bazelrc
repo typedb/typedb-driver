@@ -17,7 +17,7 @@
 # under the License.
 #
 
-build --incompatible_strict_action_env
+build --incompatible_strict_action_env --javacopt='--release 8'
 run --incompatible_strict_action_env
 test --incompatible_strict_action_env
 
