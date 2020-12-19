@@ -24,11 +24,13 @@ import {
     RelationType,
     AttributeType,
     EntityTypeImpl,
-    Type,
     RPCTransaction,
     RelationTypeImpl,
     AttributeTypeImpl,
-    Thing, ThingImpl, TypeImpl, Bytes,
+    Thing,
+    ThingImpl,
+    Bytes,
+    ThingTypeImpl,
 } from "../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
@@ -41,19 +43,19 @@ export class ConceptManager {
     }
 
     async getRootThingType(): Promise<ThingType> {
-        return await this.getType("thing") as ThingType;
+        return await this.getThingType("thing");
     }
 
     async getRootEntityType(): Promise<EntityType> {
-        return await this.getType("entity") as EntityType;
+        return await this.getThingType("entity") as EntityType;
     }
 
     async getRootRelationType(): Promise<RelationType> {
-        return await this.getType("relation") as RelationType;
+        return await this.getThingType("relation") as RelationType;
     }
 
     async getRootAttributeType(): Promise<AttributeType> {
-        return await this.getType("attribute") as AttributeType;
+        return await this.getThingType("attribute") as AttributeType;
     }
 
     async putEntityType(label: string): Promise<EntityType> {
@@ -64,7 +66,7 @@ export class ConceptManager {
     }
 
     async getEntityType(label: string): Promise<EntityType> {
-        const type = await this.getType(label);
+        const type = await this.getThingType(label);
         if (type instanceof EntityTypeImpl) return type as EntityType;
         else return null;
     }
@@ -77,7 +79,7 @@ export class ConceptManager {
     }
 
     async getRelationType(label: string): Promise<RelationType> {
-        const type = await this.getType(label);
+        const type = await this.getThingType(label);
         if (type instanceof RelationTypeImpl) return type as RelationType;
         else return null;
     }
@@ -92,7 +94,7 @@ export class ConceptManager {
     }
 
     async getAttributeType(label: string): Promise<AttributeType> {
-        const type = await this.getType(label);
+        const type = await this.getThingType(label);
         if (type instanceof AttributeTypeImpl) return type as AttributeType;
         else return null;
     }
@@ -107,12 +109,12 @@ export class ConceptManager {
             return null;
     }
 
-    async getType(label: string): Promise<Type> {
+    async getThingType(label: string): Promise<ThingType> {
         const req = new ConceptProto.ConceptManager.Req()
-            .setGetTypeReq(new ConceptProto.ConceptManager.GetType.Req().setLabel(label));
+            .setGetThingTypeReq(new ConceptProto.ConceptManager.GetThingType.Req().setLabel(label));
         const res = await this.execute(req);
-        if (res.getGetTypeRes().getResCase() === ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return TypeImpl.of(res.getGetTypeRes().getType());
+        if (res.getGetThingTypeRes().getResCase() === ConceptProto.ConceptManager.GetThingType.Res.ResCase.THING_TYPE)
+            return ThingTypeImpl.of(res.getGetThingTypeRes().getThingType());
         else
             return null;
     }

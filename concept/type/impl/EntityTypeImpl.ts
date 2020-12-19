@@ -41,6 +41,10 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     asRemote(transaction: Transaction): RemoteEntityType {
         return new RemoteEntityTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
+
+    isEntityType(): boolean {
+        return true;
+    }
 }
 
 export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteEntityType {
@@ -48,17 +52,13 @@ export class RemoteEntityTypeImpl extends RemoteThingTypeImpl implements RemoteE
         super(transaction, label, isRoot);
     }
 
+    isEntityType(): boolean {
+        return true;
+    }
+
     create(): Promise<EntityImpl> {
         const method = new ConceptProto.Type.Req().setEntityTypeCreateReq(new ConceptProto.EntityType.Create.Req());
         return this.execute(method).then(res => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
-    }
-
-    getSupertype(): Promise<EntityTypeImpl> {
-        return super.getSupertype() as Promise<EntityTypeImpl>;
-    }
-
-    getSupertypes(): Stream<EntityTypeImpl> {
-        return super.getSupertypes() as Stream<EntityTypeImpl>;
     }
 
     getSubtypes(): Stream<EntityTypeImpl> {

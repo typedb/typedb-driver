@@ -44,11 +44,19 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
     asRemote(transaction: Transaction): RemoteThingType {
         return new RemoteThingTypeImpl(transaction, this.getLabel(), this.isRoot());
     }
+
+    isThingType(): boolean {
+        return true;
+    }
 }
 
 export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingType {
     constructor(transaction: Transaction, label: string, isRoot: boolean) {
         super(transaction, label, isRoot);
+    }
+
+    isThingType(): boolean {
+        return true;
     }
 
     protected setSupertype(thingType: ThingType): Promise<void> {

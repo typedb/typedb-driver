@@ -43,6 +43,22 @@ export abstract class TypeImpl implements Type {
         this._root = root;
     }
 
+    isThingType(): boolean {
+        return false;
+    }
+
+    isEntityType(): boolean {
+        return false;
+    }
+
+    isAttributeType(): boolean {
+        return false;
+    }
+
+    isRelationType(): boolean {
+        return false;
+    }
+
     getLabel(): string {
         return this._label;
     }
@@ -73,6 +89,22 @@ export abstract class RemoteTypeImpl implements RemoteType {
         this._rpcTransaction = transaction as RPCTransaction;
         this._label = label;
         this._isRoot = isRoot;
+    }
+
+    isThingType(): boolean {
+        return false;
+    }
+
+    isEntityType(): boolean {
+        return false;
+    }
+
+    isAttributeType(): boolean {
+        return false;
+    }
+
+    isRelationType(): boolean {
+        return false;
     }
 
     getLabel(): string {
@@ -127,7 +159,7 @@ export abstract class RemoteTypeImpl implements RemoteType {
     }
 
     async isDeleted(): Promise<boolean> {
-        return !(await this._rpcTransaction.concepts().getType(this._label));
+        return !(await this._rpcTransaction.concepts().getThingType(this._label));
     }
 
     protected get transaction(): Transaction {

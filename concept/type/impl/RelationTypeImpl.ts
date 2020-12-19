@@ -42,6 +42,10 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     asRemote(transaction: Transaction): RemoteRelationTypeImpl {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
+
+    isRelationType(): boolean {
+        return true;
+    }
 }
 
 export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements RemoteRelationType {
@@ -51,6 +55,10 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
 
     asRemote(transaction: Transaction): RemoteRelationTypeImpl {
         return new RemoteRelationTypeImpl(transaction, this.getLabel(), this.isRoot())
+    }
+
+    isRelationType(): boolean {
+        return true;
     }
 
     create(): Promise<RelationImpl> {
@@ -89,14 +97,6 @@ export class RemoteRelationTypeImpl extends RemoteThingTypeImpl implements Remot
 
     setSupertype(relationType: RelationType): Promise<void> {
         return super.setSupertype(relationType);
-    }
-
-    getSupertype(): Promise<RelationTypeImpl> {
-        return super.getSupertype() as Promise<RelationTypeImpl>;
-    }
-
-    getSupertypes(): Stream<RelationTypeImpl> {
-        return super.getSupertypes() as Stream<RelationTypeImpl>;
     }
 
     getSubtypes(): Stream<RelationTypeImpl> {
