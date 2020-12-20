@@ -84,11 +84,10 @@ release:
   filter:
     owner: graknlabs
     branch: master
-  # TODO: add it back once we're able to depend on @graknlabs_protocol as bazel rather than artifact dependency
-  # validation:
-  #   validate-dependencies:
-  #     machine: graknlabs-ubuntu-20.04
-  #     script: bazel test //:release-validate-deps --test_output=streamed
+  validation:
+    validate-dependencies:
+      machine: graknlabs-ubuntu-20.04
+      script: bazel test //:release-validate-nodejs-deps --test_output=streamed
   deployment:
     deploy-github:
       machine: graknlabs-ubuntu-20.04
