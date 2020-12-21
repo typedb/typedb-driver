@@ -20,7 +20,6 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grabl.tracing.client.GrablTracingThreadStatic.ThreadTrace;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.ErrorMessage;
@@ -47,8 +46,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grabl.tracing.client.GrablTracingThreadStatic.traceOnThread;
-import static grakn.client.Grakn.Transaction.Type.WRITE;
 import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
@@ -68,28 +65,26 @@ public class RPCTransaction implements Transaction {
     private final AtomicBoolean txIsOpen;
 
     RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
-        try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
-            this.type = type;
-            conceptManager = new ConceptManager(this);
-            logicManager = new LogicManager(this);
-            queryManager = new QueryManager(this);
-            collectors = new ResponseCollectors();
+        this.type = type;
+        conceptManager = new ConceptManager(this);
+        logicManager = new LogicManager(this);
+        queryManager = new QueryManager(this);
+        collectors = new ResponseCollectors();
 
-            // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
-            streamIsOpen = new AtomicBoolean(true);
-            txIsOpen = new AtomicBoolean(true);
-            requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
-            final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(tracingData())
-                    .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                            .setSessionId(sessionId)
-                            .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                            .setOptions(options(options)));
-            final Instant startTime = Instant.now();
-            final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
-            final Instant endTime = Instant.now();
-            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
-        }
+        // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
+        streamIsOpen = new AtomicBoolean(true);
+        txIsOpen = new AtomicBoolean(true);
+        requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
+        final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData())
+                .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
+                        .setSessionId(sessionId)
+                        .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
+                        .setOptions(options(options)));
+        final Instant startTime = Instant.now();
+        final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
+        final Instant endTime = Instant.now();
+        networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
     }
 
     @Override
@@ -154,29 +149,25 @@ public class RPCTransaction implements Transaction {
     public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
-        try (ThreadTrace ignored = traceOnThread("executeAsync")) {
-            final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
-            final UUID requestId = UUID.randomUUID();
-            request.setId(requestId.toString());
-            collectors.put(requestId, responseCollector);
-            requestObserver.onNext(request.build());
-            return new QueryFuture<>(responseCollector, transformResponse);
-        }
+        final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
+        final UUID requestId = UUID.randomUUID();
+        request.setId(requestId.toString());
+        collectors.put(requestId, responseCollector);
+        requestObserver.onNext(request.build());
+        return new QueryFuture<>(responseCollector, transformResponse);
     }
 
     public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
-        try (ThreadTrace ignored = traceOnThread("stream")) {
-            final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
-            final UUID requestId = UUID.randomUUID();
-            request.setId(requestId.toString());
-            request.setLatencyMillis(networkLatencyMillis);
-            collectors.put(requestId, responseCollector);
-            requestObserver.onNext(request.build());
-            final ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
-            return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
-        }
+        final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
+        final UUID requestId = UUID.randomUUID();
+        request.setId(requestId.toString());
+        request.setLatencyMillis(networkLatencyMillis);
+        collectors.put(requestId, responseCollector);
+        requestObserver.onNext(request.build());
+        final ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
+        return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
     }
 
     private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
@@ -213,24 +204,24 @@ public class RPCTransaction implements Transaction {
         };
     }
 
-    private class ResponseCollectors {
-        private final ConcurrentMap<UUID, ResponseCollector> map;
+    private static class ResponseCollectors {
+        private final ConcurrentMap<UUID, ResponseCollector> collectors;
 
         private ResponseCollectors() {
-            map = new ConcurrentHashMap<>();
+            collectors = new ConcurrentHashMap<>();
         }
 
         private ResponseCollector get(UUID requestId) {
-            return map.get(requestId);
+            return collectors.get(requestId);
         }
 
         private synchronized void put(UUID requestId, ResponseCollector collector) {
-            map.put(requestId, collector);
+            collectors.put(requestId, collector);
         }
 
         private synchronized void clearWithError(Response.Error errorResponse) {
-            map.values().parallelStream().forEach(x -> x.add(errorResponse));
-            map.clear();
+            collectors.values().parallelStream().forEach(collector -> collector.add(errorResponse));
+            collectors.clear();
         }
     }
 
