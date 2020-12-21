@@ -31,6 +31,8 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -61,8 +63,8 @@ public class RPCTransaction implements Transaction {
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ResponseCollectors collectors;
     private final int networkLatencyMillis;
-    private final AtomicBoolean streamIsOpen;
-    private final AtomicBoolean txIsOpen;
+    private final AtomicBoolean streamOpen;
+    private final AtomicBoolean rpcTxOpen;
 
     RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         this.type = type;
@@ -72,8 +74,8 @@ public class RPCTransaction implements Transaction {
         collectors = new ResponseCollectors();
 
         // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
-        streamIsOpen = new AtomicBoolean(true);
-        txIsOpen = new AtomicBoolean(true);
+        streamOpen = new AtomicBoolean(true);
+        rpcTxOpen = new AtomicBoolean(true);
         requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
         final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
@@ -94,7 +96,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public boolean isOpen() {
-        return txIsOpen.get();
+        return rpcTxOpen.get();
     }
 
     @Override
@@ -134,10 +136,10 @@ public class RPCTransaction implements Transaction {
     }
 
     private void closeResources(Response.Error error) {
-        if (streamIsOpen.compareAndSet(true, false)) {
+        if (streamOpen.compareAndSet(true, false)) {
             requestObserver.onCompleted();
         }
-        if (txIsOpen.compareAndSet(true, false)) {
+        if (rpcTxOpen.compareAndSet(true, false)) {
             collectors.clearWithError(error);
         }
     }
@@ -147,7 +149,7 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-        if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+        if (!rpcTxOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
         final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
         final UUID requestId = UUID.randomUUID();
@@ -158,7 +160,7 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
-        if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+        if (!rpcTxOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
         final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
         final UUID requestId = UUID.randomUUID();
@@ -172,12 +174,11 @@ public class RPCTransaction implements Transaction {
 
     private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
         return new StreamObserver<TransactionProto.Transaction.Res>() {
+            private final Logger LOG = LoggerFactory.getLogger(StreamObserver.class);
+
             @Override
             public void onNext(TransactionProto.Transaction.Res res) {
-                if (!txIsOpen.get()) {
-                    System.out.println("onNext: closed");
-                    return;
-                };
+                if (!streamOpen.get()) return;
 
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
@@ -187,8 +188,8 @@ public class RPCTransaction implements Transaction {
 
             @Override
             public void onError(Throwable error) {
-                if (!txIsOpen.get()) {
-                    System.out.println("onError: closed");
+                if (!streamOpen.get()) {
+                    LOG.trace("Server sent an error after the transaction stream has been closed", error);
                     return;
                 };
 
