@@ -65,9 +65,7 @@ public class RPCTransaction implements Transaction {
     private final ResponseCollectors collectors;
     private final int networkLatencyMillis;
     private final AtomicBoolean streamIsOpen;
-    // Technically nothing prevents open and close being triggered out of order, so we record both events
-    private final AtomicBoolean transactionWasOpened;
-    private final AtomicBoolean transactionWasClosed;
+    private final AtomicBoolean txIsOpen;
 
     RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try (ThreadTrace ignored = traceOnThread(type == WRITE ? "tx.write" : "tx.read")) {
@@ -78,12 +76,9 @@ public class RPCTransaction implements Transaction {
             collectors = new ResponseCollectors();
 
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
-            streamIsOpen = new AtomicBoolean(false);
-            transactionWasOpened = new AtomicBoolean(false);
-            transactionWasClosed = new AtomicBoolean(false);
+            streamIsOpen = new AtomicBoolean(true);
+            txIsOpen = new AtomicBoolean(true);
             requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
-            streamIsOpen.set(true);
-
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
@@ -93,7 +88,6 @@ public class RPCTransaction implements Transaction {
             final Instant startTime = Instant.now();
             final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
             final Instant endTime = Instant.now();
-            transactionWasOpened.set(true);
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
         }
     }
@@ -105,7 +99,7 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public boolean isOpen() {
-        return transactionWasOpened.get() && !transactionWasClosed.get();
+        return txIsOpen.get();
     }
 
     @Override
@@ -141,11 +135,15 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void close() {
+        closeResources(new Response.Error(TRANSACTION_CLOSED));
+    }
+
+    private void closeResources(Response.Error error) {
         if (streamIsOpen.compareAndSet(true, false)) {
             requestObserver.onCompleted();
         }
-        if (transactionWasClosed.compareAndSet(false, true)) {
-            collectors.clearWithError(new Response.Error(TRANSACTION_CLOSED));
+        if (txIsOpen.compareAndSet(true, false)) {
+            collectors.clearWithError(error);
         }
     }
 
@@ -154,6 +152,8 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+        if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+
         try (ThreadTrace ignored = traceOnThread("executeAsync")) {
             final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
             final UUID requestId = UUID.randomUUID();
@@ -165,6 +165,8 @@ public class RPCTransaction implements Transaction {
     }
 
     public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+        if (!txIsOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+
         try (ThreadTrace ignored = traceOnThread("stream")) {
             final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
             final UUID requestId = UUID.randomUUID();
@@ -181,6 +183,11 @@ public class RPCTransaction implements Transaction {
         return new StreamObserver<TransactionProto.Transaction.Res>() {
             @Override
             public void onNext(TransactionProto.Transaction.Res res) {
+                if (!txIsOpen.get()) {
+                    System.out.println("onNext: closed");
+                    return;
+                };
+
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
                 if (collector == null) throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestId));
@@ -189,17 +196,19 @@ public class RPCTransaction implements Transaction {
 
             @Override
             public void onError(Throwable error) {
+                if (!txIsOpen.get()) {
+                    System.out.println("onError: closed");
+                    return;
+                };
+
                 assert error instanceof StatusRuntimeException : "The server only yields these exceptions";
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-                transactionWasClosed.set(true);
-                streamIsOpen.set(false);
-                collectors.clearWithError(new Response.Error((StatusRuntimeException) error));
+                closeResources(new Response.Error((StatusRuntimeException) error));
             }
 
             @Override
             public void onCompleted() {
-                streamIsOpen.set(false);
-                close();
+                closeResources(new Response.Error(TRANSACTION_CLOSED));
             }
         };
     }
@@ -216,7 +225,6 @@ public class RPCTransaction implements Transaction {
         }
 
         private synchronized void put(UUID requestId, ResponseCollector collector) {
-            if (transactionWasClosed.get()) throw new GraknClientException(TRANSACTION_CLOSED);
             map.put(requestId, collector);
         }
 
