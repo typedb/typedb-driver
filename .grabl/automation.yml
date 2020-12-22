@@ -19,13 +19,13 @@
 config:
   version-candidate: VERSION
   dependencies:
-    graql: [build]
-    common: [build]
+    graql: [build] # TODO: add 'release' once dependency-analysis works with tags
+    common: [build] # TODO: add 'release' once dependency-analysis works with tags
     bazel-distribution: [build]
     dependencies: [build]
-    protocol: [build]
+    protocol: [build] # TODO: add 'release' once dependency-analysis works with tags
     behaviour: [build]
-    grabl-tracing: [build]
+    grabl-tracing: [build] # TODO: add 'release' once dependency-analysis works with tags
 
 build:
   quality:
