@@ -29,7 +29,7 @@ import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
-import grakn.client.concept.type.impl.TypeImpl;
+import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
@@ -52,22 +52,22 @@ public final class ConceptManager {
 
     @CheckReturnValue
     public ThingType getRootThingType() {
-        return getType(GraqlToken.Type.THING.toString()).asThingType();
+        return getThingType(GraqlToken.Type.THING.toString()).asThingType();
     }
 
     @CheckReturnValue
     public EntityType getRootEntityType() {
-        return getType(GraqlToken.Type.ENTITY.toString()).asEntityType();
+        return getThingType(GraqlToken.Type.ENTITY.toString()).asEntityType();
     }
 
     @CheckReturnValue
     public RelationType getRootRelationType() {
-        return getType(GraqlToken.Type.RELATION.toString()).asRelationType();
+        return getThingType(GraqlToken.Type.RELATION.toString()).asRelationType();
     }
 
     @CheckReturnValue
     public AttributeType getRootAttributeType() {
-        return getType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
+        return getThingType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
     }
 
     public EntityType putEntityType(String label) {
@@ -81,7 +81,7 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public EntityType getEntityType(String label) {
-        final Type type = getType(label);
+        final Type type = getThingType(label);
         if (type instanceof EntityType) return type.asEntityType();
         else return null;
     }
@@ -97,7 +97,7 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public RelationType getRelationType(String label) {
-        final Type type = getType(label);
+        final Type type = getThingType(label);
         if (type instanceof RelationType) return type.asRelationType();
         else return null;
     }
@@ -114,7 +114,7 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public AttributeType getAttributeType(String label) {
-        final Type type = getType(label);
+        final Type type = getThingType(label);
         if (type instanceof AttributeType) return type.asAttributeType();
         else return null;
     }
@@ -134,13 +134,13 @@ public final class ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    public Type getType(String label) {
+    public ThingType getThingType(String label) {
         final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
-                .setGetTypeReq(ConceptProto.ConceptManager.GetType.Req.newBuilder().setLabel(label)).build();
+                .setGetThingTypeReq(ConceptProto.ConceptManager.GetThingType.Req.newBuilder().setLabel(label)).build();
 
         final ConceptProto.ConceptManager.Res response = execute(req);
-        if (response.getGetTypeRes().getResCase() == ConceptProto.ConceptManager.GetType.Res.ResCase.TYPE)
-            return TypeImpl.of(response.getGetTypeRes().getType());
+        if (response.getGetThingTypeRes().getResCase() == ConceptProto.ConceptManager.GetThingType.Res.ResCase.THING_TYPE)
+            return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
         else
             return null;
     }
