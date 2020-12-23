@@ -60,13 +60,13 @@ public class ThingTypeSteps {
 
     @Then("thing type root get supertypes contain:")
     public void thing_type_root_get_supertypes_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).asRemote(tx()).getSupertypes().map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(ThingType::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("thing type root get supertypes do not contain:")
     public void thing_type_root_get_supertypes_do_not_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         for (String superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
@@ -184,13 +184,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes contain:")
     public void thing_type_get_supertypes_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes do not contain:")
     public void thing_type_get_supertypes_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         for (String superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
