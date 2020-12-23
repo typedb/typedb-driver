@@ -21,7 +21,7 @@ config:
   version-candidate: VERSION
   dependencies:
     dependencies: [build]
-    common: [build, release]
+    common: [build] # TODO: add 'release' once dependency-analysis works with tags
     behaviour: [build]
 
 build:
@@ -30,18 +30,18 @@ build:
       owner: graknlabs
       branch: master
     dependency-analysis:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     test:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         ./test/start-server.sh
         source ./test/install.sh
@@ -52,7 +52,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -68,7 +68,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         ./test/start-server.sh
         source ./test/install.sh
@@ -86,11 +86,11 @@ release:
     branch: master
   validation:
     validate-dependencies:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: bazel test //:release-validate-nodejs-deps --test_output=streamed
   deployment:
     deploy-github:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         pip install certifi
         export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
@@ -98,7 +98,7 @@ release:
         export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
         bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-npm-release:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
