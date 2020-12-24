@@ -51,9 +51,6 @@ public interface RelationType extends ThingType {
         RelationType getSupertype();
 
         @Override
-        Stream<? extends ThingType> getSupertypes();
-
-        @Override
         Stream<? extends RelationType> getSubtypes();
 
         @Override
