@@ -34,6 +34,8 @@ public interface Type extends Concept {
     @CheckReturnValue
     boolean isRoot();
 
+    boolean isRelationType();
+
     @CheckReturnValue
     ThingType asThingType();
 

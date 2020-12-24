@@ -26,6 +26,7 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
+import grakn.client.concept.type.Type;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
@@ -79,13 +80,14 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public ThingTypeImpl getSupertype() {
-            final TypeImpl supertype = super.getSupertype();
+            TypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asThingType() : null;
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSupertypes() {
-            return super.getSupertypes().map(TypeImpl::asThingType);
+            Stream<? extends TypeImpl> supertypes = super.getSupertypes();
+            return supertypes.map(TypeImpl::asThingType);
         }
 
         @Override

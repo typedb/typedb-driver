@@ -31,6 +31,7 @@ import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static grakn.client.test.behaviour.config.Parameters.RootLabel;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
@@ -60,7 +61,7 @@ public class ThingTypeSteps {
 
     @Then("thing type root get supertypes contain:")
     public void thing_type_root_get_supertypes_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
@@ -184,7 +185,9 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes contain:")
     public void thing_type_get_supertypes_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        ThingType thing_type = get_thing_type(rootLabel, typeLabel);
+        ThingType.Remote remote = thing_type.asRemote(tx());
+        Set<String> actuals = remote.getSupertypes().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
@@ -322,7 +325,9 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {type_label}")
     public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, String overriddenLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
-        RoleType overriddenType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getSupertypes()
+        Stream<RelationType> relationType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getSupertypes()
+                .filter(Type::isRelationType).map(Type::asRelationType);
+        RoleType overriddenType = relationType
                 .flatMap(sup -> sup.asRemote(tx()).getRelates()).filter(r -> r.getLabel().equals(overriddenLabel)).findAny().get();
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType, overriddenType);
     }

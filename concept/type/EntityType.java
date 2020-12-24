@@ -39,7 +39,7 @@ public interface EntityType extends ThingType {
         EntityType getSupertype();
 
         @Override
-        Stream<? extends EntityType> getSupertypes();
+        Stream<? extends ThingType> getSupertypes();
 
         @Override
         Stream<? extends EntityType> getSubtypes();

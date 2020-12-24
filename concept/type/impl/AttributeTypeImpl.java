@@ -28,12 +28,14 @@ import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
 import static grakn.common.util.Objects.className;
+import static java.util.stream.Collectors.toList;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
@@ -168,11 +170,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         public AttributeTypeImpl getSupertype() {
             final ThingTypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asAttributeType() : null;
-        }
-
-        @Override
-        public Stream<? extends AttributeTypeImpl> getSupertypes() {
-            return super.getSupertypes().map(ThingTypeImpl::asAttributeType);
         }
 
         @Override
@@ -328,11 +325,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Boolean> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl::asBoolean);
-            }
-
-            @Override
             public final Stream<AttributeTypeImpl.Boolean> getSubtypes() {
                 return super.getSubtypes().map(AttributeTypeImpl::asBoolean);
             }
@@ -411,11 +403,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             public final AttributeTypeImpl.Long getSupertype() {
                 final AttributeTypeImpl supertype = super.getSupertype();
                 return supertype != null ? supertype.asLong() : null;
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Long> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl::asLong);
             }
 
             @Override
@@ -500,11 +487,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final Stream<AttributeTypeImpl.Double> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl::asDouble);
-            }
-
-            @Override
             public final Stream<AttributeTypeImpl.Double> getSubtypes() {
                 return super.getSubtypes().map(AttributeTypeImpl::asDouble);
             }
@@ -583,11 +565,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             public final AttributeTypeImpl.String getSupertype() {
                 final AttributeTypeImpl supertype = super.getSupertype();
                 return supertype != null ? supertype.asString() : null;
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.String> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl::asString);
             }
 
             @Override
@@ -687,11 +664,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             public final AttributeTypeImpl.DateTime getSupertype() {
                 final AttributeTypeImpl supertype = super.getSupertype();
                 return supertype != null ? supertype.asDateTime() : null;
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.DateTime> getSupertypes() {
-                return super.getSupertypes().map(AttributeTypeImpl::asDateTime);
             }
 
             @Override
