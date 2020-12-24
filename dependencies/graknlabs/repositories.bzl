@@ -41,16 +41,16 @@ def graknlabs_bazel_distribution():
     )
 
 def graknlabs_dependencies():
-#    git_repository(
-#        name = "graknlabs_dependencies",
-#        remote = "https://github.com/graknlabs/dependencies",
-#        commit = "a4f56afaacd8d09cc62a6c2fc0fd55718eaa98c2", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
-#    )
-#
-    native.local_repository(
+    git_repository(
         name = "graknlabs_dependencies",
-        path = "/Users/lolski/grakn.ai/graknlabs/dependencies",
+        remote = "https://github.com/graknlabs/dependencies",
+        commit = "feecf9c27fc735a0024275b2d1a80755d7001a5c", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
     )
+
+#    native.local_repository(
+#        name = "graknlabs_dependencies",
+#        path = "/Users/lolski/grakn.ai/graknlabs/dependencies",
+#    )
 
 def graknlabs_protocol():
     git_repository(
@@ -65,6 +65,11 @@ def graknlabs_behaviour():
         remote = "https://github.com/graknlabs/behaviour",
         commit = "23c7228f7db704291dbd288d2cdbf008df38a2d3", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_behaviour
     )
+
+#    native.local_repository(
+#        name = "graknlabs_behaviour",
+#        path = "/Users/lolski/grakn.ai/graknlabs/behaviour",
+#    )
 
 def graknlabs_grabl_tracing():
     git_repository(
