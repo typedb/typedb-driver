@@ -224,7 +224,7 @@ public class RPCTransaction implements Transaction {
 
         void add(Response response) {
             responseBuffer.add(response);
-            if (!(response instanceof Response.Result) || isLastResponse(read(response))) isDone.set(true);
+            if (!(response instanceof Response.Result) || isLastResponse(response.read())) isDone.set(true);
         }
 
         boolean isDone() {
@@ -232,26 +232,13 @@ public class RPCTransaction implements Transaction {
         }
 
         TransactionProto.Transaction.Res take() throws InterruptedException {
-            return read(responseBuffer.take());
+            return responseBuffer.take().read();
         }
 
         TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
             final Response response = responseBuffer.poll(timeout, unit);
-            if (response != null) return read(response);
+            if (response != null) return response.read();
             else throw new TimeoutException();
-        }
-
-        TransactionProto.Transaction.Res read(Response response) {
-            if (response instanceof Response.Result) {
-                return ((Response.Result)response).read();
-            } else if (response instanceof Response.Done.Completed) {
-                throw new GraknClientException(TRANSACTION_CLOSED);
-            } else if (response instanceof Response.Done.Error) {
-                throw new GraknClientException(((Response.Done.Error) response).error());
-            } else {
-                assert false;
-                return null;
-            }
         }
 
         abstract boolean isLastResponse(TransactionProto.Transaction.Res response);
@@ -275,6 +262,8 @@ public class RPCTransaction implements Transaction {
 
     abstract static class Response {
 
+        abstract TransactionProto.Transaction.Res read();
+
         static class Result extends Response {
             private final TransactionProto.Transaction.Res response;
 
@@ -282,6 +271,7 @@ public class RPCTransaction implements Transaction {
                 this.response = response;
             }
 
+            @Override
             TransactionProto.Transaction.Res read() {
                 return response;
             }
@@ -297,6 +287,11 @@ public class RPCTransaction implements Transaction {
             static class Completed extends Done {
 
                 @Override
+                TransactionProto.Transaction.Res read() {
+                    throw new GraknClientException(TRANSACTION_CLOSED);
+                }
+
+                @Override
                 public String toString() {
                     return className(getClass()) + "{}";
                 }
@@ -304,15 +299,16 @@ public class RPCTransaction implements Transaction {
 
             static class Error extends Done {
 
-                private final GraknClientException error;
+                private final StatusRuntimeException  error;
 
                 Error(StatusRuntimeException error) {
                     // TODO: parse different gRPC errors into specific GraknClientException
-                    this.error = new GraknClientException(error);
+                    this.error = error;
                 }
 
-                GraknClientException error() {
-                    throw error;
+                @Override
+                TransactionProto.Transaction.Res read() {
+                    throw new GraknClientException(error);
                 }
 
                 @Override
