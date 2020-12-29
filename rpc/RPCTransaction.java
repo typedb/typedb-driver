@@ -127,10 +127,16 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void close() {
-        close(new Response.Done.Completed());
+        closeFromClient(new Response.Done.Completed());
     }
 
-    private void close(Response.Done doneResponse) {
+    private void closeFromServer(Response.Done doneResponse) {
+        if (isOpen.compareAndSet(true, false)) {
+            collectors.clear(doneResponse);
+        }
+    }
+
+    private void closeFromClient(Response.Done doneResponse) {
         if (isOpen.compareAndSet(true, false)) {
             collectors.clear(doneResponse);
             requestObserver.onCompleted();
@@ -181,12 +187,12 @@ public class RPCTransaction implements Transaction {
             public void onError(Throwable ex) {
                 assert ex instanceof StatusRuntimeException : "The server sent an exception of unexpected type " + ex;
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-                close(new Response.Done.Error((StatusRuntimeException) ex));
+                closeFromServer(new Response.Done.Error((StatusRuntimeException) ex));
             }
 
             @Override
             public void onCompleted() {
-                close(new Response.Done.Completed());
+                closeFromServer(new Response.Done.Completed());
             }
         };
     }
