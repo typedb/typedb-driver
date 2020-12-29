@@ -22,7 +22,6 @@ package grakn.client.rpc;
 import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknOptions;
-import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
@@ -31,8 +30,6 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -130,7 +127,14 @@ public class RPCTransaction implements Transaction {
 
     @Override
     public void close() {
-        closeSuccess();
+        close(new Response.Done.Completed());
+    }
+
+    private void close(Response.Done doneResponse) {
+        if (isOpen.compareAndSet(true, false)) {
+            collectors.clear(doneResponse);
+            requestObserver.onCompleted();
+        }
     }
 
     public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
@@ -170,36 +174,21 @@ public class RPCTransaction implements Transaction {
                 final UUID requestId = UUID.fromString(res.getId());
                 final ResponseCollector collector = collectors.get(requestId);
                 assert collector != null : UNKNOWN_REQUEST_ID.message(requestId);
-                collector.add(new Response.Ok(res));
+                collector.add(new Response.Result(res));
             }
 
             @Override
             public void onError(Throwable ex) {
                 assert ex instanceof StatusRuntimeException : "The server sent an exception of unexpected type " + ex;
                 // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-                closeError((StatusRuntimeException) ex);
+                close(new Response.Done.Error((StatusRuntimeException) ex));
             }
 
             @Override
             public void onCompleted() {
-                closeSuccess();
-            }
-
-            private void closeError(StatusRuntimeException ex) {
-                if (isOpen.compareAndSet(true, false)) {
-                    collectors.error(new Response.Error(ex));
-                    collectors.clear();
-                    requestObserver.onCompleted();
-                }
+                close(new Response.Done.Completed());
             }
         };
-    }
-
-    private void closeSuccess() {
-        if (isOpen.compareAndSet(true, false)) {
-            collectors.clear();
-            requestObserver.onCompleted();
-        }
     }
 
     private static class ResponseCollectors {
@@ -217,11 +206,8 @@ public class RPCTransaction implements Transaction {
             collectors.put(requestId, collector);
         }
 
-        private synchronized void error(Response.Error errorResponse) {
-            collectors.values().parallelStream().forEach(collector -> collector.add(errorResponse));
-        }
-
-        private synchronized void clear() {
+        private synchronized void clear(Response.Done doneResponse) {
+            collectors.values().parallelStream().forEach(collector -> collector.add(doneResponse));
             collectors.clear();
         }
     }
@@ -238,7 +224,7 @@ public class RPCTransaction implements Transaction {
 
         void add(Response response) {
             responseBuffer.add(response);
-            if (!(response instanceof Response.Ok) || isLastResponse(response.read())) isDone.set(true);
+            if (!(response instanceof Response.Result) || isLastResponse(read(response))) isDone.set(true);
         }
 
         boolean isDone() {
@@ -246,13 +232,26 @@ public class RPCTransaction implements Transaction {
         }
 
         TransactionProto.Transaction.Res take() throws InterruptedException {
-            return responseBuffer.take().read();
+            return read(responseBuffer.take());
         }
 
         TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
             final Response response = responseBuffer.poll(timeout, unit);
-            if (response != null) return response.read();
+            if (response != null) return read(response);
             else throw new TimeoutException();
+        }
+
+        TransactionProto.Transaction.Res read(Response response) {
+            if (response instanceof Response.Result) {
+                return ((Response.Result)response).read();
+            } else if (response instanceof Response.Done.Completed) {
+                throw new GraknClientException(TRANSACTION_CLOSED);
+            } else if (response instanceof Response.Done.Error) {
+                throw new GraknClientException(((Response.Done.Error) response).error());
+            } else {
+                assert false;
+                return null;
+            }
         }
 
         abstract boolean isLastResponse(TransactionProto.Transaction.Res response);
@@ -276,16 +275,13 @@ public class RPCTransaction implements Transaction {
 
     abstract static class Response {
 
-        abstract TransactionProto.Transaction.Res read();
-
-        static class Ok extends Response {
+        static class Result extends Response {
             private final TransactionProto.Transaction.Res response;
 
-            Ok(TransactionProto.Transaction.Res response) {
+            Result(TransactionProto.Transaction.Res response) {
                 this.response = response;
             }
 
-            @Override
             TransactionProto.Transaction.Res read() {
                 return response;
             }
@@ -296,26 +292,33 @@ public class RPCTransaction implements Transaction {
             }
         }
 
-        static class Error extends Response {
-            private final GraknClientException error;
+        static abstract class Done extends Response {
 
-            Error(StatusRuntimeException error) {
-                // TODO: parse different gRPC errors into specific GraknClientException
-                this.error = new GraknClientException(error);
+            static class Completed extends Done {
+
+                @Override
+                public String toString() {
+                    return className(getClass()) + "{}";
+                }
             }
 
-            Error(ErrorMessage error) {
-                this.error = new GraknClientException(error);
-            }
+            static class Error extends Done {
 
-            @Override
-            TransactionProto.Transaction.Res read() {
-                throw error;
-            }
+                private final GraknClientException error;
 
-            @Override
-            public String toString() {
-                return className(getClass()) + "{" + error + "}";
+                Error(StatusRuntimeException error) {
+                    // TODO: parse different gRPC errors into specific GraknClientException
+                    this.error = new GraknClientException(error);
+                }
+
+                GraknClientException error() {
+                    throw error;
+                }
+
+                @Override
+                public String toString() {
+                    return className(getClass()) + "{" + error + "}";
+                }
             }
         }
     }
