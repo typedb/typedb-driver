@@ -28,51 +28,53 @@ config:
     grabl-tracing: [build] # TODO: add 'release' once dependency-analysis works with tags
 
 build:
-  quality:
-    filter:
-      owner: graknlabs
-      branch: master
-    build-analysis:
-      image: graknlabs-ubuntu-20.04
-      script: |
-        SONARCLOUD_CODE_ANALYSIS_CREDENTIAL=$SONARCLOUD_CREDENTIAL \
-          bazel run @graknlabs_dependencies//tool/sonarcloud:code-analysis -- \
-          --project-key=graknlabs_client_java \
-          --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
-    dependency-analysis:
-      image: graknlabs-ubuntu-20.04
-      script: |
-        bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
+#  quality:
+#    filter:
+#      owner: graknlabs
+#      branch: master
+#    build-analysis:
+#      image: graknlabs-ubuntu-20.04
+#      script: |
+#        SONARCLOUD_CODE_ANALYSIS_CREDENTIAL=$SONARCLOUD_CREDENTIAL \
+#          bazel run @graknlabs_dependencies//tool/sonarcloud:code-analysis -- \
+#          --project-key=graknlabs_client_java \
+#          --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
+#    dependency-analysis:
+#      image: graknlabs-ubuntu-20.04
+#      script: |
+#        bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
-    build:
-      image: graknlabs-ubuntu-20.04
-      script: |
-        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel build //...
-        bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query 'kind(checkstyle_test, //...)')
-    build-dependency:
-      image: graknlabs-ubuntu-20.04
-      script: |
-        dependencies/maven/update.sh
-        git diff --exit-code dependencies/maven/artifacts.snapshot
-        bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
-    test-integration:
-      image: graknlabs-ubuntu-20.04
-      script: |
-        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/integration/... --test_output=errors
-      # TODO: use --config=rbe once Grakn Core runs in RBE
+#    build:
+#      image: graknlabs-ubuntu-20.04
+#      script: |
+#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+#        bazel build //...
+#        bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
+#        bazel test $(bazel query 'kind(checkstyle_test, //...)')
+#    build-dependency:
+#      image: graknlabs-ubuntu-20.04
+#      script: |
+#        dependencies/maven/update.sh
+#        git diff --exit-code dependencies/maven/artifacts.snapshot
+#        bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
+#    test-integration:
+#      image: graknlabs-ubuntu-20.04
+#      script: |
+#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+#        bazel test //test/integration/... --test_output=errors
+#      # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
+      timeout: "5h"
       image: graknlabs-ubuntu-20.04
       script: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        sleep 5h
         bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
         bazel test //test/behaviour/concept/... --test_output=errors
         bazel test //test/behaviour/graql/language/define/... --test_output=errors
