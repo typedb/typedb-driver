@@ -37,7 +37,7 @@ public abstract class BehaviourTest {
 
     @BeforeClass
     public static void setupBehaviourTests() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner();
+        runner = new GraknCoreRunner(true);
         runner.start();
         GraknSingleton.setGraknRunner(runner);
     }
