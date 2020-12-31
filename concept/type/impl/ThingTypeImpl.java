@@ -64,11 +64,6 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public boolean isThingType() {
-        return true;
-    }
-
-    @Override
     public final ThingTypeImpl asThingType() {
         return this;
     }
@@ -197,11 +192,6 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public ThingTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
             return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
-        }
-
-        @Override
-        public boolean isThingType() {
-            return true;
         }
 
         @Override

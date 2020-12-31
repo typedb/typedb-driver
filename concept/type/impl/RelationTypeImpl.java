@@ -43,11 +43,6 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public boolean isRelationType() {
-        return true;
-    }
-
-    @Override
     public RelationTypeImpl asRelationType() {
         return this;
     }
@@ -125,11 +120,6 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final Stream<RelationImpl> getInstances() {
             return super.getInstances().map(ThingImpl::asRelation);
-        }
-
-        @Override
-        public boolean isRelationType() {
-            return true;
         }
 
         @Override

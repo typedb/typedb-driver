@@ -37,6 +37,11 @@ public interface AttributeType extends ThingType {
     boolean isKeyable();
 
     @Override
+    default boolean isAttributeType() {
+        return true;
+    }
+
+    @Override
     AttributeType.Remote asRemote(Grakn.Transaction transaction);
 
     AttributeType.Boolean asBoolean();

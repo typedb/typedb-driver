@@ -82,11 +82,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public boolean isAttributeType() {
-        return true;
-    }
-
-    @Override
     public AttributeTypeImpl asAttributeType() {
         return this;
     }
@@ -221,11 +216,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                             .setValue(attributeValue(value)));
             final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
             return response.getResCase() == ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? AttributeImpl.of(response.getAttribute()) : null;
-        }
-
-        @Override
-        public boolean isAttributeType() {
-            return true;
         }
 
         @Override

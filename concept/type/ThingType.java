@@ -29,6 +29,11 @@ import java.util.stream.Stream;
 public interface ThingType extends Type {
 
     @Override
+    default boolean isThingType() {
+        return true;
+    }
+
+    @Override
     ThingType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends Type.Remote, ThingType {

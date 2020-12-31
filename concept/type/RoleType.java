@@ -30,6 +30,11 @@ public interface RoleType extends Type {
     String getScopedLabel();
 
     @Override
+    default boolean isRoleType() {
+        return true;
+    }
+
+    @Override
     RoleType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends Type.Remote, RoleType {
