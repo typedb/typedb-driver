@@ -85,13 +85,13 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public ThingTypeImpl getSupertype() {
-            TypeImpl supertype = super.getSupertype();
+            final TypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asThingType() : null;
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSupertypes() {
-            Stream<? extends TypeImpl> supertypes = super.getSupertypes();
+            final Stream<? extends TypeImpl> supertypes = super.getSupertypes();
             return supertypes.map(TypeImpl::asThingType);
         }
 
