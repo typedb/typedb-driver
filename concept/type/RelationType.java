@@ -28,6 +28,11 @@ import java.util.stream.Stream;
 public interface RelationType extends ThingType {
 
     @Override
+    default boolean isRelationType() {
+        return true;
+    }
+
+    @Override
     RelationType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends ThingType.Remote, RelationType {
@@ -49,9 +54,6 @@ public interface RelationType extends ThingType {
 
         @Override
         RelationType getSupertype();
-
-        @Override
-        Stream<? extends RelationType> getSupertypes();
 
         @Override
         Stream<? extends RelationType> getSubtypes();

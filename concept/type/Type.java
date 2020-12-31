@@ -34,6 +34,26 @@ public interface Type extends Concept {
     @CheckReturnValue
     boolean isRoot();
 
+    default boolean isThingType() {
+        return false;
+    }
+
+    default boolean isEntityType() {
+        return false;
+    }
+
+    default boolean isAttributeType() {
+        return false;
+    }
+
+    default boolean isRelationType() {
+        return false;
+    }
+
+    default boolean isRoleType() {
+        return false;
+    }
+
     @CheckReturnValue
     ThingType asThingType();
 

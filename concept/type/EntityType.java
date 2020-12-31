@@ -27,6 +27,11 @@ import java.util.stream.Stream;
 public interface EntityType extends ThingType {
 
     @Override
+    default boolean isEntityType() {
+        return true;
+    }
+
+    @Override
     EntityType.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends ThingType.Remote, EntityType {
@@ -37,9 +42,6 @@ public interface EntityType extends ThingType {
 
         @Override
         EntityType getSupertype();
-
-        @Override
-        Stream<? extends EntityType> getSupertypes();
 
         @Override
         Stream<? extends EntityType> getSubtypes();

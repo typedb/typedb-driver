@@ -37,6 +37,11 @@ public interface AttributeType extends ThingType {
     boolean isKeyable();
 
     @Override
+    default boolean isAttributeType() {
+        return true;
+    }
+
+    @Override
     AttributeType.Remote asRemote(Grakn.Transaction transaction);
 
     AttributeType.Boolean asBoolean();
@@ -121,9 +126,6 @@ public interface AttributeType extends ThingType {
         AttributeType getSupertype();
 
         @Override
-        Stream<? extends AttributeType> getSupertypes();
-
-        @Override
         Stream<? extends AttributeType> getSubtypes();
 
         @Override
@@ -165,9 +167,6 @@ public interface AttributeType extends ThingType {
             AttributeType.Boolean getSupertype();
 
             @Override
-            Stream<? extends AttributeType.Boolean> getSupertypes();
-
-            @Override
             Stream<? extends AttributeType.Boolean> getSubtypes();
 
             @Override
@@ -191,9 +190,6 @@ public interface AttributeType extends ThingType {
 
             @Override
             AttributeType.Long getSupertype();
-
-            @Override
-            Stream<? extends AttributeType.Long> getSupertypes();
 
             @Override
             Stream<? extends AttributeType.Long> getSubtypes();
@@ -221,9 +217,6 @@ public interface AttributeType extends ThingType {
             AttributeType.Double getSupertype();
 
             @Override
-            Stream<? extends AttributeType.Double> getSupertypes();
-
-            @Override
             Stream<? extends AttributeType.Double> getSubtypes();
 
             @Override
@@ -247,9 +240,6 @@ public interface AttributeType extends ThingType {
 
             @Override
             AttributeType.String getSupertype();
-
-            @Override
-            Stream<? extends AttributeType.String> getSupertypes();
 
             @Override
             Stream<? extends AttributeType.String> getSubtypes();
@@ -280,9 +270,6 @@ public interface AttributeType extends ThingType {
 
             @Override
             AttributeType.DateTime getSupertype();
-
-            @Override
-            Stream<? extends AttributeType.DateTime> getSupertypes();
 
             @Override
             Stream<? extends AttributeType.DateTime> getSubtypes();
