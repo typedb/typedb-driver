@@ -65,7 +65,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/integration/... --test_output=errors
+        bazel test //test/integration/... --test_output=streamed
       # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       image: graknlabs-ubuntu-20.04
@@ -74,7 +74,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test //test/behaviour/connection/... --test_output=streamed --jobs=1
-        bazel test //test/behaviour/concept/... --test_output=errors
+        bazel test //test/behaviour/concept/... --test_output=streamed
         bazel test //test/behaviour/graql/language/define/... --test_output=streamed
       # TODO: delete --jobs=1 if we fix the issue with excess memory usage
       # TODO: use --config=rbe once Grakn Core runs in RBE
