@@ -82,7 +82,7 @@ public final class ConceptManager {
     @CheckReturnValue
     public EntityType getEntityType(String label) {
         final ThingType thingType = getThingType(label);
-        if (thingType instanceof EntityType) return thingType.asEntityType();
+        if (thingType.isEntityType()) return thingType.asEntityType();
         else return null;
     }
 
@@ -98,7 +98,7 @@ public final class ConceptManager {
     @CheckReturnValue
     public RelationType getRelationType(String label) {
         final ThingType thingType = getThingType(label);
-        if (thingType instanceof RelationType) return thingType.asRelationType();
+        if (thingType.isRelationType()) return thingType.asRelationType();
         else return null;
     }
 
@@ -115,7 +115,7 @@ public final class ConceptManager {
     @CheckReturnValue
     public AttributeType getAttributeType(String label) {
         final ThingType thingType = getThingType(label);
-        if (thingType instanceof AttributeType) return thingType.asAttributeType();
+        if (thingType.isAttributeType()) return thingType.asAttributeType();
         else return null;
     }
 
