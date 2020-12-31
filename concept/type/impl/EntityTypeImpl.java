@@ -43,6 +43,11 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
+    public boolean isEntityType() {
+        return true;
+    }
+
+    @Override
     public EntityTypeImpl asEntityType() {
         return this;
     }
@@ -84,6 +89,11 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         @Override
         public final Stream<EntityImpl> getInstances() {
             return super.getInstances().map(ThingImpl::asEntity);
+        }
+
+        @Override
+        public boolean isEntityType() {
+            return true;
         }
 
         @Override

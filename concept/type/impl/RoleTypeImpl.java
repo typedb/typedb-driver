@@ -62,6 +62,11 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
+    public boolean isRoleType() {
+        return true;
+    }
+
+    @Override
     public RoleTypeImpl asRoleType() {
         return this;
     }
@@ -152,6 +157,11 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
                             ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()),
                     res -> res.getRoleTypeGetPlayersRes().getThingTypesList()
             ).map(TypeImpl::asThingType);
+        }
+
+        @Override
+        public boolean isRoleType() {
+            return true;
         }
 
         @Override
