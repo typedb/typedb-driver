@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.connection.database;
 
-import grakn.core.test.behaviour.BehaviourTest;
+import grakn.core.test.behaviour.DebugBehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
         features = "external/graknlabs_behaviour/connection/database.feature",
         tags = "not @ignore and not @ignore-client-java and not @ignore-grakn-2.0"
 )
-public class DatabaseTest extends BehaviourTest {
+public class DatabaseTest extends DebugBehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
