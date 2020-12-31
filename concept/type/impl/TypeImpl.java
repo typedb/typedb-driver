@@ -86,31 +86,6 @@ public abstract class TypeImpl implements Type {
     }
 
     @Override
-    public boolean isThingType() {
-        return false;
-    }
-
-    @Override
-    public boolean isEntityType() {
-        return false;
-    }
-
-    @Override
-    public boolean isAttributeType() {
-        return false;
-    }
-
-    @Override
-    public boolean isRelationType() {
-        return false;
-    }
-
-    @Override
-    public boolean isRoleType() {
-        return false;
-    }
-
-    @Override
     public TypeImpl asType() {
         return this;
     }
@@ -208,31 +183,6 @@ public abstract class TypeImpl implements Type {
             return execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeIsAbstractReq(ConceptProto.Type.IsAbstract.Req.getDefaultInstance()))
                     .getTypeIsAbstractRes().getAbstract();
-        }
-
-        @Override
-        public boolean isThingType() {
-            return false;
-        }
-
-        @Override
-        public boolean isEntityType() {
-            return false;
-        }
-
-        @Override
-        public boolean isAttributeType() {
-            return false;
-        }
-
-        @Override
-        public boolean isRelationType() {
-            return false;
-        }
-
-        @Override
-        public boolean isRoleType() {
-            return false;
         }
 
         @Override
