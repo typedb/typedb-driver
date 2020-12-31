@@ -52,22 +52,22 @@ public final class ConceptManager {
 
     @CheckReturnValue
     public ThingType getRootThingType() {
-        return getThingType(GraqlToken.Type.THING.toString()).asThingType();
+        return getThingType(GraqlToken.Type.THING.toString());
     }
 
     @CheckReturnValue
     public EntityType getRootEntityType() {
-        return getThingType(GraqlToken.Type.ENTITY.toString()).asEntityType();
+        return getEntityType(GraqlToken.Type.ENTITY.toString());
     }
 
     @CheckReturnValue
     public RelationType getRootRelationType() {
-        return getThingType(GraqlToken.Type.RELATION.toString()).asRelationType();
+        return getRelationType(GraqlToken.Type.RELATION.toString());
     }
 
     @CheckReturnValue
     public AttributeType getRootAttributeType() {
-        return getThingType(GraqlToken.Type.ATTRIBUTE.toString()).asAttributeType();
+        return getAttributeType(GraqlToken.Type.ATTRIBUTE.toString());
     }
 
     public EntityType putEntityType(String label) {
@@ -81,8 +81,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public EntityType getEntityType(String label) {
-        final Type type = getThingType(label);
-        if (type instanceof EntityType) return type.asEntityType();
+        final ThingType thingType = getThingType(label);
+        if (thingType instanceof EntityType) return thingType.asEntityType();
         else return null;
     }
 
@@ -97,8 +97,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public RelationType getRelationType(String label) {
-        final Type type = getThingType(label);
-        if (type instanceof RelationType) return type.asRelationType();
+        final ThingType thingType = getThingType(label);
+        if (thingType instanceof RelationType) return thingType.asRelationType();
         else return null;
     }
 
@@ -114,8 +114,8 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public AttributeType getAttributeType(String label) {
-        final Type type = getThingType(label);
-        if (type instanceof AttributeType) return type.asAttributeType();
+        final ThingType thingType = getThingType(label);
+        if (thingType instanceof AttributeType) return thingType.asAttributeType();
         else return null;
     }
 
