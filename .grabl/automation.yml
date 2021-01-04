@@ -34,19 +34,19 @@ build:
       branch: master
     build-analysis:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         SONARCLOUD_CODE_ANALYSIS_CREDENTIAL=$SONARCLOUD_CREDENTIAL \
           bazel run @graknlabs_dependencies//tool/sonarcloud:code-analysis -- \
           --project-key=graknlabs_client_java \
           --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
     dependency-analysis:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
@@ -55,13 +55,13 @@ build:
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     build-dependency:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         dependencies/maven/update.sh
         git diff --exit-code dependencies/maven/artifacts.snapshot
         bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- list
     test-integration:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
@@ -69,7 +69,7 @@ build:
       # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
@@ -85,7 +85,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      script: |
+      command: |
         export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
@@ -95,7 +95,7 @@ build:
       filter:
         owner: graknlabs
         branch: master
-      script: |
+      command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
@@ -112,11 +112,11 @@ release:
   validation:
     validate-dependencies:
       image: graknlabs-ubuntu-20.04
-      script: bazel test //:release-validate-deps --test_output=streamed
+      command: bazel test //:release-validate-deps --test_output=streamed
   deployment:
     deploy-github:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         pip install certifi
         export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @graknlabs_dependencies//tool/release:create-notes -- client-java $(cat VERSION) ./RELEASE_TEMPLATE.md
@@ -125,7 +125,7 @@ release:
     deploy-maven-release:
       image: graknlabs-ubuntu-20.04
       dependencies: [deploy-github]
-      script: |
+      command: |
         export DEPLOY_MAVEN_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run --define version=$(cat VERSION) //:deploy-maven -- release
