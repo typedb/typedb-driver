@@ -21,13 +21,11 @@ package grakn.client.concept.thing.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Entity;
-import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
@@ -41,16 +39,15 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
 import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.iid;
 import static grakn.client.concept.proto.ConceptProtoBuilder.thing;
 import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 import static grakn.common.util.Objects.className;
 
-public abstract class ThingImpl implements Thing {
+public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     private final String iid;
     // TODO: private final ThingType type;
@@ -83,33 +80,8 @@ public abstract class ThingImpl implements Thing {
     }
 
     @Override
-    public boolean isRemote() {
-        return false;
-    }
-
-    @Override
     public ThingImpl asThing() {
         return this;
-    }
-
-    @Override
-    public final TypeImpl asType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-    }
-
-    @Override
-    public EntityImpl asEntity() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
-    }
-
-    @Override
-    public AttributeImpl<?> asAttribute() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.class)));
-    }
-
-    @Override
-    public RelationImpl asRelation() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Relation.class)));
     }
 
     @Override
@@ -131,7 +103,7 @@ public abstract class ThingImpl implements Thing {
         return iid.hashCode();
     }
 
-    public abstract static class Remote implements Thing.Remote {
+    public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 
         final RPCTransaction rpcTransaction;
         private final String iid;
@@ -246,33 +218,8 @@ public abstract class ThingImpl implements Thing {
         }
 
         @Override
-        public final boolean isRemote() {
-            return true;
-        }
-
-        @Override
         public final ThingImpl.Remote asThing() {
             return this;
-        }
-
-        @Override
-        public final TypeImpl.Remote asType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Type.class)));
-        }
-
-        @Override
-        public EntityImpl.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
-        }
-
-        @Override
-        public RelationImpl.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Relation.class)));
-        }
-
-        @Override
-        public AttributeImpl.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.class)));
         }
 
         final Grakn.Transaction tx() {

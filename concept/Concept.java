@@ -21,8 +21,16 @@ package grakn.client.concept;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.thing.impl.ThingImpl;
+import grakn.client.concept.type.AttributeType;
+import grakn.client.concept.type.EntityType;
+import grakn.client.concept.type.RelationType;
+import grakn.client.concept.type.RoleType;
+import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.ConceptProto;
@@ -34,11 +42,75 @@ import static grakn.common.util.Objects.className;
 
 public interface Concept {
 
+    default boolean isType() {
+        return false;
+    }
+
+    default boolean isThingType() {
+        return false;
+    }
+
+    default boolean isEntityType() {
+        return false;
+    }
+
+    default boolean isAttributeType() {
+        return false;
+    }
+
+    default boolean isRelationType() {
+        return false;
+    }
+
+    default boolean isRoleType() {
+        return false;
+    }
+
+    default boolean isThing() {
+        return false;
+    }
+
+    default boolean isEntity() {
+        return false;
+    }
+
+    default boolean isAttribute() {
+        return false;
+    }
+
+    default boolean isRelation() {
+        return false;
+    }
+
     @CheckReturnValue
     Type asType();
 
     @CheckReturnValue
+    ThingType asThingType();
+
+    @CheckReturnValue
+    EntityType asEntityType();
+
+    @CheckReturnValue
+    AttributeType asAttributeType();
+
+    @CheckReturnValue
+    RelationType asRelationType();
+
+    @CheckReturnValue
+    RoleType asRoleType();
+
+    @CheckReturnValue
     Thing asThing();
+
+    @CheckReturnValue
+    Entity asEntity();
+
+    @CheckReturnValue
+    Attribute<?> asAttribute();
+
+    @CheckReturnValue
+    Relation asRelation();
 
     @CheckReturnValue
     Remote asRemote(Grakn.Transaction transaction);
@@ -57,6 +129,30 @@ public interface Concept {
         Type.Remote asType();
 
         @Override
+        ThingType.Remote asThingType();
+
+        @Override
+        EntityType.Remote asEntityType();
+
+        @Override
+        RelationType.Remote asRelationType();
+
+        @Override
+        AttributeType.Remote asAttributeType();
+
+        @Override
+        RoleType.Remote asRoleType();
+
+        @Override
         Thing.Remote asThing();
+
+        @Override
+        Entity.Remote asEntity();
+
+        @Override
+        Relation.Remote asRelation();
+
+        @Override
+        Attribute.Remote<?> asAttribute();
     }
 }

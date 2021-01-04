@@ -28,14 +28,12 @@ import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.attributeValue;
 import static grakn.common.util.Objects.className;
-import static java.util.stream.Collectors.toList;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 

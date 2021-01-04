@@ -551,8 +551,8 @@ public class GraqlSteps {
 
         public boolean check(Concept concept) {
             return concept instanceof Attribute
-                    && type.equals(concept.asThing().asAttribute().asRemote(tx()).getType().getLabel())
-                    && value.equals(concept.asThing().asAttribute().getValue().toString());
+                    && type.equals(concept.asAttribute().asRemote(tx()).getType().getLabel())
+                    && value.equals(concept.asAttribute().getValue().toString());
         }
     }
 

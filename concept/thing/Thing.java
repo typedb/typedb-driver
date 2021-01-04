@@ -31,12 +31,6 @@ public interface Thing extends Concept {
 
     String getIID();
 
-    Entity asEntity();
-
-    Attribute<?> asAttribute();
-
-    Relation asRelation();
-
     @Override
     Thing.Remote asRemote(Grakn.Transaction transaction);
 
@@ -67,17 +61,5 @@ public interface Thing extends Concept {
         Stream<? extends RoleType> getPlays();
 
         Stream<? extends Relation> getRelations(RoleType... roleTypes);
-
-        @Override
-        Thing.Remote asThing();
-
-        @Override
-        Entity.Remote asEntity();
-
-        @Override
-        Relation.Remote asRelation();
-
-        @Override
-        Attribute.Remote<?> asAttribute();
     }
 }
