@@ -30,6 +30,11 @@ import java.util.stream.Stream;
 public interface Relation extends Thing {
 
     @Override
+    default boolean isRelation() {
+        return true;
+    }
+
+    @Override
     Relation.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends Thing.Remote, Relation {

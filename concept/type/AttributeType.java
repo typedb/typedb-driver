@@ -41,9 +41,30 @@ public interface AttributeType extends ThingType {
         return true;
     }
 
+    default boolean isBoolean() {
+        return false;
+    }
+
+    default boolean isLong() {
+        return false;
+    }
+
+    default boolean isDouble() {
+        return false;
+    }
+
+    default boolean isString() {
+        return false;
+    }
+
+    default boolean isDateTime() {
+        return false;
+    }
+
     @Override
     AttributeType.Remote asRemote(Grakn.Transaction transaction);
 
+    // TODO: defaults
     AttributeType.Boolean asBoolean();
 
     AttributeType.Long asLong();
@@ -157,6 +178,11 @@ public interface AttributeType extends ThingType {
     interface Boolean extends AttributeType {
 
         @Override
+        default boolean isBoolean() {
+            return true;
+        }
+
+        @Override
         AttributeType.Boolean.Remote asRemote(Grakn.Transaction transaction);
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
@@ -180,6 +206,11 @@ public interface AttributeType extends ThingType {
     }
 
     interface Long extends AttributeType {
+
+        @Override
+        default boolean isLong() {
+            return true;
+        }
 
         @Override
         AttributeType.Long.Remote asRemote(Grakn.Transaction transaction);
@@ -207,6 +238,11 @@ public interface AttributeType extends ThingType {
     interface Double extends AttributeType {
 
         @Override
+        default boolean isDouble() {
+            return true;
+        }
+
+        @Override
         AttributeType.Double.Remote asRemote(Grakn.Transaction transaction);
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
@@ -230,6 +266,11 @@ public interface AttributeType extends ThingType {
     }
 
     interface String extends AttributeType {
+
+        @Override
+        default boolean isString() {
+            return true;
+        }
 
         @Override
         AttributeType.String.Remote asRemote(Grakn.Transaction transaction);
@@ -260,6 +301,11 @@ public interface AttributeType extends ThingType {
     }
 
     interface DateTime extends AttributeType {
+
+        @Override
+        default boolean isDateTime() {
+            return true;
+        }
 
         @Override
         AttributeType.DateTime.Remote asRemote(Grakn.Transaction transaction);

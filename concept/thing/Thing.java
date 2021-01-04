@@ -32,6 +32,11 @@ public interface Thing extends Concept {
     String getIID();
 
     @Override
+    default boolean isThing() {
+        return true;
+    }
+
+    @Override
     Thing.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends Concept.Remote, Thing {

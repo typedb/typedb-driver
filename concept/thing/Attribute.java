@@ -30,6 +30,12 @@ public interface Attribute<VALUE> extends Thing {
 
     VALUE getValue();
 
+    @Override
+    default boolean isAttribute() {
+        return true;
+    }
+
+    // TODO: make these default?
     Attribute.Boolean asBoolean();
 
     Attribute.Long asLong();
