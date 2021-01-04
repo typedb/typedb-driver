@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
-public class ConceptMap implements Answer {
+public class ConceptMap {
 
     private final Map<String, Concept> map;
 

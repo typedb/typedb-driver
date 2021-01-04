@@ -19,17 +19,11 @@
 
 package grakn.client.concept.answer;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.impl.ThingImpl;
-import grakn.client.concept.type.impl.TypeImpl;
-import grakn.protocol.AnswerProto;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
-public class AnswerGroup<T> implements Answer {
+public class AnswerGroup<T> {
 
     private final Concept owner;
     private final List<T> answers;
@@ -38,13 +32,6 @@ public class AnswerGroup<T> implements Answer {
         this.owner = owner;
         this.answers = answers;
     }
-
-//    public static AnswerGroup<? extends Answer> of(Transaction tx, AnswerProto.AnswerGroup res) {
-//        Concept concept;
-//        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
-//        else concept = TypeImpl.of(res.getOwner().getType());
-//        return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
-//    }
 
     public Concept owner() {
         return this.owner;
