@@ -54,6 +54,36 @@ public final class QueryManager {
         return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
+    public Stream<ConceptMap> match(GraqlMatch.Aggregate query) {
+        return match(query, new GraknOptions());
+    }
+
+    public Stream<ConceptMap> match(GraqlMatch.Aggregate query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchAggregateReq(
+                QueryProto.Query.MatchAggregate.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
+    }
+
+    public Stream<ConceptMap> match(GraqlMatch.Group query) {
+        return match(query, new GraknOptions());
+    }
+
+    public Stream<ConceptMap> match(GraqlMatch.Group query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupReq(
+                QueryProto.Query.MatchGroup.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
+    }
+
+    public Stream<ConceptMap> match(GraqlMatch.Group.Aggregate query) {
+        return match(query, new GraknOptions());
+    }
+
+    public Stream<ConceptMap> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
+                QueryProto.Query.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
+    }
+
     public Stream<ConceptMap> insert(GraqlInsert query) {
         return insert(query, new GraknOptions());
     }
