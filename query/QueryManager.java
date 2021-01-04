@@ -50,7 +50,7 @@ public final class QueryManager {
 
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
-                QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
+                QueryProto.Query.Match.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
@@ -60,7 +60,7 @@ public final class QueryManager {
 
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
-                QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
+                QueryProto.Query.Insert.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
@@ -69,7 +69,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Graql.Delete.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Query.Delete.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     public QueryFuture<Void> define(GraqlDefine query) {
@@ -77,7 +77,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> define(GraqlDefine query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setDefineReq(QueryProto.Graql.Define.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setDefineReq(QueryProto.Query.Define.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query) {
@@ -85,7 +85,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setUndefineReq(QueryProto.Graql.Undefine.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setUndefineReq(QueryProto.Query.Undefine.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     private QueryFuture<Void> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options) {
