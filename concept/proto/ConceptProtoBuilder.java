@@ -49,7 +49,7 @@ public abstract class ConceptProtoBuilder {
 
     public static ConceptProto.Concept concept(Concept concept) {
         final ConceptProto.Concept.Builder builder = ConceptProto.Concept.newBuilder();
-        if (concept instanceof Thing) {
+        if (concept.isThing()) {
             builder.setThing(thing(concept.asThing()));
         } else {
             builder.setType(type(concept.asType()));
@@ -69,7 +69,7 @@ public abstract class ConceptProtoBuilder {
                 .setLabel(type.getLabel())
                 .setEncoding(encoding(type));
 
-        if (type instanceof RoleType) {
+        if (type.isRoleType()) {
             builder.setScope(type.asRoleType().getScope());
         }
 
@@ -122,11 +122,11 @@ public abstract class ConceptProtoBuilder {
     }
 
     private static ConceptProto.Thing.Encoding encoding(Thing thing) {
-        if (thing instanceof Entity) {
+        if (thing.isEntity()) {
             return ConceptProto.Thing.Encoding.ENTITY;
-        } else if (thing instanceof Relation) {
+        } else if (thing.isRelation()) {
             return ConceptProto.Thing.Encoding.RELATION;
-        } else if (thing instanceof Attribute) {
+        } else if (thing.isAttribute()) {
             return ConceptProto.Thing.Encoding.ATTRIBUTE;
         } else {
             return ConceptProto.Thing.Encoding.UNRECOGNIZED;
@@ -134,15 +134,15 @@ public abstract class ConceptProtoBuilder {
     }
 
     private static ConceptProto.Type.Encoding encoding(Type type) {
-        if (type instanceof EntityType) {
+        if (type.isEntityType()) {
             return ConceptProto.Type.Encoding.ENTITY_TYPE;
-        } else if (type instanceof RelationType) {
+        } else if (type.isRelationType()) {
             return ConceptProto.Type.Encoding.RELATION_TYPE;
-        } else if (type instanceof AttributeType) {
+        } else if (type.isAttributeType()) {
             return ConceptProto.Type.Encoding.ATTRIBUTE_TYPE;
-        } else if (type instanceof RoleType) {
+        } else if (type.isRoleType()) {
             return ConceptProto.Type.Encoding.ROLE_TYPE;
-        } else if (type instanceof ThingType) {
+        } else if (type.isThingType()) {
             return ConceptProto.Type.Encoding.THING_TYPE;
         } else {
             return ConceptProto.Type.Encoding.UNRECOGNIZED;

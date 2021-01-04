@@ -520,7 +520,7 @@ public class GraqlSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (concept instanceof Type) {
+            if (concept.isType()) {
                 return label.equals(concept.asType().getLabel());
             }
 
@@ -550,9 +550,9 @@ public class GraqlSteps {
         }
 
         public boolean check(Concept concept) {
-            return concept instanceof Attribute
-                    && type.equals(concept.asThing().asAttribute().asRemote(tx()).getType().getLabel())
-                    && value.equals(concept.asThing().asAttribute().getValue().toString());
+            return concept.isAttribute()
+                    && type.equals(concept.asAttribute().asRemote(tx()).getType().getLabel())
+                    && value.equals(concept.asAttribute().getValue().toString());
         }
     }
 
@@ -563,7 +563,7 @@ public class GraqlSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (!(concept instanceof Thing)) { return false; }
+            if (!concept.isThing()) { return false; }
 
             final Set<Attribute<?>> keys = concept.asThing().asRemote(tx()).getHas(true).collect(Collectors.toSet());
 

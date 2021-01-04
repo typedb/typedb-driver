@@ -114,7 +114,11 @@ public class RPCTransaction implements Transaction {
         final TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
-        execute(commitReq);
+        try {
+            execute(commitReq);
+        } finally {
+            close();
+        }
     }
 
     @Override

@@ -34,40 +34,10 @@ public interface Type extends Concept {
     @CheckReturnValue
     boolean isRoot();
 
-    default boolean isThingType() {
-        return false;
+    @Override
+    default boolean isType() {
+        return true;
     }
-
-    default boolean isEntityType() {
-        return false;
-    }
-
-    default boolean isAttributeType() {
-        return false;
-    }
-
-    default boolean isRelationType() {
-        return false;
-    }
-
-    default boolean isRoleType() {
-        return false;
-    }
-
-    @CheckReturnValue
-    ThingType asThingType();
-
-    @CheckReturnValue
-    EntityType asEntityType();
-
-    @CheckReturnValue
-    AttributeType asAttributeType();
-
-    @CheckReturnValue
-    RelationType asRelationType();
-
-    @CheckReturnValue
-    RoleType asRoleType();
 
     @Override
     Remote asRemote(Grakn.Transaction transaction);
@@ -88,23 +58,5 @@ public interface Type extends Concept {
 
         @CheckReturnValue
         Stream<? extends Type> getSubtypes();
-
-        @Override
-        Type.Remote asType();
-
-        @Override
-        ThingType.Remote asThingType();
-
-        @Override
-        EntityType.Remote asEntityType();
-
-        @Override
-        RelationType.Remote asRelationType();
-
-        @Override
-        AttributeType.Remote asAttributeType();
-
-        @Override
-        RoleType.Remote asRoleType();
     }
 }

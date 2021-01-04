@@ -21,7 +21,14 @@ package grakn.client.concept.type.impl;
 
 import grakn.client.Grakn;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.impl.ConceptImpl;
+import grakn.client.concept.thing.Attribute;
+import grakn.client.concept.thing.Entity;
+import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
+import grakn.client.concept.thing.impl.AttributeImpl;
+import grakn.client.concept.thing.impl.EntityImpl;
+import grakn.client.concept.thing.impl.RelationImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
@@ -46,7 +53,7 @@ import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.concept.proto.ConceptProtoBuilder.type;
 import static grakn.common.util.Objects.className;
 
-public abstract class TypeImpl implements Type {
+public abstract class TypeImpl extends ConceptImpl implements Type {
 
     private final String label;
     private final boolean isRoot;
@@ -81,43 +88,8 @@ public abstract class TypeImpl implements Type {
     }
 
     @Override
-    public boolean isRemote() {
-        return false;
-    }
-
-    @Override
     public TypeImpl asType() {
         return this;
-    }
-
-    @Override
-    public ThingImpl asThing() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
-    }
-
-    @Override
-    public ThingTypeImpl asThingType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(ThingType.class)));
-    }
-
-    @Override
-    public EntityTypeImpl asEntityType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(EntityType.class)));
-    }
-
-    @Override
-    public AttributeTypeImpl asAttributeType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(AttributeType.class)));
-    }
-
-    @Override
-    public RelationTypeImpl asRelationType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RelationType.class)));
-    }
-
-    @Override
-    public RoleTypeImpl asRoleType() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RoleType.class)));
     }
 
     @Override
@@ -139,7 +111,7 @@ public abstract class TypeImpl implements Type {
         return hash;
     }
 
-    public abstract static class Remote implements Type.Remote {
+    public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
         final RPCTransaction rpcTransaction;
         private String label;
@@ -166,11 +138,6 @@ public abstract class TypeImpl implements Type {
         }
 
         @Override
-        public final boolean isRemote() {
-            return true;
-        }
-
-        @Override
         public final void setLabel(String label) {
             execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
@@ -188,11 +155,6 @@ public abstract class TypeImpl implements Type {
         @Override
         public TypeImpl.Remote asType() {
             return this;
-        }
-
-        @Override
-        public ThingImpl.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
         }
 
         @Override
@@ -218,6 +180,26 @@ public abstract class TypeImpl implements Type {
         @Override
         public RoleTypeImpl.Remote asRoleType() {
             throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(RoleType.class)));
+        }
+
+        @Override
+        public ThingImpl.Remote asThing() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Thing.class)));
+        }
+
+        @Override
+        public EntityImpl.Remote asEntity() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Entity.class)));
+        }
+
+        @Override
+        public AttributeImpl.Remote<?> asAttribute() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Attribute.class)));
+        }
+
+        @Override
+        public RelationImpl.Remote asRelation() {
+            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(className(this.getClass()), className(Relation.class)));
         }
 
         // We can't declare this in Type.Remote because then (for example) EntityTypeImpl.Remote would be expected to

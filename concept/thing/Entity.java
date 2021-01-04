@@ -25,6 +25,11 @@ import grakn.client.concept.type.EntityType;
 public interface Entity extends Thing {
 
     @Override
+    default boolean isEntity() {
+        return true;
+    }
+
+    @Override
     Entity.Remote asRemote(Grakn.Transaction transaction);
 
     interface Remote extends Thing.Remote, Entity {
