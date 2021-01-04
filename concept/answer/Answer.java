@@ -36,17 +36,17 @@ public interface Answer {
         throw new UnsupportedOperationException();
     }
 
-    static Answer of(Transaction tx, AnswerProto.Answer res) {
-        switch (res.getAnswerCase()) {
-            case ANSWER_GROUP:
-                return AnswerGroup.of(tx, res.getAnswerGroup());
-            case CONCEPT_MAP:
-                return ConceptMap.of(res.getConceptMap());
-            case ANSWER_NOT_SET:
-                throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
-            case NUMBER:
-            default:
-                throw new GraknClientException(BAD_ANSWER_TYPE.message(res.getAnswerCase()));
-        }
-    }
+//    static Answer of(Transaction tx, AnswerProto.Answer res) {
+//        switch (res.getAnswerCase()) {
+//            case ANSWER_GROUP:
+//                return AnswerGroup.of(tx, res.getAnswerGroup());
+//            case CONCEPT_MAP:
+//                return ConceptMap.of(res.getConceptMap());
+//            case ANSWER_NOT_SET:
+//                throw new GraknClientException(MISSING_ANSWER.message(className(AnswerProto.Answer.AnswerCase.class)));
+//            case NUMBER:
+//            default:
+//                throw new GraknClientException(BAD_ANSWER_TYPE.message(res.getAnswerCase()));
+//        }
+//    }
 }

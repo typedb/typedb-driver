@@ -39,12 +39,12 @@ public class AnswerGroup<T> implements Answer {
         this.answers = answers;
     }
 
-    public static AnswerGroup<? extends Answer> of(Transaction tx, AnswerProto.AnswerGroup res) {
-        Concept concept;
-        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
-        else concept = TypeImpl.of(res.getOwner().getType());
-        return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
-    }
+//    public static AnswerGroup<? extends Answer> of(Transaction tx, AnswerProto.AnswerGroup res) {
+//        Concept concept;
+//        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
+//        else concept = TypeImpl.of(res.getOwner().getType());
+//        return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
+//    }
 
     public Concept owner() {
         return this.owner;
