@@ -129,8 +129,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (this == o) return true;
         if (!(o instanceof AttributeTypeImpl)) return false;
         // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
-        // because it is possible to compare a attribute root types wrapped in different type classes
-        // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
+        // because it is possible to compare attribute root types wrapped in different type classes
+        // such as: root type wrapped in AttributeTypeImpl.Root and in AttributeTypeImpl.Boolean.Root
         // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
 
         final AttributeTypeImpl that = (AttributeTypeImpl) o;
