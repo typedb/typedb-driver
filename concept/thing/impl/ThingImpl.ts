@@ -49,17 +49,19 @@ import {
     LongAttributeImpl,
     StringAttributeImpl,
     GraknClientError,
-    ErrorMessage, EntityImpl, Bytes,
+    ErrorMessage, EntityImpl, Bytes, ConceptImpl, RemoteConceptImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import ValueClass = AttributeType.ValueClass;
 
-export abstract class ThingImpl implements Thing {
+export abstract class ThingImpl extends ConceptImpl implements Thing {
     private readonly _iid: string;
 
     protected constructor(iid: string) {
+        super();
+
         if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
     }
@@ -72,6 +74,10 @@ export abstract class ThingImpl implements Thing {
         return false;
     }
 
+    isThing(): boolean {
+        return true;
+    }
+
     toString(): string {
         return `${ThingImpl.name}[iid:${this._iid}]`;
     }
@@ -79,11 +85,13 @@ export abstract class ThingImpl implements Thing {
     abstract asRemote(transaction: Transaction): RemoteThing;
 }
 
-export abstract class RemoteThingImpl implements RemoteThing {
+export abstract class RemoteThingImpl extends RemoteConceptImpl implements RemoteThing {
     private readonly _iid: string;
     private readonly _rpcTransaction: RPCTransaction;
 
     protected constructor(transaction: Transaction, iid: string) {
+        super();
+
         if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
         if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
@@ -105,6 +113,10 @@ export abstract class RemoteThingImpl implements RemoteThing {
     }
 
     isRemote(): boolean {
+        return true;
+    }
+
+    isThing(): boolean {
         return true;
     }
 

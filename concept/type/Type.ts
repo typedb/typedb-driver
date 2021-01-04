@@ -30,11 +30,6 @@ export interface Type extends Concept {
     getLabel(): string;
     isRoot(): boolean;
 
-    isThingType(): boolean;
-    isAttributeType(): boolean;
-    isEntityType(): boolean;
-    isRelationType(): boolean;
-
     asRemote(transaction: Transaction): RemoteType;
 }
 

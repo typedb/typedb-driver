@@ -46,6 +46,10 @@ export class RelationImpl extends ThingImpl implements Relation {
     asRemote(transaction: Transaction): RemoteRelationImpl {
         return new RemoteRelationImpl(transaction, this.getIID());
     }
+
+    isRelation(): boolean {
+        return true;
+    }
 }
 
 export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
@@ -105,5 +109,9 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
                 .setPlayer(ConceptProtoBuilder.thing(player))
                 .setRoleType(ConceptProtoBuilder.type(roleType))
         ));
+    }
+
+    isRelation(): boolean {
+        return true;
     }
 }

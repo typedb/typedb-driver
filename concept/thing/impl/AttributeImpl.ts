@@ -56,6 +56,30 @@ export abstract class AttributeImpl<T extends ValueClass> extends ThingImpl impl
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
 
     abstract getValue(): T;
+
+    isBoolean(): boolean {
+        return false;
+    }
+
+    isString(): boolean {
+        return false;
+    }
+
+    isDouble(): boolean {
+        return false;
+    }
+
+    isLong(): boolean {
+        return false;
+    }
+
+    isDateTime(): boolean {
+        return false;
+    }
+
+    isAttribute(): boolean {
+        return true;
+    }
 }
 
 export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteThingImpl implements RemoteAttribute<T> {
@@ -73,6 +97,30 @@ export abstract class RemoteAttributeImpl<T extends ValueClass> extends RemoteTh
     async getType(): Promise<AttributeTypeImpl> {
         const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
         return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as AttributeTypeImpl;
+    }
+
+    isBoolean(): boolean {
+        return false;
+    }
+
+    isString(): boolean {
+        return false;
+    }
+
+    isDouble(): boolean {
+        return false;
+    }
+
+    isLong(): boolean {
+        return false;
+    }
+
+    isDateTime(): boolean {
+        return false;
+    }
+
+    isAttribute(): boolean {
+        return true;
     }
 
     abstract asRemote(transaction: Transaction): RemoteAttribute<T>;
@@ -99,6 +147,10 @@ export class BooleanAttributeImpl extends AttributeImpl<boolean> implements Bool
     getValue(): boolean {
         return this._value;
     }
+
+    isBoolean(): boolean {
+        return true;
+    }
 }
 
 export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> implements Merge<RemoteBooleanAttribute, BooleanAttribute> {
@@ -121,6 +173,10 @@ export class RemoteBooleanAttributeImpl extends RemoteAttributeImpl<boolean> imp
     asRemote(transaction: Transaction): RemoteBooleanAttributeImpl {
         return new RemoteBooleanAttributeImpl(transaction, this.getIID(), this._value);
     }
+
+    isBoolean(): boolean {
+        return true;
+    }
 }
 
 export class LongAttributeImpl extends AttributeImpl<number> implements LongAttribute {
@@ -141,6 +197,10 @@ export class LongAttributeImpl extends AttributeImpl<number> implements LongAttr
 
     getValue(): number {
         return this._value;
+    }
+
+    isLong(): boolean {
+        return true;
     }
 }
 
@@ -164,6 +224,10 @@ export class RemoteLongAttributeImpl extends RemoteAttributeImpl<number> impleme
     asRemote(transaction: Transaction): RemoteLongAttributeImpl {
         return new RemoteLongAttributeImpl(transaction, this.getIID(), this._value);
     }
+
+    isLong(): boolean {
+        return true;
+    }
 }
 
 export class DoubleAttributeImpl extends AttributeImpl<number> implements DoubleAttribute {
@@ -184,6 +248,10 @@ export class DoubleAttributeImpl extends AttributeImpl<number> implements Double
 
     getValue(): number {
         return this._value;
+    }
+
+    isDouble(): boolean {
+        return true;
     }
 }
 
@@ -208,6 +276,10 @@ export class RemoteDoubleAttributeImpl extends RemoteAttributeImpl<number> imple
     asRemote(transaction: Transaction): RemoteDoubleAttributeImpl {
         return new RemoteDoubleAttributeImpl(transaction, this.getIID(), this._value);
     }
+
+    isDouble(): boolean {
+        return true;
+    }
 }
 
 export class StringAttributeImpl extends AttributeImpl<string> implements StringAttribute {
@@ -228,6 +300,10 @@ export class StringAttributeImpl extends AttributeImpl<string> implements String
 
     getValue(): string {
         return this._value;
+    }
+
+    isString(): boolean {
+        return true;
     }
 }
 
@@ -251,6 +327,10 @@ export class RemoteStringAttributeImpl extends RemoteAttributeImpl<string> imple
     asRemote(transaction: Transaction): RemoteStringAttributeImpl {
         return new RemoteStringAttributeImpl(transaction, this.getIID(), this._value);
     }
+
+    isString(): boolean {
+        return true;
+    }
 }
 
 export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTimeAttribute {
@@ -271,6 +351,10 @@ export class DateTimeAttributeImpl extends AttributeImpl<Date> implements DateTi
 
     getValue(): Date {
         return this._value;
+    }
+
+    isDateTime(): boolean {
+        return true;
     }
 }
 
@@ -294,6 +378,10 @@ class RemoteDateTimeAttributeImpl extends RemoteAttributeImpl<Date> implements M
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeImpl {
         return new RemoteDateTimeAttributeImpl(transaction, this.getIID(), this._value);
+    }
+
+    isDateTime(): boolean {
+        return true;
     }
 }
 

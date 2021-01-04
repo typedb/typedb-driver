@@ -100,7 +100,11 @@ export class RPCTransaction implements Grakn.Transaction {
     public async commit(): Promise<void> {
         const commitReq = new TransactionProto.Transaction.Req()
             .setCommitReq(new TransactionProto.Transaction.Commit.Req());
-        await this.execute(commitReq);
+        try {
+            await this.execute(commitReq);
+        } finally {
+            await this.close();
+        }
     }
 
     public async rollback(): Promise<void> {

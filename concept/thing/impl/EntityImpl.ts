@@ -40,6 +40,10 @@ export class EntityImpl extends ThingImpl implements Entity {
     asRemote(transaction: Transaction): RemoteEntityImpl {
         return new RemoteEntityImpl(transaction, this.getIID());
     }
+
+    isEntity(): boolean {
+        return true;
+    }
 }
 
 export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
@@ -54,5 +58,9 @@ export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
     async getType(): Promise<EntityTypeImpl> {
         const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
         return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as EntityTypeImpl;
+    }
+
+    isEntity(): boolean {
+        return true;
     }
 }

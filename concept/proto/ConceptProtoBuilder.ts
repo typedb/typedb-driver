@@ -25,13 +25,7 @@ import {
     Thing,
     AttributeType,
     RoleTypeImpl,
-    EntityImpl,
-    RelationImpl,
-    AttributeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    AttributeTypeImpl,
-    ThingTypeImpl, GraknClientError, ErrorMessage, Bytes,
+    GraknClientError, ErrorMessage, Bytes,
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {
@@ -47,8 +41,8 @@ export namespace ConceptProtoBuilder {
             .setLabel(type.getLabel())
             .setEncoding(typeEncoding(type));
 
-        if (type instanceof RoleTypeImpl) {
-            typeProto.setScope(type.getScope());
+        if (type.isRoleType()) {
+            typeProto.setScope((type as RoleTypeImpl).getScope());
         }
 
         return typeProto;
@@ -97,11 +91,11 @@ export namespace ConceptProtoBuilder {
     }
 
     export function thingEncoding(thing: Thing): ConceptProto.Thing.Encoding {
-        if (thing instanceof EntityImpl) {
+        if (thing.isEntity()) {
             return ConceptProto.Thing.Encoding.ENTITY;
-        } else if (thing instanceof RelationImpl) {
+        } else if (thing.isRelation()) {
             return ConceptProto.Thing.Encoding.RELATION;
-        } else if (thing instanceof AttributeImpl) {
+        } else if (thing.isAttribute()) {
             return ConceptProto.Thing.Encoding.ATTRIBUTE;
         } else {
             throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
@@ -109,15 +103,15 @@ export namespace ConceptProtoBuilder {
     }
 
     export function typeEncoding(type: Type): ConceptProto.Type.Encoding {
-        if (type instanceof EntityTypeImpl) {
+        if (type.isEntityType()) {
             return ConceptProto.Type.Encoding.ENTITY_TYPE;
-        } else if (type instanceof RelationTypeImpl) {
+        } else if (type.isRelationType()) {
             return ConceptProto.Type.Encoding.RELATION_TYPE;
-        } else if (type instanceof AttributeTypeImpl) {
+        } else if (type.isAttributeType()) {
             return ConceptProto.Type.Encoding.ATTRIBUTE_TYPE;
-        } else if (type instanceof RoleTypeImpl) {
+        } else if (type.isRoleType()) {
             return ConceptProto.Type.Encoding.ROLE_TYPE;
-        } else if (type instanceof ThingTypeImpl) {
+        } else if (type.isThingType()) {
             return ConceptProto.Type.Encoding.THING_TYPE;
         } else {
             throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(type))

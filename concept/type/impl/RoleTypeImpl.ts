@@ -57,6 +57,10 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     toString(): string {
         return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
     }
+
+    isRoleType(): boolean {
+        return true;
+    }
 }
 
 export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRoleType {
@@ -119,5 +123,9 @@ export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRol
 
     toString(): string {
         return `${this.constructor.name}[label: ${this._scope ? `${this._scope}:${this.getLabel()}` : this.getLabel()}]`;
+    }
+
+    isRoleType(): boolean {
+        return true;
     }
 }

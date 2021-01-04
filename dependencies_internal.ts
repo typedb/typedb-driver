@@ -42,6 +42,9 @@ export * from "./concept/logic/Rule";
 /* concept.logic.impl */
 export * from "./concept/logic/impl/RuleImpl";
 
+/* concept.impl */
+export * from "./concept/impl/ConceptImpl";
+
 /* concept.thing */
 export * from "./concept/thing/Attribute";
 export * from "./concept/thing/Entity";

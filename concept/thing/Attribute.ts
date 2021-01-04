@@ -31,6 +31,12 @@ export interface Attribute<T extends ValueClass> extends Thing {
     getValue(): T;
 
     asRemote(transaction: Transaction): RemoteAttribute<T>;
+
+    isBoolean(): boolean;
+    isLong(): boolean;
+    isDouble(): boolean;
+    isString(): boolean;
+    isDateTime(): boolean;
 }
 
 export interface RemoteAttribute<T extends ValueClass> extends Merge<RemoteThing, Attribute<T>> {

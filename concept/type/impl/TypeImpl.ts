@@ -26,17 +26,18 @@ import {
     ThingImpl,
     ConceptProtoBuilder,
     GraknClientError,
-    ErrorMessage, RoleTypeImpl, ThingTypeImpl,
+    ErrorMessage, RoleTypeImpl, ThingTypeImpl, ConceptImpl, RemoteConceptImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;
 
-export abstract class TypeImpl implements Type {
+export abstract class TypeImpl extends ConceptImpl implements Type {
     private readonly _label: string;
     private readonly _root: boolean;
 
     protected constructor(label: string, root: boolean) {
+        super();
         if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
 
         this._label = label;
@@ -67,6 +68,10 @@ export abstract class TypeImpl implements Type {
         return this._root;
     }
 
+    isType(): boolean {
+        return true;
+    }
+
     isRemote(): boolean {
         return false;
     }
@@ -78,33 +83,18 @@ export abstract class TypeImpl implements Type {
     abstract asRemote(transaction: Transaction): RemoteType;
 }
 
-export abstract class RemoteTypeImpl implements RemoteType {
+export abstract class RemoteTypeImpl extends RemoteConceptImpl implements RemoteType {
     private readonly _rpcTransaction: RPCTransaction;
     private _label: string;
     private readonly _isRoot: boolean;
 
     protected constructor(transaction: Transaction, label: string, isRoot: boolean) {
+        super();
         if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
         if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
         this._rpcTransaction = transaction as RPCTransaction;
         this._label = label;
         this._isRoot = isRoot;
-    }
-
-    isThingType(): boolean {
-        return false;
-    }
-
-    isEntityType(): boolean {
-        return false;
-    }
-
-    isAttributeType(): boolean {
-        return false;
-    }
-
-    isRelationType(): boolean {
-        return false;
     }
 
     getLabel(): string {
@@ -113,6 +103,10 @@ export abstract class RemoteTypeImpl implements RemoteType {
 
     isRoot(): boolean {
         return this._isRoot;
+    }
+
+    isType(): boolean {
+        return true;
     }
 
     isRemote(): boolean {
