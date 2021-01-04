@@ -64,7 +64,6 @@ public interface AttributeType extends ThingType {
     @Override
     AttributeType.Remote asRemote(Grakn.Transaction transaction);
 
-    // TODO: defaults
     AttributeType.Boolean asBoolean();
 
     AttributeType.Long asLong();

@@ -35,7 +35,6 @@ public interface Attribute<VALUE> extends Thing {
         return true;
     }
 
-    // TODO: make these default?
     Attribute.Boolean asBoolean();
 
     Attribute.Long asLong();
