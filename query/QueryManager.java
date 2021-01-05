@@ -20,13 +20,11 @@
 package grakn.client.query;
 
 import grakn.client.GraknOptions;
-import grakn.client.concept.Concept;
-import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.impl.ConceptImpl;
+import grakn.client.concept.answer.ConceptMapGroup;
+import grakn.client.concept.answer.NumberGroup;
 import grakn.client.rpc.QueryFuture;
 import grakn.client.rpc.RPCTransaction;
-import grakn.protocol.AnswerProto;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.query.GraqlDefine;
@@ -35,9 +33,7 @@ import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlUndefine;
 
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static grakn.client.GraknProtoBuilder.options;
@@ -70,39 +66,30 @@ public final class QueryManager {
         return runQuery(request, options, res -> res.getQueryRes().getMatchAggregateRes().getAnswer().getValue());
     }
 
-    public Stream<AnswerGroup<ConceptMap>> match(GraqlMatch.Group query) {
+    public Stream<ConceptMapGroup> match(GraqlMatch.Group query) {
         return match(query, new GraknOptions());
     }
 
-    public Stream<AnswerGroup<ConceptMap>> match(GraqlMatch.Group query, GraknOptions options) {
+    public Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupReq(
                 QueryProto.Query.MatchGroup.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(
                 request, options,
-                res -> res.getQueryRes().getMatchGroupRes().getAnswersList().stream()
-                        .map(e -> {
-                            Concept owner = ConceptImpl.of(e.getOwner());
-                            List<ConceptMap> conceptMaps = e.getConceptMapsList().stream().map(ConceptMap::of).collect(Collectors.toList());
-                            return new AnswerGroup<>(owner, conceptMaps);
-                        })
+                res -> res.getQueryRes().getMatchGroupRes().getAnswersList().stream().map(ConceptMapGroup::of)
         );
     }
 
-    public Stream<AnswerGroup<String>> match(GraqlMatch.Group.Aggregate query) {
+    public Stream<NumberGroup> match(GraqlMatch.Group.Aggregate query) {
         return match(query, new GraknOptions());
     }
 
-    public Stream<AnswerGroup<String>> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
+    public Stream<NumberGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
                 QueryProto.Query.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(
                 request, options,
                 res -> res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().stream()
-                        .map(e -> {
-                            Concept owner = ConceptImpl.of(e.getOwner());
-                            List<String> conceptMaps = e.getNumbersList().stream().map(AnswerProto.Number::getValue).collect(Collectors.toList());
-                            return new AnswerGroup<>(owner, conceptMaps);
-                        })
+                        .map(NumberGroup::of)
         );
     }
 
