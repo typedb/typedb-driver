@@ -22,7 +22,7 @@ package grakn.client.test.behaviour.connection;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.rpc.GraknClient;
+import grakn.client.GraknClient;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;

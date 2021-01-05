@@ -22,7 +22,7 @@ package grakn.client.test.integration;
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
-import grakn.client.rpc.GraknClient;
+import grakn.client.GraknClient;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
