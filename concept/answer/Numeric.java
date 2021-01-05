@@ -5,6 +5,8 @@ import grakn.protocol.AnswerProto;
 
 import javax.annotation.Nullable;
 
+import static grakn.client.common.exception.ErrorMessage.Query.ILLEGAL_NUMERIC_CONVERSION;
+
 public class Numeric {
     @Nullable
     private final Long longValue;
@@ -22,7 +24,7 @@ public class Numeric {
                 return Numeric.ofLong(numeric.getLongValue());
             case DOUBLE_VALUE:
                 return Numeric.ofDouble(numeric.getDoubleValue());
-            case NAN_VALUE:
+            case NAN:
                 return Numeric.ofNan();
             default:
                 throw new GraknClientException("TODO");
@@ -55,17 +57,17 @@ public class Numeric {
 
     public long asLong() {
         if (isLong()) return longValue;
-        else throw new GraknClientException("TODO");
+        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Long.class));
     }
 
     public Double asDouble() {
         if (isDouble()) return doubleValue;
-        else throw new GraknClientException("TODO");
+        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Double.class));
     }
 
     public Number asNumber() {
         if (isLong()) return longValue;
         else if (isDouble()) return doubleValue;
-        else throw new GraknClientException("TODO");
+        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Number.class));
     }
 }
