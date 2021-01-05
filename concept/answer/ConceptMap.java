@@ -38,11 +38,9 @@ import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT
 public class ConceptMap implements Answer {
 
     private final Map<String, Concept> map;
-    private final Pattern queryPattern;
 
-    public ConceptMap(Map<String, Concept> map, Pattern queryPattern) {
+    public ConceptMap(Map<String, Concept> map) {
         this.map = Collections.unmodifiableMap(map);
-        this.queryPattern = queryPattern;
     }
 
     public static ConceptMap of(AnswerProto.ConceptMap res) {
@@ -53,12 +51,7 @@ public class ConceptMap implements Answer {
             else concept = TypeImpl.of(resConcept.getType());
             variableMap.put(resVar, concept);
         });
-        Pattern queryPattern = res.getPattern().equals("") ? null : Graql.parsePattern(res.getPattern());
-        return new ConceptMap(Collections.unmodifiableMap(variableMap), queryPattern);
-    }
-
-    public Pattern queryPattern() {
-        return queryPattern;
+        return new ConceptMap(Collections.unmodifiableMap(variableMap));
     }
 
     public Map<String, Concept> map() {

@@ -155,7 +155,6 @@ public abstract class ConceptProtoBuilder {
             ConceptProto.Concept conceptProto = concept(concept);
             conceptMapProto.putMap(var, conceptProto);
         });
-        conceptMapProto.setPattern(conceptMap.queryPattern().toString());
         return conceptMapProto.build();
     }
 }
