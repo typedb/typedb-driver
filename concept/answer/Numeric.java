@@ -25,7 +25,7 @@ public class Numeric {
             case DOUBLE_VALUE:
                 return Numeric.ofDouble(numeric.getDoubleValue());
             case NAN:
-                return Numeric.ofNan();
+                return Numeric.ofNaN();
             default:
                 throw new GraknClientException("TODO");
         }
@@ -39,7 +39,7 @@ public class Numeric {
         return new Numeric(null, value);
     }
 
-    private static Numeric ofNan() {
+    private static Numeric ofNaN() {
         return new Numeric(null, null);
     }
 
@@ -51,7 +51,7 @@ public class Numeric {
         return doubleValue != null;
     }
 
-    public boolean isNan() {
+    public boolean isNaN() {
         return !isLong() && !isDouble();
     }
 
