@@ -20,12 +20,10 @@
 package grakn.client.test.behaviour.graql;
 
 import grakn.client.concept.Concept;
-import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptMapGroup;
+import grakn.client.concept.answer.NumericGroup;
 import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.client.rpc.QueryFuture;
 import graql.lang.Graql;
 import graql.lang.query.GraqlDefine;
@@ -56,8 +54,8 @@ public class GraqlSteps {
 
     private static Stream<ConceptMap> answers;
     private static Number numericAnswer;
-    private static List<AnswerGroup<ConceptMap>> answerGroups;
-    private static List<AnswerGroup<Number>> numericAnswerGroups;
+    private static List<ConceptMapGroup> answerGroups;
+    private static List<NumericGroup> numericAnswerGroups;
     HashMap<String, UniquenessCheck> identifierChecks = new HashMap<>();
     HashMap<String, String> groupOwnerIdentifiers = new HashMap<>();
     private Map<String, Map<String, String>> rules;
@@ -272,7 +270,7 @@ public class GraqlSteps {
 //
 //        for (AnswerIdentifierGroup answerIdentifierGroup : answerIdentifierGroups) {
 //            String groupOwnerIdentifier = answerIdentifierGroup.groupOwnerIdentifier;
-//            AnswerGroup<ConceptMap> answerGroup = answerGroups.stream()
+//            ConceptMapGroup answerGroup = answerGroups.stream()
 //                    .filter(ag -> identifierChecks.get(groupOwnerIdentifier).check(ag.owner()))
 //                    .findAny()
 //                    .orElse(null);

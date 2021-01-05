@@ -41,11 +41,19 @@ import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
+import grakn.protocol.ConceptProto;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.common.util.Objects.className;
 
 public abstract class ConceptImpl implements Concept {
+
+    public static Concept of(ConceptProto.Concept owner) {
+        Concept concept;
+        if (owner.hasThing()) concept = ThingImpl.of(owner.getThing());
+        else concept = TypeImpl.of(owner.getType());
+        return concept;
+    }
 
     @Override
     public final boolean isRemote() {

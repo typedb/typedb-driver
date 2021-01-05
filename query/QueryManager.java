@@ -21,6 +21,9 @@ package grakn.client.query;
 
 import grakn.client.GraknOptions;
 import grakn.client.concept.answer.ConceptMap;
+import grakn.client.concept.answer.ConceptMapGroup;
+import grakn.client.concept.answer.Numeric;
+import grakn.client.concept.answer.NumericGroup;
 import grakn.client.rpc.QueryFuture;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.QueryProto;
@@ -50,8 +53,44 @@ public final class QueryManager {
 
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
-                QueryProto.Graql.Match.Req.newBuilder().setQuery(query.toString()));
+                QueryProto.Query.Match.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
+    }
+
+    public QueryFuture<Numeric> match(GraqlMatch.Aggregate query) {
+        return match(query, new GraknOptions());
+    }
+
+    public QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchAggregateReq(
+                QueryProto.Query.MatchAggregate.Req.newBuilder().setQuery(query.toString()));
+        return runQuery(request, options, res -> Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
+    }
+
+    public Stream<ConceptMapGroup> match(GraqlMatch.Group query) {
+        return match(query, new GraknOptions());
+    }
+
+    public Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupReq(
+                QueryProto.Query.MatchGroup.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(
+                request, options,
+                res -> res.getQueryRes().getMatchGroupRes().getAnswersList().stream().map(ConceptMapGroup::of)
+        );
+    }
+
+    public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query) {
+        return match(query, new GraknOptions());
+    }
+
+    public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
+        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
+                QueryProto.Query.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(
+                request, options,
+                res -> res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().stream().map(NumericGroup::of)
+        );
     }
 
     public Stream<ConceptMap> insert(GraqlInsert query) {
@@ -60,7 +99,7 @@ public final class QueryManager {
 
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
-                QueryProto.Graql.Insert.Req.newBuilder().setQuery(query.toString()));
+                QueryProto.Query.Insert.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
@@ -69,7 +108,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Graql.Delete.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Query.Delete.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     public QueryFuture<Void> define(GraqlDefine query) {
@@ -77,7 +116,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> define(GraqlDefine query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setDefineReq(QueryProto.Graql.Define.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setDefineReq(QueryProto.Query.Define.Req.newBuilder().setQuery(query.toString())), options);
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query) {
@@ -85,7 +124,13 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setUndefineReq(QueryProto.Graql.Undefine.Req.newBuilder().setQuery(query.toString())), options);
+        return runQuery(QueryProto.Query.Req.newBuilder().setUndefineReq(QueryProto.Query.Undefine.Req.newBuilder().setQuery(query.toString())), options);
+    }
+
+    private <T> QueryFuture<T> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options, Function<TransactionProto.Transaction.Res, T> mapper) {
+        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+                .setQueryReq(request.setOptions(options(options)));
+        return rpcTransaction.executeAsync(req, mapper);
     }
 
     private QueryFuture<Void> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options) {

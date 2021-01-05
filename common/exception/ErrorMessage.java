@@ -78,6 +78,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Query(3, "The answer type '%s' was not recognised.");
         public static final Query MISSING_ANSWER =
                 new Query(4, "The required field 'answer' of type '%s' was not set.");
+        public static final Query ILLEGAL_CAST =
+                new Query(5, "Illegal casting operation to '%s'.");
 
         private static final String codePrefix = "QRY";
         private static final String messagePrefix = "Query Error";

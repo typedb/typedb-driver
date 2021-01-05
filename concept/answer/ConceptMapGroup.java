@@ -19,55 +19,50 @@
 
 package grakn.client.concept.answer;
 
-import grakn.client.Grakn.Transaction;
 import grakn.client.concept.Concept;
-import grakn.client.concept.thing.impl.ThingImpl;
-import grakn.client.concept.type.impl.TypeImpl;
+import grakn.client.concept.impl.ConceptImpl;
 import grakn.protocol.AnswerProto;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
-public class AnswerGroup<T> implements Answer {
-
+public class ConceptMapGroup {
     private final Concept owner;
-    private final List<T> answers;
+    private final List<ConceptMap> conceptMaps;
+    private final int hash;
 
-    public AnswerGroup(Concept owner, List<T> answers) {
+    public ConceptMapGroup(Concept owner, List<ConceptMap> conceptMaps) {
         this.owner = owner;
-        this.answers = answers;
+        this.conceptMaps = conceptMaps;
+        this.hash = Objects.hash(this.owner, this.conceptMaps);
     }
 
-    public static AnswerGroup<? extends Answer> of(Transaction tx, AnswerProto.AnswerGroup res) {
-        Concept concept;
-        if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
-        else concept = TypeImpl.of(res.getOwner().getType());
-        return new AnswerGroup<>(concept, res.getAnswersList().stream().map(answer -> Answer.of(tx, answer)).collect(toList()));
+    public static ConceptMapGroup of(AnswerProto.ConceptMapGroup e) {
+        Concept owner = ConceptImpl.of(e.getOwner());
+        List<ConceptMap> conceptMaps = e.getConceptMapsList().stream().map(ConceptMap::of).collect(Collectors.toList());
+        return new ConceptMapGroup(owner, conceptMaps);
     }
 
     public Concept owner() {
         return this.owner;
     }
 
-    public List<T> answers() {
-        return this.answers;
+    public List<ConceptMap> conceptMaps() {
+        return this.conceptMaps;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        AnswerGroup<?> a2 = (AnswerGroup<?>) obj;
+        ConceptMapGroup a2 = (ConceptMapGroup) obj;
         return this.owner.equals(a2.owner) &&
-                this.answers.equals(a2.answers);
+                this.conceptMaps.equals(a2.conceptMaps);
     }
 
     @Override
     public int hashCode() {
-        int hash = owner.hashCode();
-        hash = 31 * hash + answers.hashCode();
-
         return hash;
     }
 }
