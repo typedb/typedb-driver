@@ -22,7 +22,8 @@ package grakn.client.query;
 import grakn.client.GraknOptions;
 import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.answer.ConceptMapGroup;
-import grakn.client.concept.answer.NumberGroup;
+import grakn.client.concept.answer.Numeric;
+import grakn.client.concept.answer.NumericGroup;
 import grakn.client.rpc.QueryFuture;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.QueryProto;
@@ -56,14 +57,14 @@ public final class QueryManager {
         return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
-    public QueryFuture<String> match(GraqlMatch.Aggregate query) {
+    public QueryFuture<Numeric> match(GraqlMatch.Aggregate query) {
         return match(query, new GraknOptions());
     }
 
-    public QueryFuture<String> match(GraqlMatch.Aggregate query, GraknOptions options) {
+    public QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchAggregateReq(
                 QueryProto.Query.MatchAggregate.Req.newBuilder().setQuery(query.toString()));
-        return runQuery(request, options, res -> res.getQueryRes().getMatchAggregateRes().getAnswer().getValue());
+        return runQuery(request, options, res -> Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
     }
 
     public Stream<ConceptMapGroup> match(GraqlMatch.Group query) {
@@ -79,17 +80,16 @@ public final class QueryManager {
         );
     }
 
-    public Stream<NumberGroup> match(GraqlMatch.Group.Aggregate query) {
+    public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query) {
         return match(query, new GraknOptions());
     }
 
-    public Stream<NumberGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
+    public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
         final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
                 QueryProto.Query.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(
                 request, options,
-                res -> res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().stream()
-                        .map(NumberGroup::of)
+                res -> res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().stream().map(NumericGroup::of)
         );
     }
 

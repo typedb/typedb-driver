@@ -22,7 +22,7 @@ package grakn.client.test.behaviour.graql;
 import grakn.client.concept.Concept;
 import grakn.client.concept.answer.ConceptMap;
 import grakn.client.concept.answer.ConceptMapGroup;
-import grakn.client.concept.answer.NumberGroup;
+import grakn.client.concept.answer.NumericGroup;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.rpc.QueryFuture;
 import graql.lang.Graql;
@@ -55,7 +55,7 @@ public class GraqlSteps {
     private static Stream<ConceptMap> answers;
     private static Number numericAnswer;
     private static List<ConceptMapGroup> answerGroups;
-    private static List<NumberGroup> numericAnswerGroups;
+    private static List<NumericGroup> numericAnswerGroups;
     HashMap<String, UniquenessCheck> identifierChecks = new HashMap<>();
     HashMap<String, String> groupOwnerIdentifiers = new HashMap<>();
     private Map<String, Map<String, String>> rules;
