@@ -24,15 +24,18 @@ import grakn.client.concept.impl.ConceptImpl;
 import grakn.protocol.AnswerProto;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ConceptMapGroup {
     private final Concept owner;
     private final List<ConceptMap> conceptMaps;
+    private final int hash;
 
     public ConceptMapGroup(Concept owner, List<ConceptMap> conceptMaps) {
         this.owner = owner;
         this.conceptMaps = conceptMaps;
+        this.hash = Objects.hash(this.owner, this.conceptMaps);
     }
 
     public static ConceptMapGroup of(AnswerProto.ConceptMapGroup e) {
@@ -60,9 +63,6 @@ public class ConceptMapGroup {
 
     @Override
     public int hashCode() {
-        int hash = owner.hashCode();
-        hash = 31 * hash + conceptMaps.hashCode();
-
         return hash;
     }
 }

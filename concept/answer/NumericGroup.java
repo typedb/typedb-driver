@@ -23,13 +23,17 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.impl.ConceptImpl;
 import grakn.protocol.AnswerProto;
 
+import java.util.Objects;
+
 public class NumericGroup {
     private final Concept owner;
     private final Numeric numeric;
+    private final int hash;
 
     private NumericGroup(Concept owner, Numeric numeric) {
         this.owner = owner;
         this.numeric = numeric;
+        this.hash = Objects.hash(this.owner, this.numeric);
     }
 
     public static NumericGroup of(AnswerProto.NumericGroup numericGroup) {
@@ -55,9 +59,6 @@ public class NumericGroup {
 
     @Override
     public int hashCode() {
-        int hash = owner.hashCode();
-        hash = 31 * hash + numeric.hashCode();
-
         return hash;
     }
 }
