@@ -23,12 +23,10 @@ import grakn.client.GraknOptions;
 import grakn.client.concept.Concept;
 import grakn.client.concept.answer.AnswerGroup;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.thing.impl.ThingImpl;
-import grakn.client.concept.type.impl.TypeImpl;
+import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.rpc.QueryFuture;
 import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.AnswerProto;
-import grakn.protocol.ConceptProto;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.query.GraqlDefine;
@@ -83,7 +81,7 @@ public final class QueryManager {
                 request, options,
                 res -> res.getQueryRes().getMatchGroupRes().getAnswersList().stream()
                         .map(e -> {
-                            Concept owner = concept(e.getOwner());
+                            Concept owner = ConceptImpl.of(e.getOwner());
                             List<ConceptMap> conceptMaps = e.getConceptMapsList().stream().map(ConceptMap::of).collect(Collectors.toList());
                             return new AnswerGroup<>(owner, conceptMaps);
                         })
@@ -101,7 +99,7 @@ public final class QueryManager {
                 request, options,
                 res -> res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().stream()
                         .map(e -> {
-                            Concept owner = concept(e.getOwner());
+                            Concept owner = ConceptImpl.of(e.getOwner());
                             List<String> conceptMaps = e.getNumbersList().stream().map(AnswerProto.Number::getValue).collect(Collectors.toList());
                             return new AnswerGroup<>(owner, conceptMaps);
                         })
@@ -159,12 +157,5 @@ public final class QueryManager {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return rpcTransaction.stream(req, responseReader);
-    }
-
-    private Concept concept(ConceptProto.Concept owner) {
-        Concept concept;
-        if (owner.hasThing()) concept = ThingImpl.of(owner.getThing());
-        else concept = TypeImpl.of(owner.getType());
-        return concept;
     }
 }
