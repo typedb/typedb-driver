@@ -17,12 +17,13 @@
  * under the License.
  */
 
-package grakn.client.rpc;
+package grakn.client;
 
 import grakn.client.Grakn.Client;
 import grakn.client.Grakn.DatabaseManager;
 import grakn.client.Grakn.Session;
-import grakn.client.GraknOptions;
+import grakn.client.rpc.RPCDatabaseManager;
+import grakn.client.rpc.RPCSession;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -74,7 +75,7 @@ public class GraknClient implements Client {
         }
     }
 
-    Channel channel() {
+    public Channel channel() {
         return channel;
     }
 }

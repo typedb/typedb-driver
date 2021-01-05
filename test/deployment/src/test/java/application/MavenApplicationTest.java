@@ -23,7 +23,7 @@ import grakn.client.Grakn;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.concept.type.ThingType;
-import grakn.client.rpc.GraknClient;
+import grakn.client.GraknClient;
 import org.junit.Test;
 
 import java.util.stream.Collectors;

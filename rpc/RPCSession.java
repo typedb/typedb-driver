@@ -22,6 +22,7 @@ package grakn.client.rpc;
 import com.google.protobuf.ByteString;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
+import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
@@ -43,7 +44,7 @@ public class RPCSession implements Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
+    public RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
         this.channel = client.channel();
         this.database = database;
         this.type = type;
