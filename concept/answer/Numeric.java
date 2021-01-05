@@ -5,7 +5,7 @@ import grakn.protocol.AnswerProto;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.exception.ErrorMessage.Query.ILLEGAL_NUMERIC_CONVERSION;
+import static grakn.client.common.exception.ErrorMessage.Query.ILLEGAL_CAST;
 
 public class Numeric {
     @Nullable
@@ -57,17 +57,17 @@ public class Numeric {
 
     public long asLong() {
         if (isLong()) return longValue;
-        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Long.class));
+        else throw new GraknClientException(ILLEGAL_CAST.message(Long.class));
     }
 
     public Double asDouble() {
         if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Double.class));
+        else throw new GraknClientException(ILLEGAL_CAST.message(Double.class));
     }
 
     public Number asNumber() {
         if (isLong()) return longValue;
         else if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_NUMERIC_CONVERSION.message(Number.class));
+        else throw new GraknClientException(ILLEGAL_CAST.message(Number.class));
     }
 }
