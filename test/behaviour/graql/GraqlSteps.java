@@ -44,11 +44,8 @@ import java.util.stream.Stream;
 
 import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
@@ -82,6 +79,11 @@ public class GraqlSteps {
     public QueryFuture<Void> graql_undefine(String undefineQueryStatements) {
         final GraqlUndefine graqlQuery = Graql.parseQuery(String.join("\n", undefineQueryStatements));
         return tx().query().undefine(graqlQuery);
+    }
+
+    @Given("graql define; throws exception containing {string}")
+    public void graql_define_throws_exception(String exception, String defineQueryStatements) {
+        assertThrowsWithMessage(() -> graql_define(defineQueryStatements), exception);
     }
 
     @Given("graql undefine; throws exception")
