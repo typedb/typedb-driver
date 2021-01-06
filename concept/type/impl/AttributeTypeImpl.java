@@ -163,13 +163,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             super.setSupertype(attributeType);
         }
 
-        @Nullable
-        @Override
-        public AttributeTypeImpl getSupertype() {
-            final ThingTypeImpl supertype = super.getSupertype();
-            return supertype != null ? supertype.asAttributeType() : null;
-        }
-
         @Override
         public Stream<? extends AttributeTypeImpl> getSubtypes() {
             final Stream<AttributeTypeImpl> stream = super.getSubtypes().map(TypeImpl::asAttributeType);
@@ -317,12 +310,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final AttributeTypeImpl.Boolean getSupertype() {
-                final AttributeTypeImpl supertype = super.getSupertype();
-                return supertype != null ? supertype.asBoolean() : null;
-            }
-
-            @Override
             public final Stream<AttributeTypeImpl.Boolean> getSubtypes() {
                 return super.getSubtypes().map(AttributeTypeImpl::asBoolean);
             }
@@ -395,12 +382,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Override
             public AttributeTypeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
                 return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public final AttributeTypeImpl.Long getSupertype() {
-                final AttributeTypeImpl supertype = super.getSupertype();
-                return supertype != null ? supertype.asLong() : null;
             }
 
             @Override
@@ -479,12 +460,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public final AttributeTypeImpl.Double getSupertype() {
-                final AttributeTypeImpl supertype = super.getSupertype();
-                return supertype != null ? supertype.asDouble() : null;
-            }
-
-            @Override
             public final Stream<AttributeTypeImpl.Double> getSubtypes() {
                 return super.getSubtypes().map(AttributeTypeImpl::asDouble);
             }
@@ -557,12 +532,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Override
             public AttributeTypeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
                 return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public final AttributeTypeImpl.String getSupertype() {
-                final AttributeTypeImpl supertype = super.getSupertype();
-                return supertype != null ? supertype.asString() : null;
             }
 
             @Override
@@ -656,12 +625,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Override
             public AttributeTypeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
                 return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
-            }
-
-            @Override
-            public final AttributeTypeImpl.DateTime getSupertype() {
-                final AttributeTypeImpl supertype = super.getSupertype();
-                return supertype != null ? supertype.asDateTime() : null;
             }
 
             @Override

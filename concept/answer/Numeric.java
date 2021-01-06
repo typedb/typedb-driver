@@ -24,6 +24,7 @@ import grakn.protocol.AnswerProto;
 
 import javax.annotation.Nullable;
 
+import static grakn.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
 import static grakn.client.common.exception.ErrorMessage.Query.ILLEGAL_CAST;
 
 public class Numeric {
@@ -46,7 +47,7 @@ public class Numeric {
             case NAN:
                 return Numeric.ofNaN();
             default:
-                throw new GraknClientException("TODO");
+                throw new GraknClientException(BAD_ANSWER_TYPE.message(numeric.getValueCase()));
         }
     }
 

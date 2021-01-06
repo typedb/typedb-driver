@@ -44,11 +44,8 @@ import java.util.stream.Stream;
 
 import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class GraqlSteps {
 
@@ -84,6 +81,11 @@ public class GraqlSteps {
         return tx().query().undefine(graqlQuery);
     }
 
+    @Given("graql define; throws exception containing {string}")
+    public void graql_define_throws_exception(String exception, String defineQueryStatements) {
+        assertThrowsWithMessage(() -> graql_define(defineQueryStatements), exception);
+    }
+
     @Given("graql undefine; throws exception")
     public void graql_undefine_throws(String undefineQueryStatements) {
         assertThrows(() -> graql_undefine(undefineQueryStatements).get());
@@ -98,6 +100,11 @@ public class GraqlSteps {
     @Given("graql insert; throws exception")
     public void graql_insert_throws(String insertQueryStatements) {
         assertThrows(() -> graql_insert(insertQueryStatements));
+    }
+
+    @Given("graql insert; throws exception containing {string}")
+    public void graql_insert_throws_exception(String exception, String insertQueryStatements) {
+        assertThrowsWithMessage(() -> graql_insert(insertQueryStatements), exception);
     }
 
     @Given("graql delete")

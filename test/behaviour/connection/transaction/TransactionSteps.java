@@ -40,6 +40,7 @@ import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToT
 import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsToTransactionsParallel;
 import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static grakn.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -53,12 +54,12 @@ public class TransactionSteps {
     // sequential sessions, sequential transactions //
     // =============================================//
 
-    @When("session open(s) transaction of type: {transaction_type}")
+    @When("(for each )session(,) open(s) transaction(s) of type: {transaction_type}")
     public void session_opens_transaction_of_type(Transaction.Type type) {
         for_each_session_open_transactions_of_type(list(type));
     }
 
-    @When("for each session, open transaction(s) of type:")
+    @When("(for each )session(,) open transaction(s) of type:")
     public void for_each_session_open_transactions_of_type(List<Transaction.Type> types) {
         for (Session session : sessions) {
             List<Transaction> transactions = new ArrayList<>();
@@ -70,7 +71,12 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, open transaction(s) of type; throws exception")
+    @When("(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}")
+    public void for_each_session_open_transactions_of_type_throws_exception(Transaction.Type type) {
+        for_each_session_open_transactions_of_type_throws_exception(list(type));
+    }
+
+    @Then("(for each )session(,) open transaction(s) of type; throws exception")
     public void for_each_session_open_transactions_of_type_throws_exception(List<Transaction.Type> types) {
         for (Session session : sessions) {
             for (Transaction.Type type : types) {
@@ -79,12 +85,12 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transaction(s) is/are null: {bool}")
+    @Then("(for each )session(,) transaction(s) is/are null: {bool}")
     public void for_each_session_transactions_are_null(boolean isNull) {
         for_each_session_transactions_are(transaction -> assertEquals(isNull, isNull(transaction)));
     }
 
-    @Then("for each session, transaction(s) is/are open: {bool}")
+    @Then("(for each )session(,) transaction(s) is/are open: {bool}")
     public void for_each_session_transactions_are_open(boolean isOpen) {
         for_each_session_transactions_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
@@ -99,7 +105,12 @@ public class TransactionSteps {
         assertThrows(() -> sessionsToTransactions.get(sessions.get(0)).get(0).commit());
     }
 
-    @Then("for each session, transaction(s) commit(s)")
+    @Then("transaction commits; throws exception containing {string}")
+    public void transaction_commits_throws_exception(String exception) {
+        assertThrowsWithMessage(() -> sessionsToTransactions.get(sessions.get(0)).get(0).commit(), exception);
+    }
+
+    @Then("(for each )session(,) transaction(s) commit(s)")
     public void for_each_session_transactions_commit() {
         for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
@@ -108,7 +119,7 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transaction(s) commit(s); throws exception")
+    @Then("(for each )session(,) transaction(s) commit(s); throws exception")
     public void for_each_session_transactions_commits_throws_exception() {
         for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
@@ -117,7 +128,7 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transaction close(s)")
+    @Then("(for each )session(,) transaction close(s)")
     public void for_each_session_transaction_closes() {
         for (Session session : sessions) {
             for (Transaction transaction : sessionsToTransactions.get(session)) {
@@ -134,7 +145,12 @@ public class TransactionSteps {
         }
     }
 
-    @Then("for each session, transaction(s) has/have type:")
+    @Then("(for each )session(,) transaction(s) has/have type: {transaction_type}")
+    public void for_each_session_transactions_have_type(Transaction.Type type) {
+        for_each_session_transactions_have_type(list(type));
+    }
+
+    @Then("(for each )session(,) transaction(s) has/have type:")
     public void for_each_session_transactions_have_type(List<Transaction.Type> types) {
         for (Session session : sessions) {
             List<Transaction> transactions = sessionsToTransactions.get(session);
