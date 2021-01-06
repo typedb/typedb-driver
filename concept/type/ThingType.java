@@ -50,9 +50,6 @@ public interface ThingType extends Type {
         @CheckReturnValue
         Stream<? extends Thing> getInstances();
 
-        @Override
-        void setLabel(String label);
-
         void setAbstract();
 
         void unsetAbstract();
