@@ -18,14 +18,14 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "util",
     srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
-        # Internal Package Dependencies
-        "//:client-java",
 
         # Internal Repository Dependencies
         # "@graknlabs_common//:common",
@@ -33,7 +33,6 @@ java_library(
         # External Maven Dependencies
         "@maven//:junit_junit",
     ],
-    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
