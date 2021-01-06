@@ -31,18 +31,18 @@ build:
       branch: master
     dependency-analysis:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         bazel run @graknlabs_dependencies//grabl/analysis:dependency-analysis
   correctness:
     build:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         bazel build //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)')
     test:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         ./test/start-server.sh
         ./test/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/stop-server.sh
@@ -52,7 +52,7 @@ build:
         owner: graknlabs
         branch: master
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
@@ -68,7 +68,7 @@ build:
         owner: graknlabs
         branch: master
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         ./test/start-server.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
@@ -85,11 +85,11 @@ release:
   validation:
     validate-dependencies:
       image: graknlabs-ubuntu-20.04
-      script: bazel test //:release-validate-nodejs-deps --test_output=streamed
+      command: bazel test //:release-validate-nodejs-deps --test_output=streamed
   deployment:
     deploy-github:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         pip install certifi
         export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @graknlabs_dependencies//tool/release:create-notes -- client-nodejs $(cat VERSION) ./RELEASE_TEMPLATE.md
@@ -97,7 +97,7 @@ release:
         bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-npm-release:
       image: graknlabs-ubuntu-20.04
-      script: |
+      command: |
         export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
