@@ -38,6 +38,7 @@ public class Util {
             function.run();
             fail();
         } catch (RuntimeException e) {
+            System.out.println(e.toString());
             assert (e.toString().contains(message));
         }
     }

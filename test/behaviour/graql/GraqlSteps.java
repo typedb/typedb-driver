@@ -102,6 +102,11 @@ public class GraqlSteps {
         assertThrows(() -> graql_insert(insertQueryStatements));
     }
 
+    @Given("graql insert; throws exception containing {string}")
+    public void graql_insert_throws_exception(String exception, String insertQueryStatements) {
+        assertThrowsWithMessage(() -> graql_insert(insertQueryStatements), exception);
+    }
+
     @Given("graql delete")
     public QueryFuture<Void> graql_delete(String deleteQueryStatements) {
         final GraqlDelete graqlQuery = Graql.parseQuery(String.join("\n", deleteQueryStatements));
