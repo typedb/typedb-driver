@@ -98,5 +98,6 @@ export namespace ErrorMessage {
         export const NO_EXPLANATION = new Query(2, () => `No explanation was found.`);
         export const BAD_ANSWER_TYPE = new Query(3, (args: Stringable[]) => `The answer '${args[0]}' was not recognised.`);
         export const MISSING_ANSWER = new Query(4, (args: Stringable[]) => `The required field 'answer' of type '${args[0]}' was not set.`);
+        export const ILLEGAL_CAST = new Query(5, (args: Stringable[]) => `Illegal casting operation from '${args[0]}' to '${args[1]}'.`)
     }
 }

@@ -17,37 +17,35 @@
  * under the License.
  */
 
-import {
-    Answer,
-    Concept,
-    Grakn, ThingImpl, TypeImpl,
-} from "../../dependencies_internal"
-import Transaction = Grakn.Transaction;
 import AnswerProto from "grakn-protocol/protobuf/answer_pb";
+import {
+    Concept,
+    Numeric,
+    ThingImpl,
+    TypeImpl
+} from "../../dependencies_internal";
 
-
-
-export class AnswerGroup<T> {
+export class NumericGroup {
     private readonly _owner: Concept;
-    private readonly _answers: T[];
+    private readonly _numeric: Numeric;
 
-    constructor(owner: Concept, answers: T[]) {
+    constructor(owner: Concept, numeric: Numeric) {
         this._owner = owner;
-        this._answers = answers;
+        this._numeric = numeric;
     }
 
-    public static of (transaction: Transaction, res: AnswerProto.AnswerGroup): AnswerGroup<Answer> {
+    public static of (res: AnswerProto.NumericGroup): NumericGroup {
         let concept: Concept;
         if (res.getOwner().hasThing()) concept = ThingImpl.of(res.getOwner().getThing());
         else concept = TypeImpl.of(res.getOwner().getType());
-        return new AnswerGroup<Answer>(concept, res.getAnswersList().map((ans) => Answer.of(transaction, ans)) as Answer[])
+        return new NumericGroup(concept, Numeric.of(res.getNumber()))
     }
 
     owner(): Concept {
         return this._owner;
     }
 
-    answers(): T[] {
-        return this._answers;
+    numeric(): Numeric {
+        return this._numeric;
     }
 }

@@ -32,9 +32,10 @@ export * from "./common/ProtoBuilder";
 export * from "./common/utils";
 
 /* concept.answer */
-export * from "./concept/answer/Answer";
-export * from "./concept/answer/AnswerGroup";
 export * from "./concept/answer/ConceptMap";
+export * from "./concept/answer/Numeric";
+export * from "./concept/answer/ConceptMapGroup";
+export * from "./concept/answer/NumericGroup";
 
 /* concept.logic */
 export * from "./concept/logic/Rule";
