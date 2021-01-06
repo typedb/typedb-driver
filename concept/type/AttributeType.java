@@ -143,9 +143,6 @@ public interface AttributeType extends ThingType {
         void setSupertype(AttributeType attributeType);
 
         @Override
-        AttributeType getSupertype();
-
-        @Override
         Stream<? extends AttributeType> getSubtypes();
 
         @Override
@@ -189,9 +186,6 @@ public interface AttributeType extends ThingType {
             void setSupertype(AttributeType.Boolean booleanAttributeType);
 
             @Override
-            AttributeType.Boolean getSupertype();
-
-            @Override
             Stream<? extends AttributeType.Boolean> getSubtypes();
 
             @Override
@@ -217,9 +211,6 @@ public interface AttributeType extends ThingType {
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
             void setSupertype(AttributeType.Long longAttributeType);
-
-            @Override
-            AttributeType.Long getSupertype();
 
             @Override
             Stream<? extends AttributeType.Long> getSubtypes();
@@ -249,9 +240,6 @@ public interface AttributeType extends ThingType {
             void setSupertype(AttributeType.Double doubleAttributeType);
 
             @Override
-            AttributeType.Double getSupertype();
-
-            @Override
             Stream<? extends AttributeType.Double> getSubtypes();
 
             @Override
@@ -277,9 +265,6 @@ public interface AttributeType extends ThingType {
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
             void setSupertype(AttributeType.String stringAttributeType);
-
-            @Override
-            AttributeType.String getSupertype();
 
             @Override
             Stream<? extends AttributeType.String> getSubtypes();
@@ -312,9 +297,6 @@ public interface AttributeType extends ThingType {
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
             void setSupertype(AttributeType.DateTime dateTimeAttributeType);
-
-            @Override
-            AttributeType.DateTime getSupertype();
 
             @Override
             Stream<? extends AttributeType.DateTime> getSubtypes();

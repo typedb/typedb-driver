@@ -71,12 +71,6 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
-        public EntityTypeImpl getSupertype() {
-            final ThingTypeImpl supertype = super.getSupertype();
-            return supertype != null ? supertype.asEntityType() : null;
-        }
-
-        @Override
         public final Stream<EntityTypeImpl> getSubtypes() {
             return super.getSubtypes().map(ThingTypeImpl::asEntityType);
         }
