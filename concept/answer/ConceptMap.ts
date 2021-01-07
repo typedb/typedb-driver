@@ -28,11 +28,9 @@ import {
 
 export class ConceptMap {
     private readonly _map: Map<string, Concept>;
-    private readonly _queryPattern: string;
 
-    constructor(map: Map<string, Concept>, pattern: string){
+    constructor(map: Map<string, Concept>){
         this._map = map;
-        this._queryPattern = pattern;
     }
 
     static of(res: AnswerProto.ConceptMap): ConceptMap {
@@ -44,10 +42,9 @@ export class ConceptMap {
             variableMap.set(resLabel, concept);
         })
         const queryPattern = res.getPattern() === "" ? null : res.getPattern();
-        return new ConceptMap(variableMap, queryPattern);
+        return new ConceptMap(variableMap);
     }
 
-    queryPattern(): string {return this._queryPattern;}
     map(): Map<string, Concept> {return this._map;}
     concepts(): IterableIterator<Concept> {return this._map.values();}
 

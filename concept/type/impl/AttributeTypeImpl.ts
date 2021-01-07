@@ -413,6 +413,20 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
     get(value: string): Promise<StringAttributeImpl> {
         return this.getInternal(ConceptProtoBuilder.stringAttributeValue(value)) as Promise<StringAttributeImpl>;
     }
+
+    async getRegex(): Promise<string> {
+        return (await this.execute(new ConceptProto.Type.Req().setAttributeTypeGetRegexReq(
+            new ConceptProto.AttributeType.GetRegex.Req()
+        ))).getAttributeTypeGetRegexRes().getRegex();
+    }
+
+    async setRegex(regex: string): Promise<void> {
+        await this.execute(new ConceptProto.Type.Req().setAttributeTypeSetRegexReq(
+            new ConceptProto.AttributeType.SetRegex.Req()
+                .setRegex(regex)
+        ));
+    }
+
 }
 
 export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements DateTimeAttributeType {
