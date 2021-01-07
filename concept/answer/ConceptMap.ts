@@ -41,7 +41,6 @@ export class ConceptMap {
             else concept = TypeImpl.of(resConcept.getType());
             variableMap.set(resLabel, concept);
         })
-        const queryPattern = res.getPattern() === "" ? null : res.getPattern();
         return new ConceptMap(variableMap);
     }
 

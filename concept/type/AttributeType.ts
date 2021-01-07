@@ -119,8 +119,8 @@ export interface RemoteStringAttributeType extends Merge<RemoteAttributeType, St
     put(value: string): Promise<StringAttribute>;
     get(value: string): Promise<StringAttribute>;
 
-    getRegex(): Promise<String>;
-    setRegex(regex: String): Promise<void>;
+    getRegex(): Promise<string>;
+    setRegex(regex: string): Promise<void>;
 }
 
 export interface DateTimeAttributeType extends AttributeType {
