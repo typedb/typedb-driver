@@ -322,13 +322,10 @@ public class ThingTypeSteps {
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {type_label}")
-    public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, String overriddenLabel) {
+    @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}")
+    public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, Parameters.ScopedLabel overriddenLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
-        Stream<RelationType> relationType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getSupertypes()
-                .filter(Type::isRelationType).map(Type::asRelationType);
-        RoleType overriddenType = relationType
-                .flatMap(sup -> sup.asRemote(tx()).getRelates()).filter(r -> r.getLabel().equals(overriddenLabel)).findAny().get();
+        RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope()).asRemote(tx()).getRelates(overriddenLabel.role());
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType, overriddenType);
     }
 

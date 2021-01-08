@@ -75,20 +75,25 @@ public class GraqlSteps {
         assertThrows(() -> graql_define(defineQueryStatements).get());
     }
 
+    @Given("graql define; throws exception containing {string}")
+    public void graql_define_throws_exception(String exception, String defineQueryStatements) {
+        assertThrowsWithMessage(() -> graql_define(defineQueryStatements).get(), exception);
+    }
+
     @Given("graql undefine")
     public QueryFuture<Void> graql_undefine(String undefineQueryStatements) {
         final GraqlUndefine graqlQuery = Graql.parseQuery(String.join("\n", undefineQueryStatements));
         return tx().query().undefine(graqlQuery);
     }
 
-    @Given("graql define; throws exception containing {string}")
-    public void graql_define_throws_exception(String exception, String defineQueryStatements) {
-        assertThrowsWithMessage(() -> graql_define(defineQueryStatements).get(), exception);
-    }
-
     @Given("graql undefine; throws exception")
     public void graql_undefine_throws(String undefineQueryStatements) {
         assertThrows(() -> graql_undefine(undefineQueryStatements).get());
+    }
+
+    @Given("graql undefine; throws exception containing {string}")
+    public void graql_undefine_throws_exception(String exception, String undefineQueryStatements) {
+        assertThrowsWithMessage(() -> graql_undefine(undefineQueryStatements).get(), exception);
     }
 
     @Given("graql insert")
@@ -116,6 +121,11 @@ public class GraqlSteps {
     @Given("graql delete; throws exception")
     public void graql_delete_throws(String deleteQueryStatements) {
         assertThrows(() -> graql_delete(deleteQueryStatements).get());
+    }
+
+    @Given("graql delete; throws exception containing {string}")
+    public void graql_delete_throws_exception(String exception, String deleteQueryStatements) {
+        assertThrowsWithMessage(() -> graql_delete(deleteQueryStatements).get(), exception);
     }
 
     @When("get answers of graql insert")
