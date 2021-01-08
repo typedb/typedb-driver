@@ -17,32 +17,27 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "native_grakn_artifact")
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+exports_files([
+    "cucumber_test.sh",
+    "tsconfig-test.json",
+])
 
+genrule(
+    name = "behavioural-steps-compiled",
+    outs = ["behavioural-steps.tar.gz"],
+    cmd = "tar -xf $(location //:client-nodejs-compiled); npx tsc --build tsconfig-test.json; tar -cf $(@D)/behavioural-steps.tar.gz dist-test;",
+    tools = [
+        "//:behavioural-steps",
+        "//:client-nodejs-compiled",
+        "//:package.json",
+        "//:package-lock.json",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 checkstyle_test(
     name = "checkstyle",
-    include = glob([
-        "*",
-        "deployment/*",
-        "integration/*",
-        "common/*"
-    ]),
-    exclude = glob([
-        "**/package.json",
-    ]),
+    include = glob(["*"]),
     license_type = "apache",
-)
-
-native_grakn_artifact(
-    name = "native-grakn-artifact",
-    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    visibility = ["//test:__subpackages__"],
-)
-
-artifact_extractor(
-    name = "grakn-extractor",
-    artifact = ":native-grakn-artifact",
 )

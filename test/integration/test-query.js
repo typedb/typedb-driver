@@ -22,6 +22,7 @@ const { Grakn } = require("../../dist/Grakn");
 const { AttributeType } = require("../../dist/concept/type/AttributeType");
 const { ConceptMap } = require("../../dist/concept/answer/ConceptMap");
 const { SessionType, TransactionType } = Grakn;
+const { GraknOptions } = require("../../dist/GraknOptions")
 const assert = require("assert");
 
 async function run() {
@@ -131,28 +132,6 @@ async function run() {
         process.exit(1);
     }
 
-    // try {
-    //     tx = await session.transaction(TransactionType.WRITE);
-    //     await tx.query().define(
-    //         "define strongest-lion-wins sub rule, when {" +
-    //             "($w isa lion, has power-level $wp); " +
-    //             "($l isa lion, has power-level $lp); " +
-    //             "$wp > $lp;" +
-    //         "}, then {" +
-    //             "(victor:$w, loser:$l) isa lionfight;" +
-    //         "};"
-    //     )
-    //     await tx.commit();
-    //     await tx.close();
-    //     console.log("define rule query - SUCCESS");
-    // } catch (err) {
-    //     console.error(`define rule query - ERROR: ${err.stack || err}`);
-    //     await tx.close();
-    //     await session.close();
-    //     client.close();
-    //     process.exit(1);
-    // }
-
     try {
         await session.close();
         console.log("close schema session - SUCCESS");
@@ -162,7 +141,7 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("grakn", SessionType.DATA);
+        session = await client.session("grakn", SessionType.DATA, new GraknOptions().setSessionIdleTimeoutMillis(3600000));
         console.log("open data session - SUCCESS");
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);
@@ -197,6 +176,13 @@ async function run() {
                 lionNames.push(lionName.getValue());
             }
         }
+        // await tx.commit();
+        // await tx.close();
+        // tx = await session.transaction(TransactionType.WRITE);
+        // const matchresult = await tx.query().match("match $x isa lion, has name $y, has rank $z;");
+        // for await (const match of matchresult) {
+        //     console.log(match);
+        // }
         assert(JSON.stringify(lionNames.sort()) === JSON.stringify(["Amélie", "Asuka", "Chandra", "Sergey", "Steve"]))
         console.log("insert entity query - SUCCESS");
     } catch (err) {

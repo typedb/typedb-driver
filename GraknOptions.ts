@@ -26,11 +26,15 @@ export class GraknOptions {
     private _infer: boolean;
     private _explain: boolean;
     private _batchSize: number;
+    private _sessionIdleTimeoutMillis: number;
+    private _schemaLockAcquireTimeoutMillis: number;
 
     constructor() {
         this._infer = null;
         this._explain = null;
         this._batchSize = null;
+        this._sessionIdleTimeoutMillis = null;
+        this._schemaLockAcquireTimeoutMillis = null;
     }
 
     infer(): boolean {
@@ -60,6 +64,24 @@ export class GraknOptions {
             throw new GraknClientError(ErrorMessage.Client.NONPOSITIVE_BATCH_SIZE.message(batchSize))
         }
         this._batchSize = batchSize;
+        return this;
+    }
+
+    sessionIdleTimeoutMillis(): number {
+        return this._sessionIdleTimeoutMillis;
+    }
+
+    setSessionIdleTimeoutMillis(sessionIdleTimeoutMillis: number): GraknOptions {
+        this._sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
+        return this;
+    }
+
+    schemaLockAcquireTimeoutMillis(): number {
+        return this._schemaLockAcquireTimeoutMillis;
+    }
+
+    setSchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis: number): GraknOptions {
+        this._schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
         return this;
     }
 }

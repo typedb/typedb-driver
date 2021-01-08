@@ -15,10 +15,11 @@
     "build": "npm run clean && npm run lint && tsc",
     "pretest": "npm run build",
     "test": "npm run test-concept && npm run test-connection && npm run test-query",
-    "test-concept": "node test/endtoend/test-concept.js",
-    "test-connection": "node test/endtoend/test-connection.js",
-    "test-query": "node test/endtoend/test-query.js",
-    "lint": "eslint . --ext .ts"
+    "test-concept": "node test/integration/test-concept.js",
+    "test-connection": "node test/integration/test-connection.js",
+    "test-query": "node test/integration/test-query.js",
+    "lint": "eslint . --ext .ts",
+    "compile-tests": "tsc --build tsconfig-test.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { GraknOptions } from "../dependencies_internal";
+import { GraknOptions } from "./dependencies_internal";
 import options_pb from "grakn-protocol/protobuf/options_pb";
 import Options = options_pb.Options;
 
@@ -28,6 +28,8 @@ export namespace ProtoBuilder {
             if (options.infer() != null) optionsProto.setInfer(options.infer() as boolean);
             if (options.explain() != null) optionsProto.setExplain(options.explain() as boolean);
             if (options.batchSize() != null) optionsProto.setBatchSize(options.batchSize() as number);
+            if (options.sessionIdleTimeoutMillis() != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis() as number);
+            if (options.schemaLockAcquireTimeoutMillis() != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis() as number);
         }
         return optionsProto;
     }

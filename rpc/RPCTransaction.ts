@@ -120,7 +120,7 @@ export class RPCTransaction implements Grakn.Transaction {
         }
         if (!this._transactionWasClosed) {
             this._transactionWasClosed = true;
-            this._collectors.clearWithError(new ErrorResponse("Transaction closed."))
+            this._collectors.clearWithError(new ErrorResponse(new GraknClientError(ErrorMessage.Client.TRANSACTION_CLOSED.message())))
         }
     }
 

@@ -36,6 +36,46 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
+genrule(
+    name = "client-nodejs-compiled",
+    outs = ["client-nodejs.tar.gz"],
+    cmd = "npx tsc; tar -cf $(@D)/client-nodejs.tar.gz dist;",
+    tools = [
+        "//:client-nodejs-ts",
+        "//:package.json",
+        "//:package-lock.json",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "client-nodejs-ts",
+    srcs = glob([
+        "*.ts",
+        "common/**/*.ts",
+        "concept/**/*.ts",
+        "query/**/*.ts",
+        "rpc/**/*.ts",
+        "tsconfig.json",
+        "node_modules/**"
+    ]),
+)
+
+filegroup(
+    name = "behavioural-steps",
+    srcs = [
+        "//test/behaviour/config:Parameters.ts",
+        "//test/behaviour/connection:ConnectionSteps.ts",
+        "//test/behaviour/connection/database:DatabaseSteps.ts",
+        "//test/behaviour/connection/session:SessionSteps.ts",
+        "//test/behaviour/connection/transaction:TransactionSteps.ts",
+        "//test/behaviour/graql/language/define:DefineSteps.ts",
+        "//test/behaviour/util:Util.ts",
+        "//:tsconfig-test.json"
+    ] + glob(["node_modules/**"]),
+    visibility = ["//test/behaviour:__pkg__"],
+)
+
 ts_library(
     name = "_client_nodejs",
     srcs = glob([
