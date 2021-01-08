@@ -24,9 +24,11 @@ import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.Channel;
+import io.grpc.StatusRuntimeException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -83,7 +85,11 @@ public class RPCSession implements Session {
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
             pulse.cancel();
-            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            try {
+                blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            } catch (StatusRuntimeException e) {
+                throw new GraknClientException(e);
+            }
         }
     }
 
