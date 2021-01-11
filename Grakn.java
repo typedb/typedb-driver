@@ -112,16 +112,21 @@ public interface Grakn {
 
         void close();
 
+        // TODO:
+        //   it's nicer if we can split it by product:
+        //     - Type.Core.READ|WRITE
+        //     - Type.Cluster extends Type.Core and additionally introduce Type.Cluster.READ_SCALABLE
         enum Type {
             READ(0),
-            WRITE(1);
+            READ_REPLICA(1),
+            WRITE(2);
 
             private final int id;
             private final boolean isWrite;
 
             Type(int id) {
                 this.id = id;
-                this.isWrite = id == 1;
+                this.isWrite = id == 2;
             }
 
             public static Type of(int value) {
