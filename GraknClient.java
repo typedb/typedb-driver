@@ -37,6 +37,10 @@ public class GraknClient implements Client {
     private final ManagedChannel channel;
     private final DatabaseManager databases;
 
+    // TODO:
+    //  it is inevitable that the code will have to change when switching from Core to Cluster.
+    //  therefore we just have to minimise it but not aim to forcefully reduce it to 0
+    // with this argument, adding a static create method GraknClient.core(addr) and GraknClient.cluster(user, pass, addr...) makes sense
     public GraknClient() {
         this(DEFAULT_URI);
     }
@@ -44,6 +48,10 @@ public class GraknClient implements Client {
     public GraknClient(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new RPCDatabaseManager(channel);
+    }
+
+    public GraknClient(String username, String password, String... address) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
