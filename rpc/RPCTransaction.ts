@@ -116,7 +116,7 @@ export class RPCTransaction implements Grakn.Transaction {
     async close(): Promise<void> {
         if (this._streamIsOpen) {
             this._streamIsOpen = false;
-            // TODO: close stream, somehow?
+            this._stream.end();
         }
         if (!this._transactionWasClosed) {
             this._transactionWasClosed = true;
@@ -155,9 +155,8 @@ export class RPCTransaction implements Grakn.Transaction {
         });
 
         this._stream.on("error", (err) => {
-            this._transactionWasClosed = true;
-            this._streamIsOpen = false;
             this._collectors.clearWithError(new ErrorResponse(err));
+            this.close();
         });
 
         this._stream.on("end", () => {

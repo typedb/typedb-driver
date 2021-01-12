@@ -19,7 +19,7 @@
 
 import assert = require("assert");
 
-export async function assertThrows(testfunc: () => void): Promise<void> {
+export async function assertThrows(testfunc: () => Promise<any>): Promise<void> {
     try {
         await testfunc();
     } catch {
@@ -29,7 +29,7 @@ export async function assertThrows(testfunc: () => void): Promise<void> {
     assert.fail();
 }
 
-export async function assertThrowsWithMessage(testfunc: () => void, message: string): Promise<void> {
+export async function assertThrowsWithMessage(testfunc: () => Promise<any>, message: string): Promise<void> {
     try {
         await testfunc();
     } catch (error) {
