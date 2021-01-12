@@ -118,15 +118,15 @@ public interface Grakn {
         //     - Type.Cluster extends Type.Core and additionally introduce Type.Cluster.READ_SCALABLE
         enum Type {
             READ(0),
-            READ_REPLICA(1),
-            WRITE(2);
+            READ_REPLICA(2),
+            WRITE(1);
 
             private final int id;
             private final boolean isWrite;
 
             Type(int id) {
                 this.id = id;
-                this.isWrite = id == 2;
+                this.isWrite = id == 1;
             }
 
             public static Type of(int value) {

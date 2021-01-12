@@ -21,14 +21,18 @@ package grakn.client;
 
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
+import grakn.common.collection.Pair;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static grakn.common.collection.Collections.pair;
 
 public class GraknClient {
     public static final String DEFAULT_URI = "localhost:1729";
@@ -51,17 +55,17 @@ public class GraknClient {
         }
 
         @Override
-        public Grakn.Session session(String database, Grakn.Session.Type type) {
+        public RPCSession.Core session(String database, Grakn.Session.Type type) {
             return session(database, type, new GraknOptions());
         }
 
         @Override
-        public Grakn.Session session(String database, Grakn.Session.Type type, GraknOptions options) {
-            return new RPCSession(this, database, type, options);
+        public RPCSession.Core session(String database, Grakn.Session.Type type, GraknOptions options) {
+            return new RPCSession.Core(this, database, type, options);
         }
 
         @Override
-        public Grakn.DatabaseManager databases() {
+        public RPCDatabaseManager databases() {
             return databases;
         }
 
@@ -85,7 +89,7 @@ public class GraknClient {
     }
 
     public static class Cluster implements Grakn.Client {
-        private final ArrayList<GraknClient.Core> clients;
+        private final ConcurrentMap<String, GraknClient.Core> clients;
         private boolean isOpen;
 
         public Cluster() {
@@ -93,18 +97,20 @@ public class GraknClient {
         }
 
         public Cluster(String... addresses) {
-            clients = Arrays.stream(addresses).map(Core::new).collect(Collectors.toCollection(ArrayList::new));
+            clients = Arrays.stream(addresses)
+                    .map(address -> pair(address, new GraknClient.Core(address)))
+                    .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             isOpen = true;
         }
 
         @Override
-        public Grakn.Session session(String database, Grakn.Session.Type type) {
+        public RPCSession.Cluster session(String database, Grakn.Session.Type type) {
             return session(database, type, new GraknOptions());
         }
 
         @Override
-        public Grakn.Session session(String database, Grakn.Session.Type type, GraknOptions options) {
-            throw new UnsupportedOperationException();
+        public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions options) {
+            return new RPCSession.Cluster(this, database, type, options);
         }
 
         @Override
@@ -119,8 +125,12 @@ public class GraknClient {
 
         @Override
         public void close() {
-            clients.forEach(GraknClient.Core::close);
+            clients.values().forEach(Core::close);
             isOpen = false;
+        }
+
+        public ConcurrentMap<String, GraknClient.Core> clients() {
+            return clients;
         }
     }
 }

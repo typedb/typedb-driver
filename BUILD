@@ -51,6 +51,7 @@ java_library(
         "@graknlabs_graql//java/pattern",
         "@graknlabs_graql//java/query",
         "@graknlabs_protocol//grpc/java:protocol",
+        "@graknlabs_protocol//grpc/java:protocol-cluster",
 
         "@graknlabs_grabl_tracing//client",
 
