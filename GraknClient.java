@@ -19,71 +19,108 @@
 
 package grakn.client;
 
-import grakn.client.Grakn.Client;
-import grakn.client.Grakn.DatabaseManager;
-import grakn.client.Grakn.Session;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class GraknClient implements Client {
-
+public class GraknClient {
     public static final String DEFAULT_URI = "localhost:1729";
 
-    private final ManagedChannel channel;
-    private final DatabaseManager databases;
+    public static class Core implements Grakn.Client {
+        private final ManagedChannel channel;
+        private final RPCDatabaseManager databases;
 
-    // TODO:
-    //  it is inevitable that the code will have to change when switching from Core to Cluster.
-    //  therefore we just have to minimise it but not aim to forcefully reduce it to 0
-    // with this argument, adding a static create method GraknClient.core(addr) and GraknClient.cluster(user, pass, addr...) makes sense
-    public GraknClient() {
-        this(DEFAULT_URI);
-    }
+        // TODO:
+        //  it is inevitable that the code will have to change when switching from Core to Cluster.
+        //  therefore we just have to minimise it but not aim to forcefully reduce it to 0
+        // with this argument, adding a static create method GraknClient.core(addr) and GraknClient.cluster(user, pass, addr...) makes sense
+        public Core() {
+            this(DEFAULT_URI);
+        }
 
-    public GraknClient(String address) {
-        channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-        databases = new RPCDatabaseManager(channel);
-    }
+        public Core(String address) {
+            channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
+            databases = new RPCDatabaseManager(channel);
+        }
 
-    public GraknClient(String username, String password, String... address) {
-        throw new UnsupportedOperationException();
-    }
+        @Override
+        public Grakn.Session session(String database, Grakn.Session.Type type) {
+            return session(database, type, new GraknOptions());
+        }
 
-    @Override
-    public Session session(String database, Session.Type type) {
-        return session(database, type, new GraknOptions());
-    }
+        @Override
+        public Grakn.Session session(String database, Grakn.Session.Type type, GraknOptions options) {
+            return new RPCSession(this, database, type, options);
+        }
 
-    @Override
-    public Session session(String database, Session.Type type, GraknOptions options) {
-        return new RPCSession(this, database, type, options);
-    }
+        @Override
+        public Grakn.DatabaseManager databases() {
+            return databases;
+        }
 
-    @Override
-    public DatabaseManager databases() {
-        return databases;
-    }
+        @Override
+        public boolean isOpen() {
+            return !channel.isShutdown();
+        }
 
-    @Override
-    public boolean isOpen() {
-        return !channel.isShutdown();
-    }
+        @Override
+        public void close() {
+            try {
+                channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 
-    @Override
-    public void close() {
-        try {
-            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        public Channel channel() {
+            return channel;
         }
     }
 
-    public Channel channel() {
-        return channel;
+    public static class Cluster implements Grakn.Client {
+        private final ArrayList<GraknClient.Core> clients;
+        private boolean isOpen;
+
+        public Cluster() {
+            this(DEFAULT_URI);
+        }
+
+        public Cluster(String... addresses) {
+            clients = Arrays.stream(addresses).map(Core::new).collect(Collectors.toCollection(ArrayList::new));
+            isOpen = true;
+        }
+
+        @Override
+        public Grakn.Session session(String database, Grakn.Session.Type type) {
+            return session(database, type, new GraknOptions());
+        }
+
+        @Override
+        public Grakn.Session session(String database, Grakn.Session.Type type, GraknOptions options) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Grakn.DatabaseManager databases() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isOpen() {
+            return isOpen;
+        }
+
+        @Override
+        public void close() {
+            clients.forEach(GraknClient.Core::close);
+            isOpen = false;
+        }
     }
 }

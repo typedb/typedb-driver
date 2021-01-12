@@ -52,7 +52,7 @@ public class ClientQueryTest {
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
-        graknClient = new GraknClient(grakn.address());
+        graknClient = new GraknClient.Core(grakn.address());
         graknClient.databases().create("grakn");
     }
 

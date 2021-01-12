@@ -44,7 +44,7 @@ public class RPCSession implements Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    public RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
+    public RPCSession(GraknClient.Core client, String database, Type type, GraknOptions options) {
         this.channel = client.channel();
         this.database = database;
         this.type = type;

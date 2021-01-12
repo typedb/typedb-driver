@@ -73,7 +73,7 @@ public class ConnectionSteps {
         assertNull(client);
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
-        client = new GraknClient(address);
+        client = new GraknClient.Core(address);
         System.out.println("ConnectionSteps.before");
     }
 
