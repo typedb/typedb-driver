@@ -141,7 +141,11 @@ public class RPCTransaction implements Transaction {
     private void close(Response.Done doneResponse) {
         if (isOpen.compareAndSet(true, false)) {
             collectors.clear(doneResponse);
-            requestObserver.onCompleted();
+            try {
+                requestObserver.onCompleted();
+            } catch (StatusRuntimeException e) {
+                throw new GraknClientException(e);
+            }
         }
     }
 

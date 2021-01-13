@@ -89,7 +89,11 @@ public class RPCSession implements Session {
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
             pulse.cancel();
-            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            try {
+                blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            } catch (StatusRuntimeException e) {
+                throw new GraknClientException(e);
+            }
         }
     }
 
