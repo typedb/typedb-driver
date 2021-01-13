@@ -63,25 +63,29 @@ public class RPCTransaction implements Transaction {
     private final AtomicBoolean isOpen;
 
     RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
-        this.type = type;
-        conceptManager = new ConceptManager(this);
-        logicManager = new LogicManager(this);
-        queryManager = new QueryManager(this);
-        collectors = new ResponseCollectors();
+        try {
+            this.type = type;
+            conceptManager = new ConceptManager(this);
+            logicManager = new LogicManager(this);
+            queryManager = new QueryManager(this);
+            collectors = new ResponseCollectors();
 
-        // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
-        isOpen = new AtomicBoolean(true);
-        requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
-        final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                        .setSessionId(sessionId)
-                        .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                        .setOptions(options(options)));
-        final Instant startTime = Instant.now();
-        final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
-        final Instant endTime = Instant.now();
-        networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
+            // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
+            isOpen = new AtomicBoolean(true);
+            requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
+            final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(tracingData())
+                    .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
+                            .setSessionId(sessionId)
+                            .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
+                            .setOptions(options(options)));
+            final Instant startTime = Instant.now();
+            final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
+            final Instant endTime = Instant.now();
+            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
+        } catch (StatusRuntimeException e) {
+            throw new GraknClientException(e);
+        }
     }
 
     @Override
