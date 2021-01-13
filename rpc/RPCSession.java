@@ -24,9 +24,11 @@ import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.Channel;
+import io.grpc.StatusRuntimeException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,18 +47,22 @@ public class RPCSession implements Session {
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
     public RPCSession(GraknClient client, String database, Type type, GraknOptions options) {
-        this.channel = client.channel();
-        this.database = database;
-        this.type = type;
-        blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
+        try {
+            this.channel = client.channel();
+            this.database = database;
+            this.type = type;
+            blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
 
-        final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
+            final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
+                    .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
-        sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
-        pulse = new Timer();
-        isOpen = new AtomicBoolean(true);
-        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
+            sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
+            pulse = new Timer();
+            isOpen = new AtomicBoolean(true);
+            pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
+        } catch (StatusRuntimeException e) {
+            throw new GraknClientException(e);
+        }
     }
 
     @Override
@@ -83,7 +89,11 @@ public class RPCSession implements Session {
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
             pulse.cancel();
-            blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            try {
+                blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            } catch (StatusRuntimeException e) {
+                throw new GraknClientException(e);
+            }
         }
     }
 
