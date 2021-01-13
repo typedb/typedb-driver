@@ -6,7 +6,7 @@ Documentation: https://dev.docs.grakn.ai/docs/client-api/nodejs
 Now officially available through https://npmjs.com
 
 ```
-npm install grakn-client@2.0.0-alpha-4
+npm install grakn-client@{version}
 ```
 
 { release notes }
