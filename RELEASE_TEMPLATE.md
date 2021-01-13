@@ -1,6 +1,6 @@
 Documentation: http://dev.docs.grakn.ai/docs/client-api/java
 
-### Distribution
+## Distribution
 
 Available through https://repo.grakn.ai
 ```xml
@@ -20,5 +20,7 @@ Available through https://repo.grakn.ai
 ```
 
 { release notes }
+
+---
 
 **Please refer to [full release notes of 2.0.0-alpha](https://github.com/graknlabs/client-java/releases/tag/2.0.0-alpha) to see the changes contained in 2.0.0.**
