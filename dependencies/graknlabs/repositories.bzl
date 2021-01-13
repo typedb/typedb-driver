@@ -57,8 +57,8 @@ def graknlabs_protocol():
 def graknlabs_behaviour():
     git_repository(
         name = "graknlabs_behaviour",
-        remote = "https://github.com/alexjpwalker/behaviour",
-        commit = "77276c4a1b7cc1233c3fb2f1371e3f3eaf3c1498", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_behaviour
+        remote = "https://github.com/graknlabs/behaviour",
+        commit = "2279d3a284d53fdd989885c06f3c50f00f930a63", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_behaviour
     )
 
 def graknlabs_grabl_tracing():
