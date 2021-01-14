@@ -79,7 +79,7 @@ build:
         bazel test //test/behaviour/graql/language/get/...
       # TODO: delete --jobs=1 if we fix the issue with excess memory usage
       # TODO: use --config=rbe once Grakn Core runs in RBE
-      # TODO: add Graql Language tests as they are implemented
+      # TODO: add more Graql Language tests as they are fixed
     deploy-maven-snapshot:
       image: graknlabs-ubuntu-20.04
       dependencies: [build, build-dependency, test-behaviour]
