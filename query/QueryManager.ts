@@ -46,22 +46,22 @@ export class QueryManager {
     }
 
     public matchAggregate(query: string, options?: GraknOptions): Promise<Numeric> {
-        const matchAggregateQuery = new Query.Req().setMatchReq(
-            new Query.Match.Req().setQuery(query));
+        const matchAggregateQuery = new Query.Req().setMatchAggregateReq(
+            new Query.MatchAggregate.Req().setQuery(query));
         return this.runQuery(matchAggregateQuery, options ? options : new GraknOptions(),
             (res: Transaction.Res) => Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
     }
 
     public matchGroup(query: string, options?: GraknOptions): Stream<ConceptMapGroup> {
-        const matchGroupQuery = new Query.Req().setMatchReq(
-            new Query.Match.Req().setQuery(query));
+        const matchGroupQuery = new Query.Req().setMatchGroupReq(
+            new Query.MatchGroup.Req().setQuery(query));
         return this.iterateQuery(matchGroupQuery, options ? options : new GraknOptions(),
             (res: Transaction.Res) => res.getQueryRes().getMatchGroupRes().getAnswersList().map(ConceptMapGroup.of));
     }
 
     public matchGroupAggregate(query: string, options?: GraknOptions): Stream<NumericGroup> {
-        const matchGroupAggregateQuery = new Query.Req().setMatchReq(
-            new Query.Match.Req().setQuery(query));
+        const matchGroupAggregateQuery = new Query.Req().setMatchGroupAggregateReq(
+            new Query.MatchGroupAggregate.Req().setQuery(query));
         return this.iterateQuery(matchGroupAggregateQuery, options ? options : new GraknOptions(),
             (res: Transaction.Res) => res.getQueryRes().getMatchGroupAggregateRes().getAnswersList().map(NumericGroup.of));
     }
