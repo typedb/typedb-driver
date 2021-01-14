@@ -365,6 +365,7 @@ public class GraqlSteps {
         }
     }
 
+    // This method is used by explanation steps
 //    private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
 //
 //        for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
