@@ -26,7 +26,6 @@ import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +38,7 @@ public class GraknClient {
 
     public static class Core implements Grakn.Client {
         private final ManagedChannel channel;
-        private final RPCDatabaseManager databases;
+        private final RPCDatabaseManager.Core databases;
 
         // TODO:
         //  it is inevitable that the code will have to change when switching from Core to Cluster.
@@ -51,7 +50,7 @@ public class GraknClient {
 
         public Core(String address) {
             channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-            databases = new RPCDatabaseManager(channel);
+            databases = new RPCDatabaseManager.Core(channel);
         }
 
         @Override
@@ -65,7 +64,7 @@ public class GraknClient {
         }
 
         @Override
-        public RPCDatabaseManager databases() {
+        public RPCDatabaseManager.Core databases() {
             return databases;
         }
 
@@ -89,7 +88,8 @@ public class GraknClient {
     }
 
     public static class Cluster implements Grakn.Client {
-        private final ConcurrentMap<String, GraknClient.Core> clients;
+        private final ConcurrentMap<String, Core> clients;
+        private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
 
         public Cluster() {
@@ -98,8 +98,13 @@ public class GraknClient {
 
         public Cluster(String... addresses) {
             clients = Arrays.stream(addresses)
-                    .map(address -> pair(address, new GraknClient.Core(address)))
+                    .map(address -> pair(address, new Core(address)))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
+            databases = new RPCDatabaseManager.Cluster(
+                    clients.entrySet().stream()
+                            .map(client -> pair(client.getKey(), client.getValue().databases()))
+                            .collect(Collectors.toConcurrentMap(Pair::first, Pair::second))
+            );
             isOpen = true;
         }
 
@@ -114,8 +119,8 @@ public class GraknClient {
         }
 
         @Override
-        public Grakn.DatabaseManager databases() {
-            throw new UnsupportedOperationException();
+        public RPCDatabaseManager.Cluster databases() {
+            return databases;
         }
 
         @Override
@@ -125,11 +130,11 @@ public class GraknClient {
 
         @Override
         public void close() {
-            clients.values().forEach(Core::close);
+            clients.values().forEach(GraknClient.Core::close);
             isOpen = false;
         }
 
-        public ConcurrentMap<String, GraknClient.Core> clients() {
+        public ConcurrentMap<String, Core> clients() {
             return clients;
         }
     }
