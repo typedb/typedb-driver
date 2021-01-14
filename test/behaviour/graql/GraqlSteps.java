@@ -483,8 +483,7 @@ public class GraqlSteps {
     } */
 
     @Then("each answer satisfies")
-    public void each_answer_satisfies(String templatedGraqlQuery) {
-        final String templatedQuery = String.join("\n", templatedGraqlQuery);
+    public void each_answer_satisfies(String templatedQuery) {
         for (ConceptMap answer : answers) {
             final String query = applyQueryTemplate(templatedQuery, answer);
             final GraqlMatch graqlQuery = Graql.parseQuery(query).asMatch();
