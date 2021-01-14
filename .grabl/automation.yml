@@ -75,8 +75,8 @@ build:
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test //test/behaviour/connection/... --test_output=streamed --jobs=1
         bazel test //test/behaviour/concept/... --test_output=streamed
-        bazel test //test/behaviour/graql/language/match/...
-        bazel test //test/behaviour/graql/language/get/...
+        bazel test //test/behaviour/graql/language/match/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/get/... --test_output=streamed
       # TODO: delete --jobs=1 if we fix the issue with excess memory usage
       # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: add more Graql Language tests as they are fixed
