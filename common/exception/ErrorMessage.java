@@ -37,14 +37,12 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client UNKNOWN_REQUEST_ID =
                 new Client(5, "Received a response with unknown request id '%s'.");
 
-        public static final Query INVALID_RESPONSE_VALUE =
-                new Query(6, "The response value '%s' was not recognised.");
-
         public static final Client CLUSTER_LEADER_NOT_FOUND =
-                new Client(7, "No leader found for latest known term '%s'.");
-
+                new Client(6, "No leader found for latest known term '%s'.");
         public static final Client CLUSTER_SERVER_NOT_FOUND =
-                new Client(8, "The client has no knowledge of server '%s'.");
+                new Client(7, "The client has no knowledge of server '%s'.");
+
+
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";

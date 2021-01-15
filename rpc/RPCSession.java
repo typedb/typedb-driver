@@ -219,11 +219,11 @@ public class RPCSession {
 
             private ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> createReplicaMap() {
                 ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
-                DatabaseReplica.Id replica = randomReplica();
-                grakn.protocol.cluster.SessionProto.Session.DatabaseReplica.Res res = clusterBlockingStub
-                        .databaseReplicaInfo(grakn.protocol.cluster.SessionProto.Session.DatabaseReplica.Req.newBuilder().setDatabase(replica.database()).build());
-                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplica.Res.Info info: res.getInfosList()) {
-                    replicaMap.put(new DatabaseReplica.Id(info.getAddress(), info.getDatabase()), DatabaseReplica.ofProto(info));
+                DatabaseReplica.Id source = randomReplica();
+                grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res res = clusterBlockingStub
+                        .databaseReplicas(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Req.newBuilder().setDatabase(source.database()).build());
+                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.Replica replica: res.getReplicasList()) {
+                    replicaMap.put(new DatabaseReplica.Id(replica.getAddress(), replica.getDatabase()), DatabaseReplica.ofProto(replica));
                 }
                 return replicaMap;
             }
@@ -238,7 +238,7 @@ public class RPCSession {
                 this.isLeader = isLeader;
             }
 
-            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplica.Res.Info info) {
+            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.Replica info) {
                 return new DatabaseReplica(info.getTerm(), info.getIsLeader());
             }
 
