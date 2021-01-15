@@ -33,6 +33,7 @@ import io.grpc.Channel;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -104,7 +105,6 @@ public class RPCSession {
 
         Channel channel() { return channel; }
 
-
         public void pulse() {
             final SessionProto.Session.Pulse.Res res = blockingGrpcStub.sessionPulse(
                     SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build());
@@ -136,16 +136,20 @@ public class RPCSession {
     }
 
     public static class Cluster implements Grakn.Session {
+        private final GraknClient.Cluster client;
         private final String database;
         private final Type type;
+        private final ClusterGrpc.ClusterBlockingStub clusterBlockingStub;
         private final DatabaseReplicas databaseReplicas;
         private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> sessions;
         private final AtomicBoolean isOpen;
 
         public Cluster(GraknClient.Cluster client, String database, Grakn.Session.Type type, GraknOptions options) {
+            this.client = client;
             this.database = database;
             this.type = type;
-            this.databaseReplicas = new DatabaseReplicas(database, client);
+            clusterBlockingStub = ClusterGrpc.newBlockingStub(randomClient().channel());
+            this.databaseReplicas = DatabaseReplicas.ofProto(queryDatabaseReplicas());
             sessions = client.clients().entrySet().stream()
                     .map(entry -> pair(new DatabaseReplica.Id(entry.getKey(), database), entry.getValue().session(database, type, options)))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
@@ -186,17 +190,35 @@ public class RPCSession {
             return database;
         }
 
+        private GraknClient.Core randomClient() {
+            return client.clients().values().iterator().next();
+        }
+
+        private grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res queryDatabaseReplicas() {
+            return clusterBlockingStub.databaseReplicas(
+                    grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Req.newBuilder().setDatabase(database).build()
+            );
+        }
+
         public static class DatabaseReplicas {
             private final String database;
-            private final GraknClient.Cluster client;
-            private final ClusterGrpc.ClusterBlockingStub clusterBlockingStub;
             private final ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap;
+            private final Set<String> addresses;
 
-            public DatabaseReplicas(String database, GraknClient.Cluster client) {
+            private DatabaseReplicas(String database, ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap) {
                 this.database = database;
-                this.client = client;
-                clusterBlockingStub = ClusterGrpc.newBlockingStub(randomReplicaClient().channel());
-                replicaMap = createReplicaMap();
+                this.replicaMap = replicaMap;
+                this.addresses = replicaMap.keySet().stream().map(DatabaseReplica.Id::address).collect(Collectors.toSet());
+            }
+
+            public static DatabaseReplicas ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res res) {
+                ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
+
+                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
+                    replicaMap.put(new DatabaseReplica.Id(replica.getAddress(), replica.getDatabase()), DatabaseReplica.ofProto(replica));
+                }
+
+                return new DatabaseReplicas(replicaMap.values().iterator().next().id().database(), replicaMap);
             }
 
             private DatabaseReplica.Id leader() {
@@ -209,23 +231,11 @@ public class RPCSession {
             }
 
             private DatabaseReplica.Id randomReplica() {
-                String randomAddress = this.client.clients().keySet().iterator().next();
-                return new DatabaseReplica.Id(randomAddress, database);
+                return new DatabaseReplica.Id(randomReplicaAddress(), database);
             }
 
-            private GraknClient.Core randomReplicaClient() {
-                return client.clients().get(randomReplica().address());
-            }
-
-            private ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> createReplicaMap() {
-                ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
-                DatabaseReplica.Id source = randomReplica();
-                grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res res = clusterBlockingStub
-                        .databaseReplicas(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Req.newBuilder().setDatabase(source.database()).build());
-                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
-                    replicaMap.put(new DatabaseReplica.Id(replica.getAddress(), replica.getDatabase()), DatabaseReplica.ofProto(replica));
-                }
-                return replicaMap;
+            private String randomReplicaAddress() {
+                return addresses.iterator().next();
             }
         }
 
