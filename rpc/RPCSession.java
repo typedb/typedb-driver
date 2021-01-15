@@ -222,7 +222,7 @@ public class RPCSession {
                 DatabaseReplica.Id source = randomReplica();
                 grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res res = clusterBlockingStub
                         .databaseReplicas(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Req.newBuilder().setDatabase(source.database()).build());
-                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.Replica replica: res.getReplicasList()) {
+                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
                     replicaMap.put(new DatabaseReplica.Id(replica.getAddress(), replica.getDatabase()), DatabaseReplica.ofProto(replica));
                 }
                 return replicaMap;
@@ -230,16 +230,22 @@ public class RPCSession {
         }
 
         public static class DatabaseReplica {
+            private final DatabaseReplica.Id id;
             private final boolean isLeader;
             private final long term;
 
-            private DatabaseReplica(long term, boolean isLeader) {
+            private DatabaseReplica(DatabaseReplica.Id id, long term, boolean isLeader) {
+                this.id = id;
                 this.term = term;
                 this.isLeader = isLeader;
             }
 
-            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.Replica info) {
-                return new DatabaseReplica(info.getTerm(), info.getIsLeader());
+            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica) {
+                return new DatabaseReplica(new Id(replica.getAddress(), replica.getDatabase()), replica.getTerm(), replica.getIsLeader());
+            }
+
+            public Id id() {
+                return id;
             }
 
             public long term() {
