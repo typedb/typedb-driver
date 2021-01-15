@@ -19,6 +19,7 @@
 
 package grakn.client;
 
+import grakn.client.rpc.Address;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
@@ -88,8 +89,8 @@ public class GraknClient {
     }
 
     public static class Cluster implements Grakn.Client {
-        public static final Pair<String, String> DEFAULT_URI = pair("localhost:1729", "localhost:1730");
-        private final ConcurrentMap<String, Core> clients;
+        public static final Address.Cluster DEFAULT_URI = new Address.Cluster("127.0.0.1", 1729, 1730);
+        private final ConcurrentMap<Address.Cluster, Core> clients;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
 
@@ -97,9 +98,9 @@ public class GraknClient {
             this(DEFAULT_URI);
         }
 
-        public Cluster(Pair<String, String>... addresses) {
+        public Cluster(Address.Cluster... addresses) {
             clients = Arrays.stream(addresses)
-                    .map(address -> pair(address.second(), new Core(address.first())))
+                    .map(address -> pair(address, new Core(address.host() + ":" + address.clientPort())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             databases = new RPCDatabaseManager.Cluster(
                     clients.entrySet().stream()
@@ -135,7 +136,7 @@ public class GraknClient {
             isOpen = false;
         }
 
-        public ConcurrentMap<String, Core> clients() {
+        public ConcurrentMap<Address.Cluster, Core> clients() {
             return clients;
         }
     }

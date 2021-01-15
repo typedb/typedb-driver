@@ -9,7 +9,6 @@ import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
@@ -58,9 +57,9 @@ public class RPCDatabaseManager {
     }
 
     public static class Cluster implements Grakn.DatabaseManager {
-        private final ConcurrentMap<String, RPCDatabaseManager.Core> databaseManagers;
+        private final ConcurrentMap<Address.Cluster, RPCDatabaseManager.Core> databaseManagers;
 
-        public Cluster(ConcurrentMap<String, RPCDatabaseManager.Core> databaseManagers) {
+        public Cluster(ConcurrentMap<Address.Cluster, RPCDatabaseManager.Core> databaseManagers) {
             this.databaseManagers = databaseManagers;
         }
 

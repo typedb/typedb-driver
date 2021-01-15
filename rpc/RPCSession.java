@@ -203,7 +203,7 @@ public class RPCSession {
         public static class DatabaseReplicas {
             private final String database;
             private final ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap;
-            private final Set<String> addresses;
+            private final Set<Address.Cluster> addresses;
 
             private DatabaseReplicas(String database, ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap) {
                 this.database = database;
@@ -215,7 +215,8 @@ public class RPCSession {
                 ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
 
                 for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
-                    replicaMap.put(new DatabaseReplica.Id(replica.getAddress(), replica.getDatabase()), DatabaseReplica.ofProto(replica));
+                    DatabaseReplica.Id id = new DatabaseReplica.Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase());
+                    replicaMap.put(id, DatabaseReplica.ofProto(replica));
                 }
 
                 return new DatabaseReplicas(replicaMap.values().iterator().next().id().database(), replicaMap);
@@ -234,7 +235,7 @@ public class RPCSession {
                 return new DatabaseReplica.Id(randomReplicaAddress(), database);
             }
 
-            private String randomReplicaAddress() {
+            private Address.Cluster randomReplicaAddress() {
                 return addresses.iterator().next();
             }
         }
@@ -251,7 +252,11 @@ public class RPCSession {
             }
 
             public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica) {
-                return new DatabaseReplica(new Id(replica.getAddress(), replica.getDatabase()), replica.getTerm(), replica.getIsLeader());
+                return new DatabaseReplica(
+                        new Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase()),
+                        replica.getTerm(),
+                        replica.getIsLeader()
+                );
             }
 
             public Id id() {
@@ -281,15 +286,15 @@ public class RPCSession {
             }
 
             public static class Id {
-                private final String address;
+                private final Address.Cluster address;
                 private final String database;
 
-                Id(String address, String database) {
+                Id(Address.Cluster address, String database) {
                     this.address = address;
                     this.database = database;
                 }
 
-                public String address() {
+                public Address.Cluster address() {
                     return address;
                 }
 

@@ -23,6 +23,7 @@ import grakn.client.Grakn.Client;
 import grakn.client.Grakn.Session;
 import grakn.client.Grakn.Transaction;
 import grakn.client.GraknClient;
+import grakn.client.rpc.Address;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -39,7 +40,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import static grakn.client.Grakn.Transaction.Type.WRITE;
-import static grakn.common.collection.Collections.pair;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 
@@ -245,7 +245,11 @@ public class ClientQueryTest {
 
     @Test
     public void test() {
-        GraknClient.Cluster client = new GraknClient.Cluster(pair("127.0.0.1:40001", "127.0.0.1:40002"), pair("127.0.0.1:40101", "127.0.0.1:40102"), pair("127.0.0.1:40201", "127.0.0.1:40202"));
+        GraknClient.Cluster client = new GraknClient.Cluster(
+                new Address.Cluster("127.0.0.1", 40001, 40002),
+                new Address.Cluster("127.0.0.1", 40101, 40102),
+                new Address.Cluster("127.0.0.1", 40201, 40202)
+        );
         System.out.println("creating db...");
         client.databases().create("grakn");
         System.out.println("sleeping...");
