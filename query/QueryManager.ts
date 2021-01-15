@@ -99,6 +99,6 @@ export class QueryManager {
     private async runQuery<T>(request: Query.Req, options: GraknOptions, mapper: (res: Transaction.Res) => T): Promise<T> {
         const transactionRequest = new Transaction.Req()
             .setQueryReq(request.setOptions(ProtoBuilder.options(options)));
-        return mapper(await this._rpcTransaction.execute(transactionRequest));
+        return this._rpcTransaction.execute(transactionRequest, mapper);
     }
 }

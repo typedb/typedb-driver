@@ -63,4 +63,8 @@ export class Numeric {
     private static ofNaN(): Numeric {
         return new Numeric(null);
     }
+
+    public toString = () : string => {
+        return this.isNumber() ? `${this.asNumber()}` : 'NaN';
+    }
 }
