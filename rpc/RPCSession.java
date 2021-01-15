@@ -42,14 +42,7 @@ import java.util.stream.Collectors;
 
 import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_FOUND;
-import static grakn.client.common.exception.ErrorMessage.Client.INVALID_RESPONSE_VALUE;
 import static grakn.common.collection.Collections.pair;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.CANDIDATE;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.CANDIDATE_VALUE;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.FOLLOWER;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.FOLLOWER_VALUE;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.LEADER;
-import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.LEADER_VALUE;
 
 public class RPCSession {
     public static class Core implements Grakn.Session {
@@ -209,9 +202,9 @@ public class RPCSession {
             private DatabaseReplica.Id leader() {
                 Map.Entry<DatabaseReplica.Id, DatabaseReplica> initial = replicaMap.entrySet().iterator().next();
                 Map.Entry<DatabaseReplica.Id, DatabaseReplica> reduce = replicaMap.entrySet().stream()
-                        .filter(entry -> entry.getValue().role == DatabaseReplica.Role.LEADER)
+                        .filter(entry -> entry.getValue().role())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
-                if (reduce.getValue().role() == DatabaseReplica.Role.LEADER) return reduce.getKey();
+                if (reduce.getValue().role()) return reduce.getKey();
                 else throw new GraknClientException(ErrorMessage.Client.CLUSTER_LEADER_NOT_FOUND.message(reduce.getValue().term())); // TODO: throw a checked exception (LEADER_NOT_FOUND)
             }
 
@@ -237,40 +230,24 @@ public class RPCSession {
         }
 
         public static class DatabaseReplica {
-            enum Role { LEADER, CANDIDATE, FOLLOWER;}
-
-            private final Role role;
+            private final boolean isLeader;
             private final long term;
 
-            private DatabaseReplica(long term, Role role) {
+            private DatabaseReplica(long term, boolean isLeader) {
                 this.term = term;
-                this.role = role;
+                this.isLeader = isLeader;
             }
 
             public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.Replica.Res.Info info) {
-                Role role_;
-                switch (info.getRole().getNumber()) {
-                    case LEADER_VALUE:
-                        role_ = Role.LEADER;
-                        break;
-                    case CANDIDATE_VALUE:
-                        role_ = Role.CANDIDATE;
-                        break;
-                    case FOLLOWER_VALUE:
-                        role_ = Role.FOLLOWER;
-                        break;
-                    default:
-                        throw new GraknClientException(INVALID_RESPONSE_VALUE.message(info.getRole()));
-                }
-                return new DatabaseReplica(info.getTerm(), role_);
+                return new DatabaseReplica(info.getTerm(), info.getIsLeader());
             }
 
             public long term() {
                 return term;
             }
 
-            public Role role() {
-                return role;
+            public boolean role() {
+                return isLeader;
             }
 
             @Override
@@ -279,12 +256,12 @@ public class RPCSession {
                 if (o == null || getClass() != o.getClass()) return false;
                 DatabaseReplica replica = (DatabaseReplica) o;
                 return term == replica.term &&
-                        role == replica.role;
+                        isLeader == replica.isLeader;
             }
 
             @Override
             public int hashCode() {
-                return Objects.hash(role, term);
+                return Objects.hash(isLeader, term);
             }
 
             public static class Id {
