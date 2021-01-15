@@ -1,5 +1,7 @@
 package grakn.client.rpc;
 
+import java.util.Objects;
+
 import static java.lang.Integer.parseInt;
 
 public class Address {
@@ -10,7 +12,7 @@ public class Address {
 
         public static Cluster parse(String address) {
             String[] split = address.split(":");
-            return new Cluster(split[0], parseInt(split[1]), parseInt(split[3]));
+            return new Cluster(split[0], parseInt(split[1]), parseInt(split[2]));
         }
 
         public Cluster(String host, int clientPort, int serverPort) {
@@ -37,6 +39,21 @@ public class Address {
 
         public String client() {
             return host + ":" + clientPort;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Cluster cluster = (Cluster) o;
+            return clientPort == cluster.clientPort &&
+                    serverPort == cluster.serverPort &&
+                    Objects.equals(host, cluster.host);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(host, clientPort, serverPort);
         }
 
         @Override

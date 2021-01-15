@@ -144,11 +144,11 @@ public class RPCSession {
         private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> sessions;
         private final AtomicBoolean isOpen;
 
-        public Cluster(GraknClient.Cluster client, String database, Grakn.Session.Type type, GraknOptions options) {
+        public Cluster(GraknClient.Cluster client, String database, Grakn.Session.Type type, GraknOptions options, ClusterGrpc.ClusterBlockingStub clusterBlockingStub) {
             this.client = client;
             this.database = database;
             this.type = type;
-            clusterBlockingStub = ClusterGrpc.newBlockingStub(randomClient().channel());
+            this.clusterBlockingStub = clusterBlockingStub;
             this.databaseReplicas = DatabaseReplicas.ofProto(queryDatabaseReplicas());
             sessions = client.clients().entrySet().stream()
                     .map(entry -> pair(new DatabaseReplica.Id(entry.getKey(), database), entry.getValue().session(database, type, options)))
@@ -166,7 +166,7 @@ public class RPCSession {
             DatabaseReplica.Id leader = databaseReplicas.leader();
             System.out.println("opening a transaction to leader '" + leader + "'");
             RPCSession.Core leaderSession = sessions.get(leader);
-            if (leaderSession == null) throw new GraknClientException(CLUSTER_SERVER_NOT_FOUND.message(leader.address())); // TODO: throw a checked exception (SERVER_NOT_FOUND)
+            if (leaderSession == null) throw new GraknClientException(CLUSTER_SERVER_NOT_FOUND.message(leader, sessions.keySet())); // TODO: throw a checked exception (SERVER_NOT_FOUND)
             else return leaderSession.transaction(type, options);
         }
 
@@ -188,10 +188,6 @@ public class RPCSession {
         @Override
         public String database() {
             return database;
-        }
-
-        private GraknClient.Core randomClient() {
-            return client.clients().values().iterator().next();
         }
 
         private grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res queryDatabaseReplicas() {
@@ -314,6 +310,11 @@ public class RPCSession {
                 @Override
                 public int hashCode() {
                     return Objects.hash(address, database);
+                }
+
+                @Override
+                public String toString() {
+                    return address + "/" + database;
                 }
             }
         }

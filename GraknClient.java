@@ -23,11 +23,13 @@ import grakn.client.rpc.Address;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
+import grakn.protocol.cluster.ClusterGrpc;
+import grakn.protocol.cluster.SessionProto;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.util.Arrays;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -89,7 +91,7 @@ public class GraknClient {
     }
 
     public static class Cluster implements Grakn.Client {
-        public static final Address.Cluster DEFAULT_URI = new Address.Cluster("127.0.0.1", 1729, 1730);
+        private final ClusterGrpc.ClusterBlockingStub clusterBlockingStub;
         private final ConcurrentMap<Address.Cluster, Core> clients;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
@@ -98,9 +100,11 @@ public class GraknClient {
             this(DEFAULT_URI);
         }
 
-        public Cluster(Address.Cluster... addresses) {
-            clients = Arrays.stream(addresses)
-                    .map(address -> pair(address, new Core(address.host() + ":" + address.clientPort())))
+        public Cluster(String address) {
+            Core clientBootstraper = new Core(address);
+            clusterBlockingStub = ClusterGrpc.newBlockingStub(clientBootstraper.channel());
+            clients = queryServers().stream()
+                    .map(addr -> pair(addr, new Core(addr.client())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             databases = new RPCDatabaseManager.Cluster(
                     clients.entrySet().stream()
@@ -117,7 +121,7 @@ public class GraknClient {
 
         @Override
         public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions options) {
-            return new RPCSession.Cluster(this, database, type, options);
+            return new RPCSession.Cluster(this, database, type, options, clusterBlockingStub);
         }
 
         @Override
@@ -138,6 +142,14 @@ public class GraknClient {
 
         public ConcurrentMap<Address.Cluster, Core> clients() {
             return clients;
+        }
+
+        private Set<Address.Cluster> queryServers() {
+            SessionProto.Session.Servers.Res res =
+                    clusterBlockingStub.servers(SessionProto.Session.Servers.Req.newBuilder().build());
+            Set<Address.Cluster> servers = res.getServersList().stream().map(Address.Cluster::parse).collect(Collectors.toSet());
+            System.out.println("servers = " + servers);
+            return servers;
         }
     }
 }

@@ -245,11 +245,7 @@ public class ClientQueryTest {
 
     @Test
     public void test() {
-        GraknClient.Cluster client = new GraknClient.Cluster(
-                new Address.Cluster("127.0.0.1", 40001, 40002),
-                new Address.Cluster("127.0.0.1", 40101, 40102),
-                new Address.Cluster("127.0.0.1", 40201, 40202)
-        );
+        GraknClient.Cluster client = new GraknClient.Cluster("127.0.0.1:40001");
         System.out.println("creating db...");
         client.databases().create("grakn");
         System.out.println("sleeping...");

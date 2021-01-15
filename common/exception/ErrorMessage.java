@@ -40,7 +40,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client CLUSTER_LEADER_NOT_FOUND =
                 new Client(6, "No leader found for latest known term '%s'.");
         public static final Client CLUSTER_SERVER_NOT_FOUND =
-                new Client(7, "The client has no knowledge of server '%s'.");
+                new Client(7, "The client has no knowledge of server '%s': ('%s').");
 
 
 
