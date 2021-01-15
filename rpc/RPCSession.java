@@ -29,7 +29,6 @@ import grakn.common.collection.Pair;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import grakn.protocol.cluster.ClusterGrpc;
-import grakn.protocol.cluster.DatabaseProto;
 import io.grpc.Channel;
 
 import java.util.Map;
@@ -45,6 +44,12 @@ import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_FOUND;
 import static grakn.client.common.exception.ErrorMessage.Client.INVALID_RESPONSE_VALUE;
 import static grakn.common.collection.Collections.pair;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.CANDIDATE;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.CANDIDATE_VALUE;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.FOLLOWER;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.FOLLOWER_VALUE;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.LEADER;
+import static grakn.protocol.cluster.SessionProto.Session.Replica.Res.Role.LEADER_VALUE;
 
 public class RPCSession {
     public static class Core implements Grakn.Session {
@@ -222,28 +227,42 @@ public class RPCSession {
             private ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> createReplicaMap() {
                 ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
                 DatabaseReplica.Id replica = randomReplica();
-                DatabaseProto.Database.Replica.Res res = clusterBlockingStub
-                        .databaseReplicaInfo(DatabaseProto.Database.Replica.Req.newBuilder().setDatabase(replica.database()).build());
-                for (DatabaseProto.Database.Replica.Res.Info info: res.getInfosList()) {
-                    replicaMap.put(new DatabaseReplica.Id(info.getAddress(), info.getDatabase()), new DatabaseReplica(info.getTerm(), info.getRole()));
+                grakn.protocol.cluster.SessionProto.Session.Replica.Res res = clusterBlockingStub
+                        .databaseReplicaInfo(grakn.protocol.cluster.SessionProto.Session.Replica.Req.newBuilder().setDatabase(replica.database()).build());
+                for (grakn.protocol.cluster.SessionProto.Session.Replica.Res.Info info: res.getInfosList()) {
+                    replicaMap.put(new DatabaseReplica.Id(info.getAddress(), info.getDatabase()), DatabaseReplica.ofProto(info));
                 }
                 return replicaMap;
             }
         }
 
         public static class DatabaseReplica {
-            enum Role { LEADER, CANDIDATE, FOLLOWER }
+            enum Role { LEADER, CANDIDATE, FOLLOWER;}
 
             private final Role role;
             private final long term;
 
-            DatabaseReplica(long term, String role) {
-                this(term, parseRole(role));
-            }
-
-            DatabaseReplica(long term, Role role) {
+            private DatabaseReplica(long term, Role role) {
                 this.term = term;
                 this.role = role;
+            }
+
+            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.Replica.Res.Info info) {
+                Role role_;
+                switch (info.getRole().getNumber()) {
+                    case LEADER_VALUE:
+                        role_ = Role.LEADER;
+                        break;
+                    case CANDIDATE_VALUE:
+                        role_ = Role.CANDIDATE;
+                        break;
+                    case FOLLOWER_VALUE:
+                        role_ = Role.FOLLOWER;
+                        break;
+                    default:
+                        throw new GraknClientException(INVALID_RESPONSE_VALUE.message(info.getRole()));
+                }
+                return new DatabaseReplica(info.getTerm(), role_);
             }
 
             public long term() {
@@ -252,24 +271,6 @@ public class RPCSession {
 
             public Role role() {
                 return role;
-            }
-
-            private static Role parseRole(String role) {
-                Role role_;
-                switch (role) {
-                    case "leader":
-                        role_ = Role.LEADER;
-                        break;
-                    case "candidate":
-                        role_ = Role.CANDIDATE;
-                        break;
-                    case "follower":
-                        role_ = Role.FOLLOWER;
-                        break;
-                    default:
-                        throw new GraknClientException(INVALID_RESPONSE_VALUE.message(role));
-                }
-                return role_;
             }
 
             @Override
