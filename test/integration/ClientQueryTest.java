@@ -39,6 +39,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import static grakn.client.Grakn.Transaction.Type.WRITE;
+import static grakn.common.collection.Collections.pair;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 
@@ -240,5 +241,30 @@ public class ClientQueryTest {
                 fn.accept(transaction);
             }
         }
+    }
+
+    @Test
+    public void test() {
+        GraknClient.Cluster client = new GraknClient.Cluster(pair("127.0.0.1:40001", "127.0.0.1:40002"), pair("127.0.0.1:40101", "127.0.0.1:40102"), pair("127.0.0.1:40201", "127.0.0.1:40202"));
+        System.out.println("creating db...");
+        client.databases().create("grakn");
+        System.out.println("sleeping...");
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("opening session...");
+        Session session = client.session("grakn", Session.Type.DATA);
+        System.out.println("opening tx...");
+        Transaction tx = session.transaction(Transaction.Type.WRITE);
+        System.out.println("closing tx...");
+        tx.close();
+
+        System.out.println("closing session...");
+        session.close();
+
+        System.out.println("closing client...");
+        client.close();
     }
 }

@@ -23,6 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.Grakn;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.ErrorMessage;
+import grakn.client.common.exception.GraknClientException;
 import grakn.common.collection.Pair;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
@@ -40,6 +42,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static grakn.client.GraknProtoBuilder.options;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_FOUND;
+import static grakn.client.common.exception.ErrorMessage.Client.INVALID_RESPONSE_VALUE;
 import static grakn.common.collection.Collections.pair;
 
 public class RPCSession {
@@ -136,16 +140,16 @@ public class RPCSession {
     public static class Cluster implements Grakn.Session {
         private final String database;
         private final Type type;
-        private final ReplicaSet replicas;
-        private final ConcurrentMap<Replica.Id, RPCSession.Core> sessions;
+        private final DatabaseReplicas databaseReplicas;
+        private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> sessions;
         private final AtomicBoolean isOpen;
 
         public Cluster(GraknClient.Cluster client, String database, Grakn.Session.Type type, GraknOptions options) {
             this.database = database;
             this.type = type;
-            this.replicas = new ReplicaSet(database, client);
+            this.databaseReplicas = new DatabaseReplicas(database, client);
             sessions = client.clients().entrySet().stream()
-                    .map(entry -> pair(new Replica.Id(entry.getKey(), database), entry.getValue().session(database, type, options)))
+                    .map(entry -> pair(new DatabaseReplica.Id(entry.getKey(), database), entry.getValue().session(database, type, options)))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             isOpen = new AtomicBoolean(true);
         }
@@ -157,8 +161,11 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
-            Replica.Id replica = replicas.leader();
-            return sessions.get(replica).transaction(type, options);
+            DatabaseReplica.Id leader = databaseReplicas.leader();
+            System.out.println("opening a transaction to leader '" + leader + "'");
+            RPCSession.Core leaderSession = sessions.get(leader);
+            if (leaderSession == null) throw new GraknClientException(CLUSTER_SERVER_NOT_FOUND.message(leader.address())); // TODO: throw a checked exception (SERVER_NOT_FOUND)
+            else return leaderSession.transaction(type, options);
         }
 
         @Override
@@ -181,59 +188,60 @@ public class RPCSession {
             return database;
         }
 
-        public static class ReplicaSet {
-            private final String name;
+        public static class DatabaseReplicas {
+            private final String database;
             private final GraknClient.Cluster client;
             private final ClusterGrpc.ClusterBlockingStub clusterBlockingStub;
-            private final ConcurrentMap<Cluster.Replica.Id, Cluster.Replica> replicaMap;
+            private final ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap;
 
-            public ReplicaSet(String name, GraknClient.Cluster client) {
-                this.name = name;
+            public DatabaseReplicas(String database, GraknClient.Cluster client) {
+                this.database = database;
                 this.client = client;
                 clusterBlockingStub = ClusterGrpc.newBlockingStub(randomReplicaClient().channel());
                 replicaMap = createReplicaMap();
+            }
+
+            private DatabaseReplica.Id leader() {
+                Map.Entry<DatabaseReplica.Id, DatabaseReplica> initial = replicaMap.entrySet().iterator().next();
+                Map.Entry<DatabaseReplica.Id, DatabaseReplica> reduce = replicaMap.entrySet().stream()
+                        .filter(entry -> entry.getValue().role == DatabaseReplica.Role.LEADER)
+                        .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
+                if (reduce.getValue().role() == DatabaseReplica.Role.LEADER) return reduce.getKey();
+                else throw new GraknClientException(ErrorMessage.Client.CLUSTER_LEADER_NOT_FOUND.message(reduce.getValue().term())); // TODO: throw a checked exception (LEADER_NOT_FOUND)
+            }
+
+            private DatabaseReplica.Id randomReplica() {
+                String randomAddress = this.client.clients().keySet().iterator().next();
+                return new DatabaseReplica.Id(randomAddress, database);
             }
 
             private GraknClient.Core randomReplicaClient() {
                 return client.clients().get(randomReplica().address());
             }
 
-            private Cluster.Replica.Id randomReplica() {
-                String randomAddress = this.client.clients().keySet().iterator().next();
-                return new Cluster.Replica.Id(randomAddress, name);
-            }
-
-            private Cluster.Replica.Id leader() {
-                Map.Entry<Cluster.Replica.Id, Cluster.Replica> initial = replicaMap.entrySet().iterator().next();
-                return replicaMap.entrySet().stream()
-                        .filter(entry -> entry.getValue().role == Cluster.Replica.Role.LEADER)
-                        .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc)
-                        .getKey();
-            }
-
-            private ConcurrentMap<Cluster.Replica.Id, Cluster.Replica> createReplicaMap() {
-                ConcurrentMap<Cluster.Replica.Id, Cluster.Replica> replicaMap = new ConcurrentHashMap<>();
-                Cluster.Replica.Id replica = randomReplica();
+            private ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> createReplicaMap() {
+                ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
+                DatabaseReplica.Id replica = randomReplica();
                 DatabaseProto.Database.Replica.Res res = clusterBlockingStub
                         .databaseReplicaInfo(DatabaseProto.Database.Replica.Req.newBuilder().setDatabase(replica.database()).build());
                 for (DatabaseProto.Database.Replica.Res.Info info: res.getInfosList()) {
-                    replicaMap.put(new Cluster.Replica.Id(info.getAddress(), info.getDatabase()), new Cluster.Replica(info.getTerm(), info.getRole()));
+                    replicaMap.put(new DatabaseReplica.Id(info.getAddress(), info.getDatabase()), new DatabaseReplica(info.getTerm(), info.getRole()));
                 }
                 return replicaMap;
             }
         }
 
-        public static class Replica {
+        public static class DatabaseReplica {
             enum Role { LEADER, CANDIDATE, FOLLOWER }
 
             private final Role role;
             private final long term;
 
-            Replica(long term, String role) {
+            DatabaseReplica(long term, String role) {
                 this(term, parseRole(role));
             }
 
-            Replica(long term, Role role) {
+            DatabaseReplica(long term, Role role) {
                 this.term = term;
                 this.role = role;
             }
@@ -259,7 +267,7 @@ public class RPCSession {
                         role_ = Role.FOLLOWER;
                         break;
                     default:
-                        throw new IllegalArgumentException("invalid role: '" + role + "'");
+                        throw new GraknClientException(INVALID_RESPONSE_VALUE.message(role));
                 }
                 return role_;
             }
@@ -268,7 +276,7 @@ public class RPCSession {
             public boolean equals(Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                Replica replica = (Replica) o;
+                DatabaseReplica replica = (DatabaseReplica) o;
                 return term == replica.term &&
                         role == replica.role;
             }
