@@ -37,11 +37,11 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client UNKNOWN_REQUEST_ID =
                 new Client(5, "Received a response with unknown request id '%s'.");
 
-        public static final Client CLUSTER_LEADER_NOT_FOUND =
-                new Client(6, "No leader found for latest known term '%s'.");
+        public static final Client CLUSTER_LEADER_NOT_ELECTED =
+                new Client(6, "No leader has been elected for latest known term '%s'.");
 
         public static final Client CLUSTER_NOT_AVAILABLE =
-                new Client(7, "Tried connecting to '%s', but none are available.");
+                new Client(7, "Attempted connecting to these servers, but none are available: '%s'.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";

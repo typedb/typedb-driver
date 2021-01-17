@@ -25,7 +25,8 @@ import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
 import grakn.protocol.cluster.ClusterGrpc;
-import grakn.protocol.cluster.SessionProto;
+import grakn.protocol.cluster.ClusterProto;
+import grakn.protocol.cluster.DiscoveryProto;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -170,8 +171,8 @@ public class GraknClient {
                 try {
                     LOG.info("Performing server discovery to {}...", address);
                     ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = bootstrapClusterDiscoveryRPC(address);
-                    SessionProto.Session.Servers.Res res =
-                            clusterDiscoveryRPC.servers(SessionProto.Session.Servers.Req.newBuilder().build());
+                    DiscoveryProto.Discovery.Cluster.Res res =
+                            clusterDiscoveryRPC.clusterDiscovery(DiscoveryProto.Discovery.Cluster.Req.newBuilder().build());
                     Set<Address.Cluster> servers = res.getServersList().stream().map(Address.Cluster::parse).collect(Collectors.toSet());
                     LOG.info("Discovered {}", servers);
                     return pair(clusterDiscoveryRPC, servers);
@@ -179,7 +180,7 @@ public class GraknClient {
                     LOG.error("Server discovery to {} failed.", address);
                 }
             }
-            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(addresses));
+            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message((Object) addresses)); // remove ambiguity by casting to Object
         }
 
         private ClusterGrpc.ClusterBlockingStub bootstrapClusterDiscoveryRPC(String bootstrapAddress) {

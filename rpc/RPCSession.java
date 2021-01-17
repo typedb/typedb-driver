@@ -27,6 +27,7 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import grakn.protocol.cluster.ClusterGrpc;
+import grakn.protocol.cluster.DiscoveryProto;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static grakn.client.GraknProtoBuilder.options;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_FOUND;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_ELECTED;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NOT_AVAILABLE;
 
 public class RPCSession {
@@ -200,8 +201,8 @@ public class RPCSession {
             while (attempt < client.clients().size()) {
                 try {
                     return DatabaseReplicas.ofProto(
-                            clusterDiscoveryRPC.databaseReplicas(
-                                    grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Req.newBuilder()
+                            clusterDiscoveryRPC.databaseReplicasDiscovery(
+                                    DiscoveryProto.Discovery.DatabaseReplicas.Req.newBuilder()
                                             .setDatabase(database)
                                             .build()
                             )
@@ -228,10 +229,10 @@ public class RPCSession {
                 this.addresses = replicaMap.keySet().stream().map(DatabaseReplica.Id::address).collect(Collectors.toSet());
             }
 
-            public static DatabaseReplicas ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res res) {
+            public static DatabaseReplicas ofProto(DiscoveryProto.Discovery.DatabaseReplicas.Res res) {
                 ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
 
-                for (grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
+                for (DiscoveryProto.Discovery.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
                     DatabaseReplica.Id id = new DatabaseReplica.Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase());
                     replicaMap.put(id, DatabaseReplica.ofProto(replica));
                 }
@@ -245,7 +246,7 @@ public class RPCSession {
                         .filter(entry -> entry.getValue().role())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
                 if (reduce.getValue().role()) return reduce.getValue();
-                else throw new GraknClientException(CLUSTER_LEADER_NOT_FOUND.message(reduce.getValue().term())); // TODO: throw a checked exception (LEADER_NOT_FOUND)
+                else throw new GraknClientException(CLUSTER_LEADER_NOT_ELECTED.message(reduce.getValue().term())); // TODO: throw a checked exception (LEADER_NOT_FOUND)
             }
 
             // TODO: for when the transaction type is read replica
@@ -269,7 +270,7 @@ public class RPCSession {
                 this.isLeader = isLeader;
             }
 
-            public static DatabaseReplica ofProto(grakn.protocol.cluster.SessionProto.Session.DatabaseReplicas.Res.DatabaseReplica replica) {
+            public static DatabaseReplica ofProto(DiscoveryProto.Discovery.DatabaseReplicas.Res.DatabaseReplica replica) {
                 return new DatabaseReplica(
                         new Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase()),
                         replica.getTerm(),
