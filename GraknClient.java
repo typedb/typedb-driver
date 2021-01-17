@@ -19,6 +19,7 @@
 
 package grakn.client;
 
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.Address;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
@@ -28,12 +29,18 @@ import grakn.protocol.cluster.SessionProto;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NOT_AVAILABLE;
 import static grakn.common.collection.Collections.pair;
 
 public class GraknClient {
@@ -91,7 +98,9 @@ public class GraknClient {
     }
 
     public static class Cluster implements Grakn.Client {
-        private final ClusterGrpc.ClusterBlockingStub clusterBlockingStub;
+        private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
+        private final AtomicInteger selector;
+        private ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC;
         private final ConcurrentMap<Address.Cluster, Core> clients;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
@@ -101,9 +110,10 @@ public class GraknClient {
         }
 
         public Cluster(String address) {
-            Core clientBootstraper = new Core(address);
-            clusterBlockingStub = ClusterGrpc.newBlockingStub(clientBootstraper.channel());
-            clients = queryServers().stream()
+            selector = new AtomicInteger();
+            Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster>> cluster = discoverCluster(address);
+            clusterDiscoveryRPC = cluster.first();
+            clients = cluster.second().stream()
                     .map(addr -> pair(addr, new Core(addr.client())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             databases = new RPCDatabaseManager.Cluster(
@@ -121,7 +131,18 @@ public class GraknClient {
 
         @Override
         public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions options) {
-            return new RPCSession.Cluster(this, database, type, options, clusterBlockingStub);
+            return new RPCSession.Cluster(this, database, type, options, clusterDiscoveryRPC);
+        }
+
+        public ClusterGrpc.ClusterBlockingStub selectNextClusterDiscoveryRPC() {
+            Core selected = selectNextClient();
+            clusterDiscoveryRPC = ClusterGrpc.newBlockingStub(selected.channel());
+            return clusterDiscoveryRPC;
+        }
+
+        private Core selectNextClient() {
+            int index = selector.getAndIncrement() % clients.size();
+            return new ArrayList<>(clients.values()).get(index);
         }
 
         @Override
@@ -144,12 +165,26 @@ public class GraknClient {
             return clients;
         }
 
-        private Set<Address.Cluster> queryServers() {
-            SessionProto.Session.Servers.Res res =
-                    clusterBlockingStub.servers(SessionProto.Session.Servers.Req.newBuilder().build());
-            Set<Address.Cluster> servers = res.getServersList().stream().map(Address.Cluster::parse).collect(Collectors.toSet());
-            System.out.println("servers = " + servers);
-            return servers;
+        private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster>> discoverCluster(String... addresses) {
+            for (String address: addresses) {
+                try {
+                    LOG.info("Performing server discovery to {}...", address);
+                    ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = bootstrapClusterDiscoveryRPC(address);
+                    SessionProto.Session.Servers.Res res =
+                            clusterDiscoveryRPC.servers(SessionProto.Session.Servers.Req.newBuilder().build());
+                    Set<Address.Cluster> servers = res.getServersList().stream().map(Address.Cluster::parse).collect(Collectors.toSet());
+                    LOG.info("Discovered {}", servers);
+                    return pair(clusterDiscoveryRPC, servers);
+                } catch (StatusRuntimeException e) {
+                    LOG.error("Server discovery to {} failed.", address);
+                }
+            }
+            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(addresses));
+        }
+
+        private ClusterGrpc.ClusterBlockingStub bootstrapClusterDiscoveryRPC(String bootstrapAddress) {
+            GraknClient.Core client = new Core(bootstrapAddress);
+            return ClusterGrpc.newBlockingStub(client.channel());
         }
     }
 }
