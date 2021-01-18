@@ -66,6 +66,8 @@ export abstract class ConceptImpl implements Concept {
         return false;
     }
 
+    abstract equals(concept: Concept): boolean;
+
 }
 
 export abstract class RemoteConceptImpl implements RemoteConcept {
@@ -116,4 +118,6 @@ export abstract class RemoteConceptImpl implements RemoteConcept {
     isRelation(): boolean {
         return false;
     }
+
+    abstract equals(concept: Concept): boolean;
 }

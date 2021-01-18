@@ -47,6 +47,12 @@ export interface AttributeType extends ThingType {
     isString(): boolean;
     isDateTime(): boolean;
 
+    asBoolean(): BooleanAttributeType;
+    asLong(): LongAttributeType;
+    asDouble(): DoubleAttributeType;
+    asString(): StringAttributeType;
+    asDateTime(): DateTimeAttributeType;
+
     asRemote(transaction: Transaction): RemoteAttributeType;
 }
 
@@ -56,6 +62,12 @@ export interface RemoteAttributeType extends Merge<RemoteThingType, AttributeTyp
     getInstances(): Stream<Attribute<ValueClass>>;
     getOwners(): Stream<ThingType>;
     getOwners(onlyKey: boolean): Stream<ThingType>;
+
+    asBoolean(): RemoteBooleanAttributeType;
+    asLong(): RemoteLongAttributeType;
+    asDouble(): RemoteDoubleAttributeType;
+    asString(): RemoteStringAttributeType;
+    asDateTime(): RemoteDateTimeAttributeType;
 
     asRemote(transaction: Transaction): RemoteAttributeType;
 }

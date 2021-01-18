@@ -41,7 +41,13 @@ import {
     StringAttributeImpl,
     Stream,
     ConceptProtoBuilder,
-    GraknClientError, ErrorMessage,
+    GraknClientError,
+    ErrorMessage,
+    BooleanAttribute,
+    LongAttribute,
+    DoubleAttribute,
+    StringAttribute,
+    DateTimeAttribute,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -93,6 +99,22 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     isDateTime(): boolean {
         return false;
     }
+
+    asBoolean(): BooleanAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "BooleanAttributeType"))
+    }
+    asLong(): LongAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "LongAttributeType"))
+    }
+    asDouble(): DoubleAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "DoubleAttributeType"))
+    }
+    asString(): StringAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "StringAttributeType"))
+    }
+    asDateTime(): DateTimeAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "DateTimeAttributeType"))
+    }
 }
 
 export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements RemoteAttributeType {
@@ -123,6 +145,22 @@ export class RemoteAttributeTypeImpl extends RemoteThingTypeImpl implements Remo
 
     isDateTime(): boolean {
         return false;
+    }
+
+    asBoolean(): RemoteBooleanAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteBooleanAttributeType"))
+    }
+    asLong(): RemoteLongAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteLongAttributeType"))
+    }
+    asDouble(): RemoteDoubleAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteDoubleAttributeType"))
+    }
+    asString(): RemoteStringAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteStringAttributeType"))
+    }
+    asDateTime(): RemoteDateTimeAttributeType {
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteDateTimeAttributeType"))
     }
 
     getValueType(): ValueType {
@@ -177,6 +215,13 @@ export class BooleanAttributeTypeImpl extends AttributeTypeImpl implements Boole
         return true;
     }
 
+    asBoolean(): BooleanAttributeType {
+        if (this.isRoot()) {
+            return new BooleanAttributeTypeImpl("attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "BooleanAttributeType"))
+    }
+
     static of(typeProto: ConceptProto.Type): BooleanAttributeTypeImpl {
         return new BooleanAttributeTypeImpl(typeProto.getLabel(), typeProto.getRoot());
     }
@@ -198,6 +243,13 @@ export class RemoteBooleanAttributeTypeImpl extends RemoteAttributeTypeImpl impl
 
     isBoolean(): boolean {
         return true;
+    }
+
+    asBoolean(): RemoteBooleanAttributeType {
+        if (this.isRoot()) {
+            return new RemoteBooleanAttributeTypeImpl(this.transaction, "attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteBooleanAttributeType"))
     }
 
     getValueType(): ValueType {
@@ -247,6 +299,13 @@ export class LongAttributeTypeImpl extends AttributeTypeImpl implements LongAttr
         return true;
     }
 
+    asLong(): LongAttributeType {
+        if (this.isRoot()) {
+            return new LongAttributeTypeImpl("attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "LongAttributeType"))
+    }
+
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
         return new RemoteLongAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -264,6 +323,13 @@ export class RemoteLongAttributeTypeImpl extends RemoteAttributeTypeImpl impleme
 
     isLong(): boolean {
         return true;
+    }
+
+    asLong(): RemoteLongAttributeType {
+        if (this.isRoot()) {
+            return new RemoteLongAttributeTypeImpl(this.transaction, "attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteLongAttributeType"))
     }
 
     asRemote(transaction: Transaction): RemoteLongAttributeTypeImpl {
@@ -309,6 +375,13 @@ export class DoubleAttributeTypeImpl extends AttributeTypeImpl implements Double
         return true;
     }
 
+    asDouble(): DoubleAttributeType {
+        if (this.isRoot()) {
+            return new DoubleAttributeTypeImpl("attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "DoubleAttributeType"))
+    }
+
     asRemote(transaction: Transaction): RemoteDoubleAttributeTypeImpl {
         return new RemoteDoubleAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -330,6 +403,13 @@ export class RemoteDoubleAttributeTypeImpl extends RemoteAttributeTypeImpl imple
 
     isDouble(): boolean {
         return true;
+    }
+
+    asDouble(): RemoteDoubleAttributeType {
+        if (this.isRoot()) {
+            return new RemoteDoubleAttributeTypeImpl(this.transaction, "attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteDoubleAttributeType"))
     }
 
     getSubtypes(): Stream<DoubleAttributeTypeImpl> {
@@ -371,6 +451,13 @@ export class StringAttributeTypeImpl extends AttributeTypeImpl implements String
         return true;
     }
 
+    asString(): StringAttributeType {
+        if (this.isRoot()) {
+            return new StringAttributeTypeImpl("attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "StringAttributeType"))
+    }
+
     asRemote(transaction: Transaction): RemoteStringAttributeTypeImpl {
         return new RemoteStringAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -392,6 +479,13 @@ export class RemoteStringAttributeTypeImpl extends RemoteAttributeTypeImpl imple
 
     isString(): boolean {
         return true;
+    }
+
+    asString(): RemoteStringAttributeType {
+        if (this.isRoot()) {
+            return new RemoteStringAttributeTypeImpl(this.transaction, "attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteStringAttributeType"))
     }
 
     getSubtypes(): Stream<StringAttributeTypeImpl> {
@@ -447,6 +541,13 @@ export class DateTimeAttributeTypeImpl extends AttributeTypeImpl implements Date
         return true;
     }
 
+    asDateTime(): DateTimeAttributeType {
+        if (this.isRoot()) {
+            return new DateTimeAttributeTypeImpl("attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("AttributeType", "DateTimeAttributeType"))
+    }
+
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {
         return new RemoteDateTimeAttributeTypeImpl(transaction, this.getLabel(), this.isRoot())
     }
@@ -464,6 +565,13 @@ export class RemoteDateTimeAttributeTypeImpl extends RemoteAttributeTypeImpl imp
 
     isDateTime(): boolean {
         return true;
+    }
+
+    asDateTime(): RemoteDateTimeAttributeType {
+        if (this.isRoot()) {
+            return new RemoteDateTimeAttributeTypeImpl(this.transaction, "attribute", true);
+        }
+        throw new GraknClientError(ErrorMessage.Concept.INVALID_CONCEPT_CASTING.message("RemoteAttributeType", "RemoteDateTimeAttributeType"))
     }
 
     asRemote(transaction: Transaction): RemoteDateTimeAttributeTypeImpl {

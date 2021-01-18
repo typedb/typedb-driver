@@ -26,7 +26,7 @@ import {
     ThingImpl,
     ConceptProtoBuilder,
     GraknClientError,
-    ErrorMessage, RoleTypeImpl, ThingTypeImpl, ConceptImpl, RemoteConceptImpl,
+    ErrorMessage, RoleTypeImpl, ThingTypeImpl, ConceptImpl, RemoteConceptImpl, Concept,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
@@ -64,6 +64,11 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return `${this.constructor.name}[label:${this._label}]`;
     }
 
+    equals(concept: Concept): boolean {
+        if (!concept.isType()) return false;
+        return (concept as Type).getLabel() === this.getLabel();
+    }
+
     abstract asRemote(transaction: Transaction): RemoteType;
 }
 
@@ -95,6 +100,11 @@ export abstract class RemoteTypeImpl extends RemoteConceptImpl implements Remote
 
     isRemote(): boolean {
         return true;
+    }
+
+    equals(concept: Concept): boolean {
+        if (!concept.isType()) return false;
+        return (concept as Type).getLabel() === this.getLabel();
     }
 
     async setLabel(label: string): Promise<void> {

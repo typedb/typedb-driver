@@ -21,6 +21,7 @@ import { defineParameterType } from "@cucumber/cucumber";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import { Grakn } from "../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
+import { tx } from "../connection/ConnectionSteps";
 
 defineParameterType({
     name: "bool",
@@ -43,13 +44,27 @@ defineParameterType({
 defineParameterType({
     name: "root_label",
     regexp: /entity|attribute|relation/,
-    transformer: s => s,
+    transformer: s => {
+        switch (s) {
+            case "entity":
+                return RootLabel.ENTITY;
+            case "attribute":
+                return RootLabel.ATTRIBUTE;
+            case "relation":
+                return RootLabel.RELATION;
+            default:
+                throw `Root label "${s}" was unrecognised.`
+        }
+    }
 });
 
 defineParameterType({
     name: "scoped_label",
     regexp: /[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+/,
-    transformer: s => s,
+    transformer: s => {
+        const split = s.split(",");
+        return new ScopedLabel(split[0], split[1]);
+    },
 });
 
 defineParameterType({
@@ -80,9 +95,43 @@ defineParameterType({
 });
 
 defineParameterType({
+    name: "type_label",
+    regexp: /[a-zA-Z0-9]+/,
+    transformer: s => s
+});
+
+defineParameterType({
     name: "transaction_type",
     regexp: /read|write/,
     transformer: s => s === "read" ? TransactionType.READ : TransactionType.WRITE
 });
+
+export enum RootLabel {
+    ATTRIBUTE,
+    ENTITY,
+    RELATION,
+}
+
+export class ScopedLabel {
+    private readonly _scope: string;
+    private readonly _role: string;
+
+    constructor(scope: string, role: string) {
+        this._scope = scope;
+        this._role = role;
+    }
+
+    scope(): string {
+        return this._scope;
+    }
+
+    role(): string {
+        return this._role;
+    }
+
+    scopedLabel(): string {
+        return this._scope + ":" + this._role;
+    }
+}
 
 //TODO: scoped labelS (plural form), transaction typeS, possibly investigate if root label and scoped label are gonna mess with me

@@ -37,6 +37,8 @@ export interface Concept {
     isEntity(): boolean;
     isAttribute(): boolean;
     isRelation(): boolean;
+
+    equals(concept: Concept): boolean;
 }
 
 export interface RemoteConcept extends Concept {

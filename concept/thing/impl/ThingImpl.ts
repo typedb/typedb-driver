@@ -49,7 +49,7 @@ import {
     LongAttributeImpl,
     StringAttributeImpl,
     GraknClientError,
-    ErrorMessage, EntityImpl, Bytes, ConceptImpl, RemoteConceptImpl,
+    ErrorMessage, EntityImpl, Bytes, ConceptImpl, RemoteConceptImpl, Concept,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import Transaction = Grakn.Transaction;
@@ -80,6 +80,11 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
     toString(): string {
         return `${ThingImpl.name}[iid:${this._iid}]`;
+    }
+
+    equals(concept: Concept): boolean {
+        if (!concept.isThing()) return false;
+        return (concept as Thing).getIID() === this.getIID();
     }
 
     abstract asRemote(transaction: Transaction): RemoteThing;
@@ -118,6 +123,11 @@ export abstract class RemoteThingImpl extends RemoteConceptImpl implements Remot
 
     isThing(): boolean {
         return true;
+    }
+
+    equals(concept: Concept): boolean {
+        if (!concept.isThing()) return false;
+        return (concept as Thing).getIID() === this.getIID();
     }
 
     getHas(onlyKey: boolean): Stream<AttributeImpl<ValueClass>>;
