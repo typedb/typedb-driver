@@ -169,7 +169,7 @@ public class RPCSession {
                     leader.id(),
                     key -> {
                         LOG.info("Opening a session to leader '{}'", leader);
-                        return client.clients().get(key.address()).session(key.database(), this.type);
+                        return client.coreClients().get(key.address()).session(key.database(), this.type);
                     }
             );
             LOG.info("Opening a transaction to leader '{}'", leader);
@@ -198,7 +198,7 @@ public class RPCSession {
 
         private DatabaseReplicas discoverDatabaseReplicas() {
             int attempt = 0;
-            while (attempt < client.clients().size()) {
+            while (attempt < client.coreClients().size()) {
                 try {
                     return DatabaseReplicas.ofProto(
                             clusterDiscoveryRPC.databaseReplicasDiscovery(
@@ -215,13 +215,13 @@ public class RPCSession {
                 }
             }
 
-            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(client.clients()));
+            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(client.coreClients()));
         }
 
         public static class DatabaseReplicas {
             private final String database;
             private final ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap;
-            private final Set<Address.Cluster> addresses;
+            private final Set<Address.Cluster.Server> addresses;
 
             private DatabaseReplicas(String database, ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap) {
                 this.database = database;
@@ -233,7 +233,7 @@ public class RPCSession {
                 ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap = new ConcurrentHashMap<>();
 
                 for (DiscoveryProto.Discovery.DatabaseReplicas.Res.DatabaseReplica replica: res.getReplicasList()) {
-                    DatabaseReplica.Id id = new DatabaseReplica.Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase());
+                    DatabaseReplica.Id id = new DatabaseReplica.Id(Address.Cluster.Server.parse(replica.getAddress()), replica.getDatabase());
                     replicaMap.put(id, DatabaseReplica.ofProto(replica));
                 }
 
@@ -254,7 +254,7 @@ public class RPCSession {
                 return replicaMap.get(new DatabaseReplica.Id(selectRandomReplicaAddress(), database));
             }
 
-            private Address.Cluster selectRandomReplicaAddress() {
+            private Address.Cluster.Server selectRandomReplicaAddress() {
                 return addresses.iterator().next();
             }
         }
@@ -272,7 +272,7 @@ public class RPCSession {
 
             public static DatabaseReplica ofProto(DiscoveryProto.Discovery.DatabaseReplicas.Res.DatabaseReplica replica) {
                 return new DatabaseReplica(
-                        new Id(Address.Cluster.parse(replica.getAddress()), replica.getDatabase()),
+                        new Id(Address.Cluster.Server.parse(replica.getAddress()), replica.getDatabase()),
                         replica.getTerm(),
                         replica.getIsLeader()
                 );
@@ -310,15 +310,15 @@ public class RPCSession {
             }
 
             public static class Id {
-                private final Address.Cluster address;
+                private final Address.Cluster.Server address;
                 private final String database;
 
-                Id(Address.Cluster address, String database) {
+                Id(Address.Cluster.Server address, String database) {
                     this.address = address;
                     this.database = database;
                 }
 
-                public Address.Cluster address() {
+                public Address.Cluster.Server address() {
                     return address;
                 }
 

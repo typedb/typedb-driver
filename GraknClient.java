@@ -25,7 +25,6 @@ import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
 import grakn.protocol.cluster.ClusterGrpc;
-import grakn.protocol.cluster.ClusterProto;
 import grakn.protocol.cluster.DiscoveryProto;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
@@ -45,7 +44,7 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NOT_AVAI
 import static grakn.common.collection.Collections.pair;
 
 public class GraknClient {
-    public static final String DEFAULT_URI = "localhost:1729";
+    public static final String DEFAULT_ADDRESS = "localhost:1729";
 
     public static class Core implements Grakn.Client {
         private final ManagedChannel channel;
@@ -56,7 +55,7 @@ public class GraknClient {
         //  therefore we just have to minimise it but not aim to forcefully reduce it to 0
         // with this argument, adding a static create method GraknClient.core(addr) and GraknClient.cluster(user, pass, addr...) makes sense
         public Core() {
-            this(DEFAULT_URI);
+            this(DEFAULT_ADDRESS);
         }
 
         public Core(String address) {
@@ -100,25 +99,25 @@ public class GraknClient {
 
     public static class Cluster implements Grakn.Client {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        private final AtomicInteger selector;
+        private final ConcurrentMap<Address.Cluster.Server, Core> coreClients;
+        private final AtomicInteger coreClientSelector;
         private ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC;
-        private final ConcurrentMap<Address.Cluster, Core> clients;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
 
         public Cluster() {
-            this(DEFAULT_URI);
+            this(DEFAULT_ADDRESS);
         }
 
         public Cluster(String address) {
-            selector = new AtomicInteger();
-            Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster>> cluster = discoverCluster(address);
-            clusterDiscoveryRPC = cluster.first();
-            clients = cluster.second().stream()
+            Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discovery = discoverCluster(address);
+            clusterDiscoveryRPC = discovery.first();
+            coreClients = discovery.second().stream()
                     .map(addr -> pair(addr, new Core(addr.client())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
+            coreClientSelector = new AtomicInteger();
             databases = new RPCDatabaseManager.Cluster(
-                    clients.entrySet().stream()
+                    coreClients.entrySet().stream()
                             .map(client -> pair(client.getKey(), client.getValue().databases()))
                             .collect(Collectors.toConcurrentMap(Pair::first, Pair::second))
             );
@@ -142,8 +141,8 @@ public class GraknClient {
         }
 
         private Core selectNextClient() {
-            int index = selector.getAndIncrement() % clients.size();
-            return new ArrayList<>(clients.values()).get(index);
+            int index = coreClientSelector.getAndIncrement() % coreClients.size();
+            return new ArrayList<>(coreClients.values()).get(index);
         }
 
         @Override
@@ -158,22 +157,22 @@ public class GraknClient {
 
         @Override
         public void close() {
-            clients.values().forEach(GraknClient.Core::close);
+            coreClients.values().forEach(GraknClient.Core::close);
             isOpen = false;
         }
 
-        public ConcurrentMap<Address.Cluster, Core> clients() {
-            return clients;
+        public ConcurrentMap<Address.Cluster.Server, Core> coreClients() {
+            return coreClients;
         }
 
-        private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster>> discoverCluster(String... addresses) {
+        private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discoverCluster(String... addresses) {
             for (String address: addresses) {
                 try {
                     LOG.info("Performing server discovery to {}...", address);
                     ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = bootstrapClusterDiscoveryRPC(address);
                     DiscoveryProto.Discovery.Cluster.Res res =
                             clusterDiscoveryRPC.clusterDiscovery(DiscoveryProto.Discovery.Cluster.Req.newBuilder().build());
-                    Set<Address.Cluster> servers = res.getServersList().stream().map(Address.Cluster::parse).collect(Collectors.toSet());
+                    Set<Address.Cluster.Server> servers = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
                     LOG.info("Discovered {}", servers);
                     return pair(clusterDiscoveryRPC, servers);
                 } catch (StatusRuntimeException e) {

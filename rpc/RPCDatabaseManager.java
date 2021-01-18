@@ -57,9 +57,9 @@ public class RPCDatabaseManager {
     }
 
     public static class Cluster implements Grakn.DatabaseManager {
-        private final ConcurrentMap<Address.Cluster, RPCDatabaseManager.Core> databaseManagers;
+        private final ConcurrentMap<Address.Cluster.Server, RPCDatabaseManager.Core> databaseManagers;
 
-        public Cluster(ConcurrentMap<Address.Cluster, RPCDatabaseManager.Core> databaseManagers) {
+        public Cluster(ConcurrentMap<Address.Cluster.Server, RPCDatabaseManager.Core> databaseManagers) {
             this.databaseManagers = databaseManagers;
         }
 
