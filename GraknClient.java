@@ -163,9 +163,9 @@ public class GraknClient {
 
         private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discoverCluster(String... addresses) {
             for (String address: addresses) {
-                try {
+                try (GraknClient.Core client = new Core(address)) {
                     LOG.info("Performing server discovery to {}...", address);
-                    ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = bootstrapClusterDiscoveryRPC(address);
+                    ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = ClusterGrpc.newBlockingStub(client.channel());
                     DiscoveryProto.Discovery.Cluster.Res res =
                             clusterDiscoveryRPC.clusterDiscovery(DiscoveryProto.Discovery.Cluster.Req.newBuilder().build());
                     Set<Address.Cluster.Server> servers = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
@@ -176,11 +176,6 @@ public class GraknClient {
                 }
             }
             throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message((Object) addresses)); // remove ambiguity by casting to Object
-        }
-
-        private ClusterGrpc.ClusterBlockingStub bootstrapClusterDiscoveryRPC(String bootstrapAddress) {
-            GraknClient.Core client = new Core(bootstrapAddress);
-            return ClusterGrpc.newBlockingStub(client.channel());
         }
     }
 }
