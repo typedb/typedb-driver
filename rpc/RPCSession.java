@@ -99,10 +99,10 @@ public class RPCSession {
             if (isOpen.compareAndSet(true, false)) {
                 pulse.cancel();
                 try {
-                blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
-            } catch (StatusRuntimeException e) {
-                throw new GraknClientException(e);
-            }
+                    blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+                } catch (StatusRuntimeException e) {
+                    throw new GraknClientException(e);
+                }
             }
         }
 
