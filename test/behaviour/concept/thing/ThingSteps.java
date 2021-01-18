@@ -50,10 +50,6 @@ public class ThingSteps {
         things.put(variable, thing);
     }
 
-    public static void remove(String variable) {
-        things.remove(variable);
-    }
-
     @Then("entity/attribute/relation {var} is null: {bool}")
     public void thing_is_null(String var, boolean isNull) {
         if (isNull) assertNull(get(var));
