@@ -49,10 +49,6 @@ public class GraknClient {
         private final ManagedChannel channel;
         private final RPCDatabaseManager.Core databases;
 
-        // TODO:
-        //  it is inevitable that the code will have to change when switching from Core to Cluster.
-        //  therefore we just have to minimise it but not aim to forcefully reduce it to 0
-        // with this argument, adding a static create method GraknClient.core(addr) and GraknClient.cluster(user, pass, addr...) makes sense
         public Core() {
             this(DEFAULT_ADDRESS);
         }
