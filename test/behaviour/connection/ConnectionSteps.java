@@ -35,7 +35,10 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
+import static java.util.Objects.isNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -74,6 +77,7 @@ public class ConnectionSteps {
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
         client = new GraknClient.Core(address);
+        client.databases().all().forEach(database -> client.databases().delete(database));
         System.out.println("ConnectionSteps.before");
     }
 
@@ -81,7 +85,15 @@ public class ConnectionSteps {
     public synchronized void after() {
         sessions.parallelStream().forEach(Session::close);
         sessions.clear();
+
+        Stream<CompletableFuture<Void>> closures = sessionsParallel
+                .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
+                    session.close();
+                    return null;
+                }));
+        CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         sessionsParallel.clear();
+
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();

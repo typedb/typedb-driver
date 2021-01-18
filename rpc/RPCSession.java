@@ -58,7 +58,7 @@ public class RPCSession {
         private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
         public Core(GraknClient.Core client, String database, Type type, GraknOptions options) {
-            this.channel = client.channel();
+            try {this.channel = client.channel();
             this.database = database;
             this.type = type;
             blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
@@ -69,7 +69,10 @@ public class RPCSession {
             pulse = new Timer();
             isOpen = new AtomicBoolean(true);
             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
+        } catch (StatusRuntimeException e) {
+            throw new GraknClientException(e);
         }
+    }
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type) {
@@ -95,7 +98,11 @@ public class RPCSession {
         public void close() {
             if (isOpen.compareAndSet(true, false)) {
                 pulse.cancel();
+                try {
                 blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+            } catch (StatusRuntimeException e) {
+                throw new GraknClientException(e);
+            }
             }
         }
 
@@ -143,7 +150,7 @@ public class RPCSession {
         private final DatabaseReplicas databaseReplicas;
         private final String database;
         private final Type type;
-        private GraknOptions options;
+        private final GraknOptions options;
         private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> coreSessions;
         private boolean isOpen;
 
