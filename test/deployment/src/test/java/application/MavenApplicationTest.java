@@ -36,18 +36,14 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        GraknClient.Cluster client = new GraknClient.Cluster("localhost:40001", "localhost:40101", "localhost:40201");
+        GraknClient.Core client = new GraknClient.Core();
         client.databases().create("grakn");
         Session session = client.session("grakn", Session.Type.DATA);
         Transaction tx = session.transaction(Transaction.Type.WRITE);
+        ThingType root = tx.concepts().getRootThingType();
+        assertNotNull(root);
+        assertEquals(4, root.asRemote(tx).getSubtypes().collect(Collectors.toList()).size());
         tx.close();
-
-        Transaction tx2 = session.transaction(Transaction.Type.WRITE);
-        tx2.close();
-
-        Transaction tx3 = session.transaction(Transaction.Type.WRITE);
-        tx3.close();
-
         session.close();
         client.close();
     }
