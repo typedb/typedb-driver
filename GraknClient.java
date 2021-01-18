@@ -33,7 +33,6 @@ import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -99,8 +98,9 @@ public class GraknClient {
 
     public static class Cluster implements Grakn.Client {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        private final ConcurrentMap<Address.Cluster.Server, Core> coreClients;
-        private final AtomicInteger coreClientSelector;
+        private final ConcurrentMap<Address.Cluster.Server, Core> coreClientMap;
+        private final Core[] coreClientArray;
+        private final AtomicInteger selectedCoreClient;
         private ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
@@ -112,12 +112,13 @@ public class GraknClient {
         public Cluster(String address) {
             Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discovery = discoverCluster(address);
             clusterDiscoveryRPC = discovery.first();
-            coreClients = discovery.second().stream()
+            coreClientMap = discovery.second().stream()
                     .map(addr -> pair(addr, new Core(addr.client())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
-            coreClientSelector = new AtomicInteger();
+            coreClientArray = coreClientMap.values().toArray(new Core[] {});
+            selectedCoreClient = new AtomicInteger();
             databases = new RPCDatabaseManager.Cluster(
-                    coreClients.entrySet().stream()
+                    coreClientMap.entrySet().stream()
                             .map(client -> pair(client.getKey(), client.getValue().databases()))
                             .collect(Collectors.toConcurrentMap(Pair::first, Pair::second))
             );
@@ -135,14 +136,9 @@ public class GraknClient {
         }
 
         public ClusterGrpc.ClusterBlockingStub selectNextClusterDiscoveryRPC() {
-            Core selected = selectNextClient();
+            Core selected = coreClientArray[selectedCoreClient.getAndIncrement() % coreClientMap.size()];
             clusterDiscoveryRPC = ClusterGrpc.newBlockingStub(selected.channel());
             return clusterDiscoveryRPC;
-        }
-
-        private Core selectNextClient() {
-            int index = coreClientSelector.getAndIncrement() % coreClients.size();
-            return new ArrayList<>(coreClients.values()).get(index);
         }
 
         @Override
@@ -157,12 +153,12 @@ public class GraknClient {
 
         @Override
         public void close() {
-            coreClients.values().forEach(GraknClient.Core::close);
+            coreClientMap.values().forEach(GraknClient.Core::close);
             isOpen = false;
         }
 
         public ConcurrentMap<Address.Cluster.Server, Core> coreClients() {
-            return coreClients;
+            return coreClientMap;
         }
 
         private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discoverCluster(String... addresses) {

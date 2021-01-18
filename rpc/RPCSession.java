@@ -35,16 +35,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static grakn.client.GraknProtoBuilder.options;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_ELECTED;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_YET_ELECTED;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NOT_AVAILABLE;
 
 public class RPCSession {
@@ -166,16 +165,17 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
-            DatabaseReplica leader = databaseReplicas.selectLeader();
-            RPCSession.Core leaderSession = coreSessions.computeIfAbsent(
-                    leader.id(),
+            DatabaseReplica selected = type != Grakn.Transaction.Type.READ_REPLICA ?
+                    databaseReplicas.selectLeader() : databaseReplicas.selectedReplica();
+            RPCSession.Core selection = coreSessions.computeIfAbsent(
+                    selected.id(),
                     key -> {
-                        LOG.info("Opening a session to leader '{}'", leader);
+                        LOG.info("Opening a session to leader '{}'", selected);
                         return clusterClient.coreClients().get(key.address()).session(key.database(), this.type, this.options);
                     }
             );
-            LOG.info("Opening a transaction to leader '{}'", leader);
-            return leaderSession.transaction(type, options);
+            LOG.info("Opening a transaction of of type '{}' to leader '{}'", type, selected);
+            return selection.transaction(type, options);
         }
 
         @Override
@@ -222,14 +222,14 @@ public class RPCSession {
         }
 
         public static class DatabaseReplicas {
-            private final String database;
             private final ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap;
-            private final Set<Address.Cluster.Server> addresses;
+            private final DatabaseReplica[] replicaArray;
+            private final AtomicInteger selectedReplica;
 
-            private DatabaseReplicas(String database, ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap) {
-                this.database = database;
+            private DatabaseReplicas(ConcurrentMap<DatabaseReplica.Id, DatabaseReplica> replicaMap) {
                 this.replicaMap = replicaMap;
-                this.addresses = replicaMap.keySet().stream().map(DatabaseReplica.Id::address).collect(Collectors.toSet());
+                replicaArray = replicaMap.values().toArray(new DatabaseReplica[]{});
+                selectedReplica = new AtomicInteger(0);
             }
 
             public static DatabaseReplicas ofProto(DiscoveryProto.Discovery.DatabaseReplicas.Res res) {
@@ -240,7 +240,7 @@ public class RPCSession {
                     replicaMap.put(id, DatabaseReplica.ofProto(replica));
                 }
 
-                return new DatabaseReplicas(replicaMap.values().iterator().next().id().database(), replicaMap);
+                return new DatabaseReplicas(replicaMap);
             }
 
             private DatabaseReplica selectLeader() {
@@ -249,16 +249,11 @@ public class RPCSession {
                         .filter(entry -> entry.getValue().role())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
                 if (reduce.getValue().role()) return reduce.getValue();
-                else throw new GraknClientException(CLUSTER_LEADER_NOT_ELECTED.message(reduce.getValue().term())); // TODO: throw a checked exception (LEADER_NOT_FOUND)
+                else throw new GraknClientException(CLUSTER_LEADER_NOT_YET_ELECTED.message(reduce.getValue().term()));
             }
 
-            // TODO: for when the transaction type is read replica
-            private DatabaseReplica selectRandomReplica() {
-                return replicaMap.get(new DatabaseReplica.Id(selectRandomReplicaAddress(), database));
-            }
-
-            private Address.Cluster.Server selectRandomReplicaAddress() {
-                return addresses.iterator().next();
+            private DatabaseReplica selectedReplica() {
+                return replicaArray[selectedReplica.get()];
             }
         }
 
