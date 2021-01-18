@@ -139,22 +139,24 @@ public class RPCSession {
 
     public static class Cluster implements Grakn.Session {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        private final GraknClient.Cluster client;
-        private final String database;
-        private final Type type;
+        private final GraknClient.Cluster clusterClient;
         private ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC;
         private final DatabaseReplicas databaseReplicas;
-        private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> sessions;
-        private final AtomicBoolean isOpen;
+        private final String database;
+        private final Type type;
+        private GraknOptions options;
+        private final ConcurrentMap<DatabaseReplica.Id, RPCSession.Core> coreSessions;
+        private boolean isOpen;
 
-        public Cluster(GraknClient.Cluster client, String database, Grakn.Session.Type type, GraknOptions options, ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC) {
-            this.client = client;
+        public Cluster(GraknClient.Cluster clusterClient, String database, Grakn.Session.Type type, GraknOptions options, ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC) {
+            this.clusterClient = clusterClient;
             this.database = database;
             this.type = type;
+            this.options = options;
             this.clusterDiscoveryRPC = clusterDiscoveryRPC;
             this.databaseReplicas = discoverDatabaseReplicas();
-            sessions = new ConcurrentHashMap<>();
-            isOpen = new AtomicBoolean(true);
+            coreSessions = new ConcurrentHashMap<>();
+            isOpen =true;
         }
 
         @Override
@@ -165,11 +167,11 @@ public class RPCSession {
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
             DatabaseReplica leader = databaseReplicas.selectLeader();
-            RPCSession.Core leaderSession = sessions.computeIfAbsent(
+            RPCSession.Core leaderSession = coreSessions.computeIfAbsent(
                     leader.id(),
                     key -> {
                         LOG.info("Opening a session to leader '{}'", leader);
-                        return client.coreClients().get(key.address()).session(key.database(), this.type);
+                        return clusterClient.coreClients().get(key.address()).session(key.database(), this.type, this.options);
                     }
             );
             LOG.info("Opening a transaction to leader '{}'", leader);
@@ -183,12 +185,13 @@ public class RPCSession {
 
         @Override
         public boolean isOpen() {
-            return isOpen.get();
+            return isOpen;
         }
 
         @Override
         public void close() {
-            sessions.values().forEach(Core::close);
+            coreSessions.values().forEach(Core::close);
+            isOpen = false;
         }
 
         @Override
@@ -198,7 +201,7 @@ public class RPCSession {
 
         private DatabaseReplicas discoverDatabaseReplicas() {
             int attempt = 0;
-            while (attempt < client.coreClients().size()) {
+            while (attempt < clusterClient.coreClients().size()) {
                 try {
                     return DatabaseReplicas.ofProto(
                             clusterDiscoveryRPC.databaseReplicasDiscovery(
@@ -209,13 +212,13 @@ public class RPCSession {
                     );
                 } catch (StatusRuntimeException e) {
                     ClusterGrpc.ClusterBlockingStub old = clusterDiscoveryRPC;
-                    clusterDiscoveryRPC = this.client.selectNextClusterDiscoveryRPC();
-                    LOG.info("cluster discovery RPC '{}' not available. selecting another: '{}'",
+                    clusterDiscoveryRPC = this.clusterClient.selectNextClusterDiscoveryRPC();
+                    LOG.info("Cluster Discovery RPC failed - server '{}' not available. Attempting to perform the operation onto another server '{}'",
                             old.getChannel().authority(), clusterDiscoveryRPC.getChannel().authority());
                 }
             }
 
-            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(client.coreClients()));
+            throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message(clusterClient.coreClients()));
         }
 
         public static class DatabaseReplicas {
