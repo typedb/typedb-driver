@@ -24,8 +24,8 @@ import grakn.client.rpc.Address;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
-import grakn.protocol.cluster.ClusterGrpc;
-import grakn.protocol.cluster.DiscoveryProto;
+import grakn.protocol.cluster.GraknClusterGrpc;
+import grakn.protocol.cluster.ClusterProto;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -97,7 +97,7 @@ public class GraknClient {
         private final ConcurrentMap<Address.Cluster.Server, Core> coreClientMap;
         private final Core[] coreClientArray;
         private final AtomicInteger selectedCoreClient;
-        private ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC;
+        private GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
 
@@ -106,7 +106,7 @@ public class GraknClient {
         }
 
         public Cluster(String address) {
-            Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discovery = discoverCluster(address);
+            Pair<GraknClusterGrpc.GraknClusterBlockingStub, Set<Address.Cluster.Server>> discovery = discoverCluster(address);
             clusterDiscoveryRPC = discovery.first();
             coreClientMap = discovery.second().stream()
                     .map(addr -> pair(addr, new Core(addr.client())))
@@ -131,9 +131,9 @@ public class GraknClient {
             return new RPCSession.Cluster(this, database, type, options, clusterDiscoveryRPC);
         }
 
-        public ClusterGrpc.ClusterBlockingStub selectNextClusterDiscoveryRPC() {
+        public GraknClusterGrpc.GraknClusterBlockingStub selectNextClusterDiscoveryRPC() {
             Core selected = coreClientArray[selectedCoreClient.getAndIncrement() % coreClientMap.size()];
-            clusterDiscoveryRPC = ClusterGrpc.newBlockingStub(selected.channel());
+            clusterDiscoveryRPC = GraknClusterGrpc.newBlockingStub(selected.channel());
             return clusterDiscoveryRPC;
         }
 
@@ -157,13 +157,13 @@ public class GraknClient {
             return coreClientMap;
         }
 
-        private Pair<ClusterGrpc.ClusterBlockingStub, Set<Address.Cluster.Server>> discoverCluster(String... addresses) {
+        private Pair<GraknClusterGrpc.GraknClusterBlockingStub, Set<Address.Cluster.Server>> discoverCluster(String... addresses) {
             for (String address: addresses) {
                 try (GraknClient.Core client = new Core(address)) {
                     LOG.info("Performing server discovery to {}...", address);
-                    ClusterGrpc.ClusterBlockingStub clusterDiscoveryRPC = ClusterGrpc.newBlockingStub(client.channel());
-                    DiscoveryProto.Discovery.Cluster.Res res =
-                            clusterDiscoveryRPC.clusterDiscovery(DiscoveryProto.Discovery.Cluster.Req.newBuilder().build());
+                    GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC = GraknClusterGrpc.newBlockingStub(client.channel());
+                    ClusterProto.Cluster.Discover.Res res =
+                            clusterDiscoveryRPC.clusterDiscover(ClusterProto.Cluster.Discover.Req.newBuilder().build());
                     Set<Address.Cluster.Server> servers = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
                     LOG.info("Discovered {}", servers);
                     return pair(clusterDiscoveryRPC, servers);
