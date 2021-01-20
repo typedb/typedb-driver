@@ -108,7 +108,7 @@ public class GraknClient {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
         private final ConcurrentMap<Address.Cluster.Server, Core> coreClientMap;
         private final Core[] coreClientArray;
-        private final AtomicInteger selectedCoreClient;
+        private final AtomicInteger selectedCoreClientIndex;
         private GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC;
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
@@ -120,7 +120,7 @@ public class GraknClient {
                     .map(addr -> pair(addr, new Core(addr.client())))
                     .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
             coreClientArray = coreClientMap.values().toArray(new Core[] {});
-            selectedCoreClient = new AtomicInteger();
+            selectedCoreClientIndex = new AtomicInteger();
             databases = new RPCDatabaseManager.Cluster(
                     coreClientMap.entrySet().stream()
                             .map(client -> pair(client.getKey(), client.getValue().databases()))
@@ -140,7 +140,7 @@ public class GraknClient {
         }
 
         public GraknClusterGrpc.GraknClusterBlockingStub selectNextClusterDiscoveryRPC() {
-            Core selected = coreClientArray[selectedCoreClient.getAndIncrement() % coreClientMap.size()];
+            Core selected = selectNextCoreClient();
             clusterDiscoveryRPC = GraknClusterGrpc.newBlockingStub(selected.channel());
             return clusterDiscoveryRPC;
         }
@@ -180,6 +180,10 @@ public class GraknClient {
                 }
             }
             throw new GraknClientException(CLUSTER_NOT_AVAILABLE.message((Object) addresses)); // remove ambiguity by casting to Object
+        }
+
+        private Core selectNextCoreClient() {
+            return coreClientArray[selectedCoreClientIndex.getAndIncrement() % coreClientMap.size()];
         }
     }
 }
