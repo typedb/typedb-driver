@@ -33,6 +33,7 @@ import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
@@ -229,18 +230,18 @@ public class RPCSession {
         }
 
         public static class Database {
-            private final ConcurrentMap<Replica.Id, Replica> replicaMap;
+            private final Map<Replica.Id, Replica> replicaMap;
             private final Replica[] replicaArray;
             private final AtomicInteger selectedReplica;
 
-            private Database(ConcurrentMap<Replica.Id, Replica> replicaMap) {
+            private Database(Map<Replica.Id, Replica> replicaMap) {
                 this.replicaMap = replicaMap;
                 replicaArray = replicaMap.values().toArray(new Replica[]{});
                 selectedReplica = new AtomicInteger(0);
             }
 
             public static Database ofProto(DatabaseProto.Database.Discover.Res res) {
-                ConcurrentMap<Replica.Id, Replica> replicaMap = new ConcurrentHashMap<>();
+                Map<Replica.Id, Replica> replicaMap = new HashMap<>();
 
                 for (DatabaseProto.Database.Discover.Res.Replica replica: res.getReplicasList()) {
                     Replica.Id id = new Replica.Id(Address.Cluster.Server.parse(replica.getAddress()), replica.getDatabase());
