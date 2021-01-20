@@ -24,8 +24,8 @@ import grakn.client.rpc.Address;
 import grakn.client.rpc.RPCDatabaseManager;
 import grakn.client.rpc.RPCSession;
 import grakn.common.collection.Pair;
-import grakn.protocol.cluster.GraknClusterGrpc;
 import grakn.protocol.cluster.ClusterProto;
+import grakn.protocol.cluster.GraknClusterGrpc;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -33,8 +33,8 @@ import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -106,7 +106,7 @@ public class GraknClient {
 
     public static class Cluster implements Grakn.Client {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        private final ConcurrentMap<Address.Cluster.Server, Core> coreClientMap;
+        private final Map<Address.Cluster.Server, Core> coreClientMap;
         private final Core[] coreClientArray;
         private final AtomicInteger selectedCoreClientIndex;
         private GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC;
@@ -118,13 +118,13 @@ public class GraknClient {
             clusterDiscoveryRPC = discovery.first();
             coreClientMap = discovery.second().stream()
                     .map(addr -> pair(addr, new Core(addr.client())))
-                    .collect(Collectors.toConcurrentMap(Pair::first, Pair::second));
+                    .collect(Collectors.toMap(Pair::first, Pair::second));
             coreClientArray = coreClientMap.values().toArray(new Core[] {});
             selectedCoreClientIndex = new AtomicInteger();
             databases = new RPCDatabaseManager.Cluster(
                     coreClientMap.entrySet().stream()
                             .map(client -> pair(client.getKey(), client.getValue().databases()))
-                            .collect(Collectors.toConcurrentMap(Pair::first, Pair::second))
+                            .collect(Collectors.toMap(Pair::first, Pair::second))
             );
             isOpen = true;
         }
@@ -161,7 +161,7 @@ public class GraknClient {
             isOpen = false;
         }
 
-        public ConcurrentMap<Address.Cluster.Server, Core> coreClients() {
+        public Map<Address.Cluster.Server, Core> coreClients() {
             return coreClientMap;
         }
 

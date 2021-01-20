@@ -28,6 +28,7 @@ import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
@@ -76,9 +77,9 @@ public class RPCDatabaseManager {
     }
 
     public static class Cluster implements Grakn.DatabaseManager {
-        private final ConcurrentMap<Address.Cluster.Server, RPCDatabaseManager.Core> databaseManagers;
+        private final Map<Address.Cluster.Server, RPCDatabaseManager.Core> databaseManagers;
 
-        public Cluster(ConcurrentMap<Address.Cluster.Server, RPCDatabaseManager.Core> databaseManagers) {
+        public Cluster(Map<Address.Cluster.Server, Core> databaseManagers) {
             this.databaseManagers = databaseManagers;
         }
 

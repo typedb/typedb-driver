@@ -146,12 +146,12 @@ public class RPCSession {
     public static class Cluster implements Grakn.Session {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
         private final GraknClient.Cluster clusterClient;
-        private GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC;
         private final Database database;
         private final String dbName;
         private final Type type;
         private final GraknOptions options;
         private final ConcurrentMap<Replica.Id, RPCSession.Core> coreSessions;
+        private GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC;
         private boolean isOpen;
 
         public Cluster(GraknClient.Cluster clusterClient, String database, Grakn.Session.Type type, GraknOptions options, GraknClusterGrpc.GraknClusterBlockingStub clusterDiscoveryRPC) {
@@ -162,7 +162,7 @@ public class RPCSession {
             this.clusterDiscoveryRPC = clusterDiscoveryRPC;
             this.database = discoverDatabaseReplicas();
             coreSessions = new ConcurrentHashMap<>();
-            isOpen =true;
+            isOpen = true;
         }
 
         @Override
