@@ -83,7 +83,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     equals(concept: Concept): boolean {
-        if (!concept.isThing()) return false;
+        if (!concept?.isThing()) return false;
         return (concept as Thing).getIID() === this.getIID();
     }
 

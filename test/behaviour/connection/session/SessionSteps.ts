@@ -44,7 +44,7 @@ When("connection open(s) (data )session(s) for database(s):", async (names: Data
 When("connection open(s) (data )sessions in parallel for databases:", async (names: DataTable) => {
     const openings: Promise<Session>[] = []
     for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
-    sessions.concat(await Promise.all(openings));
+    sessions.push(... await Promise.all(openings));
 });
 
 When("connection close all sessions", async () => {

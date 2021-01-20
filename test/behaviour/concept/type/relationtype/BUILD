@@ -30,7 +30,7 @@ checkstyle_test(
 
 node_cucumber_test(
     name = "test",
-    features = ["@graknlabs_behaviour//concept/type:thingtype.feature"],
+    features = ["@graknlabs_behaviour//concept/type:relationtype.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
     core_artifact = "//test:native-grakn-artifact",

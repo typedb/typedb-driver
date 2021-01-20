@@ -47,7 +47,7 @@ echo Client unarchived.
 echo Unarchiving step files.
 tar -xf test/behaviour/behavioural-steps.tar.gz -C test
 echo Steps unarchived. Proceeding with tests.
-node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' && export RESULT=0 || export RESULT=1
+node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
 kill $(jps | awk '/GraknServer/ {print $1}')

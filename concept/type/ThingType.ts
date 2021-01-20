@@ -50,7 +50,7 @@ export interface RemoteThingType extends Merge<RemoteType, ThingType> {
     setOwns(attributeType: AttributeType): Promise<void>;
     setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
     setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-    setOwns(attributeType: AttributeType, isKey: boolean, otherType: AttributeType): Promise<void>;
+    setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
 
     getPlays(): Stream<RoleType>;
 

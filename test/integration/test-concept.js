@@ -231,7 +231,7 @@ async function run() {
         await lion.asRemote(tx).setOwns(age);
         customer = await tx.concepts().putEntityType("customer");
         await customer.asRemote(tx).setSupertype(person);
-        await customer.asRemote(tx).setOwns(workEmail, true, email);
+        await customer.asRemote(tx).setOwns(workEmail, email, true);
         const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
         const ownedKeys = await customer.asRemote(tx).getOwns(true).collect();
         const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();

@@ -17,42 +17,49 @@
  * under the License.
  */
 
-import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
+import { Given, After, Before, setDefaultTimeout, BeforeAll } from "@cucumber/cucumber";
 import { GraknClient } from "../../../dist/rpc/GraknClient";
 import { Grakn } from "../../../dist/Grakn";
 import Session = Grakn.Session;
 import Transaction = Grakn.Transaction;
+import assert = require("assert");
 
 setDefaultTimeout(20 * 1000);
 export const THREAD_POOL_SIZE = 32;
 
 export let client: GraknClient;
 export const sessions: Session[] = [];
-export const transactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
-export const tx = () => transactions.get(sessions[0])[0];
+export const sessionsToTransactions: Map<Session, Transaction[]> = new Map<Session, Transaction[]>();
+
+export function tx(): Transaction {
+    return sessionsToTransactions.get(sessions[0])[0];
+}
 
 Given("connection has been opened", () => {
-    if (client) return;
+    assert(client);
+});
+
+BeforeAll(() => {
     client = new GraknClient();
 });
 
-async function clearAll() {
-    if (client) {
-        const databases = await client.databases().all();
-        for (const name of databases) {
-            await client.databases().delete(name);
-        }
-        for (const session of sessions) {
-            try {
-                await session.close()
-            } catch (err) {
-                //We're okay with this.
-            }
-        }
+Before(async () => {
+    for (const session of sessions) {
+        await session.close()
+    }
+    const databases = await client.databases().all();
+    for (const name of databases) {
+        await client.databases().delete(name);
     }
     sessions.length = 0;
-    transactions.clear();
-}
+    sessionsToTransactions.clear();
+});
 
-Before(clearAll);
-After(clearAll);
+After(async () => {
+    for (const session of sessions) {
+        await session.close()
+    }
+    for (const name of await client.databases().all()) {
+        await client.databases().delete(name);
+    }
+});

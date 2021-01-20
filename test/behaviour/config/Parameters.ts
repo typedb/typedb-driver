@@ -21,7 +21,7 @@ import { defineParameterType } from "@cucumber/cucumber";
 import { AttributeType } from "../../../dist/concept/type/AttributeType";
 import { Grakn } from "../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
-import { tx } from "../connection/ConnectionSteps";
+import DataTable from "@cucumber/cucumber/lib/models/data_table";
 
 defineParameterType({
     name: "bool",
@@ -38,7 +38,7 @@ defineParameterType({
 defineParameterType({
     name: "datetime",
     regexp: /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/,
-    transformer: s => Date.parse(s),
+    transformer: s => new Date(s)
 });
 
 defineParameterType({
@@ -58,13 +58,37 @@ defineParameterType({
     }
 });
 
+export class ScopedLabel {
+    private readonly _scope: string;
+    private readonly _role: string;
+
+    constructor(scope: string, role: string) {
+        this._scope = scope;
+        this._role = role;
+    }
+
+    scope(): string {
+        return this._scope;
+    }
+
+    role(): string {
+        return this._role;
+    }
+
+    toString(): string {
+        return this._scope + ":" + this._role;
+    }
+
+    static parse(value: string): ScopedLabel {
+        const split = value.split(":");
+        return new ScopedLabel(split[0], split[1]);
+    }
+}
+
 defineParameterType({
     name: "scoped_label",
     regexp: /[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+/,
-    transformer: s => {
-        const split = s.split(",");
-        return new ScopedLabel(split[0], split[1]);
-    },
+    transformer: ScopedLabel.parse,
 });
 
 defineParameterType({
@@ -94,9 +118,13 @@ defineParameterType({
     transformer: s => s
 });
 
+export function parseVar(value: string): string {
+    return value.slice(1);
+}
+
 defineParameterType({
     name: "type_label",
-    regexp: /[a-zA-Z0-9]+/,
+    regexp: /[a-zA-Z0-9-_]+/,
     transformer: s => s
 });
 
@@ -112,26 +140,8 @@ export enum RootLabel {
     RELATION,
 }
 
-export class ScopedLabel {
-    private readonly _scope: string;
-    private readonly _role: string;
-
-    constructor(scope: string, role: string) {
-        this._scope = scope;
-        this._role = role;
-    }
-
-    scope(): string {
-        return this._scope;
-    }
-
-    role(): string {
-        return this._role;
-    }
-
-    scopedLabel(): string {
-        return this._scope + ":" + this._role;
-    }
+export function parseList(dataTable: DataTable): string[]
+export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => T): T[]
+export function parseList<T>(dataTable: DataTable, parseFn: (value: string) => string | T = val => val): (string | T)[]{
+    return dataTable.raw().map(row => parseFn(row[0]));
 }
-
-//TODO: scoped labelS (plural form), transaction typeS, possibly investigate if root label and scoped label are gonna mess with me

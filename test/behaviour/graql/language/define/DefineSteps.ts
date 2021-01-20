@@ -18,11 +18,11 @@
  */
 
 import { Then } from "@cucumber/cucumber";
-import { transactions } from "../../../connection/ConnectionSteps";
+import { sessionsToTransactions } from "../../../connection/ConnectionSteps";
 import { assertThrows, assertThrowsWithMessage } from "../../../util/Util";
 
 Then('graql define', async function (queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await transaction.query().define(queryString);
         }
@@ -30,7 +30,7 @@ Then('graql define', async function (queryString: string) {
 });
 
 Then('graql define; throws exception containing {string}', async function (exceptionString: string, queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await assertThrowsWithMessage(async () => await transaction.query().define(queryString), exceptionString);
         }
@@ -38,7 +38,7 @@ Then('graql define; throws exception containing {string}', async function (excep
 });
 
 Then('graql define; throws exception', async function (queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await assertThrows(async () => await transaction.query().define(queryString));
         }
@@ -46,7 +46,7 @@ Then('graql define; throws exception', async function (queryString: string) {
 });
 
 Then('graql insert', async function (queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await (await transaction.query().insert(queryString)).collect();
         }
@@ -54,7 +54,7 @@ Then('graql insert', async function (queryString: string) {
 });
 
 Then('graql insert; throws exception containing {string}', async function (exceptionString: string, queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await assertThrowsWithMessage(async () => await (await transaction.query().insert(queryString)).collect(), exceptionString);
         }
@@ -62,7 +62,7 @@ Then('graql insert; throws exception containing {string}', async function (excep
 });
 
 Then('graql insert; throws exception', async function (queryString: string) {
-    for (const transactionList of transactions.values()) {
+    for (const transactionList of sessionsToTransactions.values()) {
         for (const transaction of transactionList) {
             await assertThrows(async () => await (await transaction.query().insert(queryString)).collect());
         }

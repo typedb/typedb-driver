@@ -97,14 +97,11 @@ export class RemoteThingTypeImpl extends RemoteTypeImpl implements RemoteThingTy
     async setOwns(attributeType: AttributeType): Promise<void>;
     async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
     async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-    async setOwns(attributeType: AttributeType, isKey: boolean, overriddenType: AttributeType): Promise<void>;
-    async setOwns(attributeType: AttributeType, isKeyOrOverriddenType?: boolean | AttributeType, overriddenType?: AttributeType): Promise<void> {
+    async setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
+    async setOwns(attributeType: AttributeType, isKeyOrOverriddenType?: boolean | AttributeType, isKey?: boolean): Promise<void> {
         const setOwnsReq = new ConceptProto.ThingType.SetOwns.Req().setAttributeType(ConceptProtoBuilder.type(attributeType))
-            .setIsKey(typeof isKeyOrOverriddenType === "boolean" ? isKeyOrOverriddenType : false);
-        let overriddenType1: AttributeType;
-        if (isKeyOrOverriddenType instanceof AttributeTypeImpl) overriddenType1 = isKeyOrOverriddenType;
-        else if (overriddenType) overriddenType1 = overriddenType;
-        if (overriddenType1) setOwnsReq.setOverriddenType(ConceptProtoBuilder.type(overriddenType1));
+            .setIsKey(typeof isKeyOrOverriddenType === "boolean" ? isKeyOrOverriddenType : typeof isKey === "boolean" ? isKey : false);
+        if (isKeyOrOverriddenType instanceof AttributeTypeImpl) setOwnsReq.setOverriddenType(ConceptProtoBuilder.type(isKeyOrOverriddenType));
         await this.execute(new ConceptProto.Type.Req().setThingTypeSetOwnsReq(setOwnsReq));
     }
 
