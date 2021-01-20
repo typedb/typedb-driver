@@ -45,15 +45,27 @@ import static grakn.common.collection.Collections.pair;
 public class GraknClient {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
+    public static GraknClient.Core core() {
+        return core(DEFAULT_ADDRESS);
+    }
+
+    public static GraknClient.Core core(String address) {
+        return new GraknClient.Core(address);
+    }
+
+    public static GraknClient.Cluster cluster() {
+        return new GraknClient.Cluster(DEFAULT_ADDRESS);
+    }
+
+    public static GraknClient.Cluster cluster(String address) {
+        return new GraknClient.Cluster(address);
+    }
+
     public static class Core implements Grakn.Client {
         private final ManagedChannel channel;
         private final RPCDatabaseManager.Core databases;
 
-        public Core() {
-            this(DEFAULT_ADDRESS);
-        }
-
-        public Core(String address) {
+        private Core(String address) {
             channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
             databases = new RPCDatabaseManager.Core(channel);
         }
@@ -101,11 +113,7 @@ public class GraknClient {
         private final RPCDatabaseManager.Cluster databases;
         private boolean isOpen;
 
-        public Cluster() {
-            this(DEFAULT_ADDRESS);
-        }
-
-        public Cluster(String address) {
+        private Cluster(String address) {
             Pair<GraknClusterGrpc.GraknClusterBlockingStub, Set<Address.Cluster.Server>> discovery = discoverCluster(address);
             clusterDiscoveryRPC = discovery.first();
             coreClientMap = discovery.second().stream()

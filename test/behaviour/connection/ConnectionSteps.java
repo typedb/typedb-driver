@@ -76,7 +76,7 @@ public class ConnectionSteps {
         assertNull(client);
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
-        client = new GraknClient.Core(address);
+        client = GraknClient.core(address);
         client.databases().all().forEach(database -> client.databases().delete(database));
         System.out.println("ConnectionSteps.before");
     }
