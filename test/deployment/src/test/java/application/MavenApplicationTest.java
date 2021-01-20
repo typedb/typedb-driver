@@ -36,8 +36,7 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        GraknClient client = GraknClient.core();
-        GraknClient client = GraknClient.cluster();;
+        Grakn.Client client = GraknClient.core();
         client.databases().create("grakn");
         Session session = client.session("grakn", Session.Type.DATA);
         Transaction tx = session.transaction(Transaction.Type.WRITE);
