@@ -253,9 +253,9 @@ public class RPCSession {
             private Replica selectLeader() {
                 Map.Entry<Replica.Id, Replica> initial = replicaMap.entrySet().iterator().next();
                 Map.Entry<Replica.Id, Replica> reduce = replicaMap.entrySet().stream()
-                        .filter(entry -> entry.getValue().role())
+                        .filter(entry -> entry.getValue().isLeader())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
-                if (reduce.getValue().role()) return reduce.getValue();
+                if (reduce.getValue().isLeader()) return reduce.getValue();
                 else throw new GraknClientException(CLUSTER_LEADER_NOT_YET_ELECTED.message(reduce.getValue().term()));
             }
 
@@ -291,7 +291,7 @@ public class RPCSession {
                 return term;
             }
 
-            public boolean role() {
+            public boolean isLeader() {
                 return isLeader;
             }
 
