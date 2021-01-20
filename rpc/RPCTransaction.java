@@ -84,7 +84,7 @@ public class RPCTransaction implements Transaction {
             final Instant endTime = Instant.now();
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
         } catch (StatusRuntimeException e) {
-            throw new GraknClientException(e);
+            throw GraknClientException.of(e);
         }
     }
 
@@ -144,7 +144,7 @@ public class RPCTransaction implements Transaction {
             try {
                 requestObserver.onCompleted();
             } catch (StatusRuntimeException e) {
-                throw new GraknClientException(e);
+                throw GraknClientException.of(e);
             }
         }
     }
