@@ -46,6 +46,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_YET_ELECTED;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NOT_AVAILABLE;
+import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 
 public class RPCSession {
     public static class Core implements Grakn.Session {
@@ -82,6 +83,8 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
+            if (type == Grakn.Transaction.Type.READ_REPLICA) throw new GraknClientException(ILLEGAL_ARGUMENT.message(type));
+
             return new RPCTransaction(this, sessionId, type, options);
         }
 
