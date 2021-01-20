@@ -118,10 +118,14 @@ public class RPCSession {
         Channel channel() { return channel; }
 
         public void pulse() {
-            final SessionProto.Session.Pulse.Res res = blockingGrpcStub.sessionPulse(
-                    SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build());
-
-            if (!res.getAlive()) {
+            boolean alive;
+            try {
+                alive = blockingGrpcStub.sessionPulse(
+                        SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build()).getAlive();
+            } catch (StatusRuntimeException exception) {
+                alive = false;
+            }
+            if (!alive) {
                 isOpen.set(false);
                 pulse.cancel();
             }
