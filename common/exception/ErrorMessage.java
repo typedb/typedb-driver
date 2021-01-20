@@ -43,6 +43,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
 
         public static final Client CLUSTER_NOT_AVAILABLE =
                 new Client(8, "Attempted connecting to these servers, but none are available: '%s'.");
+        public static final Client SERVER_UNAVAILABLE =
+                new Client(9, "Server is unavailable.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";

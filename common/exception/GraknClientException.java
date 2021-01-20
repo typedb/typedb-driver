@@ -19,30 +19,44 @@
 
 package grakn.client.common.exception;
 
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
 public class GraknClientException extends RuntimeException {
 
+    @Nullable private final ErrorMessage errorMessage;
+
     public GraknClientException(String error) {
         super(error);
+        this.errorMessage = null;
     }
 
     public GraknClientException(ErrorMessage error) {
         super(error.toString());
         assert !getMessage().contains("%s");
+        this.errorMessage = error;
     }
 
-    public GraknClientException(StatusRuntimeException statusRuntimeException) {
-        super(statusRuntimeException.getStatus().getDescription());
+    public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
+        if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
+            return new GraknClientException(ErrorMessage.Client.SERVER_UNAVAILABLE);
+        }
+        return new GraknClientException(statusRuntimeException.getStatus().getDescription());
     }
 
     public GraknClientException(Exception e) {
         super(e);
+        this.errorMessage = null;
     }
 
     public String getName() {
         return this.getClass().getName();
+    }
+
+    @Nullable
+    public ErrorMessage getErrorMessage() {
+        return errorMessage;
     }
 }

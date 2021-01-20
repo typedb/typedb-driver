@@ -72,7 +72,7 @@ public class RPCSession {
             isOpen = new AtomicBoolean(true);
             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
         } catch (StatusRuntimeException e) {
-            throw new GraknClientException(e);
+            throw GraknClientException.of(e);
         }
     }
 
@@ -105,7 +105,7 @@ public class RPCSession {
                 try {
                     blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
                 } catch (StatusRuntimeException e) {
-                    throw new GraknClientException(e);
+                    throw GraknClientException.of(e);
                 }
             }
         }

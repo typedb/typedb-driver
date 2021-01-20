@@ -71,7 +71,7 @@ public class RPCDatabaseManager {
             try {
                 return req.get();
             } catch (StatusRuntimeException e) {
-                throw new GraknClientException(e);
+                throw GraknClientException.of(e);
             }
         }
     }
