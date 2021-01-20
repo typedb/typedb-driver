@@ -41,7 +41,7 @@ public class GraknClientException extends RuntimeException {
 
     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
-            return new GraknClientException(ErrorMessage.Client.SERVER_UNAVAILABLE);
+            return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
         }
         return new GraknClientException(statusRuntimeException.getStatus().getDescription());
     }
