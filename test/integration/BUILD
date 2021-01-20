@@ -23,6 +23,7 @@ load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 grakn_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
+    native_grakn_artifact = "//test:native-grakn-artifact",
     test_class = "grakn.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
@@ -37,7 +38,6 @@ grakn_java_test(
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
 )
 
 checkstyle_test(

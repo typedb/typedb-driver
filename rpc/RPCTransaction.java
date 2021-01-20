@@ -62,7 +62,7 @@ public class RPCTransaction implements Transaction {
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
-    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
+    RPCTransaction(RPCSession.Core session, ByteString sessionId, Type type, GraknOptions options) {
         try {
             this.type = type;
             conceptManager = new ConceptManager(this);
