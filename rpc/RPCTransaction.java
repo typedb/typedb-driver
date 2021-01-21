@@ -62,7 +62,7 @@ public class RPCTransaction implements Transaction {
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
-    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
+    RPCTransaction(RPCSession.Core session, ByteString sessionId, Type type, GraknOptions options) {
         try {
             this.type = type;
             conceptManager = new ConceptManager(this);
@@ -84,7 +84,7 @@ public class RPCTransaction implements Transaction {
             final Instant endTime = Instant.now();
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
         } catch (StatusRuntimeException e) {
-            throw new GraknClientException(e);
+            throw GraknClientException.of(e);
         }
     }
 
@@ -144,7 +144,7 @@ public class RPCTransaction implements Transaction {
             try {
                 requestObserver.onCompleted();
             } catch (StatusRuntimeException e) {
-                throw new GraknClientException(e);
+                throw GraknClientException.of(e);
             }
         }
     }

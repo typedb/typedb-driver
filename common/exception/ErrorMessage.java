@@ -36,6 +36,15 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Client(4, "The required field 'res' of type '%s' was not set.");
         public static final Client UNKNOWN_REQUEST_ID =
                 new Client(5, "Received a response with unknown request id '%s'.");
+        public static final Client ILLEGAL_ARGUMENT = new Client(6, "Illegal argument passed into the method: '%s'.");
+
+        public static final Client CLUSTER_LEADER_NOT_YET_ELECTED =
+                new Client(7, "No leader has been elected for latest known term '%s'.");
+
+        public static final Client CLUSTER_NOT_AVAILABLE =
+                new Client(8, "Attempted connecting to these servers, but none are available: '%s'.");
+        public static final Client UNABLE_TO_CONNECT =
+                new Client(9, "Unable to connect to Grakn Core Server.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";
