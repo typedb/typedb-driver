@@ -114,7 +114,7 @@ public interface Grakn {
 
         enum Type {
             READ(0),
-            READ_REPLICA(2),
+            READ_SECONDARY(2),
             WRITE(1);
 
             private final int id;
