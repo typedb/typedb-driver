@@ -22,7 +22,7 @@ import {
     Rule,
     Grakn,
     RPCTransaction,
-} from "../../../dependencies_internal";
+} from "../../dependencies_internal";
 import LogicProto from "grakn-protocol/protobuf/logic_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import Transaction = Grakn.Transaction;

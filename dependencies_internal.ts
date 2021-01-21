@@ -21,6 +21,7 @@
  * This file determines the order in which class modules are loaded at runtime.
  * Superclasses must always be loaded before their subclasses, otherwise an error will occur
  * whenever either class is instantiated at runtime.
+ * NOTE: this does not apply to interfaces, which are erased at runtime.
  */
 
 /* common */
@@ -36,11 +37,12 @@ export * from "./concept/answer/Numeric";
 export * from "./concept/answer/ConceptMapGroup";
 export * from "./concept/answer/NumericGroup";
 
-/* concept.logic */
-export * from "./concept/logic/Rule";
+/* logic.impl */
+export * from "./logic/impl/RuleImpl";
 
-/* concept.logic.impl */
-export * from "./concept/logic/impl/RuleImpl";
+/* logic */
+export * from "./logic/Rule";
+export * from "./logic/LogicManager";
 
 /* concept.impl */
 export * from "./concept/impl/ConceptImpl";
@@ -76,7 +78,6 @@ export * from "./concept/type/impl/RoleTypeImpl";
 /* concept */
 export * from "./concept/Concept";
 export * from "./concept/ConceptManager";
-export * from "./concept/LogicManager";
 
 /* query */
 export * from "./query/QueryManager";
