@@ -23,7 +23,7 @@
 @maven//:com_google_j2objc_j2objc_annotations
 @maven//:com_google_j2objc_j2objc_annotations_1_3
 @maven//:com_google_protobuf_protobuf_java
-@maven//:com_google_protobuf_protobuf_java_3_5_1
+@maven//:com_google_protobuf_protobuf_java_3_14_0
 @maven//:commons_codec_commons_codec
 @maven//:commons_codec_commons_codec_1_11
 @maven//:commons_io_commons_io
