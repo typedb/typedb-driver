@@ -39,6 +39,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 import static grakn.client.Grakn.Transaction.Type.WRITE;
+import static graql.lang.Graql.and;
+import static graql.lang.Graql.rel;
+import static graql.lang.Graql.rule;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 
@@ -53,6 +56,7 @@ public class ClientQueryTest {
         grakn = new GraknCoreRunner();
         grakn.start();
         graknClient = GraknClient.core(grakn.address());
+        if (graknClient.databases().contains("grakn")) graknClient.databases().delete("grakn");
         graknClient.databases().create("grakn");
     }
 
@@ -76,19 +80,17 @@ public class ClientQueryTest {
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
 
-            // TODO: re-enable when defining rules is supported
-//            final GraqlDefine ruleQuery = Graql.define(type("infer-parentship-from-mating-and-child-bearing").sub("rule")
-//                     .when(and(
-//                             rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-//                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")
-//                     ))
-//                     .then(and(
-//                             rel("parent", var("male")).rel("parent", var("female")).rel("child", var("offspring")).isa("parentship")
-//                     )));
+            final GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
+                     .when(and(
+                             rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                     .then(rel("parent", var("male"))
+                             .rel("parent", var("female"))
+                             .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
-//            tx.query().define(ruleQuery);
+            tx.query().define(ruleQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
         }, Session.Type.SCHEMA);

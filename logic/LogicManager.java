@@ -19,14 +19,20 @@
 
 package grakn.client.logic;
 
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.logic.impl.RuleImpl;
 import grakn.client.rpc.RPCTransaction;
+import grakn.protocol.ConceptProto;
 import grakn.protocol.LogicProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 
@@ -64,10 +70,24 @@ public final class LogicManager {
         }
     }
 
+    @CheckReturnValue
+    public Stream<RuleImpl> getRules() {
+        final LogicProto.LogicManager.Req.Builder method = LogicProto.LogicManager.Req.newBuilder()
+                .setGetRulesReq(LogicProto.LogicManager.GetRules.Req.getDefaultInstance());
+        return ruleStream(method, res -> res.getGetRulesRes().getRulesList());
+    }
+
     private LogicProto.LogicManager.Res execute(LogicProto.LogicManager.Req request) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setLogicManagerReq(request);
         return rpcTransaction.execute(req).getLogicManagerRes();
+    }
+
+    private Stream<RuleImpl> ruleStream(LogicProto.LogicManager.Req.Builder method, Function<LogicProto.LogicManager.Res, List<LogicProto.Rule>> ruleListGetter) {
+        final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData())
+                .setLogicManagerReq(method);
+        return rpcTransaction.stream(request, res -> ruleListGetter.apply(res.getLogicManagerRes()).stream().map(RuleImpl::of));
     }
 }
