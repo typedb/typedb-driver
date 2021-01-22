@@ -23,6 +23,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class GraknClientException extends RuntimeException {
 
@@ -33,8 +34,8 @@ public class GraknClientException extends RuntimeException {
         this.errorMessage = null;
     }
 
-    public GraknClientException(ErrorMessage error) {
-        super(error.toString());
+    public GraknClientException(ErrorMessage error, Object... parameters) {
+        super(error.message(parameters));
         assert !getMessage().contains("%s");
         this.errorMessage = error;
     }
@@ -42,6 +43,8 @@ public class GraknClientException extends RuntimeException {
     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
             return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
+        } else if (statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL && statusRuntimeException.getStatus().getDescription().contains("[RFT01]")) {
+            return new GraknClientException(ErrorMessage.Client.CLUSTER_SERVER_NOT_A_LEADER);
         }
         return new GraknClientException(statusRuntimeException.getStatus().getDescription());
     }

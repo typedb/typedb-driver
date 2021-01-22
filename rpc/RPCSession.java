@@ -86,7 +86,7 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
-            if (type == Grakn.Transaction.Type.READ_SECONDARY) throw new GraknClientException(ILLEGAL_ARGUMENT.message(type));
+            if (type == Grakn.Transaction.Type.READ_SECONDARY) throw new GraknClientException(ILLEGAL_ARGUMENT, type);
 
             return new RPCTransaction(this, sessionId, type, options);
         }
@@ -190,7 +190,7 @@ public class RPCSession {
                     return transactionSecondaryReplica(options);
 
                 default:
-                    throw new GraknClientException(ILLEGAL_ARGUMENT.message(type));
+                    throw new GraknClientException(ILLEGAL_ARGUMENT, type);
             }
         }
 
@@ -294,7 +294,7 @@ public class RPCSession {
 
         private GraknClientException clusterNotAvailableException() {
             String[] addresses = clusterClient.servers().stream().map(server -> server.toString()).collect(Collectors.toSet()).toArray(new String[]{});
-            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT.message((Object) addresses)); // remove ambiguity by casting to Object
+            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, (Object) addresses); // remove ambiguity by casting to Object
         }
 
         private void sleepWait() {
@@ -329,7 +329,7 @@ public class RPCSession {
                         .filter(entry -> entry.getValue().isLeader())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
                 if (reduce.getValue().isLeader()) return reduce.getValue();
-                else throw new GraknClientException(CLUSTER_LEADER_NOT_YET_ELECTED.message(reduce.getValue().term()));
+                else throw new GraknClientException(CLUSTER_LEADER_NOT_YET_ELECTED, (reduce.getValue().term()));
             }
 
             public Collection<Replica> replicas() {

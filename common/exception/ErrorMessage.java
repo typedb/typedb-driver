@@ -43,7 +43,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
                 new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to these servers, but none are available: '%s'.");
         public static final Client CLUSTER_SERVER_NOT_A_LEADER =
-                new Client(9, "Server '%s' is not a leader");
+                new Client(10, "Server is not a leader");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";
