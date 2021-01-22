@@ -38,3 +38,8 @@ export async function assertThrowsWithMessage(testfunc: () => Promise<unknown>, 
     }
     assert.fail();
 }
+
+export function splitString(value: string, separator: string, limit: number): string[] {
+    const arr = value.split(separator);
+    return arr.slice(0, limit).concat(arr.slice(limit).join(separator));
+}

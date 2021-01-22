@@ -23,10 +23,14 @@ import { Grakn } from "../../../dist/Grakn";
 import TransactionType = Grakn.TransactionType;
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 
+export function parseBool(value: string): boolean {
+    return value === "true";
+}
+
 defineParameterType({
     name: "bool",
     regexp: /true|false/,
-    transformer: s => s === "true",
+    transformer: parseBool,
 });
 
 defineParameterType({

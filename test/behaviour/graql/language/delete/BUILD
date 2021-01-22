@@ -28,7 +28,7 @@ checkstyle_test(
 
 node_cucumber_test(
     name = "test",
-    features = ["@graknlabs_behaviour//graql/language:define.feature"],
+    features = ["@graknlabs_behaviour//graql/language:delete.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
     core_artifact = "//test:native-grakn-artifact",

@@ -19,7 +19,7 @@
     "test-connection": "node test/integration/test-connection.js",
     "test-query": "node test/integration/test-query.js",
     "lint": "eslint . --ext .ts",
-    "compile-tests": "tsc --build tsconfig-test.json"
+    "compile-tests": "tsc --build test/tsconfig.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",

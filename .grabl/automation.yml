@@ -53,8 +53,12 @@ build:
       image: graknlabs-ubuntu-20.04
       command: |
         npm install typescript
-        bazel test //test/behaviour/... --jobs=1 --test_output=errors
-      # TODO: Remove --jobs=1 from above line once parallelism is functional.
+        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/graql/language/match/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/graql/language/get/... --test_output=errors --jobs=1
+        bazel test //test/behaviour/graql/language/define/... --test_output=errors --jobs=1
+      # TODO: Remove --jobs=1 once parallelism is functional
     deploy-npm-snapshot:
       filter:
         owner: graknlabs

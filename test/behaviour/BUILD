@@ -17,15 +17,16 @@
 # under the License.
 #
 
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 exports_files([
     "cucumber_test.sh",
-    "tsconfig-test.json",
 ])
 
 genrule(
     name = "behavioural-steps-compiled",
     outs = ["behavioural-steps.tar.gz"],
-    cmd = "tar -xf $(location //:client-nodejs-compiled); npx tsc --build tsconfig-test.json; tar -cf $(@D)/behavioural-steps.tar.gz dist-test;",
+    cmd = "tar -xf $(location //:client-nodejs-compiled); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behavioural-steps.tar.gz dist-test;",
     tools = [
         "//:behavioural-steps",
         "//:client-nodejs-compiled",
@@ -35,7 +36,6 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
