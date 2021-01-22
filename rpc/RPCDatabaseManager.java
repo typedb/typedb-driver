@@ -29,7 +29,6 @@ import io.grpc.StatusRuntimeException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;

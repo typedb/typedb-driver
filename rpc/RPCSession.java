@@ -232,11 +232,14 @@ public class RPCSession {
                     } catch (GraknClientException e) {
                         retry++;
                         if (e.getErrorMessage().equals(CLUSTER_SERVER_NOT_A_LEADER)) {
+                            LOG.error("NOT A LEADER", e);
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(CLUSTER_LEADER_NOT_YET_ELECTED)) {
+                            LOG.error("LEADER NOT YET ELECTED", e);
                             sleepWait();
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                            LOG.error("UNABLE TO CONNECT", e);
                             break;
                         } else {
                             throw e;
@@ -259,7 +262,7 @@ public class RPCSession {
                             }
                     );
                     LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica);
-                    return selectedSession.transaction(Grakn.Transaction.Type.READ, options);
+                    return selectedSession.transaction(Grakn.Transaction.Type.READ_SECONDARY, options);
                 } catch (GraknClientException e) {
                     if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
                         // retry to next replica
