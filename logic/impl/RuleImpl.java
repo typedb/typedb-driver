@@ -52,7 +52,7 @@ public class RuleImpl implements Rule {
     }
 
     public static RuleImpl of(LogicProto.Rule ruleProto) {
-        return new RuleImpl(ruleProto.getLabel(), Graql.and(Graql.parsePatterns(ruleProto.getWhen())), Graql.parseVariable(ruleProto.getThen()).asThing());
+        return new RuleImpl(ruleProto.getLabel(), Graql.parsePattern(ruleProto.getWhen()).asConjunction(), Graql.parseVariable(ruleProto.getThen()).asThing());
     }
 
     @Override
