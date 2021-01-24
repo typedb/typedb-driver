@@ -35,16 +35,15 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client MISSING_RESPONSE =
                 new Client(4, "The required field 'res' of type '%s' was not set.");
         public static final Client UNKNOWN_REQUEST_ID =
-                new Client(5, "Received a response with unknown request id '%s'.");
+                new Client(5, "Received a response with unknown request id '%s'.")  ;
         public static final Client ILLEGAL_ARGUMENT = new Client(6, "Illegal argument passed into the method: '%s'.");
-
+        public static final Client UNABLE_TO_CONNECT = new Client(7, "Unable to connect to Grakn Core Server.");
         public static final Client CLUSTER_LEADER_NOT_YET_ELECTED =
-                new Client(7, "No leader has been elected for latest known term '%s'.");
-
-        public static final Client CLUSTER_NOT_AVAILABLE =
-                new Client(8, "Attempted connecting to these servers, but none are available: '%s'.");
-        public static final Client UNABLE_TO_CONNECT =
-                new Client(9, "Unable to connect to Grakn Core Server.");
+                new Client(8, "No leader has been elected for latest known term '%s'.");
+        public static final Client CLUSTER_UNABLE_TO_CONNECT =
+                new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to these servers, but none are available: '%s'.");
+        public static final Client CLUSTER_SERVER_NOT_A_LEADER =
+                new Client(10, "Server is not a leader");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";
@@ -94,6 +93,18 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         private static final String messagePrefix = "Query Error";
 
         Query(int number, String message) {
+            super(codePrefix, number, messagePrefix, message);
+        }
+    }
+
+    public static class Internal extends ErrorMessage {
+        public static final Internal UNEXPECTED_INTERRUPTION =
+                new Internal(1, "Unexpected thread interruption!");
+
+        private static final String codePrefix = "INT";
+        private static final String messagePrefix = "Internal Error";
+
+        Internal(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

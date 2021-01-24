@@ -320,7 +320,7 @@ public class RPCTransaction implements Transaction {
 
                 @Override
                 TransactionProto.Transaction.Res read() {
-                    throw new GraknClientException(error);
+                    throw GraknClientException.of(error);
                 }
 
                 @Override
