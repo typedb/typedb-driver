@@ -228,18 +228,19 @@ public class RPCSession {
                                     return leaderClient.session(key.database(), this.type, this.options);
                                 }
                         );
+                        LOG.debug("Opening a transaction to primary replica '{}'", database.leader().id());
                         return leaderSession.transaction(type, options);
                     } catch (GraknClientException e) {
                         retry++;
                         if (e.getErrorMessage().equals(CLUSTER_SERVER_NOT_A_LEADER)) {
-                            LOG.error("NOT A LEADER", e);
+                            LOG.error("Unable to open a session or transaction", e);
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(CLUSTER_LEADER_NOT_YET_ELECTED)) {
-                            LOG.error("LEADER NOT YET ELECTED", e);
+                            LOG.error("Unable to open a session or transaction", e);
                             sleepWait();
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
-                            LOG.error("UNABLE TO CONNECT", e);
+                            LOG.error("Unable to open a session or transaction", e);
                             break;
                         } else {
                             throw e;
@@ -265,7 +266,7 @@ public class RPCSession {
                     return selectedSession.transaction(Grakn.Transaction.Type.READ_SECONDARY, options);
                 } catch (GraknClientException e) {
                     if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
-                        LOG.debug("Unable to connect to " + replica + ". Reattempting to the next one.")
+                        LOG.debug("Unable to connect to " + replica + ". Reattempting to the next one.", e);
                     } else {
                         throw e;
                     }
