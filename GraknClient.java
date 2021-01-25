@@ -177,7 +177,12 @@ public class GraknClient {
                     LOG.error("Server discovery to {} failed.", address);
                 }
             }
-            throw new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, (Object[]) addresses); // remove ambiguity by casting to Object
+            throw clusterNotAvailableException();
+        }
+
+        private GraknClientException clusterNotAvailableException() {
+            String addresses = servers().stream().map(Address.Cluster.Server::toString).collect(Collectors.joining(","));
+            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses); // remove ambiguity by casting to Object
         }
     }
 }
