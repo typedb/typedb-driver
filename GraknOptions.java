@@ -7,7 +7,7 @@ import java.util.Optional;
 import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_BATCH_SIZE;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
-public abstract class GraknOptions {
+public class GraknOptions {
     private Boolean infer = null;
     private Boolean explain = null;
     private Integer batchSize = null;
@@ -43,14 +43,16 @@ public abstract class GraknOptions {
     }
 
     public static GraknOptions core() {
-        return GraknOptions.core();
+        return new GraknOptions();
     }
 
     public static GraknOptions.Cluster cluster() {
         return GraknOptions.cluster();
     }
 
-    abstract boolean isCluster();
+    boolean isCluster() {
+        return false;
+    }
 
     Cluster asCluster() {
         if (isCluster()) return (Cluster) this;
