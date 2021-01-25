@@ -66,7 +66,6 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test --config=rbe //test/integration/... --test_output=streamed
-      # TODO: use --config=rbe once Grakn Core runs in RBE
     test-behaviour:
       image: graknlabs-ubuntu-20.04
       command: |
@@ -79,7 +78,6 @@ build:
         bazel test --config=rbe //test/behaviour/graql/language/get/... --test_output=streamed
         bazel test --config=rbe //test/behaviour/graql/language/define/... --test_output=streamed
       # TODO: delete --jobs=1 if we fix the issue with excess memory usage
-      # TODO: use --config=rbe once Grakn Core runs in RBE
       # TODO: add more Graql Language tests as they are fixed
     deploy-maven-snapshot:
       image: graknlabs-ubuntu-20.04
