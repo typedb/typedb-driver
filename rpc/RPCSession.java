@@ -233,14 +233,14 @@ public class RPCSession {
                     } catch (GraknClientException e) {
                         retry++;
                         if (e.getErrorMessage().equals(CLUSTER_SERVER_NOT_A_LEADER)) {
-                            LOG.error("Unable to open a session or transaction", e);
+                            LOG.debug("Unable to open a session or transaction", e);
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(CLUSTER_LEADER_NOT_YET_ELECTED)) {
-                            LOG.error("Unable to open a session or transaction", e);
+                            LOG.debug("Unable to open a session or transaction", e);
                             sleepWait();
                             database = databaseDiscover(server);
                         } else if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
-                            LOG.error("Unable to open a session or transaction", e);
+                            LOG.debug("Unable to open a session or transaction", e);
                             break;
                         } else {
                             throw e;
@@ -266,7 +266,7 @@ public class RPCSession {
                     return selectedSession.transaction(Grakn.Transaction.Type.READ_SECONDARY, options);
                 } catch (GraknClientException e) {
                     if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
-                        LOG.debug("Unable to connect to " + replica + ". Reattempting to the next one.", e);
+                        LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Reattempting to the next one.", e);
                     } else {
                         throw e;
                     }
@@ -280,7 +280,7 @@ public class RPCSession {
                 try {
                     return databaseDiscover(server);
                 } catch (StatusRuntimeException e) {
-                    // continue reattempting discovery to the next server
+                    LOG.debug("Unable to perform database discovery to " + server + ". Reattempting to the next one.", e);
                 }
             }
             throw clusterNotAvailableException();
