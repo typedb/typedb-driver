@@ -69,11 +69,11 @@ public class GraknOptions {
         return new Cluster();
     }
 
-    boolean isCluster() {
+    public boolean isCluster() {
         return false;
     }
 
-    Cluster asCluster() {
+    public Cluster asCluster() {
         if (isCluster()) return (Cluster) this;
         else throw new GraknClientException(ILLEGAL_CAST, Cluster.class);
     }

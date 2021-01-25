@@ -49,6 +49,7 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class RPCSession {
@@ -86,8 +87,6 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
-            if (type == Grakn.Transaction.Type.READ_SECONDARY) throw new GraknClientException(ILLEGAL_ARGUMENT, type);
-
             return new RPCTransaction(this, sessionId, type, options);
         }
 
@@ -182,14 +181,12 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
-            switch (type) {
-                case READ:
-                case WRITE:
-                    return transactionPrimaryReplica(type, options);
-                case READ_SECONDARY:
-                    return transactionSecondaryReplica(options);
-                default:
-                    throw new GraknClientException(ILLEGAL_ARGUMENT, type);
+            if (!options.isCluster()) throw new GraknClientException(ILLEGAL_CAST, options);
+            GraknOptions.Cluster clusterOpt = options.asCluster();
+            if (clusterOpt.primaryReplica().isPresent() && !clusterOpt.primaryReplica().get()) {
+                return transactionSecondaryReplica(type, clusterOpt);
+            } else {
+                return transactionPrimaryReplica(type, options);
             }
         }
 
@@ -251,7 +248,7 @@ public class RPCSession {
             throw clusterNotAvailableException();
         }
 
-        private Grakn.Transaction transactionSecondaryReplica(GraknOptions options) {
+        private Grakn.Transaction transactionSecondaryReplica(Grakn.Transaction.Type type, GraknOptions.Cluster options) {
             for (Replica replica: database.replicas()) {
                 try {
                     Core selectedSession = coreSessions.computeIfAbsent(
@@ -262,7 +259,7 @@ public class RPCSession {
                             }
                     );
                     LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica);
-                    return selectedSession.transaction(Grakn.Transaction.Type.READ_SECONDARY, options);
+                    return selectedSession.transaction(type, options);
                 } catch (GraknClientException e) {
                     if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
                         LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Reattempting to the next one.", e);
