@@ -265,7 +265,7 @@ public class RPCSession {
                     return selectedSession.transaction(Grakn.Transaction.Type.READ_SECONDARY, options);
                 } catch (GraknClientException e) {
                     if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
-                        // retry to next replica
+                        LOG.debug("Unable to connect to " + replica + ". Reattempting to the next one.")
                     } else {
                         throw e;
                     }
