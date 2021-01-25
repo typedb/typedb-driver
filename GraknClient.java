@@ -128,7 +128,7 @@ public class GraknClient {
 
         @Override
         public RPCSession.Cluster session(String database, Grakn.Session.Type type) {
-            return session(database, type, GraknOptions.core());
+            return session(database, type, GraknOptions.cluster());
         }
 
         @Override
