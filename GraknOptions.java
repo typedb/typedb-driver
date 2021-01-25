@@ -47,7 +47,7 @@ public class GraknOptions {
     }
 
     public static GraknOptions.Cluster cluster() {
-        return GraknOptions.cluster();
+        return new Cluster();
     }
 
     boolean isCluster() {
@@ -59,10 +59,10 @@ public class GraknOptions {
         else throw new GraknClientException(ILLEGAL_CAST, Cluster.class);
     }
 
-    public class Cluster extends GraknOptions {
+    public static class Cluster extends GraknOptions {
         private Boolean primaryReplica = null;
 
-        private Cluster() {}
+        Cluster() {}
 
         public Optional<Boolean> primaryReplica() {
             return Optional.ofNullable(primaryReplica);
