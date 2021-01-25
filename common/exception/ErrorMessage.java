@@ -38,12 +38,12 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Client(5, "Received a response with unknown request id '%s'.")  ;
         public static final Client ILLEGAL_ARGUMENT = new Client(6, "Illegal argument passed into the method: '%s'.");
         public static final Client UNABLE_TO_CONNECT = new Client(7, "Unable to connect to Grakn Core Server.");
-        public static final Client CLUSTER_LEADER_NOT_YET_ELECTED =
-                new Client(8, "No leader has been elected for latest known term '%s'.");
+        public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
+                new Client(8, "No replica has been marked as the primary replica for latest known term '%s'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
                 new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to these servers, but none are available: '%s'.");
-        public static final Client CLUSTER_SERVER_NOT_A_LEADER =
-                new Client(10, "Server is not a leader");
+        public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
+                new Client(10, "The replica is not the primary replica");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client State";

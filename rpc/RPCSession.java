@@ -44,8 +44,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static grakn.client.GraknProtoBuilder.options;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_LEADER_NOT_YET_ELECTED;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_A_LEADER;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NO_PRIMARY_REPLICA_YET;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
@@ -220,22 +220,22 @@ public class RPCSession {
                 int retry = 0;
                 while (retry < MAX_RETRY_PER_SERVER) {
                     try {
-                        Core leaderSession = coreSessions.computeIfAbsent(
-                                database.leader().id(),
+                        Core primaryReplicaSession = coreSessions.computeIfAbsent(
+                                database.primaryReplica().id(),
                                 key -> {
                                     LOG.debug("Opening a session to primary replica '{}'", key);
-                                    GraknClient.Core leaderClient = clusterClient.coreClient(key.address());
-                                    return leaderClient.session(key.database(), this.type, this.options);
+                                    GraknClient.Core primaryReplicaClient = clusterClient.coreClient(key.address());
+                                    return primaryReplicaClient.session(key.database(), this.type, this.options);
                                 }
                         );
-                        LOG.debug("Opening a transaction to primary replica '{}'", database.leader().id());
-                        return leaderSession.transaction(type, options);
+                        LOG.debug("Opening a transaction to primary replica '{}'", database.primaryReplica().id());
+                        return primaryReplicaSession.transaction(type, options);
                     } catch (GraknClientException e) {
                         retry++;
-                        if (e.getErrorMessage().equals(CLUSTER_SERVER_NOT_A_LEADER)) {
+                        if (e.getErrorMessage().equals(CLUSTER_REPLICA_NOT_PRIMARY)) {
                             LOG.debug("Unable to open a session or transaction", e);
                             database = databaseDiscover(server);
-                        } else if (e.getErrorMessage().equals(CLUSTER_LEADER_NOT_YET_ELECTED)) {
+                        } else if (e.getErrorMessage().equals(CLUSTER_NO_PRIMARY_REPLICA_YET)) {
                             LOG.debug("Unable to open a session or transaction", e);
                             sleepWait();
                             database = databaseDiscover(server);
@@ -327,13 +327,13 @@ public class RPCSession {
                 return new Database(replicaMap);
             }
 
-            private Replica leader() {
+            private Replica primaryReplica() {
                 Map.Entry<Replica.Id, Replica> initial = replicas.entrySet().iterator().next();
                 Map.Entry<Replica.Id, Replica> reduce = replicas.entrySet().stream()
-                        .filter(entry -> entry.getValue().isLeader())
+                        .filter(entry -> entry.getValue().isPrimary())
                         .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
-                if (reduce.getValue().isLeader()) return reduce.getValue();
-                else throw new GraknClientException(CLUSTER_LEADER_NOT_YET_ELECTED, (reduce.getValue().term()));
+                if (reduce.getValue().isPrimary()) return reduce.getValue();
+                else throw new GraknClientException(CLUSTER_NO_PRIMARY_REPLICA_YET, (reduce.getValue().term()));
             }
 
             public Collection<Replica> replicas() {
@@ -343,13 +343,13 @@ public class RPCSession {
 
         public static class Replica {
             private final Replica.Id id;
-            private final boolean isLeader;
+            private final boolean isPrimary;
             private final long term;
 
-            private Replica(Replica.Id id, long term, boolean isLeader) {
+            private Replica(Replica.Id id, long term, boolean isPrimary) {
                 this.id = id;
                 this.term = term;
-                this.isLeader = isLeader;
+                this.isPrimary = isPrimary;
             }
 
             public static Replica ofProto(DatabaseProto.Database.Discover.Res.Replica replica) {
@@ -368,8 +368,8 @@ public class RPCSession {
                 return term;
             }
 
-            public boolean isLeader() {
-                return isLeader;
+            public boolean isPrimary() {
+                return isPrimary;
             }
 
             @Override
@@ -378,17 +378,17 @@ public class RPCSession {
                 if (o == null || getClass() != o.getClass()) return false;
                 Replica replica = (Replica) o;
                 return term == replica.term &&
-                        isLeader == replica.isLeader;
+                        isPrimary == replica.isPrimary;
             }
 
             @Override
             public int hashCode() {
-                return Objects.hash(isLeader, term);
+                return Objects.hash(isPrimary, term);
             }
 
             @Override
             public String toString() {
-                return id + ":" + (isLeader ? "L" : "N") + ":" + term;
+                return id + ":" + (isPrimary ? "P" : "S") + ":" + term;
             }
 
             public static class Id {
