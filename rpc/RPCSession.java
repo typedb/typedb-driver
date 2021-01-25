@@ -81,7 +81,7 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type) {
-            return transaction(type, new GraknOptions());
+            return transaction(type, GraknOptions.core());
         }
 
         @Override
@@ -161,11 +161,11 @@ public class RPCSession {
         private Database database;
         private final String dbName;
         private final Type type;
-        private final GraknOptions options;
-        private final ConcurrentMap<Replica.Id, RPCSession.Core> coreSessions;
+        private final GraknOptions.Cluster options;
+        private final ConcurrentMap<Replica.Id, Core> coreSessions;
         private boolean isOpen;
 
-        public Cluster(GraknClient.Cluster clusterClient, String database, Grakn.Session.Type type, GraknOptions options) {
+        public Cluster(GraknClient.Cluster clusterClient, String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
             this.clusterClient = clusterClient;
             this.dbName = database;
             this.type = type;
@@ -177,7 +177,7 @@ public class RPCSession {
 
         @Override
         public Grakn.Transaction transaction(Grakn.Transaction.Type type) {
-            return transaction(type, new GraknOptions());
+            return transaction(type, GraknOptions.cluster());
         }
 
         @Override
@@ -188,7 +188,6 @@ public class RPCSession {
                     return transactionPrimaryReplica(type, options);
                 case READ_SECONDARY:
                     return transactionSecondaryReplica(options);
-
                 default:
                     throw new GraknClientException(ILLEGAL_ARGUMENT, type);
             }
@@ -206,7 +205,7 @@ public class RPCSession {
 
         @Override
         public void close() {
-            coreSessions.values().forEach(Core::close);
+            coreSessions.values().forEach(RPCSession.Core::close);
             isOpen = false;
         }
 
@@ -356,7 +355,7 @@ public class RPCSession {
                 return new Replica(
                         new Id(Address.Cluster.Server.parse(replica.getAddress()), replica.getDatabase()),
                         replica.getTerm(),
-                        replica.getIsLeader()
+                        replica.getIsPrimary()
                 );
             }
 

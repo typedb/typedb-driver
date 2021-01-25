@@ -48,7 +48,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMap> match(GraqlMatch query) {
-        return match(query, new GraknOptions());
+        return match(query, GraknOptions.core());
     }
 
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
@@ -58,7 +58,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Numeric> match(GraqlMatch.Aggregate query) {
-        return match(query, new GraknOptions());
+        return match(query, GraknOptions.core());
     }
 
     public QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options) {
@@ -68,7 +68,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMapGroup> match(GraqlMatch.Group query) {
-        return match(query, new GraknOptions());
+        return match(query, GraknOptions.core());
     }
 
     public Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options) {
@@ -81,7 +81,7 @@ public final class QueryManager {
     }
 
     public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query) {
-        return match(query, new GraknOptions());
+        return match(query, GraknOptions.core());
     }
 
     public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
@@ -94,7 +94,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMap> insert(GraqlInsert query) {
-        return insert(query, new GraknOptions());
+        return insert(query, GraknOptions.core());
     }
 
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
@@ -104,7 +104,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> delete(GraqlDelete query) {
-        return delete(query, new GraknOptions());
+        return delete(query, GraknOptions.core());
     }
 
     public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
@@ -112,7 +112,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> define(GraqlDefine query) {
-        return define(query, new GraknOptions());
+        return define(query, GraknOptions.core());
     }
 
     public QueryFuture<Void> define(GraqlDefine query, GraknOptions options) {
@@ -120,7 +120,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query) {
-        return undefine(query, new GraknOptions());
+        return undefine(query, GraknOptions.core());
     }
 
     public QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options) {

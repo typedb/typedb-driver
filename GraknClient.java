@@ -39,17 +39,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 import static grakn.common.collection.Collections.pair;
 
 public class GraknClient {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
-    public static GraknClient.Core core() {
+    public static Core core() {
         return core(DEFAULT_ADDRESS);
     }
 
-    public static GraknClient.Core core(String address) {
-        return new GraknClient.Core(address);
+    public static Core core(String address) {
+        return new Core(address);
     }
 
     public static GraknClient.Cluster cluster() {
@@ -71,7 +72,7 @@ public class GraknClient {
 
         @Override
         public RPCSession.Core session(String database, Grakn.Session.Type type) {
-            return session(database, type, new GraknOptions());
+            return session(database, type, GraknOptions.core());
         }
 
         @Override
@@ -127,12 +128,13 @@ public class GraknClient {
 
         @Override
         public RPCSession.Cluster session(String database, Grakn.Session.Type type) {
-            return session(database, type, new GraknOptions());
+            return session(database, type, GraknOptions.core());
         }
 
         @Override
         public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions options) {
-            return new RPCSession.Cluster(this, database, type, options);
+            if (!options.isCluster()) throw new GraknClientException(ILLEGAL_ARGUMENT, options);
+            return new RPCSession.Cluster(this, database, type, options.asCluster());
         }
 
         @Override
@@ -165,7 +167,7 @@ public class GraknClient {
 
         private Set<Address.Cluster.Server> discoverCluster(String... addresses) {
             for (String address: addresses) {
-                try (GraknClient.Core client = new Core(address)) {
+                try (Core client = new Core(address)) {
                     LOG.debug("Performing server discovery to {}...", address);
                     GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
                     ClusterProto.Cluster.Discover.Res res =

@@ -86,8 +86,6 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Query(3, "The answer type '%s' was not recognised.");
         public static final Query MISSING_ANSWER =
                 new Query(4, "The required field 'answer' of type '%s' was not set.");
-        public static final Query ILLEGAL_CAST =
-                new Query(5, "Illegal casting operation to '%s'.");
 
         private static final String codePrefix = "QRY";
         private static final String messagePrefix = "Query Error";
@@ -100,6 +98,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     public static class Internal extends ErrorMessage {
         public static final Internal UNEXPECTED_INTERRUPTION =
                 new Internal(1, "Unexpected thread interruption!");
+        public static final Internal ILLEGAL_CAST =
+                new Internal(2, "Illegal casting operation to '%s'.");
 
         private static final String codePrefix = "INT";
         private static final String messagePrefix = "Internal Error";
