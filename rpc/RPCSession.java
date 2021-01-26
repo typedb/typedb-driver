@@ -183,7 +183,7 @@ public class RPCSession {
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
             if (!options.isCluster()) throw new GraknClientException(ILLEGAL_CAST, options);
             GraknOptions.Cluster clusterOpt = options.asCluster();
-            if (clusterOpt.allowSecondaryReplica().isPresent() && !clusterOpt.allowSecondaryReplica().get()) {
+            if (clusterOpt.allowSecondaryReplica().isPresent() && clusterOpt.allowSecondaryReplica().get()) {
                 return transactionSecondaryReplica(type, clusterOpt);
             } else {
                 return transactionPrimaryReplica(type, options);
