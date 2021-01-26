@@ -37,9 +37,9 @@ build:
     build:
       image: graknlabs-ubuntu-20.04
       command: |
-        bazel build //...
+        bazel build --config=rbe //...
         bazel run @graknlabs_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query 'kind(checkstyle_test, //...)')
+        bazel test --config=rbe $(bazel query 'kind(checkstyle_test, //...)')
         npm install
         npm run lint
     test-integration:
@@ -53,11 +53,11 @@ build:
       image: graknlabs-ubuntu-20.04
       command: |
         npm install typescript
-        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/match/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/get/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/define/... --test_output=errors --jobs=1
+        bazel test --config=rbe //test/behaviour/connection/... --test_output=errors --jobs=1
+        bazel test --config=rbe //test/behaviour/concept/... --test_output=errors --jobs=1
+        bazel test --config=rbe //test/behaviour/graql/language/match/... --test_output=errors --jobs=1
+        bazel test --config=rbe //test/behaviour/graql/language/get/... --test_output=errors --jobs=1
+        bazel test --config=rbe //test/behaviour/graql/language/define/... --test_output=errors --jobs=1
       # TODO: Remove --jobs=1 once parallelism is functional
     deploy-npm-snapshot:
       filter:
@@ -72,7 +72,7 @@ build:
         export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
-        bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
+        bazel run --config=rbe --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
       dependencies: [build, test-integration, test-behaviour]
 
     test-deployment-npm:
@@ -106,7 +106,7 @@ release:
         export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @graknlabs_dependencies//tool/release:create-notes -- client-nodejs $(cat VERSION) ./RELEASE_TEMPLATE.md
         export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
+        bazel run --config=rbe --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-npm-release:
       image: graknlabs-ubuntu-20.04
       command: |
@@ -117,5 +117,5 @@ release:
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
-        bazel run --define version=$(cat VERSION) //:deploy-npm -- release
+        bazel run --config=rbe --define version=$(cat VERSION) //:deploy-npm -- release
       dependencies: [deploy-github]
