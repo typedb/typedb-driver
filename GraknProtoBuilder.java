@@ -28,6 +28,11 @@ public abstract class GraknProtoBuilder {
         options.infer().ifPresent(builder::setInfer);
         options.explain().ifPresent(builder::setExplain);
         options.batchSize().ifPresent(builder::setBatchSize);
+
+        if (options.isCluster()) {
+            options.asCluster().allowSecondaryReplica().ifPresent(builder::setAllowSecondaryReplica);
+        }
+
         return builder.build();
     }
 }

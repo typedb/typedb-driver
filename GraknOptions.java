@@ -24,9 +24,9 @@ import grakn.client.common.exception.GraknClientException;
 import java.util.Optional;
 
 import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_BATCH_SIZE;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class GraknOptions {
-
     private Boolean infer = null;
     private Boolean explain = null;
     private Integer batchSize = null;
@@ -59,5 +59,46 @@ public class GraknOptions {
         }
         this.batchSize = batchSize;
         return this;
+    }
+
+    public static GraknOptions core() {
+        return new GraknOptions();
+    }
+
+    public static GraknOptions.Cluster cluster() {
+        return new Cluster();
+    }
+
+    public boolean isCluster() {
+        return false;
+    }
+
+    public Cluster asCluster() {
+        throw new GraknClientException(ILLEGAL_CAST, Cluster.class);
+    }
+
+    public static class Cluster extends GraknOptions {
+        private Boolean allowSecondaryReplica = null;
+
+        Cluster() {}
+
+        public Optional<Boolean> allowSecondaryReplica() {
+            return Optional.ofNullable(allowSecondaryReplica);
+        }
+
+        public Cluster allowSecondaryReplica(boolean primaryReplica) {
+            this.allowSecondaryReplica = primaryReplica;
+            return this;
+        }
+
+        @Override
+        public boolean isCluster() {
+            return true;
+        }
+
+        @Override
+        public Cluster asCluster() {
+            return this;
+        }
     }
 }

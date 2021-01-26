@@ -20,8 +20,6 @@
 package grakn.client.common.tracing;
 
 import grabl.tracing.client.GrablTracingThreadStatic;
-import grakn.client.GraknOptions;
-import grakn.protocol.OptionsProto;
 
 import java.util.Collections;
 import java.util.HashMap;

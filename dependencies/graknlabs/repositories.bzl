@@ -50,8 +50,8 @@ def graknlabs_dependencies():
 def graknlabs_protocol():
     git_repository(
         name = "graknlabs_protocol",
-        remote = "https://github.com/graknlabs/protocol",
-        tag = "2.0.0-alpha-6", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        remote = "https://github.com/lolski/protocol",
+        commit = "6d5a5e1b58d91fd001e06b2820363e7194f7fd3f", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
 
 def graknlabs_behaviour():

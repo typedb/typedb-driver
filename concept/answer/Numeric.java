@@ -25,7 +25,7 @@ import grakn.protocol.AnswerProto;
 import javax.annotation.Nullable;
 
 import static grakn.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
-import static grakn.client.common.exception.ErrorMessage.Query.ILLEGAL_CAST;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class Numeric {
     @Nullable

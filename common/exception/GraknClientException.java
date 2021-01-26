@@ -33,8 +33,8 @@ public class GraknClientException extends RuntimeException {
         this.errorMessage = null;
     }
 
-    public GraknClientException(ErrorMessage error) {
-        super(error.toString());
+    public GraknClientException(ErrorMessage error, Object... parameters) {
+        super(error.message(parameters));
         assert !getMessage().contains("%s");
         this.errorMessage = error;
     }
@@ -42,6 +42,8 @@ public class GraknClientException extends RuntimeException {
     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE) {
             return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
+        } else if (isReplicaNotPrimaryException(statusRuntimeException)) {
+            return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
         }
         return new GraknClientException(statusRuntimeException.getStatus().getDescription());
     }
@@ -58,5 +60,10 @@ public class GraknClientException extends RuntimeException {
     @Nullable
     public ErrorMessage getErrorMessage() {
         return errorMessage;
+    }
+
+    // TODO: propagate exception from the server side in a less-brittle way
+    private static boolean isReplicaNotPrimaryException(StatusRuntimeException statusRuntimeException) {
+        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL && statusRuntimeException.getStatus().getDescription().contains("[RPL01]");
     }
 }
