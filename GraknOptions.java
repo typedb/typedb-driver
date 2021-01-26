@@ -74,8 +74,7 @@ public class GraknOptions {
     }
 
     public Cluster asCluster() {
-        if (isCluster()) return (Cluster) this;
-        else throw new GraknClientException(ILLEGAL_CAST, Cluster.class);
+        throw new GraknClientException(ILLEGAL_CAST, Cluster.class);
     }
 
     public static class Cluster extends GraknOptions {
@@ -95,6 +94,11 @@ public class GraknOptions {
         @Override
         public boolean isCluster() {
             return true;
+        }
+
+        @Override
+        public Cluster asCluster() {
+            return this;
         }
     }
 }
