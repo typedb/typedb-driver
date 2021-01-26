@@ -30,7 +30,7 @@ public abstract class GraknProtoBuilder {
         options.batchSize().ifPresent(builder::setBatchSize);
 
         if (options.isCluster()) {
-            options.asCluster().primaryReplica().ifPresent(builder::setPrimaryReplica);
+            options.asCluster().allowSecondaryReplica().ifPresent(builder::setAllowSecondaryReplica);
         }
 
         return builder.build();

@@ -47,7 +47,6 @@ import static grakn.client.GraknProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NO_PRIMARY_REPLICA_YET;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
@@ -155,7 +154,8 @@ public class RPCSession {
 
     public static class Cluster implements Grakn.Session {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        public static final int MAX_RETRY_PER_SERVER = 3;
+        public static final int MAX_RETRY_PER_REPLICA = 10;
+        public static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
         private final GraknClient.Cluster clusterClient;
         private Database database;
         private final String dbName;
@@ -183,7 +183,7 @@ public class RPCSession {
         public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
             if (!options.isCluster()) throw new GraknClientException(ILLEGAL_CAST, options);
             GraknOptions.Cluster clusterOpt = options.asCluster();
-            if (clusterOpt.primaryReplica().isPresent() && !clusterOpt.primaryReplica().get()) {
+            if (clusterOpt.allowSecondaryReplica().isPresent() && !clusterOpt.allowSecondaryReplica().get()) {
                 return transactionSecondaryReplica(type, clusterOpt);
             } else {
                 return transactionPrimaryReplica(type, options);
@@ -212,9 +212,9 @@ public class RPCSession {
         }
 
         private Grakn.Transaction transactionPrimaryReplica(Grakn.Transaction.Type type, GraknOptions options) {
-            for (Address.Cluster.Server server: clusterClient.servers()) {
+            for (Replica replica: database.replicas()) {
                 int retry = 0;
-                while (retry < MAX_RETRY_PER_SERVER) {
+                while (retry < MAX_RETRY_PER_REPLICA) {
                     try {
                         Core primaryReplicaSession = coreSessions.computeIfAbsent(
                                 database.primaryReplica().id(),
@@ -230,11 +230,11 @@ public class RPCSession {
                         retry++;
                         if (e.getErrorMessage().equals(CLUSTER_REPLICA_NOT_PRIMARY)) {
                             LOG.debug("Unable to open a session or transaction", e);
-                            database = databaseDiscover(server);
+                            database = databaseDiscover(replica.id().address());
                         } else if (e.getErrorMessage().equals(CLUSTER_NO_PRIMARY_REPLICA_YET)) {
                             LOG.debug("Unable to open a session or transaction", e);
-                            sleepWait();
-                            database = databaseDiscover(server);
+                            waitForPrimaryReplicaSelection();
+                            database = databaseDiscover(replica.id().address());
                         } else if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
                             LOG.debug("Unable to open a session or transaction", e);
                             break;
@@ -244,7 +244,6 @@ public class RPCSession {
                     }
                 }
             }
-
             throw clusterNotAvailableException();
         }
 
@@ -297,9 +296,9 @@ public class RPCSession {
             return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses); // remove ambiguity by casting to Object
         }
 
-        private void sleepWait() {
+        private void waitForPrimaryReplicaSelection() {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS);
             } catch (InterruptedException e2) {
                 throw new GraknClientException(UNEXPECTED_INTERRUPTION);
             }

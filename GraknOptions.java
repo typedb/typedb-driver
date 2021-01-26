@@ -79,16 +79,16 @@ public class GraknOptions {
     }
 
     public static class Cluster extends GraknOptions {
-        private Boolean primaryReplica = null;
+        private Boolean allowSecondaryReplica = null;
 
         Cluster() {}
 
-        public Optional<Boolean> primaryReplica() {
-            return Optional.ofNullable(primaryReplica);
+        public Optional<Boolean> allowSecondaryReplica() {
+            return Optional.ofNullable(allowSecondaryReplica);
         }
 
-        public Cluster primaryReplica(boolean primaryReplica) {
-            this.primaryReplica = primaryReplica;
+        public Cluster allowSecondaryReplica(boolean primaryReplica) {
+            this.allowSecondaryReplica = primaryReplica;
             return this;
         }
 
