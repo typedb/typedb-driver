@@ -25,19 +25,13 @@ import grakn.client.query.QueryManager;
 
 import java.util.List;
 
+
 public interface Grakn {
 
-    interface Client extends AutoCloseable {
+    interface Client extends GraknBase.Client<GraknOptions> {
 
-        Session session(String database, Session.Type type);
-
-        Session session(String database, Session.Type type, GraknOptions options);
-
-        DatabaseManager databases();
-
-        boolean isOpen();
-
-        void close();
+        interface Cluster extends GraknBase.Client<GraknOptions.Cluster> {
+        }
     }
 
     interface DatabaseManager {

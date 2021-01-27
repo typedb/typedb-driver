@@ -39,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import static grakn.client.common.exception.ErrorMessage.Client.ILLEGAL_ARGUMENT;
 import static grakn.common.collection.Collections.pair;
 
 public class GraknClient {
@@ -104,7 +103,7 @@ public class GraknClient {
         }
     }
 
-    public static class Cluster implements Grakn.Client {
+    public static class Cluster implements Grakn.Client.Cluster {
         private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
         private final Map<Address.Cluster.Server, Core> coreClients;
         private final Map<Address.Cluster.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
@@ -132,9 +131,8 @@ public class GraknClient {
         }
 
         @Override
-        public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions options) {
-            if (!options.isCluster()) throw new GraknClientException(ILLEGAL_ARGUMENT, options);
-            return new RPCSession.Cluster(this, database, type, options.asCluster());
+        public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
+            return new RPCSession.Cluster(this, database, type, options);
         }
 
         @Override
