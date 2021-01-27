@@ -151,7 +151,7 @@ public class GraknClient {
             isOpen = false;
         }
 
-        public Set<Address.Cluster.Server> servers() {
+        public Set<Address.Cluster.Server> clusterMembers() {
             return coreClients.keySet();
         }
 
@@ -166,23 +166,22 @@ public class GraknClient {
         private Set<Address.Cluster.Server> discoverCluster(String... addresses) {
             for (String address: addresses) {
                 try (Core client = new Core(address)) {
-                    LOG.debug("Performing server discovery to {}...", address);
+                    LOG.debug("Performing cluster discovery to {}...", address);
                     GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
                     ClusterProto.Cluster.Discover.Res res =
                             graknClusterRPC.clusterDiscover(ClusterProto.Cluster.Discover.Req.newBuilder().build());
-                    Set<Address.Cluster.Server> servers = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
-                    LOG.debug("Discovered {}", servers);
-                    return servers;
+                    Set<Address.Cluster.Server> members = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
+                    LOG.debug("Discovered {}", members);
+                    return members;
                 } catch (StatusRuntimeException e) {
-                    LOG.error("Server discovery to {} failed.", address);
+                    LOG.error("Cluster discovery to {} failed.", address);
                 }
             }
-            throw clusterNotAvailableException();
+            throw clusterNotAvailableException(addresses);
         }
 
-        private GraknClientException clusterNotAvailableException() {
-            String addresses = servers().stream().map(Address.Cluster.Server::toString).collect(Collectors.joining(","));
-            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses); // remove ambiguity by casting to Object
+        private GraknClientException clusterNotAvailableException(String... addresses) {
+            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses)); // remove ambiguity by casting to Object
         }
     }
 }

@@ -48,7 +48,6 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NO_PRIMA
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class RPCSession {
@@ -270,7 +269,7 @@ public class RPCSession {
         }
 
         private Database databaseDiscover() {
-            for (Address.Cluster.Server server: clusterClient.servers()) {
+            for (Address.Cluster.Server server: clusterClient.clusterMembers()) {
                 try {
                     return databaseDiscover(server);
                 } catch (StatusRuntimeException e) {
@@ -291,7 +290,7 @@ public class RPCSession {
         }
 
         private GraknClientException clusterNotAvailableException() {
-            String addresses = clusterClient.servers().stream().map(Address.Cluster.Server::toString).collect(Collectors.joining(","));
+            String addresses = clusterClient.clusterMembers().stream().map(Address.Cluster.Server::toString).collect(Collectors.joining(","));
             return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses); // remove ambiguity by casting to Object
         }
 
