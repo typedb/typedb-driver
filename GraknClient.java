@@ -20,7 +20,7 @@
 package grakn.client;
 
 import grakn.client.rpc.RPCClient;
-import grakn.client.rpc.cluster.ClusterClient;
+import grakn.client.rpc.cluster.RPCClientCluster;
 
 public interface GraknClient {
     String DEFAULT_ADDRESS = "localhost:1729";
@@ -38,6 +38,6 @@ public interface GraknClient {
     }
 
     static Grakn.Client.Cluster cluster(String address) {
-        return new ClusterClient(address);
+        return new RPCClientCluster(address);
     }
 }

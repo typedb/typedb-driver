@@ -37,21 +37,21 @@ import java.util.stream.Collectors;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class ClusterClient implements Grakn.Client.Cluster {
-    private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
+public class RPCClientCluster implements Grakn.Client.Cluster {
+    private static final Logger LOG = LoggerFactory.getLogger(RPCClientCluster.class);
     private final Map<Address.Server, RPCClient> coreClients;
     private final Map<Address.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
-    private final ClusterDatabaseManager databases;
+    private final RPCDatabaseManagerCluster databases;
     private boolean isOpen;
 
-    public ClusterClient(String address) {
+    public RPCClientCluster(String address) {
         coreClients = discoverCluster(address).stream()
                 .map(addr -> pair(addr, new RPCClient(addr.client())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
-        databases = new ClusterDatabaseManager(
+        databases = new RPCDatabaseManagerCluster(
                 coreClients.entrySet().stream()
                         .map(client -> pair(client.getKey(), client.getValue().databases()))
                         .collect(Collectors.toMap(Pair::first, Pair::second))
@@ -60,17 +60,17 @@ public class ClusterClient implements Grakn.Client.Cluster {
     }
 
     @Override
-    public ClusterSession session(String database, Grakn.Session.Type type) {
+    public RPCSessionCluster session(String database, Grakn.Session.Type type) {
         return session(database, type, GraknOptions.cluster());
     }
 
     @Override
-    public ClusterSession session(String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
-        return new ClusterSession(this, database, type, options);
+    public RPCSessionCluster session(String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
+        return new RPCSessionCluster(this, database, type, options);
     }
 
     @Override
-    public ClusterDatabaseManager databases() {
+    public RPCDatabaseManagerCluster databases() {
         return databases;
     }
 

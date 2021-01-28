@@ -43,11 +43,11 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_T
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
-public class ClusterSession implements Grakn.Session.Cluster {
+public class RPCSessionCluster implements Grakn.Session.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(Grakn.Session.Cluster.class);
     public static final int MAX_RETRY_PER_REPLICA = 10;
     public static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
-    private final ClusterClient clusterClient;
+    private final RPCClientCluster clusterClient;
     private Database database;
     private final String dbName;
     private final Grakn.Session.Type type;
@@ -55,7 +55,7 @@ public class ClusterSession implements Grakn.Session.Cluster {
     private final ConcurrentMap<Replica.Id, RPCSession> coreSessions;
     private boolean isOpen;
 
-    public ClusterSession(ClusterClient clusterClient, String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
+    public RPCSessionCluster(RPCClientCluster clusterClient, String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.dbName = database;
         this.type = type;

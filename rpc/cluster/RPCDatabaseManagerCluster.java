@@ -25,10 +25,10 @@ import grakn.client.rpc.RPCDatabaseManager;
 import java.util.List;
 import java.util.Map;
 
-public class ClusterDatabaseManager implements Grakn.DatabaseManager {
+public class RPCDatabaseManagerCluster implements Grakn.DatabaseManager {
     private final Map<Address.Server, RPCDatabaseManager> databaseManagers;
 
-    public ClusterDatabaseManager(Map<Address.Server, RPCDatabaseManager> databaseManagers) {
+    public RPCDatabaseManagerCluster(Map<Address.Server, RPCDatabaseManager> databaseManagers) {
         this.databaseManagers = databaseManagers;
     }
 
