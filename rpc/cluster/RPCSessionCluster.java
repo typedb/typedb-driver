@@ -22,7 +22,7 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCClient;
+import grakn.client.rpc.RPCGraknClient;
 import grakn.client.rpc.RPCSession;
 import grakn.protocol.cluster.DatabaseProto;
 import io.grpc.StatusRuntimeException;
@@ -47,7 +47,7 @@ public class RPCSessionCluster implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     public static final int MAX_RETRY_PER_REPLICA = 10;
     public static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
-    private final RPCClientCluster clusterClient;
+    private final RPCGraknClientCluster clusterClient;
     private Database database;
     private final String dbName;
     private final GraknClient.Session.Type type;
@@ -55,7 +55,7 @@ public class RPCSessionCluster implements GraknClient.Session {
     private final ConcurrentMap<Replica.Id, RPCSession> coreSessions;
     private boolean isOpen;
 
-    public RPCSessionCluster(RPCClientCluster clusterClient, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+    public RPCSessionCluster(RPCGraknClientCluster clusterClient, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.dbName = database;
         this.type = type;
@@ -110,7 +110,7 @@ public class RPCSessionCluster implements GraknClient.Session {
                             database.primaryReplica().id(),
                             key -> {
                                 LOG.debug("Opening a session to primary replica '{}'", key);
-                                RPCClient primaryReplicaClient = clusterClient.coreClient(key.address());
+                                RPCGraknClient primaryReplicaClient = clusterClient.coreClient(key.address());
                                 return primaryReplicaClient.session(key.database(), this.type, this.options);
                             }
                     );
