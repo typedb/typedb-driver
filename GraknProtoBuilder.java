@@ -28,7 +28,9 @@ public abstract class GraknProtoBuilder {
         options.infer().ifPresent(builder::setInfer);
         options.explain().ifPresent(builder::setExplain);
         options.batchSize().ifPresent(builder::setBatchSize);
-
+        options.prefetch().ifPresent(builder::setPrefetch);
+        options.sessionIdleTimeout().ifPresent(builder::setSessionIdleTimeoutMillis);
+        options.schemaLockAcquireTimeout().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
         if (options.isCluster()) {
             options.asCluster().allowSecondaryReplica().ifPresent(builder::setAllowSecondaryReplica);
         }

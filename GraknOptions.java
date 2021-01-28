@@ -23,13 +23,28 @@ import grakn.client.common.exception.GraknClientException;
 
 import java.util.Optional;
 
-import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_BATCH_SIZE;
+import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class GraknOptions {
     private Boolean infer = null;
     private Boolean explain = null;
     private Integer batchSize = null;
+    private Boolean prefetch = null;
+    private Integer sessionIdleTimeout = null;
+    private Integer schemaLockAcquireTimeout = null;
+
+    public static GraknOptions core() {
+        return new GraknOptions();
+    }
+
+    public static GraknOptions.Cluster cluster() {
+        return new Cluster();
+    }
+
+    public boolean isCluster() {
+        return false;
+    }
 
     GraknOptions() {}
 
@@ -57,22 +72,43 @@ public class GraknOptions {
 
     public GraknOptions batchSize(int batchSize) {
         if (batchSize < 1) {
-            throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(batchSize));
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(batchSize));
         }
         this.batchSize = batchSize;
         return this;
     }
 
-    public static GraknOptions core() {
-        return new GraknOptions();
+    public Optional<Boolean> prefetch() {
+        return Optional.ofNullable(prefetch);
     }
 
-    public static GraknOptions.Cluster cluster() {
-        return new Cluster();
+    public GraknOptions prefetch(boolean prefetch) {
+        this.prefetch = prefetch;
+        return this;
     }
 
-    public boolean isCluster() {
-        return false;
+    public Optional<Integer> sessionIdleTimeout() {
+        return Optional.ofNullable(sessionIdleTimeout);
+    }
+
+    public GraknOptions sessionIdleTimeout(int sessionIdleTimeout) {
+        if (sessionIdleTimeout < 1) {
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(sessionIdleTimeout));
+        }
+        this.sessionIdleTimeout = sessionIdleTimeout;
+        return this;
+    }
+
+    public Optional<Integer> schemaLockAcquireTimeout() {
+        return Optional.ofNullable(schemaLockAcquireTimeout);
+    }
+
+    public GraknOptions schemaLockAcquireTimeout(int schemaLockAcquireTimeout) {
+        if (schemaLockAcquireTimeout < 1) {
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(schemaLockAcquireTimeout));
+        }
+        this.schemaLockAcquireTimeout = schemaLockAcquireTimeout;
+        return this;
     }
 
     public Cluster asCluster() {
