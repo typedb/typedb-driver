@@ -28,9 +28,26 @@ import java.util.List;
 
 public interface Grakn {
 
-    interface Client extends GraknBase.Client<GraknOptions> {
+    interface _ClientBase extends AutoCloseable {
 
-        interface Cluster extends GraknBase.Client<GraknOptions.Cluster> {
+        Grakn.DatabaseManager databases();
+
+        boolean isOpen();
+
+        void close();
+    }
+
+    interface Client extends _ClientBase {
+
+        Grakn.Session session(String database, Grakn.Session.Type type);
+
+        Grakn.Session session(String database, Grakn.Session.Type type, GraknOptions options);
+
+        interface Cluster extends _ClientBase {
+
+            Grakn.Session.Cluster session(String database, Grakn.Session.Type type);
+
+            Grakn.Session.Cluster session(String database, Grakn.Session.Type type, GraknOptions.Cluster options);
         }
     }
 
@@ -45,11 +62,9 @@ public interface Grakn {
         List<String> all();
     }
 
-    interface Session extends AutoCloseable {
+    interface _SessionBase extends AutoCloseable {
 
         Transaction transaction(Transaction.Type type);
-
-        Transaction transaction(Transaction.Type type, GraknOptions options);
 
         Session.Type type();
 
@@ -58,6 +73,11 @@ public interface Grakn {
         void close();
 
         String database();
+    }
+
+    interface Session extends _SessionBase {
+
+        Transaction transaction(Transaction.Type type, GraknOptions options);
 
         enum Type {
             DATA(0),
@@ -85,6 +105,11 @@ public interface Grakn {
             public boolean isData() { return !isSchema; }
 
             public boolean isSchema() { return isSchema; }
+        }
+
+        interface Cluster extends _SessionBase {
+
+            Transaction transaction(Transaction.Type type, GraknOptions.Cluster options);
         }
     }
 
