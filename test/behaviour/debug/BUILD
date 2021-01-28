@@ -36,7 +36,7 @@ grakn_java_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-core",
         "//test/behaviour/config:parameters",
         "//test/behaviour/graql:steps",
         "//test/behaviour/connection/session:steps",

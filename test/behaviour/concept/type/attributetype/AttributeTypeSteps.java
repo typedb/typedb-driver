@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.tx;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -30,11 +30,11 @@ import java.util.stream.Stream;
 
 import static grakn.client.GraknClient.Session.Type.DATA;
 import static grakn.client.GraknClient.Session.Type.SCHEMA;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.sessions;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.sessionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.THREAD_POOL_SIZE;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.client;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.sessions;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.sessionsParallel;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.threadPool;
 import static grakn.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;

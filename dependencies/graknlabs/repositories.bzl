@@ -26,11 +26,17 @@ def graknlabs_graql():
         commit = "73935344f71f8b0ab61225cc77deab459129a3d2" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_graql
     )
 
+#def graknlabs_common():
+#    git_repository(
+#        name = "graknlabs_common",
+#        remote = "https://github.com/graknlabs/common",
+#        tag = "2.0.0-alpha-6" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+#    )
+
 def graknlabs_common():
-    git_repository(
+    native.local_repository(
         name = "graknlabs_common",
-        remote = "https://github.com/graknlabs/common",
-        tag = "2.0.0-alpha-6" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        path = "/Users/lolski/grakn.ai/graknlabs/common",
     )
 
 def graknlabs_bazel_distribution():

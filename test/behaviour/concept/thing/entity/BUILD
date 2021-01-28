@@ -31,7 +31,7 @@ java_library(
         "//:client-java",
         "//test/behaviour/concept/thing:steps",
         "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-core",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertEquals;

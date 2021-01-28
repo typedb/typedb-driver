@@ -31,7 +31,7 @@ java_library(
         "//test/behaviour/config:parameters",
         "//test/behaviour/concept/type/thingtype:steps",
         "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-core",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

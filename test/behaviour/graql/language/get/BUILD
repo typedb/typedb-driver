@@ -33,7 +33,7 @@ grakn_java_test(
     ],
     runtime_deps = [
         "//test/behaviour/graql:steps",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-core",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/config:parameters",
     ],

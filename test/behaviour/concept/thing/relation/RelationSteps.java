@@ -31,7 +31,7 @@ import java.util.Map;
 
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.connection.ConnectionStepsCore.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
