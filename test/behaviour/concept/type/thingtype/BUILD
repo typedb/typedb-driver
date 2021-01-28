@@ -20,7 +20,7 @@
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("//test/behaviour:rules.bzl", "grakn_core_and_cluster_behaviour_test")
 
 java_library(
     name = "steps",
@@ -41,25 +41,26 @@ java_library(
     ],
 )
 
-grakn_java_test(
+grakn_core_and_cluster_behaviour_test(
     name = "test",
-    size = "small",
     srcs = [
         "ThingTypeTest.java",
     ],
+    test_class = "grakn.client.test.behaviour.concept.type.thingtype.ThingTypeTest",
     data = [
         "@graknlabs_behaviour//concept/type:thingtype.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
-    test_class = "grakn.client.test.behaviour.concept.type.thingtype.ThingTypeTest",
-    runtime_deps = [
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    connection_steps_core = "//test/behaviour/connection:steps-core",
+    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    steps = [
         ":steps",
         "//test/behaviour/concept/thing/attribute:steps",
         "//test/behaviour/concept/thing/entity:steps",
         "//test/behaviour/concept/thing/relation:steps",
         "//test/behaviour/concept/type/attributetype:steps",
         "//test/behaviour/concept/type/relationtype:steps",
-        "//test/behaviour/config:parameters",
         "//test/behaviour/connection:steps-base",
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
@@ -72,6 +73,10 @@ grakn_java_test(
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",
     ],
+    runtime_deps = [
+        "//test/behaviour/config:parameters",
+    ],
+    size = "small",
 )
 
 checkstyle_test(
