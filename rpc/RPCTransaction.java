@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grakn.client.Grakn.Transaction;
+import grakn.client.GraknClient.Transaction;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;

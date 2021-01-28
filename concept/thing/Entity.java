@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.type.EntityType;
 
 public interface Entity extends Thing {
@@ -30,7 +30,7 @@ public interface Entity extends Thing {
     }
 
     @Override
-    Entity.Remote asRemote(Grakn.Transaction transaction);
+    Entity.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends Thing.Remote, Entity {
 

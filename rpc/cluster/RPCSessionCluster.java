@@ -19,7 +19,7 @@
 
 package grakn.client.rpc.cluster;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.RPCClient;
@@ -43,19 +43,19 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_T
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
-public class RPCSessionCluster implements Grakn.Session.Cluster {
-    private static final Logger LOG = LoggerFactory.getLogger(Grakn.Session.Cluster.class);
+public class RPCSessionCluster implements GraknClient.Session {
+    private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     public static final int MAX_RETRY_PER_REPLICA = 10;
     public static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
     private final RPCClientCluster clusterClient;
     private Database database;
     private final String dbName;
-    private final Grakn.Session.Type type;
+    private final GraknClient.Session.Type type;
     private final GraknOptions.Cluster options;
     private final ConcurrentMap<Replica.Id, RPCSession> coreSessions;
     private boolean isOpen;
 
-    public RPCSessionCluster(RPCClientCluster clusterClient, String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
+    public RPCSessionCluster(RPCClientCluster clusterClient, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.dbName = database;
         this.type = type;
@@ -66,12 +66,12 @@ public class RPCSessionCluster implements Grakn.Session.Cluster {
     }
 
     @Override
-    public Grakn.Transaction transaction(Grakn.Transaction.Type type) {
+    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type) {
         return transaction(type, GraknOptions.cluster());
     }
 
     @Override
-    public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions.Cluster options) {
+    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
         GraknOptions.Cluster clusterOpt = options.asCluster();
         if (clusterOpt.allowSecondaryReplica().isPresent() && clusterOpt.allowSecondaryReplica().get()) {
             return transactionSecondaryReplica(type, clusterOpt);
@@ -81,7 +81,7 @@ public class RPCSessionCluster implements Grakn.Session.Cluster {
     }
 
     @Override
-    public Grakn.Session.Type type() {
+    public GraknClient.Session.Type type() {
         return type;
     }
 
@@ -101,7 +101,7 @@ public class RPCSessionCluster implements Grakn.Session.Cluster {
         return dbName;
     }
 
-    private Grakn.Transaction transactionPrimaryReplica(Grakn.Transaction.Type type, GraknOptions options) {
+    private GraknClient.Transaction transactionPrimaryReplica(GraknClient.Transaction.Type type, GraknOptions options) {
         for (Replica replica: database.replicas()) {
             int retry = 0;
             while (retry < MAX_RETRY_PER_REPLICA) {
@@ -137,7 +137,7 @@ public class RPCSessionCluster implements Grakn.Session.Cluster {
         throw clusterNotAvailableException();
     }
 
-    private Grakn.Transaction transactionSecondaryReplica(Grakn.Transaction.Type type, GraknOptions.Cluster options) {
+    private GraknClient.Transaction transactionSecondaryReplica(GraknClient.Transaction.Type type, GraknOptions.Cluster options) {
         for (Replica replica: database.replicas()) {
             try {
                 RPCSession selectedSession = coreSessions.computeIfAbsent(

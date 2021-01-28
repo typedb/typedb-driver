@@ -19,9 +19,9 @@
 
 package application;
 
-import grakn.client.Grakn;
-import grakn.client.Grakn.Session;
-import grakn.client.Grakn.Transaction;
+import grakn.client.GraknClient;
+import grakn.client.GraknClient.Session;
+import grakn.client.GraknClient.Transaction;
 import grakn.client.concept.type.ThingType;
 import grakn.client.GraknClient;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        Grakn.Client client = GraknClient.core();
+        GraknClient client = GraknClient.core();
         client.databases().create("grakn");
         Session session = client.session("grakn", Session.Type.DATA);
         Transaction tx = session.transaction(Transaction.Type.WRITE);

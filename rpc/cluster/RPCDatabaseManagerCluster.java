@@ -19,13 +19,13 @@
 
 package grakn.client.rpc.cluster;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.rpc.RPCDatabaseManager;
 
 import java.util.List;
 import java.util.Map;
 
-public class RPCDatabaseManagerCluster implements Grakn.DatabaseManager {
+public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
     private final Map<Address.Server, RPCDatabaseManager> databaseManagers;
 
     public RPCDatabaseManagerCluster(Map<Address.Server, RPCDatabaseManager> databaseManagers) {

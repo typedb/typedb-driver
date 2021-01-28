@@ -19,25 +19,141 @@
 
 package grakn.client;
 
+import grakn.client.concept.ConceptManager;
+import grakn.client.logic.LogicManager;
+import grakn.client.query.QueryManager;
 import grakn.client.rpc.RPCClient;
 import grakn.client.rpc.cluster.RPCClientCluster;
 
-public interface GraknClient {
+import java.util.List;
+
+public interface GraknClient extends AutoCloseable {
     String DEFAULT_ADDRESS = "localhost:1729";
 
-    static Grakn.Client core() {
+    static GraknClient core() {
         return core(DEFAULT_ADDRESS);
     }
 
-    static Grakn.Client core(String address) {
+    static GraknClient core(String address) {
         return new RPCClient(address);
     }
 
-    static Grakn.Client.Cluster cluster() {
+    static GraknClient cluster() {
         return cluster(DEFAULT_ADDRESS);
     }
 
-    static Grakn.Client.Cluster cluster(String address) {
+    static GraknClient cluster(String address) {
         return new RPCClientCluster(address);
+    }
+
+    GraknClient.Session session(String database, GraknClient.Session.Type type);
+
+    GraknClient.Session session(String database, GraknClient.Session.Type type, GraknOptions options);
+
+    GraknClient.DatabaseManager databases();
+
+    boolean isOpen();
+
+    void close();
+
+    interface DatabaseManager {
+
+        boolean contains(String name);
+
+        void create(String name);
+
+        void delete(String name);
+
+        List<String> all();
+    }
+
+    interface Session extends AutoCloseable {
+
+        Transaction transaction(Transaction.Type type);
+
+        Transaction transaction(Transaction.Type type, GraknOptions options);
+
+        Session.Type type();
+
+        boolean isOpen();
+
+        void close();
+
+        String database();
+
+        enum Type {
+            DATA(0),
+            SCHEMA(1);
+
+            private final int id;
+            private final boolean isSchema;
+
+            Type(int id) {
+                this.id = id;
+                this.isSchema = id == 1;
+            }
+
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
+                }
+                return null;
+            }
+
+            public int id() {
+                return id;
+            }
+
+            public boolean isData() { return !isSchema; }
+
+            public boolean isSchema() { return isSchema; }
+        }
+    }
+
+    interface Transaction extends AutoCloseable {
+
+        Transaction.Type type();
+
+        boolean isOpen();
+
+        ConceptManager concepts();
+
+        LogicManager logic();
+
+        QueryManager query();
+
+        void commit();
+
+        void rollback();
+
+        void close();
+
+        enum Type {
+            READ(0),
+            WRITE(1);
+
+            private final int id;
+            private final boolean isWrite;
+
+            Type(int id) {
+                this.id = id;
+                this.isWrite = id == 1;
+            }
+
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
+                }
+                return null;
+            }
+
+            public int id() {
+                return id;
+            }
+
+            public boolean isRead() { return !isWrite; }
+
+            public boolean isWrite() { return isWrite; }
+        }
     }
 }

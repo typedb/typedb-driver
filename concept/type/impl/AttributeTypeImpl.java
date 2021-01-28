@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.impl.AttributeImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
@@ -75,7 +75,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public AttributeTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+    public AttributeTypeImpl.Remote asRemote(GraknClient.Transaction transaction) {
         return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -139,7 +139,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+        Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -154,7 +154,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -284,7 +284,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.Boolean.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -295,7 +295,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -305,7 +305,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public AttributeTypeImpl.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+            public AttributeTypeImpl.Boolean.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
             }
 
@@ -359,7 +359,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.Long.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -370,7 +370,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            public Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -380,7 +380,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public AttributeTypeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+            public AttributeTypeImpl.Long.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
             }
 
@@ -434,7 +434,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.Double.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -445,7 +445,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            public Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -455,7 +455,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public AttributeTypeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+            public AttributeTypeImpl.Double.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
             }
 
@@ -509,7 +509,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.String.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -520,7 +520,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            public Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -530,7 +530,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public AttributeTypeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+            public AttributeTypeImpl.String.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
             }
 
@@ -602,7 +602,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public AttributeTypeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeTypeImpl.DateTime.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
         }
 
@@ -613,7 +613,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            public Remote(Grakn.Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(GraknClient.Transaction transaction, java.lang.String label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -623,7 +623,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
-            public AttributeTypeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+            public AttributeTypeImpl.DateTime.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
             }
 

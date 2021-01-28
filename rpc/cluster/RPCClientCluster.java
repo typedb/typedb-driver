@@ -19,7 +19,7 @@
 
 package grakn.client.rpc.cluster;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.RPCClient;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class RPCClientCluster implements Grakn.Client.Cluster {
+public class RPCClientCluster implements GraknClient {
     private static final Logger LOG = LoggerFactory.getLogger(RPCClientCluster.class);
     private final Map<Address.Server, RPCClient> coreClients;
     private final Map<Address.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
@@ -60,13 +60,13 @@ public class RPCClientCluster implements Grakn.Client.Cluster {
     }
 
     @Override
-    public RPCSessionCluster session(String database, Grakn.Session.Type type) {
+    public RPCSessionCluster session(String database, GraknClient.Session.Type type) {
         return session(database, type, GraknOptions.cluster());
     }
 
     @Override
-    public RPCSessionCluster session(String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
-        return new RPCSessionCluster(this, database, type, options);
+    public RPCSessionCluster session(String database, GraknClient.Session.Type type, GraknOptions options) {
+        return new RPCSessionCluster(this, database, type, options.asCluster());
     }
 
     @Override

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.protocol.ConceptProto;
@@ -62,7 +62,7 @@ public interface AttributeType extends ThingType {
     }
 
     @Override
-    AttributeType.Remote asRemote(Grakn.Transaction transaction);
+    AttributeType.Remote asRemote(GraknClient.Transaction transaction);
 
     AttributeType.Boolean asBoolean();
 
@@ -179,7 +179,7 @@ public interface AttributeType extends ThingType {
         }
 
         @Override
-        AttributeType.Boolean.Remote asRemote(Grakn.Transaction transaction);
+        AttributeType.Boolean.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
@@ -206,7 +206,7 @@ public interface AttributeType extends ThingType {
         }
 
         @Override
-        AttributeType.Long.Remote asRemote(Grakn.Transaction transaction);
+        AttributeType.Long.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
@@ -233,7 +233,7 @@ public interface AttributeType extends ThingType {
         }
 
         @Override
-        AttributeType.Double.Remote asRemote(Grakn.Transaction transaction);
+        AttributeType.Double.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
@@ -260,7 +260,7 @@ public interface AttributeType extends ThingType {
         }
 
         @Override
-        AttributeType.String.Remote asRemote(Grakn.Transaction transaction);
+        AttributeType.String.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
@@ -292,7 +292,7 @@ public interface AttributeType extends ThingType {
         }
 
         @Override
-        AttributeType.DateTime.Remote asRemote(Grakn.Transaction transaction);
+        AttributeType.DateTime.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.thing.impl.EntityImpl;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.EntityType;
@@ -38,7 +38,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+    public EntityTypeImpl.Remote asRemote(GraknClient.Transaction transaction) {
         return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -49,12 +49,12 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
+        Remote(GraknClient.Transaction transaction, String label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public EntityTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+        public EntityTypeImpl.Remote asRemote(GraknClient.Transaction transaction) {
             return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

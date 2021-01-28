@@ -19,7 +19,7 @@
 
 package grakn.client.rpc;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
@@ -27,7 +27,7 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class RPCClient implements Grakn.Client {
+public class RPCClient implements GraknClient {
 
     private final ManagedChannel channel;
     private final RPCDatabaseManager databases;
@@ -38,12 +38,12 @@ public class RPCClient implements Grakn.Client {
     }
 
     @Override
-    public RPCSession session(String database, Grakn.Session.Type type) {
+    public RPCSession session(String database, GraknClient.Session.Type type) {
         return session(database, type, GraknOptions.core());
     }
 
     @Override
-    public RPCSession session(String database, Grakn.Session.Type type, GraknOptions options) {
+    public RPCSession session(String database, GraknClient.Session.Type type, GraknOptions options) {
         return new RPCSession(this, database, type, options);
     }
 

@@ -19,26 +19,19 @@
 
 package grakn.client.concept;
 
-import grakn.client.Grakn;
-import grakn.client.common.exception.GraknClientException;
+import grakn.client.GraknClient;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.thing.Entity;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.concept.type.impl.TypeImpl;
-import grakn.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.common.util.Objects.className;
 
 public interface Concept {
 
@@ -113,7 +106,7 @@ public interface Concept {
     Relation asRelation();
 
     @CheckReturnValue
-    Remote asRemote(Grakn.Transaction transaction);
+    Remote asRemote(GraknClient.Transaction transaction);
 
     @CheckReturnValue
     boolean isRemote();

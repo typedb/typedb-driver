@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
@@ -109,7 +109,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         private final String iid;
         private final int hash;
 
-        Remote(Grakn.Transaction transaction, String iid) {
+        Remote(GraknClient.Transaction transaction, String iid) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             this.rpcTransaction = (RPCTransaction) transaction;
             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
@@ -222,7 +222,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
             return this;
         }
 
-        final Grakn.Transaction tx() {
+        final GraknClient.Transaction tx() {
             return rpcTransaction;
         }
 

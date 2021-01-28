@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.ThingType;
@@ -95,7 +95,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
-        Remote(Grakn.Transaction transaction, java.lang.String iid) {
+        Remote(GraknClient.Transaction transaction, java.lang.String iid) {
             super(transaction, iid);
         }
 
@@ -182,7 +182,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeImpl.Boolean.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeImpl.Boolean.Remote(transaction, getIID(), value);
         }
 
@@ -190,13 +190,13 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
             private final java.lang.Boolean value;
 
-            Remote(Grakn.Transaction transaction, java.lang.String iid, java.lang.Boolean value) {
+            Remote(GraknClient.Transaction transaction, java.lang.String iid, java.lang.Boolean value) {
                 super(transaction, iid);
                 this.value = value;
             }
 
             @Override
-            public Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction) {
+            public Attribute.Boolean.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeImpl.Boolean.Remote(transaction, getIID(), value);
             }
 
@@ -234,7 +234,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Long.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeImpl.Long.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeImpl.Long.Remote(transaction, getIID(), value);
         }
 
@@ -252,13 +252,13 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
             private final long value;
 
-            Remote(Grakn.Transaction transaction, java.lang.String iid, long value) {
+            Remote(GraknClient.Transaction transaction, java.lang.String iid, long value) {
                 super(transaction, iid);
                 this.value = value;
             }
 
             @Override
-            public Attribute.Long.Remote asRemote(Grakn.Transaction transaction) {
+            public Attribute.Long.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeImpl.Long.Remote(transaction, getIID(), value);
             }
 
@@ -296,7 +296,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Double.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeImpl.Double.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeImpl.Double.Remote(transaction, getIID(), value);
         }
 
@@ -314,13 +314,13 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
             private final double value;
 
-            Remote(Grakn.Transaction transaction, java.lang.String iid, double value) {
+            Remote(GraknClient.Transaction transaction, java.lang.String iid, double value) {
                 super(transaction, iid);
                 this.value = value;
             }
 
             @Override
-            public Attribute.Double.Remote asRemote(Grakn.Transaction transaction) {
+            public Attribute.Double.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeImpl.Double.Remote(transaction, getIID(), value);
             }
 
@@ -358,7 +358,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.String.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeImpl.String.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeImpl.String.Remote(transaction, getIID(), value);
         }
 
@@ -376,7 +376,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
             private final java.lang.String value;
 
-            Remote(Grakn.Transaction transaction, java.lang.String iid, java.lang.String value) {
+            Remote(GraknClient.Transaction transaction, java.lang.String iid, java.lang.String value) {
                 super(transaction, iid);
                 this.value = value;
             }
@@ -387,7 +387,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             }
 
             @Override
-            public Attribute.String.Remote asRemote(Grakn.Transaction transaction) {
+            public Attribute.String.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeImpl.String.Remote(transaction, getIID(), value);
             }
 
@@ -420,7 +420,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+        public AttributeImpl.DateTime.Remote asRemote(GraknClient.Transaction transaction) {
             return new AttributeImpl.DateTime.Remote(transaction, getIID(), value);
         }
 
@@ -442,13 +442,13 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
             private final LocalDateTime value;
 
-            Remote(Grakn.Transaction transaction, java.lang.String iid, LocalDateTime value) {
+            Remote(GraknClient.Transaction transaction, java.lang.String iid, LocalDateTime value) {
                 super(transaction, iid);
                 this.value = value;
             }
 
             @Override
-            public Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction) {
+            public Attribute.DateTime.Remote asRemote(GraknClient.Transaction transaction) {
                 return new AttributeImpl.DateTime.Remote(transaction, getIID(), value);
             }
 

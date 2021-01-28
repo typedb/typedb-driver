@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.impl.ConceptImpl;
 import grakn.client.concept.thing.Attribute;
@@ -118,7 +118,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         private final boolean isRoot;
         private int hash;
 
-        Remote(Grakn.Transaction transaction, String label, boolean isRoot) {
+        Remote(GraknClient.Transaction transaction, String label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
             this.rpcTransaction = (RPCTransaction) transaction;
@@ -242,7 +242,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             return rpcTransaction.concepts().getThingType(label) == null;
         }
 
-        final Grakn.Transaction tx() {
+        final GraknClient.Transaction tx() {
             return rpcTransaction;
         }
 

@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grakn.client.GraknProtoBuilder.options;
 
-public class RPCSession implements Grakn.Session {
+public class RPCSession implements GraknClient.Session {
     private final Channel channel;
     private final String database;
     private final Type type;
@@ -62,12 +62,12 @@ public class RPCSession implements Grakn.Session {
     }
 
     @Override
-    public Grakn.Transaction transaction(Grakn.Transaction.Type type) {
+    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type) {
         return transaction(type, GraknOptions.core());
     }
 
     @Override
-    public Grakn.Transaction transaction(Grakn.Transaction.Type type, GraknOptions options) {
+    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
         return new RPCTransaction(this, sessionId, type, options);
     }
 

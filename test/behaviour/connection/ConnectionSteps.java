@@ -19,10 +19,9 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.Grakn.Client;
-import grakn.client.Grakn.Session;
-import grakn.client.Grakn.Transaction;
 import grakn.client.GraknClient;
+import grakn.client.GraknClient.Session;
+import grakn.client.GraknClient.Transaction;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -37,8 +36,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
-import static java.util.Objects.isNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -49,7 +46,7 @@ public class ConnectionSteps {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static Client client;
+    public static GraknClient client;
     public static List<Session> sessions = new ArrayList<>();
     public static List<CompletableFuture<Session>> sessionsParallel = new ArrayList<>();
     public static Map<Session, List<Transaction>> sessionsToTransactions = new HashMap<>();

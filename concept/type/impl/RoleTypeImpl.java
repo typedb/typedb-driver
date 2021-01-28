@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.type.RoleType;
 import grakn.protocol.ConceptProto;
 
@@ -57,7 +57,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public RoleTypeImpl.Remote asRemote(Grakn.Transaction transaction) {
+    public RoleTypeImpl.Remote asRemote(GraknClient.Transaction transaction) {
         return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
     }
 
@@ -90,7 +90,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         private final String scope;
         private final int hash;
 
-        public Remote(Grakn.Transaction transaction, String label, String scope, boolean isRoot) {
+        public Remote(GraknClient.Transaction transaction, String label, String scope, boolean isRoot) {
             super(transaction, label, isRoot);
             this.scope = scope;
             this.hash = Objects.hash(transaction, label, scope);
@@ -124,7 +124,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public RoleType.Remote asRemote(Grakn.Transaction transaction) {
+        public RoleType.Remote asRemote(GraknClient.Transaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), getScope(), isRoot());
         }
 
