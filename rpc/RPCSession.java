@@ -43,7 +43,7 @@ public class RPCSession implements GraknClient.Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    public RPCSession(RPCClient client, String database, Type type, GraknOptions options) {
+    public RPCSession(RPCGraknClient client, String database, Type type, GraknOptions options) {
         try {
             this.channel = client.channel();
             this.database = database;

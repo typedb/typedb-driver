@@ -22,7 +22,7 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCClient;
+import grakn.client.rpc.RPCGraknClient;
 import grakn.common.collection.Pair;
 import grakn.protocol.cluster.ClusterProto;
 import grakn.protocol.cluster.GraknClusterGrpc;
@@ -37,16 +37,16 @@ import java.util.stream.Collectors;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class RPCClientCluster implements GraknClient {
-    private static final Logger LOG = LoggerFactory.getLogger(RPCClientCluster.class);
-    private final Map<Address.Server, RPCClient> coreClients;
+public class RPCGraknClientCluster implements GraknClient {
+    private static final Logger LOG = LoggerFactory.getLogger(RPCGraknClientCluster.class);
+    private final Map<Address.Server, RPCGraknClient> coreClients;
     private final Map<Address.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
     private final RPCDatabaseManagerCluster databases;
     private boolean isOpen;
 
-    public RPCClientCluster(String address) {
+    public RPCGraknClientCluster(String address) {
         coreClients = discoverCluster(address).stream()
-                .map(addr -> pair(addr, new RPCClient(addr.client())))
+                .map(addr -> pair(addr, new RPCGraknClient(addr.client())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
@@ -81,7 +81,7 @@ public class RPCClientCluster implements GraknClient {
 
     @Override
     public void close() {
-        coreClients.values().forEach(RPCClient::close);
+        coreClients.values().forEach(RPCGraknClient::close);
         isOpen = false;
     }
 
@@ -89,7 +89,7 @@ public class RPCClientCluster implements GraknClient {
         return coreClients.keySet();
     }
 
-    public RPCClient coreClient(Address.Server address) {
+    public RPCGraknClient coreClient(Address.Server address) {
         return coreClients.get(address);
     }
 
@@ -99,7 +99,7 @@ public class RPCClientCluster implements GraknClient {
 
     private Set<Address.Server> discoverCluster(String... addresses) {
         for (String address: addresses) {
-            try (RPCClient client = new RPCClient(address)) {
+            try (RPCGraknClient client = new RPCGraknClient(address)) {
                 LOG.debug("Performing cluster discovery to {}...", address);
                 GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
                 ClusterProto.Cluster.Discover.Res res =
