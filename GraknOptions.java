@@ -33,6 +33,7 @@ public class GraknOptions {
     private Boolean prefetch = null;
     private Integer sessionIdleTimeout = null;
     private Integer schemaLockAcquireTimeout = null;
+    
     public static GraknOptions core() {
         return new GraknOptions();
     }
