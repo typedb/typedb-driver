@@ -23,7 +23,7 @@ import grakn.client.common.exception.GraknClientException;
 
 import java.util.Optional;
 
-import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_BATCH_SIZE;
+import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class GraknOptions {
@@ -33,7 +33,7 @@ public class GraknOptions {
     private Boolean prefetch = null;
     private Integer sessionIdleTimeout = null;
     private Integer schemaLockAcquireTimeout = null;
-    
+
     public static GraknOptions core() {
         return new GraknOptions();
     }
@@ -72,7 +72,7 @@ public class GraknOptions {
 
     public GraknOptions batchSize(int batchSize) {
         if (batchSize < 1) {
-            throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(batchSize));
+            throw new GraknClientException(NEGATIVE_VALUE.message(batchSize));
         }
         this.batchSize = batchSize;
         return this;
@@ -93,7 +93,7 @@ public class GraknOptions {
 
     public GraknOptions sessionIdleTimeout(int sessionIdleTimeout) {
         if (sessionIdleTimeout < 1) {
-            throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(sessionIdleTimeout));
+            throw new GraknClientException(NEGATIVE_VALUE.message(sessionIdleTimeout));
         }
         this.sessionIdleTimeout = sessionIdleTimeout;
         return this;
@@ -105,7 +105,7 @@ public class GraknOptions {
 
     public GraknOptions schemaLockAcquireTimeout(int schemaLockAcquireTimeout) {
         if (schemaLockAcquireTimeout < 1) {
-            throw new GraknClientException(NEGATIVE_BATCH_SIZE.message(schemaLockAcquireTimeout));
+            throw new GraknClientException(NEGATIVE_VALUE.message(schemaLockAcquireTimeout));
         }
         this.schemaLockAcquireTimeout = schemaLockAcquireTimeout;
         return this;
