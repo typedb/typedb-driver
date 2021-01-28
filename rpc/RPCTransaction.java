@@ -20,7 +20,7 @@
 package grakn.client.rpc;
 
 import com.google.protobuf.ByteString;
-import grakn.client.Grakn.Transaction;
+import grakn.client.GraknClient.Transaction;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManager;
@@ -62,7 +62,7 @@ public class RPCTransaction implements Transaction {
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
-    RPCTransaction(RPCSession.Core session, ByteString sessionId, Type type, GraknOptions options) {
+    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try {
             this.type = type;
             conceptManager = new ConceptManager(this);

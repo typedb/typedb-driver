@@ -19,10 +19,9 @@
 
 package grakn.client.test.integration;
 
-import grakn.client.Grakn.Client;
-import grakn.client.Grakn.Session;
-import grakn.client.Grakn.Transaction;
 import grakn.client.GraknClient;
+import grakn.client.GraknClient.Session;
+import grakn.client.GraknClient.Transaction;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -38,7 +37,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
-import static grakn.client.Grakn.Transaction.Type.WRITE;
+import static grakn.client.GraknClient.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
 import static graql.lang.Graql.rule;
@@ -49,7 +48,7 @@ import static graql.lang.Graql.var;
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static GraknCoreRunner grakn;
-    private static Client graknClient;
+    private static GraknClient graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {

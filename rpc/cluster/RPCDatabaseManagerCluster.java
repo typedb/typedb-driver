@@ -17,40 +17,38 @@
  * under the License.
  */
 
-package grakn.client.concept.thing;
+package grakn.client.rpc.cluster;
 
 import grakn.client.GraknClient;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
+import grakn.client.rpc.RPCDatabaseManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
-public interface Relation extends Thing {
+public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
+    private final Map<Address.Server, RPCDatabaseManager> databaseManagers;
 
-    @Override
-    default boolean isRelation() {
-        return true;
+    public RPCDatabaseManagerCluster(Map<Address.Server, RPCDatabaseManager> databaseManagers) {
+        this.databaseManagers = databaseManagers;
     }
 
     @Override
-    Relation.Remote asRemote(GraknClient.Transaction transaction);
+    public boolean contains(String name) {
+        return databaseManagers.values().iterator().next().contains(name);
+    }
 
-    interface Remote extends Thing.Remote, Relation {
+    @Override
+    public void create(String name) {
+        databaseManagers.values().forEach(dbMgr -> dbMgr.create(name));
+    }
 
-        @Override
-        RelationType getType();
+    @Override
+    public void delete(String name) {
+        databaseManagers.values().forEach(dbMgr -> dbMgr.delete(name));
+    }
 
-        void addPlayer(RoleType roleType, Thing player);
-
-        void removePlayer(RoleType roleType, Thing player);
-
-        Stream<? extends Thing> getPlayers(RoleType... roleTypes);
-
-        Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType();
-
-        @Override
-        Relation.Remote asRelation();
+    @Override
+    public List<String> all() {
+        return databaseManagers.values().iterator().next().all();
     }
 }

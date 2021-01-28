@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.ThingType;
 
@@ -66,7 +66,7 @@ public interface Attribute<VALUE> extends Thing {
     Attribute.DateTime asDateTime();
 
     @Override
-    Attribute.Remote<VALUE> asRemote(Grakn.Transaction transaction);
+    Attribute.Remote<VALUE> asRemote(GraknClient.Transaction transaction);
 
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
@@ -104,7 +104,7 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
-        Attribute.Boolean.Remote asRemote(Grakn.Transaction transaction);
+        Attribute.Boolean.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
         }
@@ -118,7 +118,7 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
-        Attribute.Long.Remote asRemote(Grakn.Transaction transaction);
+        Attribute.Long.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
         }
@@ -132,7 +132,7 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
-        Attribute.Double.Remote asRemote(Grakn.Transaction transaction);
+        Attribute.Double.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
         }
@@ -146,7 +146,7 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
-        Attribute.String.Remote asRemote(Grakn.Transaction transaction);
+        Attribute.String.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
         }
@@ -160,7 +160,7 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
-        Attribute.DateTime.Remote asRemote(Grakn.Transaction transaction);
+        Attribute.DateTime.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
         }

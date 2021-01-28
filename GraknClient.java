@@ -19,169 +19,141 @@
 
 package grakn.client;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.Address;
-import grakn.client.rpc.RPCDatabaseManager;
-import grakn.client.rpc.RPCSession;
-import grakn.common.collection.Pair;
-import grakn.protocol.cluster.ClusterProto;
-import grakn.protocol.cluster.GraknClusterGrpc;
-import io.grpc.Channel;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import grakn.client.concept.ConceptManager;
+import grakn.client.logic.LogicManager;
+import grakn.client.query.QueryManager;
+import grakn.client.rpc.RPCClient;
+import grakn.client.rpc.cluster.RPCClientCluster;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.List;
 
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import static grakn.common.collection.Collections.pair;
+public interface GraknClient extends AutoCloseable {
+    String DEFAULT_ADDRESS = "localhost:1729";
 
-public class GraknClient {
-    public static final String DEFAULT_ADDRESS = "localhost:1729";
-
-    public static Core core() {
+    static GraknClient core() {
         return core(DEFAULT_ADDRESS);
     }
 
-    public static Core core(String address) {
-        return new Core(address);
+    static GraknClient core(String address) {
+        return new RPCClient(address);
     }
 
-    public static GraknClient.Cluster cluster() {
-        return new GraknClient.Cluster(DEFAULT_ADDRESS);
+    static GraknClient cluster() {
+        return cluster(DEFAULT_ADDRESS);
     }
 
-    public static GraknClient.Cluster cluster(String address) {
-        return new GraknClient.Cluster(address);
+    static GraknClient cluster(String address) {
+        return new RPCClientCluster(address);
     }
 
-    public static class Core implements Grakn.Client {
-        private final ManagedChannel channel;
-        private final RPCDatabaseManager.Core databases;
+    GraknClient.Session session(String database, GraknClient.Session.Type type);
 
-        private Core(String address) {
-            channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-            databases = new RPCDatabaseManager.Core(channel);
-        }
+    GraknClient.Session session(String database, GraknClient.Session.Type type, GraknOptions options);
 
-        @Override
-        public RPCSession.Core session(String database, Grakn.Session.Type type) {
-            return session(database, type, GraknOptions.core());
-        }
+    GraknClient.DatabaseManager databases();
 
-        @Override
-        public RPCSession.Core session(String database, Grakn.Session.Type type, GraknOptions options) {
-            return new RPCSession.Core(this, database, type, options);
-        }
+    boolean isOpen();
 
-        @Override
-        public RPCDatabaseManager.Core databases() {
-            return databases;
-        }
+    void close();
 
-        @Override
-        public boolean isOpen() {
-            return !channel.isShutdown();
-        }
+    interface DatabaseManager {
 
-        @Override
-        public void close() {
-            try {
-                channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+        boolean contains(String name);
+
+        void create(String name);
+
+        void delete(String name);
+
+        List<String> all();
+    }
+
+    interface Session extends AutoCloseable {
+
+        Transaction transaction(Transaction.Type type);
+
+        Transaction transaction(Transaction.Type type, GraknOptions options);
+
+        Session.Type type();
+
+        boolean isOpen();
+
+        void close();
+
+        String database();
+
+        enum Type {
+            DATA(0),
+            SCHEMA(1);
+
+            private final int id;
+            private final boolean isSchema;
+
+            Type(int id) {
+                this.id = id;
+                this.isSchema = id == 1;
             }
-        }
 
-        public Channel channel() {
-            return channel;
-        }
-    }
-
-    public static class Cluster implements Grakn.Client.Cluster {
-        private static final Logger LOG = LoggerFactory.getLogger(Cluster.class);
-        private final Map<Address.Cluster.Server, Core> coreClients;
-        private final Map<Address.Cluster.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
-        private final RPCDatabaseManager.Cluster databases;
-        private boolean isOpen;
-
-        private Cluster(String address) {
-            coreClients = discoverCluster(address).stream()
-                    .map(addr -> pair(addr, new Core(addr.client())))
-                    .collect(Collectors.toMap(Pair::first, Pair::second));
-            graknClusterRPCs = coreClients.entrySet().stream()
-                    .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
-                    .collect(Collectors.toMap(Pair::first, Pair::second));
-            databases = new RPCDatabaseManager.Cluster(
-                    coreClients.entrySet().stream()
-                            .map(client -> pair(client.getKey(), client.getValue().databases()))
-                            .collect(Collectors.toMap(Pair::first, Pair::second))
-            );
-            isOpen = true;
-        }
-
-        @Override
-        public RPCSession.Cluster session(String database, Grakn.Session.Type type) {
-            return session(database, type, GraknOptions.cluster());
-        }
-
-        @Override
-        public RPCSession.Cluster session(String database, Grakn.Session.Type type, GraknOptions.Cluster options) {
-            return new RPCSession.Cluster(this, database, type, options);
-        }
-
-        @Override
-        public RPCDatabaseManager.Cluster databases() {
-            return databases;
-        }
-
-        @Override
-        public boolean isOpen() {
-            return isOpen;
-        }
-
-        @Override
-        public void close() {
-            coreClients.values().forEach(GraknClient.Core::close);
-            isOpen = false;
-        }
-
-        public Set<Address.Cluster.Server> clusterMembers() {
-            return coreClients.keySet();
-        }
-
-        public Core coreClient(Address.Cluster.Server address) {
-            return coreClients.get(address);
-        }
-
-        public GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC(Address.Cluster.Server address) {
-            return graknClusterRPCs.get(address);
-        }
-
-        private Set<Address.Cluster.Server> discoverCluster(String... addresses) {
-            for (String address: addresses) {
-                try (Core client = new Core(address)) {
-                    LOG.debug("Performing cluster discovery to {}...", address);
-                    GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
-                    ClusterProto.Cluster.Discover.Res res =
-                            graknClusterRPC.clusterDiscover(ClusterProto.Cluster.Discover.Req.newBuilder().build());
-                    Set<Address.Cluster.Server> members = res.getServersList().stream().map(Address.Cluster.Server::parse).collect(Collectors.toSet());
-                    LOG.debug("Discovered {}", members);
-                    return members;
-                } catch (StatusRuntimeException e) {
-                    LOG.error("Cluster discovery to {} failed.", address);
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
                 }
+                return null;
             }
-            throw clusterNotAvailableException(addresses);
-        }
 
-        private GraknClientException clusterNotAvailableException(String... addresses) {
-            return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses)); // remove ambiguity by casting to Object
+            public int id() {
+                return id;
+            }
+
+            public boolean isData() { return !isSchema; }
+
+            public boolean isSchema() { return isSchema; }
+        }
+    }
+
+    interface Transaction extends AutoCloseable {
+
+        Transaction.Type type();
+
+        boolean isOpen();
+
+        ConceptManager concepts();
+
+        LogicManager logic();
+
+        QueryManager query();
+
+        void commit();
+
+        void rollback();
+
+        void close();
+
+        enum Type {
+            READ(0),
+            WRITE(1);
+
+            private final int id;
+            private final boolean isWrite;
+
+            Type(int id) {
+                this.id = id;
+                this.isWrite = id == 1;
+            }
+
+            public static Type of(int value) {
+                for (Type t : values()) {
+                    if (t.id == value) return t;
+                }
+                return null;
+            }
+
+            public int id() {
+                return id;
+            }
+
+            public boolean isRead() { return !isWrite; }
+
+            public boolean isWrite() { return isWrite; }
         }
     }
 }

@@ -19,7 +19,7 @@
 
 package grakn.client.logic.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.logic.Rule;
 import grakn.client.rpc.RPCTransaction;
@@ -71,7 +71,7 @@ public class RuleImpl implements Rule {
     }
 
     @Override
-    public RuleImpl.Remote asRemote(Grakn.Transaction transaction) {
+    public RuleImpl.Remote asRemote(GraknClient.Transaction transaction) {
         return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
     }
 
@@ -107,7 +107,7 @@ public class RuleImpl implements Rule {
         private final ThingVariable<?> then;
         private final int hash;
 
-        public Remote(Grakn.Transaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
+        public Remote(GraknClient.Transaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
             this.rpcTransaction = (RPCTransaction) transaction;
@@ -149,7 +149,7 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public Remote asRemote(Grakn.Transaction transaction) {
+        public Remote asRemote(GraknClient.Transaction transaction) {
             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
         }
 
@@ -177,7 +177,7 @@ public class RuleImpl implements Rule {
             return hash;
         }
 
-        final Grakn.Transaction tx() {
+        final GraknClient.Transaction tx() {
             return rpcTransaction;
         }
 

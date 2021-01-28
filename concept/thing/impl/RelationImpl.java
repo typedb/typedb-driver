@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing.impl;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
 import grakn.client.concept.type.RoleType;
@@ -54,7 +54,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
+    public RelationImpl.Remote asRemote(GraknClient.Transaction transaction) {
         return new RelationImpl.Remote(transaction, getIID());
     }
 
@@ -65,12 +65,12 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(Grakn.Transaction transaction, String iid) {
+        public Remote(GraknClient.Transaction transaction, String iid) {
             super(transaction, iid);
         }
 
         @Override
-        public RelationImpl.Remote asRemote(Grakn.Transaction transaction) {
+        public RelationImpl.Remote asRemote(GraknClient.Transaction transaction) {
             return new RelationImpl.Remote(transaction, getIID());
         }
 

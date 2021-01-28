@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
@@ -40,7 +40,7 @@ public interface Type extends Concept {
     }
 
     @Override
-    Remote asRemote(Grakn.Transaction transaction);
+    Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends Type, Concept.Remote {
 

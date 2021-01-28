@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.connection.transaction;
 
-import grakn.client.Grakn.Session;
-import grakn.client.Grakn.Transaction;
+import grakn.client.GraknClient.Session;
+import grakn.client.GraknClient.Transaction;
 import graql.lang.Graql;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.thing.Entity;
 
 import java.util.stream.Stream;
@@ -32,7 +32,7 @@ public interface EntityType extends ThingType {
     }
 
     @Override
-    EntityType.Remote asRemote(Grakn.Transaction transaction);
+    EntityType.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends ThingType.Remote, EntityType {
 

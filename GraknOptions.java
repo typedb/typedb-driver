@@ -31,6 +31,8 @@ public class GraknOptions {
     private Boolean explain = null;
     private Integer batchSize = null;
 
+    GraknOptions() {}
+
     public Optional<Boolean> infer() {
         return Optional.ofNullable(infer);
     }

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.Grakn;
+import grakn.client.GraknClient;
 import grakn.client.concept.thing.Relation;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public interface RelationType extends ThingType {
     }
 
     @Override
-    RelationType.Remote asRemote(Grakn.Transaction transaction);
+    RelationType.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends ThingType.Remote, RelationType {
 
