@@ -20,7 +20,7 @@
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("//test/behaviour:rules.bzl", "grakn_core_and_cluster_behaviour_test")
 
 java_library(
     name = "steps",
@@ -41,21 +41,21 @@ java_library(
     ],
 )
 
-grakn_java_test(
-    name = "test-core",
-    size = "small",
+grakn_core_and_cluster_behaviour_test(
+    name = "test",
     srcs = [
         "DatabaseTest.java",
     ],
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
     data = [
         "@graknlabs_behaviour//connection:database.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
-    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
-    runtime_deps = [
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    connection_steps_core = "//test/behaviour/connection:steps-core",
+    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    steps = [
         ":steps",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/connection:steps-core",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
         "//test/behaviour/graql:steps",
@@ -67,34 +67,10 @@ grakn_java_test(
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
-)
-
-grakn_java_test(
-    name = "test-cluster",
-    size = "small",
-    srcs = [
-        "DatabaseTest.java",
-    ],
-    data = [
-        "@graknlabs_behaviour//connection:database.feature",
-    ],
-    native_grakn_artifact = "//test:native-grakn-cluster-artifact",
-    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
     runtime_deps = [
-        ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection:steps-cluster",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/graql:steps",
     ],
-    deps = [
-        # Internal Package Dependencies
-        "//test/behaviour",
-
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
+    size = "small",
 )
 
 checkstyle_test(
