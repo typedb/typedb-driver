@@ -33,6 +33,7 @@ java_library(
         "@maven//:io_cucumber_cucumber_java",
     ],
 )
+
 java_library(
     name = "steps-core",
     srcs = [
@@ -43,6 +44,24 @@ java_library(
         ":steps-base",
         "//:client-java",
         "@graknlabs_common//test/server:grakn-setup",
+
+        # External dependencies from Maven
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "steps-cluster",
+    srcs = [
+        "ConnectionStepsCluster.java",
+    ],
+    deps = [
+        # Package dependencies
+        ":steps-base",
+        "//:client-java",
+        "@graknlabs_common//test/server:grakn-cluster-setup",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

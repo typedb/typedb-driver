@@ -3,35 +3,49 @@ package grakn.client.test.behaviour.connection;
 import grakn.client.GraknClient;
 import grakn.common.test.server.GraknClusterRunner;
 import grakn.common.test.server.GraknSingleton;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
+    private GraknClusterRunner server;
 
-    // The following code is for running the Grakn Core distribution imported as an artifact.
-    // If you wish to debug locally against an instance of Grakn that is already running in
-    // the background, comment out all the code in this file that references 'runner'
-    // and update ConnectionSteps to connect to GraknClient.DEFAULT_URI.
-    private static GraknClusterRunner server;
-
-    @BeforeClass
-    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
-        server = new GraknClusterRunner(true);
+    @Override
+    void beforeAll() {
+        try {
+            server = new GraknClusterRunner(true);
+        } catch (InterruptedException | TimeoutException | IOException e) {
+            throw new RuntimeException(e);
+        }
         server.start();
         GraknSingleton.setGraknRunner(server);
     }
 
-    @AfterClass
-    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
-        server.stop();
+    @Before
+    public synchronized void before() {
+        beforeImpl();
     }
 
+    @After
+    public synchronized void after() {
+        afterImpl();
+    }
 
     @Override
     GraknClient createGraknClient(String address) {
-        return GraknClient.cluster(address);
+        return GraknClient.core(address);
+    }
+
+    @Given("connection has been opened")
+    public void connection_has_been_opened() {
+        connectionHasBeenOpenedImpl();
+    }
+
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        connectionDoesNotHaveAnyDatabaseImpl();
     }
 }

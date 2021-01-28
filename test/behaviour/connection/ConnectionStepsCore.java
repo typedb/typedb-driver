@@ -29,36 +29,28 @@ import io.cucumber.java.en.Given;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 public class ConnectionStepsCore extends ConnectionStepsBase {
-    private boolean isBeforeAllRan = false;
     private GraknCoreRunner server;
 
-    @Before
-    public synchronized void before() throws InterruptedException, IOException, TimeoutException {
-        if (!isBeforeAllRan) {
-            beforeAll();
-            isBeforeAllRan = true;
+    @Override
+    void beforeAll() {
+        try {
+            server = new GraknCoreRunner(true);
+        } catch (InterruptedException | TimeoutException | IOException e) {
+            throw new RuntimeException(e);
         }
-        setupClient();
+        server.start();
+        GraknSingleton.setGraknRunner(server);
+    }
+
+    @Before
+    public synchronized void before() {
+        beforeImpl();
     }
 
     @After
     public synchronized void after() {
-        teardownClient();
-    }
-
-    @Given("connection has been opened")
-    public void connection_has_been_opened() {
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-    }
-
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        assertTrue(client.databases().all().isEmpty());
+        afterImpl();
     }
 
     @Override
@@ -66,9 +58,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         return GraknClient.core(address);
     }
 
-    private void beforeAll() throws InterruptedException, TimeoutException, IOException {
-        server = new GraknCoreRunner(true);
-        server.start();
-        GraknSingleton.setGraknRunner(server);
+    @Given("connection has been opened")
+    public void connection_has_been_opened() {
+        connectionHasBeenOpenedImpl();
+    }
+
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        connectionDoesNotHaveAnyDatabaseImpl();
     }
 }
