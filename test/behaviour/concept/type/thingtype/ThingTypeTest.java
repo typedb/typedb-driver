@@ -19,7 +19,6 @@
 
 package grakn.client.test.behaviour.concept.type.thingtype;
 
-import grakn.core.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ import org.junit.runner.RunWith;
         features = "external/graknlabs_behaviour/concept/type/thingtype.feature",
         tags = "not @ignore and not @ignore-grakn"
 )
-public class ThingTypeTest extends BehaviourTest {
+public class ThingTypeTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:

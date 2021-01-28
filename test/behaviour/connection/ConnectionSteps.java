@@ -22,11 +22,15 @@ package grakn.client.test.behaviour.connection;
 import grakn.client.GraknClient;
 import grakn.client.GraknClient.Session;
 import grakn.client.GraknClient.Transaction;
+import grakn.common.test.server.GraknCoreRunner;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +38,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertFalse;
@@ -46,6 +51,7 @@ public class ConnectionSteps {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
+    private static GraknCoreRunner server;
     public static GraknClient client;
     public static List<Session> sessions = new ArrayList<>();
     public static List<CompletableFuture<Session>> sessionsParallel = new ArrayList<>();
@@ -53,19 +59,20 @@ public class ConnectionSteps {
     public static Map<Session, List<CompletableFuture<Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
     public static Map<CompletableFuture<Session>, List<CompletableFuture<Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
 
+    @BeforeClass
+    public static void beforeClass() throws InterruptedException, IOException, TimeoutException {
+        server = new GraknCoreRunner(true);
+        server.start();
+        GraknSingleton.setGraknRunner(server);
+    }
+
+    @AfterClass
+    public static void afterClass() throws InterruptedException, IOException, TimeoutException {
+        server.stop();
+    }
+
     public static Transaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
-    }
-
-    @Given("connection has been opened")
-    public void connection_has_been_opened() {
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-    }
-
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        assertTrue(client.databases().all().isEmpty());
     }
 
     @Before
@@ -73,7 +80,7 @@ public class ConnectionSteps {
         assertNull(client);
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
-        client = GraknClient.core(address);
+        client = createGraknClient(address);
         client.databases().all().forEach(database -> client.databases().delete(database));
         System.out.println("ConnectionSteps.before");
     }
@@ -99,5 +106,20 @@ public class ConnectionSteps {
         assertFalse(client.isOpen());
         client = null;
         System.out.println("ConnectionSteps.after");
+    }
+
+    @Given("connection has been opened")
+    public void connection_has_been_opened() {
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+    }
+
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        assertTrue(client.databases().all().isEmpty());
+    }
+
+    GraknClient createGraknClient(String address) {
+        return GraknClient.core(address);
     }
 }

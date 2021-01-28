@@ -19,7 +19,6 @@
 
 package grakn.client.test.behaviour.connection.transaction;
 
-import grakn.core.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -32,7 +31,7 @@ import org.junit.runner.RunWith;
         features = "external/graknlabs_behaviour/connection/transaction.feature",
         tags = "not @ignore and not @ignore-client-java and not @ignore-grakn-2.0"
 )
-public class TransactionTest extends BehaviourTest {
+public class TransactionTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:

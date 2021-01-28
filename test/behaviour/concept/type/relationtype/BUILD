@@ -47,9 +47,6 @@ grakn_java_test(
     ],
     test_class = "grakn.client.test.behaviour.concept.type.relationtype.RelationTypeTest",
     deps = [
-        # Internal Package Dependencies
-        "//test/behaviour",
-
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",
     ],
