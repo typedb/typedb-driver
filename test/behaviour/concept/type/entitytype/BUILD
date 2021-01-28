@@ -60,7 +60,7 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//concept/type:entitytype.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     size = "medium",
 )
 

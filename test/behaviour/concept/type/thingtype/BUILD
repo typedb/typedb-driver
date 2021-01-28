@@ -50,7 +50,7 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//concept/type:thingtype.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     test_class = "grakn.client.test.behaviour.concept.type.thingtype.ThingTypeTest",
     runtime_deps = [
         ":steps",

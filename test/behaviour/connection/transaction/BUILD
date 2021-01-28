@@ -54,11 +54,12 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//connection:transaction.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection:steps-core",
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/graql:steps",

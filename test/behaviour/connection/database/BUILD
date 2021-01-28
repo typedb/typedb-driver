@@ -50,11 +50,40 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//connection:database.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
+        "//test/behaviour/connection:steps-core",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/graql:steps",
+    ],
+    deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
+    ],
+)
+
+grakn_java_test(
+    name = "test-cluster",
+    size = "small",
+    srcs = [
+        "DatabaseTest.java",
+    ],
+    data = [
+        "@graknlabs_behaviour//connection:database.feature",
+    ],
+    native_grakn_artifact = "//test:native-grakn-cluster-artifact",
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
+    runtime_deps = [
+        ":steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection:steps-cluster",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
         "//test/behaviour/graql:steps",

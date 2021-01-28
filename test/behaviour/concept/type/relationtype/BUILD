@@ -50,7 +50,7 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//concept/type:relationtype.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     test_class = "grakn.client.test.behaviour.concept.type.relationtype.RelationTypeTest",
     runtime_deps = [
         ":steps",

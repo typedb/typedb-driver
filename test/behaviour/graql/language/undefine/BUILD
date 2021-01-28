@@ -43,7 +43,7 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//graql/language:undefine.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     size = "medium",
     visibility = ["//visibility:public"]
 )

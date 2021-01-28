@@ -47,7 +47,7 @@ grakn_java_test(
     data = [
         ":debug.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
+    native_grakn_artifact = "//test:native-grakn-core-artifact",
     size = "medium",
     tags = ["manual"]
 )
