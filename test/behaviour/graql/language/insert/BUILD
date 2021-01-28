@@ -19,14 +19,25 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("//test/behaviour:rules.bzl", "grakn_core_and_cluster_behaviour_test")
 
-grakn_java_test(
-    name = "test-core",
+grakn_core_and_cluster_behaviour_test(
+    name = "test",
     srcs = [
         "InsertTest.java",
     ],
     test_class = "grakn.client.test.behaviour.graql.language.insert.InsertTest",
+    data = [
+        "@graknlabs_behaviour//graql/language:insert.feature",
+    ],
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    connection_steps_core = "//test/behaviour/connection:steps-core",
+    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    steps = [
+        "//test/behaviour/graql:steps",
+        "//test/behaviour/connection/session:steps",
+    ],
     deps = [
         # Internal Package Dependencies
         "//test/behaviour",
@@ -35,15 +46,8 @@ grakn_java_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        "//test/behaviour/graql:steps",
-        "//test/behaviour/connection:steps-core",
-        "//test/behaviour/connection/session:steps",
         "//test/behaviour/config:parameters",
     ],
-    data = [
-        "@graknlabs_behaviour//graql/language:insert.feature",
-    ],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
     size = "medium",
     visibility = ["//visibility:public"]
 )
