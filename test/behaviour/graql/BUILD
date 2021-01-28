@@ -27,7 +27,8 @@ java_library(
     ],
     deps = [
         # Package dependencies
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-base",
+        "//test/behaviour/connection:steps-core",
         "//test/behaviour/util",
         "//:client-java",
 

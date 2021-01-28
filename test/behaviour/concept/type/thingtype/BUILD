@@ -31,7 +31,8 @@ java_library(
         "//:client-java",
         "//test/behaviour/config:parameters",
         "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-base",
+        "//test/behaviour/connection:steps-core",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -61,6 +62,7 @@ grakn_java_test(
         "//test/behaviour/concept/thing/relation:steps",
         "//test/behaviour/concept/type/attributetype:steps",
         "//test/behaviour/concept/type/relationtype:steps",
+        "//test/behaviour/connection:steps-base",
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",

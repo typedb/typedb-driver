@@ -33,17 +33,8 @@ public abstract class BehaviourTest {
     // the background, comment out all the code in this file that references 'runner'
     // and update ConnectionSteps to connect to GraknClient.DEFAULT_URI.
 
-    private static GraknCoreRunner runner;
-
-    @BeforeClass
-    public static void setupBehaviourTests() throws InterruptedException, IOException, TimeoutException {
-        runner = new GraknCoreRunner(true);
-        runner.start();
-        GraknSingleton.setGraknRunner(runner);
-    }
-
     @AfterClass
     public static void tearDownBehaviourTests() throws InterruptedException, IOException, TimeoutException {
-        runner.stop();
+        GraknSingleton.getGraknRunner().stop();
     }
 }

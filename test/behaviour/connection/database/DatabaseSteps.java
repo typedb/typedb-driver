@@ -26,9 +26,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static grakn.common.collection.Collections.list;
 import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
