@@ -18,20 +18,21 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "TransactionSteps.java"
+        "TransactionSteps.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/connection:steps-base",
-        "//test/behaviour/connection:steps-core",
-        "//test/behaviour/util:util",
+        "//test/behaviour/util",
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
@@ -42,22 +43,19 @@ java_library(
         "@maven//:io_cucumber_cucumber_java",
         "@maven//:org_hamcrest_hamcrest_library",
     ],
-    visibility = ["//visibility:public"],
 )
 
 grakn_java_test(
     name = "test-core",
+    size = "small",
     srcs = [
         "TransactionTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
-    deps = [
-        # Internal Package Dependencies
-        "//test/behaviour",
-
-        # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
+    data = [
+        "@graknlabs_behaviour//connection:transaction.feature",
     ],
+    native_grakn_artifact = "//test:native-grakn-artifact",
+    test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
     runtime_deps = [
         ":steps",
         "//test/behaviour/config:parameters",
@@ -65,11 +63,13 @@ grakn_java_test(
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/graql:steps",
     ],
-    data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
+    deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
     ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
-    size = "small",
 )
 
 checkstyle_test(

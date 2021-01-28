@@ -18,35 +18,51 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "RelationTypeSteps.java"
+        "RelationTypeSteps.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/util:util",
+        "//test/behaviour/util",
         "//test/behaviour/connection:steps-base",
-        "//test/behaviour/connection:steps-core",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
 grakn_java_test(
     name = "test",
+    size = "medium",
     srcs = [
-        "RelationTypeTest.java"
+        "RelationTypeTest.java",
     ],
+    data = [
+        "@graknlabs_behaviour//concept/type:relationtype.feature",
+    ],
+    native_grakn_artifact = "//test:native-grakn-artifact",
     test_class = "grakn.client.test.behaviour.concept.type.relationtype.RelationTypeTest",
+    runtime_deps = [
+        ":steps",
+        "//test/behaviour/concept/thing/entity:steps",
+        "//test/behaviour/concept/thing/relation:steps",
+        "//test/behaviour/concept/type/attributetype:steps",
+        "//test/behaviour/concept/type/thingtype:steps",
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection/database:steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+    ],
     deps = [
         # Internal Package Dependencies
         "//test/behaviour",
@@ -54,22 +70,6 @@ grakn_java_test(
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",
     ],
-    runtime_deps = [
-        ":steps",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/concept/thing/entity:steps",
-        "//test/behaviour/concept/thing/relation:steps",
-        "//test/behaviour/concept/type/attributetype:steps",
-        "//test/behaviour/concept/type/thingtype:steps",
-        "//test/behaviour/connection/database:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-    ],
-    data = [
-        "@graknlabs_behaviour//concept/type:relationtype.feature",
-    ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
-    size = "medium",
 )
 
 checkstyle_test(
