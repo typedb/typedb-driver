@@ -100,4 +100,9 @@ public abstract class ConnectionStepsBase {
         assertNotNull(client);
         assertTrue(client.isOpen());
     }
+
+    void connection_does_not_have_any_database() {
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+    }
 }

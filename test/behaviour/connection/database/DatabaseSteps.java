@@ -39,12 +39,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-    }
-
     @When("connection create database: {word}")
     public void connection_create_database(String name) {
         connection_create_databases(list(name));

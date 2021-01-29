@@ -29,6 +29,9 @@ import io.cucumber.java.en.Given;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class ConnectionStepsCore extends ConnectionStepsBase {
     private GraknCoreRunner server;
 
@@ -62,4 +65,10 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
     }
+
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        super.connection_does_not_have_any_database();
+    }
+
 }
