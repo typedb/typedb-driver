@@ -29,9 +29,6 @@ import io.cucumber.java.en.Given;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 public class ConnectionStepsCluster extends ConnectionStepsBase {
     private GraknClusterRunner server;
 
