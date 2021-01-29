@@ -19,7 +19,7 @@
 
 load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
-def grakn_core_and_cluster_behaviour_test(
+def grakn_behaviour_java_test(
         name,
         connection_steps_core,
         connection_steps_cluster,

@@ -20,7 +20,7 @@
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_core_and_cluster_behaviour_test")
+load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -42,7 +42,7 @@ java_library(
     ],
 )
 
-grakn_core_and_cluster_behaviour_test(
+grakn_behaviour_java_test(
     name = "test",
     srcs = [
         "SessionTest.java",
