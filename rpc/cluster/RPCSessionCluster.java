@@ -30,9 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -126,7 +128,7 @@ public class RPCSessionCluster implements GraknClient.Session {
                         waitForPrimaryReplicaSelection();
                         database = databaseDiscover(replica.id().address());
                     } else if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                        LOG.debug("Unable to open a session or transaction", e);
+                        LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
                         break;
                     } else {
                         throw e;
@@ -147,11 +149,11 @@ public class RPCSessionCluster implements GraknClient.Session {
                             return clusterClient.coreClient(key.address()).session(key.database(), this.type, this.options);
                         }
                 );
-                LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica);
+                LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica.id());
                 return selectedSession.transaction(type, options);
             } catch (GraknClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                    LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Reattempting to the next one.", e);
+                    LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
                 } else {
                     throw e;
                 }
@@ -198,6 +200,7 @@ public class RPCSessionCluster implements GraknClient.Session {
         private final Map<Replica.Id, Replica> replicas;
 
         private Database(Map<Replica.Id, Replica> replicas) {
+            assert !replicas.isEmpty();
             this.replicas = replicas;
         }
 
@@ -213,12 +216,14 @@ public class RPCSessionCluster implements GraknClient.Session {
         }
 
         private Replica primaryReplica() {
-            Map.Entry<Replica.Id, Replica> initial = replicas.entrySet().iterator().next();
-            Map.Entry<Replica.Id, Replica> reduce = replicas.entrySet().stream()
-                    .filter(entry -> entry.getValue().isPrimary())
-                    .reduce(initial, (acc, e) -> e.getValue().term > acc.getValue().term ? e : acc);
-            if (reduce.getValue().isPrimary()) return reduce.getValue();
-            else throw new GraknClientException(CLUSTER_NO_PRIMARY_REPLICA_YET, (reduce.getValue().term()));
+            Optional<Replica> latestPrimary = replicas.values().stream()
+                    .filter(Replica::isPrimary)
+                    .max(Comparator.comparing(e -> e.term));
+            if (latestPrimary.isPresent()) return latestPrimary.get();
+            else {
+                final Optional<Long> maxTerm = replicas.values().stream().map(replica -> replica.term).max(Comparator.naturalOrder());
+                throw new GraknClientException(CLUSTER_NO_PRIMARY_REPLICA_YET, maxTerm);
+            }
         }
 
         public Collection<Replica> replicas() {

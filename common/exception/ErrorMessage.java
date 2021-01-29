@@ -39,7 +39,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client ILLEGAL_ARGUMENT = new Client(6, "Illegal argument passed into the method: '%s'.");
         public static final Client UNABLE_TO_CONNECT = new Client(7, "Unable to connect to Grakn Core Server.");
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
-                new Client(8, "No replica has been marked as the primary replica for latest known term '%s'.");
+                new Client(8, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
                 new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
