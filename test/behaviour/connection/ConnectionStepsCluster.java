@@ -38,7 +38,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     void beforeAll() {
         try {
-            server = new GraknClusterRunner(true);
+            server = new GraknClusterRunner();
         } catch (InterruptedException | TimeoutException | IOException e) {
             throw new RuntimeException(e);
         }

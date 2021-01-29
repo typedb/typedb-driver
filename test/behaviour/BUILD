@@ -24,8 +24,7 @@ java_library(
     srcs = glob(["*.java"]),
     deps = [
         # Grakn Labs Dependencies
-        "@graknlabs_common//test/server:grakn-setup",
-
+        "@graknlabs_common//test/server:grakn-runner",
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
