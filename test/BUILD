@@ -26,7 +26,7 @@ native_grakn_artifact(
     mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
     windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
-    output = "grakn-core-server-native.tar.gz",
+    output = "native-grakn-core-artifact.tar.gz",
     visibility = ["//test:__subpackages__"],
 )
 
@@ -35,7 +35,7 @@ native_grakn_artifact(
     mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
     windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
-    output = "grakn-cluster-server-native.tar.gz",
+    output = "native-grakn-cluster-artifact.tar.gz",
     visibility = ["//test:__subpackages__"],
 )
 
