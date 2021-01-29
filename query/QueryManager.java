@@ -112,12 +112,13 @@ public final class QueryManager {
         return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Query.Delete.Req.newBuilder().setQuery(query.toString())), options);
     }
 
-    public QueryFuture<Void> update(GraqlUpdate query) {
+    public Stream<ConceptMap> update(GraqlUpdate query) {
         return update(query, GraknOptions.core());
     }
 
-    public QueryFuture<Void> update(GraqlUpdate query, GraknOptions options) {
-        return runQuery(QueryProto.Query.Req.newBuilder().setUpdateReq(QueryProto.Query.Update.Req.newBuilder().setQuery(query.toString())), options);
+    public Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options) {
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setUpdateReq(QueryProto.Query.Update.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
     public QueryFuture<Void> define(GraqlDefine query) {
