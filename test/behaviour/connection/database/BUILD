@@ -70,7 +70,7 @@ grakn_behaviour_java_test(
     runtime_deps = [
         "//test/behaviour/config:parameters",
     ],
-    size = "small",
+    size = "medium",
 )
 
 checkstyle_test(
