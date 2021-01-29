@@ -19,6 +19,7 @@
 
 package grakn.client.test.behaviour.connection.database;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -33,10 +34,16 @@ import static grakn.common.collection.Collections.list;
 import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+    }
 
     @When("connection create database: {word}")
     public void connection_create_database(String name) {

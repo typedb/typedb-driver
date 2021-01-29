@@ -59,7 +59,7 @@ public abstract class ConnectionStepsBase {
 
     abstract void beforeAll();
 
-    void beforeImpl() {
+    void before() {
         if (!isBeforeAllRan) {
             beforeAll();
             isBeforeAllRan = true;
@@ -72,7 +72,7 @@ public abstract class ConnectionStepsBase {
         System.out.println("ConnectionSteps.before");
     }
 
-    void afterImpl() {
+    void after() {
         sessions.parallelStream().forEach(GraknClient.Session::close);
         sessions.clear();
 
@@ -96,12 +96,8 @@ public abstract class ConnectionStepsBase {
 
     abstract GraknClient createGraknClient(String address);
 
-    void connectionHasBeenOpenedImpl() {
+    void connection_has_been_opened() {
         assertNotNull(client);
         assertTrue(client.isOpen());
-    }
-
-    void connectionDoesNotHaveAnyDatabaseImpl() {
-        assertTrue(client.databases().all().isEmpty());
     }
 }

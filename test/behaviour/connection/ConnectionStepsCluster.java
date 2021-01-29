@@ -45,12 +45,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Before
     public synchronized void before() {
-        beforeImpl();
+        super.before();
     }
 
     @After
     public synchronized void after() {
-        afterImpl();
+        super.after();
     }
 
     @Override
@@ -60,11 +60,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Given("connection has been opened")
     public void connection_has_been_opened() {
-        connectionHasBeenOpenedImpl();
-    }
-
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        connectionDoesNotHaveAnyDatabaseImpl();
+        super.connection_has_been_opened();
     }
 }
