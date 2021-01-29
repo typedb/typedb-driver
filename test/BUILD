@@ -22,7 +22,7 @@ load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 
 native_grakn_artifact(
-    name = "native-grakn-core-artifact",
+    name = "grakn-core-server-artifact",
     mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
     windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
@@ -31,7 +31,7 @@ native_grakn_artifact(
 )
 
 native_grakn_artifact(
-    name = "native-grakn-cluster-artifact",
+    name = "grakn-cluster-server-artifact",
     mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
     windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
