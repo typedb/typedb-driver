@@ -32,11 +32,7 @@ def graknlabs_common():
         remote = "https://github.com/lolski/common",
         commit = "a2dafd47577cc63cee640ee331472f65722e7c70" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
     )
-#    native.local_repository(
-#        name = "graknlabs_common",
-#        path = "/Users/lolski/grakn.ai/graknlabs/common",
-#    )
-
+    
 def graknlabs_bazel_distribution():
     git_repository(
         name = "graknlabs_bazel_distribution",
