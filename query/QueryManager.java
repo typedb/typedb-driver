@@ -33,6 +33,7 @@ import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlUndefine;
+import graql.lang.query.GraqlUpdate;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -109,6 +110,15 @@ public final class QueryManager {
 
     public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
         return runQuery(QueryProto.Query.Req.newBuilder().setDeleteReq(QueryProto.Query.Delete.Req.newBuilder().setQuery(query.toString())), options);
+    }
+
+    public Stream<ConceptMap> update(GraqlUpdate query) {
+        return update(query, GraknOptions.core());
+    }
+
+    public Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options) {
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setUpdateReq(QueryProto.Query.Update.Req.newBuilder().setQuery(query.toString()));
+        return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswersList().stream().map(ConceptMap::of));
     }
 
     public QueryFuture<Void> define(GraqlDefine query) {
