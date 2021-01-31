@@ -19,6 +19,7 @@
 
 package grakn.client.test.behaviour.connection.database;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -26,18 +27,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static grakn.client.test.behaviour.connection.ConnectionSteps.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.client;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.threadPool;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static grakn.common.collection.Collections.list;
 import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DatabaseSteps {
-
     @When("connection create database: {word}")
     public void connection_create_database(String name) {
         connection_create_databases(list(name));

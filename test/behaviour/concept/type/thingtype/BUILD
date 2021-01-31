@@ -18,34 +18,54 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "ThingTypeSteps.java"
+        "ThingTypeSteps.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/util",
+        "//test/behaviour/connection:steps-base",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
-grakn_java_test(
+grakn_behaviour_java_test(
     name = "test",
     srcs = [
-        "ThingTypeTest.java"
+        "ThingTypeTest.java",
     ],
     test_class = "grakn.client.test.behaviour.concept.type.thingtype.ThingTypeTest",
+    data = [
+        "@graknlabs_behaviour//concept/type:thingtype.feature",
+    ],
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    connection_steps_core = "//test/behaviour/connection:steps-core",
+    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    steps = [
+        ":steps",
+        "//test/behaviour/concept/thing/attribute:steps",
+        "//test/behaviour/concept/thing/entity:steps",
+        "//test/behaviour/concept/thing/relation:steps",
+        "//test/behaviour/concept/type/attributetype:steps",
+        "//test/behaviour/concept/type/relationtype:steps",
+        "//test/behaviour/connection:steps-base",
+        "//test/behaviour/connection/database:steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+    ],
     deps = [
         # Internal Package Dependencies
         "//test/behaviour",
@@ -54,21 +74,8 @@ grakn_java_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/concept/thing/entity:steps",
-        "//test/behaviour/concept/thing/attribute:steps",
-        "//test/behaviour/concept/thing/relation:steps",
-        "//test/behaviour/concept/type/attributetype:steps",
-        "//test/behaviour/concept/type/relationtype:steps",
-        "//test/behaviour/connection/database:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
     ],
-    data = [
-        "@graknlabs_behaviour//concept/type:thingtype.feature",
-    ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
     size = "small",
 )
 

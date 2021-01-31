@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
 import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

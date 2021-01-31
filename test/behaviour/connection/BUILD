@@ -21,14 +21,47 @@ package(default_visibility = ["//test/behaviour:__subpackages__"])
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "steps",
-    srcs = [
-        "ConnectionSteps.java",
-    ],
+    name = "steps-base",
+    srcs = ["ConnectionStepsBase.java"],
     deps = [
         # Package dependencies
         "//:client-java",
-        "@graknlabs_common//test/server:grakn-setup",
+        "@graknlabs_common//test/server:grakn-runner",
+
+        # External dependencies from Maven
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ],
+)
+
+java_library(
+    name = "steps-core",
+    srcs = [
+        "ConnectionStepsCore.java",
+    ],
+    deps = [
+        # Package dependencies
+        ":steps-base",
+        "//:client-java",
+        "@graknlabs_common//test/server:grakn-runner",
+
+        # External dependencies from Maven
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "steps-cluster",
+    srcs = [
+        "ConnectionStepsCluster.java",
+    ],
+    deps = [
+        # Package dependencies
+        ":steps-base",
+        "//:client-java",
+        "@graknlabs_common//test/server:grakn-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

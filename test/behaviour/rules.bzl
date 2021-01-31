@@ -17,31 +17,27 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
-grakn_java_test(
-    name = "test-client-query",
-    srcs = ["ClientQueryTest.java"],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
-    test_class = "grakn.client.test.integration.ClientQueryTest",
-    deps = [
-        # Internal dependencies
-        "//:client-java",
+def grakn_behaviour_java_test(
+        name,
+        connection_steps_core,
+        connection_steps_cluster,
+        steps,
+        native_grakn_artifact_core,
+        native_grakn_artifact_cluster,
+        runtime_deps = [],
+        **kwargs):
+    grakn_java_test(
+        name = name + "-core",
+        native_grakn_artifact = native_grakn_artifact_core,
+        runtime_deps = runtime_deps + [connection_steps_core] + steps,
+        **kwargs,
+    )
 
-        # External dependencies from @graknlabs
-        "@graknlabs_graql//java:graql",
-        "@graknlabs_graql//java/common",
-        "@graknlabs_graql//java/query",
-
-        # External dependencies from Maven
-        "@maven//:org_hamcrest_hamcrest_library",
-        "@maven//:org_slf4j_slf4j_api",
-    ],
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache",
-)
+    grakn_java_test(
+        name = name + "-cluster",
+        native_grakn_artifact = native_grakn_artifact_cluster,
+        runtime_deps = runtime_deps + [connection_steps_cluster] + steps,
+        **kwargs,
+    )
