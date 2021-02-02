@@ -33,6 +33,7 @@ import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlMatch;
 import graql.lang.query.GraqlUndefine;
+import graql.lang.query.GraqlUpdate;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -134,6 +135,22 @@ public class GraqlSteps {
     @Given("graql delete; throws exception containing {string}")
     public void graql_delete_throws_exception(String exception, String deleteQueryStatements) {
         assertThrowsWithMessage(() -> graql_delete(deleteQueryStatements).get(), exception);
+    }
+
+    @Given("graql update")
+    public Stream<ConceptMap> graql_update(String updateQueryStatements) {
+        final GraqlUpdate graqlQuery = Graql.parseQuery(String.join("\n", updateQueryStatements));
+        return tx().query().update(graqlQuery);
+    }
+
+    @Given("graql update; throws exception")
+    public void graql_update_throws(String updateQueryStatements) {
+        assertThrows(() -> graql_update(updateQueryStatements).iterator().next());
+    }
+
+    @Given("graql update; throws exception containing {string}")
+    public void graql_update_throws_exception(String exception, String updateQueryStatements) {
+        assertThrowsWithMessage(() -> graql_update(updateQueryStatements).iterator().next(), exception);
     }
 
     private void clearAnswers() {
