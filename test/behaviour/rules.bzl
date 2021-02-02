@@ -24,20 +24,28 @@ def grakn_behaviour_java_test(
         connection_steps_core,
         connection_steps_cluster,
         steps,
-        native_grakn_artifact_core,
-        native_grakn_artifact_cluster,
+        grakn_core_artifact_mac,
+        grakn_core_artifact_linux,
+        grakn_core_artifact_windows,
+        grakn_cluster_artifact_mac,
+        grakn_cluster_artifact_linux,
+        grakn_cluster_artifact_windows,
         runtime_deps = [],
         **kwargs):
     grakn_java_test(
         name = name + "-core",
-        native_grakn_artifact = native_grakn_artifact_core,
+        mac_artifact = grakn_core_artifact_mac,
+        linux_artifact = grakn_core_artifact_linux,
+        windows_artifact = grakn_core_artifact_windows,
         runtime_deps = runtime_deps + [connection_steps_core] + steps,
         **kwargs,
     )
 
     grakn_java_test(
         name = name + "-cluster",
-        native_grakn_artifact = native_grakn_artifact_cluster,
+        mac_artifact = grakn_cluster_artifact_mac,
+        linux_artifact = grakn_cluster_artifact_linux,
+        windows_artifact = grakn_cluster_artifact_windows,
         runtime_deps = runtime_deps + [connection_steps_cluster] + steps,
         **kwargs,
     )

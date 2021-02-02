@@ -30,8 +30,12 @@ grakn_behaviour_java_test(
     data = [
         "@graknlabs_behaviour//graql/language:match.feature",
     ],
-    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
-    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
+    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
+    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
+    grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
+    grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
     connection_steps_core = "//test/behaviour/connection:steps-core",
     connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
     steps = [
