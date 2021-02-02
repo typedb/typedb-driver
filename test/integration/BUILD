@@ -23,7 +23,9 @@ load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 grakn_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
+    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
     test_class = "grakn.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
