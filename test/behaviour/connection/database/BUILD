@@ -18,17 +18,19 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "DatabaseSteps.java"
+        "DatabaseSteps.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/connection:steps-base",
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
@@ -37,15 +39,27 @@ java_library(
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
-grakn_java_test(
-    name = "test-core",
+grakn_behaviour_java_test(
+    name = "test",
     srcs = [
-        "DatabaseTest.java"
+        "DatabaseTest.java",
     ],
     test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
+    data = [
+        "@graknlabs_behaviour//connection:database.feature",
+    ],
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    connection_steps_core = "//test/behaviour/connection:steps-core",
+    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    steps = [
+        ":steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/graql:steps",
+    ],
     deps = [
         # Internal Package Dependencies
         "//test/behaviour",
@@ -54,17 +68,9 @@ grakn_java_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        ":steps",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/graql:steps",
     ],
-    data = [
-        "@graknlabs_behaviour//connection:database.feature",
-    ],
-    native_grakn_artifact = "//test:native-grakn-artifact",
-    size = "small",
+    size = "medium",
 )
 
 checkstyle_test(

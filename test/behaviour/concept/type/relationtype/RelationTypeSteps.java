@@ -28,7 +28,7 @@ import io.cucumber.java.en.When;
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.test.behaviour.connection.ConnectionSteps.tx;
+import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;

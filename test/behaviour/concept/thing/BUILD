@@ -18,26 +18,27 @@
 #
 
 package(default_visibility = ["//test/behaviour/concept/thing:__subpackages__"])
+
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "steps",
     srcs = [
-        "ThingSteps.java"
+        "ThingSteps.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
         "//:client-java",
         "//test/behaviour/config:parameters",
         "//test/behaviour/concept/type/thingtype:steps",
-        "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps",
+        "//test/behaviour/util",
+        "//test/behaviour/connection:steps-base",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
