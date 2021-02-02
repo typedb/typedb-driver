@@ -115,7 +115,7 @@ build:
 
     deploy-maven-snapshot:
       image: graknlabs-ubuntu-20.04
-      dependencies: [build, build-dependency, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
+      dependencies: [build, build-dependency, test-behaviour-connection, test-behaviour-concept, test-behaviour-match] # , test-behaviour-writable, test-behaviour-definable
       filter:
         owner: graknlabs
         branch: master
