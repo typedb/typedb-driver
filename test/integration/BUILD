@@ -23,14 +23,9 @@ load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 grakn_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
-    grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
-    grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
-    connection_steps_core = "//test/behaviour/connection:steps-core",
-    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
+    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
+    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
     test_class = "grakn.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
