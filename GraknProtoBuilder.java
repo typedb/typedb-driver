@@ -32,7 +32,7 @@ public abstract class GraknProtoBuilder {
         options.sessionIdleTimeout().ifPresent(builder::setSessionIdleTimeoutMillis);
         options.schemaLockAcquireTimeout().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
         if (options.isCluster()) {
-            options.asCluster().allowSecondaryReplica().ifPresent(builder::setAllowSecondaryReplica);
+            options.asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
         }
 
         return builder.build();

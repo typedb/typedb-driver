@@ -73,7 +73,7 @@ public class RPCSessionCluster implements GraknClient.Session {
     @Override
     public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
         GraknOptions.Cluster clusterOpt = options.asCluster();
-        if (clusterOpt.allowSecondaryReplica().isPresent() && clusterOpt.allowSecondaryReplica().get()) {
+        if (clusterOpt.readAnyReplica().isPresent() && clusterOpt.readAnyReplica().get()) {
             return transactionSecondaryReplica(type, clusterOpt);
         } else {
             return transactionPrimaryReplica(type, options);
