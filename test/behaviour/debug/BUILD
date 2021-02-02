@@ -22,7 +22,10 @@ load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
 grakn_java_test(
-    name = "test",
+    "test",
+    "@graknlabs_grakn_core_artifact_mac//file",
+    "@graknlabs_grakn_core_artifact_linux//file",
+    "@graknlabs_grakn_core_artifact_windows//file",
     srcs = [
         "DebugTest.java",
     ],
@@ -47,7 +50,6 @@ grakn_java_test(
     data = [
         ":debug.feature",
     ],
-    native_grakn_artifact = "//test:native-grakn-core-artifact",
     size = "medium",
     tags = ["manual"]
 )
