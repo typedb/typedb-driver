@@ -36,7 +36,7 @@ def grakn_behaviour_java_test(
     grakn_java_test(
         name = name + "-core",
         mac_artifact = grakn_core_artifact_mac,
-        linux_artifact = grakn_core_artifact_mac,
+        linux_artifact = grakn_core_artifact_linux,
         windows_artifact = grakn_core_artifact_windows,
         runtime_deps = runtime_deps + [connection_steps_core] + steps,
         **kwargs,
@@ -45,7 +45,7 @@ def grakn_behaviour_java_test(
     grakn_java_test(
         name = name + "-cluster",
         mac_artifact = grakn_cluster_artifact_mac,
-        linux_artifact = grakn_cluster_artifact_mac,
+        linux_artifact = grakn_cluster_artifact_linux,
         windows_artifact = grakn_cluster_artifact_windows,
         runtime_deps = runtime_deps + [connection_steps_cluster] + steps,
         **kwargs,
