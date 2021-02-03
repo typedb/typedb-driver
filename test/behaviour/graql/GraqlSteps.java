@@ -112,7 +112,7 @@ public class GraqlSteps {
 
     @Given("graql insert; throws exception")
     public void graql_insert_throws(String insertQueryStatements) {
-        assertThrows(() -> graql_insert(insertQueryStatements));
+        assertThrows(() -> graql_insert(insertQueryStatements).iterator().next());
     }
 
     @Given("graql insert; throws exception containing {string}")
