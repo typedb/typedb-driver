@@ -112,7 +112,7 @@ public class GraqlSteps {
 
     @Given("graql insert; throws exception")
     public void graql_insert_throws(String insertQueryStatements) {
-        assertThrows(() -> graql_insert(insertQueryStatements));
+        assertThrows(() -> graql_insert(insertQueryStatements).iterator().next());
     }
 
     @Given("graql insert; throws exception containing {string}")
@@ -411,6 +411,16 @@ public class GraqlSteps {
     @Then("rules are")
     public void rules_are(Map<String, Map<String, String>> rules) {
         this.rules = rules;
+    }
+
+    @Then("rules contain: {type_label}")
+    public void rules_contain(String ruleLabel) {
+        assert(tx().logic().getRules().anyMatch(rule -> rule.getLabel().equals(ruleLabel)));
+    }
+
+    @Then("rules do not contain: {type_label}")
+    public void rules_do_not_contain(String ruleLabel) {
+        assert(tx().logic().getRules().noneMatch(rule -> rule.getLabel().equals(ruleLabel)));
     }
 
     @Then("answers contain explanation tree")

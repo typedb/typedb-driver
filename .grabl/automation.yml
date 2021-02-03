@@ -100,18 +100,19 @@ build:
 #        bazel test //test/behaviour/graql/language/delete/... --test_output=streamed
 
 
-# TODO: re-enable 'define' after fixing: https://github.com/graknlabs/grakn/issues/6112
 # TODO: delete --jobs=1 if we fix the issue with excess memory usage
 # TODO: add more Graql Language tests as they are fixed: undefine
-#    test-behaviour-definable:
-#      image: graknlabs-ubuntu-20.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-#
-#        # bazel test //test/behaviour/graql/language/define/... --test_output=streamed --jobs=1
-#        # bazel test //test/behaviour/graql/language/undefine/... --test_output=streamed
+# TODO: turn on cluster tests once cluster tests pass for define
+    test-behaviour-definable:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel test //test/behaviour/graql/language/define:checkstyle --test_output=streamed
+        bazel test //test/behaviour/graql/language/define:test-core --test_output=streamed --jobs=1
+        bazel test //test/behaviour/graql/language/undefine:checkstyle --test_output=streamed
+        bazel test //test/behaviour/graql/language/undefine:test-core --test_output=streamed --jobs=1
 
     deploy-maven-snapshot:
       image: graknlabs-ubuntu-20.04

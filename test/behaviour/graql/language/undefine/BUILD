@@ -49,6 +49,9 @@ grakn_behaviour_java_test(
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
+    runtime_deps = [
+        "//test/behaviour/config:parameters",
+    ],
     size = "medium",
     visibility = ["//visibility:public"]
 )
