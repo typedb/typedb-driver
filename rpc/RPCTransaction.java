@@ -45,7 +45,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grakn.client.GraknProtoBuilder.options;
+import static grakn.client.common.proto.OptionsProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;

@@ -27,12 +27,12 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class RPCGraknClient implements GraknClient {
+public class RPCClient implements GraknClient {
 
     private final ManagedChannel channel;
     private final RPCDatabaseManager databases;
 
-    public RPCGraknClient(String address) {
+    public RPCClient(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new RPCDatabaseManager(channel);
     }

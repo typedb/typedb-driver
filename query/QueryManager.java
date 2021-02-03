@@ -38,7 +38,7 @@ import graql.lang.query.GraqlUpdate;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.GraknProtoBuilder.options;
+import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
 public final class QueryManager {
 

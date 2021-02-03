@@ -22,7 +22,7 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCGraknClient;
+import grakn.client.rpc.RPCClient;
 import grakn.client.rpc.RPCSession;
 import grakn.protocol.cluster.DatabaseProto;
 import io.grpc.StatusRuntimeException;
@@ -112,7 +112,7 @@ public class RPCSessionCluster implements GraknClient.Session {
                             database.primaryReplica().id(),
                             key -> {
                                 LOG.debug("Opening a session to primary replica '{}'", key);
-                                RPCGraknClient primaryReplicaClient = clusterClient.coreClient(key.address());
+                                RPCClient primaryReplicaClient = clusterClient.coreClient(key.address());
                                 return primaryReplicaClient.session(key.database(), this.type, this.options);
                             }
                     );

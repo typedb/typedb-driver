@@ -22,7 +22,7 @@ package grakn.client;
 import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
-import grakn.client.rpc.RPCGraknClient;
+import grakn.client.rpc.RPCClient;
 import grakn.client.rpc.cluster.RPCGraknClientCluster;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public interface GraknClient extends AutoCloseable {
     }
 
     static GraknClient core(String address) {
-        return new RPCGraknClient(address);
+        return new RPCClient(address);
     }
 
     static GraknClient cluster() {
