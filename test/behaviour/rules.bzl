@@ -32,6 +32,7 @@ def grakn_behaviour_java_test(
         grakn_cluster_artifact_windows,
         runtime_deps = [],
         **kwargs):
+
     grakn_java_test(
         name = name + "-core",
         mac_artifact = grakn_core_artifact_mac,

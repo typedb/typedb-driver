@@ -52,11 +52,11 @@ grakn_behaviour_java_test(
         "@graknlabs_behaviour//connection:session.feature",
     ],
     grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
     grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
+    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
     grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
-    grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
     grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
+    grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
     connection_steps_core = "//test/behaviour/connection:steps-core",
     connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
     steps = [
