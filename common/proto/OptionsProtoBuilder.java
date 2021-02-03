@@ -17,11 +17,12 @@
  * under the License.
  */
 
-package grakn.client;
+package grakn.client.common.proto;
 
+import grakn.client.GraknOptions;
 import grakn.protocol.OptionsProto;
 
-public abstract class GraknProtoBuilder {
+public abstract class OptionsProtoBuilder {
 
     public static OptionsProto.Options options(GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();

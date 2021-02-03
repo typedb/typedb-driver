@@ -32,7 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static grakn.client.GraknProtoBuilder.options;
+import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
 public class RPCSession implements GraknClient.Session {
     private final Channel channel;
@@ -43,7 +43,7 @@ public class RPCSession implements GraknClient.Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    public RPCSession(RPCGraknClient client, String database, Type type, GraknOptions options) {
+    public RPCSession(RPCClient client, String database, Type type, GraknOptions options) {
         try {
             this.channel = client.channel();
             this.database = database;
