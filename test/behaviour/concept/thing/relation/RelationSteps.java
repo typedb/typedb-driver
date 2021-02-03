@@ -114,6 +114,11 @@ public class RelationSteps {
         get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
     }
 
+    @When("relation {var} add player for role\\( ?{type_label} ?): {var}; throws exception")
+    public void relation_add_player_for_role_throws_exception(String var1, String roleTypeLabel, String var2) {
+        assertThrows(() -> get(var1).asRelation().asRemote(tx()).addPlayer(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2)));
+    }
+
     @When("relation {var} remove player for role\\( ?{type_label} ?): {var}")
     public void relation_remove_player_for_role(String var1, String roleTypeLabel, String var2) {
         get(var1).asRelation().asRemote(tx()).removePlayer(get(var1).asRelation().asRemote(tx()).getType().asRemote(tx()).getRelates(roleTypeLabel), get(var2));
