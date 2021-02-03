@@ -89,15 +89,15 @@ build:
         bazel test //test/behaviour/graql/language/match/... --test_output=streamed
         bazel test //test/behaviour/graql/language/get/... --test_output=streamed
 
-# TODO: add more Graql Language tests as they are fixed: insert, delete
-#    test-behaviour-writable:
-#      image: graknlabs-ubuntu-20.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
-#        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-#        bazel test //test/behaviour/graql/language/insert/... --test_output=streamed
-#        bazel test //test/behaviour/graql/language/delete/... --test_output=streamed
+    test-behaviour-writable:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        bazel test //test/behaviour/graql/language/insert/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/delete/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/update/... --test_output=streamed
 
 
 # TODO: delete --jobs=1 if we fix the issue with excess memory usage
