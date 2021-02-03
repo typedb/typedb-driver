@@ -413,6 +413,16 @@ public class GraqlSteps {
         this.rules = rules;
     }
 
+    @Then("rules contain: {type_label}")
+    public void rules_contain(String ruleLabel) {
+        assert(tx().logic().getRules().anyMatch(rule -> rule.getLabel().equals(ruleLabel)));
+    }
+
+    @Then("rules do not contain: {type_label}")
+    public void rules_do_not_contain(String ruleLabel) {
+        assert(tx().logic().getRules().noneMatch(rule -> rule.getLabel().equals(ruleLabel)));
+    }
+
     @Then("answers contain explanation tree")
     public void answers_contain_explanation_tree(Map<Integer, Map<String, String>> explanationTree) {
         // TODO
