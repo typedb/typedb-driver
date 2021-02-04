@@ -17,15 +17,21 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
-load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
+load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
-def graknlabs_grakn_core_artifacts():
-    native_artifact_files(
-        name = "graknlabs_grakn_core_artifact",
-        group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-server-{platform}-{version}.{ext}",
-        tag_source = deployment["artifact.release"],
-        commit_source = deployment["artifact.snapshot"],
-        commit = "2bcacbdcec59d9419d62974ace513438f46238f5",
-    )
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache",
+)
+
+node_cucumber_test(
+    name = "test",
+    features = ["@graknlabs_behaviour//graql/language:update.feature"],
+    node_modules = "//:node_modules",
+    package_json = "//:package.json",
+    core_artifact = "//test:native-grakn-artifact",
+    client = "//:client-nodejs-compiled",
+    steps = "//test/behaviour:behavioural-steps-compiled",
+)

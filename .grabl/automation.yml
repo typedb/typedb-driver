@@ -49,16 +49,30 @@ build:
         ./test/integration/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-server.sh
         exit $TEST_SUCCESS
-    test-behaviour:
+    test-behaviour-connection:
       image: graknlabs-ubuntu-20.04
       command: |
-        npm install typescript
-        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/match/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/get/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/graql/language/define/... --test_output=errors --jobs=1
-      # TODO: Remove --jobs=1 once parallelism is functional
+        bazel test //test/behaviour/connection/... --test_output=streamed
+    test-behaviour-concept:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        bazel test //test/behaviour/concept/... --test_output=streamed
+    test-behaviour-match:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        bazel test //test/behaviour/graql/language/match/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/get/... --test_output=streamed
+    test-behaviour-writable:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        bazel test //test/behaviour/graql/language/insert/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/delete/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/update/... --test_output=streamed
+    test-behaviour-definable:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        bazel test //test/behaviour/graql/language/define/... --test_output=streamed
+        bazel test //test/behaviour/graql/language/undefine/... --test_output=streamed
     deploy-npm-snapshot:
       filter:
         owner: graknlabs
@@ -73,7 +87,7 @@ build:
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
-      dependencies: [build, test-integration, test-behaviour]
+      dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
 
     test-deployment-npm:
       filter:

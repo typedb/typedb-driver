@@ -78,6 +78,12 @@ export class QueryManager {
         return this.runQuery(deleteQuery, options ? options : new GraknOptions(), () => null);
     }
 
+    public update(query: string, options?: GraknOptions): Stream<ConceptMap> {
+        const updateQuery = new Query.Req().setUpdateReq(
+            new Query.Update.Req().setQuery(query));
+        return this.iterateQuery(updateQuery, options ? options : new GraknOptions(), (res: Transaction.Res) => res.getQueryRes().getUpdateRes().getAnswersList().map(ConceptMap.of));
+    }
+
     public define(query: string, options?: GraknOptions): Promise<void> {
         const defineQuery = new Query.Req().setDefineReq(
                     new Query.Define.Req().setQuery(query));

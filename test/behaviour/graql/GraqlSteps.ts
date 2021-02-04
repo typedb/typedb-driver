@@ -35,6 +35,7 @@ import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { fail } from "assert";
 import assert = require("assert");
 import ValueClass = AttributeType.ValueClass;
+import { get } from "../concept/thing/ThingSteps";
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -100,9 +101,26 @@ Then("graql delete; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().delete(query));
 });
 
+When("graql update", (query: string) => {
+    tx().query().update(query);
+});
+
+Then("graql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
+    await assertThrowsWithMessage(async () => await tx().query().update(query).next(), exceptionString);
+});
+
+Then("graql update; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().update(query).next());
+});
+
 When("get answers of graql insert", async (query: string) => {
     clearAnswers();
     answers = await tx().query().insert(query).collect();
+});
+
+When("get answers of graql update", async (query: string) => {
+    clearAnswers();
+    answers = await tx().query().update(query).collect();
 });
 
 When("get answers of graql match", async (query: string) => {
@@ -131,6 +149,19 @@ When("get answers of graql match group aggregate", async (query: string) => {
 
 Then("answer size is: {number}", async (expectedAnswers: number) => {
     assert.strictEqual(answers.length, expectedAnswers, `Expected [${expectedAnswers}], but got [${answers.length}]`);
+});
+
+Then("rules contain: {type_label}", async (ruleLabel: string) => {
+    for await (const rule of (await tx().logic().getRules())) {
+        if (rule.getLabel() === ruleLabel) return;
+    }
+    assert.fail();
+});
+
+Then("rules do not contain: {type_label}", async (ruleLabel: string) => {
+    for await (const rule of (await tx().logic().getRules())) {
+        if (rule.getLabel() === ruleLabel) assert.fail();
+    }
 });
 
 interface ConceptMatcher {
