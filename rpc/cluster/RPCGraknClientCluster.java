@@ -115,6 +115,6 @@ public class RPCGraknClientCluster implements GraknClient {
     }
 
     private GraknClientException clusterNotAvailableException(String... addresses) {
-        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses)); // remove ambiguity by casting to Object
+        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
     }
 }

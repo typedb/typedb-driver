@@ -22,7 +22,6 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCClient;
 import grakn.client.rpc.RPCSession;
 import grakn.protocol.cluster.DatabaseProto;
 import io.grpc.StatusRuntimeException;
@@ -39,7 +38,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_NO_PRIMARY_REPLICA_YET;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
@@ -62,7 +60,7 @@ public class RPCSessionCluster implements GraknClient.Session {
         this.dbName = database;
         this.type = type;
         this.options = options;
-        this.database = databaseDiscover();
+        fetchLatestReplicaInfo(MAX_RETRY_PER_REPLICA);
         coreSessions = new ConcurrentHashMap<>();
         isOpen = true;
     }
@@ -104,53 +102,29 @@ public class RPCSessionCluster implements GraknClient.Session {
     }
 
     private GraknClient.Transaction transactionPrimaryReplica(GraknClient.Transaction.Type type, GraknOptions options) {
-        for (Replica replica: database.replicas()) {
-            int retry = 0;
-            while (retry < MAX_RETRY_PER_REPLICA) {
-                try {
-                    RPCSession primaryReplicaSession = coreSessions.computeIfAbsent(
-                            database.primaryReplica().id(),
-                            key -> {
-                                LOG.debug("Opening a session to primary replica '{}'", key);
-                                RPCClient primaryReplicaClient = clusterClient.coreClient(key.address());
-                                return primaryReplicaClient.session(key.database(), this.type, this.options);
-                            }
-                    );
-                    LOG.debug("Opening a transaction to primary replica '{}'", database.primaryReplica().id());
-                    return primaryReplicaSession.transaction(type, options);
-                } catch (GraknClientException e) {
-                    retry++;
-                    if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
-                        LOG.debug("Unable to open a session or transaction", e);
-                        database = databaseDiscover(replica.id().address());
-                    } else if (CLUSTER_NO_PRIMARY_REPLICA_YET.equals(e.getErrorMessage())) {
-                        LOG.debug("Unable to open a session or transaction", e);
-                        waitForPrimaryReplicaSelection();
-                        database = databaseDiscover(replica.id().address());
-                    } else if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                        LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
-                        break;
-                    } else {
-                        throw e;
-                    }
-                }
+        if (!database.primaryReplica().isPresent()) {
+            fetchLatestReplicaInfo(MAX_RETRY_PER_REPLICA);
+        }
+
+        while (true) {
+            try {
+                return transactionReplica(type, options, database.primaryReplica().get());
+            } catch (GraknClientException e) {
+                if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
+                    LOG.debug("Unable to open a session or transaction", e);
+                    fetchLatestReplicaInfo(MAX_RETRY_PER_REPLICA);
+                } else if ((UNABLE_TO_CONNECT.equals(e.getErrorMessage()))) {
+                    waitForPrimaryReplicaSelection();
+                    fetchLatestReplicaInfo(MAX_RETRY_PER_REPLICA);
+                } else throw e;
             }
         }
-        throw clusterNotAvailableException();
     }
 
     private GraknClient.Transaction transactionSecondaryReplica(GraknClient.Transaction.Type type, GraknOptions.Cluster options) {
         for (Replica replica: database.replicas()) {
             try {
-                RPCSession selectedSession = coreSessions.computeIfAbsent(
-                        replica.id(),
-                        key -> {
-                            LOG.debug("Opening a session to '{}'", key);
-                            return clusterClient.coreClient(key.address()).session(key.database(), this.type, this.options);
-                        }
-                );
-                LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica.id());
-                return selectedSession.transaction(type, options);
+                return transactionReplica(type, options, replica);
             } catch (GraknClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
@@ -162,10 +136,43 @@ public class RPCSessionCluster implements GraknClient.Session {
         throw clusterNotAvailableException();
     }
 
+    private GraknClient.Transaction transactionReplica(GraknClient.Transaction.Type type, GraknOptions options, Replica replica) {
+        RPCSession selectedSession = coreSessions.computeIfAbsent(
+                replica.id(),
+                key -> {
+                    LOG.debug("Opening a session to '{}'", key);
+                    return clusterClient.coreClient(key.address()).session(key.database(), this.type, this.options);
+                }
+        );
+        LOG.debug("Opening read secondary transaction to secondary replica '{}'", replica.id());
+        return selectedSession.transaction(type, options);
+    }
+
+    private Replica fetchLatestReplicaInfo(int maxRetries) {
+        int retries = 0;
+        while (retries < maxRetries) {
+            database = databaseDiscover();
+            if (database.primaryReplica().isPresent()) {
+                return database.primaryReplica().get();
+            } else {
+                waitForPrimaryReplicaSelection();
+                retries++;
+            }
+        }
+
+        throw clusterNotAvailableException();
+    }
+
     private Database databaseDiscover() {
         for (Address.Server server: clusterClient.clusterMembers()) {
             try {
-                return databaseDiscover(server);
+                return Database.ofProto(
+                        clusterClient.graknClusterRPC(server).databaseDiscover(
+                                DatabaseProto.Database.Discover.Req.newBuilder()
+                                        .setDatabase(dbName)
+                                        .build()
+                        )
+                );
             } catch (StatusRuntimeException e) {
                 LOG.debug("Unable to perform database discovery to " + server + ". Reattempting to the next one.", e);
             }
@@ -173,25 +180,15 @@ public class RPCSessionCluster implements GraknClient.Session {
         throw clusterNotAvailableException();
     }
 
-    private Database databaseDiscover(Address.Server server) {
-        return Database.ofProto(
-                clusterClient.graknClusterRPC(server).databaseDiscover(
-                        DatabaseProto.Database.Discover.Req.newBuilder()
-                                .setDatabase(dbName)
-                                .build()
-                )
-        );
-    }
-
     private GraknClientException clusterNotAvailableException() {
         String addresses = clusterClient.clusterMembers().stream().map(Address.Server::toString).collect(Collectors.joining(","));
-        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses); // remove ambiguity by casting to Object
+        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses);
     }
 
     private void waitForPrimaryReplicaSelection() {
         try {
             Thread.sleep(WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS);
-        } catch (InterruptedException e2) {
+        } catch (InterruptedException e) {
             throw new GraknClientException(UNEXPECTED_INTERRUPTION);
         }
     }
@@ -215,15 +212,10 @@ public class RPCSessionCluster implements GraknClient.Session {
             return new Database(replicaMap);
         }
 
-        private Replica primaryReplica() {
-            Optional<Replica> latestPrimary = replicas.values().stream()
+        private Optional<Replica> primaryReplica() {
+            return replicas.values().stream()
                     .filter(Replica::isPrimary)
                     .max(Comparator.comparing(e -> e.term));
-            if (latestPrimary.isPresent()) return latestPrimary.get();
-            else {
-                final Optional<Long> maxTerm = replicas.values().stream().map(replica -> replica.term).max(Comparator.naturalOrder());
-                throw new GraknClientException(CLUSTER_NO_PRIMARY_REPLICA_YET, maxTerm);
-            }
         }
 
         public Collection<Replica> replicas() {
