@@ -28,6 +28,7 @@ import grakn.client.concept.thing.Attribute;
 import grakn.client.concept.type.AttributeType;
 import grakn.client.rpc.QueryFuture;
 import graql.lang.Graql;
+import graql.lang.common.exception.GraqlException;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
@@ -169,9 +170,16 @@ public class GraqlSteps {
 
     @When("get answers of graql match")
     public void graql_match(String graqlQueryStatements) {
-        final GraqlMatch graqlQuery = Graql.parseQuery(String.join("\n", graqlQueryStatements)).asMatch();
-        clearAnswers();
-        answers = tx().query().match(graqlQuery).collect(Collectors.toList());
+        try {
+            GraqlMatch graqlQuery = Graql.parseQuery(String.join("\n", graqlQueryStatements)).asMatch();
+            clearAnswers();
+            answers = tx().query().match(graqlQuery).collect(Collectors.toList());
+        } catch (GraqlException e) {
+            // NOTE: We manually close transaction here, because we want to align with all non-java clients,
+            // where parsing happens at server-side which closes transaction if they fail
+            tx().close();
+            throw e;
+        }
     }
 
     @When("graql match; throws exception")
