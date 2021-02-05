@@ -20,10 +20,14 @@
 package grakn.client.rpc.cluster;
 
 import grakn.client.GraknClient;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.RPCDatabaseManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
 public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
     private final Map<Address.Server, RPCDatabaseManager> databaseManagers;
@@ -34,21 +38,45 @@ public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
 
     @Override
     public boolean contains(String name) {
-        return databaseManagers.values().iterator().next().contains(name);
+        List<GraknClientException> errors = new ArrayList<>();
+        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+            try {
+                return databaseManager.contains(name);
+            } catch (GraknClientException e) {
+                errors.add(e);
+            }
+        }
+        throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
     }
 
     @Override
     public void create(String name) {
-        databaseManagers.values().forEach(dbMgr -> dbMgr.create(name));
+        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+            if (!databaseManager.contains(name)) {
+                databaseManager.create(name);
+            }
+        }
     }
 
     @Override
     public void delete(String name) {
-        databaseManagers.values().forEach(dbMgr -> dbMgr.delete(name));
+        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+            if (databaseManager.contains(name)) {
+                databaseManager.delete(name);
+            }
+        }
     }
 
     @Override
     public List<String> all() {
-        return databaseManagers.values().iterator().next().all();
+        List<GraknClientException> errors = new ArrayList<>();
+        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+            try {
+                return databaseManager.all();
+            } catch (GraknClientException e) {
+                errors.add(e);
+            }
+        }
+        throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
     }
 }
