@@ -37,7 +37,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client UNKNOWN_REQUEST_ID =
                 new Client(5, "Received a response with unknown request id '%s'.")  ;
         public static final Client ILLEGAL_ARGUMENT = new Client(6, "Illegal argument passed into the method: '%s'.");
-        public static final Client UNABLE_TO_CONNECT = new Client(7, "Unable to connect to Grakn Core Server.");
+        public static final Client UNABLE_TO_CONNECT = new Client(7, "Unable to connect to Grakn server.");
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
                 new Client(8, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
