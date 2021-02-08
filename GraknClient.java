@@ -38,12 +38,8 @@ public interface GraknClient extends AutoCloseable {
         return new RPCClient(address);
     }
 
-    static GraknClient cluster() {
-        return cluster(DEFAULT_ADDRESS);
-    }
-
-    static GraknClient cluster(String address) {
-        return new RPCGraknClientCluster(address);
+    static GraknClient cluster(String... addresses) {
+        return new RPCGraknClientCluster(addresses);
     }
 
     GraknClient.Session session(String database, GraknClient.Session.Type type);
