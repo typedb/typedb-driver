@@ -19,7 +19,7 @@
 
 build --incompatible_strict_action_env --javacopt='--release 8'
 run --incompatible_strict_action_env
-test --incompatible_strict_action_env
+test --incompatible_strict_action_env --test_env=PATH
 
 # what is defined in this section will be applied when bazel is invoked like this: bazel ... --config=rbe ...
 build:rbe --project_id=grakn-dev
