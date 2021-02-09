@@ -20,7 +20,7 @@
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
+load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
 
 java_library(
     name = "steps",
@@ -41,28 +41,27 @@ java_library(
     ],
 )
 
-grakn_behaviour_java_test(
-    name = "test",
+grakn_java_test(
+    name = "test-core",
     srcs = [
-        "DatabaseTest.java",
+        "DatabaseTestCore.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTest",
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTestCore",
     data = [
         "@graknlabs_behaviour//connection:database.feature",
     ],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
-    grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
-    grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
-    grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
-    connection_steps_core = "//test/behaviour/connection:steps-core",
-    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
-    steps = [
+    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
+    runtime_deps = [
+        "//test/behaviour/connection:steps-core",
+
         ":steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
         "//test/behaviour/graql:steps",
+
+        "//test/behaviour/config:parameters",
     ],
     deps = [
         # Internal Package Dependencies
@@ -71,8 +70,37 @@ grakn_behaviour_java_test(
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
+    size = "medium",
+)
+
+grakn_java_test(
+    name = "test-cluster",
+    srcs = [
+        "DatabaseTestCluster.java",
+    ],
+    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTestCluster",
+    data = [
+        "@graknlabs_behaviour//connection:database.feature",
+    ],
+    mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
+    linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
+    windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
     runtime_deps = [
+        "//test/behaviour/connection:steps-cluster",
+
+        ":steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/graql:steps",
+
         "//test/behaviour/config:parameters",
+    ],
+    deps = [
+        # Internal Package Dependencies
+        "//test/behaviour",
+
+        # External dependencies from Maven
+        "@maven//:io_cucumber_cucumber_junit",
     ],
     size = "medium",
 )

@@ -44,8 +44,8 @@ public class RPCGraknClientCluster implements GraknClient {
     private final RPCDatabaseManagerCluster databases;
     private boolean isOpen;
 
-    public RPCGraknClientCluster(String address) {
-        coreClients = discoverCluster(address).stream()
+    public RPCGraknClientCluster(String... addresses) {
+        coreClients = discoverCluster(addresses).stream()
                 .map(addr -> pair(addr, new RPCClient(addr.client())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
         graknClusterRPCs = coreClients.entrySet().stream()

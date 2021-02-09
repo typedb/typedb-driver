@@ -30,9 +30,9 @@ import org.junit.runner.RunWith;
         plugin = "pretty",
         glue = "grakn.client.test.behaviour",
         features = "external/graknlabs_behaviour/connection/database.feature",
-        tags = "not @ignore and not @ignore-client-java and not @ignore-grakn-2.0"
+        tags = "not @ignore and not @ignore-client-java and not @ignore-core"
 )
-public class DatabaseTest extends BehaviourTest {
+public class DatabaseTestCore extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
@@ -54,5 +54,5 @@ public class DatabaseTest extends BehaviourTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run Grakn)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static GraknCoreRunner runner;
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 }
