@@ -233,7 +233,7 @@ public class RPCSessionCluster implements GraknClient.Session {
             return new Replica(
                     new Id(Address.Server.parse(replica.getAddress()), replica.getDatabase()),
                     replica.getTerm(),
-                    replica.getRank() == DatabaseProto.Database.Replica.Rank.PRIMARY
+                    replica.getPrimary()
             );
         }
 
