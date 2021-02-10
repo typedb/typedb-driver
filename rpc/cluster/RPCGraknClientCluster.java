@@ -98,12 +98,12 @@ public class RPCGraknClientCluster implements GraknClient {
     }
 
     private Set<Address.Server> discoverCluster(String... addresses) {
-        for (String address: addresses) {
+        for (String address : addresses) {
             try (RPCClient client = new RPCClient(address)) {
                 LOG.debug("Performing cluster discovery to {}...", address);
                 GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
-                ClusterProto.Cluster.Discover.Res res =
-                        graknClusterRPC.clusterDiscover(ClusterProto.Cluster.Discover.Req.newBuilder().build());
+                ClusterProto.Cluster.Servers.Res res =
+                        graknClusterRPC.clusterServers(ClusterProto.Cluster.Servers.Req.newBuilder().build());
                 Set<Address.Server> members = res.getServersList().stream().map(Address.Server::parse).collect(Collectors.toSet());
                 LOG.debug("Discovered {}", members);
                 return members;

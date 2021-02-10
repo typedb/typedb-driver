@@ -166,15 +166,10 @@ public class RPCSessionCluster implements GraknClient.Session {
     private Database databaseDiscover() {
         for (Address.Server server: clusterClient.clusterMembers()) {
             try {
-                return Database.ofProto(
-                        clusterClient.graknClusterRPC(server).databaseDiscover(
-                                DatabaseProto.Database.Discover.Req.newBuilder()
-                                        .setDatabase(dbName)
-                                        .build()
-                        )
-                );
+                return Database.ofProto(clusterClient.graknClusterRPC(server).databaseReplicas(
+                        DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(dbName).build()));
             } catch (StatusRuntimeException e) {
-                LOG.debug("Unable to perform database discovery to " + server + ". Reattempting to the next one.", e);
+                LOG.debug("Failed to fetch replica info from " + server + ". Attempting next server.", e);
             }
         }
         throw clusterNotAvailableException();
@@ -201,10 +196,10 @@ public class RPCSessionCluster implements GraknClient.Session {
             this.replicas = replicas;
         }
 
-        public static Database ofProto(DatabaseProto.Database.Discover.Res res) {
+        public static Database ofProto(DatabaseProto.Database.Replicas.Res res) {
             Map<Replica.Id, Replica> replicaMap = new HashMap<>();
 
-            for (DatabaseProto.Database.Discover.Res.Replica replica: res.getReplicasList()) {
+            for (DatabaseProto.Database.Replica replica: res.getReplicasList()) {
                 Replica.Id id = new Replica.Id(Address.Server.parse(replica.getAddress()), replica.getDatabase());
                 replicaMap.put(id, Replica.ofProto(replica));
             }
@@ -234,11 +229,11 @@ public class RPCSessionCluster implements GraknClient.Session {
             this.isPrimary = isPrimary;
         }
 
-        public static Replica ofProto(DatabaseProto.Database.Discover.Res.Replica replica) {
+        public static Replica ofProto(DatabaseProto.Database.Replica replica) {
             return new Replica(
                     new Id(Address.Server.parse(replica.getAddress()), replica.getDatabase()),
                     replica.getTerm(),
-                    replica.getIsPrimary()
+                    replica.getRank() == DatabaseProto.Database.Replica.Rank.PRIMARY
             );
         }
 
