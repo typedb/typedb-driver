@@ -31,7 +31,7 @@ public class SessionClusterRPC implements GraknClient.Session {
     private final ClientClusterRPC clusterClient;
     private final ClientRPC coreClient;
     private final String database;
-    private final SessionRPC coreSession;
+    private SessionRPC coreSession;
 
     public SessionClusterRPC(ClientClusterRPC clusterClient, Address.Server serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
@@ -94,7 +94,9 @@ public class SessionClusterRPC implements GraknClient.Session {
 
             @Override
             GraknClient.Transaction rerun(DatabaseCluster.Replica replica) {
-                return coreClient.session(database, type(), options).transaction(type, options);
+                if (coreSession != null) coreSession.close();
+                coreSession = coreClient.session(database, type(), options);
+                return coreSession.transaction(type, options);
             }
         };
     }
