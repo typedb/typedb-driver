@@ -21,7 +21,7 @@ package grakn.client.rpc.cluster;
 
 import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.rpc.RPCDatabaseManager;
+import grakn.client.rpc.DatabaseManagerRPC;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +29,17 @@ import java.util.Map;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
-public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
-    private final Map<Address.Server, RPCDatabaseManager> databaseManagers;
+public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager {
+    private final Map<Address.Server, DatabaseManagerRPC> databaseManagers;
 
-    public RPCDatabaseManagerCluster(Map<Address.Server, RPCDatabaseManager> databaseManagers) {
+    public DatabaseManagerClusterRPC(Map<Address.Server, DatabaseManagerRPC> databaseManagers) {
         this.databaseManagers = databaseManagers;
     }
 
     @Override
     public boolean contains(String name) {
         List<GraknClientException> errors = new ArrayList<>();
-        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
             try {
                 return databaseManager.contains(name);
             } catch (GraknClientException e) {
@@ -51,7 +51,7 @@ public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
 
     @Override
     public void create(String name) {
-        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
             if (!databaseManager.contains(name)) {
                 databaseManager.create(name);
             }
@@ -60,7 +60,7 @@ public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
 
     @Override
     public void delete(String name) {
-        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
             if (databaseManager.contains(name)) {
                 databaseManager.delete(name);
             }
@@ -70,7 +70,7 @@ public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
     @Override
     public List<String> all() {
         List<GraknClientException> errors = new ArrayList<>();
-        for (RPCDatabaseManager databaseManager : databaseManagers.values()) {
+        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
             try {
                 return databaseManager.all();
             } catch (GraknClientException e) {
