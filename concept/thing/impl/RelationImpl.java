@@ -86,7 +86,7 @@ public class RelationImpl extends ThingImpl implements Relation {
 
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(getIID())));
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = rpcTransaction.stream(
+            final Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = transactionRPC.stream(
                     request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList().stream());
 
             final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();

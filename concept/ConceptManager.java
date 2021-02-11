@@ -25,12 +25,11 @@ import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.EntityType;
 import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
 import grakn.client.concept.type.impl.AttributeTypeImpl;
 import grakn.client.concept.type.impl.EntityTypeImpl;
 import grakn.client.concept.type.impl.RelationTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
-import grakn.client.rpc.RPCTransaction;
+import grakn.client.rpc.TransactionRPC;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
@@ -44,10 +43,10 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.valueType;
 
 public final class ConceptManager {
 
-    private final RPCTransaction rpcTransaction;
+    private final TransactionRPC transactionRPC;
 
-    public ConceptManager(RPCTransaction rpcTransaction) {
-        this.rpcTransaction = rpcTransaction;
+    public ConceptManager(TransactionRPC transactionRPC) {
+        this.transactionRPC = transactionRPC;
     }
 
     @CheckReturnValue
@@ -149,6 +148,6 @@ public final class ConceptManager {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setConceptManagerReq(request);
-        return rpcTransaction.execute(req).getConceptManagerRes();
+        return transactionRPC.execute(req).getConceptManagerRes();
     }
 }

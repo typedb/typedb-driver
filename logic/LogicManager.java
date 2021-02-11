@@ -19,10 +19,8 @@
 
 package grakn.client.logic;
 
-import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.logic.impl.RuleImpl;
-import grakn.client.rpc.RPCTransaction;
-import grakn.protocol.ConceptProto;
+import grakn.client.rpc.TransactionRPC;
 import grakn.protocol.LogicProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
@@ -38,10 +36,10 @@ import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 
 public final class LogicManager {
 
-    private final RPCTransaction rpcTransaction;
+    private final TransactionRPC transactionRPC;
 
-    public LogicManager(RPCTransaction rpcTransaction) {
-        this.rpcTransaction = rpcTransaction;
+    public LogicManager(TransactionRPC transactionRPC) {
+        this.transactionRPC = transactionRPC;
     }
 
     public Rule putRule(String label, Pattern when, Pattern then) {
@@ -81,13 +79,13 @@ public final class LogicManager {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setLogicManagerReq(request);
-        return rpcTransaction.execute(req).getLogicManagerRes();
+        return transactionRPC.execute(req).getLogicManagerRes();
     }
 
     private Stream<RuleImpl> ruleStream(LogicProto.LogicManager.Req.Builder method, Function<LogicProto.LogicManager.Res, List<LogicProto.Rule>> ruleListGetter) {
         final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setLogicManagerReq(method);
-        return rpcTransaction.stream(request, res -> ruleListGetter.apply(res.getLogicManagerRes()).stream().map(RuleImpl::of));
+        return transactionRPC.stream(request, res -> ruleListGetter.apply(res.getLogicManagerRes()).stream().map(RuleImpl::of));
     }
 }

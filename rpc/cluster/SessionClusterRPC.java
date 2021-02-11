@@ -21,19 +21,19 @@ package grakn.client.rpc.cluster;
 
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
-import grakn.client.rpc.RPCClient;
-import grakn.client.rpc.RPCSession;
+import grakn.client.rpc.ClientRPC;
+import grakn.client.rpc.SessionRPC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RPCSessionCluster implements GraknClient.Session {
+public class SessionClusterRPC implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
-    private final RPCGraknClientCluster clusterClient;
-    private RPCClient coreClient;
+    private final ClientClusterRPC clusterClient;
+    private ClientRPC coreClient;
     private final String database;
-    private RPCSession coreSession;
+    private SessionRPC coreSession;
 
-    public RPCSessionCluster(RPCGraknClientCluster clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+    public SessionClusterRPC(ClientClusterRPC clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.coreClient = clusterClient.coreClient(serverAddress);
         this.database = database;
