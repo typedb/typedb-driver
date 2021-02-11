@@ -56,26 +56,6 @@ public class SessionClusterRPC implements GraknClient.Session {
         }
     }
 
-    @Override
-    public GraknClient.Session.Type type() {
-        return coreSession.type();
-    }
-
-    @Override
-    public boolean isOpen() {
-        return coreSession.isOpen();
-    }
-
-    @Override
-    public void close() {
-        coreSession.close();
-    }
-
-    @Override
-    public String database() {
-        return database;
-    }
-
     private GraknClient.Transaction transactionPrimaryReplica(GraknClient.Transaction.Type type, GraknOptions options) {
         return transactionFailsafeTask(type, options).runPrimaryReplica();
     }
@@ -100,5 +80,25 @@ public class SessionClusterRPC implements GraknClient.Session {
                 return coreSession.transaction(type, options);
             }
         };
+    }
+
+    @Override
+    public GraknClient.Session.Type type() {
+        return coreSession.type();
+    }
+
+    @Override
+    public boolean isOpen() {
+        return coreSession.isOpen();
+    }
+
+    @Override
+    public void close() {
+        coreSession.close();
+    }
+
+    @Override
+    public String database() {
+        return database;
     }
 }
