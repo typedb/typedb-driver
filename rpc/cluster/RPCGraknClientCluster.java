@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
@@ -39,9 +41,10 @@ import static grakn.common.collection.Collections.pair;
 
 public class RPCGraknClientCluster implements GraknClient {
     private static final Logger LOG = LoggerFactory.getLogger(RPCGraknClientCluster.class);
-    private final Map<Address.Server, RPCClient> coreClients;
-    private final Map<Address.Server, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
-    private final RPCDatabaseManagerCluster databases;
+    private final Map<ServerAddress, RPCClient> coreClients;
+    private final Map<ServerAddress, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
+    private final RPCDatabaseManagerCluster databaseManagers;
+    private final ConcurrentMap<String, ReplicaInfo> replicaInfoMap;
     private boolean isOpen;
 
     public RPCGraknClientCluster(String... addresses) {
@@ -51,11 +54,12 @@ public class RPCGraknClientCluster implements GraknClient {
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
-        databases = new RPCDatabaseManagerCluster(
+        databaseManagers = new RPCDatabaseManagerCluster(
                 coreClients.entrySet().stream()
                         .map(client -> pair(client.getKey(), client.getValue().databases()))
                         .collect(Collectors.toMap(Pair::first, Pair::second))
         );
+        replicaInfoMap = new ConcurrentHashMap<>();
         isOpen = true;
     }
 
@@ -66,12 +70,35 @@ public class RPCGraknClientCluster implements GraknClient {
 
     @Override
     public RPCSessionCluster session(String database, GraknClient.Session.Type type, GraknOptions options) {
-        return new RPCSessionCluster(this, database, type, options.asCluster());
+        GraknOptions.Cluster clusterOptions = options.asCluster();
+        if (clusterOptions.readAnyReplica().isPresent() && clusterOptions.readAnyReplica().get()) {
+            return sessionAnyReplica(database, type, clusterOptions);
+        } else {
+            return sessionPrimaryReplica(database, type, clusterOptions);
+        }
+    }
+
+    private RPCSessionCluster sessionPrimaryReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+        return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica(database);
+    }
+
+    private RPCSessionCluster sessionAnyReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+        return openSessionFailsafeTask(database, type, options, this).runAnyReplica(database);
+    }
+
+    private FailsafeTask<RPCSessionCluster> openSessionFailsafeTask(String database, Session.Type type, GraknOptions.Cluster options, RPCGraknClientCluster client) {
+        return new FailsafeTask<RPCSessionCluster>(this) {
+
+            @Override
+            RPCSessionCluster run(ReplicaInfo.Replica replica) {
+                return new RPCSessionCluster(client, replica.address(), database, type, options);
+            }
+        };
     }
 
     @Override
     public RPCDatabaseManagerCluster databases() {
-        return databases;
+        return databaseManagers;
     }
 
     @Override
@@ -85,36 +112,36 @@ public class RPCGraknClientCluster implements GraknClient {
         isOpen = false;
     }
 
-    public Set<Address.Server> clusterMembers() {
+    ConcurrentMap<String, ReplicaInfo> replicaInfoMap() {
+        return replicaInfoMap;
+    }
+
+    public Set<ServerAddress> clusterMembers() {
         return coreClients.keySet();
     }
 
-    public RPCClient coreClient(Address.Server address) {
+    public RPCClient coreClient(ServerAddress address) {
         return coreClients.get(address);
     }
 
-    public GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC(Address.Server address) {
+    public GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC(ServerAddress address) {
         return graknClusterRPCs.get(address);
     }
 
-    private Set<Address.Server> discoverCluster(String... addresses) {
-        for (String address: addresses) {
+    private Set<ServerAddress> discoverCluster(String... addresses) {
+        for (String address : addresses) {
             try (RPCClient client = new RPCClient(address)) {
                 LOG.debug("Performing cluster discovery to {}...", address);
                 GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
-                ClusterProto.Cluster.Discover.Res res =
-                        graknClusterRPC.clusterDiscover(ClusterProto.Cluster.Discover.Req.newBuilder().build());
-                Set<Address.Server> members = res.getServersList().stream().map(Address.Server::parse).collect(Collectors.toSet());
+                ClusterProto.Cluster.Servers.Res res =
+                        graknClusterRPC.clusterServers(ClusterProto.Cluster.Servers.Req.newBuilder().build());
+                Set<ServerAddress> members = res.getServersList().stream().map(ServerAddress::parse).collect(Collectors.toSet());
                 LOG.debug("Discovered {}", members);
                 return members;
             } catch (StatusRuntimeException e) {
                 LOG.error("Cluster discovery to {} failed.", address);
             }
         }
-        throw clusterNotAvailableException(addresses);
-    }
-
-    private GraknClientException clusterNotAvailableException(String... addresses) {
-        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
+        throw new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
     }
 }
