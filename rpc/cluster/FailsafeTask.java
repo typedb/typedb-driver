@@ -46,9 +46,9 @@ abstract class FailsafeTask<TResult> {
         this.client = client;
     }
 
-    abstract TResult run(RPCDatabaseCluster.Replica replica);
+    abstract TResult run(ReplicaInfo.Replica replica);
 
-    TResult rerun(RPCDatabaseCluster.Replica replica) {
+    TResult rerun(ReplicaInfo.Replica replica) {
         return run(replica);
     }
 
@@ -60,7 +60,7 @@ abstract class FailsafeTask<TResult> {
         if (!client.clusterDatabases().containsKey(database) || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
             seekPrimaryReplica(database);
         }
-        RPCDatabaseCluster.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
+        ReplicaInfo.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
         int retries = 0;
         while (true) {
             try {
@@ -77,18 +77,18 @@ abstract class FailsafeTask<TResult> {
     }
 
     TResult runSecondaryReplica(String database) {
-        RPCDatabaseCluster databaseCluster = client.clusterDatabases().get(database);
-        if (databaseCluster == null) databaseCluster = fetchDatabaseReplicas(database);
+        ReplicaInfo replicaInfo = client.clusterDatabases().get(database);
+        if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas(database);
 
         // Try the preferred secondary replica first, then go through the others
-        List<RPCDatabaseCluster.Replica> replicas = new ArrayList<>();
-        replicas.add(databaseCluster.preferredSecondaryReplica());
-        for (RPCDatabaseCluster.Replica replica : databaseCluster.replicas()) {
+        List<ReplicaInfo.Replica> replicas = new ArrayList<>();
+        replicas.add(replicaInfo.preferredSecondaryReplica());
+        for (ReplicaInfo.Replica replica : replicaInfo.replicas()) {
             if (!replica.isPreferredSecondary()) replicas.add(replica);
         }
 
         int retries = 0;
-        for (RPCDatabaseCluster.Replica replica : replicas) {
+        for (ReplicaInfo.Replica replica : replicas) {
             try {
                 return retries == 0 ? run(replica) : rerun(replica);
             } catch (GraknClientException e) {
@@ -103,12 +103,12 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private RPCDatabaseCluster.Replica seekPrimaryReplica(String database) {
+    private ReplicaInfo.Replica seekPrimaryReplica(String database) {
         int retries = 0;
         while (retries < FETCH_REPLICAS_MAX_RETRIES) {
-            RPCDatabaseCluster databaseCluster = fetchDatabaseReplicas(database);
-            if (databaseCluster.primaryReplica().isPresent()) {
-                return databaseCluster.primaryReplica().get();
+            ReplicaInfo replicaInfo = fetchDatabaseReplicas(database);
+            if (replicaInfo.primaryReplica().isPresent()) {
+                return replicaInfo.primaryReplica().get();
             } else {
                 waitForPrimaryReplicaSelection();
                 retries++;
@@ -117,14 +117,14 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private RPCDatabaseCluster fetchDatabaseReplicas(String database) {
+    private ReplicaInfo fetchDatabaseReplicas(String database) {
         for (ServerAddress serverAddress : client.clusterMembers()) {
             try {
-                System.out.println("Fetching replica info from " + serverAddress);
-                RPCDatabaseCluster databaseCluster = RPCDatabaseCluster.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
+                LOG.debug("Fetching replica info from {}", serverAddress);
+                ReplicaInfo replicaInfo = ReplicaInfo.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
                         DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(database).build()));
-                client.clusterDatabases().put(database, databaseCluster);
-                return databaseCluster;
+                client.clusterDatabases().put(database, replicaInfo);
+                return replicaInfo;
             } catch (StatusRuntimeException e) {
                 LOG.debug("Failed to fetch replica info for database '" + database + "' from " + serverAddress + ". Attempting next server.", e);
             }

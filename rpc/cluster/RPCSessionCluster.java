@@ -88,12 +88,12 @@ public class RPCSessionCluster implements GraknClient.Session {
         return new FailsafeTask<GraknClient.Transaction>(clusterClient) {
 
             @Override
-            GraknClient.Transaction run(RPCDatabaseCluster.Replica replica) {
+            GraknClient.Transaction run(ReplicaInfo.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            GraknClient.Transaction rerun(RPCDatabaseCluster.Replica replica) {
+            GraknClient.Transaction rerun(ReplicaInfo.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreClient = clusterClient.coreClient(replica.address());
                 coreSession = coreClient.session(database, type(), options);

@@ -30,18 +30,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-class RPCDatabaseCluster {
+class ReplicaInfo {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RPCDatabaseCluster.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReplicaInfo.class);
     private final Map<Replica.Id, Replica> replicas;
 
-    private RPCDatabaseCluster(Map<Replica.Id, Replica> replicas) {
+    private ReplicaInfo(Map<Replica.Id, Replica> replicas) {
         assert !replicas.isEmpty();
         this.replicas = replicas;
-        System.out.println("Discovered database cluster: " + this.toString());
     }
 
-    public static RPCDatabaseCluster ofProto(DatabaseProto.Database.Replicas.Res res) {
+    public static ReplicaInfo ofProto(DatabaseProto.Database.Replicas.Res res) {
         Map<Replica.Id, Replica> replicaMap = new HashMap<>();
 
         for (DatabaseProto.Database.Replica replica: res.getReplicasList()) {
@@ -49,7 +48,9 @@ class RPCDatabaseCluster {
             replicaMap.put(id, Replica.ofProto(replica));
         }
 
-        return new RPCDatabaseCluster(replicaMap);
+        ReplicaInfo replicaInfo = new ReplicaInfo(replicaMap);
+        LOG.debug("Discovered database cluster: {}", replicaInfo);
+        return replicaInfo;
     }
 
     Optional<Replica> primaryReplica() {

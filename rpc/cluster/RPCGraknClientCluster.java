@@ -44,7 +44,7 @@ public class RPCGraknClientCluster implements GraknClient {
     private final Map<ServerAddress, RPCClient> coreClients;
     private final Map<ServerAddress, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
     private final RPCDatabaseManagerCluster databaseManagers;
-    private final ConcurrentMap<String, RPCDatabaseCluster> clusterDatabases;
+    private final ConcurrentMap<String, ReplicaInfo> clusterDatabases;
     private boolean isOpen;
 
     public RPCGraknClientCluster(String... addresses) {
@@ -90,7 +90,7 @@ public class RPCGraknClientCluster implements GraknClient {
         return new FailsafeTask<RPCSessionCluster>(this) {
 
             @Override
-            RPCSessionCluster run(RPCDatabaseCluster.Replica replica) {
+            RPCSessionCluster run(ReplicaInfo.Replica replica) {
                 return new RPCSessionCluster(client, replica.address(), database, type, options);
             }
         };
@@ -112,7 +112,7 @@ public class RPCGraknClientCluster implements GraknClient {
         isOpen = false;
     }
 
-    ConcurrentMap<String, RPCDatabaseCluster> clusterDatabases() {
+    ConcurrentMap<String, ReplicaInfo> clusterDatabases() {
         return clusterDatabases;
     }
 
