@@ -21,6 +21,7 @@ package grakn.client.rpc;
 
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.TransactionProto;
+import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
