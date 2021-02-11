@@ -44,8 +44,6 @@ kt_register_toolchains()
 # Load //builder/python
 load("@graknlabs_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
-load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
-pip_repositories()
 
 # Load //builder/antlr
 load("@graknlabs_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps")
@@ -66,8 +64,6 @@ java_grpc_compile()
 load("@graknlabs_dependencies//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip",
     graknlabs_dependencies_tool_maven_artifacts = "maven_artifacts")
 graknlabs_dependencies_ci_pip()
-load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "pip_install")
-pip_install()
 
 # Load //tool/checkstyle
 load("@graknlabs_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
