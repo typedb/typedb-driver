@@ -26,14 +26,14 @@ import grakn.client.rpc.RPCSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RPCClusterSession implements GraknClient.Session {
+public class RPCSessionCluster implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     private final RPCGraknClientCluster clusterClient;
     private final RPCClient coreClient;
     private final String database;
     private RPCSession coreSession;
 
-    public RPCClusterSession(RPCGraknClientCluster clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+    public RPCSessionCluster(RPCGraknClientCluster clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.coreClient = clusterClient.coreClient(serverAddress);
         this.database = database;
@@ -88,12 +88,12 @@ public class RPCClusterSession implements GraknClient.Session {
         return new FailsafeTask<GraknClient.Transaction>(clusterClient) {
 
             @Override
-            GraknClient.Transaction run(RPCClusterDatabase.Replica replica) {
+            GraknClient.Transaction run(RPCDatabaseCluster.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            GraknClient.Transaction rerun(RPCClusterDatabase.Replica replica) {
+            GraknClient.Transaction rerun(RPCDatabaseCluster.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreSession = coreClient.session(database, type(), options);
                 return coreSession.transaction(type, options);
