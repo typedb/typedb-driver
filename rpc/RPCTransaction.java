@@ -51,7 +51,7 @@ import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_
 import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
-public class TransactionRPC implements Transaction {
+public class RPCTransaction implements Transaction {
 
     private final Transaction.Type type;
     private final ConceptManager conceptManager;
@@ -62,7 +62,7 @@ public class TransactionRPC implements Transaction {
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
 
-    TransactionRPC(SessionRPC session, ByteString sessionId, Type type, GraknOptions options) {
+    RPCTransaction(RPCSession session, ByteString sessionId, Type type, GraknOptions options) {
         try {
             this.type = type;
             conceptManager = new ConceptManager(this);

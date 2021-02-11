@@ -25,7 +25,7 @@ import grakn.client.concept.answer.ConceptMapGroup;
 import grakn.client.concept.answer.Numeric;
 import grakn.client.concept.answer.NumericGroup;
 import grakn.client.rpc.QueryFuture;
-import grakn.client.rpc.TransactionRPC;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.QueryProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.query.GraqlDefine;
@@ -42,10 +42,10 @@ import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
 public final class QueryManager {
 
-    private final TransactionRPC transactionRPC;
+    private final RPCTransaction rpcTransaction;
 
-    public QueryManager(TransactionRPC transactionRPC) {
-        this.transactionRPC = transactionRPC;
+    public QueryManager(RPCTransaction rpcTransaction) {
+        this.rpcTransaction = rpcTransaction;
     }
 
     public Stream<ConceptMap> match(GraqlMatch query) {
@@ -140,19 +140,19 @@ public final class QueryManager {
     private <T> QueryFuture<T> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options, Function<TransactionProto.Transaction.Res, T> mapper) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
-        return transactionRPC.executeAsync(req, mapper);
+        return rpcTransaction.executeAsync(req, mapper);
     }
 
     private QueryFuture<Void> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
-        return transactionRPC.executeAsync(req, res -> null);
+        return rpcTransaction.executeAsync(req, res -> null);
     }
 
     private <T> Stream<T> iterateQuery(QueryProto.Query.Req.Builder request, GraknOptions options,
                                        Function<TransactionProto.Transaction.Res, Stream<T>> responseReader) {
         final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
-        return transactionRPC.stream(req, responseReader);
+        return rpcTransaction.stream(req, responseReader);
     }
 }

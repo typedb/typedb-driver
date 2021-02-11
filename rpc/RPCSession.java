@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
-public class SessionRPC implements GraknClient.Session {
+public class RPCSession implements GraknClient.Session {
     private final Channel channel;
     private final String database;
     private final Type type;
@@ -43,7 +43,7 @@ public class SessionRPC implements GraknClient.Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
+    public RPCSession(RPCClient client, String database, Type type, GraknOptions options) {
         try {
             this.channel = client.channel();
             this.database = database;
@@ -68,7 +68,7 @@ public class SessionRPC implements GraknClient.Session {
 
     @Override
     public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
-        return new TransactionRPC(this, sessionId, type, options);
+        return new RPCTransaction(this, sessionId, type, options);
     }
 
     @Override

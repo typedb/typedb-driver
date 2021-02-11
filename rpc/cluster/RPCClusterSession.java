@@ -21,19 +21,19 @@ package grakn.client.rpc.cluster;
 
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
-import grakn.client.rpc.ClientRPC;
-import grakn.client.rpc.SessionRPC;
+import grakn.client.rpc.RPCClient;
+import grakn.client.rpc.RPCSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SessionClusterRPC implements GraknClient.Session {
+public class RPCClusterSession implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
-    private final ClientClusterRPC clusterClient;
-    private final ClientRPC coreClient;
+    private final RPCClusterClient clusterClient;
+    private final RPCClient coreClient;
     private final String database;
-    private SessionRPC coreSession;
+    private RPCSession coreSession;
 
-    public SessionClusterRPC(ClientClusterRPC clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+    public RPCClusterSession(RPCClusterClient clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.coreClient = clusterClient.coreClient(serverAddress);
         this.database = database;
@@ -88,12 +88,12 @@ public class SessionClusterRPC implements GraknClient.Session {
         return new FailsafeTask<GraknClient.Transaction>(clusterClient) {
 
             @Override
-            GraknClient.Transaction run(DatabaseClusterRPC.Replica replica) {
+            GraknClient.Transaction run(RPCClusterDatabase.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            GraknClient.Transaction rerun(DatabaseClusterRPC.Replica replica) {
+            GraknClient.Transaction rerun(RPCClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreSession = coreClient.session(database, type(), options);
                 return coreSession.transaction(type, options);

@@ -29,7 +29,7 @@ import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.impl.RoleTypeImpl;
 import grakn.client.concept.type.impl.ThingTypeImpl;
 import grakn.client.concept.type.impl.TypeImpl;
-import grakn.client.rpc.TransactionRPC;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 
@@ -105,16 +105,16 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 
-        final TransactionRPC transactionRPC;
+        final RPCTransaction rpcTransaction;
         private final String iid;
         private final int hash;
 
         Remote(GraknClient.Transaction transaction, String iid) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            this.transactionRPC = (TransactionRPC) transaction;
+            this.rpcTransaction = (RPCTransaction) transaction;
             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.iid = iid;
-            this.hash = Objects.hash(this.transactionRPC, this.getIID());
+            this.hash = Objects.hash(this.rpcTransaction, this.getIID());
         }
 
         @Override
@@ -214,7 +214,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
         @Override
         public final boolean isDeleted() {
-            return transactionRPC.concepts().getThing(getIID()) == null;
+            return rpcTransaction.concepts().getThing(getIID()) == null;
         }
 
         @Override
@@ -223,25 +223,25 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         final GraknClient.Transaction tx() {
-            return transactionRPC;
+            return rpcTransaction;
         }
 
         Stream<ThingImpl> thingStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return transactionRPC.stream(request, res -> thingListGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
+            return rpcTransaction.stream(request, res -> thingListGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
         }
 
         Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Type>> typeListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return transactionRPC.stream(request, res -> typeListGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
+            return rpcTransaction.stream(request, res -> typeListGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
         }
 
         ConceptProto.Thing.Res execute(ConceptProto.Thing.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
-            return transactionRPC.execute(request).getThingRes();
+            return rpcTransaction.execute(request).getThingRes();
         }
 
         @Override
@@ -255,7 +255,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
             if (o == null || getClass() != o.getClass()) return false;
 
             final ThingImpl.Remote that = (ThingImpl.Remote) o;
-            return this.transactionRPC.equals(that.transactionRPC) && this.iid.equals(that.iid);
+            return this.rpcTransaction.equals(that.rpcTransaction) && this.iid.equals(that.iid);
         }
 
         @Override

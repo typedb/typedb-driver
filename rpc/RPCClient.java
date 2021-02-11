@@ -27,28 +27,28 @@ import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-public class ClientRPC implements GraknClient {
+public class RPCClient implements GraknClient {
 
     private final ManagedChannel channel;
-    private final DatabaseManagerRPC databases;
+    private final RPCDatabaseManager databases;
 
-    public ClientRPC(String address) {
+    public RPCClient(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-        databases = new DatabaseManagerRPC(channel);
+        databases = new RPCDatabaseManager(channel);
     }
 
     @Override
-    public SessionRPC session(String database, GraknClient.Session.Type type) {
+    public RPCSession session(String database, GraknClient.Session.Type type) {
         return session(database, type, GraknOptions.core());
     }
 
     @Override
-    public SessionRPC session(String database, GraknClient.Session.Type type, GraknOptions options) {
-        return new SessionRPC(this, database, type, options);
+    public RPCSession session(String database, GraknClient.Session.Type type, GraknOptions options) {
+        return new RPCSession(this, database, type, options);
     }
 
     @Override
-    public DatabaseManagerRPC databases() {
+    public RPCDatabaseManager databases() {
         return databases;
     }
 

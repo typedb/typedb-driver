@@ -32,10 +32,10 @@ import java.util.function.Supplier;
 
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 
-public class DatabaseManagerRPC implements GraknClient.DatabaseManager {
+public class RPCDatabaseManager implements GraknClient.DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
-    public DatabaseManagerRPC(Channel channel) {
+    public RPCDatabaseManager(Channel channel) {
         blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
     }
 

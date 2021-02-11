@@ -29,10 +29,10 @@ import java.util.function.Function;
 
 public class QueryFuture<T> implements Future<T> {
 
-    private final TransactionRPC.ResponseCollector.Single collector;
+    private final RPCTransaction.ResponseCollector.Single collector;
     private final Function<TransactionProto.Transaction.Res, T> transformResponse;
 
-    QueryFuture(TransactionRPC.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    QueryFuture(RPCTransaction.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         this.collector = collector;
         this.transformResponse = transformResponse;
     }

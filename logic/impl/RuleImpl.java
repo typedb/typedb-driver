@@ -22,7 +22,7 @@ package grakn.client.logic.impl;
 import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.logic.Rule;
-import grakn.client.rpc.TransactionRPC;
+import grakn.client.rpc.RPCTransaction;
 import grakn.protocol.LogicProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.Graql;
@@ -101,7 +101,7 @@ public class RuleImpl implements Rule {
 
     public static class Remote implements Rule.Remote {
 
-        final TransactionRPC transactionRPC;
+        final RPCTransaction rpcTransaction;
         private String label;
         private final Conjunction<? extends Pattern> when;
         private final ThingVariable<?> then;
@@ -110,7 +110,7 @@ public class RuleImpl implements Rule {
         public Remote(GraknClient.Transaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.transactionRPC = (TransactionRPC) transaction;
+            this.rpcTransaction = (RPCTransaction) transaction;
             this.label = label;
             this.when = when;
             this.then = then;
@@ -145,7 +145,7 @@ public class RuleImpl implements Rule {
 
         @Override
         public final boolean isDeleted() {
-            return transactionRPC.logic().getRule(label) != null;
+            return rpcTransaction.logic().getRule(label) != null;
         }
 
         @Override
@@ -169,7 +169,7 @@ public class RuleImpl implements Rule {
             if (o == null || getClass() != o.getClass()) return false;
 
             final RuleImpl.Remote that = (RuleImpl.Remote) o;
-            return this.transactionRPC.equals(that.transactionRPC) && this.label.equals(that.label);
+            return this.rpcTransaction.equals(that.rpcTransaction) && this.label.equals(that.label);
         }
 
         @Override
@@ -178,13 +178,13 @@ public class RuleImpl implements Rule {
         }
 
         final GraknClient.Transaction tx() {
-            return transactionRPC;
+            return rpcTransaction;
         }
 
         LogicProto.Rule.Res execute(LogicProto.Rule.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setRuleReq(method.setLabel(label));
-            return transactionRPC.execute(request).getRuleRes();
+            return rpcTransaction.execute(request).getRuleRes();
         }
     }
 }

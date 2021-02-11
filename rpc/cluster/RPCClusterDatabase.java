@@ -28,15 +28,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-class DatabaseClusterRPC {
+class RPCClusterDatabase {
     private final Map<Replica.Id, Replica> replicas;
 
-    private DatabaseClusterRPC(Map<Replica.Id, Replica> replicas) {
+    private RPCClusterDatabase(Map<Replica.Id, Replica> replicas) {
         assert !replicas.isEmpty();
         this.replicas = replicas;
     }
 
-    public static DatabaseClusterRPC ofProto(DatabaseProto.Database.Replicas.Res res) {
+    public static RPCClusterDatabase ofProto(DatabaseProto.Database.Replicas.Res res) {
         Map<Replica.Id, Replica> replicaMap = new HashMap<>();
 
         for (DatabaseProto.Database.Replica replica: res.getReplicasList()) {
@@ -44,7 +44,7 @@ class DatabaseClusterRPC {
             replicaMap.put(id, Replica.ofProto(replica));
         }
 
-        return new DatabaseClusterRPC(replicaMap);
+        return new RPCClusterDatabase(replicaMap);
     }
 
     Optional<Replica> primaryReplica() {
