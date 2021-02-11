@@ -68,6 +68,7 @@ abstract class FailsafeTask<TResult> {
             } catch (GraknClientException e) {
                 if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
                     LOG.debug("Unable to open a session or transaction", e);
+                    waitForPrimaryReplicaSelection();
                     replica = seekPrimaryReplica(database);
                 } else if ((UNABLE_TO_CONNECT.equals(e.getErrorMessage()))) {
                     LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
@@ -123,6 +124,7 @@ abstract class FailsafeTask<TResult> {
     private RPCDatabaseCluster fetchDatabaseReplicas(String database) {
         for (ServerAddress serverAddress : client.clusterMembers()) {
             try {
+                System.out.println("Fetching replica info from " + serverAddress);
                 RPCDatabaseCluster databaseCluster = RPCDatabaseCluster.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
                         DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(database).build()));
                 client.clusterDatabases().put(database, databaseCluster);
