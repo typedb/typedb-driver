@@ -36,7 +36,7 @@ import grakn.client.concept.type.RelationType;
 import grakn.client.concept.type.RoleType;
 import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
-import grakn.client.rpc.RPCTransaction;
+import grakn.client.rpc.TransactionRPC;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.TransactionProto;
 
@@ -113,7 +113,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
-        final RPCTransaction rpcTransaction;
+        final TransactionRPC transactionRPC;
         private String label;
         private final boolean isRoot;
         private int hash;
@@ -121,10 +121,10 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         Remote(GraknClient.Transaction transaction, String label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.rpcTransaction = (RPCTransaction) transaction;
+            this.transactionRPC = (TransactionRPC) transaction;
             this.label = label;
             this.isRoot = isRoot;
-            this.hash = Objects.hash(this.rpcTransaction, label);
+            this.hash = Objects.hash(this.transactionRPC, label);
         }
 
         @Override
@@ -142,7 +142,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             execute(ConceptProto.Type.Req.newBuilder()
                     .setTypeSetLabelReq(ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(label)));
             this.label = label;
-            this.hash = Objects.hash(rpcTransaction, this.label);
+            this.hash = Objects.hash(transactionRPC, this.label);
         }
 
         @Override
@@ -239,29 +239,29 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
         @Override
         public final boolean isDeleted() {
-            return rpcTransaction.concepts().getThingType(label) == null;
+            return transactionRPC.concepts().getThingType(label) == null;
         }
 
         final GraknClient.Transaction tx() {
-            return rpcTransaction;
+            return transactionRPC;
         }
 
         Stream<TypeImpl> typeStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Type>> typeListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
-            return rpcTransaction.stream(request, res -> typeListGetter.apply(res.getTypeRes()).stream().map(TypeImpl::of));
+            return transactionRPC.stream(request, res -> typeListGetter.apply(res.getTypeRes()).stream().map(TypeImpl::of));
         }
 
         Stream<ThingImpl> thingStream(ConceptProto.Type.Req.Builder method, Function<ConceptProto.Type.Res, List<ConceptProto.Thing>> thingListGetter) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
-            return rpcTransaction.stream(request, res -> thingListGetter.apply(res.getTypeRes()).stream().map(ThingImpl::of));
+            return transactionRPC.stream(request, res -> thingListGetter.apply(res.getTypeRes()).stream().map(ThingImpl::of));
         }
 
         ConceptProto.Type.Res execute(ConceptProto.Type.Req.Builder method) {
             final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setTypeReq(method.setLabel(label));
-            return rpcTransaction.execute(request).getTypeRes();
+            return transactionRPC.execute(request).getTypeRes();
         }
 
         @Override
@@ -275,7 +275,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             if (o == null || getClass() != o.getClass()) return false;
 
             final TypeImpl.Remote that = (TypeImpl.Remote) o;
-            return this.rpcTransaction.equals(that.rpcTransaction) &&
+            return this.transactionRPC.equals(that.transactionRPC) &&
                     this.getLabel().equals(that.getLabel());
         }
 

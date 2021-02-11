@@ -36,12 +36,12 @@ class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
     private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
-    private final RPCTransaction.ResponseCollector.Multiple responseCollector;
+    private final TransactionRPC.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
     private Iterator<T> currentIterator;
 
     ResponseIterator(UUID requestId, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                     RPCTransaction.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+                     TransactionRPC.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         this.requestId = requestId;
         this.transformResponse = transformResponse;
         this.requestObserver = requestObserver;
