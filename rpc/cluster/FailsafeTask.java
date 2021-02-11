@@ -57,10 +57,10 @@ abstract class FailsafeTask<TResult> {
     }
 
     TResult runPrimaryReplica(String database) {
-        if (!client.clusterDatabases().containsKey(database) || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
+        if (!client.replicaInfoMap().containsKey(database) || !client.replicaInfoMap().get(database).primaryReplica().isPresent()) {
             seekPrimaryReplica(database);
         }
-        ReplicaInfo.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
+        ReplicaInfo.Replica replica = client.replicaInfoMap().get(database).primaryReplica().get();
         int retries = 0;
         while (true) {
             try {
@@ -77,7 +77,7 @@ abstract class FailsafeTask<TResult> {
     }
 
     TResult runSecondaryReplica(String database) {
-        ReplicaInfo replicaInfo = client.clusterDatabases().get(database);
+        ReplicaInfo replicaInfo = client.replicaInfoMap().get(database);
         if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas(database);
 
         // Try the preferred secondary replica first, then go through the others
@@ -123,7 +123,7 @@ abstract class FailsafeTask<TResult> {
                 LOG.debug("Fetching replica info from {}", serverAddress);
                 ReplicaInfo replicaInfo = ReplicaInfo.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
                         DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(database).build()));
-                client.clusterDatabases().put(database, replicaInfo);
+                client.replicaInfoMap().put(database, replicaInfo);
                 return replicaInfo;
             } catch (StatusRuntimeException e) {
                 LOG.debug("Failed to fetch replica info for database '" + database + "' from " + serverAddress + ". Attempting next server.", e);
