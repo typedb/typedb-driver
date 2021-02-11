@@ -20,6 +20,8 @@
 package grakn.client.rpc.cluster;
 
 import grakn.protocol.cluster.DatabaseProto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -29,11 +31,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 class RPCDatabaseCluster {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RPCDatabaseCluster.class);
     private final Map<Replica.Id, Replica> replicas;
 
     private RPCDatabaseCluster(Map<Replica.Id, Replica> replicas) {
         assert !replicas.isEmpty();
         this.replicas = replicas;
+        System.out.println("Discovered database cluster: " + this.toString());
     }
 
     public static RPCDatabaseCluster ofProto(DatabaseProto.Database.Replicas.Res res) {
@@ -62,6 +67,11 @@ class RPCDatabaseCluster {
 
     public Collection<Replica> replicas() {
         return replicas.values();
+    }
+
+    @Override
+    public String toString() {
+        return replicas.values().toString();
     }
 
     static class Replica {
