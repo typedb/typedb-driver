@@ -124,7 +124,8 @@ abstract class FailsafeTask<TResult> {
             try {
                 RPCDatabaseCluster databaseCluster = RPCDatabaseCluster.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
                         DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(database).build()));
-                return client.clusterDatabases().put(database, databaseCluster);
+                client.clusterDatabases().put(database, databaseCluster);
+                return databaseCluster;
             } catch (StatusRuntimeException e) {
                 LOG.debug("Failed to fetch replica info for database '" + database + "' from " + serverAddress + ". Attempting next server.", e);
             }
