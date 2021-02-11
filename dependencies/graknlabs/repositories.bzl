@@ -22,7 +22,7 @@ def graknlabs_dependencies():
     git_repository(
         name = "graknlabs_dependencies",
         remote = "https://github.com/graknlabs/dependencies",
-        commit = "592ff77096653d8bbcbd9f8db8dcc9773f49822e", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
+        commit = "36bc9911558dc4a81f1f467d5a080033b62852fe", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_dependencies
     )
 
 #TODO: MOVE NATIVE_GRAKN_ARTIFACT INTO DEPENDENCIES, THEN REMOVE THIS DEPENDENCY
