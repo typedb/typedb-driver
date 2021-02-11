@@ -28,23 +28,23 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-class DatabaseCluster {
+class DatabaseClusterRPC {
     private final Map<Replica.Id, Replica> replicas;
 
-    private DatabaseCluster(Map<Replica.Id, Replica> replicas) {
+    private DatabaseClusterRPC(Map<Replica.Id, Replica> replicas) {
         assert !replicas.isEmpty();
         this.replicas = replicas;
     }
 
-    public static DatabaseCluster ofProto(DatabaseProto.Database.Replicas.Res res) {
+    public static DatabaseClusterRPC ofProto(DatabaseProto.Database.Replicas.Res res) {
         Map<Replica.Id, Replica> replicaMap = new HashMap<>();
 
         for (DatabaseProto.Database.Replica replica: res.getReplicasList()) {
-            Replica.Id id = new Replica.Id(Address.Server.parse(replica.getAddress()), replica.getDatabase());
+            Replica.Id id = new Replica.Id(ServerAddress.parse(replica.getAddress()), replica.getDatabase());
             replicaMap.put(id, Replica.ofProto(replica));
         }
 
-        return new DatabaseCluster(replicaMap);
+        return new DatabaseClusterRPC(replicaMap);
     }
 
     Optional<Replica> primaryReplica() {
@@ -79,7 +79,7 @@ class DatabaseCluster {
 
         public static Replica ofProto(DatabaseProto.Database.Replica replica) {
             return new Replica(
-                    new Id(Address.Server.parse(replica.getAddress()), replica.getDatabase()),
+                    new Id(ServerAddress.parse(replica.getAddress()), replica.getDatabase()),
                     replica.getTerm(),
                     replica.getPrimary(),
                     replica.getPreferredSecondary()
@@ -102,7 +102,7 @@ class DatabaseCluster {
             return isPreferredSecondary;
         }
 
-        public Address.Server address() {
+        public ServerAddress address() {
             return id.address;
         }
 
@@ -127,15 +127,15 @@ class DatabaseCluster {
         }
 
         static class Id {
-            private final Address.Server address;
+            private final ServerAddress address;
             private final String database;
 
-            Id(Address.Server address, String database) {
+            Id(ServerAddress address, String database) {
                 this.address = address;
                 this.database = database;
             }
 
-            public Address.Server address() {
+            public ServerAddress address() {
                 return address;
             }
 

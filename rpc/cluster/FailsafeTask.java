@@ -46,9 +46,9 @@ abstract class FailsafeTask<TResult> {
         this.client = client;
     }
 
-    abstract TResult run(DatabaseCluster.Replica replica);
+    abstract TResult run(DatabaseClusterRPC.Replica replica);
 
-    TResult rerun(DatabaseCluster.Replica replica) {
+    TResult rerun(DatabaseClusterRPC.Replica replica) {
         return run(replica);
     }
 
@@ -60,7 +60,7 @@ abstract class FailsafeTask<TResult> {
         if (!client.clusterDatabases().containsKey(database) || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
             seekPrimaryReplica(database);
         }
-        DatabaseCluster.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
+        DatabaseClusterRPC.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
         int retries = 0;
         while (true) {
             try {
@@ -79,18 +79,18 @@ abstract class FailsafeTask<TResult> {
     }
 
     TResult runSecondaryReplica(String database) {
-        DatabaseCluster databaseCluster = client.clusterDatabases().get(database);
+        DatabaseClusterRPC databaseCluster = client.clusterDatabases().get(database);
         if (databaseCluster == null) databaseCluster = fetchDatabaseReplicas(database);
 
         // Try the preferred secondary replica first, then go through the others
-        List<DatabaseCluster.Replica> replicas = new ArrayList<>();
+        List<DatabaseClusterRPC.Replica> replicas = new ArrayList<>();
         replicas.add(databaseCluster.preferredSecondaryReplica());
-        for (DatabaseCluster.Replica replica : databaseCluster.replicas()) {
+        for (DatabaseClusterRPC.Replica replica : databaseCluster.replicas()) {
             if (!replica.isPreferredSecondary()) replicas.add(replica);
         }
 
         int retries = 0;
-        for (DatabaseCluster.Replica replica : replicas) {
+        for (DatabaseClusterRPC.Replica replica : replicas) {
             try {
                 return retries == 0 ? run(replica) : rerun(replica);
             } catch (GraknClientException e) {
@@ -105,10 +105,10 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private DatabaseCluster.Replica seekPrimaryReplica(String database) {
+    private DatabaseClusterRPC.Replica seekPrimaryReplica(String database) {
         int retries = 0;
         while (retries < FETCH_REPLICAS_MAX_RETRIES) {
-            DatabaseCluster databaseCluster = fetchDatabaseReplicas(database);
+            DatabaseClusterRPC databaseCluster = fetchDatabaseReplicas(database);
             if (databaseCluster.primaryReplica().isPresent()) {
                 return databaseCluster.primaryReplica().get();
             } else {
@@ -119,14 +119,14 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private DatabaseCluster fetchDatabaseReplicas(String database) {
-        for (Address.Server server : client.clusterMembers()) {
+    private DatabaseClusterRPC fetchDatabaseReplicas(String database) {
+        for (ServerAddress serverAddress : client.clusterMembers()) {
             try {
-                DatabaseCluster databaseCluster = DatabaseCluster.ofProto(client.graknClusterRPC(server).databaseReplicas(
+                DatabaseClusterRPC databaseCluster = DatabaseClusterRPC.ofProto(client.graknClusterRPC(serverAddress).databaseReplicas(
                         DatabaseProto.Database.Replicas.Req.newBuilder().setDatabase(database).build()));
                 return client.clusterDatabases().put(database, databaseCluster);
             } catch (StatusRuntimeException e) {
-                LOG.debug("Failed to fetch replica info for database '" + database + "' from " + server + ". Attempting next server.", e);
+                LOG.debug("Failed to fetch replica info for database '" + database + "' from " + serverAddress + ". Attempting next server.", e);
             }
         }
         throw clusterNotAvailableException();
@@ -141,7 +141,7 @@ abstract class FailsafeTask<TResult> {
     }
 
     private GraknClientException clusterNotAvailableException() {
-        String addresses = client.clusterMembers().stream().map(Address.Server::toString).collect(Collectors.joining(","));
+        String addresses = client.clusterMembers().stream().map(ServerAddress::toString).collect(Collectors.joining(","));
         return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses);
     }
 }
