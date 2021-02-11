@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class RPCSessionCluster implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     private final RPCGraknClientCluster clusterClient;
-    private final RPCClient coreClient;
+    private RPCClient coreClient;
     private final String database;
     private RPCSession coreSession;
 
@@ -95,6 +95,7 @@ public class RPCSessionCluster implements GraknClient.Session {
             @Override
             GraknClient.Transaction rerun(RPCDatabaseCluster.Replica replica) {
                 if (coreSession != null) coreSession.close();
+                coreClient = clusterClient.coreClient(replica.address());
                 coreSession = coreClient.session(database, type(), options);
                 return coreSession.transaction(type, options);
             }
