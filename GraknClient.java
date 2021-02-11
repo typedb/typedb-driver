@@ -23,7 +23,7 @@ import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
 import grakn.client.rpc.RPCClient;
-import grakn.client.rpc.cluster.RPCClusterClient;
+import grakn.client.rpc.cluster.RPCGraknClientCluster;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public interface GraknClient extends AutoCloseable {
     }
 
     static GraknClient cluster(String... addresses) {
-        return new RPCClusterClient(addresses);
+        return new RPCGraknClientCluster(addresses);
     }
 
     GraknClient.Session session(String database, GraknClient.Session.Type type);

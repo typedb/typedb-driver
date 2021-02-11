@@ -40,9 +40,9 @@ abstract class FailsafeTask<TResult> {
     private static final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
     private static final int FETCH_REPLICAS_MAX_RETRIES = 10;
     private static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
-    private final RPCClusterClient client;
+    private final RPCGraknClientCluster client;
 
-    FailsafeTask(RPCClusterClient client) {
+    FailsafeTask(RPCGraknClientCluster client) {
         this.client = client;
     }
 
@@ -52,7 +52,7 @@ abstract class FailsafeTask<TResult> {
         return run(replica);
     }
 
-    RPCClusterClient client() {
+    RPCGraknClientCluster client() {
         return client;
     }
 

@@ -39,15 +39,15 @@ import java.util.stream.Collectors;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class RPCClusterClient implements GraknClient {
-    private static final Logger LOG = LoggerFactory.getLogger(RPCClusterClient.class);
+public class RPCGraknClientCluster implements GraknClient {
+    private static final Logger LOG = LoggerFactory.getLogger(RPCGraknClientCluster.class);
     private final Map<ServerAddress, RPCClient> coreClients;
     private final Map<ServerAddress, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
     private final RPCClusterDatabaseManager databaseManagers;
     private final ConcurrentMap<String, RPCClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    public RPCClusterClient(String... addresses) {
+    public RPCGraknClientCluster(String... addresses) {
         coreClients = discoverCluster(addresses).stream()
                 .map(addr -> pair(addr, new RPCClient(addr.client())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
@@ -86,7 +86,7 @@ public class RPCClusterClient implements GraknClient {
         return openSessionFailsafeTask(database, type, options, this).runSecondaryReplica(database);
     }
 
-    private FailsafeTask<RPCClusterSession> openSessionFailsafeTask(String database, Session.Type type, GraknOptions.Cluster options, RPCClusterClient client) {
+    private FailsafeTask<RPCClusterSession> openSessionFailsafeTask(String database, Session.Type type, GraknOptions.Cluster options, RPCGraknClientCluster client) {
         return new FailsafeTask<RPCClusterSession>(this) {
 
             @Override

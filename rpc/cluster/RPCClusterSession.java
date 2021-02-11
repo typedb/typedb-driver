@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 
 public class RPCClusterSession implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
-    private final RPCClusterClient clusterClient;
+    private final RPCGraknClientCluster clusterClient;
     private final RPCClient coreClient;
     private final String database;
     private RPCSession coreSession;
 
-    public RPCClusterSession(RPCClusterClient clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+    public RPCClusterSession(RPCGraknClientCluster clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.coreClient = clusterClient.coreClient(serverAddress);
         this.database = database;
