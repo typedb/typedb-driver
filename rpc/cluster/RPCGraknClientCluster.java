@@ -43,7 +43,7 @@ public class RPCGraknClientCluster implements GraknClient {
     private static final Logger LOG = LoggerFactory.getLogger(RPCGraknClientCluster.class);
     private final Map<ServerAddress, RPCClient> coreClients;
     private final Map<ServerAddress, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
-    private final RPCClusterDatabaseManager databaseManagers;
+    private final RPCDatabaseManagerCluster databaseManagers;
     private final ConcurrentMap<String, RPCClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
@@ -54,7 +54,7 @@ public class RPCGraknClientCluster implements GraknClient {
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
-        databaseManagers = new RPCClusterDatabaseManager(
+        databaseManagers = new RPCDatabaseManagerCluster(
                 coreClients.entrySet().stream()
                         .map(client -> pair(client.getKey(), client.getValue().databases()))
                         .collect(Collectors.toMap(Pair::first, Pair::second))
@@ -97,7 +97,7 @@ public class RPCGraknClientCluster implements GraknClient {
     }
 
     @Override
-    public RPCClusterDatabaseManager databases() {
+    public RPCDatabaseManagerCluster databases() {
         return databaseManagers;
     }
 

@@ -29,10 +29,10 @@ import java.util.Map;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
-public class RPCClusterDatabaseManager implements GraknClient.DatabaseManager {
+public class RPCDatabaseManagerCluster implements GraknClient.DatabaseManager {
     private final Map<ServerAddress, RPCDatabaseManager> databaseManagers;
 
-    public RPCClusterDatabaseManager(Map<ServerAddress, RPCDatabaseManager> databaseManagers) {
+    public RPCDatabaseManagerCluster(Map<ServerAddress, RPCDatabaseManager> databaseManagers) {
         this.databaseManagers = databaseManagers;
     }
 
