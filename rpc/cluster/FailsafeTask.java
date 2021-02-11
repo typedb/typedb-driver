@@ -66,11 +66,7 @@ abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? run(replica) : rerun(replica);
             } catch (GraknClientException e) {
-                if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
-                    LOG.debug("Unable to open a session or transaction", e);
-                    waitForPrimaryReplicaSelection();
-                    replica = seekPrimaryReplica(database);
-                } else if ((UNABLE_TO_CONNECT.equals(e.getErrorMessage()))) {
+                if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage()) || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
                     waitForPrimaryReplicaSelection();
                     replica = seekPrimaryReplica(database);
