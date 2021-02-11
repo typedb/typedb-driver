@@ -19,8 +19,10 @@
 
 package grakn.client.logic;
 
+import grakn.client.concept.type.impl.TypeImpl;
 import grakn.client.logic.impl.RuleImpl;
 import grakn.client.rpc.RPCTransaction;
+import grakn.protocol.ConceptProto;
 import grakn.protocol.LogicProto;
 import grakn.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
