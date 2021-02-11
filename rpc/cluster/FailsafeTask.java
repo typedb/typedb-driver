@@ -76,7 +76,7 @@ abstract class FailsafeTask<TResult> {
         }
     }
 
-    TResult runSecondaryReplica(String database) {
+    TResult runAnyReplica(String database) {
         ReplicaInfo replicaInfo = client.replicaInfoMap().get(database);
         if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas(database);
 

@@ -72,7 +72,7 @@ public class RPCGraknClientCluster implements GraknClient {
     public RPCSessionCluster session(String database, GraknClient.Session.Type type, GraknOptions options) {
         GraknOptions.Cluster clusterOptions = options.asCluster();
         if (clusterOptions.readAnyReplica().isPresent() && clusterOptions.readAnyReplica().get()) {
-            return sessionSecondaryReplica(database, type, clusterOptions);
+            return sessionAnyReplica(database, type, clusterOptions);
         } else {
             return sessionPrimaryReplica(database, type, clusterOptions);
         }
@@ -82,8 +82,8 @@ public class RPCGraknClientCluster implements GraknClient {
         return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica(database);
     }
 
-    private RPCSessionCluster sessionSecondaryReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runSecondaryReplica(database);
+    private RPCSessionCluster sessionAnyReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
+        return openSessionFailsafeTask(database, type, options, this).runAnyReplica(database);
     }
 
     private FailsafeTask<RPCSessionCluster> openSessionFailsafeTask(String database, Session.Type type, GraknOptions.Cluster options, RPCGraknClientCluster client) {
