@@ -21,11 +21,7 @@ package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
 import grakn.common.test.server.GraknSingleton;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.Given;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +29,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertFalse;
@@ -68,7 +63,7 @@ public abstract class ConnectionStepsBase {
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
         client = createGraknClient(address);
-        client.databases().all().forEach(database -> client.databases().delete(database));
+        client.databases().all().forEach(GraknClient.Database::delete);
         System.out.println("ConnectionSteps.before");
     }
 
@@ -87,7 +82,7 @@ public abstract class ConnectionStepsBase {
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
-        client.databases().all().forEach(database -> client.databases().delete(database));
+        client.databases().all().forEach(GraknClient.Database::delete);
         client.close();
         assertFalse(client.isOpen());
         client = null;

@@ -28,15 +28,15 @@ public class ServerAddress {
     private final int clientPort;
     private final int serverPort;
 
-    public static ServerAddress parse(String address) {
-        String[] split = address.split(":");
-        return new ServerAddress(split[0], parseInt(split[1]), parseInt(split[2]));
-    }
-
     public ServerAddress(String host, int clientPort, int serverPort) {
         this.host = host;
         this.clientPort = clientPort;
         this.serverPort = serverPort;
+    }
+
+    static ServerAddress parse(String address) {
+        String[] split = address.split(":");
+        return new ServerAddress(split[0], parseInt(split[1]), parseInt(split[2]));
     }
 
     public String host() {

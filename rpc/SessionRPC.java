@@ -36,7 +36,7 @@ import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
 public class SessionRPC implements GraknClient.Session {
     private final Channel channel;
-    private final String database;
+    private final DatabaseRPC database;
     private final Type type;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
@@ -46,9 +46,9 @@ public class SessionRPC implements GraknClient.Session {
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
             this.channel = client.channel();
-            this.database = database;
             this.type = type;
             blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
+            this.database = new DatabaseRPC(client.databases(), database);
             final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                     .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
@@ -94,7 +94,7 @@ public class SessionRPC implements GraknClient.Session {
     }
 
     @Override
-    public String database() {
+    public DatabaseRPC database() {
         return database;
     }
 
