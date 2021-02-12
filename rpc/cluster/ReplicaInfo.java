@@ -62,7 +62,7 @@ class ReplicaInfo {
     Replica preferredSecondaryReplica() {
         return replicas.values().stream()
                 .filter(Replica::isPreferredSecondary)
-                .max(Comparator.comparing(Replica::term))
+                .findAny()
                 .orElse(replicas.values().stream().findAny().get());
     }
 

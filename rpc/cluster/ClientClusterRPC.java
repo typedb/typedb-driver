@@ -79,15 +79,15 @@ public class ClientClusterRPC implements GraknClient {
     }
 
     private SessionClusterRPC sessionPrimaryReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica(database);
+        return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
     private SessionClusterRPC sessionAnyReplica(String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runAnyReplica(database);
+        return openSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
     private FailsafeTask<SessionClusterRPC> openSessionFailsafeTask(String database, Session.Type type, GraknOptions.Cluster options, ClientClusterRPC client) {
-        return new FailsafeTask<SessionClusterRPC>(this) {
+        return new FailsafeTask<SessionClusterRPC>(this, database) {
 
             @Override
             SessionClusterRPC run(ReplicaInfo.Replica replica) {

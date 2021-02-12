@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +42,11 @@ abstract class FailsafeTask<TResult> {
     private static final int FETCH_REPLICAS_MAX_RETRIES = 10;
     private static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
     private final ClientClusterRPC client;
+    private final String database;
 
-    FailsafeTask(ClientClusterRPC client) {
+    FailsafeTask(ClientClusterRPC client, String database) {
         this.client = client;
+        this.database = database;
     }
 
     abstract TResult run(ReplicaInfo.Replica replica);
@@ -52,13 +55,9 @@ abstract class FailsafeTask<TResult> {
         return run(replica);
     }
 
-    ClientClusterRPC client() {
-        return client;
-    }
-
-    TResult runPrimaryReplica(String database) {
+    TResult runPrimaryReplica() {
         if (!client.replicaInfoMap().containsKey(database) || !client.replicaInfoMap().get(database).primaryReplica().isPresent()) {
-            seekPrimaryReplica(database);
+            seekPrimaryReplica();
         }
         ReplicaInfo.Replica replica = client.replicaInfoMap().get(database).primaryReplica().get();
         int retries = 0;
@@ -69,20 +68,19 @@ abstract class FailsafeTask<TResult> {
                 if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage()) || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
                     waitForPrimaryReplicaSelection();
-                    replica = seekPrimaryReplica(database);
+                    replica = seekPrimaryReplica();
                 } else throw e;
             }
             if (++retries > PRIMARY_REPLICA_TASK_MAX_RETRIES) throw clusterNotAvailableException();
         }
     }
 
-    TResult runAnyReplica(String database) {
+    TResult runAnyReplica() {
         ReplicaInfo replicaInfo = client.replicaInfoMap().get(database);
-        if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas(database);
+        if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        List<ReplicaInfo.Replica> replicas = new ArrayList<>();
-        replicas.add(replicaInfo.preferredSecondaryReplica());
+        List<ReplicaInfo.Replica> replicas = Arrays.asList(replicaInfo.preferredSecondaryReplica());
         for (ReplicaInfo.Replica replica : replicaInfo.replicas()) {
             if (!replica.isPreferredSecondary()) replicas.add(replica);
         }
@@ -103,10 +101,10 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private ReplicaInfo.Replica seekPrimaryReplica(String database) {
+    private ReplicaInfo.Replica seekPrimaryReplica() {
         int retries = 0;
         while (retries < FETCH_REPLICAS_MAX_RETRIES) {
-            ReplicaInfo replicaInfo = fetchDatabaseReplicas(database);
+            ReplicaInfo replicaInfo = fetchDatabaseReplicas();
             if (replicaInfo.primaryReplica().isPresent()) {
                 return replicaInfo.primaryReplica().get();
             } else {
@@ -117,7 +115,7 @@ abstract class FailsafeTask<TResult> {
         throw clusterNotAvailableException();
     }
 
-    private ReplicaInfo fetchDatabaseReplicas(String database) {
+    private ReplicaInfo fetchDatabaseReplicas() {
         for (ServerAddress serverAddress : client.clusterMembers()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
