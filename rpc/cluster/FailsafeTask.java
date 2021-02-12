@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,10 +55,6 @@ abstract class FailsafeTask<TResult> {
         return run(replica);
     }
 
-    ClientClusterRPC client() {
-        return client;
-    }
-
     TResult runPrimaryReplica() {
         if (!client.replicaInfoMap().containsKey(database) || !client.replicaInfoMap().get(database).primaryReplica().isPresent()) {
             seekPrimaryReplica();
@@ -83,8 +80,7 @@ abstract class FailsafeTask<TResult> {
         if (replicaInfo == null) replicaInfo = fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        List<ReplicaInfo.Replica> replicas = new ArrayList<>();
-        replicas.add(replicaInfo.preferredSecondaryReplica());
+        List<ReplicaInfo.Replica> replicas = Arrays.asList(replicaInfo.preferredSecondaryReplica());
         for (ReplicaInfo.Replica replica : replicaInfo.replicas()) {
             if (!replica.isPreferredSecondary()) replicas.add(replica);
         }
