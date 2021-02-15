@@ -47,17 +47,15 @@ import static graql.lang.Graql.var;
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
-//    private static GraknCoreRunner grakn;
-//    private static GraknClient graknClient;
-    private static GraknClient.Cluster graknClient;
+    private static GraknCoreRunner grakn;
+    private static GraknClient graknClient;
 
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-//        grakn = new GraknCoreRunner();
-//        grakn.start();
-//        graknClient = GraknClient.core(grakn.address());
-        graknClient = GraknClient.cluster("localhost:11729");
+        grakn = new GraknCoreRunner();
+        grakn.start();
+        graknClient = GraknClient.core(grakn.address());
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
@@ -65,16 +63,7 @@ public class ClientQueryTest {
     @AfterClass
     public static void closeSession() throws Exception {
         graknClient.close();
-//        grakn.stop();
-        String s = "grakn: [(127.0.0.1:11729:11730, primary, term 2), (127.0.0.1.31729:31730, secondary, term 2)] ...";
-    }
-
-    @Test
-    public void clusterTest() throws InterruptedException {
-//        System.out.println(graknClient.databases().all());
-        System.out.println(graknClient.databases().get("grakn"));
-        Thread.sleep(5000);
-        System.out.println(graknClient.databases().get("grakn"));
+        grakn.stop();
     }
 
     @Test
