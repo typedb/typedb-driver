@@ -111,7 +111,7 @@ public class DatabaseSteps {
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertEquals(set(names), set(client.databases().all()));
+        assertEquals(set(names), client.databases().all().stream().map(GraknClient.Database::name).collect(Collectors.toSet()));
     }
     @Then("connection does not have database: {word}")
     public void connection_does_not_have_database(String name) {

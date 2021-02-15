@@ -130,7 +130,7 @@ public class SessionSteps {
         Iterator<Session> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().database());
+            assertEquals(name, sessionIter.next().database().name());
         }
     }
 
@@ -143,7 +143,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database());
+                assertEquals(name, session.database().name());
                 return null;
             });
         }
