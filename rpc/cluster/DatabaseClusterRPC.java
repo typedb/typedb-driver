@@ -145,14 +145,15 @@ class DatabaseClusterRPC implements GraknClient.Database.Cluster {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Replica replica = (Replica) o;
-            return term == replica.term &&
+            return id == replica.id &&
+                    term == replica.term &&
                     isPrimary == replica.isPrimary &&
                     isPreferredSecondary == replica.isPreferredSecondary;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(isPrimary, isPreferredSecondary, term);
+            return Objects.hash(id, isPrimary, isPreferredSecondary, term);
         }
 
         @Override

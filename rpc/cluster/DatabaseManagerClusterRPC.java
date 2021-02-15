@@ -28,6 +28,7 @@ import grakn.protocol.cluster.DatabaseProto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
@@ -82,16 +83,8 @@ public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager.Cl
         List<GraknClientException> errors = new ArrayList<>();
         for (ServerAddress address : databaseManagers.keySet()) {
             try {
-                DatabaseManagerRPC databaseManager = databaseManagers.get(address);
-                List<DatabaseRPC> databases = databaseManager.all();
-                List<GraknClient.Database.Cluster> clusterDatabases = new ArrayList<>();
-                for (DatabaseRPC database : databases) {
-                    DatabaseProto.Database.Get.Res res = client.graknClusterRPC(address)
-                            .databaseGet(DatabaseProto.Database.Get.Req.newBuilder().setName(database.name()).build());
-                    DatabaseClusterRPC clusterDatabase = DatabaseClusterRPC.of(res.getDatabase(), this);
-                    clusterDatabases.add(clusterDatabase);
-                }
-                return clusterDatabases;
+                DatabaseProto.Database.All.Res res = client.graknClusterRPC(address).databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance());
+                return res.getDatabasesList().stream().map(db -> DatabaseClusterRPC.of(db, this)).collect(Collectors.toList());
             } catch (GraknClientException e) {
                 errors.add(e);
             }
