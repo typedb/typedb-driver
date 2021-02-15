@@ -47,20 +47,6 @@ public class DatabaseRPC implements GraknClient.Database {
     }
 
     @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final DatabaseRPC that = (DatabaseRPC) o;
-        return (this.name.equals(that.name()));
-    }
-
-    @Override
     public String toString() {
         return name;
     }
