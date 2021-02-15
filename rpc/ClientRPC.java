@@ -34,7 +34,7 @@ public class ClientRPC implements GraknClient {
 
     public ClientRPC(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-        databases = new DatabaseManagerRPC(channel);
+        databases = new DatabaseManagerRPC(this);
     }
 
     @Override

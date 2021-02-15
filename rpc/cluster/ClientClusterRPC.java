@@ -39,27 +39,27 @@ import java.util.stream.Collectors;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class ClientClusterRPC implements GraknClient {
+public class ClientClusterRPC implements GraknClient.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClientClusterRPC.class);
     private final Map<ServerAddress, ClientRPC> coreClients;
     private final Map<ServerAddress, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
     private final DatabaseManagerClusterRPC databaseManagers;
-    private final ConcurrentMap<String, ReplicaInfo> replicaInfoMap;
+    private final ConcurrentMap<String, DatabaseClusterRPC> clusterDatabases;
     private boolean isOpen;
 
     public ClientClusterRPC(String... addresses) {
-        coreClients = discoverCluster(addresses).stream()
+        coreClients = fetchClusterServers(addresses).stream()
                 .map(addr -> pair(addr, new ClientRPC(addr.client())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
-        databaseManagers = new DatabaseManagerClusterRPC(
+        databaseManagers = new DatabaseManagerClusterRPC(this,
                 coreClients.entrySet().stream()
                         .map(client -> pair(client.getKey(), client.getValue().databases()))
                         .collect(Collectors.toMap(Pair::first, Pair::second))
         );
-        replicaInfoMap = new ConcurrentHashMap<>();
+        clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
     }
 
@@ -90,7 +90,7 @@ public class ClientClusterRPC implements GraknClient {
         return new FailsafeTask<SessionClusterRPC>(this, database) {
 
             @Override
-            SessionClusterRPC run(ReplicaInfo.Replica replica) {
+            SessionClusterRPC run(DatabaseClusterRPC.Replica replica) {
                 return new SessionClusterRPC(client, replica.address(), database, type, options);
             }
         };
@@ -112,8 +112,8 @@ public class ClientClusterRPC implements GraknClient {
         isOpen = false;
     }
 
-    ConcurrentMap<String, ReplicaInfo> replicaInfoMap() {
-        return replicaInfoMap;
+    ConcurrentMap<String, DatabaseClusterRPC> clusterDatabases() {
+        return clusterDatabases;
     }
 
     public Set<ServerAddress> clusterMembers() {
@@ -128,18 +128,18 @@ public class ClientClusterRPC implements GraknClient {
         return graknClusterRPCs.get(address);
     }
 
-    private Set<ServerAddress> discoverCluster(String... addresses) {
+    private Set<ServerAddress> fetchClusterServers(String... addresses) {
         for (String address : addresses) {
             try (ClientRPC client = new ClientRPC(address)) {
-                LOG.debug("Performing cluster discovery to {}...", address);
+                LOG.debug("Fetching list of cluster servers from {}...", address);
                 GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC = GraknClusterGrpc.newBlockingStub(client.channel());
                 ClusterProto.Cluster.Servers.Res res =
                         graknClusterRPC.clusterServers(ClusterProto.Cluster.Servers.Req.newBuilder().build());
                 Set<ServerAddress> members = res.getServersList().stream().map(ServerAddress::parse).collect(Collectors.toSet());
-                LOG.debug("Discovered {}", members);
+                LOG.debug("The cluster servers are {}", members);
                 return members;
             } catch (StatusRuntimeException e) {
-                LOG.error("Cluster discovery to {} failed.", address);
+                LOG.error("Fetching cluster servers from {} failed.", address);
             }
         }
         throw new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));

@@ -22,17 +22,21 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.DatabaseManagerRPC;
+import grakn.protocol.cluster.DatabaseProto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
-public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager {
+public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager.Cluster {
     private final Map<ServerAddress, DatabaseManagerRPC> databaseManagers;
+    private final ClientClusterRPC client;
 
-    public DatabaseManagerClusterRPC(Map<ServerAddress, DatabaseManagerRPC> databaseManagers) {
+    public DatabaseManagerClusterRPC(ClientClusterRPC client, Map<ServerAddress, DatabaseManagerRPC> databaseManagers) {
+        this.client = client;
         this.databaseManagers = databaseManagers;
     }
 
@@ -59,24 +63,35 @@ public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager {
     }
 
     @Override
-    public void delete(String name) {
-        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
-            if (databaseManager.contains(name)) {
-                databaseManager.delete(name);
-            }
-        }
-    }
-
-    @Override
-    public List<String> all() {
+    public GraknClient.Database.Cluster get(String name) {
         List<GraknClientException> errors = new ArrayList<>();
-        for (DatabaseManagerRPC databaseManager : databaseManagers.values()) {
+        for (ServerAddress address : databaseManagers.keySet()) {
             try {
-                return databaseManager.all();
+                DatabaseProto.Database.Get.Res res = client.graknClusterRPC(address)
+                        .databaseGet(DatabaseProto.Database.Get.Req.newBuilder().setName(name).build());
+                return DatabaseClusterRPC.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
                 errors.add(e);
             }
         }
         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
+    }
+
+    @Override
+    public List<GraknClient.Database.Cluster> all() {
+        List<GraknClientException> errors = new ArrayList<>();
+        for (ServerAddress address : databaseManagers.keySet()) {
+            try {
+                DatabaseProto.Database.All.Res res = client.graknClusterRPC(address).databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance());
+                return res.getDatabasesList().stream().map(db -> DatabaseClusterRPC.of(db, this)).collect(Collectors.toList());
+            } catch (GraknClientException e) {
+                errors.add(e);
+            }
+        }
+        throw new GraknClientException(CLUSTER_ALL_NODES_FAILED.message(errors.toString()));
+    }
+
+    Map<ServerAddress, DatabaseManagerRPC> databaseManagers() {
+        return databaseManagers;
     }
 }

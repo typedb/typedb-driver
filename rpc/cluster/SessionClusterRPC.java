@@ -30,13 +30,11 @@ public class SessionClusterRPC implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     private final ClientClusterRPC clusterClient;
     private ClientRPC coreClient;
-    private final String database;
     private SessionRPC coreSession;
 
     public SessionClusterRPC(ClientClusterRPC clusterClient, ServerAddress serverAddress, String database, GraknClient.Session.Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.coreClient = clusterClient.coreClient(serverAddress);
-        this.database = database;
         LOG.debug("Opening a session to '{}'", serverAddress);
         this.coreSession = coreClient.session(database, type, options);
     }
@@ -65,18 +63,18 @@ public class SessionClusterRPC implements GraknClient.Session {
     }
 
     private FailsafeTask<GraknClient.Transaction> transactionFailsafeTask(GraknClient.Transaction.Type type, GraknOptions options) {
-        return new FailsafeTask<GraknClient.Transaction>(clusterClient, database) {
+        return new FailsafeTask<GraknClient.Transaction>(clusterClient, database().name()) {
 
             @Override
-            GraknClient.Transaction run(ReplicaInfo.Replica replica) {
+            GraknClient.Transaction run(DatabaseClusterRPC.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            GraknClient.Transaction rerun(ReplicaInfo.Replica replica) {
+            GraknClient.Transaction rerun(DatabaseClusterRPC.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreClient = clusterClient.coreClient(replica.address());
-                coreSession = coreClient.session(database, type(), options);
+                coreSession = coreClient.session(database().name(), type(), options);
                 return coreSession.transaction(type, options);
             }
         };
@@ -98,7 +96,7 @@ public class SessionClusterRPC implements GraknClient.Session {
     }
 
     @Override
-    public String database() {
-        return database;
+    public GraknClient.Database database() {
+        return coreSession.database();
     }
 }

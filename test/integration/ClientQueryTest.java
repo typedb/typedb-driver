@@ -50,12 +50,13 @@ public class ClientQueryTest {
     private static GraknCoreRunner grakn;
     private static GraknClient graknClient;
 
+
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
         graknClient = GraknClient.core(grakn.address());
-        if (graknClient.databases().contains("grakn")) graknClient.databases().delete("grakn");
+        if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
 

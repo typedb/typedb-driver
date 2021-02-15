@@ -24,8 +24,11 @@ import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
 import grakn.client.rpc.ClientRPC;
 import grakn.client.rpc.cluster.ClientClusterRPC;
+import grakn.client.rpc.cluster.ServerAddress;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public interface GraknClient extends AutoCloseable {
     String DEFAULT_ADDRESS = "localhost:1729";
@@ -38,29 +41,74 @@ public interface GraknClient extends AutoCloseable {
         return new ClientRPC(address);
     }
 
-    static GraknClient cluster(String... addresses) {
+    static GraknClient.Cluster cluster(String... addresses) {
         return new ClientClusterRPC(addresses);
     }
 
-    GraknClient.Session session(String database, GraknClient.Session.Type type);
+    Session session(String database, GraknClient.Session.Type type);
 
-    GraknClient.Session session(String database, GraknClient.Session.Type type, GraknOptions options);
+    Session session(String database, GraknClient.Session.Type type, GraknOptions options);
 
-    GraknClient.DatabaseManager databases();
+    DatabaseManager databases();
 
     boolean isOpen();
 
     void close();
 
+    interface Cluster extends GraknClient {
+
+        @Override
+        DatabaseManager.Cluster databases();
+    }
+
     interface DatabaseManager {
 
         boolean contains(String name);
 
+        // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
         void create(String name);
 
-        void delete(String name);
+        Database get(String name);
 
-        List<String> all();
+        List<? extends Database> all();
+
+        interface Cluster extends DatabaseManager {
+
+            @Override
+            Database.Cluster get(String name);
+
+            @Override
+            List<Database.Cluster> all();
+        }
+    }
+
+    interface Database {
+
+        String name();
+
+        void delete();
+
+        interface Cluster extends Database {
+
+            Set<? extends Replica> replicas();
+
+            Optional<? extends Replica> primaryReplica();
+
+            Replica preferredSecondaryReplica();
+        }
+
+        interface Replica {
+
+            Database.Cluster database();
+
+            long term();
+
+            boolean isPrimary();
+
+            boolean isPreferredSecondary();
+
+            ServerAddress address();
+        }
     }
 
     interface Session extends AutoCloseable {
@@ -75,7 +123,7 @@ public interface GraknClient extends AutoCloseable {
 
         void close();
 
-        String database();
+        Database database();
 
         enum Type {
             DATA(0),
