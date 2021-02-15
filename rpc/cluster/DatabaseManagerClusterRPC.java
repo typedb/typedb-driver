@@ -22,7 +22,6 @@ package grakn.client.rpc.cluster;
 import grakn.client.GraknClient;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.DatabaseManagerRPC;
-import grakn.client.rpc.DatabaseRPC;
 import grakn.protocol.cluster.DatabaseProto;
 
 import java.util.ArrayList;

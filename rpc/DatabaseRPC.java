@@ -23,8 +23,8 @@ import grakn.client.GraknClient;
 import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 
-import static grakn.client.rpc.ClientRPC.rpcCall;
 import static grakn.client.rpc.DatabaseManagerRPC.nonNull;
+import static grakn.client.rpc.util.RPCUtils.rpcCall;
 
 public class DatabaseRPC implements GraknClient.Database {
 

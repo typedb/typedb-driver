@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static grakn.client.rpc.ClientRPC.rpcCall;
+import static grakn.client.rpc.util.RPCUtils.rpcCall;
 
 public class DatabaseManagerRPC implements GraknClient.DatabaseManager {
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;

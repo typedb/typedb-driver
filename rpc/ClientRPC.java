@@ -21,14 +21,11 @@ package grakn.client.rpc;
 
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
-import grakn.client.common.exception.GraknClientException;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
 
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 public class ClientRPC implements GraknClient {
 
@@ -71,13 +68,5 @@ public class ClientRPC implements GraknClient {
 
     public Channel channel() {
         return channel;
-    }
-
-    static <RES> RES rpcCall(Supplier<RES> req) {
-        try {
-            return req.get();
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
     }
 }
