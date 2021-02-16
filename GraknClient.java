@@ -55,6 +55,10 @@ public interface GraknClient extends AutoCloseable {
 
     void close();
 
+    boolean isCluster();
+
+    GraknClient.Cluster asCluster();
+
     interface Cluster extends GraknClient {
 
         @Override

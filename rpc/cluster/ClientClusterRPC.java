@@ -112,6 +112,16 @@ public class ClientClusterRPC implements GraknClient.Cluster {
         isOpen = false;
     }
 
+    @Override
+    public boolean isCluster() {
+        return true;
+    }
+
+    @Override
+    public Cluster asCluster() {
+        return this;
+    }
+
     ConcurrentMap<String, DatabaseClusterRPC> clusterDatabases() {
         return clusterDatabases;
     }
