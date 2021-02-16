@@ -90,11 +90,6 @@ class DatabaseClusterRPC implements GraknClient.Database.Cluster {
         return replicas;
     }
 
-    @Override
-    public String toString() {
-        return replicas.toString();
-    }
-
     static class Replica implements GraknClient.Database.Replica {
         private final Replica.Id id;
         private final DatabaseClusterRPC database;
