@@ -21,11 +21,15 @@ package grakn.client.rpc;
 
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.GraknClientException;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.TimeUnit;
+
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static grakn.common.util.Objects.className;
 
 public class ClientRPC implements GraknClient {
 
@@ -64,6 +68,16 @@ public class ClientRPC implements GraknClient {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    @Override
+    public boolean isCluster() {
+        return false;
+    }
+
+    @Override
+    public Cluster asCluster() {
+        throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.class), className(GraknClient.Cluster.class)));
     }
 
     public Channel channel() {
