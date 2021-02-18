@@ -46,7 +46,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
                 new Client(10, "The replica is not the primary replica");
         public static final Client CLUSTER_ALL_NODES_FAILED =
-                new Client(11, "Attempted connecting to all cluster members, but the following errors occurred: %s");
+                new Client(11, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Illegal Client Operation";
