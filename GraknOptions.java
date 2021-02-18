@@ -27,7 +27,8 @@ import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_N
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class GraknOptions {
-    private Boolean infer = null;
+    private Boolean inference = null;
+    private Boolean inferenceLogging = null;
     private Boolean explain = null;
     private Integer batchSize = null;
     private Boolean prefetch = null;
@@ -48,12 +49,21 @@ public class GraknOptions {
 
     GraknOptions() {}
 
-    public Optional<Boolean> infer() {
-        return Optional.ofNullable(infer);
+    public Optional<Boolean> inference() {
+        return Optional.ofNullable(inference);
     }
 
-    public GraknOptions infer(boolean infer) {
-        this.infer = infer;
+    public GraknOptions inference(boolean inference) {
+        this.inference = inference;
+        return this;
+    }
+
+    public Optional<Boolean> inferenceLogging() {
+        return Optional.ofNullable(inferenceLogging);
+    }
+
+    public GraknOptions inferenceLogging(boolean inferenceLogging) {
+        this.inferenceLogging = inferenceLogging;
         return this;
     }
 
