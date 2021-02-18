@@ -42,7 +42,7 @@ public class GraknClientException extends RuntimeException {
     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
         // "Received Rst Stream" occurs if the server is in the process of shutting down.
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE || statusRuntimeException.getMessage().contains("Received Rst Stream")) {
-            return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT.message(), statusRuntimeException);
+            return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
         } else if (isReplicaNotPrimaryException(statusRuntimeException)) {
             return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
         }
