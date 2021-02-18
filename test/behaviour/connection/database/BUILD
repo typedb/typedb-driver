@@ -20,7 +20,7 @@
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test/server:rules.bzl", "grakn_java_test")
+load("@graknlabs_common//test:rules.bzl", "grakn_java_test")
 
 java_library(
     name = "steps",
@@ -51,9 +51,9 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//connection:database.feature",
     ],
-    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
+    server_mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
+    server_linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    server_windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
     runtime_deps = [
         "//test/behaviour/connection:steps-core",
 
@@ -83,9 +83,9 @@ grakn_java_test(
     data = [
         "@graknlabs_behaviour//connection:database.feature",
     ],
-    mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
-    linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
-    windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
+    server_mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
+    server_linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
+    server_windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
     runtime_deps = [
         "//test/behaviour/connection:steps-cluster",
 
