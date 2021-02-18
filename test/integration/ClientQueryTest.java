@@ -41,7 +41,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static grakn.client.GraknClient.Transaction.Type.READ;
 import static grakn.client.GraknClient.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
@@ -86,10 +85,17 @@ public class ClientQueryTest {
                     type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
-
+            final GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
+                    .when(and(
+                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                            var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                    .then(rel("parent", var("male"))
+                            .rel("parent", var("female"))
+                            .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
+            tx.query().define(ruleQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
         }, Session.Type.SCHEMA);
