@@ -174,7 +174,6 @@ public class TransactionRPC implements Transaction {
         collectors.put(requestId, responseCollector);
         requestObserver.onNext(request.build());
         final ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
-        System.out.println(Thread.currentThread().getId() + "  ResponseIterator      requestId = " + requestId + "  request = " + request );
         return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
     }
 
