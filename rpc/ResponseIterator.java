@@ -22,7 +22,6 @@ package grakn.client.rpc;
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.TransactionProto;
-import io.grpc.stub.StreamObserver;
 
 import java.util.Iterator;
 import java.util.UUID;
@@ -35,12 +34,12 @@ import static grakn.common.util.Objects.className;
 class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
-    private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
+    private final SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final TransactionRPC.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
     private Iterator<T> currentIterator;
 
-    ResponseIterator(UUID requestId, StreamObserver<TransactionProto.Transaction.Req> requestObserver,
+    ResponseIterator(UUID requestId, SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver,
                      TransactionRPC.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         this.requestId = requestId;
         this.transformResponse = transformResponse;

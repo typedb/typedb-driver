@@ -57,7 +57,7 @@ public class TransactionRPC implements Transaction {
     private final ConceptManager conceptManager;
     private final LogicManager logicManager;
     private final QueryManager queryManager;
-    private final StreamObserver<TransactionProto.Transaction.Req> requestObserver;
+    private final SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ResponseCollectors collectors;
     private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
@@ -72,7 +72,7 @@ public class TransactionRPC implements Transaction {
 
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
             isOpen = new AtomicBoolean(true);
-            requestObserver = GraknGrpc.newStub(session.channel()).transaction(responseObserver());
+            requestObserver = new SynchronizedStreamObserver<>(GraknGrpc.newStub(session.channel()).transaction(responseObserver()));
             final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()

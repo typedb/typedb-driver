@@ -22,11 +22,13 @@ package grakn.client.test.integration;
 import grakn.client.GraknClient;
 import grakn.client.GraknClient.Session;
 import grakn.client.GraknClient.Transaction;
+import grakn.client.concept.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlInsert;
+import graql.lang.query.GraqlMatch;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,8 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static grakn.client.GraknClient.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
@@ -43,6 +47,7 @@ import static graql.lang.Graql.rel;
 import static graql.lang.Graql.rule;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
+import static java.util.stream.Collectors.toList;
 
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
@@ -66,6 +71,7 @@ public class ClientQueryTest {
         grakn.stop();
     }
 
+
     @Test
     public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
@@ -79,14 +85,13 @@ public class ClientQueryTest {
                     type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
-
             final GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
-                     .when(and(
-                             rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                             var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
-                     .then(rel("parent", var("male"))
-                             .rel("parent", var("female"))
-                             .rel("child", var("offspring")).isa("parentship")));
+                    .when(and(
+                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                            var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                    .then(rel("parent", var("male"))
+                            .rel("parent", var("female"))
+                            .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
@@ -220,6 +225,237 @@ public class ClientQueryTest {
 //        });
 
         LOG.info("clientJavaE2E() - client-java E2E test done.");
+    }
+
+    private String[] commitSHAs() {
+        return new String[] {
+                // queried commits
+                "VladGan/console@4bdc38acb87f9fd2fbdb7cbcf2bcc93837382cab",
+                "VladGan/console@b5ecd4707ce425d7d2d4d0b0d53420cb46e8ce52",
+                "VladGan/console@b16788637949c6b4c2a3a4bacc8da101bf838b38",
+                "VladGan/console@8e996fdf8d802d270385ac3bc7cbf5fa77ac0583",
+                "VladGan/console@1ff6651afa7abf43b5bdd3b1903e489d279e3dc6",
+                "VladGan/console@6d3ceda79eb3e3dc86d266095b613a53fb083d30",
+                "VladGan/console@23da5b400e32805c29f41671ff3f92ef48eafcf8",
+                // not queried commits
+                "VladGan/console@0000000000000000000000000000000000000000",
+                "VladGan/console@1111111111111111111111111111111111111111",
+                "VladGan/console@2222222222222222222222222222222222222222",
+        };
+    }
+
+    @Test
+    public void parallelQueriesInTransactionTest() {
+        localhostGraknTx(tx -> {
+            final GraqlDefine defineQuery = Graql.define(
+                type("symbol").sub("attribute").value(GraqlArg.ValueType.STRING),
+                type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
+                type("status").sub("attribute").value(GraqlArg.ValueType.STRING),
+                type("latest").sub("attribute").value(GraqlArg.ValueType.BOOLEAN),
+
+                type("commit").sub("entity")
+                        .owns("symbol")
+                        .plays("pipeline-automation", "trigger"),
+                type("pipeline").sub("entity")
+                        .owns("name")
+                        .owns("latest")
+                        .plays("pipeline-workflow", "pipeline")
+                        .plays("pipeline-automation", "pipeline"),
+                type("workflow").sub("entity")
+                        .owns("name")
+                        .owns("status")
+                        .owns("latest")
+                        .plays("pipeline-workflow", "workflow"),
+
+                type("pipeline-workflow").sub("relation")
+                        .relates("pipeline").relates("workflow"),
+                type("pipeline-automation").sub("relation")
+                        .relates("pipeline").relates("trigger")
+            );
+
+            LOG.info("clientJavaE2E() - define a schema...");
+            LOG.info("clientJavaE2E() - '" + defineQuery + "'");
+            tx.query().define(defineQuery);
+            tx.commit();
+            LOG.info("clientJavaE2E() - done.");
+        }, Session.Type.SCHEMA);
+
+
+
+        localhostGraknTx(tx -> {
+            final String[] commits = commitSHAs();
+            final GraqlInsert insertCommitQuery = Graql.insert(
+                    var().isa("commit").has("symbol", commits[0]),
+                    var().isa("commit").has("symbol", commits[1]),
+                    var().isa("commit").has("symbol", commits[3]),
+                    var().isa("commit").has("symbol", commits[4]),
+                    var().isa("commit").has("symbol", commits[5]),
+                    var().isa("commit").has("symbol", commits[6]),
+                    var().isa("commit").has("symbol", commits[7]),
+                    var().isa("commit").has("symbol", commits[8]),
+                    var().isa("commit").has("symbol", commits[9])
+            );
+
+            LOG.info("clientJavaE2E() - insert commit data...");
+            LOG.info("clientJavaE2E() - '" + insertCommitQuery + "'");
+            tx.query().insert(insertCommitQuery);
+            tx.commit();
+            LOG.info("clientJavaE2E() - done.");
+        });
+
+        localhostGraknTx(tx -> {
+            final GraqlInsert insertWorkflowQuery = Graql.insert(
+                    var().isa("workflow")
+                            .has("name", "workflow-A")
+                            .has("status", "running")
+                            .has("latest", true),
+                    var().isa("workflow")
+                            .has("name", "workflow-B")
+                            .has("status", "finished")
+                            .has("latest", false)
+            );
+
+            LOG.info("clientJavaE2E() - insert workflow data...");
+            LOG.info("clientJavaE2E() - '" + insertWorkflowQuery + "'");
+            tx.query().insert(insertWorkflowQuery);
+            tx.commit();
+            LOG.info("clientJavaE2E() - done.");
+        });
+
+        localhostGraknTx(tx -> {
+            final GraqlInsert insertPipelineQuery = Graql.insert(
+                    var().isa("pipeline")
+                            .has("name", "pipeline-A")
+                            .has("latest", true),
+                    var().isa("pipeline")
+                            .has("name", "pipeline-B")
+                            .has("latest", false)
+            );
+
+            LOG.info("clientJavaE2E() - insert pipeline data...");
+            LOG.info("clientJavaE2E() - '" + insertPipelineQuery + "'");
+            tx.query().insert(insertPipelineQuery);
+            tx.commit();
+            LOG.info("clientJavaE2E() - done.");
+        });
+
+        localhostGraknTx(tx -> {
+            final String[] commitShas = commitSHAs();
+            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+
+            for (int i = 0; i < commitShas.length / 2; i++) {
+                final GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                        var("commit").isa("commit").has("symbol", commitShas[i]),
+                        var("pipeline").isa("pipeline").has("name", "pipeline-A")
+                )
+                        .insert(
+                                rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
+                        );
+                LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
+                final List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
+            }
+
+
+            for (int i = commitShas.length / 2; i < commitShas.length; i++) {
+                final GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                        var("commit").isa("commit").has("symbol", commitShas[i]),
+                        var("pipeline").isa("pipeline").has("name", "pipeline-B")
+                )
+                        .insert(
+                                rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
+                        );
+                LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
+                final List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
+            }
+
+            tx.commit();
+
+            LOG.info("clientJavaE2E() - done.");
+        });
+
+        localhostGraknTx(tx -> {
+            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+
+            final GraqlInsert insertPipelineWorkflowQuery = Graql.match(
+                    var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
+                    var("workflowA").isa("workflow").has("name", "workflow-A"),
+                    var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
+                    var("workflowB").isa("workflow").has("name", "workflow-B")
+            )
+                    .insert(
+                            rel("pipeline", "pipelineA").rel("workflow", "workflowA").isa("pipeline-workflow"),
+                            rel("pipeline", "pipelineB").rel("workflow", "workflowB").isa("pipeline-workflow")
+                    );
+            LOG.info("clientJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
+            final List<ConceptMap> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
+
+            tx.commit();
+
+            LOG.info("clientJavaE2E() - done.");
+        });
+
+        String[] queries = {
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@4bdc38acb87f9fd2fbdb7cbcf2bcc93837382cab\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@b5ecd4707ce425d7d2d4d0b0d53420cb46e8ce52\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@b16788637949c6b4c2a3a4bacc8da101bf838b38\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@8e996fdf8d802d270385ac3bc7cbf5fa77ac0583\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@1ff6651afa7abf43b5bdd3b1903e489d279e3dc6\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@6d3ceda79eb3e3dc86d266095b613a53fb083d30\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;",
+                "match\n" +
+                        "$commit isa commit, has symbol \"VladGan/console@23da5b400e32805c29f41671ff3f92ef48eafcf8\";\n" +
+                        "$_ (trigger: $commit, pipeline: $pipeline) isa pipeline-automation;\n" +
+                        "$pipeline has name $pipeline-name, has latest true;\n" +
+                        "$_ (pipeline: $pipeline, workflow: $workflow) isa pipeline-workflow;\n" +
+                        "$workflow has name $workflow-name, has status $workflow-status, has latest true;\n" +
+                        "get $pipeline-name, $workflow-name, $workflow-status;"
+        };
+
+        localhostGraknTx(tx -> {
+            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+
+            Stream.of(queries).parallel().forEach(x -> {
+                GraqlMatch q = Graql.parseQuery(x).asMatch();
+                final List<ConceptMap> res = tx.query().match(q).collect(toList());
+            });
+
+            LOG.info("clientJavaE2E() - done.");
+        });
     }
 
     private String[] lionNames() {
