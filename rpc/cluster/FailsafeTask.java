@@ -25,7 +25,7 @@ import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,8 @@ abstract class FailsafeTask<TResult> {
         if (databaseClusterRPC == null) databaseClusterRPC = fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        List<DatabaseClusterRPC.Replica> replicas = Arrays.asList(databaseClusterRPC.preferredSecondaryReplica());
+        List<DatabaseClusterRPC.Replica> replicas = new ArrayList<>();
+        replicas.add(databaseClusterRPC.preferredSecondaryReplica());
         for (DatabaseClusterRPC.Replica replica : databaseClusterRPC.replicas()) {
             if (!replica.isPreferredSecondary()) replicas.add(replica);
         }
