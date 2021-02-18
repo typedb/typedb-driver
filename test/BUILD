@@ -17,7 +17,7 @@
 # under the License.
 #
 
-load("@graknlabs_common//test/server:rules.bzl", "native_grakn_artifact")
+load("@graknlabs_common//test:rules.bzl", "native_grakn_artifact")
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 

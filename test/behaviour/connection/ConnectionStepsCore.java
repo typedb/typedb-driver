@@ -38,7 +38,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     void beforeAll() {
         try {
-            server = new GraknCoreRunner(true);
+            server = new GraknCoreRunner();
         } catch (InterruptedException | TimeoutException | IOException e) {
             throw new RuntimeException(e);
         }

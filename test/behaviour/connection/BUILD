@@ -26,7 +26,7 @@ java_library(
     deps = [
         # Package dependencies
         "//:client-java",
-        "@graknlabs_common//test/server:grakn-runner",
+        "@graknlabs_common//test:grakn-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
@@ -43,7 +43,7 @@ java_library(
         # Package dependencies
         ":steps-base",
         "//:client-java",
-        "@graknlabs_common//test/server:grakn-runner",
+        "@graknlabs_common//test:grakn-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
@@ -61,7 +61,7 @@ java_library(
         # Package dependencies
         ":steps-base",
         "//:client-java",
-        "@graknlabs_common//test/server:grakn-runner",
+        "@graknlabs_common//test:grakn-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
