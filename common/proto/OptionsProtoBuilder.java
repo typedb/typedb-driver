@@ -27,7 +27,7 @@ public abstract class OptionsProtoBuilder {
     public static OptionsProto.Options options(GraknOptions options) {
         final OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
         options.infer().ifPresent(builder::setInfer);
-        options.inferLog().ifPresent(builder::setInferLog);
+        options.traceInference().ifPresent(builder::setTraceInference);
         options.explain().ifPresent(builder::setExplain);
         options.batchSize().ifPresent(builder::setBatchSize);
         options.prefetch().ifPresent(builder::setPrefetch);

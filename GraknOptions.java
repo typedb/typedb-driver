@@ -28,7 +28,7 @@ import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 
 public class GraknOptions {
     private Boolean infer = null;
-    private Boolean inferLog = null;
+    private Boolean traceInference = null;
     private Boolean explain = null;
     private Integer batchSize = null;
     private Boolean prefetch = null;
@@ -58,12 +58,12 @@ public class GraknOptions {
         return this;
     }
 
-    public Optional<Boolean> inferLog() {
-        return Optional.ofNullable(inferLog);
+    public Optional<Boolean> traceInference() {
+        return Optional.ofNullable(traceInference);
     }
 
-    public GraknOptions inferLog(boolean inferLog) {
-        this.inferLog = inferLog;
+    public GraknOptions traceInference(boolean traceInference) {
+        this.traceInference = traceInference;
         return this;
     }
 
