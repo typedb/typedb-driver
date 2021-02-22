@@ -56,8 +56,11 @@ public abstract class ConnectionStepsBase {
 
     void before() {
         if (!isBeforeAllRan) {
-            beforeAll();
-            isBeforeAllRan = true;
+            try {
+                beforeAll();
+            } finally {
+                isBeforeAllRan = true;
+            }
         }
         assertNull(client);
         String address = GraknSingleton.getGraknRunner().address();
