@@ -88,7 +88,7 @@ public class ClientRPC implements GraknClient {
         throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.class), className(GraknClient.Cluster.class)));
     }
 
-    void remove(SessionRPC session) {
+    void removeSession(SessionRPC session) {
         sessions.remove(session.id());
     }
 

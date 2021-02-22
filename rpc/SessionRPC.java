@@ -84,7 +84,7 @@ public class SessionRPC implements GraknClient.Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            client.remove(this);
+            client.removeSession(this);
             pulse.cancel();
             try {
                 blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
