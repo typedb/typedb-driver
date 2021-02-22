@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static grakn.client.common.proto.OptionsProtoBuilder.options;
 
 public class SessionRPC implements GraknClient.Session {
-    private final Channel channel;
+    private final ClientRPC client;
     private final DatabaseRPC database;
     private final Type type;
     private final ByteString sessionId;
@@ -45,9 +45,9 @@ public class SessionRPC implements GraknClient.Session {
 
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
-            this.channel = client.channel();
+            this.client = client;
             this.type = type;
-            blockingGrpcStub = GraknGrpc.newBlockingStub(channel);
+            blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             this.database = new DatabaseRPC(client.databases(), database);
             final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                     .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
@@ -84,6 +84,7 @@ public class SessionRPC implements GraknClient.Session {
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
+            client.remove(this);
             pulse.cancel();
             try {
                 blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
@@ -98,7 +99,9 @@ public class SessionRPC implements GraknClient.Session {
         return database;
     }
 
-    Channel channel() { return channel; }
+    Channel channel() { return client.channel(); }
+
+    ByteString id() { return sessionId; }
 
     public void pulse() {
         boolean alive;
