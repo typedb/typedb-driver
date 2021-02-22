@@ -71,6 +71,12 @@ public abstract class ConnectionStepsBase {
     }
 
     void after() {
+        // TODO: Remove this once the server segfault issue is fixed (grakn#6135)
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         sessions.parallelStream().forEach(GraknClient.Session::close);
         sessions.clear();
 
