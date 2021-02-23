@@ -24,15 +24,16 @@ import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 
 import static grakn.client.rpc.DatabaseManagerRPC.nonNull;
-import static grakn.client.rpc.util.RPCUtils.rpcCall;
 
 public class DatabaseRPC implements GraknClient.Database {
 
     private final String name;
+    private final ClientRPC client;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
 
     public DatabaseRPC(DatabaseManagerRPC databaseManager, String name) {
         this.name = name;
+        this.client = databaseManager.client();
         this.blockingGrpcStub = databaseManager.blockingGrpcStub();
     }
 
@@ -43,7 +44,7 @@ public class DatabaseRPC implements GraknClient.Database {
 
     @Override
     public void delete() {
-        rpcCall(() -> blockingGrpcStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
+        client.call(() -> blockingGrpcStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override

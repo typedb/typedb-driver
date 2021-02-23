@@ -25,7 +25,6 @@ import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
-import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.Timer;
@@ -45,6 +44,7 @@ public class SessionRPC implements GraknClient.Session {
 
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
+            client.connect();
             this.client = client;
             this.type = type;
             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
@@ -87,6 +87,7 @@ public class SessionRPC implements GraknClient.Session {
             client.removeSession(this);
             pulse.cancel();
             try {
+                client.connect();
                 blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.of(e);
@@ -99,7 +100,7 @@ public class SessionRPC implements GraknClient.Session {
         return database;
     }
 
-    Channel channel() { return client.channel(); }
+    ClientRPC client() { return client; }
 
     ByteString id() { return sessionId; }
 
