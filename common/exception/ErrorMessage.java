@@ -103,6 +103,8 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Internal(1, "Unexpected thread interruption!");
         public static final Internal ILLEGAL_CAST =
                 new Internal(2, "Illegal casting operation to '%s'.");
+        public static final Internal ILLEGAL_ARGUMENT =
+                new Internal(3, "Illegal argument provided: '%s'");
 
         private static final String codePrefix = "INT";
         private static final String messagePrefix = "Internal Error";
