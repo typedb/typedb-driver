@@ -56,6 +56,7 @@ public class ClientRPC implements GraknClient {
     @Override
     public SessionRPC session(String database, GraknClient.Session.Type type, GraknOptions options) {
         SessionRPC session = new SessionRPC(this, database, type, options);
+        assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
         return session;
     }
