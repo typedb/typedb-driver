@@ -24,6 +24,7 @@ import {
 
 export class GraknOptions {
     private _infer: boolean;
+    private _traceInference: boolean;
     private _explain: boolean;
     private _batchSize: number;
     private _sessionIdleTimeoutMillis: number;
@@ -31,6 +32,7 @@ export class GraknOptions {
 
     constructor() {
         this._infer = null;
+        this._traceInference = null;
         this._explain = null;
         this._batchSize = null;
         this._sessionIdleTimeoutMillis = null;
@@ -43,6 +45,15 @@ export class GraknOptions {
 
     setInfer(infer: boolean): GraknOptions {
         this._infer = infer;
+        return this;
+    }
+
+    traceInference(): boolean {
+       return this._traceInference;
+    }
+
+    setTraceInference(traceInference: boolean): GraknOptions {
+        this._traceInference = traceInference;
         return this;
     }
 
