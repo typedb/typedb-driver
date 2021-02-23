@@ -21,7 +21,6 @@ config:
   dependencies:
     graql: [build, release]
     common: [build, release]
-    bazel-distribution: [build]
     dependencies: [build]
     protocol: [build, release]
     behaviour: [build]
