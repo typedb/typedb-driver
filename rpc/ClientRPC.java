@@ -26,10 +26,12 @@ import grakn.client.common.exception.GraknClientException;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
@@ -88,7 +90,21 @@ public class ClientRPC implements GraknClient {
         throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.class), className(GraknClient.Cluster.class)));
     }
 
+    public <RES> RES call(Supplier<RES> req) {
+        try {
+            connect();
+            return req.get();
+        } catch (StatusRuntimeException e) {
+            throw GraknClientException.of(e);
+        }
+    }
+
     public void connect() {
+        // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
+        // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
+        // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an
+        // exponential backoff algorithm. Here, we ensure that when the user needs that connection urgently (e.g: to
+        // open a Grakn session), it tries to reconnect immediately instead of just failing without trying.
         if (channel.getState(true).equals(ConnectivityState.TRANSIENT_FAILURE)) {
             channel.resetConnectBackoff();
         }

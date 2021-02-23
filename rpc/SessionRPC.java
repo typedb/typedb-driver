@@ -25,7 +25,6 @@ import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
-import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
 import java.util.Timer;

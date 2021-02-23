@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
 import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static grakn.client.rpc.util.RPCUtils.rpcCall;
 
 public class DatabaseManagerRPC implements GraknClient.DatabaseManager {
     private final ClientRPC client;
@@ -42,12 +41,12 @@ public class DatabaseManagerRPC implements GraknClient.DatabaseManager {
 
     @Override
     public boolean contains(String name) {
-        return rpcCall(client, () -> blockingGrpcStub.databaseContains(DatabaseProto.Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
+        return client.call(() -> blockingGrpcStub.databaseContains(DatabaseProto.Database.Contains.Req.newBuilder().setName(nonNull(name)).build()).getContains());
     }
 
     @Override
     public void create(String name) {
-        rpcCall(client, () -> blockingGrpcStub.databaseCreate(DatabaseProto.Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
+        client.call(() -> blockingGrpcStub.databaseCreate(DatabaseProto.Database.Create.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
@@ -58,7 +57,7 @@ public class DatabaseManagerRPC implements GraknClient.DatabaseManager {
 
     @Override
     public List<DatabaseRPC> all() {
-        List<String> databases = rpcCall(client, () -> blockingGrpcStub.databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()).getNamesList());
+        List<String> databases = client.call(() -> blockingGrpcStub.databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()).getNamesList());
         return databases.stream().map(name -> new DatabaseRPC(this, name)).collect(Collectors.toList());
     }
 

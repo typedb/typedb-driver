@@ -24,7 +24,6 @@ import grakn.protocol.DatabaseProto;
 import grakn.protocol.GraknGrpc;
 
 import static grakn.client.rpc.DatabaseManagerRPC.nonNull;
-import static grakn.client.rpc.util.RPCUtils.rpcCall;
 
 public class DatabaseRPC implements GraknClient.Database {
 
@@ -45,7 +44,7 @@ public class DatabaseRPC implements GraknClient.Database {
 
     @Override
     public void delete() {
-        rpcCall(client, () -> blockingGrpcStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
+        client.call(() -> blockingGrpcStub.databaseDelete(DatabaseProto.Database.Delete.Req.newBuilder().setName(nonNull(name)).build()));
     }
 
     @Override
