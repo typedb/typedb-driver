@@ -24,7 +24,6 @@ import grakn.client.common.exception.GraknClientException;
 import grakn.client.rpc.DatabaseManagerRPC;
 import grakn.protocol.cluster.DatabaseProto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,7 +67,7 @@ public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager.Cl
         StringBuilder errors = new StringBuilder();
         for (ServerAddress address : databaseManagers.keySet()) {
             try {
-                DatabaseProto.Database.Get.Res res = rpcCall(() -> client.graknClusterRPC(address)
+                DatabaseProto.Database.Get.Res res = rpcCall(client.coreClient(address), () -> client.graknClusterRPC(address)
                         .databaseGet(DatabaseProto.Database.Get.Req.newBuilder().setName(name).build()));
                 return DatabaseClusterRPC.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
@@ -83,7 +82,7 @@ public class DatabaseManagerClusterRPC implements GraknClient.DatabaseManager.Cl
         StringBuilder errors = new StringBuilder();
         for (ServerAddress address : databaseManagers.keySet()) {
             try {
-                DatabaseProto.Database.All.Res res = rpcCall(() -> client.graknClusterRPC(address).databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()));
+                DatabaseProto.Database.All.Res res = rpcCall(client.coreClient(address), () -> client.graknClusterRPC(address).databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()));
                 return res.getDatabasesList().stream().map(db -> DatabaseClusterRPC.of(db, this)).collect(Collectors.toList());
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");

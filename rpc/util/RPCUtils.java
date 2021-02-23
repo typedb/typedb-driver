@@ -20,14 +20,16 @@
 package grakn.client.rpc.util;
 
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.rpc.ClientRPC;
 import io.grpc.StatusRuntimeException;
 
 import java.util.function.Supplier;
 
 public class RPCUtils {
 
-    public static <RES> RES rpcCall(Supplier<RES> req) {
+    public static <RES> RES rpcCall(ClientRPC client, Supplier<RES> req) {
         try {
+            client.connect();
             return req.get();
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);

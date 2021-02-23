@@ -23,7 +23,7 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import io.grpc.Channel;
+import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -88,11 +88,17 @@ public class ClientRPC implements GraknClient {
         throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.class), className(GraknClient.Cluster.class)));
     }
 
+    public void connect() {
+        if (channel.getState(true).equals(ConnectivityState.TRANSIENT_FAILURE)) {
+            channel.resetConnectBackoff();
+        }
+    }
+
     void removeSession(SessionRPC session) {
         sessions.remove(session.id());
     }
 
-    public Channel channel() {
+    public ManagedChannel channel() {
         return channel;
     }
 }
