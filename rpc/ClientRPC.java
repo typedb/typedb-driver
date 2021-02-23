@@ -19,6 +19,7 @@
 
 package grakn.client.rpc;
 
+import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
@@ -26,6 +27,8 @@ import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
@@ -35,10 +38,12 @@ public class ClientRPC implements GraknClient {
 
     private final ManagedChannel channel;
     private final DatabaseManagerRPC databases;
+    private final ConcurrentMap<ByteString, SessionRPC> sessions;
 
     public ClientRPC(String address) {
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
         databases = new DatabaseManagerRPC(this);
+        sessions = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -48,7 +53,10 @@ public class ClientRPC implements GraknClient {
 
     @Override
     public SessionRPC session(String database, GraknClient.Session.Type type, GraknOptions options) {
-        return new SessionRPC(this, database, type, options);
+        SessionRPC session = new SessionRPC(this, database, type, options);
+        assert !sessions.containsKey(session.id());
+        sessions.put(session.id(), session);
+        return session;
     }
 
     @Override
@@ -64,6 +72,7 @@ public class ClientRPC implements GraknClient {
     @Override
     public void close() {
         try {
+            sessions.values().forEach(SessionRPC::close);
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -78,6 +87,10 @@ public class ClientRPC implements GraknClient {
     @Override
     public Cluster asCluster() {
         throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.class), className(GraknClient.Cluster.class)));
+    }
+
+    void removeSession(SessionRPC session) {
+        sessions.remove(session.id());
     }
 
     public Channel channel() {
