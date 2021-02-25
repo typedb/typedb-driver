@@ -31,10 +31,6 @@ public class ServerAddress {
     private final String serverHost;
     private final int serverPort;
 
-    public ServerAddress(String host, int clientPort, int serverPort) {
-        this(host, clientPort, host, serverPort);
-    }
-
     public ServerAddress(String clientHost, int clientPort, String serverHost, int serverPort) {
         this.clientHost = clientHost;
         this.clientPort = clientPort;
