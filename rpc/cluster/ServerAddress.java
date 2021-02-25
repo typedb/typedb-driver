@@ -31,10 +31,6 @@ public class ServerAddress {
     private final String serverHost;
     private final int serverPort;
 
-    public ServerAddress(String host, int clientPort, int serverPort) {
-        this(host, clientPort, host, serverPort);
-    }
-
     public ServerAddress(String clientHost, int clientPort, String serverHost, int serverPort) {
         this.clientHost = clientHost;
         this.clientPort = clientPort;
@@ -49,11 +45,8 @@ public class ServerAddress {
             return new ServerAddress(s2[0], parseInt(s2[1]), s2[0], parseInt(s2[2]));
         } else if (s1.length == 2) {
             String[] clientAddress = s1[0].split(":");
-            if (clientAddress.length != 2) throw new GraknClientException(ILLEGAL_ARGUMENT.message(address));
-
             String[] serverAddress = s1[1].split(":");
-            if (serverAddress.length != 2) throw new GraknClientException(ILLEGAL_ARGUMENT.message(address));
-
+            if (clientAddress.length != 2 || serverAddress.length != 2) throw new GraknClientException(ILLEGAL_ARGUMENT.message(address));
             return new ServerAddress(clientAddress[0], parseInt(clientAddress[1]), serverAddress[0], parseInt(serverAddress[1]));
         } else throw new GraknClientException(ILLEGAL_ARGUMENT.message(address));
     }
