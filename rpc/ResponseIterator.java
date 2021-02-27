@@ -53,7 +53,7 @@ class ResponseIterator<T> extends AbstractIterator<T> {
             return currentIterator.next();
         }
 
-        final TransactionProto.Transaction.Res res;
+        TransactionProto.Transaction.Res res;
         try {
             res = responseCollector.take();
         } catch (InterruptedException e) {
@@ -63,7 +63,7 @@ class ResponseIterator<T> extends AbstractIterator<T> {
 
         switch (res.getResCase()) {
             case CONTINUE:
-                final TransactionProto.Transaction.Req continueReq = TransactionProto.Transaction.Req.newBuilder()
+                TransactionProto.Transaction.Req continueReq = TransactionProto.Transaction.Req.newBuilder()
                         .setId(requestId.toString()).setContinue(true).build();
                 requestObserver.onNext(continueReq);
                 return computeNext();

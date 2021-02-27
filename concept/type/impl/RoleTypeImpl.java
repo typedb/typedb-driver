@@ -76,7 +76,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final RoleTypeImpl that = (RoleTypeImpl) o;
+        RoleTypeImpl that = (RoleTypeImpl) o;
         return (this.getLabel().equals(that.getLabel()) && Objects.equals(this.scope, that.scope));
     }
 
@@ -109,7 +109,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Nullable
         @Override
         public RoleTypeImpl getSupertype() {
-            final TypeImpl supertype = super.getSupertype();
+            TypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asRoleType() : null;
         }
 
@@ -130,9 +130,9 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final RelationTypeImpl getRelationType() {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setRoleTypeGetRelationTypeReq(ConceptProto.RoleType.GetRelationType.Req.getDefaultInstance());
-            final ConceptProto.RoleType.GetRelationType.Res response = execute(method).getRoleTypeGetRelationTypeRes();
+            ConceptProto.RoleType.GetRelationType.Res response = execute(method).getRoleTypeGetRelationTypeRes();
             return TypeImpl.of(response.getRelationType()).asRelationType();
         }
 
@@ -179,7 +179,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            final RoleTypeImpl.Remote that = (RoleTypeImpl.Remote) o;
+            RoleTypeImpl.Remote that = (RoleTypeImpl.Remote) o;
             return (this.tx().equals(that.tx()) &&
                     this.getLabel().equals(that.getLabel()) &&
                     Objects.equals(this.getScope(), that.getScope()));

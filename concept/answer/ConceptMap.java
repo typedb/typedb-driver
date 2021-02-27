@@ -24,8 +24,6 @@ import grakn.client.concept.Concept;
 import grakn.client.concept.thing.impl.ThingImpl;
 import grakn.client.concept.type.impl.TypeImpl;
 import grakn.protocol.AnswerProto;
-import graql.lang.Graql;
-import graql.lang.pattern.Pattern;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,7 +42,7 @@ public class ConceptMap {
     }
 
     public static ConceptMap of(AnswerProto.ConceptMap res) {
-        final Map<String, Concept> variableMap = new HashMap<>();
+        Map<String, Concept> variableMap = new HashMap<>();
         res.getMapMap().forEach((resVar, resConcept) -> {
             Concept concept;
             if (resConcept.hasThing()) concept = ThingImpl.of(resConcept.getThing());

@@ -52,7 +52,7 @@ public class RelationSteps {
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
         Attribute.Long key = tx().concepts().getAttributeType(keyType).asLong().asRemote(tx()).put(keyValue);
-        final Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
         relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }
@@ -60,7 +60,7 @@ public class RelationSteps {
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
         Attribute.String key = tx().concepts().getAttributeType(keyType).asString().asRemote(tx()).put(keyValue);
-        final Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
         relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }
@@ -68,7 +68,7 @@ public class RelationSteps {
     @When("{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void relation_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
         Attribute.DateTime key = tx().concepts().getAttributeType(keyType).asDateTime().asRemote(tx()).put(keyValue);
-        final Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
+        Relation relation = tx().concepts().getRelationType(type).asRemote(tx()).create();
         relation.asRemote(tx()).setHas(key);
         put(var, relation);
     }

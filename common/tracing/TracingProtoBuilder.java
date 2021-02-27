@@ -32,7 +32,7 @@ public abstract class TracingProtoBuilder {
 
     public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {
-            final GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
+            GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) {
                 return Collections.emptyMap();
             }
@@ -41,7 +41,7 @@ public abstract class TracingProtoBuilder {
                 return Collections.emptyMap();
             }
 
-            final Map<String, String> metadata = new HashMap<>(2);
+            Map<String, String> metadata = new HashMap<>(2);
             metadata.put("traceParentId", threadTrace.getId().toString());
             metadata.put("traceRootId", threadTrace.getRootId().toString());
             return metadata;

@@ -55,7 +55,7 @@ public class QueryFuture<T> implements Future<T> {
     @Override
     public T get() {
         try {
-            final TransactionProto.Transaction.Res res = collector.take();
+            TransactionProto.Transaction.Res res = collector.take();
             return transformResponse.apply(res);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -66,7 +66,7 @@ public class QueryFuture<T> implements Future<T> {
     @Override
     public T get(long timeout, TimeUnit unit) {
         try {
-            final TransactionProto.Transaction.Res res = collector.take(timeout, unit);
+            TransactionProto.Transaction.Res res = collector.take(timeout, unit);
             return transformResponse.apply(res);
         } catch (InterruptedException | TimeoutException e) {
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();

@@ -133,7 +133,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         // such as: root type wrapped in AttributeTypeImpl.Root and in AttributeTypeImpl.Boolean.Root
         // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
 
-        final AttributeTypeImpl that = (AttributeTypeImpl) o;
+        AttributeTypeImpl that = (AttributeTypeImpl) o;
         return this.getLabel().equals(that.getLabel());
     }
 
@@ -165,7 +165,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeTypeImpl> getSubtypes() {
-            final Stream<AttributeTypeImpl> stream = super.getSubtypes().map(TypeImpl::asAttributeType);
+            Stream<AttributeTypeImpl> stream = super.getSubtypes().map(TypeImpl::asAttributeType);
 
             if (isRoot() && getValueType() != ValueType.OBJECT) {
                 // Get all attribute types of this value type
@@ -187,25 +187,25 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<ThingTypeImpl> getOwners(boolean onlyKey) {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypeGetOwnersReq(ConceptProto.AttributeType.GetOwners.Req.newBuilder()
-                            .setOnlyKey(onlyKey));
+                                                          .setOnlyKey(onlyKey));
             return typeStream(method, res -> res.getAttributeTypeGetOwnersRes().getOwnersList()).map(TypeImpl::asThingType);
         }
 
         protected final AttributeImpl<?> put(Object value) {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypePutReq(ConceptProto.AttributeType.Put.Req.newBuilder()
-                            .setValue(attributeValue(value)));
+                                                    .setValue(attributeValue(value)));
             return AttributeImpl.of(execute(method).getAttributeTypePutRes().getAttribute());
         }
 
         @Nullable
         protected final AttributeImpl<?> get(Object value) {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setAttributeTypeGetReq(ConceptProto.AttributeType.Get.Req.newBuilder()
-                            .setValue(attributeValue(value)));
-            final ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
+                                                    .setValue(attributeValue(value)));
+            ConceptProto.AttributeType.Get.Res response = execute(method).getAttributeTypeGetRes();
             return response.getResCase() == ConceptProto.AttributeType.Get.Res.ResCase.ATTRIBUTE ? AttributeImpl.of(response.getAttribute()) : null;
         }
 
@@ -263,7 +263,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
             // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
 
-            final AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
+            AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
             return (this.tx().equals(that.tx()) && this.getLabel().equals(that.getLabel()));
         }
     }
@@ -332,7 +332,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final AttributeImpl.Boolean get(boolean value) {
-                final AttributeImpl<?> attr = super.get(value);
+                AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asBoolean() : null;
             }
 
@@ -407,7 +407,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final AttributeImpl.Long get(long value) {
-                final AttributeImpl<?> attr = super.get(value);
+                AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asLong() : null;
             }
 
@@ -482,7 +482,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final AttributeImpl.Double get(double value) {
-                final AttributeImpl<?> attr = super.get(value);
+                AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asDouble() : null;
             }
 
@@ -557,25 +557,25 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final AttributeImpl.String get(java.lang.String value) {
-                final AttributeImpl<?> attr = super.get(value);
+                AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asString() : null;
             }
 
             @Nullable
             @Override
             public final java.lang.String getRegex() {
-                final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+                ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                         .setAttributeTypeGetRegexReq(ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance());
-                final java.lang.String regex = execute(method).getAttributeTypeGetRegexRes().getRegex();
+                java.lang.String regex = execute(method).getAttributeTypeGetRegexRes().getRegex();
                 return regex.isEmpty() ? null : regex;
             }
 
             @Override
             public final void setRegex(java.lang.String regex) {
                 if (regex == null) regex = "";
-                final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+                ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                         .setAttributeTypeSetRegexReq(ConceptProto.AttributeType.SetRegex.Req.newBuilder()
-                                .setRegex(regex));
+                                                             .setRegex(regex));
                 execute(method);
             }
 
@@ -650,7 +650,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             @Nullable
             @Override
             public final AttributeImpl.DateTime get(LocalDateTime value) {
-                final AttributeImpl<?> attr = super.get(value);
+                AttributeImpl<?> attr = super.get(value);
                 return attr != null ? attr.asDateTime() : null;
             }
 

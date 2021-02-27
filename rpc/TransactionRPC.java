@@ -45,9 +45,9 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grakn.client.common.proto.OptionsProtoBuilder.options;
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static grakn.client.common.proto.OptionsProtoBuilder.options;
 import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
@@ -74,15 +74,15 @@ public class TransactionRPC implements Transaction {
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
             isOpen = new AtomicBoolean(true);
             requestObserver = new SynchronizedStreamObserver<>(GraknGrpc.newStub(session.client().channel()).transaction(responseObserver()));
-            final TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
                     .putAllMetadata(tracingData())
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                            .setSessionId(sessionId)
-                            .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                            .setOptions(options(options)));
-            final Instant startTime = Instant.now();
-            final TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
-            final Instant endTime = Instant.now();
+                                        .setSessionId(sessionId)
+                                        .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
+                                        .setOptions(options(options)));
+            Instant startTime = Instant.now();
+            TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
+            Instant endTime = Instant.now();
             networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
@@ -116,7 +116,7 @@ public class TransactionRPC implements Transaction {
 
     @Override
     public void commit() {
-        final TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         try {
@@ -128,7 +128,7 @@ public class TransactionRPC implements Transaction {
 
     @Override
     public void rollback() {
-        final TransactionProto.Transaction.Req.Builder rollbackReq = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder rollbackReq = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance());
         execute(rollbackReq);
@@ -157,8 +157,8 @@ public class TransactionRPC implements Transaction {
     public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
         if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
-        final ResponseCollector.Single responseCollector = new ResponseCollector.Single();
-        final UUID requestId = UUID.randomUUID();
+        ResponseCollector.Single responseCollector = new ResponseCollector.Single();
+        UUID requestId = UUID.randomUUID();
         request.setId(requestId.toString());
         collectors.put(requestId, responseCollector);
         requestObserver.onNext(request.build());
@@ -168,13 +168,13 @@ public class TransactionRPC implements Transaction {
     public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
-        final ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
-        final UUID requestId = UUID.randomUUID();
+        ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
+        UUID requestId = UUID.randomUUID();
         request.setId(requestId.toString());
         request.setLatencyMillis(networkLatencyMillis);
         collectors.put(requestId, responseCollector);
         requestObserver.onNext(request.build());
-        final ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
+        ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
         return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
     }
 
@@ -184,8 +184,8 @@ public class TransactionRPC implements Transaction {
             public void onNext(TransactionProto.Transaction.Res res) {
                 if (!isOpen.get()) return;
 
-                final UUID requestId = UUID.fromString(res.getId());
-                final ResponseCollector collector = collectors.get(requestId);
+                UUID requestId = UUID.fromString(res.getId());
+                ResponseCollector collector = collectors.get(requestId);
                 assert collector != null : UNKNOWN_REQUEST_ID.message(requestId);
                 collector.add(new Response.Result(res));
             }
@@ -249,7 +249,7 @@ public class TransactionRPC implements Transaction {
         }
 
         TransactionProto.Transaction.Res take(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-            final Response response = responseBuffer.poll(timeout, unit);
+            Response response = responseBuffer.poll(timeout, unit);
             if (response != null) return response.read();
             else throw new TimeoutException();
         }

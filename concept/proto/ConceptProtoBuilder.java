@@ -23,16 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.Concept;
 import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Entity;
-import grakn.client.concept.thing.Relation;
 import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.AttributeType;
 import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.ThingType;
 import grakn.client.concept.type.Type;
 import grakn.protocol.AnswerProto;
 import grakn.protocol.ConceptProto;
@@ -48,7 +40,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class ConceptProtoBuilder {
 
     public static ConceptProto.Concept concept(Concept concept) {
-        final ConceptProto.Concept.Builder builder = ConceptProto.Concept.newBuilder();
+        ConceptProto.Concept.Builder builder = ConceptProto.Concept.newBuilder();
         if (concept.isThing()) {
             builder.setThing(thing(concept.asThing()));
         } else {
@@ -65,7 +57,7 @@ public abstract class ConceptProtoBuilder {
     }
 
     public static ConceptProto.Type type(Type type) {
-        final ConceptProto.Type.Builder builder = ConceptProto.Type.newBuilder()
+        ConceptProto.Type.Builder builder = ConceptProto.Type.newBuilder()
                 .setLabel(type.getLabel())
                 .setEncoding(encoding(type));
 

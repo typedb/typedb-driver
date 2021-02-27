@@ -127,7 +127,7 @@ public class ThingTypeSteps {
 
     @When("{root_label}\\( ?{type_label} ?) set abstract: {bool}")
     public void thing_type_set_abstract(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
-        final ThingType thingType = get_thing_type(rootLabel, typeLabel);
+        ThingType thingType = get_thing_type(rootLabel, typeLabel);
         if (isAbstract) {
             thingType.asRemote(tx()).setAbstract();
         } else {

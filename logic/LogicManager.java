@@ -27,7 +27,6 @@ import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -43,22 +42,22 @@ public final class LogicManager {
     }
 
     public Rule putRule(String label, Pattern when, Pattern then) {
-        final LogicProto.LogicManager.Req req = LogicProto.LogicManager.Req.newBuilder()
+        LogicProto.LogicManager.Req req = LogicProto.LogicManager.Req.newBuilder()
                 .setPutRuleReq(LogicProto.LogicManager.PutRule.Req.newBuilder()
-                        .setLabel(label)
-                        .setWhen(when.toString())
-                        .setThen(then.toString())).build();
-        final LogicProto.LogicManager.Res res = execute(req);
+                                       .setLabel(label)
+                                       .setWhen(when.toString())
+                                       .setThen(then.toString())).build();
+        LogicProto.LogicManager.Res res = execute(req);
         return RuleImpl.of(res.getPutRuleRes().getRule());
     }
 
     @Nullable
     @CheckReturnValue
     public Rule getRule(String label) {
-        final LogicProto.LogicManager.Req req = LogicProto.LogicManager.Req.newBuilder()
+        LogicProto.LogicManager.Req req = LogicProto.LogicManager.Req.newBuilder()
                 .setGetRuleReq(LogicProto.LogicManager.GetRule.Req.newBuilder().setLabel(label)).build();
 
-        final LogicProto.LogicManager.Res response = execute(req);
+        LogicProto.LogicManager.Res response = execute(req);
         switch (response.getGetRuleRes().getResCase()) {
             case RULE:
                 return RuleImpl.of(response.getGetRuleRes().getRule());
@@ -70,20 +69,20 @@ public final class LogicManager {
 
     @CheckReturnValue
     public Stream<RuleImpl> getRules() {
-        final LogicProto.LogicManager.Req.Builder method = LogicProto.LogicManager.Req.newBuilder()
+        LogicProto.LogicManager.Req.Builder method = LogicProto.LogicManager.Req.newBuilder()
                 .setGetRulesReq(LogicProto.LogicManager.GetRules.Req.getDefaultInstance());
         return ruleStream(method, res -> res.getGetRulesRes().getRulesList());
     }
 
     private LogicProto.LogicManager.Res execute(LogicProto.LogicManager.Req request) {
-        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setLogicManagerReq(request);
         return transactionRPC.execute(req).getLogicManagerRes();
     }
 
     private Stream<RuleImpl> ruleStream(LogicProto.LogicManager.Req.Builder method, Function<LogicProto.LogicManager.Res, List<LogicProto.Rule>> ruleListGetter) {
-        final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setLogicManagerReq(method);
         return transactionRPC.stream(request, res -> ruleListGetter.apply(res.getLogicManagerRes()).stream().map(RuleImpl::of));

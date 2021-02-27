@@ -81,18 +81,18 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType() {
-            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setRelationGetPlayersByRoleTypeReq(ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance());
 
-            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(getIID())));
-            final Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = transactionRPC.stream(
+            Stream<ConceptProto.Relation.GetPlayersByRoleType.RoleTypeWithPlayer> stream = transactionRPC.stream(
                     request, res -> res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList().stream());
 
-            final Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
+            Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream.forEach(rolePlayer -> {
-                final RoleTypeImpl role = TypeImpl.of(rolePlayer.getRoleType()).asRoleType();
-                final ThingImpl player = ThingImpl.of(rolePlayer.getPlayer());
+                RoleTypeImpl role = TypeImpl.of(rolePlayer.getRoleType()).asRoleType();
+                ThingImpl player = ThingImpl.of(rolePlayer.getPlayer());
                 if (rolePlayerMap.containsKey(role)) {
                     rolePlayerMap.get(role).add(player);
                 } else {

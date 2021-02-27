@@ -70,50 +70,50 @@ public final class ConceptManager {
     }
 
     public EntityType putEntityType(String label) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+        ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutEntityTypeReq(ConceptProto.ConceptManager.PutEntityType.Req.newBuilder()
-                        .setLabel(label)).build();
-        final ConceptProto.ConceptManager.Res res = execute(req);
+                                             .setLabel(label)).build();
+        ConceptProto.ConceptManager.Res res = execute(req);
         return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
     }
 
     @Nullable
     @CheckReturnValue
     public EntityType getEntityType(String label) {
-        final ThingType thingType = getThingType(label);
+        ThingType thingType = getThingType(label);
         if (thingType != null && thingType.isEntityType()) return thingType.asEntityType();
         else return null;
     }
 
     public RelationType putRelationType(String label) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+        ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutRelationTypeReq(ConceptProto.ConceptManager.PutRelationType.Req.newBuilder()
-                        .setLabel(label)).build();
-        final ConceptProto.ConceptManager.Res res = execute(req);
+                                               .setLabel(label)).build();
+        ConceptProto.ConceptManager.Res res = execute(req);
         return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
     }
 
     @Nullable
     @CheckReturnValue
     public RelationType getRelationType(String label) {
-        final ThingType thingType = getThingType(label);
+        ThingType thingType = getThingType(label);
         if (thingType != null && thingType.isRelationType()) return thingType.asRelationType();
         else return null;
     }
 
     public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+        ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setPutAttributeTypeReq(ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder()
-                        .setLabel(label)
-                        .setValueType(valueType(valueType))).build();
-        final ConceptProto.ConceptManager.Res res = execute(req);
+                                                .setLabel(label)
+                                                .setValueType(valueType(valueType))).build();
+        ConceptProto.ConceptManager.Res res = execute(req);
         return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
     @Nullable
     @CheckReturnValue
     public AttributeType getAttributeType(String label) {
-        final ThingType thingType = getThingType(label);
+        ThingType thingType = getThingType(label);
         if (thingType != null && thingType.isAttributeType()) return thingType.asAttributeType();
         else return null;
     }
@@ -121,10 +121,10 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public Thing getThing(String iid) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+        ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setGetThingReq(ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))).build();
 
-        final ConceptProto.ConceptManager.Res response = execute(req);
+        ConceptProto.ConceptManager.Res response = execute(req);
         if (response.getGetThingRes().getResCase() == ConceptProto.ConceptManager.GetThing.Res.ResCase.THING)
             return ThingImpl.of(response.getGetThingRes().getThing());
         else
@@ -134,10 +134,10 @@ public final class ConceptManager {
     @Nullable
     @CheckReturnValue
     public ThingType getThingType(String label) {
-        final ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
+        ConceptProto.ConceptManager.Req req = ConceptProto.ConceptManager.Req.newBuilder()
                 .setGetThingTypeReq(ConceptProto.ConceptManager.GetThingType.Req.newBuilder().setLabel(label)).build();
 
-        final ConceptProto.ConceptManager.Res response = execute(req);
+        ConceptProto.ConceptManager.Res response = execute(req);
         if (response.getGetThingTypeRes().getResCase() == ConceptProto.ConceptManager.GetThingType.Res.ResCase.THING_TYPE)
             return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
         else
@@ -145,7 +145,7 @@ public final class ConceptManager {
     }
 
     private ConceptProto.ConceptManager.Res execute(ConceptProto.ConceptManager.Req request) {
-        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .putAllMetadata(tracingData())
                 .setConceptManagerReq(request);
         return transactionRPC.execute(req).getConceptManagerRes();

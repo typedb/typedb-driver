@@ -53,7 +53,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchReq(
                 QueryProto.Query.Match.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getMatchRes().getAnswersList().stream().map(ConceptMap::of));
     }
@@ -63,7 +63,7 @@ public final class QueryManager {
     }
 
     public QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchAggregateReq(
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchAggregateReq(
                 QueryProto.Query.MatchAggregate.Req.newBuilder().setQuery(query.toString()));
         return runQuery(request, options, res -> Numeric.of(res.getQueryRes().getMatchAggregateRes().getAnswer()));
     }
@@ -73,7 +73,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupReq(
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupReq(
                 QueryProto.Query.MatchGroup.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(
                 request, options,
@@ -86,7 +86,7 @@ public final class QueryManager {
     }
 
     public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setMatchGroupAggregateReq(
                 QueryProto.Query.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(
                 request, options,
@@ -99,7 +99,7 @@ public final class QueryManager {
     }
 
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
-        final QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
+        QueryProto.Query.Req.Builder request = QueryProto.Query.Req.newBuilder().setInsertReq(
                 QueryProto.Query.Insert.Req.newBuilder().setQuery(query.toString()));
         return iterateQuery(request, options, res -> res.getQueryRes().getInsertRes().getAnswersList().stream().map(ConceptMap::of));
     }
@@ -138,20 +138,20 @@ public final class QueryManager {
     }
 
     private <T> QueryFuture<T> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options, Function<TransactionProto.Transaction.Res, T> mapper) {
-        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return transactionRPC.executeAsync(req, mapper);
     }
 
     private QueryFuture<Void> runQuery(QueryProto.Query.Req.Builder request, GraknOptions options) {
-        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return transactionRPC.executeAsync(req, res -> null);
     }
 
     private <T> Stream<T> iterateQuery(QueryProto.Query.Req.Builder request, GraknOptions options,
                                        Function<TransactionProto.Transaction.Res, Stream<T>> responseReader) {
-        final TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
+        TransactionProto.Transaction.Req.Builder req = TransactionProto.Transaction.Req.newBuilder()
                 .setQueryReq(request.setOptions(options(options)));
         return transactionRPC.stream(req, responseReader);
     }

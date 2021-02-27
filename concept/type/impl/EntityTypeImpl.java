@@ -60,7 +60,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final EntityImpl create() {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder()
                     .setEntityTypeCreateReq(ConceptProto.EntityType.Create.Req.getDefaultInstance());
             return EntityImpl.of(execute(method).getEntityTypeCreateRes().getEntity());
         }

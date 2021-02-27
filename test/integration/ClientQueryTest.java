@@ -77,7 +77,7 @@ public class ClientQueryTest {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
 
         localhostGraknTx(tx -> {
-            final GraqlDefine defineQuery = Graql.define(
+            GraqlDefine defineQuery = Graql.define(
                     type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
                     type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearing", "child-bearer"),
                     type("parentship").sub("relation").relates("parent").relates("child"),
@@ -85,13 +85,13 @@ public class ClientQueryTest {
                     type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
-            final GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
-                    .when(and(
-                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                            var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
-                    .then(rel("parent", var("male"))
-                            .rel("parent", var("female"))
-                            .rel("child", var("offspring")).isa("parentship")));
+            GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
+                                                         .when(and(
+                                                                 rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                                                                 var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                                                         .then(rel("parent", var("male"))
+                                                                       .rel("parent", var("female"))
+                                                                       .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
@@ -114,8 +114,8 @@ public class ClientQueryTest {
 //        });
 
         localhostGraknTx(tx -> {
-            final String[] names = lionNames();
-            final GraqlInsert insertLionQuery = Graql.insert(
+            String[] names = lionNames();
+            GraqlInsert insertLionQuery = Graql.insert(
                     var().isa("lion").has("name", names[0]),
                     var().isa("lion").has("name", names[1]),
                     var().isa("lion").has("name", names[2])
@@ -247,27 +247,27 @@ public class ClientQueryTest {
     @Test
     public void parallelQueriesInTransactionTest() {
         localhostGraknTx(tx -> {
-            final GraqlDefine defineQuery = Graql.define(
-                type("symbol").sub("attribute").value(GraqlArg.ValueType.STRING),
-                type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
-                type("status").sub("attribute").value(GraqlArg.ValueType.STRING),
-                type("latest").sub("attribute").value(GraqlArg.ValueType.BOOLEAN),
+            GraqlDefine defineQuery = Graql.define(
+                    type("symbol").sub("attribute").value(GraqlArg.ValueType.STRING),
+                    type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
+                    type("status").sub("attribute").value(GraqlArg.ValueType.STRING),
+                    type("latest").sub("attribute").value(GraqlArg.ValueType.BOOLEAN),
 
-                type("commit").sub("entity")
-                        .owns("symbol")
-                        .plays("pipeline-automation", "trigger"),
-                type("pipeline").sub("entity")
-                        .owns("name")
-                        .owns("latest")
-                        .plays("pipeline-workflow", "pipeline")
-                        .plays("pipeline-automation", "pipeline"),
-                type("workflow").sub("entity")
-                        .owns("name")
-                        .owns("status")
-                        .owns("latest")
-                        .plays("pipeline-workflow", "workflow"),
+                    type("commit").sub("entity")
+                            .owns("symbol")
+                            .plays("pipeline-automation", "trigger"),
+                    type("pipeline").sub("entity")
+                            .owns("name")
+                            .owns("latest")
+                            .plays("pipeline-workflow", "pipeline")
+                            .plays("pipeline-automation", "pipeline"),
+                    type("workflow").sub("entity")
+                            .owns("name")
+                            .owns("status")
+                            .owns("latest")
+                            .plays("pipeline-workflow", "workflow"),
 
-                type("pipeline-workflow").sub("relation")
+                    type("pipeline-workflow").sub("relation")
                         .relates("pipeline").relates("workflow"),
                 type("pipeline-automation").sub("relation")
                         .relates("pipeline").relates("trigger")
@@ -283,8 +283,8 @@ public class ClientQueryTest {
 
 
         localhostGraknTx(tx -> {
-            final String[] commits = commitSHAs();
-            final GraqlInsert insertCommitQuery = Graql.insert(
+            String[] commits = commitSHAs();
+            GraqlInsert insertCommitQuery = Graql.insert(
                     var().isa("commit").has("symbol", commits[0]),
                     var().isa("commit").has("symbol", commits[1]),
                     var().isa("commit").has("symbol", commits[3]),
@@ -304,7 +304,7 @@ public class ClientQueryTest {
         });
 
         localhostGraknTx(tx -> {
-            final GraqlInsert insertWorkflowQuery = Graql.insert(
+            GraqlInsert insertWorkflowQuery = Graql.insert(
                     var().isa("workflow")
                             .has("name", "workflow-A")
                             .has("status", "running")
@@ -323,7 +323,7 @@ public class ClientQueryTest {
         });
 
         localhostGraknTx(tx -> {
-            final GraqlInsert insertPipelineQuery = Graql.insert(
+            GraqlInsert insertPipelineQuery = Graql.insert(
                     var().isa("pipeline")
                             .has("name", "pipeline-A")
                             .has("latest", true),
@@ -340,11 +340,11 @@ public class ClientQueryTest {
         });
 
         localhostGraknTx(tx -> {
-            final String[] commitShas = commitSHAs();
+            String[] commitShas = commitSHAs();
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
             for (int i = 0; i < commitShas.length / 2; i++) {
-                final GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                GraqlInsert insertPipelineAutomationQuery = Graql.match(
                         var("commit").isa("commit").has("symbol", commitShas[i]),
                         var("pipeline").isa("pipeline").has("name", "pipeline-A")
                 )
@@ -352,12 +352,12 @@ public class ClientQueryTest {
                                 rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
                         );
                 LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
-                final List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
+                List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
             }
 
 
             for (int i = commitShas.length / 2; i < commitShas.length; i++) {
-                final GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                GraqlInsert insertPipelineAutomationQuery = Graql.match(
                         var("commit").isa("commit").has("symbol", commitShas[i]),
                         var("pipeline").isa("pipeline").has("name", "pipeline-B")
                 )
@@ -365,7 +365,7 @@ public class ClientQueryTest {
                                 rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
                         );
                 LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
-                final List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
+                List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
             }
 
             tx.commit();
@@ -376,7 +376,7 @@ public class ClientQueryTest {
         localhostGraknTx(tx -> {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
-            final GraqlInsert insertPipelineWorkflowQuery = Graql.match(
+            GraqlInsert insertPipelineWorkflowQuery = Graql.match(
                     var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
                     var("workflowA").isa("workflow").has("name", "workflow-A"),
                     var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
@@ -387,7 +387,7 @@ public class ClientQueryTest {
                             rel("pipeline", "pipelineB").rel("workflow", "workflowB").isa("pipeline-workflow")
                     );
             LOG.info("clientJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
-            final List<ConceptMap> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
+            List<ConceptMap> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
 
             tx.commit();
 
@@ -451,7 +451,7 @@ public class ClientQueryTest {
 
             Stream.of(queries).parallel().forEach(x -> {
                 GraqlMatch q = Graql.parseQuery(x).asMatch();
-                final List<ConceptMap> res = tx.query().match(q).collect(toList());
+                List<ConceptMap> res = tx.query().match(q).collect(toList());
             });
 
             LOG.info("clientJavaE2E() - done.");

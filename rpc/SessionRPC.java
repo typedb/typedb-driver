@@ -49,7 +49,7 @@ public class SessionRPC implements GraknClient.Session {
             this.type = type;
             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             this.database = new DatabaseRPC(client.databases(), database);
-            final SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
+            SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
                     .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
 
             sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();

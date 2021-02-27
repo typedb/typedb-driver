@@ -94,7 +94,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final ThingImpl that = (ThingImpl) o;
+        ThingImpl that = (ThingImpl) o;
         return (this.iid.equals(that.iid));
     }
 
@@ -123,23 +123,23 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         public ThingTypeImpl getType() {
-            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance());
             return TypeImpl.of(execute(method).getThingGetTypeRes().getThingType()).asThingType();
         }
 
         @Override
         public final boolean isInferred() {
-            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingIsInferredReq(ConceptProto.Thing.IsInferred.Req.getDefaultInstance());
             return execute(method).getThingIsInferredRes().getInferred();
         }
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(AttributeType... attributeTypes) {
-            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder()
-                            .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
+                                               .addAllAttributeTypes(types(Arrays.asList(attributeTypes))));
             return thingStream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
 
@@ -170,7 +170,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
-            final ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
+            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
                     .setThingGetHasReq(ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey));
             return thingStream(method, res -> res.getThingGetHasRes().getAttributesList()).map(ThingImpl::asAttribute);
         }
@@ -227,19 +227,19 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         Stream<ThingImpl> thingStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Thing>> thingListGetter) {
-            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return transactionRPC.stream(request, res -> thingListGetter.apply(res.getThingRes()).stream().map(ThingImpl::of));
         }
 
         Stream<TypeImpl> typeStream(ConceptProto.Thing.Req.Builder method, Function<ConceptProto.Thing.Res, List<ConceptProto.Type>> typeListGetter) {
-            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return transactionRPC.stream(request, res -> typeListGetter.apply(res.getThingRes()).stream().map(TypeImpl::of));
         }
 
         ConceptProto.Thing.Res execute(ConceptProto.Thing.Req.Builder method) {
-            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setThingReq(method.setIid(iid(iid)));
             return transactionRPC.execute(request).getThingRes();
         }
@@ -254,7 +254,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            final ThingImpl.Remote that = (ThingImpl.Remote) o;
+            ThingImpl.Remote that = (ThingImpl.Remote) o;
             return this.transactionRPC.equals(that.transactionRPC) && this.iid.equals(that.iid);
         }
 

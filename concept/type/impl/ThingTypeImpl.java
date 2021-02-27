@@ -79,13 +79,13 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public ThingTypeImpl getSupertype() {
-            final TypeImpl supertype = super.getSupertype();
+            TypeImpl supertype = super.getSupertype();
             return supertype != null ? supertype.asThingType() : null;
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSupertypes() {
-            final Stream<? extends TypeImpl> supertypes = super.getSupertypes();
+            Stream<? extends TypeImpl> supertypes = super.getSupertypes();
             return supertypes.map(TypeImpl::asThingType);
         }
 
@@ -96,7 +96,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<? extends ThingImpl> getInstances() {
-            final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
                     .setThingTypeGetInstancesReq(ConceptProto.ThingType.GetInstances.Req.getDefaultInstance());
             return thingStream(request, res -> res.getThingTypeGetInstancesRes().getThingsList());
         }
@@ -125,7 +125,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            final ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
+            ConceptProto.ThingType.SetOwns.Req.Builder req = ConceptProto.ThingType.SetOwns.Req.newBuilder()
                     .setAttributeType(type(attributeType)).setIsKey(isKey);
             if (overriddenType != null) req.setOverriddenType(type(overriddenType));
             execute(ConceptProto.Type.Req.newBuilder().setThingTypeSetOwnsReq(req));
@@ -148,7 +148,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
-            final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
+            ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder()
                     .setThingTypeGetPlaysReq(ConceptProto.ThingType.GetPlays.Req.getDefaultInstance());
             return typeStream(request, res -> res.getThingTypeGetPlaysRes().getRolesList()).map(TypeImpl::asRoleType);
         }
@@ -170,9 +170,9 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, boolean keysOnly) {
-            final ConceptProto.ThingType.GetOwns.Req.Builder getOwnsReq = ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly);
+            ConceptProto.ThingType.GetOwns.Req.Builder getOwnsReq = ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly);
             if (valueType != null) getOwnsReq.setValueType(valueType(valueType));
-            final ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder().setThingTypeGetOwnsReq(getOwnsReq);
+            ConceptProto.Type.Req.Builder request = ConceptProto.Type.Req.newBuilder().setThingTypeGetOwnsReq(getOwnsReq);
             return typeStream(request, res -> res.getThingTypeGetOwnsRes().getAttributeTypesList()).map(TypeImpl::asAttributeType);
         }
 

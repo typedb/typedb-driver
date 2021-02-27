@@ -90,7 +90,7 @@ public class RuleImpl implements Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final RuleImpl that = (RuleImpl) o;
+        RuleImpl that = (RuleImpl) o;
         return this.label.equals(that.label);
     }
 
@@ -168,7 +168,7 @@ public class RuleImpl implements Rule {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            final RuleImpl.Remote that = (RuleImpl.Remote) o;
+            RuleImpl.Remote that = (RuleImpl.Remote) o;
             return this.transactionRPC.equals(that.transactionRPC) && this.label.equals(that.label);
         }
 
@@ -182,7 +182,7 @@ public class RuleImpl implements Rule {
         }
 
         LogicProto.Rule.Res execute(LogicProto.Rule.Req.Builder method) {
-            final TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
+            TransactionProto.Transaction.Req.Builder request = TransactionProto.Transaction.Req.newBuilder()
                     .setRuleReq(method.setLabel(label));
             return transactionRPC.execute(request).getRuleRes();
         }

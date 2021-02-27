@@ -60,16 +60,16 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final RelationImpl create() {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeCreateReq(
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeCreateReq(
                     ConceptProto.RelationType.Create.Req.getDefaultInstance());
             return RelationImpl.of(execute(method).getRelationTypeCreateRes().getRelation());
         }
 
         @Override
         public final RoleTypeImpl getRelates(String roleLabel) {
-            final ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
+            ConceptProto.Type.Req.Builder method = ConceptProto.Type.Req.newBuilder().setRelationTypeGetRelatesForRoleLabelReq(
                     ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel));
-            final ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
+            ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = execute(method).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) return TypeImpl.of(res.getRoleType()).asRoleType();
             else return null;
         }
