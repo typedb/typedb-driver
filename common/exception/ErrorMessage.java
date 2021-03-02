@@ -44,7 +44,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
                 new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
-                new Client(10, "The replica is not the primary replica");
+                new Client(10, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
                 new Client(11, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
 
