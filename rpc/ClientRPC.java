@@ -93,14 +93,14 @@ public class ClientRPC implements GraknClient {
 
     public <RES> RES call(Supplier<RES> req) {
         try {
-            connect();
+            reconnect();
             return req.get();
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }
     }
 
-    public void connect() {
+    public void reconnect() {
         // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
         // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an

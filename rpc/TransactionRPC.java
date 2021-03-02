@@ -64,7 +64,7 @@ public class TransactionRPC implements Transaction {
 
     TransactionRPC(SessionRPC session, ByteString sessionId, Type type, GraknOptions options) {
         try {
-            session.client().connect();
+            session.client().reconnect();
             this.type = type;
             conceptManager = new ConceptManager(this);
             logicManager = new LogicManager(this);
@@ -116,13 +116,14 @@ public class TransactionRPC implements Transaction {
 
     @Override
     public void commit() {
-        TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
-                .putAllMetadata(tracingData())
-                .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
-        try {
-            execute(commitReq);
-        } finally {
-            close();
+        if (isOpen.compareAndSet(true, false)) {
+            TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
+                    .putAllMetadata(tracingData()).setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
+            try {
+                execute(commitReq);
+            } finally {
+                closeResource(new Response.Done.Completed());
+            }
         }
     }
 
@@ -141,12 +142,16 @@ public class TransactionRPC implements Transaction {
 
     private void close(Response.Done doneResponse) {
         if (isOpen.compareAndSet(true, false)) {
-            collectors.clear(doneResponse);
-            try {
-                requestObserver.onCompleted();
-            } catch (StatusRuntimeException e) {
-                throw GraknClientException.of(e);
-            }
+            closeResource(doneResponse);
+        }
+    }
+
+    private void closeResource(Response.Done doneResponse) {
+        collectors.clear(doneResponse);
+        try {
+            requestObserver.onCompleted();
+        } catch (StatusRuntimeException e) {
+            throw GraknClientException.of(e);
         }
     }
 
