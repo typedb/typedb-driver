@@ -49,7 +49,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Client(11, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
 
         private static final String codePrefix = "CLI";
-        private static final String messagePrefix = "Illegal Client Operation";
+        private static final String messagePrefix = "Client Error";
 
         Client(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
