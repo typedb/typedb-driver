@@ -116,14 +116,12 @@ public class TransactionRPC implements Transaction {
 
     @Override
     public void commit() {
-        if (isOpen.compareAndSet(true, false)) {
-            TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(tracingData()).setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
-            try {
-                execute(commitReq);
-            } finally {
-                closeResource(new Response.Done.Completed());
-            }
+        TransactionProto.Transaction.Req.Builder commitReq = TransactionProto.Transaction.Req.newBuilder()
+                .putAllMetadata(tracingData()).setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
+        try {
+            execute(commitReq);
+        } finally {
+            close();
         }
     }
 
@@ -142,16 +140,12 @@ public class TransactionRPC implements Transaction {
 
     private void close(Response.Done doneResponse) {
         if (isOpen.compareAndSet(true, false)) {
-            closeResource(doneResponse);
-        }
-    }
-
-    private void closeResource(Response.Done doneResponse) {
-        collectors.clear(doneResponse);
-        try {
-            requestObserver.onCompleted();
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
+            collectors.clear(doneResponse);
+            try {
+                requestObserver.onCompleted();
+            } catch (StatusRuntimeException e) {
+                throw GraknClientException.of(e);
+            }
         }
     }
 
