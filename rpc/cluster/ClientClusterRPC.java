@@ -49,7 +49,7 @@ public class ClientClusterRPC implements GraknClient.Cluster {
 
     public ClientClusterRPC(String... addresses) {
         coreClients = fetchClusterServers(addresses).stream()
-                .map(addr -> pair(addr, new ClientRPC(addr.client())))
+                .map(addr -> pair(addr, new ClientRPC(addr.external())))
                 .collect(Collectors.toMap(Pair::first, Pair::second));
         graknClusterRPCs = coreClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))

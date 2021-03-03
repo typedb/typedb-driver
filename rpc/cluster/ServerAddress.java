@@ -26,16 +26,16 @@ import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUME
 import static java.lang.Integer.parseInt;
 
 public class ServerAddress {
-    private final String clientHost;
-    private final int clientPort;
-    private final String serverHost;
-    private final int serverPort;
+    private final String externalHost;
+    private final int externalPort;
+    private final String internalHost;
+    private final int internalPort;
 
-    public ServerAddress(String clientHost, int clientPort, String serverHost, int serverPort) {
-        this.clientHost = clientHost;
-        this.clientPort = clientPort;
-        this.serverHost = serverHost;
-        this.serverPort = serverPort;
+    public ServerAddress(String externalHost, int externalPort, String internalHost, int internalPort) {
+        this.externalHost = externalHost;
+        this.externalPort = externalPort;
+        this.internalHost = internalHost;
+        this.internalPort = internalPort;
     }
 
     static ServerAddress parse(String address) {
@@ -51,33 +51,33 @@ public class ServerAddress {
         } else throw new GraknClientException(ILLEGAL_ARGUMENT.message(address));
     }
 
-    public String client() {
-        return clientHost + ":" + clientPort;
+    public String external() {
+        return externalHost + ":" + externalPort;
     }
 
-    public String clientHost() {
-        return clientHost;
+    public String externalHost() {
+        return externalHost;
     }
 
-    public int clientPort() {
-        return clientPort;
+    public int externalPort() {
+        return externalPort;
     }
 
-    public String server() {
-        return clientHost + ":" + serverPort;
+    public String internal() {
+        return externalHost + ":" + internalPort;
     }
 
-    public String serverHost() {
-        return serverHost;
+    public String internalHost() {
+        return internalHost;
     }
 
-    public int serverPort() {
-        return serverPort;
+    public int internalPort() {
+        return internalPort;
     }
 
     @Override
     public String toString() {
-        return clientHost + ":" + clientPort + "," + serverHost + ":" + serverPort;
+        return externalHost + ":" + externalPort + "," + internalHost + ":" + internalPort;
     }
 
     @Override
@@ -85,14 +85,14 @@ public class ServerAddress {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServerAddress that = (ServerAddress) o;
-        return clientPort == that.clientPort &&
-                serverPort == that.serverPort &&
-                Objects.equals(clientHost, that.clientHost) &&
-                Objects.equals(serverHost, that.serverHost);
+        return externalPort == that.externalPort &&
+                internalPort == that.internalPort &&
+                Objects.equals(externalHost, that.externalHost) &&
+                Objects.equals(internalHost, that.internalHost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientHost, clientPort, serverHost, serverPort);
+        return Objects.hash(externalHost, externalPort, internalHost, internalPort);
     }
 }
