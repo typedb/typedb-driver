@@ -29,6 +29,7 @@ public abstract class OptionsProtoBuilder {
         options.infer().ifPresent(builder::setInfer);
         options.traceInference().ifPresent(builder::setTraceInference);
         options.explain().ifPresent(builder::setExplain);
+        options.parallel().ifPresent(builder::setParallel);
         options.batchSize().ifPresent(builder::setBatchSize);
         options.prefetch().ifPresent(builder::setPrefetch);
         options.sessionIdleTimeout().ifPresent(builder::setSessionIdleTimeoutMillis);

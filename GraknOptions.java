@@ -30,6 +30,7 @@ public class GraknOptions {
     private Boolean infer = null;
     private Boolean traceInference = null;
     private Boolean explain = null;
+    private Boolean parallel = null;
     private Integer batchSize = null;
     private Boolean prefetch = null;
     private Integer sessionIdleTimeout = null;
@@ -73,6 +74,15 @@ public class GraknOptions {
 
     public GraknOptions explain(boolean explain) {
         this.explain = explain;
+        return this;
+    }
+
+    public Optional<Boolean> parallel() {
+        return Optional.ofNullable(parallel);
+    }
+
+    public GraknOptions parallel(boolean parallel) {
+        this.parallel = parallel;
         return this;
     }
 
