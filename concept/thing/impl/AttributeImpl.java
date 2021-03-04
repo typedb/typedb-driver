@@ -44,7 +44,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
     }
 
     public static AttributeImpl<?> of(ConceptProto.Thing thingProto) {
-        switch (thingProto.getValueType()) {
+        switch (thingProto.getType().getValueType()) {
             case BOOLEAN:
                 return AttributeImpl.Boolean.of(thingProto);
             case LONG:
@@ -57,7 +57,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
                 return AttributeImpl.DateTime.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getValueType()));
+                throw new GraknClientException(BAD_VALUE_TYPE.message(thingProto.getType().getValueType()));
         }
     }
 

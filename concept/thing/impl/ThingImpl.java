@@ -61,16 +61,16 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     public static ThingImpl of(ConceptProto.Thing thingProto) {
-        switch (thingProto.getEncoding()) {
-            case ENTITY:
+        switch (thingProto.getType().getEncoding()) {
+            case ENTITY_TYPE:
                 return EntityImpl.of(thingProto);
-            case RELATION:
+            case RELATION_TYPE:
                 return RelationImpl.of(thingProto);
-            case ATTRIBUTE:
+            case ATTRIBUTE_TYPE:
                 return AttributeImpl.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING.message(thingProto.getEncoding()));
+                throw new GraknClientException(BAD_ENCODING.message(thingProto.getType().getEncoding()));
         }
     }
 

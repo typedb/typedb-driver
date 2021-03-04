@@ -52,7 +52,6 @@ public abstract class ConceptProtoBuilder {
     public static ConceptProto.Thing thing(Thing thing) {
         return ConceptProto.Thing.newBuilder()
                 .setIid(iid(thing.getIID()))
-                .setEncoding(encoding(thing))
                 .build();
     }
 
@@ -111,18 +110,6 @@ public abstract class ConceptProtoBuilder {
 
     public static ByteString iid(String iid) {
         return ByteString.copyFrom(hexStringToBytes(iid));
-    }
-
-    private static ConceptProto.Thing.Encoding encoding(Thing thing) {
-        if (thing.isEntity()) {
-            return ConceptProto.Thing.Encoding.ENTITY;
-        } else if (thing.isRelation()) {
-            return ConceptProto.Thing.Encoding.RELATION;
-        } else if (thing.isAttribute()) {
-            return ConceptProto.Thing.Encoding.ATTRIBUTE;
-        } else {
-            return ConceptProto.Thing.Encoding.UNRECOGNIZED;
-        }
     }
 
     private static ConceptProto.Type.Encoding encoding(Type type) {
