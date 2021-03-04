@@ -27,26 +27,22 @@ import java.util.Map;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
+import static java.util.Collections.emptyMap;
 
 public abstract class TracingProtoBuilder {
 
     public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {
             GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
-            if (threadTrace == null) {
-                return Collections.emptyMap();
-            }
-
-            if (threadTrace.getId() == null || threadTrace.getRootId() == null) {
-                return Collections.emptyMap();
-            }
+            if (threadTrace == null) return emptyMap();
+            if (threadTrace.getId() == null || threadTrace.getRootId() == null) return emptyMap();
 
             Map<String, String> metadata = new HashMap<>(2);
             metadata.put("traceParentId", threadTrace.getId().toString());
             metadata.put("traceRootId", threadTrace.getRootId().toString());
             return metadata;
         } else {
-            return Collections.emptyMap();
+            return emptyMap();
         }
     }
 }
