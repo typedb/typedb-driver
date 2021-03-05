@@ -113,12 +113,14 @@ public class GraqlSteps {
     }
 
     @Given("graql insert; throws exception")
+    @SuppressWarnings("ReturnValueIgnored")
     public void graql_insert_throws(String insertQueryStatements) {
         //noinspection ResultOfMethodCallIgnored
         assertThrows(() -> graql_insert(insertQueryStatements).collect(Collectors.toList()));
     }
 
     @Given("graql insert; throws exception containing {string}")
+    @SuppressWarnings("ReturnValueIgnored")
     public void graql_insert_throws_exception(String exception, String insertQueryStatements) {
         //noinspection ResultOfMethodCallIgnored
         assertThrowsWithMessage(() -> graql_insert(insertQueryStatements).collect(Collectors.toList()), exception);
