@@ -28,10 +28,12 @@ import java.util.stream.Stream;
 
 public interface Attribute<VALUE> extends Thing {
 
-    VALUE getValue();
-
     @Override
     AttributeType getType();
+
+    VALUE getValue();
+
+    AttributeType.ValueType getValueType();
 
     @Override
     default boolean isAttribute() {
