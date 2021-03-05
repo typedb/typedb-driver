@@ -114,12 +114,12 @@ public class GraqlSteps {
 
     @Given("graql insert; throws exception")
     public void graql_insert_throws(String insertQueryStatements) {
-        assertThrows(() -> graql_insert(insertQueryStatements).iterator().next());
+        assertThrows(() -> graql_insert(insertQueryStatements).collect(Collectors.toList()));
     }
 
     @Given("graql insert; throws exception containing {string}")
     public void graql_insert_throws_exception(String exception, String insertQueryStatements) {
-        assertThrowsWithMessage(() -> graql_insert(insertQueryStatements).iterator().next(), exception);
+        assertThrowsWithMessage(() -> graql_insert(insertQueryStatements).collect(Collectors.toList()), exception);
     }
 
     @Given("graql delete")
