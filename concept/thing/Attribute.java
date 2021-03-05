@@ -33,8 +33,6 @@ public interface Attribute<VALUE> extends Thing {
 
     VALUE getValue();
 
-    AttributeType.ValueType getValueType();
-
     @Override
     default boolean isAttribute() {
         return true;

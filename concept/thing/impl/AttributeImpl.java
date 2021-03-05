@@ -97,11 +97,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
     public abstract VALUE getValue();
 
-    @Override
-    public AttributeType.ValueType getValueType() {
-        return getType().getValueType();
-    }
-
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
         Remote(GraknClient.Transaction transaction, java.lang.String iid) {
@@ -128,11 +123,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public abstract AttributeTypeImpl getType();
-
-        @Override
-        public AttributeType.ValueType getValueType() {
-            return getType().getValueType();
-        }
 
         @Override
         public AttributeImpl.Remote<VALUE> asAttribute() {
