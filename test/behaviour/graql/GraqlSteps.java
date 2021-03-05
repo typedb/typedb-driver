@@ -623,7 +623,7 @@ public class GraqlSteps {
             }
 
             Attribute<?> attribute = concept.asAttribute();
-            AttributeType attributeType = attribute.asRemote(tx()).getType();
+            AttributeType attributeType = attribute.getType();
 
             if (!type.equals(attributeType.getLabel())) {
                 return false;
@@ -668,8 +668,7 @@ public class GraqlSteps {
 
             for (Attribute<?> key : keys) {
                 String keyValue;
-                AttributeType keyType = key.asRemote(tx()).getType();
-                switch (keyType.getValueType()) {
+                switch (key.getValueType()) {
                     case BOOLEAN:
                         keyValue = key.asBoolean().getValue().toString();
                         break;
@@ -687,10 +686,10 @@ public class GraqlSteps {
                         break;
                     case OBJECT:
                     default:
-                        throw new ScenarioDefinitionException("Unrecognised value type " + keyType.getValueType());
+                        throw new ScenarioDefinitionException("Unrecognised value type " + key.getValueType());
                 }
 
-                keyMap.put(keyType.getLabel(), keyValue);
+                keyMap.put(key.getType().getLabel(), keyValue);
             }
             return value.equals(keyMap.get(type));
         }

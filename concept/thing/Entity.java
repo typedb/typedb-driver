@@ -30,11 +30,11 @@ public interface Entity extends Thing {
     }
 
     @Override
+    EntityType getType();
+
+    @Override
     Entity.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends Thing.Remote, Entity {
-
-        @Override
-        EntityType getType();
     }
 }

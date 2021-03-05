@@ -27,17 +27,25 @@ import grakn.protocol.ConceptProto;
 
 public class EntityImpl extends ThingImpl implements Entity {
 
-    EntityImpl(String iid) {
+    private final EntityTypeImpl type;
+
+    EntityImpl(String iid, EntityTypeImpl type) {
         super(iid);
+        this.type = type;
     }
 
     public static EntityImpl of(ConceptProto.Thing protoThing) {
-        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
+        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()), EntityTypeImpl.of(protoThing.getType()));
+    }
+
+    @Override
+    public EntityTypeImpl getType() {
+        return type;
     }
 
     @Override
     public EntityImpl.Remote asRemote(GraknClient.Transaction transaction) {
-        return new EntityImpl.Remote(transaction, getIID());
+        return new EntityImpl.Remote(transaction, getIID(), type);
     }
 
     @Override
@@ -47,18 +55,21 @@ public class EntityImpl extends ThingImpl implements Entity {
 
     public static class Remote extends ThingImpl.Remote implements Entity.Remote {
 
-        public Remote(GraknClient.Transaction transaction, String iid) {
+        private final EntityTypeImpl type;
+
+        public Remote(GraknClient.Transaction transaction, String iid, EntityTypeImpl type) {
             super(transaction, iid);
+            this.type = type;
         }
 
         @Override
         public EntityImpl.Remote asRemote(GraknClient.Transaction transaction) {
-            return new EntityImpl.Remote(transaction, getIID());
+            return new EntityImpl.Remote(transaction, getIID(), type);
         }
 
         @Override
         public EntityTypeImpl getType() {
-            return super.getType().asEntityType();
+            return type;
         }
 
         @Override

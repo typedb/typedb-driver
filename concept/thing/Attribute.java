@@ -28,7 +28,12 @@ import java.util.stream.Stream;
 
 public interface Attribute<VALUE> extends Thing {
 
+    @Override
+    AttributeType getType();
+
     VALUE getValue();
+
+    AttributeType.ValueType getValueType();
 
     @Override
     default boolean isAttribute() {
@@ -75,9 +80,6 @@ public interface Attribute<VALUE> extends Thing {
         Stream<? extends Thing> getOwners(ThingType ownerType);
 
         @Override
-        AttributeType getType();
-
-        @Override
         Attribute.Remote<VALUE> asAttribute();
 
         @Override
@@ -104,6 +106,9 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
+        AttributeType.Boolean getType();
+
+        @Override
         Attribute.Boolean.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
@@ -116,6 +121,9 @@ public interface Attribute<VALUE> extends Thing {
         default boolean isLong() {
             return true;
         }
+
+        @Override
+        AttributeType.Long getType();
 
         @Override
         Attribute.Long.Remote asRemote(GraknClient.Transaction transaction);
@@ -132,6 +140,9 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
+        AttributeType.Double getType();
+
+        @Override
         Attribute.Double.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
@@ -146,6 +157,9 @@ public interface Attribute<VALUE> extends Thing {
         }
 
         @Override
+        AttributeType.String getType();
+
+        @Override
         Attribute.String.Remote asRemote(GraknClient.Transaction transaction);
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
@@ -158,6 +172,9 @@ public interface Attribute<VALUE> extends Thing {
         default boolean isDateTime() {
             return true;
         }
+
+        @Override
+        AttributeType.DateTime getType();
 
         @Override
         Attribute.DateTime.Remote asRemote(GraknClient.Transaction transaction);

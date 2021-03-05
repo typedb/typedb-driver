@@ -50,10 +50,6 @@ import static grakn.common.util.Objects.className;
 public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     private final String iid;
-    // TODO: private final ThingType type;
-    // We need to store the concept Type, but we need a better way of retrieving it (currently requires a 2nd roundtrip)
-    // In 1.8 it was in a "pre-filled response" in ConceptProto.Concept, which was confusing as it was
-    // not actually prefilled when using the Concept API - only when using the Query API.
 
     ThingImpl(String iid) {
         if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
@@ -61,16 +57,16 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     public static ThingImpl of(ConceptProto.Thing thingProto) {
-        switch (thingProto.getEncoding()) {
-            case ENTITY:
+        switch (thingProto.getType().getEncoding()) {
+            case ENTITY_TYPE:
                 return EntityImpl.of(thingProto);
-            case RELATION:
+            case RELATION_TYPE:
                 return RelationImpl.of(thingProto);
-            case ATTRIBUTE:
+            case ATTRIBUTE_TYPE:
                 return AttributeImpl.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING.message(thingProto.getEncoding()));
+                throw new GraknClientException(BAD_ENCODING.message(thingProto.getType().getEncoding()));
         }
     }
 
@@ -78,6 +74,9 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final String getIID() {
         return iid;
     }
+
+    @Override
+    public abstract ThingTypeImpl getType();
 
     @Override
     public ThingImpl asThing() {
@@ -122,11 +121,8 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
             return iid;
         }
 
-        public ThingTypeImpl getType() {
-            ConceptProto.Thing.Req.Builder method = ConceptProto.Thing.Req.newBuilder()
-                    .setThingGetTypeReq(ConceptProto.Thing.GetType.Req.getDefaultInstance());
-            return TypeImpl.of(execute(method).getThingGetTypeRes().getThingType()).asThingType();
-        }
+        @Override
+        public abstract ThingTypeImpl getType();
 
         @Override
         public final boolean isInferred() {
