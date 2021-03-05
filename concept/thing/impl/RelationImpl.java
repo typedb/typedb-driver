@@ -45,17 +45,25 @@ import static grakn.client.concept.proto.ConceptProtoBuilder.types;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
-    RelationImpl(String iid) {
+    private final RelationTypeImpl type;
+
+    RelationImpl(String iid, RelationTypeImpl type) {
         super(iid);
+        this.type = type;
     }
 
     public static RelationImpl of(ConceptProto.Thing protoThing) {
-        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()));
+        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()), RelationTypeImpl.of(protoThing.getType()));
     }
 
     @Override
     public RelationImpl.Remote asRemote(GraknClient.Transaction transaction) {
-        return new RelationImpl.Remote(transaction, getIID());
+        return new RelationImpl.Remote(transaction, getIID(), type);
+    }
+
+    @Override
+    public RelationTypeImpl getType() {
+        return type;
     }
 
     @Override
@@ -65,18 +73,21 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     public static class Remote extends ThingImpl.Remote implements Relation.Remote {
 
-        public Remote(GraknClient.Transaction transaction, String iid) {
+        private final RelationTypeImpl type;
+
+        public Remote(GraknClient.Transaction transaction, String iid, RelationTypeImpl type) {
             super(transaction, iid);
+            this.type = type;
         }
 
         @Override
         public RelationImpl.Remote asRemote(GraknClient.Transaction transaction) {
-            return new RelationImpl.Remote(transaction, getIID());
+            return new RelationImpl.Remote(transaction, getIID(), type);
         }
 
         @Override
         public RelationTypeImpl getType() {
-            return super.getType().asRelationType();
+            return type;
         }
 
         @Override

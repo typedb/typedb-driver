@@ -31,6 +31,8 @@ public interface Thing extends Concept {
 
     String getIID();
 
+    ThingType getType();
+
     @Override
     default boolean isThing() {
         return true;
@@ -40,8 +42,6 @@ public interface Thing extends Concept {
     Thing.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends Concept.Remote, Thing {
-
-        ThingType getType();
 
         void setHas(Attribute<?> attribute);
 

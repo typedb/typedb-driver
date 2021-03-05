@@ -35,12 +35,12 @@ public interface Relation extends Thing {
     }
 
     @Override
+    RelationType getType();
+
+    @Override
     Relation.Remote asRemote(GraknClient.Transaction transaction);
 
     interface Remote extends Thing.Remote, Relation {
-
-        @Override
-        RelationType getType();
 
         void addPlayer(RoleType roleType, Thing player);
 
