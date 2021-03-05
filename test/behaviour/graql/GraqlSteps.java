@@ -672,7 +672,7 @@ public class GraqlSteps {
 
             for (Attribute<?> key : keys) {
                 String keyValue;
-                switch (key.getValueType()) {
+                switch (key.getType().getValueType()) {
                     case BOOLEAN:
                         keyValue = key.asBoolean().getValue().toString();
                         break;
@@ -690,7 +690,7 @@ public class GraqlSteps {
                         break;
                     case OBJECT:
                     default:
-                        throw new ScenarioDefinitionException("Unrecognised value type " + key.getValueType());
+                        throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
                 }
 
                 keyMap.put(key.getType().getLabel(), keyValue);
