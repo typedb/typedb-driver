@@ -21,7 +21,6 @@ package grakn.client.rpc.cluster;
 
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.cluster.DatabaseProto;
-import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +64,7 @@ abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? run(replica) : rerun(replica);
             } catch (GraknClientException e) {
-                if (nonFatalException(e)) {
+                if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage()) || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
                     waitForPrimaryReplicaSelection();
                     replica = seekPrimaryReplica();
@@ -145,9 +144,4 @@ abstract class FailsafeTask<TResult> {
         return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, addresses);
     }
 
-    private boolean nonFatalException(GraknClientException e) {
-        return CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage()) ||
-                UNABLE_TO_CONNECT.equals(e.getErrorMessage()) ||
-                e.getCause() instanceof StatusRuntimeException && ((StatusRuntimeException) e.getCause()).getStatus() == Status.UNKNOWN;
-    }
 }
