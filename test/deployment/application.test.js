@@ -17,9 +17,7 @@
  * under the License.
  */
 
-const {GraknClient} = require("grakn-client/GraknClient");
-const SessionType = GraknClient.SessionType;
-const TransactionType = GraknClient.TransactionType;
+const { GraknClient, SessionType, TransactionType } = require("grakn-client/GraknClient");
 
 jest.setTimeout(15000);
 
@@ -31,7 +29,8 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-    await client.databases().delete("thisisadatabase");
+    const db = await client.databases().get("thisisadatabase");
+    await db.delete();
     client.close();
 });
 
