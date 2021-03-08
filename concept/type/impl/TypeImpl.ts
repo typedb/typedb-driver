@@ -20,8 +20,8 @@
 import {
     RemoteType,
     Type,
-    Grakn,
-    RPCTransaction,
+    GraknClient,
+    TransactionRPC,
     Stream,
     ThingImpl,
     ConceptProtoBuilder,
@@ -30,7 +30,7 @@ import {
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
     private readonly _label: string;
@@ -73,7 +73,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 }
 
 export abstract class RemoteTypeImpl extends RemoteConceptImpl implements RemoteType {
-    private readonly _rpcTransaction: RPCTransaction;
+    private readonly _rpcTransaction: TransactionRPC;
     private _label: string;
     private readonly _isRoot: boolean;
 
@@ -81,7 +81,7 @@ export abstract class RemoteTypeImpl extends RemoteConceptImpl implements Remote
         super();
         if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
         if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
-        this._rpcTransaction = transaction as RPCTransaction;
+        this._rpcTransaction = transaction as TransactionRPC;
         this._label = label;
         this._isRoot = isRoot;
     }

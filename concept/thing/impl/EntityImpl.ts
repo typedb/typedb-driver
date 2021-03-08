@@ -23,22 +23,29 @@ import {
     Entity,
     RemoteEntity,
     EntityTypeImpl,
-    Grakn, ThingTypeImpl, Bytes,
+    GraknClient, ThingTypeImpl, Bytes,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {
-    protected constructor(iid: string) {
+    private readonly _type: EntityTypeImpl;
+
+    protected constructor(iid: string, type: EntityTypeImpl) {
         super(iid);
+        this._type = type;
     }
 
     static of(protoThing: ConceptProto.Thing): EntityImpl {
-        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
+        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), EntityTypeImpl.of(protoThing.getType()));
+    }
+
+    getType(): EntityTypeImpl {
+        return this._type;
     }
 
     asRemote(transaction: Transaction): RemoteEntityImpl {
-        return new RemoteEntityImpl(transaction, this.getIID());
+        return new RemoteEntityImpl(transaction, this.getIID(), this._type);
     }
 
     isEntity(): boolean {
@@ -47,17 +54,19 @@ export class EntityImpl extends ThingImpl implements Entity {
 }
 
 export class RemoteEntityImpl extends RemoteThingImpl implements RemoteEntity {
-    constructor(transaction: Transaction, iid: string) {
+    private readonly _type: EntityTypeImpl;
+
+    constructor(transaction: Transaction, iid: string, type: EntityTypeImpl) {
         super(transaction, iid);
+        this._type = type;
     }
 
     public asRemote(transaction: Transaction): RemoteEntityImpl {
-        return new RemoteEntityImpl(transaction, this.getIID());
+        return new RemoteEntityImpl(transaction, this.getIID(), this._type);
     }
 
-    async getType(): Promise<EntityTypeImpl> {
-        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as EntityTypeImpl;
+    getType(): EntityTypeImpl {
+        return this._type;
     }
 
     isEntity(): boolean {

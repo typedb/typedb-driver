@@ -20,12 +20,11 @@
 import { Then } from "@cucumber/cucumber";
 import { sessions, sessionsToTransactions } from "../ConnectionSteps";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { Grakn } from "../../../../dist/Grakn";
-import TransactionType = Grakn.TransactionType;
+import { GraknClient, TransactionType } from "../../../../dist/GraknClient";
 import assert = require("assert");
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
-import Transaction = Grakn.Transaction;
-import Session = Grakn.Session;
+import Transaction = GraknClient.Transaction;
+import Session = GraknClient.Session;
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {

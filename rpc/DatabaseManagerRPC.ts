@@ -17,24 +17,21 @@
  * under the License.
  */
 
+import { ErrorMessage, GraknClient, GraknClientError } from "../dependencies_internal";
 import { GraknClient as GraknGrpc } from "grakn-protocol/protobuf/grakn_grpc_pb"
-import {
-    ErrorMessage,
-    Grakn, GraknClientError
-} from "../dependencies_internal";
-import database_pb from "grakn-protocol/protobuf/database_pb";
-const { Database } = database_pb;
+import DatabaseProto from "grakn-protocol/protobuf/database_pb";
+import { DatabaseRPC } from "./DatabaseRPC";
 
-export class RPCDatabaseManager implements Grakn.DatabaseManager {
-    private _grpcClient: GraknGrpc;
+export class DatabaseManagerRPC implements GraknClient.DatabaseManager {
+    private readonly _grpcClient: GraknGrpc;
 
     constructor(client: GraknGrpc) {
         this._grpcClient = client;
     }
 
     contains(name: string): Promise<boolean> {
-        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = new Database.Contains.Req().setName(name);
+        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME);
+        const req = new DatabaseProto.Database.Contains.Req().setName(name);
         return new Promise((resolve, reject) => {
             this._grpcClient.database_contains(req, (err, res) => {
                 if (err) reject(err);
@@ -44,8 +41,8 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
     }
 
     create(name: string): Promise<void> {
-        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = new Database.Create.Req().setName(name);
+        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME);
+        const req = new DatabaseProto.Database.Create.Req().setName(name);
         return new Promise((resolve, reject) => {
             this._grpcClient.database_create(req, (err) => {
                 if (err) reject(err);
@@ -54,23 +51,17 @@ export class RPCDatabaseManager implements Grakn.DatabaseManager {
         });
     }
 
-    delete(name: string): Promise<void> {
-        if (!name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
-        const req = new Database.Delete.Req().setName(name);
-        return new Promise((resolve, reject) => {
-            this._grpcClient.database_delete(req, (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+    async get(name: string): Promise<DatabaseRPC> {
+        if (await this.contains(name)) return new DatabaseRPC(this._grpcClient, name);
+        else throw new GraknClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST);
     }
 
-    all(): Promise<string[]> {
-        const allRequest = new Database.All.Req();
+    all(): Promise<DatabaseRPC[]> {
+        const allRequest = new DatabaseProto.Database.All.Req();
         return new Promise((resolve, reject) => {
             this._grpcClient.database_all(allRequest, (err, res) => {
                 if (err) reject(err);
-                else resolve(res.getNamesList());
+                else resolve(res.getNamesList().map(name => new DatabaseRPC(this._grpcClient, name)));
             });
         });
     }

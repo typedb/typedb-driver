@@ -17,19 +17,15 @@
  * under the License.
  */
 
+import { TransactionRPC, Rule, RuleImpl, Stream } from "../dependencies_internal"
 import LogicProto from "grakn-protocol/protobuf/logic_pb";
-import {
-    RPCTransaction,
-    Rule,
-    RuleImpl, Stream,
-} from "../dependencies_internal"
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class LogicManager {
-    private readonly _rpcTransaction: RPCTransaction;
+    private readonly _transactionRPC: TransactionRPC;
 
-    constructor (rpcTransaction: RPCTransaction) {
-        this._rpcTransaction = rpcTransaction;
+    constructor (transactionRPC: TransactionRPC) {
+        this._transactionRPC = transactionRPC;
     }
 
     async putRule(label: string, when: string, then: string): Promise<Rule> {
@@ -58,11 +54,11 @@ export class LogicManager {
     private async execute(logicManagerReq: LogicProto.LogicManager.Req): Promise<LogicProto.LogicManager.Res> {
         const transactionReq = new TransactionProto.Transaction.Req()
             .setLogicManagerReq(logicManagerReq);
-        return await this._rpcTransaction.execute(transactionReq, res => res.getLogicManagerRes());
+        return await this._transactionRPC.execute(transactionReq, res => res.getLogicManagerRes());
     }
 
     private ruleStream(method: LogicProto.LogicManager.Req, ruleListGetter: (res: LogicProto.LogicManager.Res) => LogicProto.Rule[]): Stream<RuleImpl> {
         const request = new TransactionProto.Transaction.Req().setLogicManagerReq(method);
-        return this._rpcTransaction.stream(request, res => ruleListGetter(res.getLogicManagerRes()).map(RuleImpl.of));
+        return this._transactionRPC.stream(request, res => ruleListGetter(res.getLogicManagerRes()).map(RuleImpl.of));
     }
 }

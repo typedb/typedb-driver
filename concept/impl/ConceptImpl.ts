@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import { Concept, RemoteConcept, Grakn } from "../../dependencies_internal";
+import { Concept, RemoteConcept, GraknClient } from "../../dependencies_internal";
 
 export abstract class ConceptImpl implements Concept {
-    abstract asRemote(transaction: Grakn.Transaction): RemoteConcept
+    abstract asRemote(transaction: GraknClient.Transaction): RemoteConcept
 
     isRemote(): boolean {
         return false;
@@ -71,7 +71,7 @@ export abstract class ConceptImpl implements Concept {
 }
 
 export abstract class RemoteConceptImpl implements RemoteConcept {
-    abstract asRemote(transaction: Grakn.Transaction): RemoteConcept
+    abstract asRemote(transaction: GraknClient.Transaction): RemoteConcept
     abstract delete(): Promise<void>
     abstract isDeleted(): Promise<boolean>
 

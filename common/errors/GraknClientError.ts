@@ -21,9 +21,10 @@ import { ErrorMessage } from "../../dependencies_internal"
 export class GraknClientError extends Error {
     constructor(error: string | Error | ErrorMessage) {
         if (typeof error === "string") {
-            super(error)
+            super(error);
         } else {
-            super(error.toString())
+            // TODO: Check for UNAVAILABLE code, message containing "Received RST_STREAM", or replica-not-primary
+            super(error.toString());
         }
         this.name = "GraknClientError"; // Required to correctly report error type in default throw
     }

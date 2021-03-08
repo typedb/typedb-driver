@@ -17,20 +17,15 @@
  * under the License.
  */
 
-import {
-    Thing,
-    RemoteThing,
-    EntityType,
-    Grakn,
-    Merge,
-} from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import { Thing, RemoteThing, EntityType, GraknClient } from "../../dependencies_internal";
+import Transaction = GraknClient.Transaction;
 
 export interface Entity extends Thing {
+    getType(): EntityType;
     asRemote(transaction: Transaction): RemoteEntity;
 }
 
-export interface RemoteEntity extends Merge<RemoteThing, Entity> {
-    getType(): Promise<EntityType>;
+export interface RemoteEntity extends RemoteThing {
+    getType(): EntityType;
     asRemote(transaction: Transaction): RemoteEntity;
 }

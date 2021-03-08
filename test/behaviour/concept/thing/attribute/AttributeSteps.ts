@@ -50,7 +50,7 @@ When("attribute {var} get owners do not contain: {var}", async (var1: string, va
 });
 
 When("attribute {var} has value type: {value_type}", async (var0: string, valueType: ValueType) => {
-    assert.strictEqual(valueType, (await (get(var0) as Attribute<ValueType>).asRemote(tx()).getType()).getValueType())
+    assert.strictEqual(valueType, (get(var0) as Attribute<ValueType>).getType().getValueType());
 });
 
 When("{var} = attribute\\({type_label}) as\\(boolean) put: {bool}", async (var0: string, typeLabel: string, value: boolean) => {

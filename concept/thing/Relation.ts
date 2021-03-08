@@ -17,23 +17,17 @@
  * under the License.
  */
 
-import {
-    Thing,
-    RemoteThing,
-    Grakn,
-    RelationType,
-    RoleType,
-    Merge,
-    Stream,
-} from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import { Thing, RemoteThing, GraknClient, RelationType, RoleType, Stream } from "../../dependencies_internal";
+import Transaction = GraknClient.Transaction;
 
 export interface Relation extends Thing {
+    getType(): RelationType;
     asRemote(transaction: Transaction): RemoteRelation;
 }
 
-export interface RemoteRelation extends Merge<RemoteThing, Relation> {
-    getType(): Promise<RelationType>;
+export interface RemoteRelation extends RemoteThing {
+    getType(): RelationType;
+    asRemote(transaction: Transaction): RemoteRelation;
 
     addPlayer(roleType: RoleType, player: Thing): Promise<void>;
     removePlayer(roleType: RoleType, player: Thing): Promise<void>;
@@ -42,6 +36,4 @@ export interface RemoteRelation extends Merge<RemoteThing, Relation> {
     getPlayers(roleTypes: RoleType[]): Stream<Thing>;
 
     getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
-
-    asRemote(transaction: Transaction): RemoteRelation;
 }

@@ -31,15 +31,13 @@ import {
 export namespace ConceptProtoBuilder {
 
     export function thing(thing: Thing): ConceptProto.Thing {
-        return new ConceptProto.Thing()
-            .setIid(Bytes.hexStringToBytes(thing.getIID()))
-            .setEncoding(thingEncoding(thing));
+        return new ConceptProto.Thing().setIid(Bytes.hexStringToBytes(thing.getIID()));
     }
 
     export function type(type: Type): ConceptProto.Type {
         const typeProto = new ConceptProto.Type()
             .setLabel(type.getLabel())
-            .setEncoding(typeEncoding(type));
+            .setEncoding(encoding(type));
 
         if (type.isRoleType()) {
             typeProto.setScope((type as RoleTypeImpl).getScope());
@@ -90,19 +88,7 @@ export namespace ConceptProtoBuilder {
         }
     }
 
-    export function thingEncoding(thing: Thing): ConceptProto.Thing.Encoding {
-        if (thing.isEntity()) {
-            return ConceptProto.Thing.Encoding.ENTITY;
-        } else if (thing.isRelation()) {
-            return ConceptProto.Thing.Encoding.RELATION;
-        } else if (thing.isAttribute()) {
-            return ConceptProto.Thing.Encoding.ATTRIBUTE;
-        } else {
-            throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thing))
-        }
-    }
-
-    export function typeEncoding(type: Type): ConceptProto.Type.Encoding {
+    export function encoding(type: Type): ConceptProto.Type.Encoding {
         if (type.isEntityType()) {
             return ConceptProto.Type.Encoding.ENTITY_TYPE;
         } else if (type.isRelationType()) {

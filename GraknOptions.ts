@@ -17,82 +17,35 @@
  * under the License.
  */
 
-import {
-    GraknClientError,
-    ErrorMessage,
-} from "./dependencies_internal"
-
 export class GraknOptions {
-    private _infer: boolean;
-    private _traceInference: boolean;
-    private _explain: boolean;
-    private _batchSize: number;
-    private _sessionIdleTimeoutMillis: number;
-    private _schemaLockAcquireTimeoutMillis: number;
+    infer?: boolean;
+    traceInference?: boolean;
+    explain?: boolean;
+    parallel?: boolean;
+    batchSize?: number;
+    prefetch?: boolean;
+    sessionIdleTimeoutMillis?: number;
+    schemaLockAcquireTimeoutMillis?: number;
 
-    constructor() {
-        this._infer = null;
-        this._traceInference = null;
-        this._explain = null;
-        this._batchSize = null;
-        this._sessionIdleTimeoutMillis = null;
-        this._schemaLockAcquireTimeoutMillis = null;
+    constructor(obj: {[K in keyof GraknOptions]: GraknOptions[K]} = {}) {
+        Object.assign(this, obj);
+    }
+}
+
+export class GraknOptionsCluster extends GraknOptions {
+    readAnyReplica?: boolean;
+
+    constructor(obj: {[K in keyof GraknOptionsCluster]: GraknOptionsCluster[K]} = {}) {
+        super(obj);
+    }
+}
+
+export namespace GraknOptions {
+    export function core(options: {[K in keyof GraknOptions]: GraknOptions[K]} = {}) {
+        return new GraknOptions(options);
     }
 
-    infer(): boolean {
-        return this._infer;
-    }
-
-    setInfer(infer: boolean): GraknOptions {
-        this._infer = infer;
-        return this;
-    }
-
-    traceInference(): boolean {
-       return this._traceInference;
-    }
-
-    setTraceInference(traceInference: boolean): GraknOptions {
-        this._traceInference = traceInference;
-        return this;
-    }
-
-    explain(): boolean {
-        return this._explain;
-    }
-
-    setExplain(explain: boolean): GraknOptions {
-        this._explain = explain;
-        return this;
-    }
-
-    batchSize(): number {
-        return this._batchSize;
-    }
-
-    setBatchSize(batchSize: number): GraknOptions {
-        if (batchSize < 1) {
-            throw new GraknClientError(ErrorMessage.Client.NONPOSITIVE_BATCH_SIZE.message(batchSize))
-        }
-        this._batchSize = batchSize;
-        return this;
-    }
-
-    sessionIdleTimeoutMillis(): number {
-        return this._sessionIdleTimeoutMillis;
-    }
-
-    setSessionIdleTimeoutMillis(sessionIdleTimeoutMillis: number): GraknOptions {
-        this._sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
-        return this;
-    }
-
-    schemaLockAcquireTimeoutMillis(): number {
-        return this._schemaLockAcquireTimeoutMillis;
-    }
-
-    setSchemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis: number): GraknOptions {
-        this._schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
-        return this;
+    export function cluster(options: {[K in keyof GraknOptionsCluster]: GraknOptionsCluster[K]} = {}) {
+        return new GraknOptionsCluster(options);
     }
 }

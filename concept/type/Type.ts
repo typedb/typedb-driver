@@ -17,14 +17,8 @@
  * under the License.
  */
 
-import {
-    Concept,
-    RemoteConcept,
-    Grakn,
-    Merge,
-    Stream,
-} from "../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import { Concept, RemoteConcept, GraknClient, Stream } from "../../dependencies_internal";
+import Transaction = GraknClient.Transaction;
 
 export interface Type extends Concept {
     getLabel(): string;
@@ -33,13 +27,15 @@ export interface Type extends Concept {
     asRemote(transaction: Transaction): RemoteType;
 }
 
-export interface RemoteType extends Merge<RemoteConcept, Type> {
+export interface RemoteType extends RemoteConcept {
+    getLabel(): string;
+    isRoot(): boolean;
+    asRemote(transaction: Transaction): RemoteType;
+
     setLabel(label: string): Promise<void>;
     isAbstract(): Promise<boolean>;
 
     getSupertype(): Promise<Type>;
     getSupertypes(): Stream<Type>;
     getSubtypes(): Stream<Type>;
-
-    asRemote(transaction: Transaction): RemoteType; /* Required for `RemoteType` to take precedence over `RemoteConcept` in sub-interfaces */
 }

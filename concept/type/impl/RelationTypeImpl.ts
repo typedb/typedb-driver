@@ -22,12 +22,12 @@ import {
     RemoteThingTypeImpl,
     RelationType,
     RemoteRelationType,
-    Grakn,
+    GraknClient,
     Stream,
     RelationImpl,
     RoleTypeImpl, TypeImpl,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto, { Type as TypeProto } from "grakn-protocol/protobuf/concept_pb";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {

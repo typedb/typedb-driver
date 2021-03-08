@@ -24,14 +24,14 @@ import {
     RemoteThingType,
     AttributeType,
     RoleType,
-    Grakn,
+    GraknClient,
     Stream,
     ThingImpl,
     RoleTypeImpl,
     AttributeTypeImpl,
     ConceptProtoBuilder, EntityTypeImpl, RelationTypeImpl, GraknClientError, ErrorMessage,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import assert from "assert";
 

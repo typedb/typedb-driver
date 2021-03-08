@@ -53,7 +53,7 @@ export class Numeric {
 
     public asNumber(): number {
         if (this.isNumber()) return this._numberValue;
-        else throw new GraknClientError(ErrorMessage.Query.ILLEGAL_CAST.message("NaN", "number"));
+        else throw new GraknClientError(ErrorMessage.Internal.ILLEGAL_CAST.message("NaN", "number"));
     }
 
     private static ofNumber(value: number): Numeric {

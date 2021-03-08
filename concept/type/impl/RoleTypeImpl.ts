@@ -22,15 +22,15 @@ import {
     RemoteThingTypeImpl,
     RoleType,
     RemoteRoleType,
-    Grakn,
+    GraknClient,
     RelationTypeImpl,
     Stream,
-    TypeImpl,
+    TypeImpl, RemoteTypeImpl,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
-export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
+export class RoleTypeImpl extends TypeImpl implements RoleType {
     private readonly _scope: string;
 
     protected constructor(label: string, scope: string, isRoot: boolean) {
@@ -63,7 +63,7 @@ export class RoleTypeImpl extends ThingTypeImpl implements RoleType {
     }
 }
 
-export class RemoteRoleTypeImpl extends RemoteThingTypeImpl implements RemoteRoleType {
+export class RemoteRoleTypeImpl extends RemoteTypeImpl implements RemoteRoleType {
     private readonly _scope: string;
 
     constructor(transaction: Transaction, label: string, scope: string, isRoot: boolean) {

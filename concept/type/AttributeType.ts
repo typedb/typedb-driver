@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import {
     Attribute,
     BooleanAttribute,
@@ -25,7 +25,7 @@ import {
     DoubleAttribute,
     LongAttribute,
     StringAttribute,
-    Grakn,
+    GraknClient,
     RemoteThingType,
     ThingType,
     Merge,

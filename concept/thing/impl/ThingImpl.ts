@@ -29,14 +29,14 @@ import {
     LongAttributeType,
     StringAttributeType,
     RoleType,
-    Grakn,
+    GraknClient,
     ThingTypeImpl,
     RoleTypeImpl,
     Stream,
     RelationImpl,
     TypeImpl,
     ConceptProtoBuilder,
-    RPCTransaction,
+    TransactionRPC,
     BooleanAttributeTypeImpl,
     DateTimeAttributeTypeImpl,
     DoubleAttributeTypeImpl,
@@ -52,7 +52,7 @@ import {
     ErrorMessage, EntityImpl, Bytes, ConceptImpl, RemoteConceptImpl, Concept,
 } from "../../../dependencies_internal";
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 import ValueClass = AttributeType.ValueClass;
 
@@ -69,6 +69,8 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     getIID(): string {
         return this._iid;
     }
+
+    abstract getType(): ThingTypeImpl;
 
     isRemote(): boolean {
         return false;
@@ -92,7 +94,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
 export abstract class RemoteThingImpl extends RemoteConceptImpl implements RemoteThing {
     private readonly _iid: string;
-    private readonly _rpcTransaction: RPCTransaction;
+    private readonly _transactionRPC: TransactionRPC;
 
     protected constructor(transaction: Transaction, iid: string) {
         super();
@@ -100,17 +102,14 @@ export abstract class RemoteThingImpl extends RemoteConceptImpl implements Remot
         if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
         if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
-        this._rpcTransaction = transaction as RPCTransaction;
+        this._transactionRPC = transaction as TransactionRPC;
     }
 
     getIID(): string {
         return this._iid;
     }
 
-    async getType(): Promise<ThingTypeImpl> {
-        const response = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return TypeImpl.of(response.getThingGetTypeRes().getThingType()) as ThingTypeImpl;
-    }
+    abstract getType(): ThingTypeImpl;
 
     async isInferred(): Promise<boolean> {
         return (await this.execute(new ConceptProto.Thing.Req().setThingIsInferredReq(
@@ -190,26 +189,26 @@ export abstract class RemoteThingImpl extends RemoteConceptImpl implements Remot
     }
 
     async isDeleted(): Promise<boolean> {
-        return !(await this._rpcTransaction.concepts().getThing(this._iid));
+        return !(await this._transactionRPC.concepts().getThing(this._iid));
     }
 
     protected get transaction(): Transaction {
-        return this._rpcTransaction;
+        return this._transactionRPC;
     }
 
     protected typeStream(method: ConceptProto.Thing.Req, typeGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Type[]): Stream<TypeImpl> {
         const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
-        return (this._rpcTransaction).stream(request, res => typeGetter(res.getThingRes()).map(TypeImpl.of));
+        return (this._transactionRPC).stream(request, res => typeGetter(res.getThingRes()).map(TypeImpl.of));
     }
 
     protected thingStream(method: ConceptProto.Thing.Req, thingGetter: (res: ConceptProto.Thing.Res) => ConceptProto.Thing[]): Stream<ThingImpl> {
         const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
-        return this._rpcTransaction.stream(request, res => thingGetter(res.getThingRes()).map(ThingImpl.of));
+        return this._transactionRPC.stream(request, res => thingGetter(res.getThingRes()).map(ThingImpl.of));
     }
 
     protected execute(method: ConceptProto.Thing.Req): Promise<ConceptProto.Thing.Res> {
         const request = new TransactionProto.Transaction.Req().setThingReq(method.setIid(Bytes.hexStringToBytes(this._iid)));
-        return this._rpcTransaction.execute(request, res => res.getThingRes());
+        return this._transactionRPC.execute(request, res => res.getThingRes());
     }
 
     toString(): string {
@@ -221,15 +220,15 @@ export abstract class RemoteThingImpl extends RemoteConceptImpl implements Remot
 
 export namespace ThingImpl {
     export function of(thingProto: ConceptProto.Thing): ThingImpl {
-        switch (thingProto.getEncoding()) {
-            case ConceptProto.Thing.Encoding.ENTITY:
+        switch (thingProto.getType().getEncoding()) {
+            case ConceptProto.Type.Encoding.ENTITY_TYPE:
                 return EntityImpl.of(thingProto);
-            case ConceptProto.Thing.Encoding.RELATION:
+            case ConceptProto.Type.Encoding.RELATION_TYPE:
                 return RelationImpl.of(thingProto);
-            case ConceptProto.Thing.Encoding.ATTRIBUTE:
+            case ConceptProto.Type.Encoding.ATTRIBUTE_TYPE:
                 return AttributeImpl.of(thingProto);
             default:
-                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getEncoding()));
+                throw new GraknClientError(ErrorMessage.Concept.BAD_ENCODING.message(thingProto.getType().getEncoding()));
         }
     }
 }

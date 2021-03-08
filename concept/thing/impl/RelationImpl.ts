@@ -25,26 +25,33 @@ import {
     Thing,
     RelationTypeImpl,
     RoleType,
-    Grakn,
+    GraknClient,
     Stream,
-    RPCTransaction,
+    TransactionRPC,
     RoleTypeImpl, ConceptProtoBuilder, ThingTypeImpl, TypeImpl, Bytes,
 } from "../../../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
-    protected constructor(iid: string) {
-        super(iid)
+    private readonly _type: RelationTypeImpl;
+
+    protected constructor(iid: string, type: RelationTypeImpl) {
+        super(iid);
+        this._type = type;
     }
 
     static of(protoThing: ConceptProto.Thing): RelationImpl {
-        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()));
+        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid_asU8()), RelationTypeImpl.of(protoThing.getType()));
     }
 
     asRemote(transaction: Transaction): RemoteRelationImpl {
-        return new RemoteRelationImpl(transaction, this.getIID());
+        return new RemoteRelationImpl(transaction, this.getIID(), this._type);
+    }
+
+    getType(): RelationTypeImpl {
+        return this._type;
     }
 
     isRelation(): boolean {
@@ -53,17 +60,19 @@ export class RelationImpl extends ThingImpl implements Relation {
 }
 
 export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelation {
-    constructor(transaction: Transaction, iid: string) {
+    private readonly _type: RelationTypeImpl;
+
+    constructor(transaction: Transaction, iid: string, type: RelationTypeImpl) {
         super(transaction, iid);
+        this._type = type;
     }
 
     asRemote(transaction: Transaction): RemoteRelationImpl {
-        return new RemoteRelationImpl(transaction, this.getIID());
+        return new RemoteRelationImpl(transaction, this.getIID(), this._type);
     }
 
-    async getType(): Promise<RelationTypeImpl> {
-        const res = await this.execute(new ConceptProto.Thing.Req().setThingGetTypeReq(new ConceptProto.Thing.GetType.Req()));
-        return ThingTypeImpl.of(res.getThingGetTypeRes().getThingType()) as RelationTypeImpl;
+    getType(): RelationTypeImpl {
+        return this._type;
     }
 
     async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
@@ -71,7 +80,7 @@ export class RemoteRelationImpl extends RemoteThingImpl implements RemoteRelatio
             .setRelationGetPlayersByRoleTypeReq(new ConceptProto.Relation.GetPlayersByRoleType.Req())
             .setIid(Bytes.hexStringToBytes(this.getIID()));
         const request = new TransactionProto.Transaction.Req().setThingReq(method);
-        const stream = (this.transaction as RPCTransaction).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
+        const stream = (this.transaction as TransactionRPC).stream(request, res => res.getThingRes().getRelationGetPlayersByRoleTypeRes().getRoleTypesWithPlayersList());
         const rolePlayerMap = new Map<RoleTypeImpl, ThingImpl[]>();
         for await (const rolePlayer of stream) {
             const role = TypeImpl.of(rolePlayer.getRoleType()) as RoleTypeImpl;

@@ -18,10 +18,9 @@
  */
 
 import { Given, After, Before, setDefaultTimeout, BeforeAll } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/rpc/GraknClient";
-import { Grakn } from "../../../dist/Grakn";
-import Session = Grakn.Session;
-import Transaction = Grakn.Transaction;
+import { GraknClient } from "../../../dist/GraknClient";
+import Session = GraknClient.Session;
+import Transaction = GraknClient.Transaction;
 import assert = require("assert");
 
 setDefaultTimeout(20 * 1000);
@@ -40,7 +39,7 @@ Given("connection has been opened", () => {
 });
 
 BeforeAll(() => {
-    client = new GraknClient();
+    client = GraknClient.core();
 });
 
 Before(async () => {
@@ -48,8 +47,8 @@ Before(async () => {
         await session.close()
     }
     const databases = await client.databases().all();
-    for (const name of databases) {
-        await client.databases().delete(name);
+    for (const db of databases) {
+        await db.delete();
     }
     sessions.length = 0;
     sessionsToTransactions.clear();
@@ -59,7 +58,7 @@ After(async () => {
     for (const session of sessions) {
         await session.close()
     }
-    for (const name of await client.databases().all()) {
-        await client.databases().delete(name);
+    for (const db of await client.databases().all()) {
+        await db.delete();
     }
 });

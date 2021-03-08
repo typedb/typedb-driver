@@ -76,9 +76,9 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {boo
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: boolean) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as BooleanAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getEntityType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
-                return
+                return;
             }
         }
         put(thingName, null);
@@ -89,9 +89,9 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {int
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: number) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as LongAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getEntityType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
-                return
+                return;
             }
         }
         put(thingName, null);
@@ -102,9 +102,9 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {wor
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: string) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as StringAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getEntityType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
-                return
+                return;
             }
         }
         put(thingName, null);

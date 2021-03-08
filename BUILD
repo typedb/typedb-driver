@@ -110,7 +110,6 @@ pkg_npm(
     srcs = glob([
        "package.json",
        "README.md",
-       ".npmignore",
     ]),
     deps = [
         "@npm//grakn-protocol",

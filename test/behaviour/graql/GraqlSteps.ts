@@ -35,7 +35,6 @@ import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { fail } from "assert";
 import assert = require("assert");
 import ValueClass = AttributeType.ValueClass;
-import { get } from "../concept/thing/ThingSteps";
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -225,7 +224,7 @@ class AttributeValueMatcher extends AttributeMatcher {
 
         const attribute = concept as Attribute<ValueClass>;
 
-        if (this.typeLabel !== (await attribute.asRemote(tx()).getType()).getLabel()) return false;
+        if (this.typeLabel !== attribute.getType().getLabel()) return false;
 
         return this.check(attribute);
     }
@@ -239,7 +238,7 @@ class ThingKeyMatcher extends AttributeMatcher {
         const keys = (concept as Thing).asRemote(tx()).getHas(true);
 
         for await (const key of keys) {
-            if ((await key.asRemote(tx()).getType()).getLabel() === this.typeLabel) {
+            if (key.getType().getLabel() === this.typeLabel) {
                 return this.check(key);
             }
         }

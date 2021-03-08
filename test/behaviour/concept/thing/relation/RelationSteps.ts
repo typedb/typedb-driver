@@ -78,7 +78,7 @@ When("{var} = relation\\({type_label}) get instance with key\\({type_label}): {b
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: boolean) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as BooleanAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getRelationType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
                 return
             }
@@ -91,7 +91,7 @@ When("{var} = relation\\({type_label}) get instance with key\\({type_label}): {i
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: number) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as LongAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getRelationType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
                 return
             }
@@ -104,7 +104,7 @@ When("{var} = relation\\({type_label}) get instance with key\\({type_label}): {w
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: string) => {
         const key = await ((await tx().concepts().getAttributeType(keyTypeLabel)) as StringAttributeType).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
-            if ((await owner.asRemote(tx()).getType()).equals(await tx().concepts().getRelationType(thingTypeLabel))) {
+            if (owner.getType().getLabel() === thingTypeLabel) {
                 put(thingName, owner);
                 return
             }
@@ -145,7 +145,7 @@ When("relation\\({type_label}) get instances is empty", async (typeLabel: string
 
 When("relation {var} add player for role\\({type_label}): {var}", async (relationName:string, typeLabel: string, playerName: string) => {
     const relation = get(relationName) as Relation;
-    const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(typeLabel);
+    const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
     const player = get(playerName);
     await relation.asRemote(tx()).addPlayer(roleType, player);
 });
@@ -153,15 +153,15 @@ When("relation {var} add player for role\\({type_label}): {var}", async (relatio
 When("relation {var} add player for role\\({type_label}): {var}; throws exception", async (relationName:string, typeLabel: string, playerName: string) => {
     await assertThrows(async () => {
         const relation = get(relationName) as Relation;
-        const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(typeLabel);
+        const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
         const player = get(playerName);
         await relation.asRemote(tx()).addPlayer(roleType, player);
-    })
+    });
 });
 
 When("relation {var} remove player for role\\({type_label}): {var}", async (relationName:string, typeLabel: string, playerName: string) => {
     const relation = get(relationName) as Relation;
-    const roleType = await (await relation.asRemote(tx()).getType()).asRemote(tx()).getRelates(typeLabel);
+    const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
     const player = get(playerName);
     await relation.asRemote(tx()).removePlayer(roleType, player);
 });
@@ -196,11 +196,11 @@ When("relation {var} get players do not contain: {var}", async (var1: string, va
 });
 
 When("relation {var} get players for role\\({type_label}) contain: {var}", async (var1: string, roleLabel: string, var2: string) => {
-    const roleType = await (await (get(var1) as Relation).asRemote(tx()).getType()).asRemote(tx()).getRelates(roleLabel);
+    const roleType = await (get(var1) as Relation).getType().asRemote(tx()).getRelates(roleLabel);
     assert(await (get(var1) as Relation).asRemote(tx()).getPlayers([roleType]).some(x => x.equals(get(var2))));
 });
 
 When("relation {var} get players for role\\({type_label}) do not contain: {var}", async (var1: string, roleLabel: string, var2: string) => {
-    const roleType = await (await (get(var1) as Relation).asRemote(tx()).getType()).asRemote(tx()).getRelates(roleLabel);
+    const roleType = await (get(var1) as Relation).getType().asRemote(tx()).getRelates(roleLabel);
     assert(!(await (get(var1) as Relation).asRemote(tx()).getPlayers([roleType]).some(x => x.equals(get(var2)))));
 });

@@ -24,7 +24,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.14.0",
-    "grakn-protocol": "2.0.0-alpha-10"
+    "grakn-protocol": "https://repo.grakn.ai/repository/npm-snapshot/grakn-protocol/-/grakn-protocol-0.0.0-aa53efa4131bc7397efcf29375d2db6eab760df4.tgz"
   },
   "devDependencies": {
     "@bazel/typescript": "2.3.1",
@@ -36,8 +36,8 @@
     "@typescript-eslint/parser": "4.9.0",
     "eslint": "7.14.0",
     "fs-extra": "7.0.1",
-    "grpc-tools": "1.10.0",
     "grpc_tools_node_protoc_ts": "5.0.1",
+    "grpc-tools": "1.10.0",
     "jest": "26.6.3",
     "properties-reader": "0.3.1",
     "rimraf": "3.0.2",

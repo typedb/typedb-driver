@@ -17,10 +17,8 @@
  * under the License.
  */
 
-import {
-    Grakn,
-} from "../dependencies_internal";
-import Transaction = Grakn.Transaction;
+import { GraknClient } from "../dependencies_internal";
+import Transaction = GraknClient.Transaction;
 
 export interface Concept {
     asRemote(transaction: Transaction): RemoteConcept;
@@ -44,16 +42,4 @@ export interface Concept {
 export interface RemoteConcept extends Concept {
     delete(): Promise<void>;
     isDeleted(): Promise<boolean>;
-
-    isType(): boolean;
-    isRoleType(): boolean;
-    isThingType(): boolean;
-    isEntityType(): boolean;
-    isAttributeType(): boolean;
-    isRelationType(): boolean;
-
-    isThing(): boolean;
-    isEntity(): boolean;
-    isAttribute(): boolean;
-    isRelation(): boolean;
 }

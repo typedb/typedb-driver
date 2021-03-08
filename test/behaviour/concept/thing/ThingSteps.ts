@@ -46,7 +46,7 @@ When("entity/attribute/relation {var} is deleted: {bool}", async (thingName: str
 
 When("{root_label} {var} has type: {type_label}", async (rootLabel: RootLabel, thingName: string, label: string) => {
     const desiredType = await getThingType(rootLabel, label);
-    assert((await get(thingName).asRemote(tx()).getType()).equals(desiredType));
+    assert(get(thingName).getType().equals(desiredType));
 });
 
 When("delete entity:/attribute:/relation: {var}", async (thingName: string) => {

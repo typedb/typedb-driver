@@ -20,12 +20,12 @@
 import {
     RemoteRule,
     Rule,
-    Grakn,
-    RPCTransaction,
+    GraknClient,
+    TransactionRPC,
 } from "../../dependencies_internal";
 import LogicProto from "grakn-protocol/protobuf/logic_pb";
 import TransactionProto from "grakn-protocol/protobuf/transaction_pb";
-import Transaction = Grakn.Transaction;
+import Transaction = GraknClient.Transaction;
 
 export class RuleImpl implements Rule {
 
@@ -72,10 +72,10 @@ export class RemoteRuleImpl implements RemoteRule {
     private _label: string;
     private readonly _when: string;
     private readonly _then: string;
-    private readonly _rpcTransaction: RPCTransaction;
+    private readonly _rpcTransaction: TransactionRPC;
 
     constructor(transaction: Transaction, label: string, when: string, then: string) {
-        this._rpcTransaction = transaction as RPCTransaction;
+        this._rpcTransaction = transaction as TransactionRPC;
         this._label = label;
         this._when = when;
         this._then = then;
@@ -119,7 +119,7 @@ export class RemoteRuleImpl implements RemoteRule {
         return this._rpcTransaction.execute(request, res => res.getRuleRes());
     }
 
-    protected get rpcTransaction(): RPCTransaction {
+    protected get rpcTransaction(): TransactionRPC {
         return this._rpcTransaction;
     }
 }

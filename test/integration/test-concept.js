@@ -17,20 +17,19 @@
  * under the License.
  */
 
-const { GraknClient } = require("../../dist/rpc/GraknClient");
-const { Grakn } = require("../../dist/Grakn");
+const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
 const { AttributeType } = require("../../dist/concept/type/AttributeType");
-const { SessionType, TransactionType } = Grakn;
 const assert = require("assert");
 
 async function run() {
-    const client = new GraknClient();
+    const client = GraknClient.core();
 
     try {
-        const names = await client.databases().all();
-        console.log(`get databases - SUCCESS - the databases are [${names}]`);
-        if (names.includes("grakn")) {
-            await client.databases().delete("grakn");
+        const dbs = await client.databases().all();
+        console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
+        const grakn = dbs.find(x => x.name() === "grakn");
+        if (grakn) {
+            await grakn.delete();
             console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
         }
         await client.databases().create("grakn");
@@ -371,7 +370,7 @@ async function run() {
         let players = await firstLionFamily.asRemote(tx).getPlayers().collect();
         assert(players.length === 1);
         const lionCubPlayers = await firstLionFamily.asRemote(tx).getPlayers([lionCub]).collect();
-        assert(players.length === 1);
+        assert(lionCubPlayers.length === 1);
         const playersByRoleType = (await firstLionFamily.asRemote(tx).getPlayersByRoleType()).keys();
         const firstPlayer = playersByRoleType.next().value;
         assert(firstPlayer.getScopedLabel() === "lion-family:lion-cub");
