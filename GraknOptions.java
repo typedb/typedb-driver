@@ -33,8 +33,8 @@ public class GraknOptions {
     private Boolean parallel = null;
     private Integer batchSize = null;
     private Boolean prefetch = null;
-    private Integer sessionIdleTimeout = null;
-    private Integer schemaLockAcquireTimeout = null;
+    private Integer sessionIdleTimeoutMillis = null;
+    private Integer schemaLockAcquireTimeoutMillis = null;
 
     public static GraknOptions core() {
         return new GraknOptions();
@@ -107,27 +107,27 @@ public class GraknOptions {
         return this;
     }
 
-    public Optional<Integer> sessionIdleTimeout() {
-        return Optional.ofNullable(sessionIdleTimeout);
+    public Optional<Integer> sessionIdleTimeoutMillis() {
+        return Optional.ofNullable(sessionIdleTimeoutMillis);
     }
 
-    public GraknOptions sessionIdleTimeout(int sessionIdleTimeout) {
-        if (sessionIdleTimeout < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(sessionIdleTimeout));
+    public GraknOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
+        if (sessionIdleTimeoutMillis < 1) {
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(sessionIdleTimeoutMillis));
         }
-        this.sessionIdleTimeout = sessionIdleTimeout;
+        this.sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
         return this;
     }
 
-    public Optional<Integer> schemaLockAcquireTimeout() {
-        return Optional.ofNullable(schemaLockAcquireTimeout);
+    public Optional<Integer> schemaLockAcquireTimeoutMillis() {
+        return Optional.ofNullable(schemaLockAcquireTimeoutMillis);
     }
 
-    public GraknOptions schemaLockAcquireTimeout(int schemaLockAcquireTimeout) {
-        if (schemaLockAcquireTimeout < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(schemaLockAcquireTimeout));
+    public GraknOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
+        if (schemaLockAcquireTimeoutMillis < 1) {
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED.message(schemaLockAcquireTimeoutMillis));
         }
-        this.schemaLockAcquireTimeout = schemaLockAcquireTimeout;
+        this.schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
         return this;
     }
 
