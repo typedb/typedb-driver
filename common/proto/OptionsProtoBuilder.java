@@ -32,8 +32,8 @@ public abstract class OptionsProtoBuilder {
         options.parallel().ifPresent(builder::setParallel);
         options.batchSize().ifPresent(builder::setBatchSize);
         options.prefetch().ifPresent(builder::setPrefetch);
-        options.sessionIdleTimeout().ifPresent(builder::setSessionIdleTimeoutMillis);
-        options.schemaLockAcquireTimeout().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
+        options.sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
+        options.schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
         if (options.isCluster()) {
             options.asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
         }
