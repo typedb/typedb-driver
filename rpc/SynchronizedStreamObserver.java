@@ -21,18 +21,26 @@ package grakn.client.rpc;
 
 import io.grpc.stub.StreamObserver;
 
-public class SynchronizedStreamObserver<T> {
+public class SynchronizedStreamObserver<T> implements StreamObserver<T> {
+
     private final StreamObserver<T> s;
 
     SynchronizedStreamObserver(StreamObserver<T> stream) {
         s = stream;
     }
 
-    synchronized void onNext(T value) {
+    @Override
+    public synchronized void onNext(T value) {
         s.onNext(value);
     }
 
-    synchronized void onCompleted() {
+    @Override
+    public void onError(Throwable t) {
+        s.onError(t);
+    }
+
+    @Override
+    public synchronized void onCompleted() {
         s.onCompleted();
     }
 }

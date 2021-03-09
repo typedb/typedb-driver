@@ -25,13 +25,16 @@ import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
+import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static grakn.client.common.proto.OptionsProtoBuilder.options;
+import static grakn.client.common.proto.ProtoBuilder.options;
 
 public class SessionRPC implements GraknClient.Session {
     private final ClientRPC client;
@@ -41,6 +44,7 @@ public class SessionRPC implements GraknClient.Session {
     private final AtomicBoolean isOpen;
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
+    private final int networkLatencyMillis;
 
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
@@ -49,16 +53,22 @@ public class SessionRPC implements GraknClient.Session {
             this.type = type;
             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             this.database = new DatabaseRPC(client.databases(), database);
-            SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                    .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
-
-            sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
+            Instant startTime = Instant.now();
+            SessionProto.Session.Open.Res res = blockingGrpcStub.sessionOpen(openRequest(database, type, options));
+            Instant endTime = Instant.now();
+            sessionId = res.getSessionId();
             pulse = new Timer();
             isOpen = new AtomicBoolean(true);
             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
+            networkLatencyMillis = (int) (ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis());
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }
+    }
+
+    private SessionProto.Session.Open.Req openRequest(String database, Type type, GraknOptions options) {
+        return SessionProto.Session.Open.Req.newBuilder().setDatabase(database)
+                .setType(sessionType(type)).setOptions(options(options)).build();
     }
 
     @Override
@@ -68,7 +78,7 @@ public class SessionRPC implements GraknClient.Session {
 
     @Override
     public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
-        return new TransactionRPC(this, sessionId, type, options);
+        return new TransactionRPC(this, sessionId, type, options, client.batcher().nextExecutor());
     }
 
     @Override
@@ -88,7 +98,9 @@ public class SessionRPC implements GraknClient.Session {
             pulse.cancel();
             try {
                 client.reconnect();
-                blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
+                SessionProto.Session.Close.Res ignored = blockingGrpcStub.sessionClose(
+                        SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build()
+                );
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.of(e);
             }
@@ -100,15 +112,28 @@ public class SessionRPC implements GraknClient.Session {
         return database;
     }
 
+    int networkLatencyMillis() {
+        return networkLatencyMillis;
+    }
+
     ClientRPC client() { return client; }
 
     ByteString id() { return sessionId; }
 
-    public void pulse() {
+    Channel channel() {
+        return client.channel();
+    }
+
+    void reconnect() {
+        client.reconnect();
+    }
+
+    private void pulse() {
         boolean alive;
         try {
             alive = blockingGrpcStub.sessionPulse(
-                    SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build()).getAlive();
+                    SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build()
+            ).getAlive();
         } catch (StatusRuntimeException exception) {
             alive = false;
         }

@@ -31,18 +31,23 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface GraknClient extends AutoCloseable {
-    String DEFAULT_ADDRESS = "localhost:1729";
 
-    static GraknClient core() {
-        return core(DEFAULT_ADDRESS);
-    }
+    String DEFAULT_ADDRESS = "localhost:1729";
 
     static GraknClient core(String address) {
         return new ClientRPC(address);
     }
 
-    static GraknClient.Cluster cluster(String... addresses) {
+    static GraknClient core(String address, int parallelisation) {
+        return new ClientRPC(address, parallelisation);
+    }
+
+    static GraknClient.Cluster cluster(Set<String> addresses) {
         return new ClientClusterRPC(addresses);
+    }
+
+    static GraknClient.Cluster cluster(Set<String> addresses, int parallelisation) {
+        return new ClientClusterRPC(addresses, parallelisation);
     }
 
     Session session(String database, GraknClient.Session.Type type);

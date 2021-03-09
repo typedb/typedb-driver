@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
+import static grakn.client.common.proto.ProtoBuilder.tracingData;
 
 public final class LogicManager {
 

@@ -26,27 +26,30 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
     }
 
     public static class Client extends ErrorMessage {
+        public static final Client CLIENT_CLOSED =
+                new Client(1, "The client has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED =
-                new Client(1, "The transaction has been closed and no further operation is allowed.");
-        public static final Client UNABLE_TO_CONNECT = new Client(2, "Unable to connect to Grakn server.");
+                new Client(2, "The transaction has been closed and no further operation is allowed.");
+        public static final Client UNABLE_TO_CONNECT =
+                new Client(3, "Unable to connect to Grakn server.");
         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
-                new Client(3, "Value cannot be less than 1, was: '%d'.");
+                new Client(4, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
-                new Client(4, "Database name cannot be null.");
+                new Client(5, "Database name cannot be null.");
         public static final Client DB_DOES_NOT_EXIST =
-                new Client(5, "The database '%s' does not exist.");
+                new Client(6, "The database '%s' does not exist.");
         public static final Client MISSING_RESPONSE =
-                new Client(6, "The required field 'res' of type '%s' was not set.");
+                new Client(7, "The required field 'res' of type '%s' was not set.");
         public static final Client UNKNOWN_REQUEST_ID =
-                new Client(7, "Received a response with unknown request id '%s'.");
+                new Client(8, "Received a response with unknown request id '%s'.");
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
-                new Client(8, "No replica has been marked as the primary replica for latest known term '%d'.");
+                new Client(9, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
-                new Client(9, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
+                new Client(10, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
-                new Client(10, "The replica is not the primary replica.");
+                new Client(11, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
-                new Client(11, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
+                new Client(12, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";

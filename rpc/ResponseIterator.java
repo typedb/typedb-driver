@@ -21,6 +21,7 @@ package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.rpc.common.TransactionRequestBatcher;
 import grakn.protocol.TransactionProto;
 
 import java.util.Iterator;
@@ -34,16 +35,17 @@ import static grakn.common.util.Objects.className;
 class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
-    private final SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver;
+    private final TransactionRequestBatcher.Executor.Dispatcher batchExecutor;
     private final TransactionRPC.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
     private Iterator<T> currentIterator;
 
-    ResponseIterator(UUID requestId, SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                     TransactionRPC.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+    ResponseIterator(UUID requestId, TransactionRequestBatcher.Executor.Dispatcher batchExecutor,
+                     TransactionRPC.ResponseCollector.Multiple responseCollector,
+                     Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
         this.requestId = requestId;
         this.transformResponse = transformResponse;
-        this.requestObserver = requestObserver;
+        this.batchExecutor = batchExecutor;
         this.responseCollector = responseCollector;
     }
 
@@ -62,13 +64,15 @@ class ResponseIterator<T> extends AbstractIterator<T> {
         }
 
         switch (res.getResCase()) {
-            case CONTINUE:
-                TransactionProto.Transaction.Req continueReq = TransactionProto.Transaction.Req.newBuilder()
-                        .setId(requestId.toString()).setContinue(true).build();
-                requestObserver.onNext(continueReq);
-                return computeNext();
-            case DONE:
-                return endOfData();
+            case ITERATE_RES:
+                if (res.getIterateRes().getHasNext()) {
+                    batchExecutor.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setIterateReq(
+                            TransactionProto.Transaction.Iterate.Req.getDefaultInstance()
+                    ).build());
+                    return computeNext();
+                } else {
+                    return endOfData();
+                }
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
