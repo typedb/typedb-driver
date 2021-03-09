@@ -23,6 +23,7 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient.Transaction;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.proto.OptionsProtoBuilder;
 import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
@@ -47,13 +48,13 @@ import java.util.stream.StreamSupport;
 
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import static grakn.client.common.proto.OptionsProtoBuilder.options;
 import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
 public class TransactionRPC implements Transaction {
 
     private final Transaction.Type type;
+    private final GraknOptions options;
     private final ConceptManager conceptManager;
     private final LogicManager logicManager;
     private final QueryManager queryManager;
@@ -66,6 +67,7 @@ public class TransactionRPC implements Transaction {
         try {
             session.client().reconnect();
             this.type = type;
+            this.options = options;
             conceptManager = new ConceptManager(this);
             logicManager = new LogicManager(this);
             queryManager = new QueryManager(this);
@@ -79,7 +81,7 @@ public class TransactionRPC implements Transaction {
                     .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
                                         .setSessionId(sessionId)
                                         .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                                        .setOptions(options(options)));
+                                        .setOptions(OptionsProtoBuilder.options(options)));
             Instant startTime = Instant.now();
             TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
             Instant endTime = Instant.now();
@@ -92,6 +94,11 @@ public class TransactionRPC implements Transaction {
     @Override
     public Type type() {
         return type;
+    }
+
+    @Override
+    public GraknOptions options() {
+        return options;
     }
 
     @Override

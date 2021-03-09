@@ -123,6 +123,8 @@ public interface GraknClient extends AutoCloseable {
 
         Session.Type type();
 
+        GraknOptions options();
+
         boolean isOpen();
 
         void close();
@@ -161,6 +163,8 @@ public interface GraknClient extends AutoCloseable {
     interface Transaction extends AutoCloseable {
 
         Transaction.Type type();
+
+        GraknOptions options();
 
         boolean isOpen();
 

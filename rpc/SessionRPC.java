@@ -23,6 +23,7 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.proto.OptionsProtoBuilder;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.StatusRuntimeException;
@@ -31,12 +32,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static grakn.client.common.proto.OptionsProtoBuilder.options;
-
 public class SessionRPC implements GraknClient.Session {
     private final ClientRPC client;
     private final DatabaseRPC database;
     private final Type type;
+    private final GraknOptions options;
     private final ByteString sessionId;
     private final AtomicBoolean isOpen;
     private final Timer pulse;
@@ -47,10 +47,11 @@ public class SessionRPC implements GraknClient.Session {
             client.reconnect();
             this.client = client;
             this.type = type;
+            this.options = options;
             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             this.database = new DatabaseRPC(client.databases(), database);
             SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                    .setDatabase(database).setType(sessionType(type)).setOptions(options(options)).build();
+                    .setDatabase(database).setType(sessionType(type)).setOptions(OptionsProtoBuilder.options(options)).build();
 
             sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
             pulse = new Timer();
@@ -74,6 +75,11 @@ public class SessionRPC implements GraknClient.Session {
     @Override
     public Type type() {
         return type;
+    }
+
+    @Override
+    public GraknOptions options() {
+        return options;
     }
 
     @Override
