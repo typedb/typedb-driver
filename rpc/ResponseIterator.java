@@ -37,14 +37,14 @@ class ResponseIterator<T> extends AbstractIterator<T> {
     private final UUID requestId;
     private final TransactionRequestBatcher.Executor.Dispatcher batchExecutor;
     private final TransactionRPC.ResponseCollector.Multiple responseCollector;
-    private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
+    private final Function<TransactionProto.Transaction.Res, Stream<T>> responseFn;
     private Iterator<T> currentIterator;
 
     ResponseIterator(UUID requestId, TransactionRequestBatcher.Executor.Dispatcher batchExecutor,
                      TransactionRPC.ResponseCollector.Multiple responseCollector,
-                     Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+                     Function<TransactionProto.Transaction.Res, Stream<T>> responseFn) {
         this.requestId = requestId;
-        this.transformResponse = transformResponse;
+        this.responseFn = responseFn;
         this.batchExecutor = batchExecutor;
         this.responseCollector = responseCollector;
     }
@@ -76,7 +76,7 @@ class ResponseIterator<T> extends AbstractIterator<T> {
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
-                currentIterator = transformResponse.apply(res).iterator();
+                currentIterator = responseFn.apply(res).iterator();
                 return computeNext();
         }
     }

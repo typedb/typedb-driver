@@ -161,11 +161,13 @@ public class TransactionRPC implements Transaction {
         return executeAsync(request, res -> res, batch).get();
     }
 
-    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> mapper) {
-        return executeAsync(request, mapper, true);
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request,
+                                           Function<TransactionProto.Transaction.Res, T> responseFn) {
+        return executeAsync(request, responseFn, true);
     }
 
-    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> mapper, boolean batch) {
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request,
+                                           Function<TransactionProto.Transaction.Res, T> responseFn, boolean batch) {
         if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
         ResponseCollector.Single responseCollector = new ResponseCollector.Single();
         UUID requestId = UUID.randomUUID();
@@ -173,11 +175,11 @@ public class TransactionRPC implements Transaction {
         collectors.put(requestId, responseCollector);
         if (batch) dispatcher.dispatch(request.build());
         else dispatcher.dispatchNow(request.build());
-        return new QueryFuture<>(responseCollector, mapper);
+        return new QueryFuture<>(responseCollector, responseFn);
     }
 
     public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request,
-                                Function<TransactionProto.Transaction.Res, Stream<T>> mapper) {
+                                Function<TransactionProto.Transaction.Res, Stream<T>> responseFn) {
         if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
         ResponseCollector.Multiple collector = new ResponseCollector.Multiple();
@@ -185,7 +187,7 @@ public class TransactionRPC implements Transaction {
         request.setId(requestId.toString());
         collectors.put(requestId, collector);
         dispatcher.dispatch(request.build());
-        ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, dispatcher, collector, mapper);
+        ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, dispatcher, collector, responseFn);
         return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
     }
 
