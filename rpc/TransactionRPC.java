@@ -57,7 +57,6 @@ public class TransactionRPC implements Transaction {
     private final LogicManager logicManager;
     private final QueryManager queryManager;
     private final ResponseCollectors collectors;
-
     private final AtomicBoolean isOpen;
     private final TransactionRequestBatcher.Executor.Dispatcher dispatcher;
 
