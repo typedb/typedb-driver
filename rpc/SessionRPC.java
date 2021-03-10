@@ -96,7 +96,7 @@ public class SessionRPC implements GraknClient.Session {
                 client.reconnect();
                 blockingGrpcStub.sessionClose(SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build());
             } catch (StatusRuntimeException e) {
-                throw GraknClientException.of(e);
+                // Most likely the session is already closed or the server is no longer running.
             }
         }
     }
