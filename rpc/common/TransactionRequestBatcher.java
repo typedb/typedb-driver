@@ -41,7 +41,8 @@ import static grakn.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
 public class TransactionRequestBatcher implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionRequestBatcher.class);
-    private static final int BATCH_WINDOW_MILLIS = 1;
+    private static final int BATCH_WINDOW_SMALL_MILLIS = 1;
+    private static final int BATCH_WINDOW_LARGE_MILLIS = 3;
 
     private final ArrayList<Executor> executors;
     private final AtomicInteger executorIndex;
@@ -98,7 +99,7 @@ public class TransactionRequestBatcher implements AutoCloseable {
                     permissionToRun.acquire();
                     boolean first = true;
                     while (true) {
-                        Thread.sleep(first ? BATCH_WINDOW_MILLIS : BATCH_WINDOW_MILLIS * 3);
+                        Thread.sleep(first ? BATCH_WINDOW_SMALL_MILLIS : BATCH_WINDOW_LARGE_MILLIS);
                         if (dispatchers.isEmpty()) break;
                         else dispatchers.forEach(Dispatcher::sendBatchedRequests);
                         first = false;
