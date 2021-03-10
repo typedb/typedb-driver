@@ -96,10 +96,12 @@ public class TransactionRequestBatcher implements AutoCloseable {
             while (isOpen) {
                 try {
                     permissionToRun.acquire();
+                    boolean first = true;
                     while (true) {
-                        Thread.sleep(BATCH_WINDOW_MILLIS);
+                        Thread.sleep(first ? BATCH_WINDOW_MILLIS : BATCH_WINDOW_MILLIS * 3);
                         if (dispatchers.isEmpty()) break;
                         else dispatchers.forEach(Dispatcher::sendBatchedRequests);
+                        first = false;
                     }
                 } catch (InterruptedException e) {
                     LOG.error(e.getMessage(), e);
