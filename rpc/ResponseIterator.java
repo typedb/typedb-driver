@@ -35,17 +35,17 @@ import static grakn.common.util.Objects.className;
 class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
-    private final TransactionRequestBatcher.Executor.Dispatcher batchExecutor;
+    private final TransactionRequestBatcher.Executor.Dispatcher dispatcher;
     private final TransactionRPC.ResponseCollector.Multiple responseCollector;
     private final Function<TransactionProto.Transaction.Res, Stream<T>> responseFn;
     private Iterator<T> currentIterator;
 
-    ResponseIterator(UUID requestId, TransactionRequestBatcher.Executor.Dispatcher batchExecutor,
+    ResponseIterator(UUID requestId, TransactionRequestBatcher.Executor.Dispatcher dispatcher,
                      TransactionRPC.ResponseCollector.Multiple responseCollector,
                      Function<TransactionProto.Transaction.Res, Stream<T>> responseFn) {
         this.requestId = requestId;
         this.responseFn = responseFn;
-        this.batchExecutor = batchExecutor;
+        this.dispatcher = dispatcher;
         this.responseCollector = responseCollector;
     }
 
@@ -66,7 +66,7 @@ class ResponseIterator<T> extends AbstractIterator<T> {
         switch (res.getResCase()) {
             case ITERATE_RES:
                 if (res.getIterateRes().getHasNext()) {
-                    batchExecutor.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setIterateReq(
+                    dispatcher.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setIterateReq(
                             TransactionProto.Transaction.Iterate.Req.getDefaultInstance()
                     ).build());
                     return computeNext();
