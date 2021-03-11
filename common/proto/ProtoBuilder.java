@@ -17,11 +17,12 @@
  * under the License.
  */
 
-package grakn.client.common.tracing;
+package grakn.client.common.proto;
 
 import grabl.tracing.client.GrablTracingThreadStatic;
+import grakn.client.GraknOptions;
+import grakn.protocol.OptionsProto;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,24 @@ import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
 import static java.util.Collections.emptyMap;
 
-public abstract class TracingProtoBuilder {
+public abstract class ProtoBuilder {
+
+    public static OptionsProto.Options options(GraknOptions options) {
+        OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
+        options.infer().ifPresent(builder::setInfer);
+        options.traceInference().ifPresent(builder::setTraceInference);
+        options.explain().ifPresent(builder::setExplain);
+        options.parallel().ifPresent(builder::setParallel);
+        options.batchSize().ifPresent(builder::setBatchSize);
+        options.prefetch().ifPresent(builder::setPrefetch);
+        options.sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
+        options.schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
+        if (options.isCluster()) {
+            options.asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
+        }
+
+        return builder.build();
+    }
 
     public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {

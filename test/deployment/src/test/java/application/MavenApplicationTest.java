@@ -23,7 +23,6 @@ import grakn.client.GraknClient;
 import grakn.client.GraknClient.Session;
 import grakn.client.GraknClient.Transaction;
 import grakn.client.concept.type.ThingType;
-import grakn.client.GraknClient;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        GraknClient client = GraknClient.core();
+        GraknClient client = GraknClient.core(GraknClient.DEFAULT_ADDRESS);
         client.databases().create("grakn");
         Session session = client.session("grakn", Session.Type.DATA);
         Transaction tx = session.transaction(Transaction.Type.WRITE);

@@ -23,6 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.rpc.common.TransactionRequestBatcher;
+import grakn.common.concurrent.NamedThreadFactory;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -38,14 +40,31 @@ import static grakn.common.util.Objects.className;
 
 public class ClientRPC implements GraknClient {
 
+    private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
+
     private final ManagedChannel channel;
+    private final TransactionRequestBatcher batcher;
     private final DatabaseManagerRPC databases;
     private final ConcurrentMap<ByteString, SessionRPC> sessions;
 
     public ClientRPC(String address) {
+        this(address, calculateParallelisation());
+    }
+
+    public ClientRPC(String address, int parallelisation) {
+        NamedThreadFactory tf = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
+        batcher = new TransactionRequestBatcher(parallelisation, tf);
         databases = new DatabaseManagerRPC(this);
         sessions = new ConcurrentHashMap<>();
+    }
+
+    public static int calculateParallelisation() {
+        int cores = Runtime.getRuntime().availableProcessors();
+        if (cores <= 4) return 2;
+        else if (cores <= 9) return 3;
+        else if (cores <= 16) return 4;
+        else return (int) Math.ceil(cores / 4.0);
     }
 
     @Override
@@ -74,6 +93,7 @@ public class ClientRPC implements GraknClient {
     @Override
     public void close() {
         try {
+            batcher.close();
             sessions.values().forEach(SessionRPC::close);
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -100,7 +120,11 @@ public class ClientRPC implements GraknClient {
         }
     }
 
-    public void reconnect() {
+    public ManagedChannel channel() {
+        return channel;
+    }
+
+    void reconnect() {
         // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
         // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an
@@ -111,11 +135,11 @@ public class ClientRPC implements GraknClient {
         }
     }
 
-    void removeSession(SessionRPC session) {
-        sessions.remove(session.id());
+    TransactionRequestBatcher batcher() {
+        return batcher;
     }
 
-    public ManagedChannel channel() {
-        return channel;
+    void removeSession(SessionRPC session) {
+        sessions.remove(session.id());
     }
 }

@@ -21,6 +21,7 @@ package grakn.client.rpc;
 
 import com.google.common.collect.AbstractIterator;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.rpc.common.TransactionRequestBatcher;
 import grakn.protocol.TransactionProto;
 
 import java.util.Iterator;
@@ -34,16 +35,17 @@ import static grakn.common.util.Objects.className;
 class ResponseIterator<T> extends AbstractIterator<T> {
 
     private final UUID requestId;
-    private final SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver;
+    private final TransactionRequestBatcher.Executor.Dispatcher dispatcher;
     private final TransactionRPC.ResponseCollector.Multiple responseCollector;
-    private final Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse;
+    private final Function<TransactionProto.Transaction.Res, Stream<T>> responseFn;
     private Iterator<T> currentIterator;
 
-    ResponseIterator(UUID requestId, SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver,
-                     TransactionRPC.ResponseCollector.Multiple responseCollector, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+    ResponseIterator(UUID requestId, TransactionRequestBatcher.Executor.Dispatcher dispatcher,
+                     TransactionRPC.ResponseCollector.Multiple responseCollector,
+                     Function<TransactionProto.Transaction.Res, Stream<T>> responseFn) {
         this.requestId = requestId;
-        this.transformResponse = transformResponse;
-        this.requestObserver = requestObserver;
+        this.responseFn = responseFn;
+        this.dispatcher = dispatcher;
         this.responseCollector = responseCollector;
     }
 
@@ -62,17 +64,19 @@ class ResponseIterator<T> extends AbstractIterator<T> {
         }
 
         switch (res.getResCase()) {
-            case CONTINUE:
-                TransactionProto.Transaction.Req continueReq = TransactionProto.Transaction.Req.newBuilder()
-                        .setId(requestId.toString()).setContinue(true).build();
-                requestObserver.onNext(continueReq);
-                return computeNext();
-            case DONE:
-                return endOfData();
+            case STREAM_RES:
+                if (res.getStreamRes().getIsDone()) {
+                    return endOfData();
+                } else {
+                    dispatcher.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setStreamReq(
+                            TransactionProto.Transaction.Stream.Req.getDefaultInstance()
+                    ).build());
+                    return computeNext();
+                }
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
             default:
-                currentIterator = transformResponse.apply(res).iterator();
+                currentIterator = responseFn.apply(res).iterator();
                 return computeNext();
         }
     }

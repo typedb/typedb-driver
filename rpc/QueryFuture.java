@@ -30,11 +30,11 @@ import java.util.function.Function;
 public class QueryFuture<T> implements Future<T> {
 
     private final TransactionRPC.ResponseCollector.Single collector;
-    private final Function<TransactionProto.Transaction.Res, T> transformResponse;
+    private final Function<TransactionProto.Transaction.Res, T> responseFn;
 
-    QueryFuture(TransactionRPC.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> transformResponse) {
+    QueryFuture(TransactionRPC.ResponseCollector.Single collector, Function<TransactionProto.Transaction.Res, T> responseFn) {
         this.collector = collector;
-        this.transformResponse = transformResponse;
+        this.responseFn = responseFn;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class QueryFuture<T> implements Future<T> {
     public T get() {
         try {
             TransactionProto.Transaction.Res res = collector.take();
-            return transformResponse.apply(res);
+            return responseFn.apply(res);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new GraknClientException(e);
@@ -67,7 +67,7 @@ public class QueryFuture<T> implements Future<T> {
     public T get(long timeout, TimeUnit unit) {
         try {
             TransactionProto.Transaction.Res res = collector.take(timeout, unit);
-            return transformResponse.apply(res);
+            return responseFn.apply(res);
         } catch (InterruptedException | TimeoutException e) {
             if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             throw new GraknClientException(e);
