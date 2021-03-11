@@ -22,7 +22,6 @@ package grakn.client.rpc;
 import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
-import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknClientException;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.GraknGrpc;
@@ -30,8 +29,8 @@ import grakn.protocol.SessionProto;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,7 +64,7 @@ public class SessionRPC implements GraknClient.Session {
             isOpen = new AtomicBoolean(true);
             transactions = new ConcurrentSet<>();
             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
-            networkLatencyMillis = (int) (ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis());
+            networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }

@@ -80,11 +80,11 @@ public class TransactionRPC implements Transaction {
     }
 
     private static TransactionProto.Transaction.Req.Builder openRequest(
-            ByteString sessionID, Type transactionType, GraknOptions options, int latencyMillis) {
+            ByteString sessionID, Type transactionType, GraknOptions options, int networkLatencyMillis) {
         return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
                 TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
                         .setType(TransactionProto.Transaction.Type.forNumber(transactionType.id()))
-                        .setOptions(options(options)).setLatencyMillis(latencyMillis)
+                        .setOptions(options(options)).setNetworkLatencyMillis(networkLatencyMillis)
         );
     }
 
