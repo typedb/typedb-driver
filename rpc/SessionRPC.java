@@ -22,7 +22,9 @@ package grakn.client.rpc;
 import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
+import grakn.client.common.exception.ErrorMessage;
 import grakn.client.common.exception.GraknClientException;
+import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.Channel;
@@ -34,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
 import static grakn.client.common.proto.ProtoBuilder.options;
 
 public class SessionRPC implements GraknClient.Session {
@@ -45,6 +48,7 @@ public class SessionRPC implements GraknClient.Session {
     private final Timer pulse;
     private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
     private final int networkLatencyMillis;
+    private final ConcurrentSet<TransactionRPC> transactions;
 
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
@@ -59,6 +63,7 @@ public class SessionRPC implements GraknClient.Session {
             sessionId = res.getSessionId();
             pulse = new Timer();
             isOpen = new AtomicBoolean(true);
+            transactions = new ConcurrentSet<>();
             pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
             networkLatencyMillis = (int) (ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis());
         } catch (StatusRuntimeException e) {
@@ -72,13 +77,19 @@ public class SessionRPC implements GraknClient.Session {
     }
 
     @Override
-    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type) {
+    public synchronized GraknClient.Transaction transaction(GraknClient.Transaction.Type type) {
         return transaction(type, GraknOptions.core());
     }
 
     @Override
-    public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
-        return new TransactionRPC(this, sessionId, type, options, client.batcher().nextExecutor());
+    public synchronized GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
+        if (isOpen.get()) {
+            TransactionRPC transactionRPC = new TransactionRPC(this, sessionId, type, options, client.batcher().nextExecutor());
+            transactions.add(transactionRPC);
+            return transactionRPC;
+        } else {
+            throw new GraknClientException(SESSION_CLOSED);
+        }
     }
 
     @Override
@@ -92,8 +103,9 @@ public class SessionRPC implements GraknClient.Session {
     }
 
     @Override
-    public void close() {
+    public synchronized void close() {
         if (isOpen.compareAndSet(true, false)) {
+            transactions.forEach(TransactionRPC::close);
             client.removeSession(this);
             pulse.cancel();
             try {

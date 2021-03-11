@@ -69,14 +69,14 @@ public class TransactionRequestBatcher implements AutoCloseable {
             accessLock.writeLock().lock();
             if (isOpen) {
                 isOpen = false;
-                executors.forEach(Executor::clear);
+                executors.forEach(Executor::close);
             }
         } finally {
             accessLock.writeLock().unlock();
         }
     }
 
-    public class Executor {
+    public class Executor implements AutoCloseable {
 
         private final ConcurrentSet<Dispatcher> dispatchers;
         private final AtomicBoolean isRunning;
@@ -113,14 +113,21 @@ public class TransactionRequestBatcher implements AutoCloseable {
             }
         }
 
-        public void clear() {
-            dispatchers.clear();
+        @Override
+        public void close() {
+            dispatchers.forEach(Dispatcher::close);
         }
 
         public Dispatcher dispatcher(StreamObserver<TransactionProto.Transaction.Reqs> requestObserver) {
-            Dispatcher dispatcher = new Dispatcher(requestObserver);
-            dispatchers.add(dispatcher);
-            return dispatcher;
+            try {
+                accessLock.readLock().lock();
+                if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+                Dispatcher dispatcher = new Dispatcher(requestObserver);
+                dispatchers.add(dispatcher);
+                return dispatcher;
+            } finally {
+                accessLock.readLock().unlock();
+            }
         }
 
         public class Dispatcher implements AutoCloseable {
