@@ -28,6 +28,8 @@ import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -43,6 +45,7 @@ import static grakn.client.common.proto.ProtoBuilder.options;
 
 public class SessionRPC implements GraknClient.Session {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SessionRPC.class);
     private static final int PULSE_TEMPO_MILLIS = 5_000;
 
     private final ClientRPC client;

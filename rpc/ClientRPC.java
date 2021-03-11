@@ -93,9 +93,9 @@ public class ClientRPC implements GraknClient {
     @Override
     public void close() {
         try {
-            batcher.close();
             sessions.values().forEach(SessionRPC::close);
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            batcher.close();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
