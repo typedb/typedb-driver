@@ -116,6 +116,7 @@ public class TransactionRequestBatcher implements AutoCloseable {
         @Override
         public void close() {
             dispatchers.forEach(Dispatcher::close);
+            mayStartRunning();
         }
 
         public Dispatcher dispatcher(StreamObserver<TransactionProto.Transaction.Reqs> requestObserver) {
