@@ -277,7 +277,7 @@ public class TransactionRPC implements Transaction {
 
             @Override
             boolean isLastResponse(TransactionProto.Transaction.Res response) {
-                return !response.getIterateRes().getHasNext();
+                return response.getStreamRes().getIsDone();
             }
         }
     }

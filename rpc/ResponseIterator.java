@@ -64,14 +64,14 @@ class ResponseIterator<T> extends AbstractIterator<T> {
         }
 
         switch (res.getResCase()) {
-            case ITERATE_RES:
-                if (res.getIterateRes().getHasNext()) {
-                    dispatcher.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setIterateReq(
-                            TransactionProto.Transaction.Iterate.Req.getDefaultInstance()
+            case STREAM_RES:
+                if (res.getStreamRes().getIsDone()) {
+                    return endOfData();
+                } else {
+                    dispatcher.dispatch(TransactionProto.Transaction.Req.newBuilder().setId(requestId.toString()).setStreamReq(
+                            TransactionProto.Transaction.Stream.Req.getDefaultInstance()
                     ).build());
                     return computeNext();
-                } else {
-                    return endOfData();
                 }
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(className(TransactionProto.Transaction.Res.class)));
