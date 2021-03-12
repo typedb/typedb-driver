@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 public class SessionClusterRPC implements GraknClient.Session {
     private static final Logger LOG = LoggerFactory.getLogger(GraknClient.Session.class);
     private final ClientClusterRPC clusterClient;
+    private final GraknOptions.Cluster options;
     private ClientRPC coreClient;
     private SessionRPC coreSession;
 
@@ -37,6 +38,7 @@ public class SessionClusterRPC implements GraknClient.Session {
         this.coreClient = clusterClient.coreClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
         this.coreSession = coreClient.session(database, type, options);
+        this.options = options;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class SessionClusterRPC implements GraknClient.Session {
             GraknClient.Transaction rerun(DatabaseClusterRPC.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreClient = clusterClient.coreClient(replica.address());
-                coreSession = coreClient.session(database().name(), type(), options);
+                coreSession = coreClient.session(database().name(), SessionClusterRPC.this.type(), SessionClusterRPC.this.options());
                 return coreSession.transaction(type, options);
             }
         };
@@ -83,6 +85,11 @@ public class SessionClusterRPC implements GraknClient.Session {
     @Override
     public GraknClient.Session.Type type() {
         return coreSession.type();
+    }
+
+    @Override
+    public GraknOptions.Cluster options() {
+        return options;
     }
 
     @Override
