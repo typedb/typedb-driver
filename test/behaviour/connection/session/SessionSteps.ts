@@ -18,7 +18,7 @@
  */
 
 import { When, Then } from "@cucumber/cucumber";
-import { client, sessions } from "../ConnectionSteps";
+import { client, sessions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { GraknClient, SessionType } from "../../../../dist/GraknClient";
 import assert = require("assert");

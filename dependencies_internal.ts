@@ -94,6 +94,14 @@ export * from "./rpc/SessionRPC";
 export * from "./rpc/TransactionRPC";
 export * from "./rpc/Stream";
 
+/* rpc.cluster */
+export * from "./rpc/cluster/FailsafeTask";
+export * from "./rpc/cluster/ServerAddress";
+export * from "./rpc/cluster/ClientClusterRPC";
+export * from "./rpc/cluster/DatabaseManagerClusterRPC";
+export * from "./rpc/cluster/DatabaseClusterRPC";
+export * from "./rpc/cluster/SessionClusterRPC";
+
 /* common.proto */
 export * from "./common/proto/OptionsProtoBuilder";
 

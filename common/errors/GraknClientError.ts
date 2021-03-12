@@ -17,15 +17,36 @@
  * under the License.
  */
 import { ErrorMessage } from "../../dependencies_internal"
+import { ServiceError } from "@grpc/grpc-js";
+import { Status } from "@grpc/grpc-js/build/src/constants";
+import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
+import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+
+function isReplicaNotPrimaryError(e: ServiceError): boolean {
+    return e instanceof GraknClientError && e.message.includes("[RPL01]");
+}
 
 export class GraknClientError extends Error {
-    constructor(error: string | Error | ErrorMessage) {
-        if (typeof error === "string") {
-            super(error);
-        } else {
-            // TODO: Check for UNAVAILABLE code, message containing "Received RST_STREAM", or replica-not-primary
-            super(error.toString());
-        }
+    private readonly _errorMessage: ErrorMessage;
+
+    constructor(error: string | Error | ServiceError | ErrorMessage) {
+        if (typeof error === "string") super(error);
+        else super(error.toString());
+
         this.name = "GraknClientError"; // Required to correctly report error type in default throw
+
+        if (error instanceof ErrorMessage) {
+            this._errorMessage = error;
+        } else if (error instanceof Error && "code" in error) {
+            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
+                this._errorMessage = UNABLE_TO_CONNECT;
+            } else if (isReplicaNotPrimaryError(error)) {
+                this._errorMessage = CLUSTER_REPLICA_NOT_PRIMARY;
+            }
+        }
+    }
+
+    errorMessage(): ErrorMessage {
+        return this._errorMessage;
     }
 }

@@ -18,7 +18,7 @@
 #
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "node_cucumber_test")
+load("//test/behaviour:rules.bzl", "grakn_behaviour_node_test")
 
 exports_files(["RelationSteps.ts"])
 
@@ -28,12 +28,14 @@ checkstyle_test(
     license_type = "apache",
 )
 
-node_cucumber_test(
+grakn_behaviour_node_test(
     name = "test",
     features = ["@graknlabs_behaviour//concept/thing:relation.feature"],
     node_modules = "//:node_modules",
     package_json = "//:package.json",
-    core_artifact = "//test:native-grakn-artifact",
-    client = "//:client-nodejs-compiled",
-    steps = "//test/behaviour:behavioural-steps-compiled",
+    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
+    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
+    client = "//:client-nodejs-targz",
+    steps_core = "//test/behaviour:steps-core-targz",
+    steps_cluster = "//test/behaviour:steps-cluster-targz",
 )

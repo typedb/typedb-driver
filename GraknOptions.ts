@@ -32,10 +32,10 @@ export class GraknOptions {
     }
 }
 
-export class GraknOptionsCluster extends GraknOptions {
+export class GraknClusterOptions extends GraknOptions {
     readAnyReplica?: boolean;
 
-    constructor(obj: {[K in keyof GraknOptionsCluster]: GraknOptionsCluster[K]} = {}) {
+    constructor(obj: {[K in keyof GraknClusterOptions]: GraknClusterOptions[K]} = {}) {
         super(obj);
     }
 }
@@ -45,7 +45,7 @@ export namespace GraknOptions {
         return new GraknOptions(options);
     }
 
-    export function cluster(options: {[K in keyof GraknOptionsCluster]: GraknOptionsCluster[K]} = {}) {
-        return new GraknOptionsCluster(options);
+    export function cluster(options: {[K in keyof GraknClusterOptions]: GraknClusterOptions[K]} = {}) {
+        return new GraknClusterOptions(options);
     }
 }

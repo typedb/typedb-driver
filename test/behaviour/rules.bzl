@@ -17,13 +17,13 @@
 # under the License.
 #
 
-def node_cucumber_test(name, features, node_modules, package_json, core_artifact, client, steps):
+def node_cucumber_test(name, features, node_modules, package_json, native_grakn_artifact, client, steps):
     native.sh_test (
         name = name,
         data = [
             node_modules,
             package_json,
-            core_artifact,
+            native_grakn_artifact,
             client,
             steps,
         ] + features,
@@ -31,6 +31,28 @@ def node_cucumber_test(name, features, node_modules, package_json, core_artifact
             "//test/behaviour:cucumber_test.sh",
         ],
         args = [
-            "$(rootpath " + core_artifact + ")",
+            "$(rootpath " + native_grakn_artifact + ")",
         ],
+    )
+
+def grakn_behaviour_node_test(
+        name,
+        native_grakn_artifact_core,
+        native_grakn_artifact_cluster,
+        steps_core,
+        steps_cluster,
+        **kwargs):
+
+    node_cucumber_test(
+        name = name + "-core",
+        steps = steps_core,
+        native_grakn_artifact = native_grakn_artifact_core,
+        **kwargs,
+    )
+
+    node_cucumber_test(
+        name = name + "-cluster",
+        steps = steps_cluster,
+        native_grakn_artifact = native_grakn_artifact_cluster,
+        **kwargs,
     )

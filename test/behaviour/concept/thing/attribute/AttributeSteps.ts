@@ -19,7 +19,7 @@
 
 import { When } from "@cucumber/cucumber";
 import { get, put} from "../ThingSteps";
-import { tx } from "../../../connection/ConnectionSteps";
+import { tx } from "../../../connection/ConnectionStepsBase";
 import assert = require("assert");
 import {
     AttributeType,

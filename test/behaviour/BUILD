@@ -24,12 +24,25 @@ exports_files([
 ])
 
 genrule(
-    name = "behavioural-steps-compiled",
-    outs = ["behavioural-steps.tar.gz"],
-    cmd = "tar -xf $(location //:client-nodejs-compiled); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behavioural-steps.tar.gz dist-test;",
+    name = "steps-core-targz",
+    outs = ["behaviour-steps-core.tar.gz"],
+    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-core.tar.gz dist-test;",
     tools = [
-        "//:behavioural-steps",
-        "//:client-nodejs-compiled",
+        "//:behaviour-steps-core",
+        "//:client-nodejs-targz",
+        "//:package.json",
+        "//:package-lock.json",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "steps-cluster-targz",
+    outs = ["behaviour-steps-cluster.tar.gz"],
+    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-cluster.tar.gz dist-test;",
+    tools = [
+        "//:behaviour-steps-cluster",
+        "//:client-nodejs-targz",
         "//:package.json",
         "//:package-lock.json",
     ],

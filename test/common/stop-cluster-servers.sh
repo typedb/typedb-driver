@@ -17,5 +17,4 @@
 # under the License.
 #
 
-npm install
-npm run test
+kill $(jps | awk '/GraknServer/ {print $1}' | paste -sd " " -)

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { tx } from "../../../connection/ConnectionSteps";
+import { tx } from "../../../connection/ConnectionStepsBase";
 import { Then, When } from "@cucumber/cucumber";
 import assert from "assert";
 import { AttributeType } from "../../../../../dist/concept/type/AttributeType";

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { GraknOptions, GraknOptionsCluster } from "../../dependencies_internal";
+import { GraknOptions, GraknClusterOptions } from "../../dependencies_internal";
 import options_pb from "grakn-protocol/protobuf/options_pb";
 import Options = options_pb.Options;
 
@@ -33,7 +33,7 @@ export namespace OptionsProtoBuilder {
             if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
             if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
             if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);
-            if (options instanceof GraknOptionsCluster) {
+            if (options instanceof GraknClusterOptions) {
                 if (options.readAnyReplica != null) optionsProto.setReadAnyReplica(options.readAnyReplica);
             }
         }

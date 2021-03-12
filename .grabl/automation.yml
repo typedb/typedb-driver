@@ -51,9 +51,22 @@ build:
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        ./test/common/start-server.sh
-        ./test/integration/test.sh && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        ./test/common/stop-server.sh
+        npm install
+        ./test/common/start-core-server.sh
+        npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-core-server.sh
+        exit $TEST_SUCCESS
+    test-cluster-failover:
+      machine: 4-core-8-gb
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        npm install
+        ./test/common/start-cluster-servers.sh
+        npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     test-behaviour-connection:
       image: graknlabs-ubuntu-20.04
@@ -116,7 +129,7 @@ build:
         branch: master
       image: graknlabs-ubuntu-20.04
       command: |
-        ./test/common/start-server.sh
+        ./test/common/start-core-server.sh
         cd test/deployment/
         echo -n "0.0.0-$GRABL_COMMIT" > ../../VERSION
         npm install https://repo.grakn.ai/repository/npm-snapshot-group/grakn-client/-/grakn-client-$(cat ../../VERSION).tgz

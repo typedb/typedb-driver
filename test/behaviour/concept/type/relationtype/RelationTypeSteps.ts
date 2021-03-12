@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { tx } from "../../../connection/ConnectionSteps";
+import { tx } from "../../../connection/ConnectionStepsBase";
 import { Then, When } from "@cucumber/cucumber";
 import { parseList, ScopedLabel } from "../../../config/Parameters";
 import { assertThrows } from "../../../util/Util";

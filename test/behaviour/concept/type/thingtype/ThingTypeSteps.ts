@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { tx } from "../../../connection/ConnectionSteps";
+import { tx } from "../../../connection/ConnectionStepsBase";
 import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import assert from "assert";

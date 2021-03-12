@@ -35,6 +35,7 @@ export class TransactionRPC implements GraknClient.Transaction {
     private readonly _grpcClient: GraknGrpc;
 
     private _stream: ClientDuplexStream<TransactionProto.Transaction.Req, TransactionProto.Transaction.Res>;
+    private _options: GraknOptions;
     private _isOpen: boolean;
     private _networkLatencyMillis: number;
 
@@ -50,6 +51,7 @@ export class TransactionRPC implements GraknClient.Transaction {
 
     async open(sessionId: string, options?: GraknOptions): Promise<TransactionRPC> {
         this.openTransactionStream();
+        this._options = options;
         this._isOpen = true;
         const openRequest = new TransactionProto.Transaction.Req()
             .setOpenReq(
@@ -65,27 +67,31 @@ export class TransactionRPC implements GraknClient.Transaction {
         return this;
     }
 
-    public type(): TransactionType {
+    type(): TransactionType {
         return this._type;
     }
 
-    public isOpen(): boolean {
+    options(): GraknOptions {
+        return this._options;
+    }
+
+    isOpen(): boolean {
         return this._isOpen;
     }
 
-    public concepts(): ConceptManager {
+    concepts(): ConceptManager {
         return this._conceptManager;
     }
 
-    public logic(): LogicManager {
+    logic(): LogicManager {
         return this._logicManager;
     }
 
-    public query(): QueryManager {
+    query(): QueryManager {
         return this._queryManager;
     }
 
-    public async commit(): Promise<void> {
+    async commit(): Promise<void> {
         const commitReq = new TransactionProto.Transaction.Req()
             .setCommitReq(new TransactionProto.Transaction.Commit.Req());
         try {
@@ -95,7 +101,7 @@ export class TransactionRPC implements GraknClient.Transaction {
         }
     }
 
-    public async rollback(): Promise<void> {
+    async rollback(): Promise<void> {
         const rollbackReq = new TransactionProto.Transaction.Req()
             .setRollbackReq(new TransactionProto.Transaction.Rollback.Req());
         await this.execute(rollbackReq);

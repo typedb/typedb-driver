@@ -21,11 +21,7 @@
 
 import ConceptProto from "grakn-protocol/protobuf/concept_pb";
 import {
-    Type,
-    Thing,
-    AttributeType,
-    RoleTypeImpl,
-    GraknClientError, ErrorMessage, Bytes,
+    Type, Thing, AttributeType, RoleTypeImpl, GraknClientError, ErrorMessage, Bytes
 } from "../../dependencies_internal";
 
 export namespace ConceptProtoBuilder {

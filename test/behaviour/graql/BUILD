@@ -18,7 +18,7 @@
 #
 
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "node_cucumber_test")
+load("//test/behaviour:rules.bzl", "grakn_behaviour_node_test")
 
 exports_files(["GraqlSteps.ts"])
 

@@ -30,6 +30,7 @@ export class SessionRPC implements GraknClient.Session {
     private readonly _grpcClient: GraknGrpc;
     private readonly _database: DatabaseRPC;
     private readonly _type: SessionType;
+    private _options: GraknOptions;
     private _id: string;
     private _isOpen: boolean;
     private _pulse: NodeJS.Timeout;
@@ -46,10 +47,11 @@ export class SessionRPC implements GraknClient.Session {
             .setDatabase(this._database.name())
             .setType(sessionType(this._type))
             .setOptions(OptionsProtoBuilder.options(options));
+        this._options = options;
         this._isOpen = true;
         const res = await new Promise<SessionProto.Session.Open.Res>((resolve, reject) => {
             this._grpcClient.session_open(openReq, (err, res) => {
-                if (err) reject(err);
+                if (err) reject(new GraknClientError(err));
                 else resolve(res);
             });
         });
@@ -67,6 +69,10 @@ export class SessionRPC implements GraknClient.Session {
         return this._type;
     }
 
+    options(): GraknOptions {
+        return this._options;
+    }
+
     isOpen(): boolean {
         return this._isOpen;
     }
@@ -76,10 +82,9 @@ export class SessionRPC implements GraknClient.Session {
             this._isOpen = false;
             clearTimeout(this._pulse);
             const req = new SessionProto.Session.Close.Req().setSessionId(this._id);
-            await new Promise<void>((resolve, reject) => {
-                this._grpcClient.session_close(req, (err) => {
-                    if (err) reject(err);
-                    else resolve();
+            await new Promise<void>(resolve => {
+                this._grpcClient.session_close(req, () => {
+                    resolve();
                 });
             });
         }

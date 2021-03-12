@@ -17,9 +17,13 @@
 # under the License.
 #
 
-exports_files(["ConnectionSteps.ts"])
-
 load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+exports_files([
+    "ConnectionStepsBase.ts",
+    "ConnectionStepsCluster.ts",
+    "ConnectionStepsCore.ts"
+])
 
 checkstyle_test(
     name = "checkstyle",

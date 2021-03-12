@@ -17,7 +17,9 @@
  * under the License.
  */
 
-import { GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC } from "./dependencies_internal";
+import {
+    GraknOptions, ConceptManager, QueryManager, LogicManager, ClientRPC, ServerAddress, ClientClusterRPC
+} from "./dependencies_internal";
 
 export interface GraknClient {
     session(databaseName: string, type: SessionType, options?: GraknOptions): Promise<GraknClient.Session>;
@@ -39,9 +41,9 @@ export namespace GraknClient {
         return new ClientRPC(address);
     }
 
-    // export function cluster(addresses: string[]): GraknClientCluster {
-    //     return new ClientClusterRPC(addresses);
-    // }
+    export function cluster(addresses: string[]): Promise<GraknClientCluster> {
+        return new ClientClusterRPC().open(addresses);
+    }
 
     export interface DatabaseManager {
         contains(name: string): Promise<boolean>;
@@ -71,12 +73,13 @@ export namespace GraknClient {
         term(): number;
         isPrimary(): boolean;
         isPreferredSecondary(): boolean;
-        // address(): ServerAddress;
+        address(): ServerAddress;
     }
 
     export interface Session {
         transaction(type: TransactionType, options?: GraknOptions): Promise<Transaction>;
         type(): SessionType;
+        options(): GraknOptions;
         isOpen(): boolean;
         close(): Promise<void>;
         database(): Database;
@@ -84,6 +87,7 @@ export namespace GraknClient {
 
     export interface Transaction {
         type(): TransactionType;
+        options(): GraknOptions;
         isOpen(): boolean;
         concepts(): ConceptManager;
         logic(): LogicManager;

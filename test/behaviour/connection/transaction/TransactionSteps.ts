@@ -18,7 +18,7 @@
  */
 
 import { Then } from "@cucumber/cucumber";
-import { sessions, sessionsToTransactions } from "../ConnectionSteps";
+import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { GraknClient, TransactionType } from "../../../../dist/GraknClient";
 import assert = require("assert");

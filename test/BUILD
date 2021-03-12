@@ -43,14 +43,27 @@ checkstyle_test(
 )
 
 native_grakn_artifact(
-    name = "native-grakn-artifact",
+    name = "native-grakn-core-artifact",
     mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
     windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
     output = "grakn-core-artifact.tar.gz"
 )
 
+native_grakn_artifact(
+    name = "native-grakn-cluster-artifact",
+    mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
+    linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
+    windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
+    output = "grakn-cluster-artifact.tar.gz"
+)
+
 artifact_extractor(
     name = "grakn-extractor",
-    artifact = ":native-grakn-artifact",
+    artifact = ":native-grakn-core-artifact",
+)
+
+artifact_extractor(
+    name = "grakn-cluster-extractor",
+    artifact = ":native-grakn-cluster-artifact",
 )

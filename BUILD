@@ -37,7 +37,7 @@ load("//:deployment.bzl", github_deployment = "deployment")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 
 genrule(
-    name = "client-nodejs-compiled",
+    name = "client-nodejs-targz",
     outs = ["client-nodejs.tar.gz"],
     cmd = "npx tsc; tar -cf $(@D)/client-nodejs.tar.gz dist;",
     tools = [
@@ -62,25 +62,33 @@ filegroup(
     ]),
 )
 
+behaviour_steps_common = [
+    "//test/behaviour/connection:ConnectionStepsBase.ts",
+    "//test/behaviour/concept/thing:ThingSteps.ts",
+    "//test/behaviour/concept/thing/attribute:AttributeSteps.ts",
+    "//test/behaviour/concept/thing/entity:EntitySteps.ts",
+    "//test/behaviour/concept/thing/relation:RelationSteps.ts",
+    "//test/behaviour/concept/type/attributetype:AttributeTypeSteps.ts",
+    "//test/behaviour/concept/type/relationtype:RelationTypeSteps.ts",
+    "//test/behaviour/concept/type/thingtype:ThingTypeSteps.ts",
+    "//test/behaviour/config:Parameters.ts",
+    "//test/behaviour/connection/database:DatabaseSteps.ts",
+    "//test/behaviour/connection/session:SessionSteps.ts",
+    "//test/behaviour/connection/transaction:TransactionSteps.ts",
+    "//test/behaviour/graql:GraqlSteps.ts",
+    "//test/behaviour/util:Util.ts",
+    "//test:tsconfig.json"
+] + glob(["node_modules/**"])
+
 filegroup(
-    name = "behavioural-steps",
-    srcs = [
-        "//test/behaviour/concept/thing:ThingSteps.ts",
-        "//test/behaviour/concept/thing/attribute:AttributeSteps.ts",
-        "//test/behaviour/concept/thing/entity:EntitySteps.ts",
-        "//test/behaviour/concept/thing/relation:RelationSteps.ts",
-        "//test/behaviour/concept/type/attributetype:AttributeTypeSteps.ts",
-        "//test/behaviour/concept/type/relationtype:RelationTypeSteps.ts",
-        "//test/behaviour/concept/type/thingtype:ThingTypeSteps.ts",
-        "//test/behaviour/config:Parameters.ts",
-        "//test/behaviour/connection:ConnectionSteps.ts",
-        "//test/behaviour/connection/database:DatabaseSteps.ts",
-        "//test/behaviour/connection/session:SessionSteps.ts",
-        "//test/behaviour/connection/transaction:TransactionSteps.ts",
-        "//test/behaviour/graql:GraqlSteps.ts",
-        "//test/behaviour/util:Util.ts",
-        "//test:tsconfig.json"
-    ] + glob(["node_modules/**"]),
+    name = "behaviour-steps-core",
+    srcs = behaviour_steps_common + ["//test/behaviour/connection:ConnectionStepsCore.ts"],
+    visibility = ["//test/behaviour:__pkg__"],
+)
+
+filegroup(
+    name = "behaviour-steps-cluster",
+    srcs = behaviour_steps_common + ["//test/behaviour/connection:ConnectionStepsCluster.ts"],
     visibility = ["//test/behaviour:__pkg__"],
 )
 

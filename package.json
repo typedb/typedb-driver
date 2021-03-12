@@ -18,6 +18,7 @@
     "test-concept": "node test/integration/test-concept.js",
     "test-connection": "node test/integration/test-connection.js",
     "test-query": "node test/integration/test-query.js",
+    "test-cluster-failover": "npm run build && node test/integration/test-cluster-failover.js",
     "lint": "eslint . --ext .ts",
     "compile-tests": "tsc --build test/tsconfig.json"
   },

@@ -19,6 +19,6 @@
 
 build --incompatible_strict_action_env --javacopt='--release 8'
 run --incompatible_strict_action_env
-test --incompatible_strict_action_env --cache_test_results=no
+test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no
 
 try-import /opt/credentials/bazel-remote-cache.rc

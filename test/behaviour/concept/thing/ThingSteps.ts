@@ -20,7 +20,7 @@
 import { After, When } from "@cucumber/cucumber";
 import { Thing } from "../../../../dist/concept/thing/Thing";
 import assert = require("assert");
-import { tx } from "../../connection/ConnectionSteps";
+import { tx } from "../../connection/ConnectionStepsBase";
 import { getThingType } from "../type/thingtype/ThingTypeSteps";
 import { assertThrows } from "../../util/Util";
 import { Attribute } from "../../../../dist/concept/thing/Attribute";

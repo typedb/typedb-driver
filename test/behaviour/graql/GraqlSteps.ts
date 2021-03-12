@@ -18,7 +18,7 @@
  */
 
 import { Then, When } from "@cucumber/cucumber";
-import { tx } from "../connection/ConnectionSteps";
+import { tx } from "../connection/ConnectionStepsBase";
 import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
 import { ConceptMap } from "../../../dist/concept/answer/ConceptMap";
 import { Numeric } from "../../../dist/concept/answer/Numeric";

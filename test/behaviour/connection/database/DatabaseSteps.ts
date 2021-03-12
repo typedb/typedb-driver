@@ -18,7 +18,7 @@
  */
 
 import { When, Then, Given } from "@cucumber/cucumber";
-import { client, THREAD_POOL_SIZE } from "../ConnectionSteps";
+import { client, THREAD_POOL_SIZE } from "../ConnectionStepsBase";
 import * as assert from "assert";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import { assertThrows } from "../../util/Util";
