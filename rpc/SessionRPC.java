@@ -23,24 +23,38 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.proto.OptionsProtoBuilder;
+import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
+import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.StampedLock;
 
 public class SessionRPC implements GraknClient.Session {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SessionRPC.class);
+    private static final int PULSE_TEMPO_MILLIS = 5_000;
+
     private final ClientRPC client;
     private final DatabaseRPC database;
+    private final ByteString sessionId;
+    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
+    private final ConcurrentSet<TransactionRPC> transactions;
     private final Type type;
     private final GraknOptions options;
-    private final ByteString sessionId;
-    private final AtomicBoolean isOpen;
     private final Timer pulse;
-    private final GraknGrpc.GraknBlockingStub blockingGrpcStub;
+    private final ReadWriteLock accessLock;
+    private final AtomicBoolean isOpen;
+    private final int networkLatencyMillis;
 
     public SessionRPC(ClientRPC client, String database, Type type, GraknOptions options) {
         try {
@@ -48,17 +62,36 @@ public class SessionRPC implements GraknClient.Session {
             this.client = client;
             this.type = type;
             this.options = options;
-            blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             this.database = new DatabaseRPC(client.databases(), database);
-            SessionProto.Session.Open.Req openReq = SessionProto.Session.Open.Req.newBuilder()
-                    .setDatabase(database).setType(sessionType(type)).setOptions(OptionsProtoBuilder.options(options)).build();
-
-            sessionId = blockingGrpcStub.sessionOpen(openReq).getSessionId();
-            pulse = new Timer();
+            blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
+            Instant startTime = Instant.now();
+            SessionProto.Session.Open.Res res = blockingGrpcStub.sessionOpen(openRequest(database, type, options));
+            Instant endTime = Instant.now();
+            networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
+            sessionId = res.getSessionId();
+            transactions = new ConcurrentSet<>();
+            accessLock = new StampedLock().asReadWriteLock();
             isOpen = new AtomicBoolean(true);
-            pulse.scheduleAtFixedRate(this.new PulseTask(), 0, 5000);
+            pulse = new Timer();
+            pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_TEMPO_MILLIS);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
+        }
+    }
+
+    private static SessionProto.Session.Open.Req openRequest(String database, Type type, GraknOptions options) {
+        return SessionProto.Session.Open.Req.newBuilder().setDatabase(database)
+                .setType(sessionType(type)).setOptions(options(options)).build();
+    }
+
+    private static SessionProto.Session.Type sessionType(Type type) {
+        switch (type) {
+            case DATA:
+                return SessionProto.Session.Type.DATA;
+            case SCHEMA:
+                return SessionProto.Session.Type.SCHEMA;
+            default:
+                throw new GraknClientException(ILLEGAL_ARGUMENT);
         }
     }
 
@@ -69,23 +102,22 @@ public class SessionRPC implements GraknClient.Session {
 
     @Override
     public GraknClient.Transaction transaction(GraknClient.Transaction.Type type, GraknOptions options) {
-        return new TransactionRPC(this, sessionId, type, options);
+        try {
+            accessLock.readLock().lock();
+            if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
+            TransactionRPC transactionRPC = new TransactionRPC(this, sessionId, type, options, client.batcher().nextExecutor());
+            transactions.add(transactionRPC);
+            return transactionRPC;
+        } finally {
+            accessLock.readLock().unlock();
+        }
     }
 
     @Override
-    public Type type() {
-        return type;
-    }
+    public DatabaseRPC database() { return database; }
 
     @Override
-    public GraknOptions options() {
-        return options;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return isOpen.get();
-    }
+    public GraknOptions options() { return options; }
 
     @Override
     public void close() {
@@ -102,44 +134,56 @@ public class SessionRPC implements GraknClient.Session {
     }
 
     @Override
-    public DatabaseRPC database() {
-        return database;
-    }
+    public Type type() { return type; }
 
-    ClientRPC client() { return client; }
+    @Override
+    public boolean isOpen() { return isOpen.get(); }
+
+    void reconnect() { client.reconnect(); }
 
     ByteString id() { return sessionId; }
 
-    public void pulse() {
-        boolean alive;
-        try {
-            alive = blockingGrpcStub.sessionPulse(
-                    SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build()).getAlive();
-        } catch (StatusRuntimeException exception) {
-            alive = false;
-        }
-        if (!alive) {
-            isOpen.set(false);
-            pulse.cancel();
-        }
-    }
+    Channel channel() { return client.channel(); }
 
-    private static SessionProto.Session.Type sessionType(Type type) {
-        switch (type) {
-            case DATA:
-                return SessionProto.Session.Type.DATA;
-            case SCHEMA:
-                return SessionProto.Session.Type.SCHEMA;
-            default:
-                return SessionProto.Session.Type.UNRECOGNIZED;
+    int networkLatencyMillis() { return networkLatencyMillis; }
+
+    @Override
+    public void close() {
+        try {
+            accessLock.writeLock().lock();
+            if (isOpen.compareAndSet(true, false)) {
+                transactions.forEach(TransactionRPC::close);
+                client.removeSession(this);
+                pulse.cancel();
+                client.reconnect();
+                SessionProto.Session.Close.Res ignored = blockingGrpcStub.sessionClose(
+                        SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionId).build()
+                );
+            }
+        } catch (StatusRuntimeException e) {
+            throw GraknClientException.of(e);
+        } finally {
+            accessLock.writeLock().unlock();
         }
     }
 
     private class PulseTask extends TimerTask {
+
         @Override
         public void run() {
             if (!isOpen()) return;
-            pulse();
+            boolean alive;
+            try {
+                alive = blockingGrpcStub.sessionPulse(
+                        SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionId).build()
+                ).getAlive();
+            } catch (StatusRuntimeException exception) {
+                alive = false;
+            }
+            if (!alive) {
+                isOpen.set(false);
+                pulse.cancel();
+            }
         }
     }
 }

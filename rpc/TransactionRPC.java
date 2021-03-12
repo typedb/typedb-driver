@@ -27,13 +27,12 @@ import grakn.client.common.proto.OptionsProtoBuilder;
 import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
+import grakn.client.rpc.common.TransactionRequestBatcher;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.TransactionProto;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +47,8 @@ import java.util.stream.StreamSupport;
 
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import static grakn.client.common.tracing.TracingProtoBuilder.tracingData;
+import static grakn.client.common.proto.ProtoBuilder.options;
+import static grakn.client.common.proto.ProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
 public class TransactionRPC implements Transaction {
@@ -58,14 +58,14 @@ public class TransactionRPC implements Transaction {
     private final ConceptManager conceptManager;
     private final LogicManager logicManager;
     private final QueryManager queryManager;
-    private final SynchronizedStreamObserver<TransactionProto.Transaction.Req> requestObserver;
     private final ResponseCollectors collectors;
-    private final int networkLatencyMillis;
     private final AtomicBoolean isOpen;
+    private final TransactionRequestBatcher.Executor.Dispatcher dispatcher;
 
-    TransactionRPC(SessionRPC session, ByteString sessionId, Type type, GraknOptions options) {
+    TransactionRPC(SessionRPC sessionRPC, ByteString sessionId, Type type, GraknOptions options,
+                   TransactionRequestBatcher.Executor batchExecutor) {
         try {
-            session.client().reconnect();
+            sessionRPC.reconnect();
             this.type = type;
             this.options = options;
             conceptManager = new ConceptManager(this);
@@ -75,20 +75,20 @@ public class TransactionRPC implements Transaction {
 
             // Opening the StreamObserver exposes these atomics to another thread, so we must initialize them first.
             isOpen = new AtomicBoolean(true);
-            requestObserver = new SynchronizedStreamObserver<>(GraknGrpc.newStub(session.client().channel()).transaction(responseObserver()));
-            TransactionProto.Transaction.Req.Builder openRequest = TransactionProto.Transaction.Req.newBuilder()
-                    .putAllMetadata(tracingData())
-                    .setOpenReq(TransactionProto.Transaction.Open.Req.newBuilder()
-                                        .setSessionId(sessionId)
-                                        .setType(TransactionProto.Transaction.Type.forNumber(type.id()))
-                                        .setOptions(OptionsProtoBuilder.options(options)));
-            Instant startTime = Instant.now();
-            TransactionProto.Transaction.Open.Res res = execute(openRequest).getOpenRes();
-            Instant endTime = Instant.now();
-            networkLatencyMillis = (int) ChronoUnit.MILLIS.between(startTime, endTime) - res.getProcessingTimeMillis();
+            dispatcher = batchExecutor.dispatcher(GraknGrpc.newStub(sessionRPC.channel()).transaction(responseObserver()));
+            execute(openRequest(sessionId, type, options, sessionRPC.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }
+    }
+
+    private static TransactionProto.Transaction.Req.Builder openRequest(
+            ByteString sessionID, Type transactionType, GraknOptions options, int networkLatencyMillis) {
+        return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
+                TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
+                        .setType(TransactionProto.Transaction.Type.forNumber(transactionType.id()))
+                        .setOptions(options(options)).setNetworkLatencyMillis(networkLatencyMillis)
+        );
     }
 
     @Override
@@ -149,7 +149,7 @@ public class TransactionRPC implements Transaction {
         if (isOpen.compareAndSet(true, false)) {
             collectors.clear(doneResponse);
             try {
-                requestObserver.onCompleted();
+                dispatcher.close();
             } catch (StatusRuntimeException e) {
                 throw GraknClientException.of(e);
             }
@@ -157,34 +157,45 @@ public class TransactionRPC implements Transaction {
     }
 
     public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
-        return executeAsync(request, res -> res).get();
+        return execute(request, true);
     }
 
-    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, T> transformResponse) {
-        if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+    public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request, boolean batch) {
+        return executeAsync(request, res -> res, batch).get();
+    }
 
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request,
+                                           Function<TransactionProto.Transaction.Res, T> responseFn) {
+        return executeAsync(request, responseFn, true);
+    }
+
+    public <T> QueryFuture<T> executeAsync(TransactionProto.Transaction.Req.Builder request,
+                                           Function<TransactionProto.Transaction.Res, T> responseFn, boolean batch) {
+        if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
         ResponseCollector.Single responseCollector = new ResponseCollector.Single();
         UUID requestId = UUID.randomUUID();
         request.setId(requestId.toString());
         collectors.put(requestId, responseCollector);
-        requestObserver.onNext(request.build());
-        return new QueryFuture<>(responseCollector, transformResponse);
+        if (batch) dispatcher.dispatch(request.build());
+        else dispatcher.dispatchNow(request.build());
+        return new QueryFuture<>(responseCollector, responseFn);
     }
 
-    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request, Function<TransactionProto.Transaction.Res, Stream<T>> transformResponse) {
+    public <T> Stream<T> stream(TransactionProto.Transaction.Req.Builder request,
+                                Function<TransactionProto.Transaction.Res, Stream<T>> responseFn) {
         if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
 
-        ResponseCollector.Multiple responseCollector = new ResponseCollector.Multiple();
+        ResponseCollector.Multiple collector = new ResponseCollector.Multiple();
         UUID requestId = UUID.randomUUID();
         request.setId(requestId.toString());
-        request.setLatencyMillis(networkLatencyMillis);
-        collectors.put(requestId, responseCollector);
-        requestObserver.onNext(request.build());
-        ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, requestObserver, responseCollector, transformResponse);
+        collectors.put(requestId, collector);
+        dispatcher.dispatch(request.build());
+        ResponseIterator<T> responseIterator = new ResponseIterator<>(requestId, dispatcher, collector, responseFn);
         return StreamSupport.stream(((Iterable<T>) () -> responseIterator).spliterator(), false);
     }
 
     private StreamObserver<TransactionProto.Transaction.Res> responseObserver() {
+
         return new StreamObserver<TransactionProto.Transaction.Res>() {
             @Override
             public void onNext(TransactionProto.Transaction.Res res) {
@@ -274,7 +285,7 @@ public class TransactionRPC implements Transaction {
 
             @Override
             boolean isLastResponse(TransactionProto.Transaction.Res response) {
-                return response.getDone();
+                return response.getStreamRes().getIsDone();
             }
         }
     }

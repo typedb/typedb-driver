@@ -47,18 +47,20 @@ public class ClientClusterRPC implements GraknClient.Cluster {
     private final ConcurrentMap<String, DatabaseClusterRPC> clusterDatabases;
     private boolean isOpen;
 
-    public ClientClusterRPC(String... addresses) {
-        coreClients = fetchClusterServers(addresses).stream()
-                .map(addr -> pair(addr, new ClientRPC(addr.external())))
-                .collect(Collectors.toMap(Pair::first, Pair::second));
-        graknClusterRPCs = coreClients.entrySet().stream()
-                .map(client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel())))
-                .collect(Collectors.toMap(Pair::first, Pair::second));
-        databaseManagers = new DatabaseManagerClusterRPC(this,
-                coreClients.entrySet().stream()
-                        .map(client -> pair(client.getKey(), client.getValue().databases()))
-                        .collect(Collectors.toMap(Pair::first, Pair::second))
-        );
+    public ClientClusterRPC(Set<String> addresses) {
+        this(addresses, ClientRPC.calculateParallelisation());
+    }
+
+    public ClientClusterRPC(Set<String> addresses, int parallelisation) {
+        coreClients = fetchClusterServers(addresses).stream().map(
+                address -> pair(address, new ClientRPC(address.external(), parallelisation))
+        ).collect(Collectors.toMap(Pair::first, Pair::second));
+        graknClusterRPCs = coreClients.entrySet().stream().map(
+                client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel()))
+        ).collect(Collectors.toMap(Pair::first, Pair::second));
+        databaseManagers = new DatabaseManagerClusterRPC(this, coreClients.entrySet().stream().map(
+                client -> pair(client.getKey(), client.getValue().databases())
+        ).collect(Collectors.toMap(Pair::first, Pair::second)));
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
     }
@@ -138,7 +140,7 @@ public class ClientClusterRPC implements GraknClient.Cluster {
         return graknClusterRPCs.get(address);
     }
 
-    private Set<ServerAddress> fetchClusterServers(String... addresses) {
+    private Set<ServerAddress> fetchClusterServers(Set<String> addresses) {
         for (String address : addresses) {
             try (ClientRPC client = new ClientRPC(address)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
