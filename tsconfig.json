@@ -68,10 +68,14 @@
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
-  "exclude": [
-    "dist",
-    "test",
-    "bazel-*",
-    "node_modules"
+  "include": [
+    "common",
+    "concept",
+    "logic",
+    "query",
+    "rpc",
+    "dependencies_internal.ts",
+    "GraknClient.ts",
+    "GraknOptions.ts"
   ]
 }

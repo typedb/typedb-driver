@@ -34,7 +34,7 @@ load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_nodejs
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
 
 genrule(
     name = "client-nodejs-targz",
@@ -92,8 +92,8 @@ filegroup(
     visibility = ["//test/behaviour:__pkg__"],
 )
 
-ts_library(
-    name = "_client_nodejs",
+ts_project(
+    name = "client-nodejs",
     srcs = glob([
         "*.ts",
         "common/**/*.ts",
@@ -102,18 +102,18 @@ ts_library(
         "query/**/*.ts",
         "rpc/**/*.ts",
     ]),
-    module_name = "grakn-client",
-    module_root = ".",
     tsconfig = "tsconfig.json",
+    declaration = True,
     deps = [
         "@npm//@grpc/grpc-js",
         "@npm//grakn-protocol",
         "@npm//@types/node",
+        "@npm//typescript",
     ],
 )
 
 pkg_npm(
-    name = "client-nodejs",
+    name = "client-nodejs-npm-package",
     package_name = "grakn-client",
     srcs = glob([
        "package.json",
@@ -123,7 +123,7 @@ pkg_npm(
         "@npm//grakn-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
-        ":_client_nodejs",
+        ":client-nodejs",
     ],
     visibility = ["//visibility:public"],
     vendor_external = [],
@@ -131,7 +131,7 @@ pkg_npm(
 
 assemble_npm(
     name = "assemble-npm",
-    target = ":client-nodejs",
+    target = ":client-nodejs-npm-package",
 )
 
 deploy_npm(
