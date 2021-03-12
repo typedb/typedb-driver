@@ -23,7 +23,7 @@ import com.google.protobuf.ByteString;
 import grakn.client.GraknClient.Transaction;
 import grakn.client.GraknOptions;
 import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.proto.OptionsProtoBuilder;
+import grakn.client.common.proto.ProtoBuilder;
 import grakn.client.concept.ConceptManager;
 import grakn.client.logic.LogicManager;
 import grakn.client.query.QueryManager;
@@ -47,7 +47,6 @@ import java.util.stream.StreamSupport;
 
 import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import static grakn.client.common.proto.ProtoBuilder.options;
 import static grakn.client.common.proto.ProtoBuilder.tracingData;
 import static grakn.common.util.Objects.className;
 
@@ -87,7 +86,7 @@ public class TransactionRPC implements Transaction {
         return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
                 TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
                         .setType(TransactionProto.Transaction.Type.forNumber(transactionType.id()))
-                        .setOptions(options(options)).setNetworkLatencyMillis(networkLatencyMillis)
+                        .setOptions(ProtoBuilder.options(options)).setNetworkLatencyMillis(networkLatencyMillis)
         );
     }
 
