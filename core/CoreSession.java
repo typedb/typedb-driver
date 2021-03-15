@@ -104,7 +104,7 @@ public class CoreSession implements Session {
         try {
             accessLock.readLock().lock();
             if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
-            Transaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options, client.executor());
+            Transaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options, client.transmitter());
             transactions.add(transactionRPC);
             return transactionRPC;
         } finally {

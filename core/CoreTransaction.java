@@ -52,7 +52,7 @@ public class CoreTransaction implements Transaction.Extended {
     private final BidirectionalStream bidirectionalStream;
 
     CoreTransaction(CoreSession sessionRPC, ByteString sessionId, Type type,
-                    GraknOptions options, RequestTransmitter executor) {
+                    GraknOptions options, RequestTransmitter transmitter) {
         try {
             sessionRPC.reconnect();
             this.type = type;
@@ -60,7 +60,7 @@ public class CoreTransaction implements Transaction.Extended {
             conceptManager = new ConceptManagerImpl(this);
             logicManager = new LogicManagerImpl(this);
             queryManager = new QueryManagerImpl(this);
-            bidirectionalStream = new BidirectionalStream(sessionRPC.channel(), executor);
+            bidirectionalStream = new BidirectionalStream(sessionRPC.channel(), transmitter);
             execute(Proto.Transaction.open(sessionId, type.proto(), options.proto(), sessionRPC.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);

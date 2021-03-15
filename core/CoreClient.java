@@ -44,7 +44,7 @@ public class CoreClient implements Client {
     private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
 
     private final ManagedChannel channel;
-    private final RequestTransmitter batcher;
+    private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databases;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
@@ -53,9 +53,9 @@ public class CoreClient implements Client {
     }
 
     public CoreClient(String address, int parallelisation) {
-        NamedThreadFactory tf = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
+        NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-        batcher = new RequestTransmitter(parallelisation, tf);
+        transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databases = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
     }
@@ -96,7 +96,7 @@ public class CoreClient implements Client {
         try {
             sessions.values().forEach(CoreSession::close);
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            batcher.close();
+            transmitter.close();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -136,8 +136,8 @@ public class CoreClient implements Client {
         }
     }
 
-    RequestTransmitter executor() {
-        return batcher;
+    RequestTransmitter transmitter() {
+        return transmitter;
     }
 
     void removeSession(CoreSession session) {

@@ -45,11 +45,11 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(Channel channel, RequestTransmitter executor) {
+    public BidirectionalStream(Channel channel, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);
-        dispatcher = executor.dispatcher(GraknGrpc.newStub(channel).transaction(responseObserver()));
+        dispatcher = transmitter.dispatcher(GraknGrpc.newStub(channel).transaction(new ResponseObserver()));
         isOpen.set(true);
     }
 
@@ -105,40 +105,6 @@ public class BidirectionalStream implements AutoCloseable {
         }
     }
 
-    private StreamObserver<Transaction.Server> responseObserver() {
-
-        return new StreamObserver<Transaction.Server>() {
-            @Override
-            public void onNext(Transaction.Server serverMsg) {
-                if (!isOpen.get()) return;
-
-                switch (serverMsg.getServerCase()) {
-                    case RES:
-                        collect(serverMsg.getRes());
-                        break;
-                    case RES_PART:
-                        collect(serverMsg.getResPart());
-                        break;
-                    default:
-                    case SERVER_NOT_SET:
-                        throw new GraknClientException(ILLEGAL_ARGUMENT);
-                }
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                assert t instanceof StatusRuntimeException : "The server sent an exception of unexpected type " + t.getClass();
-                // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
-                close((StatusRuntimeException) t);
-            }
-
-            @Override
-            public void onCompleted() {
-                close();
-            }
-        };
-    }
-
     public static class Single<T> {
 
         private final ResponseCollector.Queue<T> queue;
@@ -149,6 +115,38 @@ public class BidirectionalStream implements AutoCloseable {
 
         public T get() {
             return queue.take();
+        }
+    }
+
+    private class ResponseObserver implements StreamObserver<Transaction.Server> {
+
+        @Override
+        public void onNext(Transaction.Server serverMsg) {
+            if (!isOpen.get()) return;
+
+            switch (serverMsg.getServerCase()) {
+                case RES:
+                    collect(serverMsg.getRes());
+                    break;
+                case RES_PART:
+                    collect(serverMsg.getResPart());
+                    break;
+                default:
+                case SERVER_NOT_SET:
+                    throw new GraknClientException(ILLEGAL_ARGUMENT);
+            }
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            assert t instanceof StatusRuntimeException : "The server sent an exception of unexpected type " + t.getClass();
+            // TODO: this isn't nice - an error from one request isn't really appropriate for all of them (see #180)
+            close((StatusRuntimeException) t);
+        }
+
+        @Override
+        public void onCompleted() {
+            close();
         }
     }
 }

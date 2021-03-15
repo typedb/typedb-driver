@@ -50,12 +50,12 @@ public class RequestTransmitter implements AutoCloseable {
     private final ReadWriteLock accessLock;
     private volatile boolean isOpen;
 
-    public RequestTransmitter(int executors, NamedThreadFactory threadFactory) {
-        this.executors = new ArrayList<>(executors);
+    public RequestTransmitter(int parallelisation, NamedThreadFactory threadFactory) {
+        this.executors = new ArrayList<>(parallelisation);
         this.executorIndex = new AtomicInteger(0);
         this.accessLock = new StampedLock().asReadWriteLock();
         this.isOpen = true;
-        for (int i = 0; i < executors; i++) this.executors.add(new Executor(threadFactory));
+        for (int i = 0; i < parallelisation; i++) this.executors.add(new Executor(threadFactory));
     }
 
     private Executor nextExecutor() {
@@ -92,7 +92,7 @@ public class RequestTransmitter implements AutoCloseable {
         }
     }
 
-    public class Executor implements AutoCloseable {
+    private class Executor implements AutoCloseable {
 
         private final ConcurrentSet<Dispatcher> dispatchers;
         private final AtomicBoolean isRunning;
