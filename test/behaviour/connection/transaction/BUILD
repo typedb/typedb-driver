@@ -31,8 +31,9 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//:client-java",
+        "//api:api",
         "//test/behaviour/connection:steps-base",
-        "//test/behaviour/util",
+        "//test/behaviour/util:util",
 
         # Internal Repository Dependencies
         "@graknlabs_common//:common",
@@ -70,7 +71,8 @@ grakn_behaviour_java_test(
     ],
     deps = [
         # Internal Package Dependencies
-        "//test/behaviour",
+        "//api:api",
+        "//test/behaviour:behaviour",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",

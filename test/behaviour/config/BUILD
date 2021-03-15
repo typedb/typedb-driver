@@ -25,6 +25,7 @@ java_library(
     srcs = ["Parameters.java"],
     deps = [
         "//:client-java",
+        "//api:api",
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java"
     ],

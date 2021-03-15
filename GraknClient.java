@@ -19,198 +19,29 @@
 
 package grakn.client;
 
-import grakn.client.concept.ConceptManager;
-import grakn.client.logic.LogicManager;
-import grakn.client.query.QueryManager;
-import grakn.client.rpc.ClientRPC;
-import grakn.client.rpc.cluster.ClientClusterRPC;
-import grakn.client.rpc.cluster.ServerAddress;
+import grakn.client.api.Client;
+import grakn.client.cluster.ClusterClient;
+import grakn.client.core.CoreClient;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
-public interface GraknClient extends AutoCloseable {
+public class GraknClient {
 
-    String DEFAULT_ADDRESS = "localhost:1729";
+    public static final String DEFAULT_ADDRESS = "localhost:1729";
 
-    static GraknClient core(String address) {
-        return new ClientRPC(address);
+    public static Client core(String address) {
+        return new CoreClient(address);
     }
 
-    static GraknClient core(String address, int parallelisation) {
-        return new ClientRPC(address, parallelisation);
+    public static Client core(String address, int parallelisation) {
+        return new CoreClient(address, parallelisation);
     }
 
-    static GraknClient.Cluster cluster(Set<String> addresses) {
-        return new ClientClusterRPC(addresses);
+    public static Client.Cluster cluster(Set<String> addresses) {
+        return new ClusterClient(addresses);
     }
 
-    static GraknClient.Cluster cluster(Set<String> addresses, int parallelisation) {
-        return new ClientClusterRPC(addresses, parallelisation);
-    }
-
-    Session session(String database, GraknClient.Session.Type type);
-
-    Session session(String database, GraknClient.Session.Type type, GraknOptions options);
-
-    DatabaseManager databases();
-
-    boolean isOpen();
-
-    void close();
-
-    boolean isCluster();
-
-    GraknClient.Cluster asCluster();
-
-    interface Cluster extends GraknClient {
-
-        @Override
-        DatabaseManager.Cluster databases();
-    }
-
-    interface DatabaseManager {
-
-        boolean contains(String name);
-
-        // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
-        void create(String name);
-
-        Database get(String name);
-
-        List<? extends Database> all();
-
-        interface Cluster extends DatabaseManager {
-
-            @Override
-            Database.Cluster get(String name);
-
-            @Override
-            List<Database.Cluster> all();
-        }
-    }
-
-    interface Database {
-
-        String name();
-
-        void delete();
-
-        interface Cluster extends Database {
-
-            Set<? extends Replica> replicas();
-
-            Optional<? extends Replica> primaryReplica();
-
-            Replica preferredSecondaryReplica();
-        }
-
-        interface Replica {
-
-            Database.Cluster database();
-
-            long term();
-
-            boolean isPrimary();
-
-            boolean isPreferredSecondary();
-
-            ServerAddress address();
-        }
-    }
-
-    interface Session extends AutoCloseable {
-
-        Transaction transaction(Transaction.Type type);
-
-        Transaction transaction(Transaction.Type type, GraknOptions options);
-
-        Session.Type type();
-
-        GraknOptions options();
-
-        boolean isOpen();
-
-        void close();
-
-        Database database();
-
-        enum Type {
-            DATA(0),
-            SCHEMA(1);
-
-            private final int id;
-            private final boolean isSchema;
-
-            Type(int id) {
-                this.id = id;
-                this.isSchema = id == 1;
-            }
-
-            public static Type of(int value) {
-                for (Type t : values()) {
-                    if (t.id == value) return t;
-                }
-                return null;
-            }
-
-            public int id() {
-                return id;
-            }
-
-            public boolean isData() { return !isSchema; }
-
-            public boolean isSchema() { return isSchema; }
-        }
-    }
-
-    interface Transaction extends AutoCloseable {
-
-        Transaction.Type type();
-
-        GraknOptions options();
-
-        boolean isOpen();
-
-        ConceptManager concepts();
-
-        LogicManager logic();
-
-        QueryManager query();
-
-        void commit();
-
-        void rollback();
-
-        void close();
-
-        enum Type {
-            READ(0),
-            WRITE(1);
-
-            private final int id;
-            private final boolean isWrite;
-
-            Type(int id) {
-                this.id = id;
-                this.isWrite = id == 1;
-            }
-
-            public static Type of(int value) {
-                for (Type t : values()) {
-                    if (t.id == value) return t;
-                }
-                return null;
-            }
-
-            public int id() {
-                return id;
-            }
-
-            public boolean isRead() { return !isWrite; }
-
-            public boolean isWrite() { return isWrite; }
-        }
+    public static Client.Cluster cluster(Set<String> addresses, int parallelisation) {
+        return new ClusterClient(addresses, parallelisation);
     }
 }

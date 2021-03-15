@@ -20,6 +20,7 @@
 package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
+import grakn.client.api.Client;
 import grakn.common.test.server.GraknCoreRunner;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
@@ -28,9 +29,6 @@ import io.cucumber.java.en.Given;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class ConnectionStepsCore extends ConnectionStepsBase {
     private GraknCoreRunner server;
@@ -57,7 +55,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    GraknClient createGraknClient(String address) {
+    Client createGraknClient(String address) {
         return GraknClient.core(address);
     }
 

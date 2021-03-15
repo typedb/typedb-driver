@@ -20,6 +20,7 @@
 package grakn.client.test.behaviour.connection;
 
 import grakn.client.GraknClient;
+import grakn.client.api.Client;
 import grakn.common.test.server.GraknClusterRunner;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
@@ -54,7 +55,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    GraknClient createGraknClient(String address) {
+    Client createGraknClient(String address) {
         return GraknClient.core(address);
     }
 

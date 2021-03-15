@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.concept.thing.entity;
 
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Entity;
+import grakn.client.api.concept.thing.Attribute;
+import grakn.client.api.concept.thing.Entity;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -33,6 +33,7 @@ import static grakn.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("CheckReturnValue")
 public class EntitySteps {
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance")

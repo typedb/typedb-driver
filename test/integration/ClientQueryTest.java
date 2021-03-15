@@ -20,9 +20,10 @@
 package grakn.client.test.integration;
 
 import grakn.client.GraknClient;
-import grakn.client.GraknClient.Session;
-import grakn.client.GraknClient.Transaction;
-import grakn.client.concept.answer.ConceptMap;
+import grakn.client.api.Client;
+import grakn.client.api.Session;
+import grakn.client.api.Transaction;
+import grakn.client.api.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -41,7 +42,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static grakn.client.GraknClient.Transaction.Type.WRITE;
+import static grakn.client.api.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
 import static graql.lang.Graql.rule;
@@ -53,7 +54,7 @@ import static java.util.stream.Collectors.toList;
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static GraknCoreRunner grakn;
-    private static GraknClient graknClient;
+    private static Client graknClient;
 
 
     @BeforeClass
@@ -228,7 +229,7 @@ public class ClientQueryTest {
     }
 
     private String[] commitSHAs() {
-        return new String[] {
+        return new String[]{
                 // queried commits
                 "VladGan/console@4bdc38acb87f9fd2fbdb7cbcf2bcc93837382cab",
                 "VladGan/console@b5ecd4707ce425d7d2d4d0b0d53420cb46e8ce52",
@@ -268,9 +269,9 @@ public class ClientQueryTest {
                             .plays("pipeline-workflow", "workflow"),
 
                     type("pipeline-workflow").sub("relation")
-                        .relates("pipeline").relates("workflow"),
-                type("pipeline-automation").sub("relation")
-                        .relates("pipeline").relates("trigger")
+                            .relates("pipeline").relates("workflow"),
+                    type("pipeline-automation").sub("relation")
+                            .relates("pipeline").relates("trigger")
             );
 
             LOG.info("clientJavaE2E() - define a schema...");
@@ -279,7 +280,6 @@ public class ClientQueryTest {
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
         }, Session.Type.SCHEMA);
-
 
 
         localhostGraknTx(tx -> {

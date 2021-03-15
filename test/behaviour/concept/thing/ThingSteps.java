@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.concept.thing;
 
-import grakn.client.concept.thing.Thing;
-import grakn.client.concept.type.ThingType;
+import grakn.client.api.concept.thing.Thing;
+import grakn.client.api.concept.type.ThingType;
 import grakn.client.test.behaviour.config.Parameters.RootLabel;
 import grakn.client.test.behaviour.config.Parameters.ScopedLabel;
 import io.cucumber.java.After;

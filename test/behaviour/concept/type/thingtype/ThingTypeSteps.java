@@ -19,12 +19,12 @@
 
 package grakn.client.test.behaviour.concept.type.thingtype;
 
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.EntityType;
-import grakn.client.concept.type.RelationType;
-import grakn.client.concept.type.RoleType;
-import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
+import grakn.client.api.concept.type.AttributeType;
+import grakn.client.api.concept.type.EntityType;
+import grakn.client.api.concept.type.RelationType;
+import grakn.client.api.concept.type.RoleType;
+import grakn.client.api.concept.type.ThingType;
+import grakn.client.api.concept.type.Type;
 import grakn.client.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.config;
 
-import grakn.client.GraknClient.Transaction;
-import grakn.client.concept.type.AttributeType.ValueType;
+import grakn.client.api.Transaction;
+import grakn.client.api.concept.type.AttributeType.ValueType;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static grakn.client.GraknClient.Transaction.Type.READ;
-import static grakn.client.GraknClient.Transaction.Type.WRITE;
+import static grakn.client.api.Transaction.Type.READ;
+import static grakn.client.api.Transaction.Type.WRITE;
 import static java.util.Objects.hash;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;

@@ -19,9 +19,9 @@
 
 package grakn.client.test.behaviour.concept.thing.relation;
 
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.thing.Relation;
-import grakn.client.concept.thing.Thing;
+import grakn.client.api.concept.thing.Attribute;
+import grakn.client.api.concept.thing.Relation;
+import grakn.client.api.concept.thing.Thing;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("CheckReturnValue")
 public class RelationSteps {
 
     @When("{var} = relation\\( ?{type_label} ?) create new instance")

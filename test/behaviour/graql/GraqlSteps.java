@@ -19,14 +19,14 @@
 
 package grakn.client.test.behaviour.graql;
 
-import grakn.client.concept.Concept;
-import grakn.client.concept.answer.ConceptMap;
-import grakn.client.concept.answer.ConceptMapGroup;
-import grakn.client.concept.answer.Numeric;
-import grakn.client.concept.answer.NumericGroup;
-import grakn.client.concept.thing.Attribute;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.rpc.QueryFuture;
+import grakn.client.api.answer.ConceptMap;
+import grakn.client.api.answer.ConceptMapGroup;
+import grakn.client.api.answer.Numeric;
+import grakn.client.api.answer.NumericGroup;
+import grakn.client.api.concept.Concept;
+import grakn.client.api.concept.thing.Attribute;
+import grakn.client.api.concept.type.AttributeType;
+import grakn.client.api.query.QueryFuture;
 import graql.lang.Graql;
 import graql.lang.common.exception.GraqlException;
 import graql.lang.query.GraqlDefine;
@@ -444,12 +444,12 @@ public class GraqlSteps {
 
     @Then("rules contain: {type_label}")
     public void rules_contain(String ruleLabel) {
-        assert(tx().logic().getRules().anyMatch(rule -> rule.getLabel().equals(ruleLabel)));
+        assert (tx().logic().getRules().anyMatch(rule -> rule.getLabel().equals(ruleLabel)));
     }
 
     @Then("rules do not contain: {type_label}")
     public void rules_do_not_contain(String ruleLabel) {
-        assert(tx().logic().getRules().noneMatch(rule -> rule.getLabel().equals(ruleLabel)));
+        assert (tx().logic().getRules().noneMatch(rule -> rule.getLabel().equals(ruleLabel)));
     }
 
     @Then("answers contain explanation tree")

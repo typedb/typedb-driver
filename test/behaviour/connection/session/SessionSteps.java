@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.connection.session;
 
-import grakn.client.GraknClient.Session;
+import grakn.client.api.Session;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import static grakn.client.GraknClient.Session.Type.DATA;
-import static grakn.client.GraknClient.Session.Type.SCHEMA;
+import static grakn.client.api.Session.Type.DATA;
+import static grakn.client.api.Session.Type.SCHEMA;
 import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
 import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessions;

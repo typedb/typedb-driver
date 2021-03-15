@@ -19,7 +19,10 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.GraknClient;
+import grakn.client.api.Client;
+import grakn.client.api.Session;
+import grakn.client.api.Transaction;
+import grakn.client.api.database.Database;
 import grakn.common.test.server.GraknSingleton;
 
 import java.util.ArrayList;
@@ -40,15 +43,15 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static GraknClient client;
-    public static List<GraknClient.Session> sessions = new ArrayList<>();
-    public static List<CompletableFuture<GraknClient.Session>> sessionsParallel = new ArrayList<>();
-    public static Map<GraknClient.Session, List<GraknClient.Transaction>> sessionsToTransactions = new HashMap<>();
-    public static Map<GraknClient.Session, List<CompletableFuture<GraknClient.Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
-    public static Map<CompletableFuture<GraknClient.Session>, List<CompletableFuture<GraknClient.Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
+    public static Client client;
+    public static List<Session> sessions = new ArrayList<>();
+    public static List<CompletableFuture<Session>> sessionsParallel = new ArrayList<>();
+    public static Map<Session, List<Transaction>> sessionsToTransactions = new HashMap<>();
+    public static Map<Session, List<CompletableFuture<Transaction>>> sessionsToTransactionsParallel = new HashMap<>();
+    public static Map<CompletableFuture<Session>, List<CompletableFuture<Transaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
     private static boolean isBeforeAllRan = false;
 
-    public static GraknClient.Transaction tx() {
+    public static Transaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
@@ -66,7 +69,7 @@ public abstract class ConnectionStepsBase {
         String address = GraknSingleton.getGraknRunner().address();
         assertNotNull(address);
         client = createGraknClient(address);
-        client.databases().all().forEach(GraknClient.Database::delete);
+        client.databases().all().forEach(Database::delete);
         System.out.println("ConnectionSteps.before");
     }
 
@@ -77,7 +80,7 @@ public abstract class ConnectionStepsBase {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        sessions.parallelStream().forEach(GraknClient.Session::close);
+        sessions.parallelStream().forEach(Session::close);
         sessions.clear();
 
         Stream<CompletableFuture<Void>> closures = sessionsParallel
@@ -91,14 +94,14 @@ public abstract class ConnectionStepsBase {
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
-        client.databases().all().forEach(GraknClient.Database::delete);
+        client.databases().all().forEach(Database::delete);
         client.close();
         assertFalse(client.isOpen());
         client = null;
         System.out.println("ConnectionSteps.after");
     }
 
-    abstract GraknClient createGraknClient(String address);
+    abstract Client createGraknClient(String address);
 
     void connection_has_been_opened() {
         assertNotNull(client);

@@ -30,6 +30,7 @@ grakn_java_test(
     deps = [
         # Internal dependencies
         "//:client-java",
+        "//api:api",
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java:graql",

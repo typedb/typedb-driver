@@ -22,7 +22,6 @@ artifacts = [
   "ch.qos.logback:logback-core",
   "com.google.code.findbugs:annotations",
   "com.google.code.findbugs:jsr305",
-  "com.google.guava:guava",
   "commons-io:commons-io",
   "io.cucumber:cucumber-java",
   "io.cucumber:cucumber-junit",
