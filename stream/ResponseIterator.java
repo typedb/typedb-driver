@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import static grakn.client.common.ErrorMessage.Client.MISSING_RESPONSE;
+import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public class ResponseIterator implements Iterator<TransactionProto.Transaction.ResPart> {
@@ -55,12 +56,15 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
             case RES_NOT_SET:
                 throw new GraknClientException(MISSING_RESPONSE.message(requestID));
             case STREAM_RES_PART:
-                if (resPart.getStreamResPart().getIsDone()) {
-                    state = State.DONE;
-                    return false;
-                } else {
-                    dispatcher.dispatch(Proto.Transaction.streamReq(requestID));
-                    return fetchAndCheck();
+                switch (resPart.getStreamResPart().getState()) {
+                    case DONE:
+                        state = State.DONE;
+                        return false;
+                    case CONTINUE:
+                        dispatcher.dispatch(Proto.Transaction.streamReq(requestID));
+                        return fetchAndCheck();
+                    default:
+                        throw new GraknClientException(ILLEGAL_ARGUMENT);
                 }
             default:
                 next = resPart;
