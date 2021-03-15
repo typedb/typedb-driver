@@ -21,7 +21,10 @@ package grakn.client.stream;
 
 import grakn.client.common.GraknClientException;
 import grakn.protocol.GraknGrpc;
-import grakn.protocol.TransactionProto.Transaction;
+import grakn.protocol.TransactionProto.Transaction.Req;
+import grakn.protocol.TransactionProto.Transaction.Res;
+import grakn.protocol.TransactionProto.Transaction.ResPart;
+import grakn.protocol.TransactionProto.Transaction.Server;
 import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -40,8 +43,8 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 
 public class BidirectionalStream implements AutoCloseable {
 
-    private final ResponseCollector<Transaction.Res> resCollector;
-    private final ResponseCollector<Transaction.ResPart> resPartCollector;
+    private final ResponseCollector<Res> resCollector;
+    private final ResponseCollector<ResPart> resPartCollector;
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
@@ -53,18 +56,18 @@ public class BidirectionalStream implements AutoCloseable {
         isOpen.set(true);
     }
 
-    public Single<Transaction.Res> single(Transaction.Req.Builder request, boolean batch) {
+    public Single<Res> single(Req.Builder request, boolean batch) {
         UUID requestID = UUID.randomUUID();
-        Transaction.Req req = request.setReqId(requestID.toString()).build();
-        ResponseCollector.Queue<Transaction.Res> queue = resCollector.queue(requestID);
+        Req req = request.setReqId(requestID.toString()).build();
+        ResponseCollector.Queue<Res> queue = resCollector.queue(requestID);
         if (batch) dispatcher.dispatch(req);
         else dispatcher.dispatchNow(req);
         return new Single<>(queue);
     }
 
-    public Stream<Transaction.ResPart> stream(Transaction.Req.Builder request) {
+    public Stream<ResPart> stream(Req.Builder request) {
         UUID requestID = UUID.randomUUID();
-        ResponseCollector.Queue<Transaction.ResPart> collector = resPartCollector.queue(requestID);
+        ResponseCollector.Queue<ResPart> collector = resPartCollector.queue(requestID);
         dispatcher.dispatch(request.setReqId(requestID.toString()).build());
         ResponseIterator iterator = new ResponseIterator(requestID, collector, dispatcher);
         return StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED | IMMUTABLE), false);
@@ -74,16 +77,16 @@ public class BidirectionalStream implements AutoCloseable {
         return isOpen.get();
     }
 
-    private void collect(Transaction.Res res) {
+    private void collect(Res res) {
         UUID requestID = UUID.fromString(res.getReqId());
-        ResponseCollector.Queue<Transaction.Res> collector = resCollector.get(requestID);
+        ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
         if (collector != null) collector.put(res);
         else throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestID));
     }
 
-    private void collect(Transaction.ResPart resPart) {
+    private void collect(ResPart resPart) {
         UUID requestID = UUID.fromString(resPart.getReqId());
-        ResponseCollector.Queue<Transaction.ResPart> collector = resPartCollector.get(requestID);
+        ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
         if (collector != null) collector.put(resPart);
         else throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestID));
     }
@@ -118,10 +121,10 @@ public class BidirectionalStream implements AutoCloseable {
         }
     }
 
-    private class ResponseObserver implements StreamObserver<Transaction.Server> {
+    private class ResponseObserver implements StreamObserver<Server> {
 
         @Override
-        public void onNext(Transaction.Server serverMsg) {
+        public void onNext(Server serverMsg) {
             if (!isOpen.get()) return;
 
             switch (serverMsg.getServerCase()) {

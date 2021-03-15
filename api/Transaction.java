@@ -25,20 +25,27 @@ import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
 import grakn.protocol.TransactionProto;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface Transaction extends AutoCloseable {
 
+    @CheckReturnValue
     boolean isOpen();
 
+    @CheckReturnValue
     Type type();
 
+    @CheckReturnValue
     GraknOptions options();
 
+    @CheckReturnValue
     ConceptManager concepts();
 
+    @CheckReturnValue
     LogicManager logic();
 
+    @CheckReturnValue
     QueryManager query();
 
     void commit();

@@ -41,15 +41,13 @@ public class CoreDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public boolean contains(String n) {
-        return client.call(() -> blockingGrpcStub.databaseContains(
-                Proto.Database.contains(nonNull(n))
-        ).getContains());
+    public boolean contains(String name) {
+        return client.call(() -> blockingGrpcStub.databaseContains(Proto.Database.contains(nonNull(name))).getContains());
     }
 
     @Override
-    public void create(String n) {
-        client.call(() -> blockingGrpcStub.databaseCreate(Proto.Database.create(nonNull(n))));
+    public void create(String name) {
+        client.call(() -> blockingGrpcStub.databaseCreate(Proto.Database.create(nonNull(name))));
     }
 
     @Override

@@ -22,18 +22,26 @@ package grakn.client.api;
 import grakn.client.api.database.Database;
 import grakn.protocol.SessionProto;
 
+import javax.annotation.CheckReturnValue;
+
 public interface Session extends AutoCloseable {
 
+    @CheckReturnValue
     boolean isOpen();
 
+    @CheckReturnValue
     Type type();
 
+    @CheckReturnValue
     Database database();
 
+    @CheckReturnValue
     GraknOptions options();
 
+    @CheckReturnValue
     Transaction transaction(Transaction.Type type);
 
+    @CheckReturnValue
     Transaction transaction(Transaction.Type type, GraknOptions options);
 
     void close();

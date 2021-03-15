@@ -38,14 +38,14 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
     private TransactionProto.Transaction.ResPart next;
     private State state;
 
-    enum State {EMTPY, FETCHED, DONE}
+    enum State {EMPTY, FETCHED, DONE}
 
     public ResponseIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
                             RequestTransmitter.Dispatcher requestDispatcher) {
         this.requestID = requestID;
         this.dispatcher = requestDispatcher;
         this.responseCollector = responseQueue;
-        state = State.EMTPY;
+        state = State.EMPTY;
         next = null;
     }
 
@@ -76,7 +76,7 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
                 return false;
             case FETCHED:
                 return true;
-            case EMTPY:
+            case EMPTY:
                 return fetchAndCheck();
             default:
                 throw new GraknClientException(ILLEGAL_STATE);
@@ -86,7 +86,7 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
     @Override
     public TransactionProto.Transaction.ResPart next() {
         if (!hasNext()) throw new NoSuchElementException();
-        state = State.EMTPY;
+        state = State.EMPTY;
         return next;
     }
 }
