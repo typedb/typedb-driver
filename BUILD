@@ -47,7 +47,8 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", ".grabl/automation.yml"]),
+    include = glob(["*", ".grabl/*"]),
+    exclude = glob(["docs/*"]),
     license_type = "apache",
     size = "small",
 )

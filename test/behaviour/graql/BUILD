@@ -34,7 +34,6 @@ java_library(
     ],
     deps = [
         # Package dependencies
-        "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
         "//test/behaviour/util:util",
