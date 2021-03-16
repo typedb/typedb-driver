@@ -32,7 +32,8 @@ import grakn.client.logic.LogicManagerImpl;
 import grakn.client.query.QueryManagerImpl;
 import grakn.client.stream.BidirectionalStream;
 import grakn.client.stream.RequestTransmitter;
-import grakn.protocol.TransactionProto;
+import grakn.protocol.TransactionProto.Transaction.Req;
+import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
 import io.grpc.StatusRuntimeException;
 
@@ -88,27 +89,27 @@ public class CoreTransaction implements Transaction.Extended {
     public QueryManager query() { return queryManager; }
 
     @Override
-    public TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request) {
+    public Res execute(Req.Builder request) {
         return execute(request, true);
     }
 
-    private TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request, boolean batch) {
+    private Res execute(Req.Builder request, boolean batch) {
         return query(request, batch).map(res -> res).get();
     }
 
     @Override
-    public QueryFuture<TransactionProto.Transaction.Res> query(TransactionProto.Transaction.Req.Builder request) {
+    public QueryFuture<Res> query(Req.Builder request) {
         return query(request, true);
     }
 
-    private QueryFuture<TransactionProto.Transaction.Res> query(
-            TransactionProto.Transaction.Req.Builder request, boolean batch) {
+    private QueryFuture<Res> query(Req.Builder request, boolean batch) {
         if (!isOpen()) throw new GraknClientException(TRANSACTION_CLOSED);
-        return () -> bidirectionalStream.single(request, batch).get();
+        BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch);
+        return single::get;
     }
 
     @Override
-    public Stream<ResPart> stream(TransactionProto.Transaction.Req.Builder request) {
+    public Stream<ResPart> stream(Req.Builder request) {
         if (!isOpen()) throw new GraknClientException(TRANSACTION_CLOSED);
         return bidirectionalStream.stream(request);
     }

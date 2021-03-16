@@ -56,7 +56,6 @@ public class ClientQueryTest {
     private static GraknCoreRunner grakn;
     private static Client graknClient;
 
-
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
@@ -71,7 +70,6 @@ public class ClientQueryTest {
         graknClient.close();
         grakn.stop();
     }
-
 
     @Test
     public void applicationTest() {
