@@ -42,11 +42,11 @@ import java.util.UUID;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-import static grakn.client.common.Proto.Thing.iid;
+import static grakn.client.common.RequestBuilder.Thing.byteString;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.Collections.emptyMap;
 
-public class Proto {
+public class RequestBuilder {
 
     public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {
@@ -65,36 +65,36 @@ public class Proto {
 
     public static class Database {
 
-        public static grakn.protocol.DatabaseProto.Database.All.Req all() {
+        public static grakn.protocol.DatabaseProto.Database.All.Req allReq() {
             return grakn.protocol.DatabaseProto.Database.All.Req.getDefaultInstance();
         }
 
-        public static grakn.protocol.DatabaseProto.Database.Contains.Req contains(String name) {
+        public static grakn.protocol.DatabaseProto.Database.Contains.Req containsReq(String name) {
             return grakn.protocol.DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build();
         }
 
-        public static grakn.protocol.DatabaseProto.Database.Create.Req create(String name) {
+        public static grakn.protocol.DatabaseProto.Database.Create.Req createReq(String name) {
             return grakn.protocol.DatabaseProto.Database.Create.Req.newBuilder().setName(name).build();
         }
 
-        public static grakn.protocol.DatabaseProto.Database.Delete.Req delete(String name) {
+        public static grakn.protocol.DatabaseProto.Database.Delete.Req deleteReq(String name) {
             return grakn.protocol.DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build();
         }
     }
 
     public static class Session {
 
-        public static SessionProto.Session.Open.Req open(
+        public static SessionProto.Session.Open.Req openReq(
                 String database, SessionProto.Session.Type type, OptionsProto.Options options) {
             return SessionProto.Session.Open.Req.newBuilder().setDatabase(database)
                     .setType(type).setOptions(options).build();
         }
 
-        public static SessionProto.Session.Pulse.Req pulse(ByteString sessionID) {
+        public static SessionProto.Session.Pulse.Req pulseReq(ByteString sessionID) {
             return SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionID).build();
         }
 
-        public static SessionProto.Session.Close.Req close(ByteString sessionID) {
+        public static SessionProto.Session.Close.Req closeReq(ByteString sessionID) {
             return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionID).build();
         }
     }
@@ -111,7 +111,7 @@ public class Proto {
             ).build();
         }
 
-        public static TransactionProto.Transaction.Req.Builder open(
+        public static TransactionProto.Transaction.Req.Builder openReq(
                 ByteString sessionID, TransactionProto.Transaction.Type type, OptionsProto.Options options, int networkLatencyMillis) {
             return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
                     TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
@@ -119,12 +119,12 @@ public class Proto {
             );
         }
 
-        public static TransactionProto.Transaction.Req.Builder commit() {
+        public static TransactionProto.Transaction.Req.Builder commitReq() {
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData())
                     .setCommitReq(TransactionProto.Transaction.Commit.Req.getDefaultInstance());
         }
 
-        public static TransactionProto.Transaction.Req.Builder rollback() {
+        public static TransactionProto.Transaction.Req.Builder rollbackReq() {
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData())
                     .setRollbackReq(TransactionProto.Transaction.Rollback.Req.getDefaultInstance());
         }
@@ -137,58 +137,58 @@ public class Proto {
             return TransactionProto.Transaction.Req.newBuilder().setQueryManagerReq(queryReq.setOptions(options));
         }
 
-        public static TransactionProto.Transaction.Req.Builder define(GraqlDefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder defineReq(GraqlDefine query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDefineReq(
                     QueryProto.QueryManager.Define.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder undefine(GraqlUndefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder undefineReq(GraqlUndefine query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUndefineReq(
                     QueryProto.QueryManager.Undefine.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder match(GraqlMatch query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder matchReq(GraqlMatch query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchReq(
                     QueryProto.QueryManager.Match.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder matchAggregate(
+        public static TransactionProto.Transaction.Req.Builder matchAggregateReq(
                 GraqlMatch.Aggregate query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchAggregateReq(
                     QueryProto.QueryManager.MatchAggregate.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder matchGroup(
+        public static TransactionProto.Transaction.Req.Builder matchGroupReq(
                 GraqlMatch.Group query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupReq(
                     QueryProto.QueryManager.MatchGroup.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder matchGroupAggregate(
+        public static TransactionProto.Transaction.Req.Builder matchGroupAggregateReq(
                 GraqlMatch.Group.Aggregate query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupAggregateReq(
                     QueryProto.QueryManager.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder insert(GraqlInsert query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder insertReq(GraqlInsert query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setInsertReq(
                     QueryProto.QueryManager.Insert.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder delete(GraqlDelete query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder deleteReq(GraqlDelete query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDeleteReq(
                     QueryProto.QueryManager.Delete.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder update(String query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder updateReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUpdateReq(
                     QueryProto.QueryManager.Update.Req.newBuilder().setQuery(query)
             ), options);
@@ -202,34 +202,34 @@ public class Proto {
             return TransactionProto.Transaction.Req.newBuilder().putAllMetadata(tracingData()).setConceptManagerReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder putEntityType(String label) {
+        public static TransactionProto.Transaction.Req.Builder putEntityTypeReq(String label) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutEntityTypeReq(
                     ConceptProto.ConceptManager.PutEntityType.Req.newBuilder().setLabel(label))
             );
         }
 
-        public static TransactionProto.Transaction.Req.Builder putRelationType(String label) {
+        public static TransactionProto.Transaction.Req.Builder putRelationTypeReq(String label) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutRelationTypeReq(
                     ConceptProto.ConceptManager.PutRelationType.Req.newBuilder().setLabel(label))
             );
         }
 
-        public static TransactionProto.Transaction.Req.Builder putAttributeType(
+        public static TransactionProto.Transaction.Req.Builder putAttributeTypeReq(
                 String label, ConceptProto.AttributeType.ValueType valueType) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutAttributeTypeReq(
                     ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder().setLabel(label).setValueType(valueType)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getThingType(String label) {
+        public static TransactionProto.Transaction.Req.Builder getThingTypeReq(String label) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setGetThingTypeReq(
                     ConceptProto.ConceptManager.GetThingType.Req.newBuilder().setLabel(label)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getThing(String iid) {
+        public static TransactionProto.Transaction.Req.Builder getThingReq(String iid) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setGetThingReq(
-                    ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(iid(iid))
+                    ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(byteString(iid))
             ));
         }
     }
@@ -242,20 +242,20 @@ public class Proto {
                     .putAllMetadata(tracingData()).setLogicManagerReq(logicReq);
         }
 
-        public static TransactionProto.Transaction.Req.Builder putRule(String label, String whenStr, String thenStr) {
+        public static TransactionProto.Transaction.Req.Builder putRuleReq(String label, String whenStr, String thenStr) {
             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setPutRuleReq(
                     LogicProto.LogicManager.PutRule.Req.newBuilder()
                             .setLabel(label).setWhen(whenStr).setThen(thenStr)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getRule(String label) {
+        public static TransactionProto.Transaction.Req.Builder getRuleReq(String label) {
             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setGetRuleReq(
                     LogicProto.LogicManager.GetRule.Req.newBuilder().setLabel(label)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getRules() {
+        public static TransactionProto.Transaction.Req.Builder getRulesReq() {
             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setGetRulesReq(
                     LogicProto.LogicManager.GetRules.Req.getDefaultInstance()
             ));
@@ -268,37 +268,37 @@ public class Proto {
             return TransactionProto.Transaction.Req.newBuilder().setTypeReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder isAbstract(String label) {
+        public static TransactionProto.Transaction.Req.Builder isAbstractReq(String label) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeIsAbstractReq(
                     ConceptProto.Type.IsAbstract.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder setLabel(String label, String newLabel) {
+        public static TransactionProto.Transaction.Req.Builder setLabelReq(String label, String newLabel) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeSetLabelReq(
                     ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(newLabel)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSupertypes(String label) {
+        public static TransactionProto.Transaction.Req.Builder getSupertypesReq(String label) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSupertypesReq(
                     ConceptProto.Type.GetSupertypes.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSubtypes(String label) {
+        public static TransactionProto.Transaction.Req.Builder getSubtypesReq(String label) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSubtypesReq(
                     ConceptProto.Type.GetSubtypes.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSupertype(String label) {
+        public static TransactionProto.Transaction.Req.Builder getSupertypeReq(String label) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSupertypeReq(
                     ConceptProto.Type.GetSupertype.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder delete(String label) {
+        public static TransactionProto.Transaction.Req.Builder deleteReq(String label) {
             return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeDeleteReq(
                     ConceptProto.Type.Delete.Req.getDefaultInstance()
             ));
@@ -306,23 +306,23 @@ public class Proto {
 
         public static class RoleType {
 
-            public static ConceptProto.Type roleType(String scope, String label, ConceptProto.Type.Encoding encoding) {
+            public static ConceptProto.Type protoRoleType(String scope, String label, ConceptProto.Type.Encoding encoding) {
                 return ConceptProto.Type.newBuilder().setScope(scope).setLabel(label).setEncoding(encoding).build();
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelationType(String scope, String label) {
+            public static TransactionProto.Transaction.Req.Builder getRelationTypeReq(String scope, String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setScope(scope).setLabel(label).setRoleTypeGetRelationTypeReq(
                         ConceptProto.RoleType.GetRelationType.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelationTypes(String scope, String label) {
+            public static TransactionProto.Transaction.Req.Builder getRelationTypesReq(String scope, String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setScope(scope).setRoleTypeGetRelationTypesReq(
                         ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlayers(String scope, String label) {
+            public static TransactionProto.Transaction.Req.Builder getPlayersReq(String scope, String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setScope(scope).setRoleTypeGetPlayersReq(
                         ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()
                 ));
@@ -331,41 +331,41 @@ public class Proto {
 
         public static class ThingType {
 
-            public static ConceptProto.Type thingType(String label, ConceptProto.Type.Encoding encoding) {
+            public static ConceptProto.Type protoThingType(String label, ConceptProto.Type.Encoding encoding) {
                 return ConceptProto.Type.newBuilder().setLabel(label).setEncoding(encoding).build();
             }
 
-            public static TransactionProto.Transaction.Req.Builder setAbstract(String label) {
+            public static TransactionProto.Transaction.Req.Builder setAbstractReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetAbstractReq(
                         ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetAbstract(String label) {
+            public static TransactionProto.Transaction.Req.Builder unsetAbstractReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetAbstractReq(
                         ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setSupertype(String label, ConceptProto.Type supertype) {
+            public static TransactionProto.Transaction.Req.Builder setSupertypeReq(String label, ConceptProto.Type supertype) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeSetSupertypeReq(
                         ConceptProto.Type.SetSupertype.Req.newBuilder().setType(supertype)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlays(String label) {
+            public static TransactionProto.Transaction.Req.Builder getPlaysReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetPlaysReq(
                         ConceptProto.ThingType.GetPlays.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setPlays(String label, ConceptProto.Type roleType) {
+            public static TransactionProto.Transaction.Req.Builder setPlaysReq(String label, ConceptProto.Type roleType) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetPlaysReq(
                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setPlays(
+            public static TransactionProto.Transaction.Req.Builder setPlaysReq(
                     String label, ConceptProto.Type roleType, ConceptProto.Type overriddenRoleType) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetPlaysReq(
                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
@@ -373,19 +373,19 @@ public class Proto {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetPlays(String label, ConceptProto.Type roleType) {
+            public static TransactionProto.Transaction.Req.Builder unsetPlaysReq(String label, ConceptProto.Type roleType) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetPlaysReq(
                         ConceptProto.ThingType.UnsetPlays.Req.newBuilder().setRole(roleType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwns(String label, boolean keysOnly) {
+            public static TransactionProto.Transaction.Req.Builder getOwnsReq(String label, boolean keysOnly) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetOwnsReq(
                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwns(
+            public static TransactionProto.Transaction.Req.Builder getOwnsReq(
                     String label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetOwnsReq(
                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
@@ -393,7 +393,7 @@ public class Proto {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setOwns(
+            public static TransactionProto.Transaction.Req.Builder setOwnsReq(
                     String label, ConceptProto.Type attributeType, boolean isKey) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
@@ -402,7 +402,7 @@ public class Proto {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setOwns(
+            public static TransactionProto.Transaction.Req.Builder setOwnsReq(
                     String label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType, boolean isKey) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
@@ -412,14 +412,14 @@ public class Proto {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetOwns(
+            public static TransactionProto.Transaction.Req.Builder unsetOwnsReq(
                     String label, ConceptProto.Type attributeType) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetOwnsReq(
                         ConceptProto.ThingType.UnsetOwns.Req.newBuilder().setAttributeType(attributeType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getInstances(String label) {
+            public static TransactionProto.Transaction.Req.Builder getInstancesReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetInstancesReq(
                         ConceptProto.ThingType.GetInstances.Req.getDefaultInstance()
                 ));
@@ -428,7 +428,7 @@ public class Proto {
 
         public static class EntityType {
 
-            public static TransactionProto.Transaction.Req.Builder create(String label) {
+            public static TransactionProto.Transaction.Req.Builder createReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setEntityTypeCreateReq(
                         ConceptProto.EntityType.Create.Req.getDefaultInstance()
                 ));
@@ -437,31 +437,31 @@ public class Proto {
 
         public static class RelationType {
 
-            public static TransactionProto.Transaction.Req.Builder create(String label) {
+            public static TransactionProto.Transaction.Req.Builder createReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeCreateReq(
                         ConceptProto.RelationType.Create.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelates(String label) {
+            public static TransactionProto.Transaction.Req.Builder getRelatesReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeGetRelatesReq(
                         ConceptProto.RelationType.GetRelates.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelates(String label, String roleLabel) {
+            public static TransactionProto.Transaction.Req.Builder getRelatesReq(String label, String roleLabel) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeGetRelatesForRoleLabelReq(
                         ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setRelates(String label, String roleLabel) {
+            public static TransactionProto.Transaction.Req.Builder setRelatesReq(String label, String roleLabel) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeSetRelatesReq(
                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setRelates(
+            public static TransactionProto.Transaction.Req.Builder setRelatesReq(
                     String label, String roleLabel, String overriddenLabel) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeSetRelatesReq(
                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
@@ -469,7 +469,7 @@ public class Proto {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetRelates(String label, String roleLabel) {
+            public static TransactionProto.Transaction.Req.Builder unsetRelatesReq(String label, String roleLabel) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeUnsetRelatesReq(
                         ConceptProto.RelationType.UnsetRelates.Req.newBuilder().setLabel(roleLabel)
                 ));
@@ -478,31 +478,31 @@ public class Proto {
 
         public static class AttributeType {
 
-            public static TransactionProto.Transaction.Req.Builder getOwners(String label, boolean onlyKey) {
+            public static TransactionProto.Transaction.Req.Builder getOwnersReq(String label, boolean onlyKey) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetOwnersReq(
                         ConceptProto.AttributeType.GetOwners.Req.newBuilder().setOnlyKey(onlyKey)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder put(String label, ConceptProto.Attribute.Value value) {
+            public static TransactionProto.Transaction.Req.Builder putReq(String label, ConceptProto.Attribute.Value value) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypePutReq(
                         ConceptProto.AttributeType.Put.Req.newBuilder().setValue(value)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder get(String label, ConceptProto.Attribute.Value value) {
+            public static TransactionProto.Transaction.Req.Builder getReq(String label, ConceptProto.Attribute.Value value) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetReq(
                         ConceptProto.AttributeType.Get.Req.newBuilder().setValue(value)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRegex(String label) {
+            public static TransactionProto.Transaction.Req.Builder getRegexReq(String label) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetRegexReq(
                         ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setRegex(String label, String regex) {
+            public static TransactionProto.Transaction.Req.Builder setRegexReq(String label, String regex) {
                 return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeSetRegexReq(
                         ConceptProto.AttributeType.SetRegex.Req.newBuilder().setRegex(regex)
                 ));
@@ -512,93 +512,93 @@ public class Proto {
 
     public static class Thing {
 
-        public static ByteString iid(String iid) {
+        static ByteString byteString(String iid) {
             return ByteString.copyFrom(hexStringToBytes(iid));
         }
 
-        public static ConceptProto.Thing thing(String iid) {
-            return ConceptProto.Thing.newBuilder().setIid(iid(iid)).build();
+        public static ConceptProto.Thing protoThing(String iid) {
+            return ConceptProto.Thing.newBuilder().setIid(byteString(iid)).build();
         }
 
         private static TransactionProto.Transaction.Req.Builder thingReq(ConceptProto.Thing.Req.Builder req) {
             return TransactionProto.Transaction.Req.newBuilder().setThingReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder isInferred(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingIsInferredReq(
+        public static TransactionProto.Transaction.Req.Builder isInferredReq(String iid) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingIsInferredReq(
                     ConceptProto.Thing.IsInferred.Req.getDefaultInstance())
             );
         }
 
-        public static TransactionProto.Transaction.Req.Builder getHas(
+        public static TransactionProto.Transaction.Req.Builder getHasReq(
                 String iid, List<ConceptProto.Type> attributeTypes) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingGetHasReq(
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
                     ConceptProto.Thing.GetHas.Req.newBuilder().addAllAttributeTypes(attributeTypes)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getHas(String iid, boolean onlyKey) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingGetHasReq(
+        public static TransactionProto.Transaction.Req.Builder getHasReq(String iid, boolean onlyKey) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
                     ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder setHas(String iid, ConceptProto.Thing attribute) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingSetHasReq(
+        public static TransactionProto.Transaction.Req.Builder setHasReq(String iid, ConceptProto.Thing attribute) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingSetHasReq(
                     ConceptProto.Thing.SetHas.Req.newBuilder().setAttribute(attribute)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder unsetHas(String iid, ConceptProto.Thing attribute) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingUnsetHasReq(
+        public static TransactionProto.Transaction.Req.Builder unsetHasReq(String iid, ConceptProto.Thing attribute) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingUnsetHasReq(
                     ConceptProto.Thing.UnsetHas.Req.newBuilder().setAttribute(attribute)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getPlays(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingGetPlaysReq(
+        public static TransactionProto.Transaction.Req.Builder getPlaysReq(String iid) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetPlaysReq(
                     ConceptProto.Thing.GetPlays.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getRelations(
+        public static TransactionProto.Transaction.Req.Builder getRelationsReq(
                 String iid, List<ConceptProto.Type> roleTypes) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingGetRelationsReq(
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetRelationsReq(
                     ConceptProto.Thing.GetRelations.Req.newBuilder().addAllRoleTypes(roleTypes)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder delete(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setThingDeleteReq(
+        public static TransactionProto.Transaction.Req.Builder deleteReq(String iid) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingDeleteReq(
                     ConceptProto.Thing.Delete.Req.getDefaultInstance()
             ));
         }
 
         public static class Relation {
 
-            public static TransactionProto.Transaction.Req.Builder getPlayersByRoleType(String iid) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setRelationGetPlayersByRoleTypeReq(
+            public static TransactionProto.Transaction.Req.Builder getPlayersByRoleTypeReq(String iid) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersByRoleTypeReq(
                         ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlayers(
+            public static TransactionProto.Transaction.Req.Builder getPlayersReq(
                     String iid, List<ConceptProto.Type> roleTypes) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setRelationGetPlayersReq(
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersReq(
                         ConceptProto.Relation.GetPlayers.Req.newBuilder().addAllRoleTypes(roleTypes)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder addPlayer(
+            public static TransactionProto.Transaction.Req.Builder addPlayerReq(
                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setRelationAddPlayerReq(
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationAddPlayerReq(
                         ConceptProto.Relation.AddPlayer.Req.newBuilder().setRoleType(roleType).setPlayer(player)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder removePlayer(
+            public static TransactionProto.Transaction.Req.Builder removePlayerReq(
                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setRelationRemovePlayerReq(
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationRemovePlayerReq(
                         ConceptProto.Relation.RemovePlayer.Req.newBuilder().setRoleType(roleType).setPlayer(player)
                 ));
             }
@@ -606,35 +606,35 @@ public class Proto {
 
         public static class Attribute {
 
-            public static TransactionProto.Transaction.Req.Builder getOwners(String iid) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setAttributeGetOwnersReq(
+            public static TransactionProto.Transaction.Req.Builder getOwnersReq(String iid) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
                         ConceptProto.Attribute.GetOwners.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwners(String iid, ConceptProto.Type ownerType) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(iid(iid)).setAttributeGetOwnersReq(
+            public static TransactionProto.Transaction.Req.Builder getOwnersReq(String iid, ConceptProto.Type ownerType) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
                         ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(ownerType)
                 ));
             }
 
-            public static ConceptProto.Attribute.Value attributeValueBoolean(boolean value) {
+            public static ConceptProto.Attribute.Value attributeValueBooleanReq(boolean value) {
                 return ConceptProto.Attribute.Value.newBuilder().setBoolean(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueLong(long value) {
+            public static ConceptProto.Attribute.Value attributeValueLongReq(long value) {
                 return ConceptProto.Attribute.Value.newBuilder().setLong(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueDouble(double value) {
+            public static ConceptProto.Attribute.Value attributeValueDoubleReq(double value) {
                 return ConceptProto.Attribute.Value.newBuilder().setDouble(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueString(String value) {
+            public static ConceptProto.Attribute.Value attributeValueStringReq(String value) {
                 return ConceptProto.Attribute.Value.newBuilder().setString(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueDateTime(LocalDateTime value) {
+            public static ConceptProto.Attribute.Value attributeValueDateTimeReq(LocalDateTime value) {
                 long epochMillis = value.atZone(ZoneId.of("Z")).toInstant().toEpochMilli();
                 return ConceptProto.Attribute.Value.newBuilder().setDateTime(epochMillis).build();
             }
@@ -647,13 +647,13 @@ public class Proto {
             return TransactionProto.Transaction.Req.newBuilder().setRuleReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder setLabel(String currentLabel, String newLabel) {
+        public static TransactionProto.Transaction.Req.Builder setLabelReq(String currentLabel, String newLabel) {
             return ruleReq(LogicProto.Rule.Req.newBuilder().setLabel(currentLabel).setRuleSetLabelReq(
                     LogicProto.Rule.SetLabel.Req.newBuilder().setLabel(newLabel)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder delete(String label) {
+        public static TransactionProto.Transaction.Req.Builder deleteReq(String label) {
             return ruleReq(LogicProto.Rule.Req.newBuilder().setLabel(label).setRuleDeleteReq(
                     LogicProto.Rule.Delete.Req.getDefaultInstance()
             ));

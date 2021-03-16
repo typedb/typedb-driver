@@ -21,13 +21,16 @@ package grakn.client.concept.type;
 
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.type.RoleType;
-import grakn.client.common.Proto;
+import grakn.client.common.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static grakn.client.common.RequestBuilder.Type.RoleType.getPlayersReq;
+import static grakn.client.common.RequestBuilder.Type.RoleType.getRelationTypeReq;
+import static grakn.client.common.RequestBuilder.Type.RoleType.getRelationTypesReq;
 import static grakn.common.util.Objects.className;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
@@ -46,7 +49,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     public static ConceptProto.Type protoRoleTypes(RoleType roleType) {
-        return Proto.Type.RoleType.roleType(roleType.getScope(), roleType.getLabel(), TypeImpl.encoding(roleType));
+        return RequestBuilder.Type.RoleType.protoRoleType(roleType.getScope(), roleType.getLabel(), TypeImpl.encoding(roleType));
     }
 
     @Override
@@ -133,20 +136,20 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public final RelationTypeImpl getRelationType() {
-            ConceptProto.Type.Res res = execute(Proto.Type.RoleType.getRelationType(getScope(), getLabel()));
+            ConceptProto.Type.Res res = execute(getRelationTypeReq(getScope(), getLabel()));
             return RelationTypeImpl.of(res.getRoleTypeGetRelationTypeRes().getRelationType());
         }
 
         @Override
         public final Stream<RelationTypeImpl> getRelationTypes() {
-            return stream(Proto.Type.RoleType.getRelationTypes(getScope(), getLabel()))
+            return stream(getRelationTypesReq(getScope(), getLabel()))
                     .flatMap(rp -> rp.getRoleTypeGetRelationTypesResPart().getRelationTypesList().stream())
                     .map(RelationTypeImpl::of);
         }
 
         @Override
         public final Stream<ThingTypeImpl> getPlayers() {
-            return stream(Proto.Type.RoleType.getPlayers(getScope(), getLabel()))
+            return stream(getPlayersReq(getScope(), getLabel()))
                     .flatMap(rp -> rp.getRoleTypeGetPlayersResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }

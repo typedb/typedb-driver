@@ -26,7 +26,6 @@ import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.EntityType;
 import grakn.client.api.concept.type.RelationType;
 import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.Proto;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.client.concept.type.AttributeTypeImpl;
 import grakn.client.concept.type.EntityTypeImpl;
@@ -37,6 +36,12 @@ import grakn.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
 
 import javax.annotation.Nullable;
+
+import static grakn.client.common.RequestBuilder.ConceptManager.getThingReq;
+import static grakn.client.common.RequestBuilder.ConceptManager.getThingTypeReq;
+import static grakn.client.common.RequestBuilder.ConceptManager.putAttributeTypeReq;
+import static grakn.client.common.RequestBuilder.ConceptManager.putEntityTypeReq;
+import static grakn.client.common.RequestBuilder.ConceptManager.putRelationTypeReq;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
@@ -68,8 +73,7 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public EntityType putEntityType(String label) {
-        ConceptProto.ConceptManager.Res res = execute(Proto.ConceptManager.putEntityType(label));
-        return EntityTypeImpl.of(res.getPutEntityTypeRes().getEntityType());
+        return EntityTypeImpl.of(execute(putEntityTypeReq(label)).getPutEntityTypeRes().getEntityType());
     }
 
     @Override
@@ -82,8 +86,7 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public RelationType putRelationType(String label) {
-        ConceptProto.ConceptManager.Res res = execute(Proto.ConceptManager.putRelationType(label));
-        return RelationTypeImpl.of(res.getPutRelationTypeRes().getRelationType());
+        return RelationTypeImpl.of(execute(putRelationTypeReq(label)).getPutRelationTypeRes().getRelationType());
     }
 
     @Override
@@ -96,7 +99,7 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
-        ConceptProto.ConceptManager.Res res = execute(Proto.ConceptManager.putAttributeType(label, valueType.proto()));
+        ConceptProto.ConceptManager.Res res = execute(putAttributeTypeReq(label, valueType.proto()));
         return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
@@ -111,10 +114,10 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public ThingType getThingType(String label) {
-        ConceptProto.ConceptManager.Res response = execute(Proto.ConceptManager.getThingType(label));
-        switch (response.getGetThingTypeRes().getResCase()) {
+        ConceptProto.ConceptManager.GetThingType.Res res = execute(getThingTypeReq(label)).getGetThingTypeRes();
+        switch (res.getResCase()) {
             case THING_TYPE:
-                return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
+                return ThingTypeImpl.of(res.getThingType());
             default:
             case RES_NOT_SET:
                 return null;
@@ -124,10 +127,10 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public Thing getThing(String iid) {
-        ConceptProto.ConceptManager.Res response = execute(Proto.ConceptManager.getThing(iid));
-        switch (response.getGetThingRes().getResCase()) {
+        ConceptProto.ConceptManager.GetThing.Res res = execute(getThingReq(iid)).getGetThingRes();
+        switch (res.getResCase()) {
             case THING:
-                return ThingImpl.of(response.getGetThingRes().getThing());
+                return ThingImpl.of(res.getThing());
             default:
             case RES_NOT_SET:
                 return null;

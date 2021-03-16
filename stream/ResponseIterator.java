@@ -20,7 +20,7 @@
 package grakn.client.stream;
 
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
+import grakn.client.common.RequestBuilder;
 import grakn.protocol.TransactionProto;
 
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
                         state = State.DONE;
                         return false;
                     case CONTINUE:
-                        dispatcher.dispatch(Proto.Transaction.streamReq(requestID));
+                        dispatcher.dispatch(RequestBuilder.Transaction.streamReq(requestID));
                         return fetchAndCheck();
                     default:
                         throw new GraknClientException(ILLEGAL_ARGUMENT);

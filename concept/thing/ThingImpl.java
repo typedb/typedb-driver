@@ -25,7 +25,6 @@ import grakn.client.api.concept.thing.Thing;
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
 import grakn.client.concept.ConceptImpl;
 import grakn.client.concept.type.RoleTypeImpl;
 import grakn.client.concept.type.ThingTypeImpl;
@@ -38,6 +37,14 @@ import java.util.stream.Stream;
 import static grakn.client.common.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_IID;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.RequestBuilder.Thing.deleteReq;
+import static grakn.client.common.RequestBuilder.Thing.getHasReq;
+import static grakn.client.common.RequestBuilder.Thing.getPlaysReq;
+import static grakn.client.common.RequestBuilder.Thing.getRelationsReq;
+import static grakn.client.common.RequestBuilder.Thing.isInferredReq;
+import static grakn.client.common.RequestBuilder.Thing.protoThing;
+import static grakn.client.common.RequestBuilder.Thing.setHasReq;
+import static grakn.client.common.RequestBuilder.Thing.unsetHasReq;
 import static grakn.client.concept.type.TypeImpl.protoTypes;
 import static grakn.common.util.Objects.className;
 import static java.util.Arrays.asList;
@@ -121,12 +128,12 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
         @Override
         public final boolean isInferred() {
-            return execute(Proto.Thing.isInferred(getIID())).getThingIsInferredRes().getInferred();
+            return execute(isInferredReq(getIID())).getThingIsInferredRes().getInferred();
         }
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(AttributeType... attributeTypes) {
-            return stream(Proto.Thing.getHas(getIID(), protoTypes(asList(attributeTypes))))
+            return stream(getHasReq(getIID(), protoTypes(asList(attributeTypes))))
                     .flatMap(rp -> rp.getThingGetHasResPart().getAttributesList().stream())
                     .map(AttributeImpl::of);
         }
@@ -158,38 +165,38 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
         @Override
         public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
-            return stream(Proto.Thing.getHas(getIID(), onlyKey))
+            return stream(getHasReq(getIID(), onlyKey))
                     .flatMap(rp -> rp.getThingGetHasResPart().getAttributesList().stream())
                     .map(AttributeImpl::of);
         }
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
-            return stream(Proto.Thing.getPlays(getIID()))
+            return stream(getPlaysReq(getIID()))
                     .flatMap(rp -> rp.getThingGetPlaysResPart().getRoleTypesList().stream())
                     .map(RoleTypeImpl::of);
         }
 
         @Override
         public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
-            return stream(Proto.Thing.getRelations(getIID(), protoTypes(asList(roleTypes))))
+            return stream(getRelationsReq(getIID(), protoTypes(asList(roleTypes))))
                     .flatMap(rp -> rp.getThingGetRelationsResPart().getRelationsList().stream())
                     .map(RelationImpl::of);
         }
 
         @Override
         public final void setHas(Attribute<?> attribute) {
-            execute(Proto.Thing.setHas(getIID(), Proto.Thing.thing(attribute.getIID())));
+            execute(setHasReq(getIID(), protoThing(attribute.getIID())));
         }
 
         @Override
         public final void unsetHas(Attribute<?> attribute) {
-            execute(Proto.Thing.unsetHas(getIID(), Proto.Thing.thing(attribute.getIID())));
+            execute(unsetHasReq(getIID(), protoThing(attribute.getIID())));
         }
 
         @Override
         public final void delete() {
-            execute(Proto.Thing.delete(getIID()));
+            execute(deleteReq(getIID()));
         }
 
         @Override

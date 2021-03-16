@@ -21,12 +21,13 @@ package grakn.client.concept.type;
 
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.type.EntityType;
-import grakn.client.common.Proto;
 import grakn.client.concept.thing.EntityImpl;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
+
+import static grakn.client.common.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -61,8 +62,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
         @Override
         public final EntityImpl create() {
-            ConceptProto.Type.Res res = execute(Proto.Type.EntityType.create(getLabel()));
-            return EntityImpl.of(res.getEntityTypeCreateRes().getEntity());
+            return EntityImpl.of(execute(createReq(getLabel())).getEntityTypeCreateRes().getEntity());
         }
 
         @Override

@@ -27,7 +27,6 @@ import grakn.client.api.logic.LogicManager;
 import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
 import grakn.client.concept.ConceptManagerImpl;
 import grakn.client.logic.LogicManagerImpl;
 import grakn.client.query.QueryManagerImpl;
@@ -40,6 +39,9 @@ import io.grpc.StatusRuntimeException;
 import java.util.stream.Stream;
 
 import static grakn.client.common.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static grakn.client.common.RequestBuilder.Transaction.commitReq;
+import static grakn.client.common.RequestBuilder.Transaction.openReq;
+import static grakn.client.common.RequestBuilder.Transaction.rollbackReq;
 
 public class CoreTransaction implements Transaction.Extended {
 
@@ -61,7 +63,7 @@ public class CoreTransaction implements Transaction.Extended {
             logicManager = new LogicManagerImpl(this);
             queryManager = new QueryManagerImpl(this);
             bidirectionalStream = new BidirectionalStream(sessionRPC.channel(), transmitter);
-            execute(Proto.Transaction.open(sessionId, type.proto(), options.proto(), sessionRPC.networkLatencyMillis()), false);
+            execute(openReq(sessionId, type.proto(), options.proto(), sessionRPC.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }
@@ -114,7 +116,7 @@ public class CoreTransaction implements Transaction.Extended {
     @Override
     public void commit() {
         try {
-            execute(Proto.Transaction.commit());
+            execute(commitReq());
         } finally {
             close();
         }
@@ -122,7 +124,7 @@ public class CoreTransaction implements Transaction.Extended {
 
     @Override
     public void rollback() {
-        execute(Proto.Transaction.rollback());
+        execute(rollbackReq());
     }
 
     @Override

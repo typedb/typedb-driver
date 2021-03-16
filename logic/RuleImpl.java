@@ -22,7 +22,6 @@ package grakn.client.logic;
 import grakn.client.api.Transaction;
 import grakn.client.api.logic.Rule;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
 import grakn.protocol.LogicProto;
 import graql.lang.Graql;
 import graql.lang.pattern.Conjunction;
@@ -33,6 +32,8 @@ import java.util.Objects;
 
 import static grakn.client.common.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.RequestBuilder.Rule.deleteReq;
+import static grakn.client.common.RequestBuilder.Rule.setLabelReq;
 import static grakn.common.util.Objects.className;
 
 public class RuleImpl implements Rule {
@@ -137,13 +138,13 @@ public class RuleImpl implements Rule {
 
         @Override
         public void setLabel(String newLabel) {
-            transactionRPC.execute(Proto.Rule.setLabel(label, newLabel));
+            transactionRPC.execute(setLabelReq(label, newLabel));
             this.label = newLabel;
         }
 
         @Override
         public void delete() {
-            transactionRPC.execute(Proto.Rule.delete(label));
+            transactionRPC.execute(deleteReq(label));
         }
 
         @Override

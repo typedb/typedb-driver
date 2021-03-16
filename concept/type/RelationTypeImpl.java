@@ -21,12 +21,16 @@ package grakn.client.concept.type;
 
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.type.RelationType;
-import grakn.client.common.Proto;
 import grakn.client.concept.thing.RelationImpl;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
+
+import static grakn.client.common.RequestBuilder.Type.RelationType.createReq;
+import static grakn.client.common.RequestBuilder.Type.RelationType.getRelatesReq;
+import static grakn.client.common.RequestBuilder.Type.RelationType.setRelatesReq;
+import static grakn.client.common.RequestBuilder.Type.RelationType.unsetRelatesReq;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
@@ -61,7 +65,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final RelationImpl create() {
-            ConceptProto.Type.Res res = execute(Proto.Type.RelationType.create(getLabel()));
+            ConceptProto.Type.Res res = execute(createReq(getLabel()));
             return RelationImpl.of(res.getRelationTypeCreateRes().getRelation());
         }
 
@@ -72,33 +76,32 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
         @Override
         public final RoleTypeImpl getRelates(String roleLabel) {
-            ConceptProto.RelationType.GetRelatesForRoleLabel.Res res = execute(
-                    Proto.Type.RelationType.getRelates(getLabel(), roleLabel)
-            ).getRelationTypeGetRelatesForRoleLabelRes();
+            ConceptProto.RelationType.GetRelatesForRoleLabel.Res res =
+                    execute(getRelatesReq(getLabel(), roleLabel)).getRelationTypeGetRelatesForRoleLabelRes();
             if (res.hasRoleType()) return RoleTypeImpl.of(res.getRoleType());
             else return null;
         }
 
         @Override
         public final Stream<RoleTypeImpl> getRelates() {
-            return stream(Proto.Type.RelationType.getRelates(getLabel()))
+            return stream(getRelatesReq(getLabel()))
                     .flatMap(rp -> rp.getRelationTypeGetRelatesResPart().getRolesList().stream())
                     .map(RoleTypeImpl::of);
         }
 
         @Override
         public final void setRelates(String roleLabel) {
-            execute(Proto.Type.RelationType.setRelates(getLabel(), roleLabel));
+            execute(setRelatesReq(getLabel(), roleLabel));
         }
 
         @Override
         public final void setRelates(String roleLabel, String overriddenLabel) {
-            execute(Proto.Type.RelationType.setRelates(getLabel(), roleLabel, overriddenLabel));
+            execute(setRelatesReq(getLabel(), roleLabel, overriddenLabel));
         }
 
         @Override
         public final void unsetRelates(String roleLabel) {
-            execute(Proto.Type.RelationType.unsetRelates(getLabel(), roleLabel));
+            execute(unsetRelatesReq(getLabel(), roleLabel));
         }
 
         @Override

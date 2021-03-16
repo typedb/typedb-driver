@@ -27,7 +27,6 @@ import grakn.client.api.answer.Numeric;
 import grakn.client.api.answer.NumericGroup;
 import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
-import grakn.client.common.Proto;
 import grakn.client.concept.answer.ConceptMapGroupImpl;
 import grakn.client.concept.answer.ConceptMapImpl;
 import grakn.client.concept.answer.NumericGroupImpl;
@@ -42,6 +41,16 @@ import graql.lang.query.GraqlUndefine;
 import graql.lang.query.GraqlUpdate;
 
 import java.util.stream.Stream;
+
+import static grakn.client.common.RequestBuilder.QueryManager.defineReq;
+import static grakn.client.common.RequestBuilder.QueryManager.deleteReq;
+import static grakn.client.common.RequestBuilder.QueryManager.insertReq;
+import static grakn.client.common.RequestBuilder.QueryManager.matchAggregateReq;
+import static grakn.client.common.RequestBuilder.QueryManager.matchGroupAggregateReq;
+import static grakn.client.common.RequestBuilder.QueryManager.matchGroupReq;
+import static grakn.client.common.RequestBuilder.QueryManager.matchReq;
+import static grakn.client.common.RequestBuilder.QueryManager.undefineReq;
+import static grakn.client.common.RequestBuilder.QueryManager.updateReq;
 
 public final class QueryManagerImpl implements QueryManager {
 
@@ -58,7 +67,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> match(GraqlMatch query, GraknOptions options) {
-        return stream(Proto.QueryManager.match(query, options.proto()))
+        return stream(matchReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
     }
@@ -70,7 +79,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options) {
-        return query(Proto.QueryManager.matchAggregate(query, options.proto()))
+        return query(matchAggregateReq(query, options.proto()))
                 .map(r -> r.getMatchAggregateRes().getAnswer())
                 .map(NumericImpl::of);
     }
@@ -82,7 +91,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options) {
-        return stream(Proto.QueryManager.matchGroup(query, options.proto()))
+        return stream(matchGroupReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchGroupResPart().getAnswersList().stream())
                 .map(ConceptMapGroupImpl::of);
     }
@@ -94,7 +103,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options) {
-        return stream(Proto.QueryManager.matchGroupAggregate(query, options.proto()))
+        return stream(matchGroupAggregateReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchGroupAggregateResPart().getAnswersList().stream())
                 .map(NumericGroupImpl::of);
     }
@@ -106,7 +115,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options) {
-        return stream(Proto.QueryManager.insert(query, options.proto()))
+        return stream(insertReq(query, options.proto()))
                 .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
     }
@@ -118,8 +127,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> delete(GraqlDelete query, GraknOptions options) {
-        TransactionProto.Transaction.Req.Builder req = Proto.QueryManager.delete(query, options.proto());
-        return queryVoid(req);
+        return queryVoid(deleteReq(query, options.proto()));
     }
 
     @Override
@@ -129,7 +137,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options) {
-        return stream(Proto.QueryManager.update(query.toString(), options.proto()))
+        return stream(updateReq(query.toString(), options.proto()))
                 .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
     }
@@ -141,7 +149,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> define(GraqlDefine query, GraknOptions options) {
-        return queryVoid(Proto.QueryManager.define(query, options.proto()));
+        return queryVoid(defineReq(query, options.proto()));
     }
 
     @Override
@@ -151,7 +159,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options) {
-        return queryVoid(Proto.QueryManager.undefine(query, options.proto()));
+        return queryVoid(undefineReq(query, options.proto()));
     }
 
     private QueryFuture<Void> queryVoid(TransactionProto.Transaction.Req.Builder req) {

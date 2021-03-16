@@ -24,7 +24,6 @@ import grakn.client.api.GraknOptions;
 import grakn.client.api.Session;
 import grakn.client.api.Transaction;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.GraknGrpc;
 import grakn.protocol.SessionProto;
@@ -40,6 +39,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
 import static grakn.client.common.ErrorMessage.Client.SESSION_CLOSED;
+import static grakn.client.common.RequestBuilder.Session.closeReq;
+import static grakn.client.common.RequestBuilder.Session.openReq;
+import static grakn.client.common.RequestBuilder.Session.pulseReq;
 
 public class CoreSession implements Session {
 
@@ -67,7 +69,7 @@ public class CoreSession implements Session {
             blockingGrpcStub = GraknGrpc.newBlockingStub(client.channel());
             Instant startTime = Instant.now();
             SessionProto.Session.Open.Res res = blockingGrpcStub.sessionOpen(
-                    Proto.Session.open(database, type.proto(), options.proto())
+                    openReq(database, type.proto(), options.proto())
             );
             Instant endTime = Instant.now();
             networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
@@ -130,7 +132,7 @@ public class CoreSession implements Session {
                 pulse.cancel();
                 client.reconnect();
                 try {
-                    blockingGrpcStub.sessionClose(Proto.Session.close(sessionID));
+                    SessionProto.Session.Close.Res ignore = blockingGrpcStub.sessionClose(closeReq(sessionID));
                 } catch (StatusRuntimeException e) {
                     // Most likely the session is already closed or the server is no longer running.
                 }
@@ -149,7 +151,7 @@ public class CoreSession implements Session {
             if (!isOpen()) return;
             boolean alive;
             try {
-                alive = blockingGrpcStub.sessionPulse(Proto.Session.pulse(sessionID)).getAlive();
+                alive = blockingGrpcStub.sessionPulse(pulseReq(sessionID)).getAlive();
             } catch (StatusRuntimeException exception) {
                 alive = false;
             }

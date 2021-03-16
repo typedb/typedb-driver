@@ -20,7 +20,7 @@
 package grakn.client.stream;
 
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
+import grakn.client.common.RequestBuilder;
 import grakn.common.collection.ConcurrentSet;
 import grakn.common.concurrent.NamedThreadFactory;
 import grakn.protocol.TransactionProto;
@@ -153,7 +153,7 @@ public class RequestTransmitter implements AutoCloseable {
             TransactionProto.Transaction.Req request;
             ArrayList<TransactionProto.Transaction.Req> requests = new ArrayList<>(requestQueue.size() * 2);
             while ((request = requestQueue.poll()) != null) requests.add(request);
-            requestObserver.onNext(Proto.Transaction.clientMsg(requests));
+            requestObserver.onNext(RequestBuilder.Transaction.clientMsg(requests));
         }
 
         public void dispatch(TransactionProto.Transaction.Req requestProto) {

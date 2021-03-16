@@ -31,7 +31,6 @@ import grakn.client.api.concept.type.RoleType;
 import grakn.client.api.concept.type.ThingType;
 import grakn.client.api.concept.type.Type;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
 import grakn.client.concept.ConceptImpl;
 import grakn.client.concept.thing.AttributeImpl;
 import grakn.client.concept.thing.EntityImpl;
@@ -50,6 +49,12 @@ import static grakn.client.common.ErrorMessage.Concept.BAD_ENCODING;
 import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_LABEL;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static grakn.client.common.RequestBuilder.Type.deleteReq;
+import static grakn.client.common.RequestBuilder.Type.getSubtypesReq;
+import static grakn.client.common.RequestBuilder.Type.getSupertypeReq;
+import static grakn.client.common.RequestBuilder.Type.getSupertypesReq;
+import static grakn.client.common.RequestBuilder.Type.isAbstractReq;
+import static grakn.client.common.RequestBuilder.Type.setLabelReq;
 import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 import static grakn.common.util.Objects.className;
@@ -164,14 +169,14 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
         @Override
         public final void setLabel(String newLabel) {
-            execute(Proto.Type.setLabel(getLabel(), newLabel));
+            execute(setLabelReq(getLabel(), newLabel));
             this.label = newLabel;
             this.hash = Objects.hash(transactionRPC, this.label);
         }
 
         @Override
         public final boolean isAbstract() {
-            return execute(Proto.Type.isAbstract(getLabel())).getTypeIsAbstractRes().getAbstract();
+            return execute(isAbstractReq(getLabel())).getTypeIsAbstractRes().getAbstract();
         }
 
         @Override
@@ -245,10 +250,10 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         @Nullable
         @Override
         public TypeImpl getSupertype() {
-            ConceptProto.Type.Res res = execute(Proto.Type.getSupertype(getLabel()));
-            switch (res.getTypeGetSupertypeRes().getResCase()) {
+            ConceptProto.Type.GetSupertype.Res res = execute(getSupertypeReq(getLabel())).getTypeGetSupertypeRes();
+            switch (res.getResCase()) {
                 case TYPE:
-                    return TypeImpl.of(res.getTypeGetSupertypeRes().getType());
+                    return TypeImpl.of(res.getType());
                 default:
                 case RES_NOT_SET:
                     return null;
@@ -257,21 +262,21 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
         @Override
         public Stream<? extends TypeImpl> getSupertypes() {
-            return stream(Proto.Type.getSupertypes(getLabel()))
+            return stream(getSupertypesReq(getLabel()))
                     .flatMap(rp -> rp.getTypeGetSupertypesResPart().getTypesList().stream())
                     .map(TypeImpl::of);
         }
 
         @Override
         public Stream<? extends TypeImpl> getSubtypes() {
-            return stream(Proto.Type.getSubtypes(getLabel()))
+            return stream(getSubtypesReq(getLabel()))
                     .flatMap(rp -> rp.getTypeGetSubtypesResPart().getTypesList().stream())
                     .map(TypeImpl::of);
         }
 
         @Override
         public final void delete() {
-            execute(Proto.Type.delete(getLabel()));
+            execute(deleteReq(getLabel()));
         }
 
         @Override

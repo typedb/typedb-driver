@@ -25,13 +25,23 @@ import grakn.client.api.concept.type.AttributeType.ValueType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.api.concept.type.ThingType;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.Proto;
+import grakn.client.common.RequestBuilder;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
 import static grakn.client.common.ErrorMessage.Concept.BAD_ENCODING;
+import static grakn.client.common.RequestBuilder.Type.ThingType.getInstancesReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.getOwnsReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.getPlaysReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.setAbstractReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.setOwnsReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.setPlaysReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.setSupertypeReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.unsetAbstractReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.unsetOwnsReq;
+import static grakn.client.common.RequestBuilder.Type.ThingType.unsetPlaysReq;
 import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -58,7 +68,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     public static ConceptProto.Type protoThingType(ThingType thingType) {
-        return Proto.Type.ThingType.thingType(thingType.getLabel(), TypeImpl.encoding(thingType));
+        return RequestBuilder.Type.ThingType.protoThingType(thingType.getLabel(), TypeImpl.encoding(thingType));
     }
 
     @Override
@@ -78,7 +88,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         void setSupertype(ThingType thingType) {
-            execute(Proto.Type.ThingType.setSupertype(getLabel(), protoThingType(thingType)));
+            execute(setSupertypeReq(getLabel(), protoThingType(thingType)));
         }
 
         @Override
@@ -100,31 +110,29 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<? extends ThingImpl> getInstances() {
-            return stream(Proto.Type.ThingType.getInstances(getLabel()))
+            return stream(getInstancesReq(getLabel()))
                     .flatMap(rp -> rp.getThingTypeGetInstancesResPart().getThingsList().stream())
                     .map(ThingImpl::of);
         }
 
         @Override
         public final void setAbstract() {
-            execute(Proto.Type.ThingType.setAbstract(getLabel()));
+            execute(setAbstractReq(getLabel()));
         }
 
         @Override
         public final void unsetAbstract() {
-            execute(Proto.Type.ThingType.unsetAbstract(getLabel()));
+            execute(unsetAbstractReq(getLabel()));
         }
 
         @Override
         public final void setPlays(RoleType roleType) {
-            execute(Proto.Type.ThingType.setPlays(getLabel(), protoRoleTypes(roleType)));
+            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType)));
         }
 
         @Override
         public final void setPlays(RoleType roleType, RoleType overriddenRoleType) {
-            execute(Proto.Type.ThingType.setPlays(
-                    getLabel(), protoRoleTypes(roleType), protoRoleTypes(overriddenRoleType)
-            ));
+            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType), protoRoleTypes(overriddenRoleType)));
         }
 
         @Override
@@ -134,7 +142,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public void setOwns(AttributeType attributeType, boolean isKey) {
-            execute(Proto.Type.ThingType.setOwns(getLabel(), protoThingType(attributeType), isKey));
+            execute(setOwnsReq(getLabel(), protoThingType(attributeType), isKey));
         }
 
         @Override
@@ -144,14 +152,12 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            execute(Proto.Type.ThingType.setOwns(
-                    getLabel(), protoThingType(attributeType), protoThingType(overriddenType), isKey
-            ));
+            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoThingType(overriddenType), isKey));
         }
 
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
-            return stream(Proto.Type.ThingType.getPlays(getLabel()))
+            return stream(getPlaysReq(getLabel()))
                     .flatMap(rp -> rp.getThingTypeGetPlaysResPart().getRolesList().stream())
                     .map(RoleTypeImpl::of);
         }
@@ -168,26 +174,26 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<AttributeTypeImpl> getOwns(boolean keysOnly) {
-            return stream(Proto.Type.ThingType.getOwns(getLabel(), keysOnly))
+            return stream(getOwnsReq(getLabel(), keysOnly))
                     .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
 
         @Override
         public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, boolean keysOnly) {
-            return stream(Proto.Type.ThingType.getOwns(getLabel(), valueType.proto(), keysOnly))
+            return stream(getOwnsReq(getLabel(), valueType.proto(), keysOnly))
                     .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
 
         @Override
         public final void unsetPlays(RoleType roleType) {
-            execute(Proto.Type.ThingType.unsetPlays(getLabel(), protoRoleTypes(roleType)));
+            execute(unsetPlaysReq(getLabel(), protoRoleTypes(roleType)));
         }
 
         @Override
         public final void unsetOwns(AttributeType attributeType) {
-            execute(Proto.Type.ThingType.unsetOwns(getLabel(), protoThingType(attributeType)));
+            execute(unsetOwnsReq(getLabel(), protoThingType(attributeType)));
         }
 
         @Override
