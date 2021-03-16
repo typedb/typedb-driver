@@ -164,7 +164,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<AttributeTypeImpl> getOwns() {
-            return getOwns(null, false);
+            return getOwns(false);
         }
 
         @Override
