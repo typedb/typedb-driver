@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept.type;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Relation;
 
 import javax.annotation.CheckReturnValue;
@@ -34,7 +34,7 @@ public interface RelationType extends ThingType {
     }
 
     @Override
-    RelationType.Remote asRemote(Transaction transaction);
+    RelationType.Remote asRemote(GraknTransaction transaction);
 
     interface Remote extends ThingType.Remote, RelationType {
 

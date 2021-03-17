@@ -20,7 +20,7 @@
 package grakn.client.query;
 
 import grakn.client.api.GraknOptions;
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.answer.ConceptMapGroup;
 import grakn.client.api.answer.Numeric;
@@ -54,9 +54,9 @@ import static grakn.client.common.RequestBuilder.QueryManager.updateReq;
 
 public final class QueryManagerImpl implements QueryManager {
 
-    private final Transaction.Extended transactionRPC;
+    private final GraknTransaction.Extended transactionRPC;
 
-    public QueryManagerImpl(Transaction.Extended transactionRPC) {
+    public QueryManagerImpl(GraknTransaction.Extended transactionRPC) {
         this.transactionRPC = transactionRPC;
     }
 

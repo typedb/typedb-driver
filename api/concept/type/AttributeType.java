@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept.type;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.common.GraknClientException;
 import grakn.protocol.ConceptProto;
@@ -72,7 +72,7 @@ public interface AttributeType extends ThingType {
 
     @Override
     @CheckReturnValue
-    AttributeType.Remote asRemote(Transaction transaction);
+    AttributeType.Remote asRemote(GraknTransaction transaction);
 
     @CheckReturnValue
     AttributeType.Boolean asBoolean();
@@ -231,7 +231,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Boolean.Remote asRemote(Transaction transaction);
+        AttributeType.Boolean.Remote asRemote(GraknTransaction transaction);
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
@@ -263,7 +263,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Long.Remote asRemote(Transaction transaction);
+        AttributeType.Long.Remote asRemote(GraknTransaction transaction);
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
@@ -295,7 +295,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Double.Remote asRemote(Transaction transaction);
+        AttributeType.Double.Remote asRemote(GraknTransaction transaction);
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
@@ -327,7 +327,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.String.Remote asRemote(Transaction transaction);
+        AttributeType.String.Remote asRemote(GraknTransaction transaction);
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
@@ -365,7 +365,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.DateTime.Remote asRemote(Transaction transaction);
+        AttributeType.DateTime.Remote asRemote(GraknTransaction transaction);
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 

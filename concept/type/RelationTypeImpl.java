@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.type.RelationType;
 import grakn.client.common.Label;
 import grakn.client.concept.thing.RelationImpl;
@@ -44,7 +44,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public RelationTypeImpl.Remote asRemote(Transaction transaction) {
+    public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
         return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -55,12 +55,12 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(Transaction transaction, Label label, boolean isRoot) {
+        public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public RelationTypeImpl.Remote asRemote(Transaction transaction) {
+        public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
             return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

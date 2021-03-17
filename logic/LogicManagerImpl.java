@@ -19,7 +19,7 @@
 
 package grakn.client.logic;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.logic.LogicManager;
 import grakn.client.api.logic.Rule;
 import grakn.protocol.LogicProto;
@@ -35,9 +35,9 @@ import static grakn.client.common.RequestBuilder.LogicManager.putRuleReq;
 
 public final class LogicManagerImpl implements LogicManager {
 
-    private final Transaction.Extended transactionRPC;
+    private final GraknTransaction.Extended transactionRPC;
 
-    public LogicManagerImpl(Transaction.Extended transactionRPC) {
+    public LogicManagerImpl(GraknTransaction.Extended transactionRPC) {
         this.transactionRPC = transactionRPC;
     }
 

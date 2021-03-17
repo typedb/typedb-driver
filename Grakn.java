@@ -17,38 +17,31 @@
  * under the License.
  */
 
-package grakn.client.api;
+package grakn.client;
 
-import grakn.client.api.database.DatabaseManager;
+import grakn.client.api.GraknClient;
+import grakn.client.cluster.ClusterClient;
+import grakn.client.core.CoreClient;
 
-import javax.annotation.CheckReturnValue;
+import java.util.Set;
 
-public interface Client extends AutoCloseable {
+public class Grakn {
 
-    @CheckReturnValue
-    boolean isOpen();
+    public static final String DEFAULT_ADDRESS = "localhost:1729";
 
-    @CheckReturnValue
-    DatabaseManager databases();
+    public static GraknClient coreClient(String address) {
+        return new CoreClient(address);
+    }
 
-    @CheckReturnValue
-    Session session(String database, Session.Type type);
+    public static GraknClient coreClient(String address, int parallelisation) {
+        return new CoreClient(address, parallelisation);
+    }
 
-    @CheckReturnValue
-    Session session(String database, Session.Type type, GraknOptions options);
+    public static GraknClient.Cluster clusterClient(Set<String> addresses) {
+        return new ClusterClient(addresses);
+    }
 
-    @CheckReturnValue
-    boolean isCluster();
-
-    @CheckReturnValue
-    Client.Cluster asCluster();
-
-    void close();
-
-    interface Cluster extends Client {
-
-        @Override
-        @CheckReturnValue
-        DatabaseManager.Cluster databases();
+    public static GraknClient.Cluster clusterClient(Set<String> addresses, int parallelisation) {
+        return new ClusterClient(addresses, parallelisation);
     }
 }

@@ -19,7 +19,7 @@
 
 package grakn.client.concept.type;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.api.concept.thing.Entity;
 import grakn.client.api.concept.thing.Relation;
@@ -144,15 +144,15 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
-        final Transaction.Extended transactionRPC;
+        final GraknTransaction.Extended transactionRPC;
         private Label label;
         private final boolean isRoot;
         private int hash;
 
-        Remote(Transaction transaction, Label label, boolean isRoot) {
+        Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null) throw new GraknClientException(MISSING_LABEL);
-            this.transactionRPC = (Transaction.Extended) transaction;
+            this.transactionRPC = (GraknTransaction.Extended) transaction;
             this.label = label;
             this.isRoot = isRoot;
             this.hash = Objects.hash(this.transactionRPC, label);
@@ -280,7 +280,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             execute(deleteReq(getLabel()));
         }
 
-        final Transaction tx() {
+        final GraknTransaction tx() {
             return transactionRPC;
         }
 

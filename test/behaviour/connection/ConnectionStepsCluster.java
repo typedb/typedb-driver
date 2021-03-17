@@ -19,8 +19,8 @@
 
 package grakn.client.test.behaviour.connection;
 
-import grakn.client.GraknClient;
-import grakn.client.api.Client;
+import grakn.client.Grakn;
+import grakn.client.api.GraknClient;
 import grakn.common.test.server.GraknClusterRunner;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
@@ -55,8 +55,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    Client createGraknClient(String address) {
-        return GraknClient.core(address);
+    GraknClient createGraknClient(String address) {
+        return Grakn.coreClient(address);
     }
 
     @Given("connection has been opened")

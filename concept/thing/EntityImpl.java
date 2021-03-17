@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Entity;
 import grakn.client.concept.type.EntityTypeImpl;
 import grakn.common.collection.Bytes;
@@ -44,7 +44,7 @@ public class EntityImpl extends ThingImpl implements Entity {
     }
 
     @Override
-    public EntityImpl.Remote asRemote(Transaction transaction) {
+    public EntityImpl.Remote asRemote(GraknTransaction transaction) {
         return new EntityImpl.Remote(transaction, getIID(), type);
     }
 
@@ -57,13 +57,13 @@ public class EntityImpl extends ThingImpl implements Entity {
 
         private final EntityTypeImpl type;
 
-        public Remote(Transaction transaction, String iid, EntityTypeImpl type) {
+        public Remote(GraknTransaction transaction, String iid, EntityTypeImpl type) {
             super(transaction, iid);
             this.type = type;
         }
 
         @Override
-        public EntityImpl.Remote asRemote(Transaction transaction) {
+        public EntityImpl.Remote asRemote(GraknTransaction transaction) {
             return new EntityImpl.Remote(transaction, getIID(), type);
         }
 

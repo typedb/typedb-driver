@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Relation;
 import grakn.client.api.concept.thing.Thing;
 import grakn.client.api.concept.type.RoleType;
@@ -60,7 +60,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public RelationImpl.Remote asRemote(Transaction transaction) {
+    public RelationImpl.Remote asRemote(GraknTransaction transaction) {
         return new RelationImpl.Remote(transaction, getIID(), type);
     }
 
@@ -78,13 +78,13 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         private final RelationTypeImpl type;
 
-        public Remote(Transaction transaction, String iid, RelationTypeImpl type) {
+        public Remote(GraknTransaction transaction, String iid, RelationTypeImpl type) {
             super(transaction, iid);
             this.type = type;
         }
 
         @Override
-        public RelationImpl.Remote asRemote(Transaction transaction) {
+        public RelationImpl.Remote asRemote(GraknTransaction transaction) {
             return new RelationImpl.Remote(transaction, getIID(), type);
         }
 

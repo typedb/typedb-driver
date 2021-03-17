@@ -19,7 +19,7 @@
 
 package grakn.client.api.logic;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -36,7 +36,7 @@ public interface Rule {
     Pattern getThen();
 
     @CheckReturnValue
-    Rule.Remote asRemote(Transaction transaction);
+    Rule.Remote asRemote(GraknTransaction transaction);
 
     @CheckReturnValue
     boolean isRemote();

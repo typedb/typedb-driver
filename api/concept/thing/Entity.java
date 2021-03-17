@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept.thing;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;
@@ -38,7 +38,7 @@ public interface Entity extends Thing {
 
     @Override
     @CheckReturnValue
-    Entity.Remote asRemote(Transaction transaction);
+    Entity.Remote asRemote(GraknTransaction transaction);
 
     interface Remote extends Thing.Remote, Entity {}
 }

@@ -20,9 +20,9 @@
 package grakn.client.core;
 
 import com.google.protobuf.ByteString;
-import grakn.client.api.Client;
+import grakn.client.api.GraknClient;
 import grakn.client.api.GraknOptions;
-import grakn.client.api.Session;
+import grakn.client.api.GraknSession;
 import grakn.client.common.GraknClientException;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.concurrent.NamedThreadFactory;
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
 
-public class CoreClient implements Client {
+public class CoreClient implements GraknClient {
 
     private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
 
@@ -69,12 +69,12 @@ public class CoreClient implements Client {
     }
 
     @Override
-    public CoreSession session(String database, Session.Type type) {
+    public CoreSession session(String database, GraknSession.Type type) {
         return session(database, type, GraknOptions.core());
     }
 
     @Override
-    public CoreSession session(String database, Session.Type type, GraknOptions options) {
+    public CoreSession session(String database, GraknSession.Type type, GraknOptions options) {
         CoreSession session = new CoreSession(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
@@ -109,7 +109,7 @@ public class CoreClient implements Client {
 
     @Override
     public Cluster asCluster() {
-        throw new GraknClientException(ILLEGAL_CAST.message(className(Client.Cluster.class)));
+        throw new GraknClientException(ILLEGAL_CAST.message(className(GraknClient.Cluster.class)));
     }
 
     public <RES> RES call(Supplier<RES> req) {

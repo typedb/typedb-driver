@@ -19,7 +19,7 @@
 
 package grakn.client.concept.thing;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.api.concept.thing.Thing;
 import grakn.client.api.concept.type.AttributeType;
@@ -106,13 +106,13 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 
-        final Transaction.Extended transactionRPC;
+        final GraknTransaction.Extended transactionRPC;
         private final String iid;
         private final int hash;
 
-        Remote(Transaction transaction, String iid) {
+        Remote(GraknTransaction transaction, String iid) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            this.transactionRPC = (Transaction.Extended) transaction;
+            this.transactionRPC = (GraknTransaction.Extended) transaction;
             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.iid = iid;
             this.hash = Objects.hash(this.transactionRPC, this.getIID());

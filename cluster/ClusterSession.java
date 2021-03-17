@@ -20,16 +20,16 @@
 package grakn.client.cluster;
 
 import grakn.client.api.GraknOptions;
-import grakn.client.api.Session;
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknSession;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.database.Database;
 import grakn.client.core.CoreClient;
 import grakn.client.core.CoreSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterSession implements Session {
-    private static final Logger LOG = LoggerFactory.getLogger(Session.class);
+public class ClusterSession implements GraknSession {
+    private static final Logger LOG = LoggerFactory.getLogger(GraknSession.class);
     private final ClusterClient clusterClient;
     private final GraknOptions.Cluster options;
     private CoreClient coreClient;
@@ -44,12 +44,12 @@ public class ClusterSession implements Session {
     }
 
     @Override
-    public Transaction transaction(Transaction.Type type) {
+    public GraknTransaction transaction(GraknTransaction.Type type) {
         return transaction(type, GraknOptions.cluster());
     }
 
     @Override
-    public Transaction transaction(Transaction.Type type, GraknOptions options) {
+    public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
         GraknOptions.Cluster clusterOpt = options.asCluster();
         if (clusterOpt.readAnyReplica().isPresent() && clusterOpt.readAnyReplica().get()) {
             return transactionAnyReplica(type, clusterOpt);
@@ -58,24 +58,24 @@ public class ClusterSession implements Session {
         }
     }
 
-    private Transaction transactionPrimaryReplica(Transaction.Type type, GraknOptions options) {
+    private GraknTransaction transactionPrimaryReplica(GraknTransaction.Type type, GraknOptions options) {
         return transactionFailsafeTask(type, options).runPrimaryReplica();
     }
 
-    private Transaction transactionAnyReplica(Transaction.Type type, GraknOptions.Cluster options) {
+    private GraknTransaction transactionAnyReplica(GraknTransaction.Type type, GraknOptions.Cluster options) {
         return transactionFailsafeTask(type, options).runAnyReplica();
     }
 
-    private FailsafeTask<Transaction> transactionFailsafeTask(Transaction.Type type, GraknOptions options) {
-        return new FailsafeTask<Transaction>(clusterClient, database().name()) {
+    private FailsafeTask<GraknTransaction> transactionFailsafeTask(GraknTransaction.Type type, GraknOptions options) {
+        return new FailsafeTask<GraknTransaction>(clusterClient, database().name()) {
 
             @Override
-            Transaction run(ClusterDatabase.Replica replica) {
+            GraknTransaction run(ClusterDatabase.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            Transaction rerun(ClusterDatabase.Replica replica) {
+            GraknTransaction rerun(ClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 coreClient = clusterClient.coreClient(replica.address());
                 coreSession = coreClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
@@ -85,7 +85,7 @@ public class ClusterSession implements Session {
     }
 
     @Override
-    public Session.Type type() {
+    public GraknSession.Type type() {
         return coreSession.type();
     }
 

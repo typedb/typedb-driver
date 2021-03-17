@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept.thing;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.Concept;
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.RoleType;
@@ -44,7 +44,7 @@ public interface Thing extends Concept {
 
     @Override
     @CheckReturnValue
-    Thing.Remote asRemote(Transaction transaction);
+    Thing.Remote asRemote(GraknTransaction transaction);
 
     interface Remote extends Concept.Remote, Thing {
 

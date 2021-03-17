@@ -19,62 +19,36 @@
 
 package grakn.client.api;
 
-import grakn.client.api.database.Database;
-import grakn.protocol.SessionProto;
+import grakn.client.api.database.DatabaseManager;
 
 import javax.annotation.CheckReturnValue;
 
-public interface Session extends AutoCloseable {
+public interface GraknClient extends AutoCloseable {
 
     @CheckReturnValue
     boolean isOpen();
 
     @CheckReturnValue
-    Type type();
+    DatabaseManager databases();
 
     @CheckReturnValue
-    Database database();
+    GraknSession session(String database, GraknSession.Type type);
 
     @CheckReturnValue
-    GraknOptions options();
+    GraknSession session(String database, GraknSession.Type type, GraknOptions options);
 
     @CheckReturnValue
-    Transaction transaction(Transaction.Type type);
+    boolean isCluster();
 
     @CheckReturnValue
-    Transaction transaction(Transaction.Type type, GraknOptions options);
+    GraknClient.Cluster asCluster();
 
     void close();
 
-    enum Type {
-        DATA(0),
-        SCHEMA(1);
+    interface Cluster extends GraknClient {
 
-        private final int id;
-        private final boolean isSchema;
-
-        Type(int id) {
-            this.id = id;
-            this.isSchema = id == 1;
-        }
-
-        public static Type of(int value) {
-            for (Type t : values()) {
-                if (t.id == value) return t;
-            }
-            return null;
-        }
-
-        public int id() {
-            return id;
-        }
-
-        public boolean isData() { return !isSchema; }
-
-        public boolean isSchema() { return isSchema; }
-
-        public SessionProto.Session.Type proto() {
-            return SessionProto.Session.Type.forNumber(id);
-        }
+        @Override
+        @CheckReturnValue
+        DatabaseManager.Cluster databases();
     }
 }

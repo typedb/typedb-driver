@@ -19,10 +19,10 @@
 
 package grakn.client.test.integration;
 
-import grakn.client.GraknClient;
-import grakn.client.api.Client;
-import grakn.client.api.Session;
-import grakn.client.api.Transaction;
+import grakn.client.Grakn;
+import grakn.client.api.GraknClient;
+import grakn.client.api.GraknSession;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.answer.ConceptMap;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
@@ -42,7 +42,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static grakn.client.api.Transaction.Type.WRITE;
+import static grakn.client.api.GraknSession.Type.DATA;
+import static grakn.client.api.GraknTransaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
 import static graql.lang.Graql.rule;
@@ -54,13 +55,13 @@ import static java.util.stream.Collectors.toList;
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static GraknCoreRunner grakn;
-    private static Client graknClient;
+    private static GraknClient graknClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         grakn = new GraknCoreRunner();
         grakn.start();
-        graknClient = GraknClient.core(grakn.address());
+        graknClient = Grakn.coreClient(grakn.address());
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
@@ -97,7 +98,7 @@ public class ClientQueryTest {
             tx.query().define(ruleQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        }, Session.Type.SCHEMA);
+        }, GraknSession.Type.SCHEMA);
 
         // TODO: re-enable when match is implemented
 //        localhostGraknTx(tx -> {
@@ -277,7 +278,7 @@ public class ClientQueryTest {
             tx.query().define(defineQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        }, Session.Type.SCHEMA);
+        }, GraknSession.Type.SCHEMA);
 
 
         localhostGraknTx(tx -> {
@@ -460,19 +461,19 @@ public class ClientQueryTest {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<Transaction> fn) {
+    private void localhostGraknTx(Consumer<GraknTransaction> fn) {
         String database = "grakn";
-        try (Session session = graknClient.session(database, Session.Type.DATA)) {
-            try (Transaction transaction = session.transaction(WRITE)) {
+        try (GraknSession session = graknClient.session(database, DATA)) {
+            try (GraknTransaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }
         }
     }
 
-    private void localhostGraknTx(Consumer<Transaction> fn, Session.Type sessionType) {
+    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknSession.Type sessionType) {
         String database = "grakn";
-        try (Session session = graknClient.session(database, sessionType)) {
-            try (Transaction transaction = session.transaction(WRITE)) {
+        try (GraknSession session = graknClient.session(database, sessionType)) {
+            try (GraknTransaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }
         }

@@ -19,9 +19,9 @@
 
 package grakn.client.cluster;
 
-import grakn.client.api.Client;
+import grakn.client.api.GraknClient;
 import grakn.client.api.GraknOptions;
-import grakn.client.api.Session;
+import grakn.client.api.GraknSession;
 import grakn.client.common.GraknClientException;
 import grakn.client.core.CoreClient;
 import grakn.common.collection.Pair;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
-public class ClusterClient implements Client.Cluster {
+public class ClusterClient implements GraknClient.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
     private final Map<String, CoreClient> coreClients;
     private final Map<String, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
@@ -78,12 +78,12 @@ public class ClusterClient implements Client.Cluster {
     }
 
     @Override
-    public ClusterSession session(String database, Session.Type type) {
+    public ClusterSession session(String database, GraknSession.Type type) {
         return session(database, type, GraknOptions.cluster());
     }
 
     @Override
-    public ClusterSession session(String database, Session.Type type, GraknOptions options) {
+    public ClusterSession session(String database, GraknSession.Type type, GraknOptions options) {
         GraknOptions.Cluster clusterOptions = options.asCluster();
         if (clusterOptions.readAnyReplica().isPresent() && clusterOptions.readAnyReplica().get()) {
             return sessionAnyReplica(database, type, clusterOptions);
@@ -93,17 +93,17 @@ public class ClusterClient implements Client.Cluster {
     }
 
     private ClusterSession sessionPrimaryReplica(
-            String database, Session.Type type, GraknOptions.Cluster options) {
+            String database, GraknSession.Type type, GraknOptions.Cluster options) {
         return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
     private ClusterSession sessionAnyReplica(
-            String database, Session.Type type, GraknOptions.Cluster options) {
+            String database, GraknSession.Type type, GraknOptions.Cluster options) {
         return openSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
     private FailsafeTask<ClusterSession> openSessionFailsafeTask(
-            String database, Session.Type type, GraknOptions.Cluster options, ClusterClient client) {
+            String database, GraknSession.Type type, GraknOptions.Cluster options, ClusterClient client) {
         return new FailsafeTask<ClusterSession>(this, database) {
 
             @Override

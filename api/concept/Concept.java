@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.api.concept.thing.Entity;
 import grakn.client.api.concept.thing.Relation;
@@ -116,7 +116,7 @@ public interface Concept {
     Relation asRelation();
 
     @CheckReturnValue
-    Remote asRemote(Transaction transaction);
+    Remote asRemote(GraknTransaction transaction);
 
     @CheckReturnValue
     boolean isRemote();

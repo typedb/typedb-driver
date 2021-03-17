@@ -19,7 +19,7 @@
 
 package grakn.client.api.concept.type;
 
-import grakn.client.api.Transaction;
+import grakn.client.api.GraknTransaction;
 
 import java.util.stream.Stream;
 
@@ -31,7 +31,7 @@ public interface RoleType extends Type {
     }
 
     @Override
-    RoleType.Remote asRemote(Transaction transaction);
+    RoleType.Remote asRemote(GraknTransaction transaction);
 
     interface Remote extends Type.Remote, RoleType {
 
