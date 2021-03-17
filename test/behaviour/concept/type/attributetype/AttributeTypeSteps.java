@@ -19,18 +19,18 @@
 
 package grakn.client.test.behaviour.concept.type.attributetype;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.type.AttributeType;
-import grakn.client.concept.type.AttributeType.ValueType;
-import grakn.client.concept.type.ThingType;
-import grakn.client.concept.type.Type;
+import grakn.client.api.concept.type.AttributeType;
+import grakn.client.api.concept.type.AttributeType.ValueType;
+import grakn.client.api.concept.type.ThingType;
+import grakn.client.api.concept.type.Type;
+import grakn.client.common.GraknClientException;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
@@ -80,14 +80,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
     public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
     public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -124,14 +124,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) get key owners contain:")
     public void attribute_type_get_owners_as_key_contains(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get key owners do not contain:")
     public void attribute_type_get_owners_as_key_do_not_contains(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
@@ -140,14 +140,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) get attribute owners contain:")
     public void attribute_type_get_owners_as_attribute_contains(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get attribute owners do not contain:")
     public void attribute_type_get_owners_as_attribute_do_not_contains(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(ThingType::getLabel).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }

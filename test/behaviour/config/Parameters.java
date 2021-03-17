@@ -19,8 +19,9 @@
 
 package grakn.client.test.behaviour.config;
 
-import grakn.client.GraknClient.Transaction;
-import grakn.client.concept.type.AttributeType.ValueType;
+import grakn.client.api.GraknTransaction;
+import grakn.client.api.concept.type.AttributeType.ValueType;
+import grakn.client.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -30,9 +31,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static grakn.client.GraknClient.Transaction.Type.READ;
-import static grakn.client.GraknClient.Transaction.Type.WRITE;
-import static java.util.Objects.hash;
+import static grakn.client.api.GraknTransaction.Type.READ;
+import static grakn.client.api.GraknTransaction.Type.WRITE;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -65,19 +65,19 @@ public class Parameters {
     }
 
     @ParameterType("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
-    public ScopedLabel scoped_label(String roleLabel) {
+    public Label scoped_label(String roleLabel) {
         String[] labels = roleLabel.split(":");
-        return new ScopedLabel(labels[0], labels[1]);
+        return Label.of(labels[0], labels[1]);
     }
 
     @DataTableType
-    public List<ScopedLabel> scoped_labels(List<String> values) {
+    public List<Label> scoped_labels(List<String> values) {
         Iterator<String> valuesIter = values.iterator();
         String next;
-        List<ScopedLabel> scopedLabels = new ArrayList<>();
+        List<Label> scopedLabels = new ArrayList<>();
         while (valuesIter.hasNext() && (next = valuesIter.next()).matches("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")) {
             String[] labels = next.split(":");
-            scopedLabels.add(new ScopedLabel(labels[0], labels[1]));
+            scopedLabels.add(Label.of(labels[0], labels[1]));
         }
 
         if (valuesIter.hasNext()) fail("Values do not match Scoped Labels regular expression");
@@ -108,7 +108,7 @@ public class Parameters {
     }
 
     @ParameterType("read|write")
-    public Transaction.Type transaction_type(String type) {
+    public GraknTransaction.Type transaction_type(String type) {
         if (type.equals("read")) {
             return READ;
         } else if (type.equals("write")) {
@@ -118,10 +118,10 @@ public class Parameters {
     }
 
     @DataTableType
-    public List<Transaction.Type> transaction_types(List<String> values) {
-        List<Transaction.Type> typeList = new ArrayList<>();
+    public List<GraknTransaction.Type> transaction_types(List<String> values) {
+        List<GraknTransaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            Transaction.Type type = transaction_type(value);
+            GraknTransaction.Type type = transaction_type(value);
             assertNotNull(type);
             typeList.add(type);
         }
@@ -151,43 +151,6 @@ public class Parameters {
 
         public String label() {
             return label;
-        }
-    }
-
-    public static class ScopedLabel {
-        private final String scope;
-        private final String role;
-
-        public ScopedLabel(String scope, String role) {
-            this.scope = scope;
-            this.role = role;
-        }
-
-        public String scope() {
-            return scope;
-        }
-
-        public String role() {
-            return role;
-        }
-
-        @Override
-        public String toString() {
-            return scope + ":" + role;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (object == null || getClass() != object.getClass()) return false;
-            ScopedLabel that = (ScopedLabel) object;
-            return (this.scope.equals(that.scope) &&
-                    this.role.equals(that.role));
-        }
-
-        @Override
-        public final int hashCode() {
-            return hash(scope, role);
         }
     }
 }

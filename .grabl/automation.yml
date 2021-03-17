@@ -65,49 +65,96 @@ build:
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
         bazel test //test/integration/... --test_output=errors
-    test-behaviour-connection:
+    test-behaviour-connection-core:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
     # TODO: delete --jobs=1 if we fix the issue with excess memory usage
-    test-behaviour-concept:
+    test-behaviour-connection-cluster:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/concept/... --test_output=errors
-    test-behaviour-match:
+        .grabl/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    # TODO: delete --jobs=1 if we fix the issue with excess memory usage
+    test-behaviour-concept-core:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/graql/language/match/... --test_output=errors
-        bazel test //test/behaviour/graql/language/get/... --test_output=errors
-    test-behaviour-writable:
+        .grabl/test-core.sh //test/behaviour/concept/... --test_output=errors
+    test-behaviour-concept-cluster:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/graql/language/insert/... --test_output=errors
-        bazel test //test/behaviour/graql/language/delete/... --test_output=errors
-        bazel test //test/behaviour/graql/language/update/... --test_output=errors
-    test-behaviour-definable:
+        .grabl/test-cluster.sh //test/behaviour/concept/... --test_output=errors
+    test-behaviour-match-core:
       image: graknlabs-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
         export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
         bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/graql/language/define/... --test_output=errors
-        bazel test //test/behaviour/graql/language/undefine/... --test_output=errors
+        .grabl/test-core.sh //test/behaviour/graql/language/match/... --test_output=errors
+        .grabl/test-core.sh //test/behaviour/graql/language/get/... --test_output=errors
+    test-behaviour-match-cluster:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/graql/language/match/... --test_output=errors
+        .grabl/test-cluster.sh //test/behaviour/graql/language/get/... --test_output=errors
+    test-behaviour-writable-core:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/graql/language/insert/... --test_output=errors
+        .grabl/test-core.sh //test/behaviour/graql/language/delete/... --test_output=errors
+        .grabl/test-core.sh //test/behaviour/graql/language/update/... --test_output=errors
+    test-behaviour-writable-cluster:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/graql/language/insert/... --test_output=errors
+        .grabl/test-cluster.sh //test/behaviour/graql/language/delete/... --test_output=errors
+        .grabl/test-cluster.sh //test/behaviour/graql/language/update/... --test_output=errors
+    test-behaviour-definable-core:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/graql/language/define/... --test_output=errors
+        .grabl/test-core.sh //test/behaviour/graql/language/undefine/... --test_output=errors
+    test-behaviour-definable-cluster:
+      image: graknlabs-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_GRAKN_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_GRAKN_PASSWORD
+        bazel run @graknlabs_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/graql/language/define/... --test_output=errors
+        .grabl/test-cluster.sh //test/behaviour/graql/language/undefine/... --test_output=errors
     deploy-maven-snapshot:
       image: graknlabs-ubuntu-20.04
-      dependencies: [build, build-dependency, test-behaviour-connection, test-behaviour-concept, test-behaviour-match] # , test-behaviour-writable, test-behaviour-definable
+      dependencies: [
+        build, build-dependency,
+        test-behaviour-connection-core, test-behaviour-connection-cluster,
+        test-behaviour-concept-core, test-behaviour-concept-cluster,
+        test-behaviour-match-core, test-behaviour-match-cluster,
+        test-behaviour-writable-core, test-behaviour-writable-cluster,
+        test-behaviour-definable-core, test-behaviour-definable-cluster
+      ]
       filter:
         owner: graknlabs
         branch: master

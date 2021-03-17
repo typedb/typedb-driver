@@ -19,7 +19,7 @@
 
 package grakn.client.test.behaviour.concept.thing.attribute;
 
-import grakn.client.concept.type.AttributeType.ValueType;
+import grakn.client.api.concept.type.AttributeType.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

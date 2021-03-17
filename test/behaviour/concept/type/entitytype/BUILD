@@ -62,7 +62,7 @@ grakn_behaviour_java_test(
     ],
     deps = [
         # Internal Package Dependencies
-        "//test/behaviour",
+        "//test/behaviour:behaviour",
 
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",

@@ -19,8 +19,7 @@
 
 package grakn.client.test.behaviour.connection.database;
 
-import grakn.client.GraknClient;
-import io.cucumber.java.en.Given;
+import grakn.client.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -36,7 +35,6 @@ import static grakn.common.collection.Collections.list;
 import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -111,8 +109,9 @@ public class DatabaseSteps {
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertEquals(set(names), client.databases().all().stream().map(GraknClient.Database::name).collect(Collectors.toSet()));
+        assertEquals(set(names), client.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
     }
+
     @Then("connection does not have database: {word}")
     public void connection_does_not_have_database(String name) {
         connection_does_not_have_databases(list(name));
@@ -121,7 +120,7 @@ public class DatabaseSteps {
 
     @Then("connection does not have database(s):")
     public void connection_does_not_have_databases(List<String> names) {
-        Set<String> databases = client.databases().all().stream().map(GraknClient.Database::name).collect(Collectors.toSet());
+        Set<String> databases = client.databases().all().stream().map(Database::name).collect(Collectors.toSet());
         for (String databaseName : names) {
             assertFalse(databases.contains(databaseName));
         }

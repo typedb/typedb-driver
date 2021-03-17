@@ -30,9 +30,9 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//:client-java",
-        "//test/behaviour/config:parameters",
-        "//test/behaviour/util",
+        "//api:api",
+        "//common:common",
+        "//test/behaviour/util:util",
         "//test/behaviour/connection:steps-base",
 
         # External Maven Dependencies
@@ -70,7 +70,7 @@ grakn_behaviour_java_test(
     ],
     deps = [
         # Internal Package Dependencies
-        "//test/behaviour",
+        "//test/behaviour:behaviour",
 
         # External Maven Dependencies
         "@maven//:io_cucumber_cucumber_junit",
