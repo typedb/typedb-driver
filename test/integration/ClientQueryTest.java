@@ -61,7 +61,6 @@ public class ClientQueryTest {
         grakn = new GraknCoreRunner();
         grakn.start();
         graknClient = GraknClient.core(grakn.address());
-        graknClient = GraknClient.core(GraknClient.DEFAULT_ADDRESS);
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
