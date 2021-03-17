@@ -34,7 +34,9 @@ import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
 public interface AttributeType extends ThingType {
 
     @CheckReturnValue
-    ValueType getValueType();
+    default ValueType getValueType() {
+        return ValueType.OBJECT;
+    }
 
     @CheckReturnValue
     boolean isKeyable();
@@ -119,25 +121,6 @@ public interface AttributeType extends ThingType {
         }
 
         @CheckReturnValue
-        public static ValueType of(ConceptProto.AttributeType.ValueType valueType) {
-            switch (valueType) {
-                case STRING:
-                    return AttributeType.ValueType.STRING;
-                case BOOLEAN:
-                    return AttributeType.ValueType.BOOLEAN;
-                case LONG:
-                    return AttributeType.ValueType.LONG;
-                case DOUBLE:
-                    return AttributeType.ValueType.DOUBLE;
-                case DATETIME:
-                    return AttributeType.ValueType.DATETIME;
-                default:
-                case UNRECOGNIZED:
-                    throw new GraknClientException(BAD_VALUE_TYPE.message(valueType));
-            }
-        }
-
-        @CheckReturnValue
         public Class<?> valueClass() {
             return valueClass;
         }
@@ -150,11 +133,6 @@ public interface AttributeType extends ThingType {
         @CheckReturnValue
         public boolean isKeyable() {
             return isKeyable;
-        }
-
-        @Override
-        public java.lang.String toString() {
-            return valueClass.getName();
         }
 
         @CheckReturnValue
@@ -225,6 +203,12 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
+        default ValueType getValueType() {
+            return ValueType.BOOLEAN;
+        }
+
+        @Override
+        @CheckReturnValue
         default boolean isBoolean() {
             return true;
         }
@@ -254,6 +238,12 @@ public interface AttributeType extends ThingType {
     }
 
     interface Long extends AttributeType {
+
+        @Override
+        @CheckReturnValue
+        default ValueType getValueType() {
+            return ValueType.LONG;
+        }
 
         @Override
         @CheckReturnValue
@@ -289,6 +279,12 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
+        default ValueType getValueType() {
+            return ValueType.DOUBLE;
+        }
+
+        @Override
+        @CheckReturnValue
         default boolean isDouble() {
             return true;
         }
@@ -318,6 +314,12 @@ public interface AttributeType extends ThingType {
     }
 
     interface String extends AttributeType {
+
+        @Override
+        @CheckReturnValue
+        default ValueType getValueType() {
+            return ValueType.STRING;
+        }
 
         @Override
         @CheckReturnValue
@@ -356,6 +358,12 @@ public interface AttributeType extends ThingType {
     }
 
     interface DateTime extends AttributeType {
+
+        @Override
+        @CheckReturnValue
+        default ValueType getValueType() {
+            return ValueType.DATETIME;
+        }
 
         @Override
         @CheckReturnValue

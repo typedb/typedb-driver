@@ -75,11 +75,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public ValueType getValueType() {
-        return ValueType.OBJECT;
-    }
-
-    @Override
     public final boolean isKeyable() {
         return getValueType().isKeyable();
     }
@@ -151,11 +146,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
-        }
-
-        @Override
-        public ValueType getValueType() {
-            return ValueType.OBJECT;
         }
 
         @Override
@@ -289,11 +279,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.BOOLEAN;
-        }
-
-        @Override
         public AttributeTypeImpl.Boolean.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
         }
@@ -307,11 +292,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.BOOLEAN;
             }
 
             @Override
@@ -364,11 +344,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.LONG;
-        }
-
-        @Override
         public AttributeTypeImpl.Long.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
         }
@@ -382,11 +357,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.LONG;
             }
 
             @Override
@@ -439,11 +409,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.DOUBLE;
-        }
-
-        @Override
         public AttributeTypeImpl.Double.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
         }
@@ -457,11 +422,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DOUBLE;
             }
 
             @Override
@@ -514,11 +474,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.STRING;
-        }
-
-        @Override
         public AttributeTypeImpl.String.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
         }
@@ -532,11 +487,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.STRING;
             }
 
             @Override
@@ -603,11 +553,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.DATETIME;
-        }
-
-        @Override
         public AttributeTypeImpl.DateTime.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
         }
@@ -621,11 +566,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DATETIME;
             }
 
             @Override
