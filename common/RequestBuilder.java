@@ -557,9 +557,9 @@ public class RequestBuilder {
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getPlaysReq(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetPlaysReq(
-                    ConceptProto.Thing.GetPlays.Req.getDefaultInstance()
+        public static TransactionProto.Transaction.Req.Builder getPlayingReq(String iid) {
+            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetPlayingReq(
+                    ConceptProto.Thing.GetPlaying.Req.getDefaultInstance()
             ));
         }
 
@@ -578,19 +578,6 @@ public class RequestBuilder {
 
         public static class Relation {
 
-            public static TransactionProto.Transaction.Req.Builder getPlayersByRoleTypeReq(String iid) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersByRoleTypeReq(
-                        ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance()
-                ));
-            }
-
-            public static TransactionProto.Transaction.Req.Builder getPlayersReq(
-                    String iid, List<ConceptProto.Type> roleTypes) {
-                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersReq(
-                        ConceptProto.Relation.GetPlayers.Req.newBuilder().addAllRoleTypes(roleTypes)
-                ));
-            }
-
             public static TransactionProto.Transaction.Req.Builder addPlayerReq(
                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationAddPlayerReq(
@@ -602,6 +589,25 @@ public class RequestBuilder {
                     String iid, ConceptProto.Type roleType, ConceptProto.Thing player) {
                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationRemovePlayerReq(
                         ConceptProto.Relation.RemovePlayer.Req.newBuilder().setRoleType(roleType).setPlayer(player)
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getPlayersReq(
+                    String iid, List<ConceptProto.Type> roleTypes) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersReq(
+                        ConceptProto.Relation.GetPlayers.Req.newBuilder().addAllRoleTypes(roleTypes)
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getPlayersByRoleTypeReq(String iid) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetPlayersByRoleTypeReq(
+                        ConceptProto.Relation.GetPlayersByRoleType.Req.getDefaultInstance()
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getRelatingReq(String iid) {
+                return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setRelationGetRelatingReq(
+                        ConceptProto.Relation.GetRelating.Req.getDefaultInstance()
                 ));
             }
         }

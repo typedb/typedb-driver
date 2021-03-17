@@ -39,7 +39,7 @@ import static grakn.client.common.ErrorMessage.Concept.MISSING_IID;
 import static grakn.client.common.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static grakn.client.common.RequestBuilder.Thing.deleteReq;
 import static grakn.client.common.RequestBuilder.Thing.getHasReq;
-import static grakn.client.common.RequestBuilder.Thing.getPlaysReq;
+import static grakn.client.common.RequestBuilder.Thing.getPlayingReq;
 import static grakn.client.common.RequestBuilder.Thing.getRelationsReq;
 import static grakn.client.common.RequestBuilder.Thing.isInferredReq;
 import static grakn.client.common.RequestBuilder.Thing.protoThing;
@@ -171,17 +171,17 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         @Override
-        public final Stream<RoleTypeImpl> getPlays() {
-            return stream(getPlaysReq(getIID()))
-                    .flatMap(rp -> rp.getThingGetPlaysResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
-        }
-
-        @Override
         public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
             return stream(getRelationsReq(getIID(), protoTypes(asList(roleTypes))))
                     .flatMap(rp -> rp.getThingGetRelationsResPart().getRelationsList().stream())
                     .map(RelationImpl::of);
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getPlaying() {
+            return stream(getPlayingReq(getIID()))
+                    .flatMap(rp -> rp.getThingGetPlayingResPart().getRoleTypesList().stream())
+                    .map(RoleTypeImpl::of);
         }
 
         @Override

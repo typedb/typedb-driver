@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 import static grakn.client.common.RequestBuilder.Thing.Relation.addPlayerReq;
 import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
 import static grakn.client.common.RequestBuilder.Thing.Relation.getPlayersReq;
+import static grakn.client.common.RequestBuilder.Thing.Relation.getRelatingReq;
 import static grakn.client.common.RequestBuilder.Thing.Relation.removePlayerReq;
 import static grakn.client.common.RequestBuilder.Thing.protoThing;
 import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
@@ -94,6 +95,23 @@ public class RelationImpl extends ThingImpl implements Relation {
         }
 
         @Override
+        public void addPlayer(RoleType roleType, Thing player) {
+            execute(addPlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+        }
+
+        @Override
+        public void removePlayer(RoleType roleType, Thing player) {
+            execute(removePlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+        }
+
+        @Override
+        public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
+            return stream(getPlayersReq(getIID(), protoTypes(asList(roleTypes))))
+                    .flatMap(rp -> rp.getRelationGetPlayersResPart().getThingsList().stream())
+                    .map(ThingImpl::of);
+        }
+
+        @Override
         public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType() {
             Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
             stream(getPlayersByRoleTypeReq(getIID()))
@@ -108,20 +126,10 @@ public class RelationImpl extends ThingImpl implements Relation {
         }
 
         @Override
-        public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
-            return stream(getPlayersReq(getIID(), protoTypes(asList(roleTypes))))
-                    .flatMap(rp -> rp.getRelationGetPlayersResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
-
-        @Override
-        public void addPlayer(RoleType roleType, Thing player) {
-            execute(addPlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
-        }
-
-        @Override
-        public void removePlayer(RoleType roleType, Thing player) {
-            execute(removePlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+        public Stream<? extends RoleType> getRelating() {
+            return stream(getRelatingReq(getIID()))
+                    .flatMap(rp -> rp.getRelationGetRelatingResPart().getRoleTypesList().stream())
+                    .map(RoleTypeImpl::of);
         }
 
         @Override

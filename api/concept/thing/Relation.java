@@ -56,6 +56,9 @@ public interface Relation extends Thing {
         @CheckReturnValue
         Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType();
 
+        @CheckReturnValue
+        Stream<? extends RoleType> getRelating();
+
         @Override
         @CheckReturnValue
         Relation.Remote asRelation();

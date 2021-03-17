@@ -77,9 +77,9 @@ public interface Thing extends Concept {
         Stream<? extends Attribute<?>> getHas(AttributeType... attributeTypes);
 
         @CheckReturnValue
-        Stream<? extends RoleType> getPlays();
+        Stream<? extends Relation> getRelations(RoleType... roleTypes);
 
         @CheckReturnValue
-        Stream<? extends Relation> getRelations(RoleType... roleTypes);
+        Stream<? extends RoleType> getPlaying();
     }
 }
