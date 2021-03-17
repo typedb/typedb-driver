@@ -25,7 +25,7 @@ import grakn.client.api.concept.type.RelationType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.api.concept.type.ThingType;
 import grakn.client.api.concept.type.Type;
-import grakn.client.test.behaviour.config.Parameters;
+import grakn.client.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -60,30 +60,26 @@ public class ThingTypeSteps {
 
     @Then("thing type root get supertypes contain:")
     public void thing_type_root_get_supertypes_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("thing type root get supertypes do not contain:")
     public void thing_type_root_get_supertypes_do_not_contain(List<String> superLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
-        for (String superLabel : superLabels) {
-            assertFalse(actuals.contains(superLabel));
-        }
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSupertypes().map(t -> t.getLabel().name()).collect(toSet());
+        for (String superLabel : superLabels) assertFalse(actuals.contains(superLabel));
     }
 
     @Then("thing type root get subtypes contain:")
     public void thing_type_root_get_subtypes_contain(List<String> subLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("thing type root get subtypes do not contain:")
     public void thing_type_root_get_subtypes_do_not_contain(List<String> subLabels) {
-        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
-        for (String subLabel : subLabels) {
-            assertFalse(actuals.contains(subLabel));
-        }
+        Set<String> actuals = tx().concepts().getRootThingType().asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
+        for (String subLabel : subLabels) assertFalse(actuals.contains(subLabel));
     }
 
     @When("put {root_label} type: {type_label}")
@@ -186,13 +182,13 @@ public class ThingTypeSteps {
     public void thing_type_get_supertypes_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
         ThingType thing_type = get_thing_type(rootLabel, typeLabel);
         ThingType.Remote remote = thing_type.asRemote(tx());
-        Set<String> actuals = remote.getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = remote.getSupertypes().map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get supertypes do not contain:")
     public void thing_type_get_supertypes_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> superLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSupertypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSupertypes().map(t -> t.getLabel().name()).collect(toSet());
         for (String superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
@@ -200,13 +196,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get subtypes contain:")
     public void thing_type_get_subtypes_contain(RootLabel rootLabel, String typeLabel, List<String> subLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get subtypes do not contain:")
     public void thing_type_get_subtypes_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> subLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -246,13 +242,13 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types contain:")
     public void thing_type_get_has_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types do not contain:")
     public void thing_type_get_has_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
         for (String attributeLabel : attributeLabels) {
             assertFalse(actuals.contains(attributeLabel));
         }
@@ -297,69 +293,63 @@ public class ThingTypeSteps {
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types contain:")
     public void thing_type_get_has_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type::getLabel).collect(toSet());
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(at -> at.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")
     public void thing_type_get_has_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(Type::getLabel).collect(toSet());
-        for (String attributeLabel : attributeLabels) {
-            assertFalse(actuals.contains(attributeLabel));
-        }
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(at -> at.getLabel().name()).collect(toSet());
+        for (String attributeLabel : attributeLabels) assertFalse(actuals.contains(attributeLabel));
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")
-    public void thing_type_set_plays_role(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
-        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
+    public void thing_type_set_plays_role(RootLabel rootLabel, String typeLabel, Label roleLabel) {
+        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).asRemote(tx()).getRelates(roleLabel.name());
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType);
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}; throws exception")
-    public void thing_type_set_plays_role_throws_exception(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
-        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
+    public void thing_type_set_plays_role_throws_exception(RootLabel rootLabel, String typeLabel, Label roleLabel) {
+        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).asRemote(tx()).getRelates(roleLabel.name());
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType));
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}")
-    public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, Parameters.ScopedLabel overriddenLabel) {
-        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
-        RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope()).asRemote(tx()).getRelates(overriddenLabel.role());
+    public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Label roleLabel, Label overriddenLabel) {
+        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).asRemote(tx()).getRelates(roleLabel.name());
+        RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope().get()).asRemote(tx()).getRelates(overriddenLabel.name());
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType, overriddenType);
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}; throws exception")
-    public void thing_type_set_plays_role_as_throws_exception(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel, Parameters.ScopedLabel overriddenLabel) {
-        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
-        RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope()).asRemote(tx()).getRelates(overriddenLabel.role());
+    public void thing_type_set_plays_role_as_throws_exception(RootLabel rootLabel, String typeLabel, Label roleLabel, Label overriddenLabel) {
+        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).asRemote(tx()).getRelates(roleLabel.name());
+        RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope().get()).asRemote(tx()).getRelates(overriddenLabel.name());
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setPlays(roleType, overriddenType));
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")
-    public void thing_type_unset_plays_role(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
-        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope()).asRemote(tx()).getRelates(roleLabel.role());
+    public void thing_type_unset_plays_role(RootLabel rootLabel, String typeLabel, Label roleLabel) {
+        RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).asRemote(tx()).getRelates(roleLabel.name());
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).unsetPlays(roleType);
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")
-    public void thing_type_unset_plays_role_throws_exception(RootLabel rootLabel, String typeLabel, Parameters.ScopedLabel roleLabel) {
+    public void thing_type_unset_plays_role_throws_exception(RootLabel rootLabel, String typeLabel, Label roleLabel) {
         assertThrows(() -> thing_type_unset_plays_role(rootLabel, typeLabel, roleLabel));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get playing roles contain:")
-    public void thing_type_get_playing_roles_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
-        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(
-                r -> new Parameters.ScopedLabel(r.getScope(), r.getLabel())
-        ).collect(toSet());
+    public void thing_type_get_playing_roles_contain(RootLabel rootLabel, String typeLabel, List<Label> roleLabels) {
+        Set<Label> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(Type::getLabel).collect(toSet());
         assertTrue(actuals.containsAll(roleLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get playing roles do not contain:")
-    public void thing_type_get_playing_roles_do_not_contain(RootLabel rootLabel, String typeLabel, List<Parameters.ScopedLabel> roleLabels) {
-        Set<Parameters.ScopedLabel> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(
-                r -> new Parameters.ScopedLabel(r.getScope(), r.getLabel())
-        ).collect(toSet());
-        for (Parameters.ScopedLabel roleLabel : roleLabels) {
+    public void thing_type_get_playing_roles_do_not_contain(RootLabel rootLabel, String typeLabel, List<Label> roleLabels) {
+        Set<Label> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(Type::getLabel).collect(toSet());
+        for (Label roleLabel : roleLabels) {
             assertFalse(actuals.contains(roleLabel));
         }
     }

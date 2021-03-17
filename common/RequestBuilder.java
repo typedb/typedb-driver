@@ -268,62 +268,64 @@ public class RequestBuilder {
             return TransactionProto.Transaction.Req.newBuilder().setTypeReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder isAbstractReq(String label) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeIsAbstractReq(
+        private static ConceptProto.Type.Req.Builder newReqBuilder(Label label) {
+            ConceptProto.Type.Req.Builder builder = ConceptProto.Type.Req.newBuilder().setLabel(label.name());
+            if (label.scope().isPresent()) builder.setScope(label.scope().get());
+            return builder;
+        }
+
+        public static TransactionProto.Transaction.Req.Builder isAbstractReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeIsAbstractReq(
                     ConceptProto.Type.IsAbstract.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder setLabelReq(String label, String newLabel) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeSetLabelReq(
+        public static TransactionProto.Transaction.Req.Builder setLabelReq(Label label, String newLabel) {
+            return typeReq(newReqBuilder(label).setTypeSetLabelReq(
                     ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(newLabel)
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSupertypesReq(String label) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSupertypesReq(
+        public static TransactionProto.Transaction.Req.Builder getSupertypesReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeGetSupertypesReq(
                     ConceptProto.Type.GetSupertypes.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSubtypesReq(String label) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSubtypesReq(
+        public static TransactionProto.Transaction.Req.Builder getSubtypesReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeGetSubtypesReq(
                     ConceptProto.Type.GetSubtypes.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getSupertypeReq(String label) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeGetSupertypeReq(
+        public static TransactionProto.Transaction.Req.Builder getSupertypeReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeGetSupertypeReq(
                     ConceptProto.Type.GetSupertype.Req.getDefaultInstance()
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder deleteReq(String label) {
-            return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeDeleteReq(
+        public static TransactionProto.Transaction.Req.Builder deleteReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeDeleteReq(
                     ConceptProto.Type.Delete.Req.getDefaultInstance()
             ));
         }
 
         public static class RoleType {
 
-            public static ConceptProto.Type protoRoleType(String scope, String label, ConceptProto.Type.Encoding encoding) {
-                return ConceptProto.Type.newBuilder().setScope(scope).setLabel(label).setEncoding(encoding).build();
+            public static ConceptProto.Type protoRoleType(Label label, ConceptProto.Type.Encoding encoding) {
+                assert label.scope().isPresent();
+                return ConceptProto.Type.newBuilder().setScope(label.scope().get())
+                        .setLabel(label.name()).setEncoding(encoding).build();
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelationTypeReq(String scope, String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setScope(scope).setLabel(label).setRoleTypeGetRelationTypeReq(
-                        ConceptProto.RoleType.GetRelationType.Req.getDefaultInstance()
-                ));
-            }
-
-            public static TransactionProto.Transaction.Req.Builder getRelationTypesReq(String scope, String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setScope(scope).setRoleTypeGetRelationTypesReq(
+            public static TransactionProto.Transaction.Req.Builder getRelationTypesReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetRelationTypesReq(
                         ConceptProto.RoleType.GetRelationTypes.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlayersReq(String scope, String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setScope(scope).setRoleTypeGetPlayersReq(
+            public static TransactionProto.Transaction.Req.Builder getPlayersReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayersReq(
                         ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()
                 ));
             }
@@ -331,71 +333,71 @@ public class RequestBuilder {
 
         public static class ThingType {
 
-            public static ConceptProto.Type protoThingType(String label, ConceptProto.Type.Encoding encoding) {
-                return ConceptProto.Type.newBuilder().setLabel(label).setEncoding(encoding).build();
+            public static ConceptProto.Type protoThingType(Label label, ConceptProto.Type.Encoding encoding) {
+                return ConceptProto.Type.newBuilder().setLabel(label.name()).setEncoding(encoding).build();
             }
 
-            public static TransactionProto.Transaction.Req.Builder setAbstractReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetAbstractReq(
+            public static TransactionProto.Transaction.Req.Builder setAbstractReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeSetAbstractReq(
                         ConceptProto.ThingType.SetAbstract.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetAbstractReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetAbstractReq(
+            public static TransactionProto.Transaction.Req.Builder unsetAbstractReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeUnsetAbstractReq(
                         ConceptProto.ThingType.UnsetAbstract.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setSupertypeReq(String label, ConceptProto.Type supertype) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setTypeSetSupertypeReq(
+            public static TransactionProto.Transaction.Req.Builder setSupertypeReq(Label label, ConceptProto.Type supertype) {
+                return typeReq(newReqBuilder(label).setTypeSetSupertypeReq(
                         ConceptProto.Type.SetSupertype.Req.newBuilder().setType(supertype)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlaysReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetPlaysReq(
+            public static TransactionProto.Transaction.Req.Builder getPlaysReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetPlaysReq(
                         ConceptProto.ThingType.GetPlays.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setPlaysReq(String label, ConceptProto.Type roleType) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetPlaysReq(
+            public static TransactionProto.Transaction.Req.Builder setPlaysReq(Label label, ConceptProto.Type roleType) {
+                return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder setPlaysReq(
-                    String label, ConceptProto.Type roleType, ConceptProto.Type overriddenRoleType) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetPlaysReq(
+                    Label label, ConceptProto.Type roleType, ConceptProto.Type overriddenRoleType) {
+                return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
                                 .setOverriddenRole(overriddenRoleType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetPlaysReq(String label, ConceptProto.Type roleType) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetPlaysReq(
+            public static TransactionProto.Transaction.Req.Builder unsetPlaysReq(Label label, ConceptProto.Type roleType) {
+                return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
                         ConceptProto.ThingType.UnsetPlays.Req.newBuilder().setRole(roleType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwnsReq(String label, boolean keysOnly) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetOwnsReq(
+            public static TransactionProto.Transaction.Req.Builder getOwnsReq(Label label, boolean keysOnly) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder getOwnsReq(
-                    String label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetOwnsReq(
+                    Label label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
                         ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
                                 .setValueType(valueType)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-                    String label, ConceptProto.Type attributeType, boolean isKey) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetOwnsReq(
+                    Label label, ConceptProto.Type attributeType, boolean isKey) {
+                return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
                                 .setAttributeType(attributeType)
                                 .setIsKey(isKey)
@@ -403,8 +405,8 @@ public class RequestBuilder {
             }
 
             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-                    String label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType, boolean isKey) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeSetOwnsReq(
+                    Label label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType, boolean isKey) {
+                return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
                                 .setAttributeType(attributeType)
                                 .setOverriddenType(overriddenType)
@@ -413,14 +415,14 @@ public class RequestBuilder {
             }
 
             public static TransactionProto.Transaction.Req.Builder unsetOwnsReq(
-                    String label, ConceptProto.Type attributeType) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeUnsetOwnsReq(
+                    Label label, ConceptProto.Type attributeType) {
+                return typeReq(newReqBuilder(label).setThingTypeUnsetOwnsReq(
                         ConceptProto.ThingType.UnsetOwns.Req.newBuilder().setAttributeType(attributeType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getInstancesReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setThingTypeGetInstancesReq(
+            public static TransactionProto.Transaction.Req.Builder getInstancesReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
                         ConceptProto.ThingType.GetInstances.Req.getDefaultInstance()
                 ));
             }
@@ -428,8 +430,8 @@ public class RequestBuilder {
 
         public static class EntityType {
 
-            public static TransactionProto.Transaction.Req.Builder createReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setEntityTypeCreateReq(
+            public static TransactionProto.Transaction.Req.Builder createReq(Label label) {
+                return typeReq(newReqBuilder(label).setEntityTypeCreateReq(
                         ConceptProto.EntityType.Create.Req.getDefaultInstance()
                 ));
             }
@@ -437,40 +439,40 @@ public class RequestBuilder {
 
         public static class RelationType {
 
-            public static TransactionProto.Transaction.Req.Builder createReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeCreateReq(
+            public static TransactionProto.Transaction.Req.Builder createReq(Label label) {
+                return typeReq(newReqBuilder(label).setRelationTypeCreateReq(
                         ConceptProto.RelationType.Create.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelatesReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeGetRelatesReq(
+            public static TransactionProto.Transaction.Req.Builder getRelatesReq(Label label) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesReq(
                         ConceptProto.RelationType.GetRelates.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRelatesReq(String label, String roleLabel) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeGetRelatesForRoleLabelReq(
+            public static TransactionProto.Transaction.Req.Builder getRelatesReq(Label label, String roleLabel) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
                         ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setRelatesReq(String label, String roleLabel) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeSetRelatesReq(
+            public static TransactionProto.Transaction.Req.Builder setRelatesReq(Label label, String roleLabel) {
+                return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder setRelatesReq(
-                    String label, String roleLabel, String overriddenLabel) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeSetRelatesReq(
+                    Label label, String roleLabel, String overriddenLabel) {
+                return typeReq(newReqBuilder(label).setRelationTypeSetRelatesReq(
                         ConceptProto.RelationType.SetRelates.Req.newBuilder().setLabel(roleLabel)
                                 .setOverriddenLabel(overriddenLabel)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder unsetRelatesReq(String label, String roleLabel) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setRelationTypeUnsetRelatesReq(
+            public static TransactionProto.Transaction.Req.Builder unsetRelatesReq(Label label, String roleLabel) {
+                return typeReq(newReqBuilder(label).setRelationTypeUnsetRelatesReq(
                         ConceptProto.RelationType.UnsetRelates.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
@@ -478,32 +480,32 @@ public class RequestBuilder {
 
         public static class AttributeType {
 
-            public static TransactionProto.Transaction.Req.Builder getOwnersReq(String label, boolean onlyKey) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetOwnersReq(
+            public static TransactionProto.Transaction.Req.Builder getOwnersReq(Label label, boolean onlyKey) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
                         ConceptProto.AttributeType.GetOwners.Req.newBuilder().setOnlyKey(onlyKey)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder putReq(String label, ConceptProto.Attribute.Value value) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypePutReq(
+            public static TransactionProto.Transaction.Req.Builder putReq(Label label, ConceptProto.Attribute.Value value) {
+                return typeReq(newReqBuilder(label).setAttributeTypePutReq(
                         ConceptProto.AttributeType.Put.Req.newBuilder().setValue(value)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getReq(String label, ConceptProto.Attribute.Value value) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetReq(
+            public static TransactionProto.Transaction.Req.Builder getReq(Label label, ConceptProto.Attribute.Value value) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
                         ConceptProto.AttributeType.Get.Req.newBuilder().setValue(value)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getRegexReq(String label) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeGetRegexReq(
+            public static TransactionProto.Transaction.Req.Builder getRegexReq(Label label) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetRegexReq(
                         ConceptProto.AttributeType.GetRegex.Req.getDefaultInstance()
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder setRegexReq(String label, String regex) {
-                return typeReq(ConceptProto.Type.Req.newBuilder().setLabel(label).setAttributeTypeSetRegexReq(
+            public static TransactionProto.Transaction.Req.Builder setRegexReq(Label label, String regex) {
+                return typeReq(newReqBuilder(label).setAttributeTypeSetRegexReq(
                         ConceptProto.AttributeType.SetRegex.Req.newBuilder().setRegex(regex)
                 ));
             }

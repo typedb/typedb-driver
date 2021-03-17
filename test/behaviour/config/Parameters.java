@@ -21,6 +21,7 @@ package grakn.client.test.behaviour.config;
 
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.type.AttributeType.ValueType;
+import grakn.client.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -32,7 +33,6 @@ import java.util.List;
 
 import static grakn.client.api.Transaction.Type.READ;
 import static grakn.client.api.Transaction.Type.WRITE;
-import static java.util.Objects.hash;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -65,19 +65,19 @@ public class Parameters {
     }
 
     @ParameterType("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")
-    public ScopedLabel scoped_label(String roleLabel) {
+    public Label scoped_label(String roleLabel) {
         String[] labels = roleLabel.split(":");
-        return new ScopedLabel(labels[0], labels[1]);
+        return Label.of(labels[0], labels[1]);
     }
 
     @DataTableType
-    public List<ScopedLabel> scoped_labels(List<String> values) {
+    public List<Label> scoped_labels(List<String> values) {
         Iterator<String> valuesIter = values.iterator();
         String next;
-        List<ScopedLabel> scopedLabels = new ArrayList<>();
+        List<Label> scopedLabels = new ArrayList<>();
         while (valuesIter.hasNext() && (next = valuesIter.next()).matches("[a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+")) {
             String[] labels = next.split(":");
-            scopedLabels.add(new ScopedLabel(labels[0], labels[1]));
+            scopedLabels.add(Label.of(labels[0], labels[1]));
         }
 
         if (valuesIter.hasNext()) fail("Values do not match Scoped Labels regular expression");
@@ -151,43 +151,6 @@ public class Parameters {
 
         public String label() {
             return label;
-        }
-    }
-
-    public static class ScopedLabel {
-        private final String scope;
-        private final String role;
-
-        public ScopedLabel(String scope, String role) {
-            this.scope = scope;
-            this.role = role;
-        }
-
-        public String scope() {
-            return scope;
-        }
-
-        public String role() {
-            return role;
-        }
-
-        @Override
-        public String toString() {
-            return scope + ":" + role;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (this == object) return true;
-            if (object == null || getClass() != object.getClass()) return false;
-            ScopedLabel that = (ScopedLabel) object;
-            return (this.scope.equals(that.scope) &&
-                    this.role.equals(that.role));
-        }
-
-        @Override
-        public final int hashCode() {
-            return hash(scope, role);
         }
     }
 }

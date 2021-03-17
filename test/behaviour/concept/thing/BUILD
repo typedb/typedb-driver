@@ -30,6 +30,7 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//api:api",
+        "//common:common",
         "//test/behaviour/config:parameters",
         "//test/behaviour/concept/type/thingtype:steps",
         "//test/behaviour/util:util",

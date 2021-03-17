@@ -25,6 +25,7 @@ import grakn.client.api.concept.type.AttributeType.ValueType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.api.concept.type.ThingType;
 import grakn.client.common.GraknClientException;
+import grakn.client.common.Label;
 import grakn.client.common.RequestBuilder;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
@@ -47,7 +48,7 @@ import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     ThingTypeImpl(String label, boolean isRoot) {
-        super(label, isRoot);
+        super(Label.of(label), isRoot);
     }
 
     public static ThingTypeImpl of(ConceptProto.Type typeProto) {
@@ -83,7 +84,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        Remote(Transaction transaction, String label, boolean isRoot) {
+        Remote(Transaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -204,6 +205,11 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public final ThingTypeImpl.Remote asThingType() {
             return this;
+        }
+
+        @Override
+        public final boolean isDeleted() {
+            return transactionRPC.concepts().getThingType(getLabel().name()) == null;
         }
     }
 }

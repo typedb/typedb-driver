@@ -27,6 +27,7 @@ import grakn.client.api.concept.Concept;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.query.QueryFuture;
+import grakn.client.common.Label;
 import graql.lang.Graql;
 import graql.lang.common.exception.GraqlException;
 import graql.lang.query.GraqlDefine;
@@ -582,27 +583,23 @@ public class GraqlSteps {
 
     public static class LabelUniquenessCheck implements UniquenessCheck {
 
-        private final String label;
+        private final Label label;
 
-        LabelUniquenessCheck(String label) {
-            this.label = label;
+        LabelUniquenessCheck(String scopedLabel) {
+            String[] tokens = scopedLabel.split(":");
+            this.label = tokens.length > 1 ? Label.of(tokens[0], tokens[1]) : Label.of(tokens[0]);
         }
 
         @Override
         public boolean check(Concept concept) {
-            if (concept.isRoleType()) {
-                return label.equals(concept.asRoleType().getScopedLabel());
-            } else if (concept.isType()) {
-                return label.equals(concept.asType().getLabel());
-            }
-
+            if (concept.isType()) return label.equals(concept.asType().getLabel());
             throw new ScenarioDefinitionException("Concept was checked for label uniqueness, but it is not a Type.");
         }
     }
 
     public static class AttributeUniquenessCheck {
 
-        protected final String type;
+        protected final Label type;
         protected final String value;
 
         AttributeUniquenessCheck(String typeAndValue) {
@@ -611,7 +608,7 @@ public class GraqlSteps {
                     String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s.", typeAndValue),
                     2, s.length
             );
-            type = s[0];
+            type = Label.of(s[0]);
             value = s[1];
         }
     }
@@ -667,8 +664,7 @@ public class GraqlSteps {
             if (!concept.isThing()) { return false; }
 
             Set<Attribute<?>> keys = concept.asThing().asRemote(tx()).getHas(true).collect(Collectors.toSet());
-
-            HashMap<String, String> keyMap = new HashMap<>();
+            HashMap<Label, String> keyMap = new HashMap<>();
 
             for (Attribute<?> key : keys) {
                 String keyValue;

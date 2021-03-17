@@ -21,8 +21,8 @@ package grakn.client.test.behaviour.concept.thing;
 
 import grakn.client.api.concept.thing.Thing;
 import grakn.client.api.concept.type.ThingType;
+import grakn.client.common.Label;
 import grakn.client.test.behaviour.config.Parameters.RootLabel;
-import grakn.client.test.behaviour.config.Parameters.ScopedLabel;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -192,9 +192,9 @@ public class ThingSteps {
     }
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")
-    public void thing_get_relations_contain(String var1, ScopedLabel scopedLabel, String var2) {
+    public void thing_get_relations_contain(String var1, Label scopedLabel, String var2) {
         assertTrue(get(var1).asRemote(tx()).getRelations(
-                tx().concepts().getRelationType(scopedLabel.scope()).asRemote(tx()).getRelates(scopedLabel.role())
+                tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
         ).anyMatch(k -> k.equals(get(var2))));
     }
 
@@ -204,9 +204,9 @@ public class ThingSteps {
     }
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")
-    public void thing_get_relations_do_not_contain(String var1, ScopedLabel scopedLabel, String var2) {
+    public void thing_get_relations_do_not_contain(String var1, Label scopedLabel, String var2) {
         assertTrue(get(var1).asRemote(tx()).getRelations(
-                tx().concepts().getRelationType(scopedLabel.scope()).asRemote(tx()).getRelates(scopedLabel.role())
+                tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
         ).noneMatch(k -> k.equals(get(var2))));
     }
 

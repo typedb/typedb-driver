@@ -24,6 +24,8 @@ import grakn.client.api.Client;
 import grakn.client.api.Session;
 import grakn.client.api.Transaction;
 import grakn.client.api.answer.ConceptMap;
+import grakn.client.api.concept.type.RelationType;
+import grakn.client.api.concept.type.RoleType;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -31,6 +33,7 @@ import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlInsert;
 import graql.lang.query.GraqlMatch;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -42,6 +45,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static grakn.client.api.Transaction.Type.READ;
 import static grakn.client.api.Transaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
@@ -58,9 +62,10 @@ public class ClientQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        grakn = new GraknCoreRunner();
-        grakn.start();
-        graknClient = GraknClient.core(grakn.address());
+//        grakn = new GraknCoreRunner();
+//        grakn.start();
+//        graknClient = GraknClient.core(grakn.address());
+        graknClient = GraknClient.core(GraknClient.DEFAULT_ADDRESS);
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
@@ -68,8 +73,28 @@ public class ClientQueryTest {
     @AfterClass
     public static void closeSession() throws Exception {
         graknClient.close();
-        grakn.stop();
+//        grakn.stop();
     }
+
+    @Test
+    public void basicTest() {
+        try (Session session = graknClient.session("grakn", Session.Type.SCHEMA)) {
+            try (Transaction tx = session.transaction(WRITE)) {
+                RelationType.Remote marriage = tx.concepts().putRelationType("marriage").asRemote(tx);
+                marriage.setRelates("husband");
+                marriage.setRelates("wife");
+
+                RoleType.Remote husband = marriage.getRelates("husband").asRemote(tx);
+                RoleType.Remote wife = marriage.getRelates("wife").asRemote(tx);
+
+                Assert.assertEquals("role", husband.getSupertype().getLabel());
+                Assert.assertEquals("role", wife.getSupertype().getLabel());
+                tx.commit();
+            }
+
+        }
+    }
+
 
     @Test
     public void applicationTest() {

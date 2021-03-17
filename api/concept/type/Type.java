@@ -21,6 +21,7 @@ package grakn.client.api.concept.type;
 
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.Concept;
+import grakn.client.common.Label;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -29,7 +30,7 @@ import java.util.stream.Stream;
 public interface Type extends Concept {
 
     @CheckReturnValue
-    String getLabel();
+    Label getLabel();
 
     @CheckReturnValue
     boolean isRoot();

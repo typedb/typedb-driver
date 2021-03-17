@@ -22,6 +22,7 @@ package grakn.client.concept.type;
 import grakn.client.api.Transaction;
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.common.GraknClientException;
+import grakn.client.common.Label;
 import grakn.client.concept.thing.AttributeImpl;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
@@ -46,7 +47,7 @@ import static grakn.common.util.Objects.className;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
-    private static final java.lang.String ROOT_LABEL = "attribute";
+    private static final Label ROOT_LABEL = Label.of("attribute");
 
     AttributeTypeImpl(java.lang.String label, boolean isRoot) {
         super(label, isRoot);
@@ -95,7 +96,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.Boolean asBoolean() {
-        if (isRoot()) return new Boolean(ROOT_LABEL, true);
+        if (isRoot()) return new Boolean(ROOT_LABEL.name(), true);
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
                 className(this.getClass()), className(AttributeType.Boolean.class))
         );
@@ -103,7 +104,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.Long asLong() {
-        if (isRoot()) return new Long(ROOT_LABEL, true);
+        if (isRoot()) return new Long(ROOT_LABEL.name(), true);
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
                 className(this.getClass()), className(AttributeType.Long.class)
         ));
@@ -111,7 +112,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.Double asDouble() {
-        if (isRoot()) return new Double(ROOT_LABEL, true);
+        if (isRoot()) return new Double(ROOT_LABEL.name(), true);
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
                 className(this.getClass()), className(AttributeType.Double.class)
         ));
@@ -119,7 +120,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.String asString() {
-        if (isRoot()) return new String(ROOT_LABEL, true);
+        if (isRoot()) return new String(ROOT_LABEL.name(), true);
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
                 className(this.getClass()), className(AttributeType.String.class)
         ));
@@ -127,7 +128,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.DateTime asDateTime() {
-        if (isRoot()) return new DateTime(ROOT_LABEL, true);
+        if (isRoot()) return new DateTime(ROOT_LABEL.name(), true);
         throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
                 className(this.getClass()), className(AttributeType.DateTime.class)
         ));
@@ -148,7 +149,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+        Remote(Transaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -304,7 +305,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(Transaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -379,7 +380,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(Transaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -454,7 +455,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(Transaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -529,7 +530,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(Transaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
@@ -618,7 +619,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            public Remote(Transaction transaction, java.lang.String label, boolean isRoot) {
+            public Remote(Transaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
             }
 
