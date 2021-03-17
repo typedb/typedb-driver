@@ -85,7 +85,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
     public void relation_type_get_role_type_get_label(String relationLabel, String roleLabel, String getLabel) {
-        assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getLabel());
+        assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getLabel().name());
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")
