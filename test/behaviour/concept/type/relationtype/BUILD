@@ -32,7 +32,6 @@ java_library(
         # Internal Package Dependencies
         "//api:api",
         "//common:common",
-        "//test/behaviour/config:parameters",
         "//test/behaviour/util:util",
         "//test/behaviour/connection:steps-base",
 
