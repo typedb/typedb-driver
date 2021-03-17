@@ -58,7 +58,7 @@ public interface ThingType extends Type {
 
         void unsetAbstract();
 
-        void setPlays(RoleType role);
+        void setPlays(RoleType roleType);
 
         void setPlays(RoleType roleType, RoleType overriddenType);
 
@@ -85,7 +85,7 @@ public interface ThingType extends Type {
         @CheckReturnValue
         Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
 
-        void unsetPlays(RoleType role);
+        void unsetPlays(RoleType roleType);
 
         void unsetOwns(AttributeType attributeType);
     }
