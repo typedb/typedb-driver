@@ -69,7 +69,9 @@ public class ThingSteps {
 
     @When("delete entity:/attribute:/relation: {var}")
     public void delete_thing(String var) {
-        get(var).asRemote(tx()).delete();
+        Thing thing = get(var);
+        Thing.Remote remote = thing.asRemote(tx());
+        remote.delete();
     }
 
     @When("entity/attribute/relation {var} set has: {var}")
