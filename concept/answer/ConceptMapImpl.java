@@ -66,7 +66,7 @@ public class ConceptMapImpl implements ConceptMap {
     @Override
     public Concept get(String variable) {
         Concept concept = map.get(variable);
-        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST.message(variable));
+        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST, variable);
         return concept;
     }
 

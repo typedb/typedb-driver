@@ -70,13 +70,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                 return new AttributeTypeImpl(type.getLabel(), type.getRoot());
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_VALUE_TYPE.message(type.getValueType()));
+                throw new GraknClientException(BAD_VALUE_TYPE, type.getValueType());
         }
-    }
-
-    @Override
-    public ValueType getValueType() {
-        return ValueType.OBJECT;
     }
 
     @Override
@@ -97,41 +92,31 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public AttributeTypeImpl.Boolean asBoolean() {
         if (isRoot()) return new Boolean(ROOT_LABEL.name(), true);
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                className(this.getClass()), className(AttributeType.Boolean.class))
-        );
+        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
     }
 
     @Override
     public AttributeTypeImpl.Long asLong() {
         if (isRoot()) return new Long(ROOT_LABEL.name(), true);
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                className(this.getClass()), className(AttributeType.Long.class)
-        ));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
     }
 
     @Override
     public AttributeTypeImpl.Double asDouble() {
         if (isRoot()) return new Double(ROOT_LABEL.name(), true);
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                className(this.getClass()), className(AttributeType.Double.class)
-        ));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
     }
 
     @Override
     public AttributeTypeImpl.String asString() {
         if (isRoot()) return new String(ROOT_LABEL.name(), true);
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                className(this.getClass()), className(AttributeType.String.class)
-        ));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
     }
 
     @Override
     public AttributeTypeImpl.DateTime asDateTime() {
         if (isRoot()) return new DateTime(ROOT_LABEL.name(), true);
-        throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                className(this.getClass()), className(AttributeType.DateTime.class)
-        ));
+        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
     }
 
     @Override
@@ -151,11 +136,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
-        }
-
-        @Override
-        public ValueType getValueType() {
-            return ValueType.OBJECT;
         }
 
         @Override
@@ -227,41 +207,31 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         @Override
         public AttributeTypeImpl.Boolean.Remote asBoolean() {
             if (isRoot()) return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true);
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.Boolean.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
         }
 
         @Override
         public AttributeTypeImpl.Long.Remote asLong() {
             if (isRoot()) return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true);
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.Long.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
         }
 
         @Override
         public AttributeTypeImpl.Double.Remote asDouble() {
             if (isRoot()) return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true);
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.Double.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
         }
 
         @Override
         public AttributeTypeImpl.String.Remote asString() {
             if (isRoot()) return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true);
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.String.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
         }
 
         @Override
         public AttributeTypeImpl.DateTime.Remote asDateTime() {
             if (isRoot()) return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true);
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.DateTime.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
         }
 
         @Override
@@ -289,11 +259,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.BOOLEAN;
-        }
-
-        @Override
         public AttributeTypeImpl.Boolean.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
         }
@@ -307,11 +272,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.BOOLEAN;
             }
 
             @Override
@@ -364,11 +324,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.LONG;
-        }
-
-        @Override
         public AttributeTypeImpl.Long.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
         }
@@ -382,11 +337,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.LONG;
             }
 
             @Override
@@ -439,11 +389,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.DOUBLE;
-        }
-
-        @Override
         public AttributeTypeImpl.Double.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
         }
@@ -457,11 +402,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DOUBLE;
             }
 
             @Override
@@ -514,11 +454,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.STRING;
-        }
-
-        @Override
         public AttributeTypeImpl.String.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
         }
@@ -532,11 +467,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.STRING;
             }
 
             @Override
@@ -603,11 +533,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         }
 
         @Override
-        public ValueType getValueType() {
-            return ValueType.DATETIME;
-        }
-
-        @Override
         public AttributeTypeImpl.DateTime.Remote asRemote(GraknTransaction transaction) {
             return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
         }
@@ -621,11 +546,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
                 super(transaction, label, isRoot);
-            }
-
-            @Override
-            public ValueType getValueType() {
-                return ValueType.DATETIME;
             }
 
             @Override
