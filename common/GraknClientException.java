@@ -35,11 +35,6 @@ public class GraknClientException extends RuntimeException {
         this.errorMessage = error;
     }
 
-    public GraknClientException(Throwable e) {
-        super(e);
-        this.errorMessage = null;
-    }
-
     public GraknClientException(String message, Throwable cause) {
         super(message, cause);
         this.errorMessage = null;
