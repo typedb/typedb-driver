@@ -35,6 +35,16 @@ public class GraknClientException extends RuntimeException {
         this.errorMessage = error;
     }
 
+    public GraknClientException(Throwable e) {
+        super(e);
+        this.errorMessage = null;
+    }
+
+    public GraknClientException(String message, Throwable cause) {
+        super(message, cause);
+        this.errorMessage = null;
+    }
+
     public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
         // "Received Rst Stream" occurs if the server is in the process of shutting down.
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE
@@ -45,16 +55,6 @@ public class GraknClientException extends RuntimeException {
             return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
         }
         return new GraknClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
-    }
-
-    public GraknClientException(Exception e) {
-        super(e);
-        this.errorMessage = null;
-    }
-
-    public GraknClientException(String message, Throwable cause) {
-        super(message, cause);
-        this.errorMessage = null;
     }
 
     public String getName() {
