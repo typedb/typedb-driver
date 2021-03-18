@@ -29,11 +29,6 @@ public class GraknClientException extends RuntimeException {
     @Nullable
     private final ErrorMessage errorMessage;
 
-    public GraknClientException(String error) {
-        super(error);
-        this.errorMessage = null;
-    }
-
     public GraknClientException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
         assert !getMessage().contains("%s");

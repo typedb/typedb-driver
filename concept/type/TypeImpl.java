@@ -79,7 +79,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             case ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);
             case UNRECOGNIZED:
-                throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
+                throw new GraknClientException(BAD_ENCODING, typeProto.getEncoding());
             default:
                 return ThingTypeImpl.of(typeProto);
         }
@@ -187,65 +187,47 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
         @Override
         public ThingTypeImpl.Remote asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(ThingType.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
         }
 
         @Override
         public EntityTypeImpl.Remote asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(EntityType.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
         }
 
         @Override
         public RelationTypeImpl.Remote asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(RelationType.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
         }
 
         @Override
         public AttributeTypeImpl.Remote asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(AttributeType.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
         }
 
         @Override
         public RoleTypeImpl.Remote asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(RoleType.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
         }
 
         @Override
         public ThingImpl.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(Thing.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
         }
 
         @Override
         public EntityImpl.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(Entity.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
         }
 
         @Override
         public AttributeImpl.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(Attribute.class)
-            ));
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
         }
 
         @Override
         public RelationImpl.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING.message(
-                    className(this.getClass()), className(Relation.class))
-            );
+            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
         }
 
         @Nullable

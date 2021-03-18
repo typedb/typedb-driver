@@ -68,7 +68,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
                 return AttributeImpl.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING.message(thingProto.getType().getEncoding()));
+                throw new GraknClientException(BAD_ENCODING, thingProto.getType().getEncoding());
         }
     }
 

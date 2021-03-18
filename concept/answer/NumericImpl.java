@@ -49,7 +49,7 @@ public class NumericImpl implements Numeric {
             case NAN:
                 return NumericImpl.ofNaN();
             default:
-                throw new GraknClientException(BAD_ANSWER_TYPE.message(numeric.getValueCase()));
+                throw new GraknClientException(BAD_ANSWER_TYPE, numeric.getValueCase());
         }
     }
 
@@ -83,19 +83,19 @@ public class NumericImpl implements Numeric {
     @Override
     public long asLong() {
         if (isLong()) return longValue;
-        else throw new GraknClientException(ILLEGAL_CAST.message(Long.class));
+        else throw new GraknClientException(ILLEGAL_CAST, Long.class);
     }
 
     @Override
     public Double asDouble() {
         if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_CAST.message(Double.class));
+        else throw new GraknClientException(ILLEGAL_CAST, Double.class);
     }
 
     @Override
     public Number asNumber() {
         if (isLong()) return longValue;
         else if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_CAST.message(Number.class));
+        else throw new GraknClientException(ILLEGAL_CAST, Number.class);
     }
 }

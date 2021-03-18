@@ -54,7 +54,7 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
         TransactionProto.Transaction.ResPart resPart = responseCollector.take();
         switch (resPart.getResCase()) {
             case RES_NOT_SET:
-                throw new GraknClientException(MISSING_RESPONSE.message(requestID));
+                throw new GraknClientException(MISSING_RESPONSE, requestID);
             case STREAM_RES_PART:
                 switch (resPart.getStreamResPart().getState()) {
                     case DONE:

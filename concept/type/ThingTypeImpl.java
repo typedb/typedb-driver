@@ -64,7 +64,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
                 return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING.message(typeProto.getEncoding()));
+                throw new GraknClientException(BAD_ENCODING, typeProto.getEncoding());
         }
     }
 

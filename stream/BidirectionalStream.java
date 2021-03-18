@@ -81,14 +81,14 @@ public class BidirectionalStream implements AutoCloseable {
         UUID requestID = UUID.fromString(res.getReqId());
         ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
         if (collector != null) collector.put(res);
-        else throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestID));
+        else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
     }
 
     private void collect(ResPart resPart) {
         UUID requestID = UUID.fromString(resPart.getReqId());
         ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
         if (collector != null) collector.put(resPart);
-        else throw new GraknClientException(UNKNOWN_REQUEST_ID.message(requestID));
+        else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
     }
 
     @Override
