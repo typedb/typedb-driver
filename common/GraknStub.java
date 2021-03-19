@@ -34,7 +34,6 @@ import io.grpc.stub.StreamObserver;
 import java.util.function.Supplier;
 
 import static grakn.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
-import static grakn.protocol.ClusterServerProto.Server;
 
 public abstract class GraknStub {
 

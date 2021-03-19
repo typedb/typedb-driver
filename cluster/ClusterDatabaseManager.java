@@ -23,6 +23,7 @@ import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
 import grakn.client.common.GraknClientException;
 import grakn.client.core.CoreDatabaseManager;
+import grakn.common.collection.Pair;
 import grakn.protocol.ClusterDatabaseProto;
 
 import java.util.List;
@@ -31,15 +32,20 @@ import java.util.Map;
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.allReq;
 import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.getReq;
+import static grakn.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     private final Map<String, CoreDatabaseManager> databaseMgrs;
     private final ClusterClient client;
 
-    public ClusterDatabaseManager(ClusterClient client, Map<String, CoreDatabaseManager> databaseMgrs) {
+    public ClusterDatabaseManager(ClusterClient client) {
         this.client = client;
-        this.databaseMgrs = databaseMgrs;
+        this.databaseMgrs = client.coreClients().entrySet().stream()
+                .map(c -> pair(c.getKey(), c.getValue().databases()))
+                .collect(toMap(Pair::first, Pair::second));
+        ;
     }
 
     @Override
