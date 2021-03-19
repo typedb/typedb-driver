@@ -127,9 +127,13 @@ abstract class FailsafeTask<RESULT> {
                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());
                 client.databaseByName().put(database, databaseClusterRPC);
                 return databaseClusterRPC;
-            } catch (StatusRuntimeException e) {
-                LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
-                                  serverAddress + ". Attempting next server.", e);
+            } catch (GraknClientException e) {
+                if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                    LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
+                            serverAddress + ". Attempting next server.", e);
+                } else {
+                    throw e;
+                }
             }
         }
         throw clusterNotAvailableException();
