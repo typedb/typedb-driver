@@ -21,6 +21,8 @@ package grakn.client.common;
 
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
+import grakn.protocol.ClusterDatabaseProto;
+import grakn.protocol.ClusterServerProto;
 import grakn.protocol.ConceptProto;
 import grakn.protocol.CoreDatabaseProto;
 import grakn.protocol.LogicProto;
@@ -64,29 +66,57 @@ public class RequestBuilder {
         }
     }
 
-    public static class DatabaseManager {
+    public static class Core {
 
-        public static CoreDatabaseProto.CoreDatabaseManager.Create.Req createReq(String name) {
-            return CoreDatabaseProto.CoreDatabaseManager.Create.Req.newBuilder().setName(name).build();
+        public static class DatabaseManager {
+
+            public static CoreDatabaseProto.CoreDatabaseManager.Create.Req createReq(String name) {
+                return CoreDatabaseProto.CoreDatabaseManager.Create.Req.newBuilder().setName(name).build();
+            }
+
+            public static CoreDatabaseProto.CoreDatabaseManager.Contains.Req containsReq(String name) {
+                return CoreDatabaseProto.CoreDatabaseManager.Contains.Req.newBuilder().setName(name).build();
+            }
+
+            public static CoreDatabaseProto.CoreDatabaseManager.All.Req allReq() {
+                return CoreDatabaseProto.CoreDatabaseManager.All.Req.getDefaultInstance();
+            }
         }
 
-        public static CoreDatabaseProto.CoreDatabaseManager.Contains.Req containsReq(String name) {
-            return CoreDatabaseProto.CoreDatabaseManager.Contains.Req.newBuilder().setName(name).build();
-        }
+        public static class Database {
 
-        public static CoreDatabaseProto.CoreDatabaseManager.All.Req allReq() {
-            return CoreDatabaseProto.CoreDatabaseManager.All.Req.getDefaultInstance();
+            public static CoreDatabaseProto.CoreDatabase.Schema.Req schemaReq(String name) {
+                return CoreDatabaseProto.CoreDatabase.Schema.Req.newBuilder().setName(name).build();
+            }
+
+            public static CoreDatabaseProto.CoreDatabase.Delete.Req deleteReq(String name) {
+                return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
+            }
         }
     }
 
-    public static class Database {
+    public static class Cluster {
 
-        public static CoreDatabaseProto.CoreDatabase.Schema.Req schemaReq(String name) {
-            return CoreDatabaseProto.CoreDatabase.Schema.Req.newBuilder().setName(name).build();
+        public static class Server {
+
+            public static ClusterServerProto.Server.All.Req allReq() {
+                return ClusterServerProto.Server.All.Req.newBuilder().build();
+            }
         }
 
-        public static CoreDatabaseProto.CoreDatabase.Delete.Req deleteReq(String name) {
-            return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
+        public static class DatabaseManager {
+
+            public static ClusterDatabaseProto.ClusterDatabaseManager.Get.Req getReq(String name) {
+                return ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build();
+            }
+
+            public static ClusterDatabaseProto.ClusterDatabaseManager.All.Req allReq() {
+                return ClusterDatabaseProto.ClusterDatabaseManager.All.Req.getDefaultInstance();
+            }
+        }
+
+        public static class Database {
+
         }
     }
 

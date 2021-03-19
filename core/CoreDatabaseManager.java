@@ -28,9 +28,9 @@ import java.util.List;
 
 import static grakn.client.common.ErrorMessage.Client.DB_DOES_NOT_EXIST;
 import static grakn.client.common.ErrorMessage.Client.MISSING_DB_NAME;
-import static grakn.client.common.RequestBuilder.DatabaseManager.allReq;
-import static grakn.client.common.RequestBuilder.DatabaseManager.containsReq;
-import static grakn.client.common.RequestBuilder.DatabaseManager.createReq;
+import static grakn.client.common.RequestBuilder.Core.DatabaseManager.allReq;
+import static grakn.client.common.RequestBuilder.Core.DatabaseManager.containsReq;
+import static grakn.client.common.RequestBuilder.Core.DatabaseManager.createReq;
 import static java.util.stream.Collectors.toList;
 
 public class CoreDatabaseManager implements DatabaseManager {

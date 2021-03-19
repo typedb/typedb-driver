@@ -128,7 +128,7 @@ public abstract class GraknStub {
             this.blockingStub = GraknClusterGrpc.newBlockingStub(channel);
         }
 
-        public Server.All.Res serversAll(Server.All.Req request) {
+        public Server.All.Res serverAll(Server.All.Req request) {
             return resilientCall(() -> blockingStub.serverAll(request));
         }
 

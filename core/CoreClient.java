@@ -29,12 +29,10 @@ import grakn.client.stream.RequestTransmitter;
 import grakn.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
@@ -101,15 +99,6 @@ public class CoreClient implements GraknClient {
     @Override
     public Cluster asCluster() {
         throw new GraknClientException(ILLEGAL_CAST, className(GraknClient.Cluster.class));
-    }
-
-    public <RES> RES call(Supplier<RES> req) {
-        try {
-            reconnect();
-            return req.get();
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
     }
 
     public ManagedChannel channel() {

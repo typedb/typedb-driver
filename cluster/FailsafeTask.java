@@ -32,6 +32,7 @@ import static grakn.client.common.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMAR
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.getReq;
 
 abstract class FailsafeTask<RESULT> {
 
@@ -122,9 +123,7 @@ abstract class FailsafeTask<RESULT> {
         for (String serverAddress : client.clusterMembers()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
-                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(
-                        ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(database).build()
-                );
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());
                 client.databaseByName().put(database, databaseClusterRPC);
                 return databaseClusterRPC;

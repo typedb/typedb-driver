@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static grakn.client.common.RequestBuilder.Cluster.Server.allReq;
 import static grakn.common.collection.Collections.pair;
 
 public class ClusterClient implements GraknClient.Cluster {
@@ -136,7 +137,7 @@ public class ClusterClient implements GraknClient.Cluster {
             try (CoreClient client = new CoreClient(address)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 GraknStub.Cluster stub = GraknStub.cluster(client.channel());
-                ClusterServerProto.Server.All.Res res = stub.serversAll(ClusterServerProto.Server.All.Req.newBuilder().build());
+                ClusterServerProto.Server.All.Res res = stub.serverAll(allReq());
                 Set<String> members = new HashSet<>(res.getAddressesList());
                 LOG.debug("The cluster servers are {}", members);
                 return members;

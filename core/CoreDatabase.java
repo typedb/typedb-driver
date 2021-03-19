@@ -22,8 +22,8 @@ package grakn.client.core;
 import grakn.client.api.database.Database;
 import grakn.client.common.GraknStub;
 
-import static grakn.client.common.RequestBuilder.Database.deleteReq;
-import static grakn.client.common.RequestBuilder.Database.schemaReq;
+import static grakn.client.common.RequestBuilder.Core.Database.deleteReq;
+import static grakn.client.common.RequestBuilder.Core.Database.schemaReq;
 import static grakn.client.core.CoreDatabaseManager.nonNull;
 
 public class CoreDatabase implements Database {

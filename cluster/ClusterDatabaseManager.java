@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.allReq;
+import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.getReq;
 import static java.util.stream.Collectors.toList;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
@@ -67,9 +69,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         StringBuilder errors = new StringBuilder();
         for (String address : databaseMgrs.keySet()) {
             try {
-                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.coreClient(address).call(
-                        () -> client.stub(address).databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build())
-                );
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(address).databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
@@ -83,10 +83,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         StringBuilder errors = new StringBuilder();
         for (String address : databaseMgrs.keySet()) {
             try {
-                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.coreClient(address).call(
-                        () -> client.stub(address).databasesAll(
-                                ClusterDatabaseProto.ClusterDatabaseManager.All.Req.getDefaultInstance()
-                        ));
+                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
                 return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
