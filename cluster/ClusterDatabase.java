@@ -33,7 +33,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 class ClusterDatabase implements Database.Cluster {
 
@@ -43,22 +44,24 @@ class ClusterDatabase implements Database.Cluster {
     private final ClusterDatabaseManager databaseMgr;
     private final Set<Replica> replicas;
 
-    private ClusterDatabase(String database, ClusterDatabaseManager databaseMgr) {
+    private ClusterDatabase(String database, ClusterDatabaseManager clusterDatabaseMgr) {
         this.name = database;
-        this.databaseMgr = databaseMgr;
+        this.databaseMgr = clusterDatabaseMgr;
         this.databases = new HashMap<>();
         this.replicas = new HashSet<>();
-        for (String address : databaseMgr.databaseManagers().keySet()) {
-            CoreDatabaseManager databaseManager = databaseMgr.databaseManagers().get(address);
-            databases.put(address, new CoreDatabase(databaseManager, database));
+        for (String address : clusterDatabaseMgr.databaseMgrs().keySet()) {
+            CoreDatabaseManager coreDatabaseMgr = clusterDatabaseMgr.databaseMgrs().get(address);
+            databases.put(address, new CoreDatabase(coreDatabaseMgr, database));
         }
     }
 
-    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterDatabaseManager databaseManagerCluster) {
+    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterDatabaseManager clusterDatabaseMgr) {
         assert protoDB.getReplicasCount() > 0;
         String database = protoDB.getName();
-        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, databaseManagerCluster);
-        databaseClusterRPC.replicas().addAll(protoDB.getReplicasList().stream().map(rep -> Replica.of(rep, databaseClusterRPC)).collect(Collectors.toSet()));
+        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, clusterDatabaseMgr);
+        databaseClusterRPC.replicas().addAll(protoDB.getReplicasList().stream().map(
+                rep -> Replica.of(rep, databaseClusterRPC)
+        ).collect(toSet()));
         LOG.debug("Discovered database cluster: {}", databaseClusterRPC);
         return databaseClusterRPC;
     }
@@ -77,7 +80,7 @@ class ClusterDatabase implements Database.Cluster {
     @Override
     public void delete() {
         for (String address : databases.keySet()) {
-            if (databaseMgr.databaseManagers().get(address).contains(name)) databases.get(address).delete();
+            if (databaseMgr.databaseMgrs().get(address).contains(name)) databases.get(address).delete();
         }
     }
 

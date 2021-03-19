@@ -47,9 +47,9 @@ public class CoreTransaction implements GraknTransaction.Extended {
 
     private final GraknTransaction.Type type;
     private final GraknOptions options;
-    private final ConceptManager conceptManager;
-    private final LogicManager logicManager;
-    private final QueryManager queryManager;
+    private final ConceptManager conceptMgr;
+    private final LogicManager logicMgr;
+    private final QueryManager queryMgr;
 
     private final BidirectionalStream bidirectionalStream;
 
@@ -57,9 +57,9 @@ public class CoreTransaction implements GraknTransaction.Extended {
         try {
             this.type = type;
             this.options = options;
-            conceptManager = new ConceptManagerImpl(this);
-            logicManager = new LogicManagerImpl(this);
-            queryManager = new QueryManagerImpl(this);
+            conceptMgr = new ConceptManagerImpl(this);
+            logicMgr = new LogicManagerImpl(this);
+            queryMgr = new QueryManagerImpl(this);
             bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
             execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
@@ -77,13 +77,13 @@ public class CoreTransaction implements GraknTransaction.Extended {
     public boolean isOpen() { return bidirectionalStream.isOpen(); }
 
     @Override
-    public ConceptManager concepts() { return conceptManager; }
+    public ConceptManager concepts() { return conceptMgr; }
 
     @Override
-    public LogicManager logic() { return logicManager; }
+    public LogicManager logic() { return logicMgr; }
 
     @Override
-    public QueryManager query() { return queryManager; }
+    public QueryManager query() { return queryMgr; }
 
     @Override
     public Res execute(Req.Builder request) {

@@ -46,7 +46,7 @@ public class ClusterClient implements GraknClient.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
     private final Map<String, CoreClient> coreClients;
     private final Map<String, GraknStub.Cluster> stubs;
-    private final ClusterDatabaseManager databaseManagers;
+    private final ClusterDatabaseManager databaseMgrs;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
@@ -61,7 +61,7 @@ public class ClusterClient implements GraknClient.Cluster {
         stubs = coreClients.entrySet().stream().map(
                 client -> pair(client.getKey(), GraknStub.cluster(client.getValue().channel()))
         ).collect(Collectors.toMap(Pair::first, Pair::second));
-        databaseManagers = new ClusterDatabaseManager(this, coreClients.entrySet().stream().map(
+        databaseMgrs = new ClusterDatabaseManager(this, coreClients.entrySet().stream().map(
                 client -> pair(client.getKey(), client.getValue().databases())
         ).collect(Collectors.toMap(Pair::first, Pair::second)));
         clusterDatabases = new ConcurrentHashMap<>();
@@ -75,7 +75,7 @@ public class ClusterClient implements GraknClient.Cluster {
 
     @Override
     public ClusterDatabaseManager databases() {
-        return databaseManagers;
+        return databaseMgrs;
     }
 
     @Override
