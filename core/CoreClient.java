@@ -117,10 +117,6 @@ public class CoreClient implements GraknClient {
         sessions.remove(session.id());
     }
 
-    void reconnect() {
-        // TODO: remove
-    }
-
     @Override
     public void close() {
         try {

@@ -123,8 +123,6 @@ public class CoreSession implements GraknSession {
 
     int networkLatencyMillis() { return networkLatencyMillis; }
 
-    void reconnect() { client.reconnect(); }
-
     @Override
     public void close() {
         try {
@@ -133,7 +131,6 @@ public class CoreSession implements GraknSession {
                 transactions.forEach(GraknTransaction.Extended::close);
                 client.removeSession(this);
                 pulse.cancel();
-                client.reconnect();
                 try {
                     SessionProto.Session.Close.Res ignore = stub().sessionClose(closeReq(sessionID));
                 } catch (StatusRuntimeException e) {
