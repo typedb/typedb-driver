@@ -19,6 +19,7 @@
 
 package grakn.client.common;
 
+import grakn.protocol.ClusterServerProto;
 import grakn.protocol.CoreDatabaseProto.CoreDatabase;
 import grakn.protocol.CoreDatabaseProto.CoreDatabaseManager;
 import grakn.protocol.GraknClusterGrpc;
@@ -128,8 +129,8 @@ public abstract class GraknStub {
             this.blockingStub = GraknClusterGrpc.newBlockingStub(channel);
         }
 
-        public Server.All.Res serverAll(Server.All.Req request) {
-            return resilientCall(() -> blockingStub.serverAll(request));
+        public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
+            return resilientCall(() -> blockingStub.serversAll(request));
         }
 
         public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {

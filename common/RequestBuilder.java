@@ -99,8 +99,8 @@ public class RequestBuilder {
 
         public static class Server {
 
-            public static ClusterServerProto.Server.All.Req allReq() {
-                return ClusterServerProto.Server.All.Req.newBuilder().build();
+            public static ClusterServerProto.ServerManager.All.Req allReq() {
+                return ClusterServerProto.ServerManager.All.Req.newBuilder().build();
             }
         }
 
