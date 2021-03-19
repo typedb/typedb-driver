@@ -68,7 +68,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         for (String address : databaseManagers.keySet()) {
             try {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.coreClient(address).call(
-                        () -> client.blockingStub(address).databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build())
+                        () -> client.stub(address).databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build())
                 );
                 return ClusterDatabase.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
@@ -84,7 +84,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         for (String address : databaseManagers.keySet()) {
             try {
                 ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.coreClient(address).call(
-                        () -> client.blockingStub(address).databasesAll(
+                        () -> client.stub(address).databasesAll(
                                 ClusterDatabaseProto.ClusterDatabaseManager.All.Req.getDefaultInstance()
                         ));
                 return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());

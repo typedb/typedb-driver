@@ -24,7 +24,7 @@ import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.api.GraknTransaction;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.ResilientStub;
+import grakn.client.common.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.SessionProto;
@@ -113,7 +113,7 @@ public class CoreSession implements GraknSession {
 
     ByteString id() { return sessionID; }
 
-    ResilientStub.Core stub() {
+    GraknStub.Core stub() {
         return client.stub();
     }
 

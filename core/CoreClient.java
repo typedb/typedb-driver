@@ -24,7 +24,7 @@ import grakn.client.api.GraknClient;
 import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.ResilientStub;
+import grakn.client.common.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
@@ -44,7 +44,7 @@ public class CoreClient implements GraknClient {
     private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
 
     private final ManagedChannel channel;
-    private final ResilientStub.Core stub;
+    private final GraknStub.Core stub;
     private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
@@ -56,7 +56,7 @@ public class CoreClient implements GraknClient {
     public CoreClient(String address, int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
         channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
-        stub = ResilientStub.core(channel);
+        stub = GraknStub.core(channel);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
@@ -116,7 +116,7 @@ public class CoreClient implements GraknClient {
         return channel;
     }
 
-    ResilientStub.Core stub() {
+    GraknStub.Core stub() {
         return stub;
     }
 

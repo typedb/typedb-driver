@@ -122,7 +122,7 @@ abstract class FailsafeTask<RESULT> {
         for (String serverAddress : client.clusterMembers()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
-                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.blockingStub(serverAddress).databasesGet(
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(
                         ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(database).build()
                 );
                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());

@@ -20,7 +20,7 @@
 package grakn.client.stream;
 
 import grakn.client.common.GraknClientException;
-import grakn.client.common.ResilientStub;
+import grakn.client.common.GraknStub;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
@@ -47,7 +47,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(ResilientStub.Core stub, RequestTransmitter transmitter) {
+    public BidirectionalStream(GraknStub.Core stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);

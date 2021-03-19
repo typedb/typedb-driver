@@ -22,7 +22,7 @@ package grakn.client.core;
 import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
 import grakn.client.common.GraknClientException;
-import grakn.client.common.ResilientStub;
+import grakn.client.common.GraknStub;
 
 import java.util.List;
 
@@ -49,21 +49,21 @@ public class CoreDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean contains(String name) {
-        return blockingStub().databasesContains(containsReq(nonNull(name))).getContains();
+        return stub().databasesContains(containsReq(nonNull(name))).getContains();
     }
 
     @Override
     public void create(String name) {
-        blockingStub().databasesCreate(createReq(nonNull(name)));
+        stub().databasesCreate(createReq(nonNull(name)));
     }
 
     @Override
     public List<CoreDatabase> all() {
-        List<String> databases = blockingStub().databasesAll(allReq()).getNamesList();
+        List<String> databases = stub().databasesAll(allReq()).getNamesList();
         return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
     }
 
-    ResilientStub.Core blockingStub() {
+    GraknStub.Core stub() {
         return client.stub();
     }
 

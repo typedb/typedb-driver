@@ -35,11 +35,11 @@ import java.util.function.Supplier;
 import static grakn.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
 import static grakn.protocol.ClusterServerProto.Server;
 
-public abstract class ResilientStub {
+public abstract class GraknStub {
 
     private final ManagedChannel channel;
 
-    private ResilientStub(ManagedChannel channel) {
+    private GraknStub(ManagedChannel channel) {
         this.channel = channel;
     }
 
@@ -71,7 +71,7 @@ public abstract class ResilientStub {
         }
     }
 
-    public static class Core extends ResilientStub {
+    public static class Core extends GraknStub {
 
         private final GraknCoreGrpc.GraknCoreBlockingStub blockingStub;
         private final GraknCoreGrpc.GraknCoreStub asyncStub;
@@ -119,7 +119,7 @@ public abstract class ResilientStub {
         }
     }
 
-    public static class Cluster extends ResilientStub {
+    public static class Cluster extends GraknStub {
 
         private final GraknClusterGrpc.GraknClusterBlockingStub blockingStub;
 

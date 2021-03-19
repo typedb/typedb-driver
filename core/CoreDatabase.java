@@ -20,7 +20,7 @@
 package grakn.client.core;
 
 import grakn.client.api.database.Database;
-import grakn.client.common.ResilientStub;
+import grakn.client.common.GraknStub;
 
 import static grakn.client.common.RequestBuilder.Database.deleteReq;
 import static grakn.client.common.RequestBuilder.Database.schemaReq;
@@ -36,8 +36,8 @@ public class CoreDatabase implements Database {
         this.name = nonNull((name));
     }
 
-    private ResilientStub.Core blockingStub() {
-        return databaseMgr.blockingStub();
+    private GraknStub.Core stub() {
+        return databaseMgr.stub();
     }
 
     @Override
@@ -47,12 +47,12 @@ public class CoreDatabase implements Database {
 
     @Override
     public String schema() {
-        return blockingStub().databaseSchema(schemaReq(name)).getSchema();
+        return stub().databaseSchema(schemaReq(name)).getSchema();
     }
 
     @Override
     public void delete() {
-        blockingStub().databaseDelete(deleteReq(name));
+        stub().databaseDelete(deleteReq(name));
     }
 
     @Override
