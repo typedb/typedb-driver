@@ -23,7 +23,7 @@ load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "common",
-    srcs = glob(["*.java"], exclude=["test/**"]),
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
     deps = [
         # External dependencies from @graknlabs
         "@graknlabs_common//:common",

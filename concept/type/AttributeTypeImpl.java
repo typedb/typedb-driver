@@ -21,7 +21,7 @@ package grakn.client.concept.type;
 
 import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.type.AttributeType;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.common.Label;
 import grakn.client.concept.thing.AttributeImpl;
 import grakn.client.concept.thing.ThingImpl;
@@ -31,18 +31,18 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueBooleanReq;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueDateTimeReq;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueDoubleReq;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueLongReq;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.attributeValueStringReq;
-import static grakn.client.common.RequestBuilder.Type.AttributeType.getOwnersReq;
-import static grakn.client.common.RequestBuilder.Type.AttributeType.getRegexReq;
-import static grakn.client.common.RequestBuilder.Type.AttributeType.getReq;
-import static grakn.client.common.RequestBuilder.Type.AttributeType.putReq;
-import static grakn.client.common.RequestBuilder.Type.AttributeType.setRegexReq;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueBooleanReq;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueDateTimeReq;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueDoubleReq;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueLongReq;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueStringReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getRegexReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.putReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.setRegexReq;
 import static grakn.common.util.Objects.className;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {

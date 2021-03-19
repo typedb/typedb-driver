@@ -22,7 +22,7 @@ package grakn.client.concept.thing;
 import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.thing.Attribute;
 import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.type.AttributeTypeImpl;
 import grakn.protocol.ConceptProto;
 
@@ -31,9 +31,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static grakn.client.common.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.RequestBuilder.Thing.Attribute.getOwnersReq;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.getOwnersReq;
 import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 import static grakn.common.collection.Bytes.bytesToHexString;
 import static grakn.common.util.Objects.className;

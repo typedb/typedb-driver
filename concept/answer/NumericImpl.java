@@ -20,13 +20,13 @@
 package grakn.client.concept.answer;
 
 import grakn.client.api.answer.Numeric;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.AnswerProto;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_CAST;
-import static grakn.client.common.ErrorMessage.Query.BAD_ANSWER_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static grakn.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
 
 public class NumericImpl implements Numeric {
 

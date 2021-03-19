@@ -26,7 +26,7 @@ import grakn.client.api.concept.ConceptManager;
 import grakn.client.api.logic.LogicManager;
 import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManagerImpl;
 import grakn.client.logic.LogicManagerImpl;
 import grakn.client.query.QueryManagerImpl;
@@ -38,10 +38,10 @@ import io.grpc.StatusRuntimeException;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static grakn.client.common.RequestBuilder.Transaction.commitReq;
-import static grakn.client.common.RequestBuilder.Transaction.openReq;
-import static grakn.client.common.RequestBuilder.Transaction.rollbackReq;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.commitReq;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.openReq;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.rollbackReq;
 
 public class CoreTransaction implements GraknTransaction.Extended {
 

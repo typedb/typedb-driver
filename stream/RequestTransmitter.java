@@ -19,8 +19,8 @@
 
 package grakn.client.stream;
 
-import grakn.client.common.GraknClientException;
-import grakn.client.common.RequestBuilder;
+import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.RequestBuilder;
 import grakn.common.collection.ConcurrentSet;
 import grakn.common.concurrent.NamedThreadFactory;
 import grakn.protocol.TransactionProto;
@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static grakn.client.common.ErrorMessage.Client.CLIENT_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
 
 public class RequestTransmitter implements AutoCloseable {
 

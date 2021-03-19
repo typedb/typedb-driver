@@ -21,7 +21,7 @@ package grakn.client.cluster;
 
 import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.core.CoreDatabaseManager;
 import grakn.common.collection.Pair;
 import grakn.protocol.ClusterDatabaseProto;
@@ -29,9 +29,9 @@ import grakn.protocol.ClusterDatabaseProto;
 import java.util.List;
 import java.util.Map;
 
-import static grakn.client.common.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.allReq;
-import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.getReq;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.allReq;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 import static grakn.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;

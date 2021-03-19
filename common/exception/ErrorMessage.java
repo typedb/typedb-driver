@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.common;
+package grakn.client.common.exception;
 
 public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
 

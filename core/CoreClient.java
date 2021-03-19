@@ -23,8 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.api.GraknClient;
 import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
-import grakn.client.common.GraknClientException;
-import grakn.client.common.GraknStub;
+import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_CAST;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
 
 public class CoreClient implements GraknClient {

@@ -17,10 +17,11 @@
  * under the License.
  */
 
-package grakn.client.common;
+package grakn.client.common.rpc;
 
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
+import grakn.client.common.Label;
 import grakn.protocol.ClusterDatabaseProto;
 import grakn.protocol.ClusterServerProto;
 import grakn.protocol.ConceptProto;
@@ -45,7 +46,7 @@ import java.util.UUID;
 
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-import static grakn.client.common.RequestBuilder.Thing.byteString;
+import static grakn.client.common.rpc.RequestBuilder.Thing.byteString;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.Collections.emptyMap;
 

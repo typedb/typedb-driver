@@ -23,8 +23,8 @@ import com.google.protobuf.ByteString;
 import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.api.GraknTransaction;
-import grakn.client.common.GraknClientException;
-import grakn.client.common.GraknStub;
+import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.SessionProto;
@@ -38,10 +38,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static grakn.client.common.ErrorMessage.Client.SESSION_CLOSED;
-import static grakn.client.common.RequestBuilder.Session.closeReq;
-import static grakn.client.common.RequestBuilder.Session.openReq;
-import static grakn.client.common.RequestBuilder.Session.pulseReq;
+import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
+import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
+import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
+import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
 
 public class CoreSession implements GraknSession {
 

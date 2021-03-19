@@ -19,7 +19,7 @@
 
 package grakn.client.cluster;
 
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ClusterDatabaseProto;
 import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
@@ -28,11 +28,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static grakn.client.common.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import static grakn.client.common.ErrorMessage.Client.UNABLE_TO_CONNECT;
-import static grakn.client.common.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
-import static grakn.client.common.RequestBuilder.Cluster.DatabaseManager.getReq;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 
 abstract class FailsafeTask<RESULT> {
 

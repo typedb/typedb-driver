@@ -20,10 +20,10 @@
 package grakn.client.core;
 
 import grakn.client.api.database.Database;
-import grakn.client.common.GraknStub;
+import grakn.client.common.rpc.GraknStub;
 
-import static grakn.client.common.RequestBuilder.Core.Database.deleteReq;
-import static grakn.client.common.RequestBuilder.Core.Database.schemaReq;
+import static grakn.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+import static grakn.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
 import static grakn.client.core.CoreDatabaseManager.nonNull;
 
 public class CoreDatabase implements Database {

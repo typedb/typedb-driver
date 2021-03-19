@@ -21,7 +21,7 @@ package grakn.client.concept.answer;
 
 import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.concept.Concept;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.client.concept.type.TypeImpl;
 import grakn.protocol.AnswerProto;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static grakn.client.common.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
 public class ConceptMapImpl implements ConceptMap {
 

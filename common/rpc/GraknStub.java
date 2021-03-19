@@ -17,8 +17,9 @@
  * under the License.
  */
 
-package grakn.client.common;
+package grakn.client.common.rpc;
 
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ClusterServerProto;
 import grakn.protocol.CoreDatabaseProto.CoreDatabase;
 import grakn.protocol.CoreDatabaseProto.CoreDatabaseManager;

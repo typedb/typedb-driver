@@ -19,14 +19,14 @@
 
 package grakn.client.api;
 
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.OptionsProto;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static grakn.client.common.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_CAST;
+import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
 
 public class GraknOptions {
