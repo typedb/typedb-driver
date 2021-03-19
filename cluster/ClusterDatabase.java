@@ -22,7 +22,7 @@ package grakn.client.cluster;
 import grakn.client.api.database.Database;
 import grakn.client.core.CoreDatabase;
 import grakn.client.core.CoreDatabaseManager;
-import grakn.protocol.cluster.DatabaseProto;
+import grakn.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ class ClusterDatabase implements Database.Cluster {
         }
     }
 
-    static ClusterDatabase of(DatabaseProto.Database protoDB, ClusterDatabaseManager databaseManagerCluster) {
+    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterDatabaseManager databaseManagerCluster) {
         assert protoDB.getReplicasCount() > 0;
         String database = protoDB.getName();
         ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, databaseManagerCluster);
@@ -66,6 +66,12 @@ class ClusterDatabase implements Database.Cluster {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public String schema() {
+        // TODO: select the leader database
+        return databases.values().iterator().next().schema();
     }
 
     @Override
@@ -114,7 +120,7 @@ class ClusterDatabase implements Database.Cluster {
             this.hash = Objects.hash(id, isPrimary, isPreferred, term);
         }
 
-        public static Replica of(DatabaseProto.Database.Replica replica, ClusterDatabase database) {
+        public static Replica of(ClusterDatabaseProto.ClusterDatabase.Replica replica, ClusterDatabase database) {
             return new Replica(database, replica.getAddress(), replica.getPrimary(),
                                replica.getPreferred(), replica.getTerm());
         }

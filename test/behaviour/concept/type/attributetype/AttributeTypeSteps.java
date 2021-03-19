@@ -21,7 +21,6 @@ package grakn.client.test.behaviour.concept.type.attributetype;
 
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.AttributeType.ValueType;
-import grakn.client.api.concept.type.ThingType;
 import grakn.client.api.concept.type.Type;
 import grakn.client.common.GraknClientException;
 import io.cucumber.java.en.Then;

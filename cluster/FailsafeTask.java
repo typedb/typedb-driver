@@ -20,7 +20,7 @@
 package grakn.client.cluster;
 
 import grakn.client.common.GraknClientException;
-import grakn.protocol.cluster.DatabaseProto;
+import grakn.protocol.ClusterDatabaseProto;
 import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +55,11 @@ abstract class FailsafeTask<RESULT> {
     }
 
     RESULT runPrimaryReplica() {
-        if (!client.clusterDatabases().containsKey(database)
-                || !client.clusterDatabases().get(database).primaryReplica().isPresent()) {
+        if (!client.databaseByAddress().containsKey(database)
+                || !client.databaseByAddress().get(database).primaryReplica().isPresent()) {
             seekPrimaryReplica();
         }
-        ClusterDatabase.Replica replica = client.clusterDatabases().get(database).primaryReplica().get();
+        ClusterDatabase.Replica replica = client.databaseByAddress().get(database).primaryReplica().get();
         int retries = 0;
         while (true) {
             try {
@@ -77,7 +77,7 @@ abstract class FailsafeTask<RESULT> {
     }
 
     RESULT runAnyReplica() {
-        ClusterDatabase databaseClusterRPC = client.clusterDatabases().get(database);
+        ClusterDatabase databaseClusterRPC = client.databaseByAddress().get(database);
         if (databaseClusterRPC == null) databaseClusterRPC = fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
@@ -122,11 +122,11 @@ abstract class FailsafeTask<RESULT> {
         for (String serverAddress : client.clusterMembers()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
-                DatabaseProto.Database.Get.Res res = client.graknClusterRPC(serverAddress).databaseGet(
-                        DatabaseProto.Database.Get.Req.newBuilder().setName(database).build()
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.blockingStub(serverAddress).databasesGet(
+                        ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(database).build()
                 );
                 ClusterDatabase databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), client.databases());
-                client.clusterDatabases().put(database, databaseClusterRPC);
+                client.databaseByAddress().put(database, databaseClusterRPC);
                 return databaseClusterRPC;
             } catch (StatusRuntimeException e) {
                 LOG.debug("Failed to fetch replica info for database '" + database + "' from " +

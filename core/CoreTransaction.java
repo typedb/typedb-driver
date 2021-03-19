@@ -31,7 +31,6 @@ import grakn.client.concept.ConceptManagerImpl;
 import grakn.client.logic.LogicManagerImpl;
 import grakn.client.query.QueryManagerImpl;
 import grakn.client.stream.BidirectionalStream;
-import grakn.client.stream.RequestTransmitter;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
@@ -54,17 +53,15 @@ public class CoreTransaction implements GraknTransaction.Extended {
 
     private final BidirectionalStream bidirectionalStream;
 
-    CoreTransaction(CoreSession sessionRPC, ByteString sessionId, Type type,
-                    GraknOptions options, RequestTransmitter transmitter) {
+    CoreTransaction(CoreSession session, ByteString sessionId, Type type, GraknOptions options) {
         try {
-            sessionRPC.reconnect();
             this.type = type;
             this.options = options;
             conceptManager = new ConceptManagerImpl(this);
             logicManager = new LogicManagerImpl(this);
             queryManager = new QueryManagerImpl(this);
-            bidirectionalStream = new BidirectionalStream(sessionRPC.channel(), transmitter);
-            execute(openReq(sessionId, type.proto(), options.proto(), sessionRPC.networkLatencyMillis()), false);
+            bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
+            execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }

@@ -23,10 +23,10 @@ import grakn.client.api.GraknClient;
 import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.common.GraknClientException;
+import grakn.client.common.ResilientStub;
 import grakn.client.core.CoreClient;
 import grakn.common.collection.Pair;
-import grakn.protocol.cluster.ClusterProto;
-import grakn.protocol.cluster.GraknClusterGrpc;
+import grakn.protocol.ClusterServerProto;
 import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +42,10 @@ import static grakn.client.common.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.common.collection.Collections.pair;
 
 public class ClusterClient implements GraknClient.Cluster {
+
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
     private final Map<String, CoreClient> coreClients;
-    private final Map<String, GraknClusterGrpc.GraknClusterBlockingStub> graknClusterRPCs;
+    private final Map<String, ResilientStub.Cluster> blockingStubs;
     private final ClusterDatabaseManager databaseManagers;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
@@ -57,8 +58,8 @@ public class ClusterClient implements GraknClient.Cluster {
         coreClients = fetchClusterServers(addresses).stream().map(
                 address -> pair(address, new CoreClient(address, parallelisation))
         ).collect(Collectors.toMap(Pair::first, Pair::second));
-        graknClusterRPCs = coreClients.entrySet().stream().map(
-                client -> pair(client.getKey(), GraknClusterGrpc.newBlockingStub(client.getValue().channel()))
+        blockingStubs = coreClients.entrySet().stream().map(
+                client -> pair(client.getKey(), ResilientStub.cluster(client.getValue().channel()))
         ).collect(Collectors.toMap(Pair::first, Pair::second));
         databaseManagers = new ClusterDatabaseManager(this, coreClients.entrySet().stream().map(
                 client -> pair(client.getKey(), client.getValue().databases())
@@ -113,7 +114,7 @@ public class ClusterClient implements GraknClient.Cluster {
         };
     }
 
-    ConcurrentMap<String, ClusterDatabase> clusterDatabases() {
+    ConcurrentMap<String, ClusterDatabase> databaseByAddress() {
         return clusterDatabases;
     }
 
@@ -125,18 +126,17 @@ public class ClusterClient implements GraknClient.Cluster {
         return coreClients.get(address);
     }
 
-    public GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC(String address) {
-        return graknClusterRPCs.get(address);
+    public ResilientStub.Cluster blockingStub(String address) {
+        return blockingStubs.get(address);
     }
 
     private Set<String> fetchClusterServers(Set<String> addresses) {
         for (String address : addresses) {
             try (CoreClient client = new CoreClient(address)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                GraknClusterGrpc.GraknClusterBlockingStub graknClusterRPC =
-                        GraknClusterGrpc.newBlockingStub(client.channel());
-                ClusterProto.Cluster.Servers.Res res =
-                        graknClusterRPC.clusterServers(ClusterProto.Cluster.Servers.Req.newBuilder().build());
+                ResilientStub.Cluster blockingStub = ResilientStub.cluster(client.channel());
+                ClusterServerProto.Server.All.Res res =
+                        blockingStub.serversAll(ClusterServerProto.Server.All.Req.newBuilder().build());
                 Set<String> members = new HashSet<>(res.getAddressesList());
                 LOG.debug("The cluster servers are {}", members);
                 return members;

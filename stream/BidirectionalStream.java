@@ -20,12 +20,11 @@
 package grakn.client.stream;
 
 import grakn.client.common.GraknClientException;
-import grakn.protocol.GraknGrpc;
+import grakn.client.common.ResilientStub;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
 import grakn.protocol.TransactionProto.Transaction.Server;
-import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
@@ -48,11 +47,11 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(Channel channel, RequestTransmitter transmitter) {
+    public BidirectionalStream(ResilientStub.Core stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);
-        dispatcher = transmitter.dispatcher(GraknGrpc.newStub(channel).transaction(new ResponseObserver()));
+        dispatcher = transmitter.dispatcher(stub.transaction(new ResponseObserver()));
         isOpen.set(true);
     }
 

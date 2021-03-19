@@ -22,6 +22,7 @@ package grakn.client.common;
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
 import grakn.protocol.ConceptProto;
+import grakn.protocol.CoreDatabaseProto;
 import grakn.protocol.LogicProto;
 import grakn.protocol.OptionsProto;
 import grakn.protocol.QueryProto;
@@ -63,22 +64,29 @@ public class RequestBuilder {
         }
     }
 
+    public static class DatabaseManager {
+
+        public static CoreDatabaseProto.CoreDatabaseManager.Create.Req createReq(String name) {
+            return CoreDatabaseProto.CoreDatabaseManager.Create.Req.newBuilder().setName(name).build();
+        }
+
+        public static CoreDatabaseProto.CoreDatabaseManager.Contains.Req containsReq(String name) {
+            return CoreDatabaseProto.CoreDatabaseManager.Contains.Req.newBuilder().setName(name).build();
+        }
+
+        public static CoreDatabaseProto.CoreDatabaseManager.All.Req allReq() {
+            return CoreDatabaseProto.CoreDatabaseManager.All.Req.getDefaultInstance();
+        }
+    }
+
     public static class Database {
 
-        public static grakn.protocol.DatabaseProto.Database.All.Req allReq() {
-            return grakn.protocol.DatabaseProto.Database.All.Req.getDefaultInstance();
+        public static CoreDatabaseProto.CoreDatabase.Schema.Req schemaReq(String name) {
+            return CoreDatabaseProto.CoreDatabase.Schema.Req.newBuilder().setName(name).build();
         }
 
-        public static grakn.protocol.DatabaseProto.Database.Contains.Req containsReq(String name) {
-            return grakn.protocol.DatabaseProto.Database.Contains.Req.newBuilder().setName(name).build();
-        }
-
-        public static grakn.protocol.DatabaseProto.Database.Create.Req createReq(String name) {
-            return grakn.protocol.DatabaseProto.Database.Create.Req.newBuilder().setName(name).build();
-        }
-
-        public static grakn.protocol.DatabaseProto.Database.Delete.Req deleteReq(String name) {
-            return grakn.protocol.DatabaseProto.Database.Delete.Req.newBuilder().setName(name).build();
+        public static CoreDatabaseProto.CoreDatabase.Delete.Req deleteReq(String name) {
+            return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
         }
     }
 

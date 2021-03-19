@@ -23,13 +23,13 @@ import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
 import grakn.client.common.GraknClientException;
 import grakn.client.core.CoreDatabaseManager;
-import grakn.protocol.cluster.DatabaseProto;
+import grakn.protocol.ClusterDatabaseProto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static grakn.client.common.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static java.util.stream.Collectors.toList;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     private final Map<String, CoreDatabaseManager> databaseManagers;
@@ -67,8 +67,8 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         StringBuilder errors = new StringBuilder();
         for (String address : databaseManagers.keySet()) {
             try {
-                DatabaseProto.Database.Get.Res res = client.coreClient(address).call(
-                        () -> client.graknClusterRPC(address).databaseGet(DatabaseProto.Database.Get.Req.newBuilder().setName(name).build())
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.coreClient(address).call(
+                        () -> client.blockingStub(address).databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req.newBuilder().setName(name).build())
                 );
                 return ClusterDatabase.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
@@ -83,9 +83,11 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         StringBuilder errors = new StringBuilder();
         for (String address : databaseManagers.keySet()) {
             try {
-                DatabaseProto.Database.All.Res res = client.coreClient(address).call(() -> client.graknClusterRPC(address)
-                        .databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()));
-                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(Collectors.toList());
+                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.coreClient(address).call(
+                        () -> client.blockingStub(address).databasesAll(
+                                ClusterDatabaseProto.ClusterDatabaseManager.All.Req.getDefaultInstance()
+                        ));
+                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
             }
