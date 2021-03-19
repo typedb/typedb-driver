@@ -114,7 +114,8 @@ public class ClusterClient implements GraknClient.Cluster {
         };
     }
 
-    ConcurrentMap<String, ClusterDatabase> databaseByAddress() {
+    // TODO: this is not good - we should not pass an internal object to be modified outside of this class
+    ConcurrentMap<String, ClusterDatabase> databaseByName() {
         return clusterDatabases;
     }
 
