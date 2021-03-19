@@ -19,7 +19,7 @@
 
 package grakn.client.stream;
 
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
@@ -31,8 +31,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static grakn.client.common.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static grakn.client.common.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class ResponseCollector<R> {
 

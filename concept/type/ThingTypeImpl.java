@@ -24,25 +24,25 @@ import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.AttributeType.ValueType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.common.Label;
-import grakn.client.common.RequestBuilder;
+import grakn.client.common.rpc.RequestBuilder;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.common.RequestBuilder.Type.ThingType.getInstancesReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.getOwnsReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.getPlaysReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.setAbstractReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.setOwnsReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.setPlaysReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.setSupertypeReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.unsetAbstractReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.unsetOwnsReq;
-import static grakn.client.common.RequestBuilder.Type.ThingType.unsetPlaysReq;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setPlaysReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setSupertypeReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
 import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {

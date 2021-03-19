@@ -21,31 +21,39 @@ package grakn.client.cluster;
 
 import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.core.CoreDatabaseManager;
-import grakn.protocol.cluster.DatabaseProto;
+import grakn.common.collection.Pair;
+import grakn.protocol.ClusterDatabaseProto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static grakn.client.common.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.allReq;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
+import static grakn.common.collection.Collections.pair;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
-    private final Map<String, CoreDatabaseManager> databaseManagers;
+    private final Map<String, CoreDatabaseManager> databaseMgrs;
     private final ClusterClient client;
 
-    public ClusterDatabaseManager(ClusterClient client, Map<String, CoreDatabaseManager> databaseManagers) {
+    public ClusterDatabaseManager(ClusterClient client) {
         this.client = client;
-        this.databaseManagers = databaseManagers;
+        this.databaseMgrs = client.coreClients().entrySet().stream()
+                .map(c -> pair(c.getKey(), c.getValue().databases()))
+                .collect(toMap(Pair::first, Pair::second));
+        ;
     }
 
     @Override
     public boolean contains(String name) {
         StringBuilder errors = new StringBuilder();
-        for (String address : databaseManagers.keySet()) {
+        for (String address : databaseMgrs.keySet()) {
             try {
-                return databaseManagers.get(address).contains(name);
+                return databaseMgrs.get(address).contains(name);
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
             }
@@ -55,9 +63,9 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     @Override
     public void create(String name) {
-        for (CoreDatabaseManager databaseManager : databaseManagers.values()) {
-            if (!databaseManager.contains(name)) {
-                databaseManager.create(name);
+        for (CoreDatabaseManager databaseMgr : databaseMgrs.values()) {
+            if (!databaseMgr.contains(name)) {
+                databaseMgr.create(name);
             }
         }
     }
@@ -65,11 +73,9 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     @Override
     public Database.Cluster get(String name) {
         StringBuilder errors = new StringBuilder();
-        for (String address : databaseManagers.keySet()) {
+        for (String address : databaseMgrs.keySet()) {
             try {
-                DatabaseProto.Database.Get.Res res = client.coreClient(address).call(
-                        () -> client.graknClusterRPC(address).databaseGet(DatabaseProto.Database.Get.Req.newBuilder().setName(name).build())
-                );
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(address).databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), this);
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
@@ -81,11 +87,10 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     @Override
     public List<Database.Cluster> all() {
         StringBuilder errors = new StringBuilder();
-        for (String address : databaseManagers.keySet()) {
+        for (String address : databaseMgrs.keySet()) {
             try {
-                DatabaseProto.Database.All.Res res = client.coreClient(address).call(() -> client.graknClusterRPC(address)
-                        .databaseAll(DatabaseProto.Database.All.Req.getDefaultInstance()));
-                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(Collectors.toList());
+                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
+                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
             }
@@ -93,7 +98,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
     }
 
-    Map<String, CoreDatabaseManager> databaseManagers() {
-        return databaseManagers;
+    Map<String, CoreDatabaseManager> databaseMgrs() {
+        return databaseMgrs;
     }
 }

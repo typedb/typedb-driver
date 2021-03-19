@@ -19,13 +19,12 @@
 
 package grakn.client.stream;
 
-import grakn.client.common.GraknClientException;
-import grakn.protocol.GraknGrpc;
+import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.GraknStub;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
 import grakn.protocol.TransactionProto.Transaction.Server;
-import io.grpc.Channel;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
@@ -35,8 +34,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grakn.client.common.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
+import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
@@ -48,11 +47,11 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(Channel channel, RequestTransmitter transmitter) {
+    public BidirectionalStream(GraknStub.Core stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);
-        dispatcher = transmitter.dispatcher(GraknGrpc.newStub(channel).transaction(new ResponseObserver()));
+        dispatcher = transmitter.dispatcher(stub.transaction(new ResponseObserver()));
         isOpen.set(true);
     }
 

@@ -23,14 +23,14 @@ import grakn.client.api.GraknTransaction;
 import grakn.client.api.concept.type.RelationType;
 import grakn.client.api.concept.type.RoleType;
 import grakn.client.common.Label;
-import grakn.client.common.RequestBuilder;
+import grakn.client.common.rpc.RequestBuilder;
 import grakn.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static grakn.client.common.RequestBuilder.Type.RoleType.getPlayersReq;
-import static grakn.client.common.RequestBuilder.Type.RoleType.getRelationTypesReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.RoleType.getPlayersReq;
+import static grakn.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 

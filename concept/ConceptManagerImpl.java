@@ -37,11 +37,11 @@ import graql.lang.common.GraqlToken;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.RequestBuilder.ConceptManager.getThingReq;
-import static grakn.client.common.RequestBuilder.ConceptManager.getThingTypeReq;
-import static grakn.client.common.RequestBuilder.ConceptManager.putAttributeTypeReq;
-import static grakn.client.common.RequestBuilder.ConceptManager.putEntityTypeReq;
-import static grakn.client.common.RequestBuilder.ConceptManager.putRelationTypeReq;
+import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
+import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
+import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
+import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
+import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
 
 public final class ConceptManagerImpl implements ConceptManager {
 

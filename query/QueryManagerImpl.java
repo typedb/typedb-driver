@@ -42,15 +42,15 @@ import graql.lang.query.GraqlUpdate;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.RequestBuilder.QueryManager.defineReq;
-import static grakn.client.common.RequestBuilder.QueryManager.deleteReq;
-import static grakn.client.common.RequestBuilder.QueryManager.insertReq;
-import static grakn.client.common.RequestBuilder.QueryManager.matchAggregateReq;
-import static grakn.client.common.RequestBuilder.QueryManager.matchGroupAggregateReq;
-import static grakn.client.common.RequestBuilder.QueryManager.matchGroupReq;
-import static grakn.client.common.RequestBuilder.QueryManager.matchReq;
-import static grakn.client.common.RequestBuilder.QueryManager.undefineReq;
-import static grakn.client.common.RequestBuilder.QueryManager.updateReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.defineReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.deleteReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.insertReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchAggregateReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchGroupAggregateReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchGroupReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.undefineReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.updateReq;
 
 public final class QueryManagerImpl implements QueryManager {
 

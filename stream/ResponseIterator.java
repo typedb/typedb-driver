@@ -19,17 +19,17 @@
 
 package grakn.client.stream;
 
-import grakn.client.common.GraknClientException;
-import grakn.client.common.RequestBuilder;
+import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.RequestBuilder;
 import grakn.protocol.TransactionProto;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static grakn.client.common.ErrorMessage.Client.MISSING_RESPONSE;
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
-import static grakn.client.common.ErrorMessage.Internal.ILLEGAL_STATE;
+import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
+import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public class ResponseIterator implements Iterator<TransactionProto.Transaction.ResPart> {
 

@@ -21,16 +21,15 @@ package grakn.client.test.behaviour.concept.type.attributetype;
 
 import grakn.client.api.concept.type.AttributeType;
 import grakn.client.api.concept.type.AttributeType.ValueType;
-import grakn.client.api.concept.type.ThingType;
 import grakn.client.api.concept.type.Type;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.common.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;

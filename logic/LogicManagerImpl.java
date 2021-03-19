@@ -29,9 +29,9 @@ import graql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static grakn.client.common.RequestBuilder.LogicManager.getRuleReq;
-import static grakn.client.common.RequestBuilder.LogicManager.getRulesReq;
-import static grakn.client.common.RequestBuilder.LogicManager.putRuleReq;
+import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
+import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
+import static grakn.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
 
 public final class LogicManagerImpl implements LogicManager {
 

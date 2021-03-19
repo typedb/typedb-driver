@@ -26,12 +26,11 @@ import grakn.client.api.concept.ConceptManager;
 import grakn.client.api.logic.LogicManager;
 import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
-import grakn.client.common.GraknClientException;
+import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptManagerImpl;
 import grakn.client.logic.LogicManagerImpl;
 import grakn.client.query.QueryManagerImpl;
 import grakn.client.stream.BidirectionalStream;
-import grakn.client.stream.RequestTransmitter;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
@@ -39,32 +38,30 @@ import io.grpc.StatusRuntimeException;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static grakn.client.common.RequestBuilder.Transaction.commitReq;
-import static grakn.client.common.RequestBuilder.Transaction.openReq;
-import static grakn.client.common.RequestBuilder.Transaction.rollbackReq;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.commitReq;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.openReq;
+import static grakn.client.common.rpc.RequestBuilder.Transaction.rollbackReq;
 
 public class CoreTransaction implements GraknTransaction.Extended {
 
     private final GraknTransaction.Type type;
     private final GraknOptions options;
-    private final ConceptManager conceptManager;
-    private final LogicManager logicManager;
-    private final QueryManager queryManager;
+    private final ConceptManager conceptMgr;
+    private final LogicManager logicMgr;
+    private final QueryManager queryMgr;
 
     private final BidirectionalStream bidirectionalStream;
 
-    CoreTransaction(CoreSession sessionRPC, ByteString sessionId, Type type,
-                    GraknOptions options, RequestTransmitter transmitter) {
+    CoreTransaction(CoreSession session, ByteString sessionId, Type type, GraknOptions options) {
         try {
-            sessionRPC.reconnect();
             this.type = type;
             this.options = options;
-            conceptManager = new ConceptManagerImpl(this);
-            logicManager = new LogicManagerImpl(this);
-            queryManager = new QueryManagerImpl(this);
-            bidirectionalStream = new BidirectionalStream(sessionRPC.channel(), transmitter);
-            execute(openReq(sessionId, type.proto(), options.proto(), sessionRPC.networkLatencyMillis()), false);
+            conceptMgr = new ConceptManagerImpl(this);
+            logicMgr = new LogicManagerImpl(this);
+            queryMgr = new QueryManagerImpl(this);
+            bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
+            execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
         } catch (StatusRuntimeException e) {
             throw GraknClientException.of(e);
         }
@@ -80,13 +77,13 @@ public class CoreTransaction implements GraknTransaction.Extended {
     public boolean isOpen() { return bidirectionalStream.isOpen(); }
 
     @Override
-    public ConceptManager concepts() { return conceptManager; }
+    public ConceptManager concepts() { return conceptMgr; }
 
     @Override
-    public LogicManager logic() { return logicManager; }
+    public LogicManager logic() { return logicMgr; }
 
     @Override
-    public QueryManager query() { return queryManager; }
+    public QueryManager query() { return queryMgr; }
 
     @Override
     public Res execute(Req.Builder request) {
