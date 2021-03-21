@@ -39,6 +39,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
 import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
 import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
 import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
@@ -129,8 +130,12 @@ public class CoreSession implements GraknSession {
                 pulse.cancel();
                 try {
                     SessionProto.Session.Close.Res ignore = stub().sessionClose(closeReq(sessionID));
-                } catch (StatusRuntimeException e) {
-                    // Most likely the session is already closed or the server is no longer running.
+                } catch (GraknClientException e) {
+                    if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                        // Most likely the session is already closed or the server is no longer running.
+                    } else {
+                        throw e;
+                    }
                 }
             }
         } catch (StatusRuntimeException e) {
