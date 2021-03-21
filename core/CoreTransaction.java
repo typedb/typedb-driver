@@ -54,17 +54,13 @@ public class CoreTransaction implements GraknTransaction.Extended {
     private final BidirectionalStream bidirectionalStream;
 
     CoreTransaction(CoreSession session, ByteString sessionId, Type type, GraknOptions options) {
-        try {
-            this.type = type;
-            this.options = options;
-            conceptMgr = new ConceptManagerImpl(this);
-            logicMgr = new LogicManagerImpl(this);
-            queryMgr = new QueryManagerImpl(this);
-            bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
-            execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
+        this.type = type;
+        this.options = options;
+        conceptMgr = new ConceptManagerImpl(this);
+        logicMgr = new LogicManagerImpl(this);
+        queryMgr = new QueryManagerImpl(this);
+        bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
+        execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
     }
 
     @Override
