@@ -49,7 +49,6 @@ java_library(
         "@maven//:io_netty_netty_tcnative_boringssl_static",
         # "@maven//:io_grpc_grpc_core", // TODO: verify whether we need this or not
     ],
-    tags = ["maven_coordinates=io.grakn.client:grakn-client-core:{pom_version}"],
 )
 
 checkstyle_test(

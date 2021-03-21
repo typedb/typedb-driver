@@ -63,6 +63,7 @@ assemble_maven(
     project_description = "Grakn Client API for Java",
     project_url = "https://github.com/graknlabs/client-java",
     scm_url = "https://github.com/graknlabs/client-java",
+    source_jar_prefix = "grakn/client",
 )
 
 deploy_maven(
