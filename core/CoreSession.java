@@ -138,8 +138,6 @@ public class CoreSession implements GraknSession {
                     }
                 }
             }
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
         } finally {
             accessLock.writeLock().unlock();
         }
