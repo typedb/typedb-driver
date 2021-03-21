@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static grakn.client.common.rpc.RequestBuilder.Cluster.Server.allReq;
 import static grakn.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
@@ -76,8 +77,12 @@ public class ClusterClient implements GraknClient.Cluster {
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
                 return members;
-            } catch (StatusRuntimeException e) {
-                LOG.error("Fetching cluster servers from {} failed.", address);
+            } catch (GraknClientException e) {
+                if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                    LOG.error("Fetching cluster servers from {} failed.", address);
+                } else {
+                    throw e;
+                }
             }
         }
         throw new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
