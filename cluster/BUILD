@@ -38,7 +38,6 @@ java_library(
         "@maven//:io_grpc_grpc_api",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    tags = ["maven_coordinates=io.grakn.client:grakn-client-cluster:{pom_version}"],
 )
 
 checkstyle_test(

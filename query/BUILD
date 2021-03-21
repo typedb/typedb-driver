@@ -36,7 +36,6 @@ java_library(
 
         # External dependencies from Maven
     ],
-    tags = ["maven_coordinates=io.grakn.client:grakn-client-query:{pom_version}"],
 )
 
 checkstyle_test(
