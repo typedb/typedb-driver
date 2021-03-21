@@ -151,8 +151,12 @@ public class CoreSession implements GraknSession {
             boolean alive;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (StatusRuntimeException exception) {
-                alive = false;
+            }  catch (GraknClientException e) {
+                if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                    alive = false;
+                } else {
+                    throw e;
+                }
             }
             if (!alive) {
                 isOpen.set(false);
