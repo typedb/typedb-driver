@@ -24,6 +24,7 @@ import grakn.client.api.logic.Explanation;
 import grakn.client.api.logic.Rule;
 import grakn.client.concept.answer.ConceptMapImpl;
 import grakn.protocol.AnswerProto;
+import grakn.protocol.LogicProto;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class ExplanationImpl implements Explanation {
         this.whenAnswer = whenAnswer;
     }
 
-    public static Explanation of(AnswerProto.Explanation explanation) {
+    public static Explanation of(LogicProto.Explanation explanation) {
         return new ExplanationImpl(
                 RuleImpl.of(explanation.getRule()),
                 of(explanation.getVarMappingMap()),
@@ -53,7 +54,7 @@ public class ExplanationImpl implements Explanation {
         );
     }
 
-    private static Map<String, Set<String>> of(Map<String, AnswerProto.Explanation.VarsList> varMapping) {
+    private static Map<String, Set<String>> of(Map<String, LogicProto.Explanation.VarsList> varMapping) {
         Map<String, Set<String>> mapping = new HashMap<>();
         varMapping.forEach((from, tos) -> mapping.put(from, new HashSet<>(tos.getVarsList())));
         return mapping;
