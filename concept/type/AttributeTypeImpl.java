@@ -75,11 +75,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public final boolean isKeyable() {
-        return getValueType().isKeyable();
-    }
-
-    @Override
     public AttributeTypeImpl.Remote asRemote(GraknTransaction transaction) {
         return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
@@ -136,11 +131,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
-        }
-
-        @Override
-        public final boolean isKeyable() {
-            return getValueType().isKeyable();
         }
 
         @Override
