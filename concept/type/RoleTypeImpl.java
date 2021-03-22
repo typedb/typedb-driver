@@ -34,12 +34,12 @@ import static grakn.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTy
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
-    RoleTypeImpl(String scope, String label, boolean root) {
-        super(Label.of(scope, label), root);
+    RoleTypeImpl(Label label, boolean root) {
+        super(label, root);
     }
 
     public static RoleTypeImpl of(ConceptProto.Type typeProto) {
-        return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getRoot());
+        return new RoleTypeImpl(Label.of(typeProto.getScope(), typeProto.getLabel()), typeProto.getRoot());
     }
 
     public static ConceptProto.Type protoRoleType(RoleType roleType) {
