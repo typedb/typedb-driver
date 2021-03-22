@@ -209,7 +209,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final boolean isDeleted() {
-            return transactionRPC.concepts().getThingType(getLabel().name()) == null;
+            return transactionExt.concepts().getThingType(getLabel().name()) == null;
         }
     }
 }

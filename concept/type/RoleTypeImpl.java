@@ -88,7 +88,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Override
         public final RelationType getRelationType() {
             assert getLabel().scope().isPresent();
-            return transactionRPC.concepts().getRelationType(getLabel().scope().get());
+            return transactionExt.concepts().getRelationType(getLabel().scope().get());
         }
 
         @Override
@@ -108,7 +108,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Override
         public final boolean isDeleted() {
             return getRelationType() == null ||
-                    getRelationType().asRemote(transactionRPC).getRelates(getLabel().name()) == null;
+                    getRelationType().asRemote(transactionExt).getRelates(getLabel().name()) == null;
         }
 
         @Override
