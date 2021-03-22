@@ -33,11 +33,11 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueBooleanReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueDateTimeReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueDoubleReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueLongReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.attributeValueStringReq;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.protoBooleanAttributeValue;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.protoDateTimeAttributeValue;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.protoDoubleAttributeValue;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.protoLongAttributeValue;
+import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.protoStringAttributeValue;
 import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getRegexReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.AttributeType.getReq;
@@ -296,13 +296,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Boolean put(boolean value) {
-                return super.put(attributeValueBooleanReq(value)).asBoolean();
+                return super.put(protoBooleanAttributeValue(value)).asBoolean();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Boolean get(boolean value) {
-                AttributeImpl<?> attr = super.get(attributeValueBooleanReq(value));
+                AttributeImpl<?> attr = super.get(protoBooleanAttributeValue(value));
                 return attr != null ? attr.asBoolean() : null;
             }
 
@@ -361,13 +361,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Long put(long value) {
-                return super.put(attributeValueLongReq(value)).asLong();
+                return super.put(protoLongAttributeValue(value)).asLong();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Long get(long value) {
-                AttributeImpl<?> attr = super.get(attributeValueLongReq(value));
+                AttributeImpl<?> attr = super.get(protoLongAttributeValue(value));
                 return attr != null ? attr.asLong() : null;
             }
 
@@ -426,13 +426,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Double put(double value) {
-                return super.put(attributeValueDoubleReq(value)).asDouble();
+                return super.put(protoDoubleAttributeValue(value)).asDouble();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Double get(double value) {
-                AttributeImpl<?> attr = super.get(attributeValueDoubleReq(value));
+                AttributeImpl<?> attr = super.get(protoDoubleAttributeValue(value));
                 return attr != null ? attr.asDouble() : null;
             }
 
@@ -491,13 +491,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.String put(java.lang.String value) {
-                return super.put(attributeValueStringReq(value)).asString();
+                return super.put(protoStringAttributeValue(value)).asString();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.String get(java.lang.String value) {
-                AttributeImpl<?> attr = super.get(attributeValueStringReq(value));
+                AttributeImpl<?> attr = super.get(protoStringAttributeValue(value));
                 return attr != null ? attr.asString() : null;
             }
 
@@ -570,13 +570,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.DateTime put(LocalDateTime value) {
-                return super.put(attributeValueDateTimeReq(value)).asDateTime();
+                return super.put(protoDateTimeAttributeValue(value)).asDateTime();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.DateTime get(LocalDateTime value) {
-                AttributeImpl<?> attr = super.get(attributeValueDateTimeReq(value));
+                AttributeImpl<?> attr = super.get(protoDateTimeAttributeValue(value));
                 return attr != null ? attr.asDateTime() : null;
             }
 
