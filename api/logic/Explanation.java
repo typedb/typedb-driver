@@ -17,33 +17,21 @@
  * under the License.
  */
 
-package grakn.client.api.answer;
+package grakn.client.api.logic;
 
-import grakn.client.api.concept.Concept;
+import grakn.client.api.answer.ConceptMap;
 
-import javax.annotation.CheckReturnValue;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public interface ConceptMap {
+public interface Explanation {
 
-    @CheckReturnValue
-    Map<String, Concept> map();
+    Rule rule();
 
-    @CheckReturnValue
-    Collection<Concept> concepts();
+    ConceptMap thenAnswer();
 
-    @CheckReturnValue
-    Concept get(String variable);
+    ConceptMap whenAnswer();
 
-    Set<Explainable> explainables();
+    Map<String, Set<String>> variableMapping();
 
-    interface Explainable {
-
-        String conjunction();
-
-        long id();
-
-    }
 }

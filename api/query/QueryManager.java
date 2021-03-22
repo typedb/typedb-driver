@@ -22,6 +22,7 @@ package grakn.client.api.query;
 import grakn.client.api.GraknOptions;
 import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.answer.ConceptMapGroup;
+import grakn.client.api.logic.Explanation;
 import grakn.client.api.answer.Numeric;
 import grakn.client.api.answer.NumericGroup;
 import graql.lang.query.GraqlDefine;
@@ -71,6 +72,10 @@ public interface QueryManager {
     Stream<ConceptMap> update(GraqlUpdate query);
 
     Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options);
+
+    Stream<Explanation> explain(ConceptMap.Explainable explainable);
+
+    Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options);
 
     QueryFuture<Void> define(GraqlDefine query);
 

@@ -28,6 +28,7 @@ java_library(
         # Internal dependencies
         "//api:api",
         "//common:common",
+        "//concept:concept",
 
         # External dependencies from @graknlabs
         "@graknlabs_common//:common",

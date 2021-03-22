@@ -21,9 +21,11 @@ package grakn.client.test.integration;
 
 import grakn.client.Grakn;
 import grakn.client.api.GraknClient;
+import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.api.GraknTransaction;
 import grakn.client.api.answer.ConceptMap;
+import grakn.client.api.logic.Explanation;
 import grakn.common.test.server.GraknCoreRunner;
 import graql.lang.Graql;
 import graql.lang.common.GraqlArg;
@@ -40,9 +42,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static grakn.client.api.GraknSession.Type.DATA;
+import static grakn.client.api.GraknTransaction.Type.READ;
 import static grakn.client.api.GraknTransaction.Type.WRITE;
 import static graql.lang.Graql.and;
 import static graql.lang.Graql.rel;
@@ -50,6 +54,8 @@ import static graql.lang.Graql.rule;
 import static graql.lang.Graql.type;
 import static graql.lang.Graql.var;
 import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
@@ -59,17 +65,17 @@ public class ClientQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        grakn = new GraknCoreRunner();
-        grakn.start();
-        graknClient = Grakn.coreClient(grakn.address());
+//        grakn = new GraknCoreRunner();
+//        grakn.start();
+        graknClient = Grakn.coreClient("localhost:1729"); //grakn.address());
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
 
     @AfterClass
-    public static void closeSession() throws Exception {
+    public static void closeSession() {
         graknClient.close();
-        grakn.stop();
+//        grakn.stop();
     }
 
     @Test
@@ -125,7 +131,7 @@ public class ClientQueryTest {
             tx.query().insert(insertLionQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, WRITE);
 
         // TODO: uncomment when match is implemented
 //        localhostGraknTx(tx -> {
@@ -300,7 +306,7 @@ public class ClientQueryTest {
             tx.query().insert(insertCommitQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, READ);
 
         localhostGraknTx(tx -> {
             GraqlInsert insertWorkflowQuery = Graql.insert(
@@ -319,7 +325,7 @@ public class ClientQueryTest {
             tx.query().insert(insertWorkflowQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, WRITE);
 
         localhostGraknTx(tx -> {
             GraqlInsert insertPipelineQuery = Graql.insert(
@@ -336,7 +342,7 @@ public class ClientQueryTest {
             tx.query().insert(insertPipelineQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, WRITE);
 
         localhostGraknTx(tx -> {
             String[] commitShas = commitSHAs();
@@ -370,7 +376,7 @@ public class ClientQueryTest {
             tx.commit();
 
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, WRITE);
 
         localhostGraknTx(tx -> {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
@@ -391,7 +397,7 @@ public class ClientQueryTest {
             tx.commit();
 
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, WRITE);
 
         String[] queries = {
                 "match\n" +
@@ -454,17 +460,75 @@ public class ClientQueryTest {
             });
 
             LOG.info("clientJavaE2E() - done.");
-        });
+        }, READ);
+    }
+
+    @Test
+    public void testSimpleExplanation() {
+        localhostGraknTx(tx -> {
+            GraqlDefine schema = Graql.parseQuery("define " +
+                    "person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;" +
+                    "name sub attribute, value string;" +
+                    "friendship sub relation, relates friend;" +
+                    "marriage sub relation, relates husband, relates wife;" +
+                    "rule marriage-is-friendship: when {" +
+                    "   $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; " +
+                    "} then {" +
+                    "   (friend: $x, friend: $y) isa friendship;" +
+                    "};" +
+                    "rule everyone-is-friends: when {" +
+                    "   $x isa person; $y isa person; not { $x is $y; };" +
+                    "} then {" +
+                    "   (friend: $x, friend: $y) isa friendship;" +
+                    "};").asDefine();
+            tx.query().define(schema);
+            tx.commit();
+        }, GraknSession.Type.SCHEMA);
+
+
+        localhostGraknTx(tx -> {
+            GraqlInsert data = Graql.parseQuery(
+                    "insert " +
+                            "$x isa person, has name 'Zack'; " +
+                            "$y isa person, has name 'Yasmin'; " +
+                            "(husband: $x, wife: $y) isa marriage;"
+            ).asInsert();
+            tx.query().insert(data);
+            tx.commit();
+        }, WRITE);
+
+        localhostGraknTx(tx -> {
+            GraqlInsert data = Graql.parseQuery(
+                    "insert " +
+                            "$x isa person, has name 'Zack'; " +
+                            "$y isa person, has name 'Yasmin'; " +
+                            "(husband: $x, wife: $y) isa marriage;"
+            ).asInsert();
+            List<ConceptMap> answers = tx.query().match(Graql.parseQuery(
+                    "match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"
+            ).asMatch()).collect(toList());
+
+            assertEquals(1, answers.get(0).explainables().size());
+            assertEquals(1, answers.get(1).explainables().size());
+            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().iterator().next()).collect(Collectors.toList());
+            assertEquals(3, explanations.size());
+            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().iterator().next()).collect(Collectors.toList());
+            assertEquals(3, explanations2.size());
+        }, READ, GraknOptions.core().explain(true));
     }
 
     private String[] lionNames() {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<GraknTransaction> fn) {
+    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknTransaction.Type type) {
+        localhostGraknTx(fn, type, GraknOptions.core());
+    }
+
+    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknTransaction.Type type, GraknOptions options) {
         String database = "grakn";
         try (GraknSession session = graknClient.session(database, DATA)) {
-            try (GraknTransaction transaction = session.transaction(WRITE)) {
+            try (GraknTransaction transaction = session.transaction(type, options)) {
                 fn.accept(transaction);
             }
         }
