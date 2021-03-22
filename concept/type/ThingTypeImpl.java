@@ -43,7 +43,7 @@ import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setSupertype
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
+import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -128,12 +128,12 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void setPlays(RoleType roleType) {
-            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType)));
+            execute(setPlaysReq(getLabel(), protoRoleType(roleType)));
         }
 
         @Override
         public final void setPlays(RoleType roleType, RoleType overriddenRoleType) {
-            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType), protoRoleTypes(overriddenRoleType)));
+            execute(setPlaysReq(getLabel(), protoRoleType(roleType), protoRoleType(overriddenRoleType)));
         }
 
         @Override
@@ -189,7 +189,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void unsetPlays(RoleType roleType) {
-            execute(unsetPlaysReq(getLabel(), protoRoleTypes(roleType)));
+            execute(unsetPlaysReq(getLabel(), protoRoleType(roleType)));
         }
 
         @Override

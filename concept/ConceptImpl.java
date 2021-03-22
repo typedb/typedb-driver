@@ -48,11 +48,9 @@ import static grakn.common.util.Objects.className;
 
 public abstract class ConceptImpl implements Concept {
 
-    public static Concept of(ConceptProto.Concept owner) {
-        Concept concept;
-        if (owner.hasThing()) concept = ThingImpl.of(owner.getThing());
-        else concept = TypeImpl.of(owner.getType());
-        return concept;
+    public static Concept of(ConceptProto.Concept protoConcept) {
+        if (protoConcept.hasThing()) return ThingImpl.of(protoConcept.getThing());
+        else return TypeImpl.of(protoConcept.getType());
     }
 
     @Override

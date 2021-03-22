@@ -56,7 +56,7 @@ import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.isAbstractReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.setLabelReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
+import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
 import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 import static grakn.common.util.Objects.className;
 import static java.util.stream.Collectors.toList;
@@ -104,7 +104,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     public static List<ConceptProto.Type> protoTypes(Collection<? extends Type> types) {
         return types.stream().map(type -> {
             if (type.isThingType()) return protoThingType(type.asThingType());
-            else return protoRoleTypes(type.asRoleType());
+            else return protoRoleType(type.asRoleType());
         }).collect(toList());
     }
 

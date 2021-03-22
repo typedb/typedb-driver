@@ -42,7 +42,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getRoot());
     }
 
-    public static ConceptProto.Type protoRoleTypes(RoleType roleType) {
+    public static ConceptProto.Type protoRoleType(RoleType roleType) {
         return RequestBuilder.Type.RoleType.protoRoleType(roleType.getLabel(), TypeImpl.encoding(roleType));
     }
 
