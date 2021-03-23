@@ -138,7 +138,7 @@ public final class QueryManagerImpl implements QueryManager {
     @Override
     public Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options) {
         return stream(updateReq(query.toString(), options.proto()))
-                .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
+                .flatMap(rp -> rp.getUpdateResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
     }
 
