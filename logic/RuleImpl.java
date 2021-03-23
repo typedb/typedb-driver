@@ -105,7 +105,7 @@ public class RuleImpl implements Rule {
 
     public static class Remote implements Rule.Remote {
 
-        final GraknTransaction.Extended transactionRPC;
+        final GraknTransaction.Extended transactionExt;
         private String label;
         private final Conjunction<? extends Pattern> when;
         private final ThingVariable<?> then;
@@ -114,7 +114,7 @@ public class RuleImpl implements Rule {
         public Remote(GraknTransaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.transactionRPC = (GraknTransaction.Extended) transaction;
+            this.transactionExt = (GraknTransaction.Extended) transaction;
             this.label = label;
             this.when = when;
             this.then = then;
@@ -138,18 +138,18 @@ public class RuleImpl implements Rule {
 
         @Override
         public void setLabel(String newLabel) {
-            transactionRPC.execute(setLabelReq(label, newLabel));
+            transactionExt.execute(setLabelReq(label, newLabel));
             this.label = newLabel;
         }
 
         @Override
         public void delete() {
-            transactionRPC.execute(deleteReq(label));
+            transactionExt.execute(deleteReq(label));
         }
 
         @Override
         public final boolean isDeleted() {
-            return transactionRPC.logic().getRule(label) != null;
+            return transactionExt.logic().getRule(label) != null;
         }
 
         @Override
@@ -173,7 +173,7 @@ public class RuleImpl implements Rule {
             if (o == null || getClass() != o.getClass()) return false;
 
             RuleImpl.Remote that = (RuleImpl.Remote) o;
-            return this.transactionRPC.equals(that.transactionRPC) && this.label.equals(that.label);
+            return this.transactionExt.equals(that.transactionExt) && this.label.equals(that.label);
         }
 
         @Override
