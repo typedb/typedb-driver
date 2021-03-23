@@ -56,7 +56,7 @@ import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.isAbstractReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.setLabelReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
+import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
 import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
 import static grakn.common.util.Objects.className;
 import static java.util.stream.Collectors.toList;
@@ -104,7 +104,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     public static List<ConceptProto.Type> protoTypes(Collection<? extends Type> types) {
         return types.stream().map(type -> {
             if (type.isThingType()) return protoThingType(type.asThingType());
-            else return protoRoleTypes(type.asRoleType());
+            else return protoRoleType(type.asRoleType());
         }).collect(toList());
     }
 
@@ -144,7 +144,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
-        final GraknTransaction.Extended transactionRPC;
+        final GraknTransaction.Extended transactionExt;
         private Label label;
         private final boolean isRoot;
         private int hash;
@@ -152,10 +152,10 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         Remote(GraknTransaction transaction, Label label, boolean isRoot) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             if (label == null) throw new GraknClientException(MISSING_LABEL);
-            this.transactionRPC = (GraknTransaction.Extended) transaction;
+            this.transactionExt = (GraknTransaction.Extended) transaction;
             this.label = label;
             this.isRoot = isRoot;
-            this.hash = Objects.hash(this.transactionRPC, label);
+            this.hash = Objects.hash(this.transactionExt, label);
         }
 
         @Override
@@ -172,7 +172,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         public final void setLabel(String newLabel) {
             execute(setLabelReq(getLabel(), newLabel));
             this.label = Label.of(label.scope().orElse(null), newLabel);
-            this.hash = Objects.hash(transactionRPC, this.label);
+            this.hash = Objects.hash(transactionExt, this.label);
         }
 
         @Override
@@ -263,15 +263,15 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         }
 
         final GraknTransaction tx() {
-            return transactionRPC;
+            return transactionExt;
         }
 
         protected ConceptProto.Type.Res execute(TransactionProto.Transaction.Req.Builder request) {
-            return transactionRPC.execute(request).getTypeRes();
+            return transactionExt.execute(request).getTypeRes();
         }
 
         protected Stream<ConceptProto.Type.ResPart> stream(TransactionProto.Transaction.Req.Builder request) {
-            return transactionRPC.stream(request).map(TransactionProto.Transaction.ResPart::getTypeResPart);
+            return transactionExt.stream(request).map(TransactionProto.Transaction.ResPart::getTypeResPart);
         }
 
         @Override
@@ -285,7 +285,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             if (o == null || getClass() != o.getClass()) return false;
 
             TypeImpl.Remote that = (TypeImpl.Remote) o;
-            return this.transactionRPC.equals(that.transactionRPC) &&
+            return this.transactionExt.equals(that.transactionExt) &&
                     this.getLabel().equals(that.getLabel());
         }
 

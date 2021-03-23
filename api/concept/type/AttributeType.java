@@ -38,9 +38,6 @@ public interface AttributeType extends ThingType {
         return ValueType.OBJECT;
     }
 
-    @CheckReturnValue
-    boolean isKeyable();
-
     @Override
     @CheckReturnValue
     default boolean isAttributeType() {

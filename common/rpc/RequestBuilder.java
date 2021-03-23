@@ -665,23 +665,23 @@ public class RequestBuilder {
                 ));
             }
 
-            public static ConceptProto.Attribute.Value attributeValueBooleanReq(boolean value) {
+            public static ConceptProto.Attribute.Value protoBooleanAttributeValue(boolean value) {
                 return ConceptProto.Attribute.Value.newBuilder().setBoolean(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueLongReq(long value) {
+            public static ConceptProto.Attribute.Value protoLongAttributeValue(long value) {
                 return ConceptProto.Attribute.Value.newBuilder().setLong(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueDoubleReq(double value) {
+            public static ConceptProto.Attribute.Value protoDoubleAttributeValue(double value) {
                 return ConceptProto.Attribute.Value.newBuilder().setDouble(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueStringReq(String value) {
+            public static ConceptProto.Attribute.Value protoStringAttributeValue(String value) {
                 return ConceptProto.Attribute.Value.newBuilder().setString(value).build();
             }
 
-            public static ConceptProto.Attribute.Value attributeValueDateTimeReq(LocalDateTime value) {
+            public static ConceptProto.Attribute.Value protoDateTimeAttributeValue(LocalDateTime value) {
                 long epochMillis = value.atZone(ZoneId.of("Z")).toInstant().toEpochMilli();
                 return ConceptProto.Attribute.Value.newBuilder().setDateTime(epochMillis).build();
             }

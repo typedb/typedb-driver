@@ -32,12 +32,12 @@ import static grakn.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    EntityTypeImpl(String label, boolean isRoot) {
+    EntityTypeImpl(Label label, boolean isRoot) {
         super(label, isRoot);
     }
 
     public static EntityTypeImpl of(ConceptProto.Type typeProto) {
-        return new EntityTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+        return new EntityTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
     }
 
     @Override

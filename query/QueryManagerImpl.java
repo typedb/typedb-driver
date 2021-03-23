@@ -54,10 +54,10 @@ import static grakn.client.common.rpc.RequestBuilder.QueryManager.updateReq;
 
 public final class QueryManagerImpl implements QueryManager {
 
-    private final GraknTransaction.Extended transactionRPC;
+    private final GraknTransaction.Extended transactionExt;
 
-    public QueryManagerImpl(GraknTransaction.Extended transactionRPC) {
-        this.transactionRPC = transactionRPC;
+    public QueryManagerImpl(GraknTransaction.Extended transactionExt) {
+        this.transactionExt = transactionExt;
     }
 
     @Override
@@ -138,7 +138,7 @@ public final class QueryManagerImpl implements QueryManager {
     @Override
     public Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options) {
         return stream(updateReq(query.toString(), options.proto()))
-                .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
+                .flatMap(rp -> rp.getUpdateResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
     }
 
@@ -163,14 +163,14 @@ public final class QueryManagerImpl implements QueryManager {
     }
 
     private QueryFuture<Void> queryVoid(TransactionProto.Transaction.Req.Builder req) {
-        return transactionRPC.query(req).map(res -> null);
+        return transactionExt.query(req).map(res -> null);
     }
 
     private QueryFuture<QueryProto.QueryManager.Res> query(TransactionProto.Transaction.Req.Builder req) {
-        return transactionRPC.query(req).map(TransactionProto.Transaction.Res::getQueryManagerRes);
+        return transactionExt.query(req).map(TransactionProto.Transaction.Res::getQueryManagerRes);
     }
 
     private Stream<QueryProto.QueryManager.ResPart> stream(TransactionProto.Transaction.Req.Builder req) {
-        return transactionRPC.stream(req).map(TransactionProto.Transaction.ResPart::getQueryManagerResPart);
+        return transactionExt.stream(req).map(TransactionProto.Transaction.ResPart::getQueryManagerResPart);
     }
 }

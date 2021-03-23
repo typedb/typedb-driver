@@ -42,7 +42,7 @@ import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersRe
 import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getRelatingReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.removePlayerReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.protoThing;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
+import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
 import static grakn.client.concept.type.TypeImpl.protoTypes;
 import static java.util.Arrays.asList;
 
@@ -96,12 +96,12 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         @Override
         public void addPlayer(RoleType roleType, Thing player) {
-            execute(addPlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+            execute(addPlayerReq(getIID(), protoRoleType(roleType), protoThing(player.getIID())));
         }
 
         @Override
         public void removePlayer(RoleType roleType, Thing player) {
-            execute(removePlayerReq(getIID(), protoRoleTypes(roleType), protoThing(player.getIID())));
+            execute(removePlayerReq(getIID(), protoRoleType(roleType), protoThing(player.getIID())));
         }
 
         @Override

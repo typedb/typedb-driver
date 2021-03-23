@@ -35,12 +35,12 @@ import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.unsetRela
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    RelationTypeImpl(String label, boolean isRoot) {
+    RelationTypeImpl(Label label, boolean isRoot) {
         super(label, isRoot);
     }
 
     public static RelationTypeImpl of(ConceptProto.Type typeProto) {
-        return new RelationTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+        return new RelationTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
     }
 
     @Override

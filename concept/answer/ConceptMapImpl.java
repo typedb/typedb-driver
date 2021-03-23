@@ -22,6 +22,7 @@ package grakn.client.concept.answer;
 import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.concept.Concept;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.concept.ConceptImpl;
 import grakn.client.concept.thing.ThingImpl;
 import grakn.client.concept.type.TypeImpl;
 import grakn.protocol.AnswerProto;
@@ -44,12 +45,7 @@ public class ConceptMapImpl implements ConceptMap {
 
     public static ConceptMap of(AnswerProto.ConceptMap res) {
         Map<String, Concept> variableMap = new HashMap<>();
-        res.getMapMap().forEach((resVar, resConcept) -> {
-            Concept concept;
-            if (resConcept.hasThing()) concept = ThingImpl.of(resConcept.getThing());
-            else concept = TypeImpl.of(resConcept.getType());
-            variableMap.put(resVar, concept);
-        });
+        res.getMapMap().forEach((resVar, resConcept) -> variableMap.put(resVar, ConceptImpl.of(resConcept)));
         return new ConceptMapImpl(Collections.unmodifiableMap(variableMap));
     }
 

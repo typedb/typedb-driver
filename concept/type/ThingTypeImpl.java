@@ -43,12 +43,12 @@ import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setSupertype
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
 import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleTypes;
+import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
-    ThingTypeImpl(String label, boolean isRoot) {
-        super(Label.of(label), isRoot);
+    ThingTypeImpl(Label label, boolean isRoot) {
+        super(label, isRoot);
     }
 
     public static ThingTypeImpl of(ConceptProto.Type typeProto) {
@@ -61,7 +61,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
                 return AttributeTypeImpl.of(typeProto);
             case THING_TYPE:
                 assert typeProto.getRoot();
-                return new ThingTypeImpl(typeProto.getLabel(), typeProto.getRoot());
+                return new ThingTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
             case UNRECOGNIZED:
             default:
                 throw new GraknClientException(BAD_ENCODING, typeProto.getEncoding());
@@ -128,12 +128,12 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void setPlays(RoleType roleType) {
-            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType)));
+            execute(setPlaysReq(getLabel(), protoRoleType(roleType)));
         }
 
         @Override
         public final void setPlays(RoleType roleType, RoleType overriddenRoleType) {
-            execute(setPlaysReq(getLabel(), protoRoleTypes(roleType), protoRoleTypes(overriddenRoleType)));
+            execute(setPlaysReq(getLabel(), protoRoleType(roleType), protoRoleType(overriddenRoleType)));
         }
 
         @Override
@@ -189,7 +189,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final void unsetPlays(RoleType roleType) {
-            execute(unsetPlaysReq(getLabel(), protoRoleTypes(roleType)));
+            execute(unsetPlaysReq(getLabel(), protoRoleType(roleType)));
         }
 
         @Override
@@ -209,7 +209,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public final boolean isDeleted() {
-            return transactionRPC.concepts().getThingType(getLabel().name()) == null;
+            return transactionExt.concepts().getThingType(getLabel().name()) == null;
         }
     }
 }
