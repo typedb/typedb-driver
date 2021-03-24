@@ -91,7 +91,7 @@ public class CoreTransaction implements GraknTransaction.Extended {
     }
 
     private Res execute(Req.Builder request, boolean batch) {
-        return query(request, batch).map(res -> res).get();
+        return query(request, batch).get();
     }
 
     @Override
