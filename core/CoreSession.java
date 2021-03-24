@@ -59,26 +59,22 @@ public class CoreSession implements GraknSession {
     private final int networkLatencyMillis;
 
     public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
-        try {
-            this.client = client;
-            this.type = type;
-            this.options = options;
-            Instant startTime = Instant.now();
-            SessionProto.Session.Open.Res res = client.stub().sessionOpen(
-                    openReq(database, type.proto(), options.proto())
-            );
-            Instant endTime = Instant.now();
-            this.database = new CoreDatabase(client.databases(), database);
-            networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
-            sessionID = res.getSessionId();
-            transactions = new ConcurrentSet<>();
-            accessLock = new StampedLock().asReadWriteLock();
-            isOpen = new AtomicBoolean(true);
-            pulse = new Timer();
-            pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
+        this.client = client;
+        this.type = type;
+        this.options = options;
+        Instant startTime = Instant.now();
+        SessionProto.Session.Open.Res res = client.stub().sessionOpen(
+                openReq(database, type.proto(), options.proto())
+        );
+        Instant endTime = Instant.now();
+        this.database = new CoreDatabase(client.databases(), database);
+        networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
+        sessionID = res.getSessionId();
+        transactions = new ConcurrentSet<>();
+        accessLock = new StampedLock().asReadWriteLock();
+        isOpen = new AtomicBoolean(true);
+        pulse = new Timer();
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
 
     @Override
