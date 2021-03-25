@@ -27,7 +27,6 @@ import grakn.client.common.rpc.GraknStub;
 import grakn.client.core.CoreClient;
 import grakn.common.collection.Pair;
 import grakn.protocol.ClusterServerProto;
-import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
-import static grakn.client.common.rpc.RequestBuilder.Cluster.Server.allReq;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
 import static grakn.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
