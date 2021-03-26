@@ -199,11 +199,21 @@ public class GraqlSteps {
         numericAnswer = tx().query().match(graqlQuery).get();
     }
 
+    @When("graql match aggregate; throws exception")
+    public void graql_match_aggregate_throws_exception(String graqlQueryStatements) {
+        assertThrows(() -> graql_match_aggregate(graqlQueryStatements));
+    }
+
     @When("get answers of graql match group")
     public void graql_match_group(String graqlQueryStatements) {
         GraqlMatch.Group graqlQuery = Graql.parseQuery(String.join("\n", graqlQueryStatements)).asMatchGroup();
         clearAnswers();
         answerGroups = tx().query().match(graqlQuery).collect(Collectors.toList());
+    }
+
+    @When("graql match group; throws exception")
+    public void graql_match_group_throws_exception(String graqlQueryStatements) {
+        assertThrows(() -> graql_match_group(graqlQueryStatements));
     }
 
     @When("get answers of graql match group aggregate")

@@ -34,7 +34,6 @@ import grakn.client.stream.BidirectionalStream;
 import grakn.protocol.TransactionProto.Transaction.Req;
 import grakn.protocol.TransactionProto.Transaction.Res;
 import grakn.protocol.TransactionProto.Transaction.ResPart;
-import io.grpc.StatusRuntimeException;
 
 import java.util.stream.Stream;
 
@@ -54,17 +53,13 @@ public class CoreTransaction implements GraknTransaction.Extended {
     private final BidirectionalStream bidirectionalStream;
 
     CoreTransaction(CoreSession session, ByteString sessionId, Type type, GraknOptions options) {
-        try {
-            this.type = type;
-            this.options = options;
-            conceptMgr = new ConceptManagerImpl(this);
-            logicMgr = new LogicManagerImpl(this);
-            queryMgr = new QueryManagerImpl(this);
-            bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
-            execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
+        this.type = type;
+        this.options = options;
+        conceptMgr = new ConceptManagerImpl(this);
+        logicMgr = new LogicManagerImpl(this);
+        queryMgr = new QueryManagerImpl(this);
+        bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
+        execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
     }
 
     @Override
@@ -91,7 +86,7 @@ public class CoreTransaction implements GraknTransaction.Extended {
     }
 
     private Res execute(Req.Builder request, boolean batch) {
-        return query(request, batch).map(res -> res).get();
+        return query(request, batch).get();
     }
 
     @Override

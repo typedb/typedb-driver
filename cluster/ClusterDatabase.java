@@ -187,7 +187,6 @@ class ClusterDatabase implements Database.Cluster {
                 this.address = address;
                 this.databaseName = databaseName;
                 this.hash = Objects.hash(address, databaseName);
-                ;
             }
 
             public String address() {

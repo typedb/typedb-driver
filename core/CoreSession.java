@@ -28,7 +28,6 @@ import grakn.client.common.rpc.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.SessionProto;
-import io.grpc.StatusRuntimeException;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -59,26 +58,22 @@ public class CoreSession implements GraknSession {
     private final int networkLatencyMillis;
 
     public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
-        try {
-            this.client = client;
-            this.type = type;
-            this.options = options;
-            Instant startTime = Instant.now();
-            SessionProto.Session.Open.Res res = client.stub().sessionOpen(
-                    openReq(database, type.proto(), options.proto())
-            );
-            Instant endTime = Instant.now();
-            this.database = new CoreDatabase(client.databases(), database);
-            networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
-            sessionID = res.getSessionId();
-            transactions = new ConcurrentSet<>();
-            accessLock = new StampedLock().asReadWriteLock();
-            isOpen = new AtomicBoolean(true);
-            pulse = new Timer();
-            pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
-        }
+        this.client = client;
+        this.type = type;
+        this.options = options;
+        Instant startTime = Instant.now();
+        SessionProto.Session.Open.Res res = client.stub().sessionOpen(
+                openReq(database, type.proto(), options.proto())
+        );
+        Instant endTime = Instant.now();
+        this.database = new CoreDatabase(client.databases(), database);
+        networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
+        sessionID = res.getSessionId();
+        transactions = new ConcurrentSet<>();
+        accessLock = new StampedLock().asReadWriteLock();
+        isOpen = new AtomicBoolean(true);
+        pulse = new Timer();
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
 
     @Override
@@ -132,13 +127,11 @@ public class CoreSession implements GraknSession {
                 client.removeSession(this);
                 pulse.cancel();
                 try {
-                    SessionProto.Session.Close.Res ignore = stub().sessionClose(closeReq(sessionID));
-                } catch (StatusRuntimeException e) {
+                    stub().sessionClose(closeReq(sessionID));
+                } catch (GraknClientException e) {
                     // Most likely the session is already closed or the server is no longer running.
                 }
             }
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
         } finally {
             accessLock.writeLock().unlock();
         }
@@ -152,7 +145,7 @@ public class CoreSession implements GraknSession {
             boolean alive;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (StatusRuntimeException exception) {
+            } catch (GraknClientException exception) {
                 alive = false;
             }
             if (!alive) {
