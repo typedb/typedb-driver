@@ -45,7 +45,6 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         this.databaseMgrs = client.coreClients().entrySet().stream()
                 .map(c -> pair(c.getKey(), c.getValue().databases()))
                 .collect(toMap(Pair::first, Pair::second));
-        ;
     }
 
     @Override
