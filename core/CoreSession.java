@@ -28,7 +28,6 @@ import grakn.client.common.rpc.GraknStub;
 import grakn.client.stream.RequestTransmitter;
 import grakn.common.collection.ConcurrentSet;
 import grakn.protocol.SessionProto;
-import io.grpc.StatusRuntimeException;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -128,13 +127,11 @@ public class CoreSession implements GraknSession {
                 client.removeSession(this);
                 pulse.cancel();
                 try {
-                    SessionProto.Session.Close.Res ignore = stub().sessionClose(closeReq(sessionID));
-                } catch (StatusRuntimeException e) {
+                    stub().sessionClose(closeReq(sessionID));
+                } catch (GraknClientException e) {
                     // Most likely the session is already closed or the server is no longer running.
                 }
             }
-        } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
         } finally {
             accessLock.writeLock().unlock();
         }
@@ -148,7 +145,7 @@ public class CoreSession implements GraknSession {
             boolean alive;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (StatusRuntimeException exception) {
+            } catch (GraknClientException exception) {
                 alive = false;
             }
             if (!alive) {
