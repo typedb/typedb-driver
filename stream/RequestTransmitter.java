@@ -38,6 +38,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
 import static grakn.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
+import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 
 public class RequestTransmitter implements AutoCloseable {
 
@@ -141,15 +142,17 @@ public class RequestTransmitter implements AutoCloseable {
         private final Executor executor;
         private final StreamObserver<TransactionProto.Transaction.Client> requestObserver;
         private final ConcurrentLinkedQueue<TransactionProto.Transaction.Req> requestQueue;
+        private final AtomicBoolean isOpen;
 
         private Dispatcher(Executor executor, StreamObserver<TransactionProto.Transaction.Client> requestObserver) {
             this.executor = executor;
             this.requestObserver = requestObserver;
             requestQueue = new ConcurrentLinkedQueue<>();
+            isOpen = new AtomicBoolean(true);
         }
 
         private synchronized void sendBatchedRequests() {
-            if (requestQueue.isEmpty() || !isOpen) return;
+            if (requestQueue.isEmpty() || !isOpen.get()) return;
             TransactionProto.Transaction.Req request;
             ArrayList<TransactionProto.Transaction.Req> requests = new ArrayList<>(requestQueue.size() * 2);
             while ((request = requestQueue.poll()) != null) requests.add(request);
@@ -159,7 +162,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatch(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+                if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
                 requestQueue.add(requestProto);
                 executor.mayStartRunning();
             } finally {
@@ -170,7 +173,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatchNow(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+                if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
                 requestQueue.add(requestProto);
                 sendBatchedRequests();
             } finally {
@@ -179,9 +182,11 @@ public class RequestTransmitter implements AutoCloseable {
         }
 
         @Override
-        public void close() {
-            requestObserver.onCompleted();
-            executor.dispatchers.remove(this);
+        public synchronized void close() {
+            if (isOpen.compareAndSet(true, false)) {
+                requestObserver.onCompleted();
+                executor.dispatchers.remove(this);
+            }
         }
     }
 }
