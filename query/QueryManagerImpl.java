@@ -146,12 +146,12 @@ public final class QueryManagerImpl implements QueryManager {
     }
 
     @Override
-    public Stream<Explanation> explain(ConceptMap.Explainable explainable) {
+    public Stream<Explanation> explain(ConceptMap.Explainables.Explainable explainable) {
         return explain(explainable, GraknOptions.core());
     }
 
     @Override
-    public Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options) {
+    public Stream<Explanation> explain(ConceptMap.Explainables.Explainable explainable, GraknOptions options) {
         return stream(explainReq(explainable.id(), options.proto()))
                 .flatMap(rp -> rp.getExplainResPart().getExplanationsList().stream())
                 .map(ExplanationImpl::of);

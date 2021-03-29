@@ -65,9 +65,9 @@ public class ClientQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-//        grakn = new GraknCoreRunner();
-//        grakn.start();
-        graknClient = Grakn.coreClient("localhost:1729"); //grakn.address());
+        grakn = new GraknCoreRunner();
+        grakn.start();
+        graknClient = Grakn.coreClient(grakn.address());
         if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
         graknClient.databases().create("grakn");
     }
@@ -75,7 +75,7 @@ public class ClientQueryTest {
     @AfterClass
     public static void closeSession() {
         graknClient.close();
-//        grakn.stop();
+        grakn.stop();
     }
 
     @Test
@@ -508,11 +508,11 @@ public class ClientQueryTest {
                     "match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"
             ).asMatch()).collect(toList());
 
-            assertEquals(1, answers.get(0).explainables().size());
-            assertEquals(1, answers.get(1).explainables().size());
-            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().iterator().next()).collect(Collectors.toList());
+            assertEquals(1, answers.get(0).explainables().explainableConcepts().size());
+            assertEquals(1, answers.get(1).explainables().explainableConcepts().size());
+            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().explainableConcepts().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations.size());
-            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().iterator().next()).collect(Collectors.toList());
+            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().explainableConcepts().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
         }, READ, GraknOptions.core().explain(true));
     }
