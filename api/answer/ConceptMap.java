@@ -47,11 +47,11 @@ public interface ConceptMap {
 
         Explainable ownership(String owner, String attribute);
 
-        Map<String, Explainable> explainableRelations();
+        Map<String, Explainable> relations();
 
-        Map<String, Explainable> explainableAttributes();
+        Map<String, Explainable> attributes();
 
-        Map<Pair<String, String>, Explainable> explainableOwnerships();
+        Map<Pair<String, String>, Explainable> ownerships();
 
     }
 

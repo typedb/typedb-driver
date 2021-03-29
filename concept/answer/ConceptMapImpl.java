@@ -158,17 +158,17 @@ public class ConceptMapImpl implements ConceptMap {
         }
 
         @Override
-        public Map<String, Explainable> explainableRelations() {
+        public Map<String, Explainable> relations() {
             return this.explainableRelations;
         }
 
         @Override
-        public Map<String, Explainable> explainableAttributes() {
+        public Map<String, Explainable> attributes() {
             return this.explainableAttributes;
         }
 
         @Override
-        public Map<Pair<String, String>, Explainable> explainableOwnerships() {
+        public Map<Pair<String, String>, Explainable> ownerships() {
             return this.explainableOwnerships;
         }
 
