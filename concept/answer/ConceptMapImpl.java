@@ -20,7 +20,6 @@
 package grakn.client.concept.answer;
 
 import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.answer.ConceptMap.Explainables.Explainable;
 import grakn.client.api.concept.Concept;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.concept.ConceptImpl;
@@ -59,18 +58,22 @@ public class ConceptMapImpl implements ConceptMap {
     }
 
     private static Explainables of(AnswerProto.Explainables explainables) {
-        Map<String, Explainable> explainableConcepts = new HashMap<>();
-        explainables.getExplainableConceptsMap().forEach((var, explainable) -> {
-            explainableConcepts.put(var, ExplainablesImpl.ExplainableImpl.of(explainable));
+        Map<String, Explainable> explainableRelations = new HashMap<>();
+        explainables.getExplainableRelationsMap().forEach((var, explainable) -> {
+            explainableRelations.put(var, ExplainableImpl.of(explainable));
+        });
+        Map<String, Explainable> explainableAttributes = new HashMap<>();
+        explainables.getExplainableAttributesMap().forEach((var, explainable) -> {
+            explainableAttributes.put(var, ExplainableImpl.of(explainable));
         });
         Map<Pair<String, String>, Explainable> explainableOwnerships = new HashMap<>();
         explainables.getExplainableOwnershipsList().forEach((explainableOwnership) -> {
             explainableOwnerships.put(
                     new Pair<>(explainableOwnership.getOwner(), explainableOwnership.getAttribute()),
-                    ExplainablesImpl.ExplainableImpl.of(explainableOwnership.getExplainable())
+                    ExplainableImpl.of(explainableOwnership.getExplainable())
             );
         });
-        return new ExplainablesImpl(explainableConcepts, explainableOwnerships);
+        return new ExplainablesImpl(explainableRelations, explainableAttributes, explainableOwnerships);
     }
 
     @Override
@@ -111,26 +114,37 @@ public class ConceptMapImpl implements ConceptMap {
     }
 
     @Override
-    public int hashCode() { return map.hashCode();}
+    public int hashCode() {
+        return map.hashCode();
+    }
 
     public static class ExplainablesImpl implements Explainables {
 
-        Map<String, Explainable> explainableConcepts;
-
+        Map<String, Explainable> explainableRelations;
+        Map<String, Explainable> explainableAttributes;
         Map<Pair<String, String>, Explainable> explainableOwnerships;
 
         ExplainablesImpl() {
-            this(new HashMap<>(), new HashMap<>());
+            this(new HashMap<>(), new HashMap<>(), new HashMap<>());
         }
 
-        ExplainablesImpl(Map<String, Explainable> explainableConcepts, Map<Pair<String, String>, Explainable> explainableOwnerships) {
-            this.explainableConcepts = explainableConcepts;
+        ExplainablesImpl(Map<String, Explainable> explainableRelations, Map<String, Explainable> explainableAttributes,
+                         Map<Pair<String, String>, Explainable> explainableOwnerships) {
+            this.explainableRelations = explainableRelations;
+            this.explainableAttributes = explainableAttributes;
             this.explainableOwnerships = explainableOwnerships;
         }
 
         @Override
-        public Explainable concept(String variable) {
-            Explainable explainable = explainableConcepts.get(variable);
+        public Explainable relation(String variable) {
+            Explainable explainable = explainableRelations.get(variable);
+            if (explainable == null) throw new GraknClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
+            return explainable;
+        }
+
+        @Override
+        public Explainable attribute(String variable) {
+            Explainable explainable = explainableAttributes.get(variable);
             if (explainable == null) throw new GraknClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return explainable;
         }
@@ -138,13 +152,19 @@ public class ConceptMapImpl implements ConceptMap {
         @Override
         public Explainable ownership(String owner, String attribute) {
             Explainable explainable = explainableOwnerships.get(new Pair<>(owner, attribute));
-            if (explainable == null) throw new GraknClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
+            if (explainable == null)
+                throw new GraknClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
             return explainable;
         }
 
         @Override
-        public Map<String, Explainable> explainableConcepts() {
-            return this.explainableConcepts;
+        public Map<String, Explainable> explainableRelations() {
+            return this.explainableRelations;
+        }
+
+        @Override
+        public Map<String, Explainable> explainableAttributes() {
+            return this.explainableAttributes;
         }
 
         @Override
@@ -157,52 +177,53 @@ public class ConceptMapImpl implements ConceptMap {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ExplainablesImpl that = (ExplainablesImpl) o;
-            return explainableConcepts.equals(that.explainableConcepts) &&
+            return explainableRelations.equals(that.explainableRelations) &&
+                    explainableAttributes.equals(that.explainableAttributes) &&
                     explainableOwnerships.equals(that.explainableOwnerships);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(explainableConcepts, explainableOwnerships);
+            return Objects.hash(explainableRelations, explainableAttributes, explainableOwnerships);
         }
 
+    }
 
-        static class ExplainableImpl implements Explainable {
+    static class ExplainableImpl implements Explainable {
 
-            private final String conjunction;
-            private final long id;
+        private final String conjunction;
+        private final long id;
 
-            ExplainableImpl(String conjunction, long id) {
-                this.conjunction = conjunction;
-                this.id = id;
-            }
+        ExplainableImpl(String conjunction, long id) {
+            this.conjunction = conjunction;
+            this.id = id;
+        }
 
-            public static Explainable of(AnswerProto.Explainable explainable) {
-                return new ExplainableImpl(explainable.getConjunction(), explainable.getId());
-            }
+        public static Explainable of(AnswerProto.Explainable explainable) {
+            return new ExplainableImpl(explainable.getConjunction(), explainable.getId());
+        }
 
-            @Override
-            public String conjunction() {
-                return conjunction;
-            }
+        @Override
+        public String conjunction() {
+            return conjunction;
+        }
 
-            @Override
-            public long id() {
-                return id;
-            }
+        @Override
+        public long id() {
+            return id;
+        }
 
-            @Override
-            public boolean equals(final Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-                final ExplainableImpl that = (ExplainableImpl) o;
-                return id == that.id;
-            }
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            final ExplainableImpl that = (ExplainableImpl) o;
+            return id == that.id;
+        }
 
-            @Override
-            public int hashCode() {
-                return (int) id;
-            }
+        @Override
+        public int hashCode() {
+            return (int) id;
         }
     }
 }

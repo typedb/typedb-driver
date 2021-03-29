@@ -40,7 +40,8 @@ public class ExplanationImpl implements Explanation {
     private final ConceptMap whenAnswer;
 
     private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConceptMap thenAnswer, ConceptMap whenAnswer) {
-        this.rule = rule; this.variableMapping = variableMapping;
+        this.rule = rule;
+        this.variableMapping = variableMapping;
         this.thenAnswer = thenAnswer;
         this.whenAnswer = whenAnswer;
     }
@@ -82,7 +83,8 @@ public class ExplanationImpl implements Explanation {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true; if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         final ExplanationImpl that = (ExplanationImpl) o;
         return rule.equals(that.rule) && variableMapping.equals(that.variableMapping) &&
                 thenAnswer.equals(that.thenAnswer) && whenAnswer.equals(that.whenAnswer);

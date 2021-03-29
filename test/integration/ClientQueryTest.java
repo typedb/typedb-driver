@@ -306,7 +306,7 @@ public class ClientQueryTest {
             tx.query().insert(insertCommitQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        }, READ);
+        }, WRITE);
 
         localhostGraknTx(tx -> {
             GraqlInsert insertWorkflowQuery = Graql.insert(
@@ -508,11 +508,11 @@ public class ClientQueryTest {
                     "match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"
             ).asMatch()).collect(toList());
 
-            assertEquals(1, answers.get(0).explainables().explainableConcepts().size());
-            assertEquals(1, answers.get(1).explainables().explainableConcepts().size());
-            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().explainableConcepts().values().iterator().next()).collect(Collectors.toList());
+            assertEquals(1, answers.get(0).explainables().explainableRelations().size());
+            assertEquals(1, answers.get(1).explainables().explainableRelations().size());
+            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().explainableRelations().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations.size());
-            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().explainableConcepts().values().iterator().next()).collect(Collectors.toList());
+            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().explainableRelations().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
         }, READ, GraknOptions.core().explain(true));
     }

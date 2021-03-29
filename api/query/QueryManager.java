@@ -73,9 +73,9 @@ public interface QueryManager {
 
     Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options);
 
-    Stream<Explanation> explain(ConceptMap.Explainables.Explainable explainable);
+    Stream<Explanation> explain(ConceptMap.Explainable explainable);
 
-    Stream<Explanation> explain(ConceptMap.Explainables.Explainable explainable, GraknOptions options);
+    Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options);
 
     QueryFuture<Void> define(GraqlDefine query);
 

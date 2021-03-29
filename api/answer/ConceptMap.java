@@ -20,15 +20,11 @@
 package grakn.client.api.answer;
 
 import grakn.client.api.concept.Concept;
-import grakn.client.common.exception.GraknClientException;
 import grakn.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
-
-import static grakn.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
 
 public interface ConceptMap {
 
@@ -45,21 +41,25 @@ public interface ConceptMap {
 
     interface Explainables {
 
-        Explainable concept(String variable);
+        Explainable relation(String variable);
+
+        Explainable attribute(String variable);
 
         Explainable ownership(String owner, String attribute);
 
-        Map<String, Explainable> explainableConcepts();
+        Map<String, Explainable> explainableRelations();
+
+        Map<String, Explainable> explainableAttributes();
 
         Map<Pair<String, String>, Explainable> explainableOwnerships();
 
-        interface Explainable {
+    }
 
-            String conjunction();
+    interface Explainable {
 
-            long id();
+        String conjunction();
 
-        }
+        long id();
 
     }
 }
