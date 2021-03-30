@@ -87,7 +87,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public String toString() {
-        return className(this.getClass()) + "[iid:" + iid + "]";
+        return className(this.getClass()) + "[" + getType().getLabel() + ":" + iid + "]";
     }
 
     @Override
