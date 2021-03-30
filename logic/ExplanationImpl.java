@@ -23,7 +23,6 @@ import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.logic.Explanation;
 import grakn.client.api.logic.Rule;
 import grakn.client.concept.answer.ConceptMapImpl;
-import grakn.protocol.AnswerProto;
 import grakn.protocol.LogicProto;
 
 import java.util.HashMap;
@@ -36,26 +35,26 @@ public class ExplanationImpl implements Explanation {
 
     private final Rule rule;
     private final Map<String, Set<String>> variableMapping;
-    private final ConceptMap thenAnswer;
-    private final ConceptMap whenAnswer;
+    private final ConceptMap conclusion;
+    private final ConceptMap condition;
 
-    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConceptMap thenAnswer, ConceptMap whenAnswer) {
+    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConceptMap conclusion, ConceptMap condition) {
         this.rule = rule;
         this.variableMapping = variableMapping;
-        this.thenAnswer = thenAnswer;
-        this.whenAnswer = whenAnswer;
+        this.conclusion = conclusion;
+        this.condition = condition;
     }
 
     public static Explanation of(LogicProto.Explanation explanation) {
         return new ExplanationImpl(
                 RuleImpl.of(explanation.getRule()),
                 of(explanation.getVarMappingMap()),
-                ConceptMapImpl.of(explanation.getThenAnswer()),
-                ConceptMapImpl.of(explanation.getWhenAnswer())
+                ConceptMapImpl.of(explanation.getConclusion()),
+                ConceptMapImpl.of(explanation.getCondition())
         );
     }
 
-    private static Map<String, Set<String>> of(Map<String, LogicProto.Explanation.VarsList> varMapping) {
+    private static Map<String, Set<String>> of(Map<String, LogicProto.Explanation.VarList> varMapping) {
         Map<String, Set<String>> mapping = new HashMap<>();
         varMapping.forEach((from, tos) -> mapping.put(from, new HashSet<>(tos.getVarsList())));
         return mapping;
@@ -73,12 +72,12 @@ public class ExplanationImpl implements Explanation {
 
     @Override
     public ConceptMap thenAnswer() {
-        return thenAnswer;
+        return conclusion;
     }
 
     @Override
     public ConceptMap whenAnswer() {
-        return whenAnswer;
+        return condition;
     }
 
     @Override
@@ -87,11 +86,11 @@ public class ExplanationImpl implements Explanation {
         if (o == null || getClass() != o.getClass()) return false;
         final ExplanationImpl that = (ExplanationImpl) o;
         return rule.equals(that.rule) && variableMapping.equals(that.variableMapping) &&
-                thenAnswer.equals(that.thenAnswer) && whenAnswer.equals(that.whenAnswer);
+                conclusion.equals(that.conclusion) && condition.equals(that.condition);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rule, variableMapping, thenAnswer, whenAnswer);
+        return Objects.hash(rule, variableMapping, conclusion, condition);
     }
 }

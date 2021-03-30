@@ -58,22 +58,21 @@ public class ConceptMapImpl implements ConceptMap {
     }
 
     private static Explainables of(AnswerProto.Explainables explainables) {
-        Map<String, Explainable> explainableRelations = new HashMap<>();
-        explainables.getExplainableRelationsMap().forEach((var, explainable) -> {
-            explainableRelations.put(var, ExplainableImpl.of(explainable));
+        Map<String, Explainable> relations = new HashMap<>();
+        explainables.getRelationsMap().forEach((var, explainable) -> {
+            relations.put(var, ExplainableImpl.of(explainable));
         });
-        Map<String, Explainable> explainableAttributes = new HashMap<>();
-        explainables.getExplainableAttributesMap().forEach((var, explainable) -> {
-            explainableAttributes.put(var, ExplainableImpl.of(explainable));
+        Map<String, Explainable> attributes = new HashMap<>();
+        explainables.getAttributesMap().forEach((var, explainable) -> {
+            attributes.put(var, ExplainableImpl.of(explainable));
         });
-        Map<Pair<String, String>, Explainable> explainableOwnerships = new HashMap<>();
-        explainables.getExplainableOwnershipsList().forEach((explainableOwnership) -> {
-            explainableOwnerships.put(
-                    new Pair<>(explainableOwnership.getOwner(), explainableOwnership.getAttribute()),
-                    ExplainableImpl.of(explainableOwnership.getExplainable())
-            );
+        Map<Pair<String, String>, Explainable> ownerships = new HashMap<>();
+        explainables.getOwnershipsMap().forEach((var, ownedMap) -> {
+            ownedMap.getOwnedMap().forEach((owned, explainable) -> {
+                ownerships.put(new Pair<>(var, owned), ExplainableImpl.of(explainable));
+            });
         });
-        return new ExplainablesImpl(explainableRelations, explainableAttributes, explainableOwnerships);
+        return new ExplainablesImpl(relations, attributes, ownerships);
     }
 
     @Override
