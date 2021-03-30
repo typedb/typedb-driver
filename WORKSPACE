@@ -90,11 +90,12 @@ rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-load("@graknlabs_bazel_distribution//maven:deps.bzl", graknlabs_bazel_distribution_maven_artifacts = "maven_artifacts")
-
 # Load //github
 load("@graknlabs_bazel_distribution//github:deps.bzl", github_deps = "deps")
 github_deps()
+
+# Load //maven
+load("@graknlabs_bazel_distribution//maven:deps.bzl", graknlabs_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 ################################
 # Load @graknlabs dependencies #
@@ -129,7 +130,6 @@ maven(
     graknlabs_dependencies_tool_maven_artifacts +
     graknlabs_client_java_artifacts +
     graknlabs_bazel_distribution_maven_artifacts,
-
     graknlabs_client_java_overrides
 )
 
