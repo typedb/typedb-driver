@@ -23,12 +23,14 @@ import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknTransaction;
 import grakn.client.api.answer.ConceptMap;
 import grakn.client.api.answer.ConceptMapGroup;
+import grakn.client.api.logic.Explanation;
 import grakn.client.api.answer.Numeric;
 import grakn.client.api.answer.NumericGroup;
 import grakn.client.api.query.QueryFuture;
 import grakn.client.api.query.QueryManager;
 import grakn.client.concept.answer.ConceptMapGroupImpl;
 import grakn.client.concept.answer.ConceptMapImpl;
+import grakn.client.logic.ExplanationImpl;
 import grakn.client.concept.answer.NumericGroupImpl;
 import grakn.client.concept.answer.NumericImpl;
 import grakn.protocol.QueryProto;
@@ -44,6 +46,7 @@ import java.util.stream.Stream;
 
 import static grakn.client.common.rpc.RequestBuilder.QueryManager.defineReq;
 import static grakn.client.common.rpc.RequestBuilder.QueryManager.deleteReq;
+import static grakn.client.common.rpc.RequestBuilder.QueryManager.explainReq;
 import static grakn.client.common.rpc.RequestBuilder.QueryManager.insertReq;
 import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchAggregateReq;
 import static grakn.client.common.rpc.RequestBuilder.QueryManager.matchGroupAggregateReq;
@@ -140,6 +143,18 @@ public final class QueryManagerImpl implements QueryManager {
         return stream(updateReq(query.toString(), options.proto()))
                 .flatMap(rp -> rp.getUpdateResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
+    }
+
+    @Override
+    public Stream<Explanation> explain(ConceptMap.Explainable explainable) {
+        return explain(explainable, GraknOptions.core());
+    }
+
+    @Override
+    public Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options) {
+        return stream(explainReq(explainable.id(), options.proto()))
+                .flatMap(rp -> rp.getExplainResPart().getExplanationsList().stream())
+                .map(ExplanationImpl::of);
     }
 
     @Override

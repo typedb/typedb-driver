@@ -232,6 +232,12 @@ public class RequestBuilder {
                     QueryProto.QueryManager.Update.Req.newBuilder().setQuery(query)
             ), options);
         }
+
+        public static TransactionProto.Transaction.Req.Builder explainReq(long id, OptionsProto.Options options) {
+            return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setExplainReq(
+                    QueryProto.QueryManager.Explain.Req.newBuilder().setExplainableId(id)
+            ), options);
+        }
     }
 
     public static class ConceptManager {

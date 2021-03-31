@@ -20,6 +20,7 @@
 package grakn.client.api.answer;
 
 import grakn.client.api.concept.Concept;
+import grakn.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Collection;
@@ -35,4 +36,30 @@ public interface ConceptMap {
 
     @CheckReturnValue
     Concept get(String variable);
+
+    Explainables explainables();
+
+    interface Explainables {
+
+        Explainable relation(String variable);
+
+        Explainable attribute(String variable);
+
+        Explainable ownership(String owner, String attribute);
+
+        Map<String, Explainable> relations();
+
+        Map<String, Explainable> attributes();
+
+        Map<Pair<String, String>, Explainable> ownerships();
+
+    }
+
+    interface Explainable {
+
+        String conjunction();
+
+        long id();
+
+    }
 }

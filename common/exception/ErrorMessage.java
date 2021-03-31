@@ -76,6 +76,10 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
                 new Concept(6, "The value type '%s' was not recognised.");
         public static final Concept BAD_ATTRIBUTE_VALUE =
                 new Concept(7, "The attribute value '%s' was not recognised.");
+        public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
+                new Concept(8, "The concept identified by '%s' is not explainable.");
+        public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
+                new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";

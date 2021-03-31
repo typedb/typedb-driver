@@ -31,7 +31,7 @@ import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
-public class ResponseIterator implements Iterator<TransactionProto.Transaction.ResPart> {
+public class ResponsePartIterator implements Iterator<TransactionProto.Transaction.ResPart> {
 
     private final UUID requestID;
     private final RequestTransmitter.Dispatcher dispatcher;
@@ -41,8 +41,8 @@ public class ResponseIterator implements Iterator<TransactionProto.Transaction.R
 
     enum State {EMPTY, FETCHED, DONE}
 
-    public ResponseIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
-                            RequestTransmitter.Dispatcher requestDispatcher) {
+    public ResponsePartIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
+                                RequestTransmitter.Dispatcher requestDispatcher) {
         this.requestID = requestID;
         this.dispatcher = requestDispatcher;
         this.responseCollector = responseQueue;

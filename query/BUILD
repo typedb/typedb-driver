@@ -29,6 +29,7 @@ java_library(
         "//api:api",
         "//common:common",
         "//concept:concept",
+        "//logic:logic",
 
         # External dependencies from @graknlabs
         "@graknlabs_graql//java/query",
