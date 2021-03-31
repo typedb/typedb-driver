@@ -25,6 +25,8 @@ import grakn.client.core.CoreClient;
 
 import java.util.Set;
 
+import static grakn.common.collection.Collections.set;
+
 public class Grakn {
 
     public static final String DEFAULT_ADDRESS = "localhost:1729";
@@ -35,6 +37,14 @@ public class Grakn {
 
     public static GraknClient coreClient(String address, int parallelisation) {
         return new CoreClient(address, parallelisation);
+    }
+
+    public static GraknClient.Cluster clusterClient(String address) {
+        return new ClusterClient(set(address));
+    }
+
+    public static GraknClient.Cluster clusterClient(String address, int parallelisation) {
+        return new ClusterClient(set(address), parallelisation);
     }
 
     public static GraknClient.Cluster clusterClient(Set<String> addresses) {
