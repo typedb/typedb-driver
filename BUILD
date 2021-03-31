@@ -40,6 +40,9 @@ java_library(
         "//api:api",
         "//cluster:cluster",
         "//core:core",
+
+        # External dependencies from @graknlabs
+        "@graknlabs_common//:common",
     ],
     resources = ["LICENSE"],
     tags = ["maven_coordinates=io.grakn.client:grakn-client:{pom_version}"],
