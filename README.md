@@ -28,8 +28,8 @@ To learn about the methods available on the concepts retrieved as the answers to
 <dependencies>
     <dependency>
         <groupId>io.grakn.client</groupId>
-        <artifactId>api</artifactId>
-        <version>1.5.0</version>
+        <artifactId>grakn-client</artifactId>
+        <version>2.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -41,7 +41,7 @@ Further documentation: https://dev.grakn.ai/docs/client-api/java
 > Note: You don't need to compile Grakn Client from source if you just want to use it in your code. See the _"Import Grakn Client for Java"_ section above.
 
 1. Make sure you have the following dependencies installed on your machine:
-    - Java 8
+    - Java JDK 11 or higher
     - [Bazel](https://docs.bazel.build/versions/master/install.html)
 
 2. Build the JAR:
