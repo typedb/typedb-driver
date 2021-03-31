@@ -25,8 +25,7 @@ load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@graknlabs_dependencies//distribution/maven:version.bzl", "version")
 load("@graknlabs_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
 load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
-load("@graknlabs_bazel_distribution//maven:rules.bzl", "deploy_maven")
-load("@graknlabs_bazel_distribution//maven:new_rules.bzl", "assemble_maven")
+load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
@@ -57,13 +56,13 @@ checkstyle_test(
 assemble_maven(
     name = "assemble-maven",
     target = ":client-java",
+    source_jar_prefix = "grakn/client/",
     workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json",
     version_overrides = version(artifacts_org, artifacts_repo),
     project_name = "Grakn Client Java",
     project_description = "Grakn Client API for Java",
     project_url = "https://github.com/graknlabs/client-java",
     scm_url = "https://github.com/graknlabs/client-java",
-    source_jar_prefix = "grakn/client/",
 )
 
 deploy_maven(
