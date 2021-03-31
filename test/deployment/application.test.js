@@ -17,7 +17,7 @@
  * under the License.
  */
 
-const { Grakn } = require("grakn-client/GraknClient");
+const { Grakn } = require("grakn-client/Grakn");
 const { SessionType } = require("grakn-client/api/Session");
 const { TransactionType } = require("grakn-client/api/Transaction");
 
