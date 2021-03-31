@@ -18,8 +18,8 @@
  */
 
 const { Grakn } = require("grakn-client/Grakn");
-const { SessionType } = require("grakn-client/api/Session");
-const { TransactionType } = require("grakn-client/api/Transaction");
+const { SessionType } = require("grakn-client/api/GraknSession");
+const { TransactionType } = require("grakn-client/api/GraknTransaction");
 
 jest.setTimeout(15000);
 
