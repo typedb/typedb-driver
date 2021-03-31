@@ -17,14 +17,16 @@
  * under the License.
  */
 
-const { GraknClient, SessionType, TransactionType } = require("grakn-client/GraknClient");
+const { Grakn } = require("grakn-client/GraknClient");
+const { SessionType } = require("grakn-client/api/Session");
+const { TransactionType } = require("grakn-client/api/Transaction");
 
 jest.setTimeout(15000);
 
 let client;
 
 beforeEach(async () => {
-    client = GraknClient.core();
+    client = Grakn.coreClient();
     await client.databases().create("thisisadatabase");
 })
 
