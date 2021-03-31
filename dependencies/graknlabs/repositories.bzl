@@ -43,8 +43,8 @@ def graknlabs_dependencies():
 def graknlabs_protocol():
     git_repository(
         name = "graknlabs_protocol",
-        remote = "https://github.com/flyingsilverfin/protocol",
-        commit = "db450964d23303ab73a04c781db0dd0ef53fa869", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
+        remote = "https://github.com/graknlabs/protocol",
+        commit = "f4a784601e6af2b41695733dac0bf2ebc2ed45a5", # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_protocol
     )
 
 def graknlabs_behaviour():
