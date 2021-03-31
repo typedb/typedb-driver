@@ -21,9 +21,9 @@ bazel run //test:grakn-cluster-extractor -- grakn_distribution
 echo Successfully unarchived Grakn distribution. Creating 3 copies.
 cp -r grakn_distribution/$GRAKN/ 1 && cp -r grakn_distribution/$GRAKN/ 2 && cp -r grakn_distribution/$GRAKN/ 3
 echo Starting 3 Grakn servers.
-./1/grakn server --data data --address 127.0.0.1:11729:11730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
-./2/grakn server --data data --address 127.0.0.1:21729:21730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
-./3/grakn server --data data --address 127.0.0.1:31729:31730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
+./1/grakn server --data server/data --address 127.0.0.1:11729:11730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
+./2/grakn server --data server/data --address 127.0.0.1:21729:21730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
+./3/grakn server --data server/data --address 127.0.0.1:31729:31730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
 
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60

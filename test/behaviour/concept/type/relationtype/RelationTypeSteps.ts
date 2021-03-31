@@ -17,12 +17,12 @@
  * under the License.
  */
 
-import { tx } from "../../../connection/ConnectionStepsBase";
-import { Then, When } from "@cucumber/cucumber";
-import { parseList, ScopedLabel } from "../../../config/Parameters";
-import { assertThrows } from "../../../util/Util";
-import assert = require("assert");
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {Then, When} from "@cucumber/cucumber";
+import {parseList, ScopedLabel} from "../../../config/Parameters";
+import {assertThrows} from "../../../util/Util";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
+import assert = require("assert");
 
 
 When("relation\\({type_label}) set relates role: {type_label}", async (relationLabel: string, roleLabel: string) => {
@@ -65,7 +65,7 @@ When("relation\\({type_label}) get role\\({type_label}) set label: {type_label}"
 
 When("relation\\({type_label}) get role\\({type_label}) get label: {type_label}", async (relationLabel: string, roleLabel: string, getLabel: string) => {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    assert.strictEqual(roleType.getLabel(), getLabel);
+    assert.strictEqual(roleType.getLabel().name(), getLabel);
 });
 
 When("relation\\({type_label}) get role\\({type_label}) is abstract: {bool}", async (relationLabel: string, roleLabel: string, isAbstract: boolean) => {
@@ -74,7 +74,7 @@ When("relation\\({type_label}) get role\\({type_label}) is abstract: {bool}", as
 });
 
 async function getActualRelatedRoles(relationLabel: string) {
-    return ((await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates()).map(role => role.getScopedLabel()).collect();
+    return ((await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates()).map(role => role.getLabel().scopedName()).collect();
 }
 
 Then("relation\\({type_label}) get related roles contain:", async (relationLabel: string, roleLabelsTable: DataTable) => {
@@ -97,7 +97,7 @@ Then("relation\\({type_label}) get role\\({type_label}) get supertype: {scoped_l
 
 async function getActualSupertypesForRelatedRole(relationLabel: string, roleLabel: string) {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return roleType.asRemote(tx()).getSupertypes().map(role => role.getScopedLabel()).collect();
+    return roleType.asRemote(tx()).getSupertypes().map(role => role.getLabel().scopedName()).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get supertypes contain:", async (relationLabel: string, roleLabel: string, superLabelsTable: DataTable) => {
@@ -114,12 +114,14 @@ Then("relation\\({type_label}) get role\\({type_label}) get supertypes do not co
 
 async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: string) {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return await roleType.asRemote(tx()).getPlayers().map(tt => tt.getLabel()).collect();
+    return await roleType.asRemote(tx()).getPlayers().map(tt => tt.getLabel().scopedName()).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get players contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {
     const playerLabels = parseList(playerLabelsTable);
     const actuals = await getActualPlayersForRelatedRole(relationLabel, roleLabel);
+    console.log(playerLabels);
+    console.log(actuals);
     actuals.every(pl => assert(playerLabels.includes(pl)));
 });
 
@@ -131,7 +133,7 @@ Then("relation\\({type_label}) get role\\({type_label}) get players do not conta
 
 async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel: string) {
     const roleType = await (await tx().concepts().getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return roleType.asRemote(tx()).getSubtypes().map(role => role.getScopedLabel()).collect();
+    return roleType.asRemote(tx()).getSubtypes().map(role => role.getLabel().scopedName()).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {

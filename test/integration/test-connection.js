@@ -17,10 +17,12 @@
  * under the License.
  */
 
-const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
+const {Grakn} = require("../../dist/Grakn");
+const {SessionType} = require("../../dist/api/GraknSession")
+const {TransactionType} = require("../../dist/api/GraknTransaction")
 
 async function run() {
-    const client = GraknClient.core();
+    const client = Grakn.coreClient();
 
     try {
         const dbs = await client.databases().all();

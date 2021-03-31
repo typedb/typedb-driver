@@ -17,12 +17,11 @@
  * under the License.
  */
 
-import { When, Then } from "@cucumber/cucumber";
-import { client, sessions } from "../ConnectionStepsBase";
+import {Then, When} from "@cucumber/cucumber";
+import {client, sessions} from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient, SessionType } from "../../../../dist/GraknClient";
+import {GraknSession, SessionType} from "../../../../dist/api/GraknSession";
 import assert = require("assert");
-import Session = GraknClient.Session;
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
     sessions.push(await client.session(name, SessionType.SCHEMA))
@@ -41,7 +40,7 @@ When("connection open(s) (data )session(s) for database(s):", async (names: Data
 });
 
 When("connection open(s) (data )sessions in parallel for databases:", async (names: DataTable) => {
-    const openings: Promise<Session>[] = []
+    const openings: Promise<GraknSession>[] = []
     for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
     sessions.push(... await Promise.all(openings));
 });

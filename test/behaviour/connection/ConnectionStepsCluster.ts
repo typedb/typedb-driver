@@ -18,9 +18,9 @@
  */
 
 import { BeforeAll } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/GraknClient";
+import { Grakn} from "../../../dist/Grakn";
 import { setClient } from "./ConnectionStepsBase";
 
 BeforeAll(async () => {
-    setClient(await GraknClient.cluster([GraknClient.DEFAULT_ADDRESS]));
+    setClient(await Grakn.clusterClient([Grakn.DEFAULT_ADDRESS]));
 });

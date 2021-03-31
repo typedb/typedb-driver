@@ -17,16 +17,16 @@
  * under the License.
  */
 
-import { After, When } from "@cucumber/cucumber";
-import { Thing } from "../../../../dist/concept/thing/Thing";
+import {After, When} from "@cucumber/cucumber";
+import {tx} from "../../connection/ConnectionStepsBase";
+import {getThingType} from "../type/thingtype/ThingTypeSteps";
+import {assertThrows} from "../../util/Util";
+import {Thing} from "../../../../dist/api/concept/thing/Thing";
+import {Attribute} from "../../../../dist/api/concept/thing/Attribute";
+import {AttributeType} from "../../../../dist/api/concept/type/AttributeType";
+import {RootLabel, ScopedLabel} from "../../config/Parameters";
 import assert = require("assert");
-import { tx } from "../../connection/ConnectionStepsBase";
-import { getThingType } from "../type/thingtype/ThingTypeSteps";
-import { assertThrows } from "../../util/Util";
-import { Attribute } from "../../../../dist/concept/thing/Attribute";
-import { AttributeType } from "../../../../dist/concept/type/AttributeType";
 import ValueClass = AttributeType.ValueClass;
-import { RootLabel, ScopedLabel } from "../../config/Parameters";
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const get: (name: string) => Thing = (name: string) => things.get(name);
@@ -182,7 +182,8 @@ When("entity/attribute/relation {var} get attributes\\({type_label}) as\\(dateti
 });
 
 When("entity/attribute/relation {var} get relations\\({scoped_label}) contain: {var}", async (thingName: string, scopedLabel: ScopedLabel, relationName: string) => {
-    for await (const relation of get(thingName).asRemote(tx()).getRelations([await (await tx().concepts().getRelationType(scopedLabel.scope())).asRemote(tx()).getRelates(scopedLabel.role())])) {
+    const roleType = await (await tx().concepts().getRelationType(scopedLabel.scope())).asRemote(tx()).getRelates(scopedLabel.role())
+    for await (const relation of get(thingName).asRemote(tx()).getRelations([roleType])) {
         if (relation.equals(get(relationName))) return;
     }
     assert.fail();
@@ -196,7 +197,8 @@ When("entity/attribute/relation {var} get relations contain: {var}", async (thin
 });
 
 When("entity/attribute/relation {var} get relations\\({scoped_label}) do not contain: {var}", async (thingName: string, scopedLabel: ScopedLabel, relationName: string) => {
-    for await (const relation of get(thingName).asRemote(tx()).getRelations([await (await tx().concepts().getRelationType(scopedLabel.scope())).asRemote(tx()).getRelates(scopedLabel.role())])) {
+    const roleType = await (await tx().concepts().getRelationType(scopedLabel.scope())).asRemote(tx()).getRelates(scopedLabel.role())
+    for await (const relation of get(thingName).asRemote(tx()).getRelations([roleType])) {
         if (relation.equals(get(relationName))) assert.fail();
     }
 

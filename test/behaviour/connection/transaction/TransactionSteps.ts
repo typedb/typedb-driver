@@ -20,15 +20,15 @@
 import { Then } from "@cucumber/cucumber";
 import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient, TransactionType } from "../../../../dist/GraknClient";
-import assert = require("assert");
+import { GraknClient } from "../../../../dist/api/GraknClient";
+import { GraknSession, SessionType } from "../../../../dist/api/GraknSession";
+import { GraknTransaction, TransactionType } from "../../../../dist/api/GraknTransaction";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
-import Transaction = GraknClient.Transaction;
-import Session = GraknClient.Session;
+import assert = require("assert");
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {
-        const transactions: Transaction[] = []
+        const transactions: GraknTransaction[] = []
         for (const transactionType of transactionTypes) {
             const transaction = await session.transaction(transactionType);
             transactions.push(transaction);
@@ -131,8 +131,8 @@ Then('(for each )session(,) transaction(s)( in parallel) has/have type(s):', fun
 
 Then('(for each )session(,) open transaction(s) in parallel of type:', async function (transactionTypeTable: DataTable) {
     const typeArray = dataTableToTransactionTypes(transactionTypeTable);
-    const openings: Promise<Transaction>[] = []
-    const sessionList: Session[] = []
+    const openings: Promise<GraknTransaction>[] = []
+    const sessionList: GraknSession[] = []
     for (const type of typeArray) {
         for (const session of sessions) {
             openings.push(session.transaction(type));

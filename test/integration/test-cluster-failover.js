@@ -17,7 +17,9 @@
  * under the License.
  */
 
-const { GraknClient, SessionType, TransactionType } = require("../../dist/GraknClient");
+const { Grakn} = require("../../dist/Grakn");
+const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
+const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
 const assert = require("assert");
 const { spawn, spawnSync } = require("child_process");
 
@@ -35,7 +37,7 @@ async function seekPrimaryReplica(databases) {
 }
 
 async function run() {
-    const client = await GraknClient.cluster(["localhost:11729", "localhost:21729", "localhost:31729"]);
+    const client = await Grakn.clusterClient(["localhost:11729", "localhost:21729", "localhost:31729"]);
     try {
         if (await client.databases().contains("grakn")) {
             await (await client.databases().get("grakn")).delete();
@@ -47,17 +49,17 @@ async function run() {
         let session = await client.session("grakn", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
         let person = await tx.concepts().putEntityType("person");
-        console.info(`Put the entity type '${person.getLabel()}'.`);
+        console.info(`Put the entity type '${person.getLabel().scopedName()}'.`);
         await tx.commit();
         tx = await session.transaction(TransactionType.READ);
         person = await tx.concepts().getEntityType("person");
-        console.info(`Retrieved entity type with label '${person.getLabel()}' from primary replica.`);
+        console.info(`Retrieved entity type with label '${person.getLabel().scopedName()}' from primary replica.`);
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
             primaryReplica = await seekPrimaryReplica(client.databases());
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
-            const port = primaryReplica.id().address().internalPort();
+            const port = primaryReplica.address().substring(10,15);
             const lsof = spawnSync("lsof", ["-i", `:${port}`], { stdio: "pipe", encoding: "utf-8" });
             const primaryReplicaServerPID = lsof.stdout.split("\n").filter(s => s.includes("LISTEN")).map(s => s.split(/\s+/)[1])[0];
             console.info(`Primary replica is hosted by server with PID ${primaryReplicaServerPID}`);
@@ -67,10 +69,10 @@ async function run() {
             session = await client.session("grakn", SessionType.SCHEMA);
             tx = await session.transaction(TransactionType.READ);
             person = await tx.concepts().putEntityType("person");
-            console.info(`Retrieved entity type with label '${person.getLabel()}' from new primary replica`);
-            assert(person.getLabel() === "person");
-            const idx = primaryReplica.address().externalPort().toString()[0];
-            spawn(`./${idx}/grakn`, ["server", "--data", "data", "--address", `127.0.0.1:${idx}1729:${idx}1730`,
+            console.info(`Retrieved entity type with label '${person.getLabel().scopedName()}' from new primary replica`);
+            assert(person.getLabel().scopedName() === "person");
+            const idx = primaryReplica.address()[10];
+            spawn(`./${idx}/grakn`, ["server", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730`,
                 "--peer", "127.0.0.1:11729:11730", "--peer", "127.0.0.1:21729:21730", "--peer", "127.0.0.1:31729:31730"]);
             await new Promise(resolve => setTimeout(resolve, 11000));
         }

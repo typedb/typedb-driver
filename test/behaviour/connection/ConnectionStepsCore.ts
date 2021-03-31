@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import { BeforeAll } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/GraknClient";
-import { setClient } from "./ConnectionStepsBase";
+import {BeforeAll} from "@cucumber/cucumber";
+import {Grakn} from "../../../dist/Grakn";
+import {setClient} from "./ConnectionStepsBase";
 
 BeforeAll(() => {
-    setClient(GraknClient.core());
+    setClient(Grakn.coreClient());
 });

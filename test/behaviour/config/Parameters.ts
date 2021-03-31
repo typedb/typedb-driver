@@ -17,10 +17,10 @@
  * under the License.
  */
 
-import { defineParameterType } from "@cucumber/cucumber";
-import { AttributeType } from "../../../dist/concept/type/AttributeType";
+import {defineParameterType} from "@cucumber/cucumber";
+import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TransactionType } from "../../../dist/GraknClient";
+import {TransactionType} from "../../../dist/api/GraknTransaction";
 
 export function parseBool(value: string): boolean {
     return value === "true";

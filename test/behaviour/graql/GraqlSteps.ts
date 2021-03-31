@@ -17,22 +17,22 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
-import { tx } from "../connection/ConnectionStepsBase";
-import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
-import { ConceptMap } from "../../../dist/concept/answer/ConceptMap";
-import { Numeric } from "../../../dist/concept/answer/Numeric";
-import { ConceptMapGroup } from "../../../dist/concept/answer/ConceptMapGroup";
-import { NumericGroup } from "../../../dist/concept/answer/NumericGroup";
-import { Concept } from "../../../dist/concept/Concept";
-import { RoleType } from "../../../dist/concept/type/RoleType";
-import { Type } from "../../../dist/concept/type/Type";
-import { AttributeType } from "../../../dist/concept/type/AttributeType";
-import { Attribute } from "../../../dist/concept/thing/Attribute";
-import { parseBool } from "../config/Parameters";
-import { Thing } from "../../../dist/concept/thing/Thing";
+import {Then, When} from "@cucumber/cucumber";
+import {tx} from "../connection/ConnectionStepsBase";
+import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
+import {ConceptMap} from "../../../dist/api/answer/ConceptMap";
+import {Numeric} from "../../../dist/api/answer/Numeric";
+import {ConceptMapGroup} from "../../../dist/api/answer/ConceptMapGroup";
+import {NumericGroup} from "../../../dist/api/answer/NumericGroup";
+import {Concept} from "../../../dist/api/concept/Concept";
+import {RoleType} from "../../../dist/api/concept/type/RoleType";
+import {Type} from "../../../dist/api/concept/type/Type";
+import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
+import {Attribute} from "../../../dist/api/concept/thing/Attribute";
+import {Thing} from "../../../dist/api/concept/thing/Thing";
+import {parseBool} from "../config/Parameters";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { fail } from "assert";
+import {fail} from "assert";
 import assert = require("assert");
 import ValueClass = AttributeType.ValueClass;
 
@@ -81,11 +81,11 @@ When("graql insert", (query: string) => {
 });
 
 Then("graql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().insert(query).next(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query().insert(query).first(), exceptionString);
 });
 
 Then("graql insert; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().insert(query).next());
+    await assertThrows(async () => await tx().query().insert(query).first());
 });
 
 When("graql delete", (query: string) => {
@@ -105,11 +105,11 @@ When("graql update", (query: string) => {
 });
 
 Then("graql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().update(query).next(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query().update(query).first(), exceptionString);
 });
 
 Then("graql update; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().update(query).next());
+    await assertThrows(async () => await tx().query().update(query).first());
 });
 
 When("get answers of graql insert", async (query: string) => {
@@ -128,7 +128,7 @@ When("get answers of graql match", async (query: string) => {
 });
 
 Then("graql match; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().match(query).next());
+    await assertThrows(async () => await tx().query().match(query).first());
 });
 
 When("get answer of graql match aggregate", async (query: string) => {
@@ -141,10 +141,19 @@ When("get answers of graql match group", async (query: string) => {
     answerGroups = await tx().query().matchGroup(query).collect();
 });
 
+When("graql match group; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().matchGroup(query).first());
+})
+
 When("get answers of graql match group aggregate", async (query: string) => {
     clearAnswers();
     numericAnswerGroups = await tx().query().matchGroupAggregate(query).collect();
 });
+
+When("graql match aggregate; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query().matchAggregate(query));
+
+})
 
 Then("answer size is: {number}", async (expectedAnswers: number) => {
     assert.strictEqual(answers.length, expectedAnswers, `Expected [${expectedAnswers}], but got [${answers.length}]`);
@@ -179,8 +188,8 @@ class TypeLabelMatcher implements ConceptMatcher {
     }
 
     async matches(concept: Concept): Promise<boolean> {
-        if (concept.isRoleType()) return this.label == (concept as RoleType).getScopedLabel();
-        else if (concept.isType()) return this.label == (concept as Type).getLabel();
+        if (concept.isRoleType()) return this.label == (concept as RoleType).getLabel().scopedName();
+        else if (concept.isType()) return this.label == (concept as Type).getLabel().scopedName();
         else throw new TypeError("A Concept was matched by label, but it is not a Type.");
     }
 }
@@ -224,7 +233,7 @@ class AttributeValueMatcher extends AttributeMatcher {
 
         const attribute = concept as Attribute<ValueClass>;
 
-        if (this.typeLabel !== attribute.getType().getLabel()) return false;
+        if (this.typeLabel !== attribute.getType().getLabel().scopedName()) return false;
 
         return this.check(attribute);
     }
@@ -238,7 +247,7 @@ class ThingKeyMatcher extends AttributeMatcher {
         const keys = (concept as Thing).asRemote(tx()).getHas(true);
 
         for await (const key of keys) {
-            if (key.getType().getLabel() === this.typeLabel) {
+            if (key.getType().getLabel().scopedName() === this.typeLabel) {
                 return this.check(key);
             }
         }

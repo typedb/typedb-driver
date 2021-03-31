@@ -121,7 +121,7 @@ build:
         export DEPLOY_NPM_USERNAME=$REPO_GRAKN_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_GRAKN_PASSWORD
         export DEPLOY_NPM_EMAIL=$REPO_GRAKN_EMAIL
-        bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
+        bazel run --define version=$(git rev-parse HEAD) --spawn_strategy=local //:deploy-npm -- snapshot
       dependencies: [build, test-integration, test-behaviour-connection, test-behaviour-concept, test-behaviour-match, test-behaviour-writable, test-behaviour-definable]
     test-deployment-npm:
       filter:
