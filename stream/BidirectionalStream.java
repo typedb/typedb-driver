@@ -68,7 +68,7 @@ public class BidirectionalStream implements AutoCloseable {
         UUID requestID = UUID.randomUUID();
         ResponseCollector.Queue<ResPart> collector = resPartCollector.queue(requestID);
         dispatcher.dispatch(request.setReqId(requestID.toString()).build());
-        ResponseIterator iterator = new ResponseIterator(requestID, collector, dispatcher);
+        ResponsePartIterator iterator = new ResponsePartIterator(requestID, collector, dispatcher);
         return StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED | IMMUTABLE), false);
     }
 
