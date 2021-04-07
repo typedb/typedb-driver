@@ -19,6 +19,7 @@
 
 package grakn.client.stream;
 
+import com.google.protobuf.ByteString;
 import grakn.client.common.exception.GraknClientException;
 import grakn.client.common.rpc.GraknStub;
 import grakn.protocol.TransactionProto.Transaction.Req;
@@ -34,8 +35,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static grakn.client.common.collection.Bytes.bytesToUUID;
 import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
+import static grakn.client.common.rpc.RequestBuilder.UUIDAsByteString;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
@@ -57,7 +60,7 @@ public class BidirectionalStream implements AutoCloseable {
 
     public Single<Res> single(Req.Builder request, boolean batch) {
         UUID requestID = UUID.randomUUID();
-        Req req = request.setReqId(requestID.toString()).build();
+        Req req = request.setReqId(UUIDAsByteString(requestID)).build();
         ResponseCollector.Queue<Res> queue = resCollector.queue(requestID);
         if (batch) dispatcher.dispatch(req);
         else dispatcher.dispatchNow(req);
@@ -67,7 +70,7 @@ public class BidirectionalStream implements AutoCloseable {
     public Stream<ResPart> stream(Req.Builder request) {
         UUID requestID = UUID.randomUUID();
         ResponseCollector.Queue<ResPart> collector = resPartCollector.queue(requestID);
-        dispatcher.dispatch(request.setReqId(requestID.toString()).build());
+        dispatcher.dispatch(request.setReqId(UUIDAsByteString(requestID)).build());
         ResponsePartIterator iterator = new ResponsePartIterator(requestID, collector, dispatcher);
         return StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED | IMMUTABLE), false);
     }
@@ -77,17 +80,21 @@ public class BidirectionalStream implements AutoCloseable {
     }
 
     private void collect(Res res) {
-        UUID requestID = UUID.fromString(res.getReqId());
+        UUID requestID = byteStringAsUUID(res.getReqId());
         ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
         if (collector != null) collector.put(res);
         else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
     }
 
     private void collect(ResPart resPart) {
-        UUID requestID = UUID.fromString(resPart.getReqId());
+        UUID requestID = byteStringAsUUID(resPart.getReqId());
         ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
         if (collector != null) collector.put(resPart);
         else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
+    }
+
+    private static UUID byteStringAsUUID(ByteString byteString) {
+        return bytesToUUID(byteString.toByteArray());
     }
 
     @Override
