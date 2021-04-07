@@ -577,12 +577,6 @@ public class RequestBuilder {
             return TransactionProto.Transaction.Req.newBuilder().setThingReq(req);
         }
 
-        public static TransactionProto.Transaction.Req.Builder isInferredReq(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingIsInferredReq(
-                    ConceptProto.Thing.IsInferred.Req.getDefaultInstance())
-            );
-        }
-
         public static TransactionProto.Transaction.Req.Builder getHasReq(
                 String iid, List<ConceptProto.Type> attributeTypes) {
             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
