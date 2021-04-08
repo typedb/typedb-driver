@@ -71,12 +71,12 @@ public class ExplanationImpl implements Explanation {
     }
 
     @Override
-    public ConceptMap thenAnswer() {
+    public ConceptMap conclusion() {
         return conclusion;
     }
 
     @Override
-    public ConceptMap whenAnswer() {
+    public ConceptMap condition() {
         return condition;
     }
 

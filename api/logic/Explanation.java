@@ -28,10 +28,10 @@ public interface Explanation {
 
     Rule rule();
 
-    ConceptMap thenAnswer();
+    ConceptMap conclusion();
 
-    ConceptMap whenAnswer();
+    ConceptMap condition();
 
     Map<String, Set<String>> variableMapping();
-
+    
 }
