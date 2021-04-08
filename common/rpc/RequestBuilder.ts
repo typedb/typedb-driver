@@ -37,6 +37,7 @@ import {
     Type as TypeProto
 } from "grakn-protocol/common/concept_pb";
 import {Options} from "grakn-protocol/common/options_pb";
+import * as uuid from "uuid";
 import {Label} from "../Label";
 import {Bytes} from "../util/Bytes";
 
@@ -136,7 +137,7 @@ export namespace RequestBuilder {
         }
 
         export function streamReq(requestId: string) {
-            return new TransactionProto.Req().setReqId(requestId).setStreamReq(new TransactionProto.Stream.Req());
+            return new TransactionProto.Req().setReqId(uuid.parse(requestId) as Uint8Array).setStreamReq(new TransactionProto.Stream.Req());
         }
 
     }
@@ -539,13 +540,6 @@ export namespace RequestBuilder {
 
         export function protoThing(iid: string): ThingProto {
             return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
-        }
-
-
-        export function isInferredReq(iid: string) {
-            return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingIsInferredReq(
-                new ThingProto.IsInferred.Req()
-            ));
         }
 
         export function getHasReq(iid: string, onlyKey: boolean) {

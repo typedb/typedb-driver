@@ -35,13 +35,12 @@ export interface Thing extends Concept {
 
     getType(): ThingType;
 
+    isInferred(): boolean;
 }
 
 export interface RemoteThing extends Thing, RemoteConcept {
 
     asRemote(transaction: GraknTransaction): RemoteThing;
-
-    isInferred(): Promise<boolean>;
 
     setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void>;
 

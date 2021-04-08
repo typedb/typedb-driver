@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import {Stringable} from "../util/utils";
+type Stringable = { toString: () => string; };
 
 export abstract class ErrorMessage {
     private readonly _codePrefix: string;

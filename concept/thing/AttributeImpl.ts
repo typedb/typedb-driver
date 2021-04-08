@@ -33,10 +33,10 @@ import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class AttributeImpl<T extends AttributeType.ValueClass> extends ThingImpl implements Attribute<T> {
 
-    private _type: AttributeType;
+    private readonly _type: AttributeType;
 
-    constructor(iid: string, type: AttributeType) {
-        super(iid);
+    protected constructor(iid: string, isInferred: boolean, type: AttributeType) {
+        super(iid, isInferred);
         this._type = type;
     }
 
@@ -80,17 +80,18 @@ export namespace AttributeImpl {
         if (!thingProto) return null;
         const attrType = AttributeTypeImpl.of(thingProto.getType());
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
+        const isInferred = thingProto.getInferred();
         switch (thingProto.getType().getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
-                return new AttributeImpl.Boolean(iid, attrType as AttributeType.Boolean, thingProto.getValue().getBoolean());
+                return new AttributeImpl.Boolean(iid, isInferred, attrType as AttributeType.Boolean, thingProto.getValue().getBoolean());
             case AttributeTypeProto.ValueType.LONG:
-                return new AttributeImpl.Long(iid, attrType as AttributeType.Long, thingProto.getValue().getLong());
+                return new AttributeImpl.Long(iid, isInferred, attrType as AttributeType.Long, thingProto.getValue().getLong());
             case AttributeTypeProto.ValueType.DOUBLE:
-                return new AttributeImpl.Double(iid, attrType as AttributeType.Double, thingProto.getValue().getDouble());
+                return new AttributeImpl.Double(iid, isInferred, attrType as AttributeType.Double, thingProto.getValue().getDouble());
             case AttributeTypeProto.ValueType.STRING:
-                return new AttributeImpl.String(iid, attrType as AttributeType.String, thingProto.getValue().getString());
+                return new AttributeImpl.String(iid, isInferred, attrType as AttributeType.String, thingProto.getValue().getString());
             case AttributeTypeProto.ValueType.DATETIME:
-                return new AttributeImpl.DateTime(iid, attrType as AttributeType.DateTime, new Date(thingProto.getValue().getDateTime()));
+                return new AttributeImpl.DateTime(iid, isInferred, attrType as AttributeType.DateTime, new Date(thingProto.getValue().getDateTime()));
             default:
                 throw new GraknClientError(BAD_VALUE_TYPE.message(thingProto.getType().getValueType()));
         }
@@ -98,10 +99,10 @@ export namespace AttributeImpl {
 
     export abstract class RemoteImpl<T extends AttributeType.ValueClass> extends RemoteThingImpl implements Attribute.Remote<T> {
 
-        private _type: AttributeType;
+        private readonly _type: AttributeType;
 
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType) {
-            super(transaction, iid);
+        protected constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType) {
+            super(transaction, iid, isInferred);
             this._type = type;
         }
 
@@ -152,15 +153,15 @@ export namespace AttributeImpl {
     }
 
     export class Boolean extends AttributeImpl<boolean> implements Attribute.Boolean {
-        private _value: boolean;
+        private readonly _value: boolean;
 
-        constructor(iid: string, type: AttributeType.Boolean, value: boolean) {
-            super(iid, type);
+        constructor(iid: string, isInferred: boolean, type: AttributeType.Boolean, value: boolean) {
+            super(iid, isInferred, type);
             this._value = value;
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean {
-            return new AttributeImpl.RemoteImpl.Boolean(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Boolean(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Boolean {
@@ -179,15 +180,15 @@ export namespace AttributeImpl {
 
 
     export class Long extends AttributeImpl<number> implements Attribute.Long {
-        private _value: number;
+        private readonly _value: number;
 
-        constructor(iid: string, type: AttributeType.Long, value: number) {
-            super(iid, type);
+        constructor(iid: string, isInferred: boolean, type: AttributeType.Long, value: number) {
+            super(iid, isInferred, type);
             this._value = value;
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteLong {
-            return new AttributeImpl.RemoteImpl.Long(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Long(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Long {
@@ -206,15 +207,15 @@ export namespace AttributeImpl {
 
 
     export class Double extends AttributeImpl<number> implements Attribute.Double {
-        private _value: number;
+        private readonly _value: number;
 
-        constructor(iid: string, type: AttributeType.Double, value: number) {
-            super(iid, type);
+        constructor(iid: string, isInferred: boolean, type: AttributeType.Double, value: number) {
+            super(iid, isInferred, type);
             this._value = value;
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteDouble {
-            return new AttributeImpl.RemoteImpl.Double(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.Double(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.Double {
@@ -235,13 +236,13 @@ export namespace AttributeImpl {
     export class String extends AttributeImpl<string> implements Attribute.String {
         private _value: string;
 
-        constructor(iid: string, type: AttributeType.String, value: string) {
-            super(iid, type);
+        constructor(iid: string, isInferred: boolean, type: AttributeType.String, value: string) {
+            super(iid, isInferred, type);
             this._value = value;
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteString {
-            return new AttributeImpl.RemoteImpl.String(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.String(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.String {
@@ -260,15 +261,15 @@ export namespace AttributeImpl {
 
 
     export class DateTime extends AttributeImpl<Date> implements Attribute.DateTime {
-        private _value: Date;
+        private readonly _value: Date;
 
-        constructor(iid: string, type: AttributeType.DateTime, value: Date) {
-            super(iid, type);
+        constructor(iid: string, isInferred: boolean, type: AttributeType.DateTime, value: Date) {
+            super(iid, isInferred, type);
             this._value = value;
         }
 
         asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime {
-            return new AttributeImpl.RemoteImpl.DateTime(transaction as GraknTransaction.Extended, this.getIID(), this.getType(), this.getValue());
+            return new AttributeImpl.RemoteImpl.DateTime(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
         }
 
         getType(): AttributeType.DateTime {
@@ -288,10 +289,10 @@ export namespace AttributeImpl {
     export namespace RemoteImpl {
 
         export class Boolean extends AttributeImpl.RemoteImpl<boolean> implements Attribute.RemoteBoolean {
-            private _value: boolean;
+            private readonly _value: boolean;
 
-            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Boolean, value: boolean) {
-                super(transaction, iid, type);
+            constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Boolean, value: boolean) {
+                super(transaction, iid, isInferred, type);
                 this._value = value;
             }
 
@@ -314,10 +315,10 @@ export namespace AttributeImpl {
 
 
         export class Double extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteDouble {
-            private _value: number;
+            private readonly _value: number;
 
-            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Double, value: number) {
-                super(transaction, iid, type);
+            constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Double, value: number) {
+                super(transaction, iid, isInferred, type);
                 this._value = value;
             }
 
@@ -340,10 +341,10 @@ export namespace AttributeImpl {
         }
 
         export class Long extends AttributeImpl.RemoteImpl<number> implements Attribute.RemoteLong {
-            private _value: number;
+            private readonly _value: number;
 
-            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.Long, value: number) {
-                super(transaction, iid, type);
+            constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Long, value: number) {
+                super(transaction, iid, isInferred, type);
                 this._value = value;
             }
 
@@ -366,10 +367,10 @@ export namespace AttributeImpl {
         }
 
         export class String extends AttributeImpl.RemoteImpl<string> implements Attribute.RemoteString {
-            private _value: string;
+            private readonly _value: string;
 
-            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.String, value: string) {
-                super(transaction, iid, type);
+            constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.String, value: string) {
+                super(transaction, iid, isInferred, type);
                 this._value = value;
             }
 
@@ -393,10 +394,10 @@ export namespace AttributeImpl {
 
 
         export class DateTime extends AttributeImpl.RemoteImpl<Date> implements Attribute.RemoteDateTime {
-            private _value: Date;
+            private readonly _value: Date;
 
-            constructor(transaction: GraknTransaction.Extended, iid: string, type: AttributeType.DateTime, value: Date) {
-                super(transaction, iid, type);
+            constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.DateTime, value: Date) {
+                super(transaction, iid, isInferred, type);
                 this._value = value;
             }
 

@@ -21,12 +21,12 @@ import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
 import {ResponsePartIterator} from "./ResponsePartIterator";
 import {Stream} from "../common/util/Stream";
-import {uuidv4} from "../common/util/utils";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {GraknClientError} from "../common/errors/GraknClientError";
 import {Transaction} from "grakn-protocol/common/transaction_pb";
 import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
+import * as uuid from "uuid";
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
@@ -52,8 +52,8 @@ export class BidirectionalStream {
     }
 
     async single(request: Transaction.Req, batch: boolean): Promise<Transaction.Res> {
-        const requestId = uuidv4();
-        request.setReqId(requestId);
+        const requestId = uuid.v4();
+        request.setReqId(uuid.parse(requestId) as Uint8Array);
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
@@ -61,8 +61,8 @@ export class BidirectionalStream {
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
-        const requestId = uuidv4();
-        request.setReqId(requestId);
+        const requestId = uuid.v4();
+        request.setReqId(uuid.parse(requestId) as Uint8Array);
         const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
         this._dispatcher.dispatch(request);
@@ -83,14 +83,14 @@ export class BidirectionalStream {
 
     private collectRes(res: Transaction.Res): void {
         const requestId = res.getReqId();
-        const queue = this._responseCollector.get(requestId);
+        const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
         if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 
     private collectResPart(res: Transaction.ResPart): void {
         const requestId = res.getReqId();
-        const queue = this._responsePartCollector.get(requestId);
+        const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
         if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }

@@ -30,15 +30,15 @@ import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
 
 export class RelationImpl extends ThingImpl implements Relation {
 
-    private _type: RelationType;
+    private readonly _type: RelationType;
 
-    constructor(iid: string, type: RelationType) {
-        super(iid);
+    constructor(iid: string, isInferred: boolean, type: RelationType) {
+        super(iid, isInferred);
         this._type = type;
     }
 
     asRemote(transaction: GraknTransaction): RemoteRelation {
-        return new RelationImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getIID(), this.getType());
+        return new RelationImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
     }
 
     getType(): RelationType {
@@ -57,15 +57,15 @@ export namespace RelationImpl {
     export function of(thingProto: ThingProto) {
         if (!thingProto) return null;
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        return new RelationImpl(iid, RelationTypeImpl.of(thingProto.getType()));
+        return new RelationImpl(iid, thingProto.getInferred(), RelationTypeImpl.of(thingProto.getType()));
     }
 
     export class RemoteImpl extends RemoteThingImpl implements RemoteRelation {
 
         private _type: RelationType;
 
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: RelationType) {
-            super(transaction, iid);
+        constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: RelationType) {
+            super(transaction, iid, isInferred);
             this._type = type;
         }
 
@@ -129,6 +129,13 @@ export namespace RelationImpl {
         async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
             const request = RequestBuilder.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
             await this.execute(request);
+        }
+
+        getRelating(): Stream<RoleType> {
+            const request = RequestBuilder.Thing.Relation.getRelatingReq(this.getIID());
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
+                .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
         }
 
     }

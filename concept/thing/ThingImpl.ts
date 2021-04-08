@@ -37,12 +37,14 @@ import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 export abstract class ThingImpl extends ConceptImpl implements Thing {
-    private _iid: string;
+    private readonly _iid: string;
+    private readonly _isInferred: boolean;
 
-    constructor(iid: string) {
+    protected constructor(iid: string, isInferred: boolean) {
         super();
         if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
+        this._isInferred = isInferred;
     }
 
     abstract asRemote(transaction: GraknTransaction): RemoteThing;
@@ -58,6 +60,10 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
     abstract getType(): ThingType;
 
+    isInferred(): boolean {
+        return this._isInferred;
+    }
+
     isThing(): boolean {
         return true;
     }
@@ -69,18 +75,14 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
 
     private _transaction: GraknTransaction.Extended;
 
-    constructor(transaction: GraknTransaction.Extended, iid: string) {
-        super(iid);
+    protected constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean) {
+        super(iid, isInferred);
         this._transaction = transaction;
     }
 
     abstract asRemote(transaction: GraknTransaction): RemoteThing;
 
     abstract getType(): ThingType;
-
-    isThing(): boolean {
-        return true;
-    }
 
     async delete(): Promise<void> {
         const request = RequestBuilder.Thing.deleteReq(this.getIID());
@@ -143,11 +145,6 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
 
     async isDeleted(): Promise<boolean> {
         return !(await this._transaction.concepts().getThing(this.getIID()));
-    }
-
-    async isInferred(): Promise<boolean> {
-        const request = RequestBuilder.Thing.isInferredReq(this.getIID());
-        return (await this.execute(request)).getThingIsInferredRes().getInferred();
     }
 
     async setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void> {

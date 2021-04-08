@@ -28,13 +28,13 @@ export class EntityImpl extends ThingImpl implements Entity {
 
     private _type: EntityType;
 
-    constructor(iid: string, type: EntityType) {
-        super(iid);
+    constructor(iid: string, isInferred: boolean, type: EntityType) {
+        super(iid, isInferred);
         this._type = type;
     }
 
     asRemote(transaction: GraknTransaction): RemoteEntity {
-        return new EntityImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getIID(), this.getType());
+        return new EntityImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
     }
 
     getType(): EntityType {
@@ -53,16 +53,16 @@ export namespace EntityImpl {
     export function of(thingProto: ThingProto): Entity {
         if (!thingProto) return null;
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        return new EntityImpl(iid, EntityTypeImpl.of(thingProto.getType()));
+        return new EntityImpl(iid, thingProto.getInferred(), EntityTypeImpl.of(thingProto.getType()));
     }
 
 
     export class RemoteImpl extends RemoteThingImpl implements RemoteEntity {
 
-        private _type: EntityType;
+        private readonly _type: EntityType;
 
-        constructor(transaction: GraknTransaction.Extended, iid: string, type: EntityType) {
-            super(transaction, iid);
+        constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: EntityType) {
+            super(transaction, iid, isInferred);
             this._type = type;
         }
 

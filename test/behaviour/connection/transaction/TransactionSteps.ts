@@ -25,12 +25,13 @@ import { GraknSession, SessionType } from "../../../../dist/api/GraknSession";
 import { GraknTransaction, TransactionType } from "../../../../dist/api/GraknTransaction";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
 import assert = require("assert");
+import { GraknOptions } from "../../../../dist/api/GraknOptions";
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {
         const transactions: GraknTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType);
+            const transaction = await session.transaction(transactionType, GraknOptions.core({infer: true}));
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);

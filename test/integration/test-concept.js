@@ -57,8 +57,6 @@ async function run() {
         console.log("putEntityType - SUCCESS");
     } catch (err) {
         console.error(`putEntityType - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -74,8 +72,6 @@ async function run() {
         console.log("putRelationType / setRelates / setPlays - SUCCESS");
     } catch (err) {
         console.error(`putRelationType / setRelates / setPlays - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -89,8 +85,6 @@ async function run() {
         console.log("commit attribute type + owns - SUCCESS");
     } catch (err) {
         console.error(`commit attribute type + owns - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -105,8 +99,6 @@ async function run() {
         console.log("set supertype - SUCCESS");
     } catch (err) {
         console.error(`set supertype - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -118,8 +110,6 @@ async function run() {
         console.log(`get supertype - SUCCESS - the supertype of 'lion' is '${supertypeOfLion.getLabel()}'.`);
     } catch (err) {
         console.error(`get supertype - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -131,8 +121,6 @@ async function run() {
         console.log(`get supertypes - SUCCESS - the supertypes of 'stone-lion' are [${supertypesOfStoneLion.map(x => x.getLabel())}].`);
     } catch (err) {
         console.error(`get supertypes - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -144,8 +132,6 @@ async function run() {
         console.log(`get subtypes - SUCCESS - the subtypes of 'lion' are [${subtypesOfLion.map(x => x.getLabel())}].`);
     } catch (err) {
         console.error(`get subtypes - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -161,8 +147,6 @@ async function run() {
         console.log(`set label - SUCCESS - 'monkey' has been renamed to '${newLabel}'.`);
     } catch (err) {
         console.error(`set label - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -182,8 +166,6 @@ async function run() {
         console.log(`unset abstract - SUCCESS - 'whale' ${isAbstractAfterUnset ? "is still" : "is no longer"} abstract.`);
     } catch (err) {
         console.error(`set label - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -212,8 +194,6 @@ async function run() {
         console.log(`get/set relates/plays/players, overriding a super-role - SUCCESS - 'man' plays [${playingRoles}]; 'fathership:father' is played by [${roleplayers}].`);
     } catch (err) {
         console.error(`get/set relates/plays/players, overriding a super-role - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -245,8 +225,6 @@ async function run() {
             `of which [${ownedKeys.map(x => x.getLabel().scopedName())}] are keys, and [${ownedDateTimes.map((x => x.getLabel()))}] are datetimes`);
     } catch (err) {
         console.error(`get/set owns, overriding a super-attribute - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -268,8 +246,6 @@ async function run() {
             + `'person' plays [${personPlays}], 'fathership' relates [${fathershipRelates}]`);
     } catch (err) {
         console.error(`unset owns/plays/relates - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -288,8 +264,6 @@ async function run() {
             + `volume is a ${volume.getValueType()}, is-alive is a ${isAlive.getValueType()} and start-date is a ${startDate.getValueType()}`);
     } catch (err) {
         console.error(`put all 5 attribute value types - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -302,8 +276,6 @@ async function run() {
         console.log(`put rule - SUCCESS`);
     } catch (err) {
         console.error(`put rule - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -327,7 +299,7 @@ async function run() {
         for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();
         const firstLion = lions[0];
-        const isInferred = await firstLion.asRemote(tx).isInferred();
+        const isInferred = firstLion.isInferred();
         const lionType = await firstLion.asRemote(tx).getType();
         const age42 = await age.asRemote(tx).put(42);
         await firstLion.asRemote(tx).setHas(age42);
@@ -357,8 +329,6 @@ async function run() {
         console.log(`getType - SUCCESS - After looking more closely, it turns out that there are ${lions.length} stone lions.`);
     } catch (err) {
         console.error(`Thing methods - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -384,8 +354,6 @@ async function run() {
         console.log(`Relation methods - SUCCESS`);
     } catch (err) {
         console.error(`Relation methods - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
@@ -403,8 +371,6 @@ async function run() {
             + `volume is ${volumeAttr.getValue()}, is-alive is ${isAliveAttr.getValue()} and start-date is ${startDateAttr.getValue()}`);
     } catch (err) {
         console.error(`put 5 different types of attributes - ERROR: ${err.stack || err}`);
-        await tx.close();
-        await session.close();
         client.close();
         process.exit(1);
     }
