@@ -19,6 +19,7 @@
 
 package grakn.client.test.behaviour.connection.transaction;
 
+import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.api.GraknTransaction;
 import graql.lang.Graql;
@@ -65,7 +66,7 @@ public class TransactionSteps {
         for (GraknSession session : sessions) {
             List<GraknTransaction> transactions = new ArrayList<>();
             for (GraknTransaction.Type type : types) {
-                GraknTransaction transaction = session.transaction(type);
+                GraknTransaction transaction = session.transaction(type, GraknOptions.core().infer(true));
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);
