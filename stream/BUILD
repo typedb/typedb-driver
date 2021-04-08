@@ -34,6 +34,7 @@ java_library(
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_protobuf_protobuf_java",
         "@maven//:io_grpc_grpc_stub",
         "@maven//:io_grpc_grpc_api",
         "@maven//:org_slf4j_slf4j_api"

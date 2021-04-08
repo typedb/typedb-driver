@@ -29,13 +29,13 @@ public class EntityImpl extends ThingImpl implements Entity {
 
     private final EntityTypeImpl type;
 
-    EntityImpl(String iid, EntityTypeImpl type) {
-        super(iid);
+    EntityImpl(String iid, boolean isInferred, EntityTypeImpl type) {
+        super(iid, isInferred);
         this.type = type;
     }
 
     public static EntityImpl of(ConceptProto.Thing protoThing) {
-        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()), EntityTypeImpl.of(protoThing.getType()));
+        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()), protoThing.getInferred(), EntityTypeImpl.of(protoThing.getType()));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class EntityImpl extends ThingImpl implements Entity {
 
     @Override
     public EntityImpl.Remote asRemote(GraknTransaction transaction) {
-        return new EntityImpl.Remote(transaction, getIID(), type);
+        return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
     }
 
     @Override
@@ -57,14 +57,14 @@ public class EntityImpl extends ThingImpl implements Entity {
 
         private final EntityTypeImpl type;
 
-        public Remote(GraknTransaction transaction, String iid, EntityTypeImpl type) {
-            super(transaction, iid);
+        public Remote(GraknTransaction transaction, String iid, boolean isInferred, EntityTypeImpl type) {
+            super(transaction, iid, isInferred);
             this.type = type;
         }
 
         @Override
         public EntityImpl.Remote asRemote(GraknTransaction transaction) {
-            return new EntityImpl.Remote(transaction, getIID(), type);
+            return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
         }
 
         @Override

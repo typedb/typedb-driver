@@ -50,19 +50,20 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     private final RelationTypeImpl type;
 
-    RelationImpl(String iid, RelationTypeImpl type) {
-        super(iid);
+    RelationImpl(String iid, boolean isInferred, RelationTypeImpl type) {
+        super(iid, isInferred);
         this.type = type;
     }
 
     public static RelationImpl of(ConceptProto.Thing protoThing) {
         return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()),
-                                RelationTypeImpl.of(protoThing.getType()));
+                protoThing.getInferred(),
+                RelationTypeImpl.of(protoThing.getType()));
     }
 
     @Override
     public RelationImpl.Remote asRemote(GraknTransaction transaction) {
-        return new RelationImpl.Remote(transaction, getIID(), type);
+        return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
     }
 
     @Override
@@ -79,14 +80,14 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         private final RelationTypeImpl type;
 
-        public Remote(GraknTransaction transaction, String iid, RelationTypeImpl type) {
-            super(transaction, iid);
+        public Remote(GraknTransaction transaction, String iid, boolean isInferred, RelationTypeImpl type) {
+            super(transaction, iid, isInferred);
             this.type = type;
         }
 
         @Override
         public RelationImpl.Remote asRemote(GraknTransaction transaction) {
-            return new RelationImpl.Remote(transaction, getIID(), type);
+            return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
         }
 
         @Override

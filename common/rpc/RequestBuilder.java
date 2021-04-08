@@ -44,8 +44,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.google.protobuf.ByteString.copyFrom;
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
+import static grakn.client.common.collection.Bytes.uuidToBytes;
 import static grakn.client.common.rpc.RequestBuilder.Thing.byteString;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.Collections.emptyMap;
@@ -65,6 +67,10 @@ public class RequestBuilder {
         } else {
             return emptyMap();
         }
+    }
+
+    public static ByteString UUIDAsByteString(UUID uuid) {
+        return copyFrom(uuidToBytes(uuid));
     }
 
     public static class Core {
@@ -145,7 +151,7 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req streamReq(UUID reqID) {
-            return TransactionProto.Transaction.Req.newBuilder().setReqId(reqID.toString()).setStreamReq(
+            return TransactionProto.Transaction.Req.newBuilder().setReqId(UUIDAsByteString(reqID)).setStreamReq(
                     TransactionProto.Transaction.Stream.Req.getDefaultInstance()
             ).build();
         }
@@ -569,12 +575,6 @@ public class RequestBuilder {
 
         private static TransactionProto.Transaction.Req.Builder thingReq(ConceptProto.Thing.Req.Builder req) {
             return TransactionProto.Transaction.Req.newBuilder().setThingReq(req);
-        }
-
-        public static TransactionProto.Transaction.Req.Builder isInferredReq(String iid) {
-            return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingIsInferredReq(
-                    ConceptProto.Thing.IsInferred.Req.getDefaultInstance())
-            );
         }
 
         public static TransactionProto.Transaction.Req.Builder getHasReq(

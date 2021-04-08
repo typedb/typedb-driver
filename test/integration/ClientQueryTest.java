@@ -514,7 +514,7 @@ public class ClientQueryTest {
             assertEquals(3, explanations.size());
             List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().relations().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
-        }, READ, GraknOptions.core().explain(true));
+        }, READ, GraknOptions.core().infer(true).explain(true));
     }
 
     private String[] lionNames() {

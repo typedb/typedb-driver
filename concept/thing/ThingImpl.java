@@ -41,7 +41,6 @@ import static grakn.client.common.rpc.RequestBuilder.Thing.deleteReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.getHasReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.getPlayingReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.getRelationsReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.isInferredReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.protoThing;
 import static grakn.client.common.rpc.RequestBuilder.Thing.setHasReq;
 import static grakn.client.common.rpc.RequestBuilder.Thing.unsetHasReq;
@@ -52,10 +51,12 @@ import static java.util.Arrays.asList;
 public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     private final String iid;
+    private final boolean isInferred;
 
-    ThingImpl(String iid) {
+    ThingImpl(String iid, boolean isInferred) {
         if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
         this.iid = iid;
+        this.isInferred = isInferred;
     }
 
     public static ThingImpl of(ConceptProto.Thing thingProto) {
@@ -79,6 +80,11 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public abstract ThingTypeImpl getType();
+
+    @Override
+    public boolean isInferred() {
+        return isInferred;
+    }
 
     @Override
     public ThingImpl asThing() {
@@ -108,13 +114,15 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
         final GraknTransaction.Extended transactionRPC;
         private final String iid;
+        private final boolean isInferred;
         private final int hash;
 
-        Remote(GraknTransaction transaction, String iid) {
+        Remote(GraknTransaction transaction, String iid, boolean isInferred) {
             if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
             this.transactionRPC = (GraknTransaction.Extended) transaction;
             if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
             this.iid = iid;
+            this.isInferred = isInferred;
             this.hash = Objects.hash(this.transactionRPC, this.getIID());
         }
 
@@ -127,8 +135,8 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         public abstract ThingTypeImpl getType();
 
         @Override
-        public final boolean isInferred() {
-            return execute(isInferredReq(getIID())).getThingIsInferredRes().getInferred();
+        public boolean isInferred() {
+            return isInferred;
         }
 
         @Override

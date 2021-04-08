@@ -36,6 +36,9 @@ public interface Thing extends Concept {
     @CheckReturnValue
     ThingType getType();
 
+    @CheckReturnValue
+    boolean isInferred();
+
     @Override
     @CheckReturnValue
     default boolean isThing() {
@@ -51,9 +54,6 @@ public interface Thing extends Concept {
         void setHas(Attribute<?> attribute);
 
         void unsetHas(Attribute<?> attribute);
-
-        @CheckReturnValue
-        boolean isInferred();
 
         @CheckReturnValue
         Stream<? extends Attribute<?>> getHas(boolean onlyKey);
