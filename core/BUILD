@@ -47,7 +47,6 @@ java_library(
         "@maven//:io_grpc_grpc_netty",
         "@maven//:io_netty_netty_all",
         "@maven//:io_netty_netty_tcnative_boringssl_static",
-        # "@maven//:io_grpc_grpc_core", // TODO: verify whether we need this or not
     ],
 )
 
