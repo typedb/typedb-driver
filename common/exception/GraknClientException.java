@@ -63,6 +63,8 @@ public class GraknClientException extends RuntimeException {
 
     // TODO: propagate exception from the server side in a less-brittle way
     private static boolean isReplicaNotPrimaryException(StatusRuntimeException statusRuntimeException) {
-        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL && statusRuntimeException.getStatus().getDescription().contains("[RPL01]");
+        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL
+                && statusRuntimeException.getStatus().getDescription() != null
+                && statusRuntimeException.getStatus().getDescription().contains("[RPL01]");
     }
 }
