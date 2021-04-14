@@ -21,7 +21,6 @@ package grakn.client.cluster;
 
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ClusterDatabaseProto;
-import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +127,7 @@ abstract class FailsafeTask<RESULT> {
                 client.databaseByName().put(database, clusterDatabase);
                 return clusterDatabase;
             } catch (GraknClientException e) {
-                if (e.getErrorMessage().equals(UNABLE_TO_CONNECT)) {
+                if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
                             serverAddress + ". Attempting next server.", e);
                 } else {
