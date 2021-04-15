@@ -35,8 +35,8 @@ public class GraknOptions {
     private Boolean traceInference = null;
     private Boolean explain = null;
     private Boolean parallel = null;
-    private Integer batchSize = null;
     private Boolean prefetch = null;
+    private Integer prefetchSize = null;
     private Integer sessionIdleTimeoutMillis = null;
     private Integer schemaLockAcquireTimeoutMillis = null;
 
@@ -96,25 +96,25 @@ public class GraknOptions {
     }
 
     @CheckReturnValue
-    public Optional<Integer> batchSize() {
-        return Optional.ofNullable(batchSize);
-    }
-
-    public GraknOptions batchSize(int batchSize) {
-        if (batchSize < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, batchSize);
-        }
-        this.batchSize = batchSize;
-        return this;
-    }
-
-    @CheckReturnValue
     public Optional<Boolean> prefetch() {
         return Optional.ofNullable(prefetch);
     }
 
     public GraknOptions prefetch(boolean prefetch) {
         this.prefetch = prefetch;
+        return this;
+    }
+
+    @CheckReturnValue
+    public Optional<Integer> prefetchSize() {
+        return Optional.ofNullable(prefetchSize);
+    }
+
+    public GraknOptions prefetchSize(int prefetchSize) {
+        if (prefetchSize < 1) {
+            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, prefetchSize);
+        }
+        this.prefetchSize = prefetchSize;
         return this;
     }
 
@@ -156,7 +156,7 @@ public class GraknOptions {
         traceInference().ifPresent(builder::setTraceInference);
         explain().ifPresent(builder::setExplain);
         parallel().ifPresent(builder::setParallel);
-        batchSize().ifPresent(builder::setBatchSize);
+        prefetchSize().ifPresent(builder::setPrefetchSize);
         prefetch().ifPresent(builder::setPrefetch);
         sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
         schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
