@@ -25,7 +25,7 @@ namespace Opts {
         traceInference?: boolean;
         explain?: boolean;
         parallel?: boolean;
-        batchSize?: number;
+        prefetchSize?: number;
         prefetch?: boolean;
         sessionIdleTimeoutMillis?: number;
         schemaLockAcquireTimeoutMillis?: number;
@@ -42,7 +42,7 @@ namespace Opts {
             if (options.traceInference != null) optionsProto.setTraceInference(options.traceInference);
             if (options.explain != null) optionsProto.setExplain(options.explain);
             if (options.parallel != null) optionsProto.setParallel(options.parallel);
-            if (options.batchSize != null) optionsProto.setBatchSize(options.batchSize);
+            if (options.prefetchSize != null) optionsProto.setPrefetchSize(options.prefetchSize);
             if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
             if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
             if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);

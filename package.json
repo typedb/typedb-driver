@@ -25,7 +25,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.14.0",
-    "grakn-protocol": "2.0.1",
+    "grakn-protocol": "https://repo.grakn.ai/repository/npm-snapshot/grakn-protocol/-/grakn-protocol-0.0.0-efac95a542c5f23b0ee881f7bd618224b0aa7d6c.tgz",
     "uuid": "8.3.2"
   },
   "devDependencies": {
