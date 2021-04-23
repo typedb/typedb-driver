@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package typedb.client.concept.answer;
 
-import grakn.client.api.answer.Numeric;
-import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.AnswerProto;
+import typedb.client.api.answer.Numeric;
+import typedb.client.common.exception.TypeDBClientException;
+import typedb.protocol.AnswerProto;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static grakn.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
+import static typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static typedb.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
 
 public class NumericImpl implements Numeric {
 
@@ -49,7 +49,7 @@ public class NumericImpl implements Numeric {
             case NAN:
                 return NumericImpl.ofNaN();
             default:
-                throw new GraknClientException(BAD_ANSWER_TYPE, numeric.getValueCase());
+                throw new TypeDBClientException(BAD_ANSWER_TYPE, numeric.getValueCase());
         }
     }
 
@@ -83,19 +83,19 @@ public class NumericImpl implements Numeric {
     @Override
     public long asLong() {
         if (isLong()) return longValue;
-        else throw new GraknClientException(ILLEGAL_CAST, Long.class);
+        else throw new TypeDBClientException(ILLEGAL_CAST, Long.class);
     }
 
     @Override
     public Double asDouble() {
         if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_CAST, Double.class);
+        else throw new TypeDBClientException(ILLEGAL_CAST, Double.class);
     }
 
     @Override
     public Number asNumber() {
         if (isLong()) return longValue;
         else if (isDouble()) return doubleValue;
-        else throw new GraknClientException(ILLEGAL_CAST, Number.class);
+        else throw new TypeDBClientException(ILLEGAL_CAST, Number.class);
     }
 }

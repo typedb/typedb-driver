@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.api.concept.type;
+package typedb.client.api.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.Concept;
-import grakn.client.common.Label;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.Concept;
+import typedb.client.common.Label;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public interface Type extends Concept {
     }
 
     @Override
-    Remote asRemote(GraknTransaction transaction);
+    Remote asRemote(TypeDBTransaction transaction);
 
     interface Remote extends Type, Concept.Remote {
 

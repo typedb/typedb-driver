@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package grakn.client.api.concept;
+package typedb.client.api.concept;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.thing.Entity;
-import grakn.client.api.concept.thing.Relation;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.api.concept.type.Type;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.thing.Attribute;
+import typedb.client.api.concept.thing.Entity;
+import typedb.client.api.concept.thing.Relation;
+import typedb.client.api.concept.thing.Thing;
+import typedb.client.api.concept.type.AttributeType;
+import typedb.client.api.concept.type.EntityType;
+import typedb.client.api.concept.type.RelationType;
+import typedb.client.api.concept.type.RoleType;
+import typedb.client.api.concept.type.ThingType;
+import typedb.client.api.concept.type.Type;
 
 import javax.annotation.CheckReturnValue;
 
@@ -116,7 +116,7 @@ public interface Concept {
     Relation asRelation();
 
     @CheckReturnValue
-    Remote asRemote(GraknTransaction transaction);
+    Remote asRemote(TypeDBTransaction transaction);
 
     @CheckReturnValue
     boolean isRemote();

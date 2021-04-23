@@ -17,14 +17,14 @@
  * under the License.
  */
 
-package grakn.client.core;
+package typedb.client.core;
 
-import grakn.client.api.database.Database;
-import grakn.client.common.rpc.GraknStub;
+import typedb.client.api.database.Database;
+import typedb.client.common.rpc.TypeDBStub;
 
-import static grakn.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-import static grakn.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static grakn.client.core.CoreDatabaseManager.nonNull;
+import static typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+import static typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
+import static typedb.client.core.CoreDatabaseManager.nonNull;
 
 public class CoreDatabase implements Database {
 
@@ -36,7 +36,7 @@ public class CoreDatabase implements Database {
         this.name = nonNull((name));
     }
 
-    private GraknStub.Core stub() {
+    private TypeDBStub.Core stub() {
         return databaseMgr.stub();
     }
 

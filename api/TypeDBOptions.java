@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package grakn.client.api;
+package typedb.client.api;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.OptionsProto;
+import typedb.client.common.exception.TypeDBClientException;
+import typedb.protocol.OptionsProto;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static grakn.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static typedb.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
+import static typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static grakn.common.util.Objects.className;
 
-public class GraknOptions {
+public class TypeDBOptions {
 
     private Boolean infer = null;
     private Boolean traceInference = null;
@@ -41,12 +41,12 @@ public class GraknOptions {
     private Integer schemaLockAcquireTimeoutMillis = null;
 
     @CheckReturnValue
-    public static GraknOptions core() {
-        return new GraknOptions();
+    public static TypeDBOptions core() {
+        return new TypeDBOptions();
     }
 
     @CheckReturnValue
-    public static GraknOptions.Cluster cluster() {
+    public static TypeDBOptions.Cluster cluster() {
         return new Cluster();
     }
 
@@ -60,7 +60,7 @@ public class GraknOptions {
         return Optional.ofNullable(infer);
     }
 
-    public GraknOptions infer(boolean infer) {
+    public TypeDBOptions infer(boolean infer) {
         this.infer = infer;
         return this;
     }
@@ -70,7 +70,7 @@ public class GraknOptions {
         return Optional.ofNullable(traceInference);
     }
 
-    public GraknOptions traceInference(boolean traceInference) {
+    public TypeDBOptions traceInference(boolean traceInference) {
         this.traceInference = traceInference;
         return this;
     }
@@ -80,7 +80,7 @@ public class GraknOptions {
         return Optional.ofNullable(explain);
     }
 
-    public GraknOptions explain(boolean explain) {
+    public TypeDBOptions explain(boolean explain) {
         this.explain = explain;
         return this;
     }
@@ -90,7 +90,7 @@ public class GraknOptions {
         return Optional.ofNullable(parallel);
     }
 
-    public GraknOptions parallel(boolean parallel) {
+    public TypeDBOptions parallel(boolean parallel) {
         this.parallel = parallel;
         return this;
     }
@@ -100,9 +100,9 @@ public class GraknOptions {
         return Optional.ofNullable(batchSize);
     }
 
-    public GraknOptions batchSize(int batchSize) {
+    public TypeDBOptions batchSize(int batchSize) {
         if (batchSize < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, batchSize);
+            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, batchSize);
         }
         this.batchSize = batchSize;
         return this;
@@ -113,7 +113,7 @@ public class GraknOptions {
         return Optional.ofNullable(prefetch);
     }
 
-    public GraknOptions prefetch(boolean prefetch) {
+    public TypeDBOptions prefetch(boolean prefetch) {
         this.prefetch = prefetch;
         return this;
     }
@@ -123,9 +123,9 @@ public class GraknOptions {
         return Optional.ofNullable(sessionIdleTimeoutMillis);
     }
 
-    public GraknOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
+    public TypeDBOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
         if (sessionIdleTimeoutMillis < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
+            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
         }
         this.sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
         return this;
@@ -136,9 +136,9 @@ public class GraknOptions {
         return Optional.ofNullable(schemaLockAcquireTimeoutMillis);
     }
 
-    public GraknOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
+    public TypeDBOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
         if (schemaLockAcquireTimeoutMillis < 1) {
-            throw new GraknClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
+            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
         }
         this.schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
         return this;
@@ -146,7 +146,7 @@ public class GraknOptions {
 
     @CheckReturnValue
     public Cluster asCluster() {
-        throw new GraknClientException(ILLEGAL_CAST, className(Cluster.class));
+        throw new TypeDBClientException(ILLEGAL_CAST, className(Cluster.class));
     }
 
     @CheckReturnValue
@@ -165,7 +165,7 @@ public class GraknOptions {
         return builder.build();
     }
 
-    public static class Cluster extends GraknOptions {
+    public static class Cluster extends TypeDBOptions {
 
         private Boolean readAnyReplica = null;
 

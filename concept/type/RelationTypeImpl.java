@@ -17,21 +17,21 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.common.Label;
-import grakn.client.concept.thing.RelationImpl;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.type.RelationType;
+import typedb.client.common.Label;
+import typedb.client.concept.thing.RelationImpl;
+import typedb.client.concept.thing.ThingImpl;
+import typedb.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
+import static typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
+import static typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
+import static typedb.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
+import static typedb.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
@@ -44,7 +44,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -55,12 +55,12 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
+        public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

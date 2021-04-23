@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.common.rpc;
+package typedb.client.common.rpc;
 
 import com.google.protobuf.ByteString;
 import grabl.tracing.client.GrablTracingThreadStatic;
-import grakn.client.common.Label;
-import grakn.protocol.ClusterDatabaseProto;
-import grakn.protocol.ClusterServerProto;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.CoreDatabaseProto;
-import grakn.protocol.LogicProto;
-import grakn.protocol.OptionsProto;
-import grakn.protocol.QueryProto;
-import grakn.protocol.SessionProto;
-import grakn.protocol.TransactionProto;
+import typedb.client.common.Label;
+import typedb.protocol.ClusterDatabaseProto;
+import typedb.protocol.ClusterServerProto;
+import typedb.protocol.ConceptProto;
+import typedb.protocol.CoreDatabaseProto;
+import typedb.protocol.LogicProto;
+import typedb.protocol.OptionsProto;
+import typedb.protocol.QueryProto;
+import typedb.protocol.SessionProto;
+import typedb.protocol.TransactionProto;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
@@ -47,8 +47,8 @@ import java.util.UUID;
 import static com.google.protobuf.ByteString.copyFrom;
 import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
 import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-import static grakn.client.common.collection.Bytes.uuidToBytes;
-import static grakn.client.common.rpc.RequestBuilder.Thing.byteString;
+import static typedb.client.common.collection.Bytes.uuidToBytes;
+import static typedb.client.common.rpc.RequestBuilder.Thing.byteString;
 import static grakn.common.collection.Bytes.hexStringToBytes;
 import static java.util.Collections.emptyMap;
 

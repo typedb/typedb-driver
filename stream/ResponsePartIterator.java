@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package grakn.client.stream;
+package typedb.client.stream;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.RequestBuilder;
-import grakn.protocol.TransactionProto;
+import typedb.client.common.exception.TypeDBClientException;
+import typedb.client.common.rpc.RequestBuilder;
+import typedb.protocol.TransactionProto;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static grakn.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static typedb.client.common.exception.ErrorMessage.Client.MISSING_RESPONSE;
+import static typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
+import static typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public class ResponsePartIterator implements Iterator<TransactionProto.Transaction.ResPart> {
 
@@ -54,7 +54,7 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
         TransactionProto.Transaction.ResPart resPart = responseCollector.take();
         switch (resPart.getResCase()) {
             case RES_NOT_SET:
-                throw new GraknClientException(MISSING_RESPONSE, requestID);
+                throw new TypeDBClientException(MISSING_RESPONSE, requestID);
             case STREAM_RES_PART:
                 switch (resPart.getStreamResPart().getState()) {
                     case DONE:
@@ -64,7 +64,7 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
                         dispatcher.dispatch(RequestBuilder.Transaction.streamReq(requestID));
                         return fetchAndCheck();
                     default:
-                        throw new GraknClientException(ILLEGAL_ARGUMENT);
+                        throw new TypeDBClientException(ILLEGAL_ARGUMENT);
                 }
             default:
                 next = resPart;
@@ -83,7 +83,7 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
             case EMPTY:
                 return fetchAndCheck();
             default:
-                throw new GraknClientException(ILLEGAL_STATE);
+                throw new TypeDBClientException(ILLEGAL_STATE);
         }
     }
 

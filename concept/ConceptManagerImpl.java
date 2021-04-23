@@ -17,37 +17,37 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package typedb.client.concept;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.ConceptManager;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.client.concept.type.AttributeTypeImpl;
-import grakn.client.concept.type.EntityTypeImpl;
-import grakn.client.concept.type.RelationTypeImpl;
-import grakn.client.concept.type.ThingTypeImpl;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.ConceptManager;
+import typedb.client.api.concept.thing.Thing;
+import typedb.client.api.concept.type.AttributeType;
+import typedb.client.api.concept.type.EntityType;
+import typedb.client.api.concept.type.RelationType;
+import typedb.client.api.concept.type.ThingType;
+import typedb.client.concept.thing.ThingImpl;
+import typedb.client.concept.type.AttributeTypeImpl;
+import typedb.client.concept.type.EntityTypeImpl;
+import typedb.client.concept.type.RelationTypeImpl;
+import typedb.client.concept.type.ThingTypeImpl;
+import typedb.protocol.ConceptProto;
+import typedb.protocol.TransactionProto;
 import graql.lang.common.GraqlToken;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
+import static typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
+import static typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
+import static typedb.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
+import static typedb.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
+import static typedb.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
-    private final GraknTransaction.Extended transactionExt;
+    private final TypeDBTransaction.Extended transactionExt;
 
-    public ConceptManagerImpl(GraknTransaction.Extended transactionExt) {
+    public ConceptManagerImpl(TypeDBTransaction.Extended transactionExt) {
         this.transactionExt = transactionExt;
     }
 

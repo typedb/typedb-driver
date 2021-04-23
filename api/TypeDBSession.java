@@ -17,18 +17,14 @@
  * under the License.
  */
 
-package grakn.client.api;
+package typedb.client.api;
 
-import grakn.client.api.concept.ConceptManager;
-import grakn.client.api.logic.LogicManager;
-import grakn.client.api.query.QueryFuture;
-import grakn.client.api.query.QueryManager;
-import grakn.protocol.TransactionProto;
+import typedb.client.api.database.Database;
+import typedb.protocol.SessionProto;
 
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
-public interface GraknTransaction extends AutoCloseable {
+public interface TypeDBSession extends AutoCloseable {
 
     @CheckReturnValue
     boolean isOpen();
@@ -37,33 +33,29 @@ public interface GraknTransaction extends AutoCloseable {
     Type type();
 
     @CheckReturnValue
-    GraknOptions options();
+    Database database();
 
     @CheckReturnValue
-    ConceptManager concepts();
+    TypeDBOptions options();
 
     @CheckReturnValue
-    LogicManager logic();
+    TypeDBTransaction transaction(TypeDBTransaction.Type type);
 
     @CheckReturnValue
-    QueryManager query();
-
-    void commit();
-
-    void rollback();
+    TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options);
 
     void close();
 
     enum Type {
-        READ(0),
-        WRITE(1);
+        DATA(0),
+        SCHEMA(1);
 
         private final int id;
-        private final boolean isWrite;
+        private final boolean isSchema;
 
         Type(int id) {
             this.id = id;
-            this.isWrite = id == 1;
+            this.isSchema = id == 1;
         }
 
         public static Type of(int value) {
@@ -77,21 +69,12 @@ public interface GraknTransaction extends AutoCloseable {
             return id;
         }
 
-        public boolean isRead() { return !isWrite; }
+        public boolean isData() { return !isSchema; }
 
-        public boolean isWrite() { return isWrite; }
+        public boolean isSchema() { return isSchema; }
 
-        public TransactionProto.Transaction.Type proto() {
-            return TransactionProto.Transaction.Type.forNumber(id);
+        public SessionProto.Session.Type proto() {
+            return SessionProto.Session.Type.forNumber(id);
         }
-    }
-
-    interface Extended extends GraknTransaction {
-
-        TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
-
-        QueryFuture<TransactionProto.Transaction.Res> query(TransactionProto.Transaction.Req.Builder request);
-
-        Stream<TransactionProto.Transaction.ResPart> stream(TransactionProto.Transaction.Req.Builder request);
     }
 }

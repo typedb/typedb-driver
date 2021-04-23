@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.api.answer;
+package typedb.client.api.answer;
 
-import grakn.client.api.concept.Concept;
+import typedb.client.api.concept.Concept;
 import grakn.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;

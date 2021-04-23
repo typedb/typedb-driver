@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package grakn.client.cluster;
+package typedb.client.cluster;
 
-import grakn.client.api.database.Database;
-import grakn.client.core.CoreDatabase;
-import grakn.client.core.CoreDatabaseManager;
-import grakn.protocol.ClusterDatabaseProto;
+import typedb.client.api.database.Database;
+import typedb.client.core.CoreDatabase;
+import typedb.client.core.CoreDatabaseManager;
+import typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

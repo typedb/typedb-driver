@@ -17,27 +17,27 @@
  * under the License.
  */
 
-package grakn.client.logic;
+package typedb.client.logic;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.logic.LogicManager;
-import grakn.client.api.logic.Rule;
-import grakn.protocol.LogicProto;
-import grakn.protocol.TransactionProto;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.logic.LogicManager;
+import typedb.client.api.logic.Rule;
+import typedb.protocol.LogicProto;
+import typedb.protocol.TransactionProto;
 import graql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
+import static typedb.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
+import static typedb.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
+import static typedb.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
 
 public final class LogicManagerImpl implements LogicManager {
 
-    private final GraknTransaction.Extended transactionRPC;
+    private final TypeDBTransaction.Extended transactionRPC;
 
-    public LogicManagerImpl(GraknTransaction.Extended transactionRPC) {
+    public LogicManagerImpl(TypeDBTransaction.Extended transactionRPC) {
         this.transactionRPC = transactionRPC;
     }
 

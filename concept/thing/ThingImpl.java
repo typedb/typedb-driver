@@ -17,34 +17,34 @@
  * under the License.
  */
 
-package grakn.client.concept.thing;
+package typedb.client.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.ConceptImpl;
-import grakn.client.concept.type.RoleTypeImpl;
-import grakn.client.concept.type.ThingTypeImpl;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.thing.Attribute;
+import typedb.client.api.concept.thing.Thing;
+import typedb.client.api.concept.type.AttributeType;
+import typedb.client.api.concept.type.RoleType;
+import typedb.client.common.exception.TypeDBClientException;
+import typedb.client.concept.ConceptImpl;
+import typedb.client.concept.type.RoleTypeImpl;
+import typedb.client.concept.type.ThingTypeImpl;
+import typedb.protocol.ConceptProto;
+import typedb.protocol.TransactionProto;
 
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_IID;
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-import static grakn.client.common.rpc.RequestBuilder.Thing.deleteReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.getHasReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.getPlayingReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.getRelationsReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.protoThing;
-import static grakn.client.common.rpc.RequestBuilder.Thing.setHasReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.unsetHasReq;
-import static grakn.client.concept.type.TypeImpl.protoTypes;
+import static typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static typedb.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static typedb.client.common.rpc.RequestBuilder.Thing.deleteReq;
+import static typedb.client.common.rpc.RequestBuilder.Thing.getHasReq;
+import static typedb.client.common.rpc.RequestBuilder.Thing.getPlayingReq;
+import static typedb.client.common.rpc.RequestBuilder.Thing.getRelationsReq;
+import static typedb.client.common.rpc.RequestBuilder.Thing.protoThing;
+import static typedb.client.common.rpc.RequestBuilder.Thing.setHasReq;
+import static typedb.client.common.rpc.RequestBuilder.Thing.unsetHasReq;
+import static typedb.client.concept.type.TypeImpl.protoTypes;
 import static grakn.common.util.Objects.className;
 import static java.util.Arrays.asList;
 
@@ -54,7 +54,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     private final boolean isInferred;
 
     ThingImpl(String iid, boolean isInferred) {
-        if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
+        if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
         this.iid = iid;
         this.isInferred = isInferred;
     }
@@ -69,7 +69,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
                 return AttributeImpl.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING, thingProto.getType().getEncoding());
+                throw new TypeDBClientException(BAD_ENCODING, thingProto.getType().getEncoding());
         }
     }
 
@@ -112,15 +112,15 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
 
-        final GraknTransaction.Extended transactionRPC;
+        final TypeDBTransaction.Extended transactionRPC;
         private final String iid;
         private final boolean isInferred;
         private final int hash;
 
-        Remote(GraknTransaction transaction, String iid, boolean isInferred) {
-            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            this.transactionRPC = (GraknTransaction.Extended) transaction;
-            if (iid == null || iid.isEmpty()) throw new GraknClientException(MISSING_IID);
+        Remote(TypeDBTransaction transaction, String iid, boolean isInferred) {
+            if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
+            this.transactionRPC = (TypeDBTransaction.Extended) transaction;
+            if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
             this.iid = iid;
             this.isInferred = isInferred;
             this.hash = Objects.hash(this.transactionRPC, this.getIID());

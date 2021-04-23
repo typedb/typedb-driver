@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.api.answer;
+package typedb.client.api.answer;
 
 import javax.annotation.CheckReturnValue;
 

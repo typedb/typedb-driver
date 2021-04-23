@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection;
+package typedb.client.test.behaviour.connection;
 
-import grakn.client.Grakn;
-import grakn.client.api.GraknClient;
+import typedb.client.TypeDB;
+import typedb.client.api.TypeDBClient;
 import grakn.common.test.server.GraknClusterRunner;
 import grakn.common.test.server.GraknSingleton;
 import io.cucumber.java.After;
@@ -55,8 +55,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    GraknClient createGraknClient(String address) {
-        return Grakn.coreClient(address);
+    TypeDBClient createTypeDBClient(String address) {
+        return TypeDB.coreClient(address);
     }
 
     @Given("connection has been opened")

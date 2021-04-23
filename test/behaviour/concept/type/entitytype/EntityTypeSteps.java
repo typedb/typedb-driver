@@ -17,6 +17,6 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.type.entitytype;
+package typedb.client.test.behaviour.concept.type.entitytype;
 
 public class EntityTypeSteps {}

@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.api.concept.type;
+package typedb.client.api.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType.ValueType;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.thing.Thing;
+import typedb.client.api.concept.type.AttributeType.ValueType;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -35,7 +35,7 @@ public interface ThingType extends Type {
     }
 
     @Override
-    ThingType.Remote asRemote(GraknTransaction transaction);
+    ThingType.Remote asRemote(TypeDBTransaction transaction);
 
     interface Remote extends Type.Remote, ThingType {
 

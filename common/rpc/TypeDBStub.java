@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package grakn.client.common.rpc;
+package typedb.client.common.rpc;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.ClusterServerProto;
-import grakn.protocol.CoreDatabaseProto.CoreDatabase;
-import grakn.protocol.CoreDatabaseProto.CoreDatabaseManager;
-import grakn.protocol.GraknClusterGrpc;
-import grakn.protocol.GraknCoreGrpc;
-import grakn.protocol.SessionProto.Session;
-import grakn.protocol.TransactionProto;
+import typedb.client.common.exception.TypeDBClientException;
+import typedb.protocol.ClusterServerProto;
+import typedb.protocol.CoreDatabaseProto.CoreDatabase;
+import typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
+import typedb.protocol.TypeDBClusterGrpc;
+import typedb.protocol.TypeDBCoreGrpc;
+import typedb.protocol.SessionProto.Session;
+import typedb.protocol.TransactionProto;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
@@ -34,13 +34,13 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.function.Supplier;
 
-import static grakn.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
+import static typedb.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
 
-public abstract class GraknStub {
+public abstract class TypeDBStub {
 
     private final ManagedChannel channel;
 
-    private GraknStub(ManagedChannel channel) {
+    private TypeDBStub(ManagedChannel channel) {
         this.channel = channel;
     }
 
@@ -57,7 +57,7 @@ public abstract class GraknStub {
         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
         // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an
         // exponential backoff algorithm. Here, we ensure that when the user needs that connection urgently (e.g: to
-        // open a Grakn session), it tries to reconnect immediately instead of just failing without trying.
+        // open a TypeDB session), it tries to reconnect immediately instead of just failing without trying.
         if (channel.getState(true).equals(ConnectivityState.TRANSIENT_FAILURE)) {
             channel.resetConnectBackoff();
         }
@@ -68,19 +68,19 @@ public abstract class GraknStub {
             ensureConnected();
             return function.get();
         } catch (StatusRuntimeException e) {
-            throw GraknClientException.of(e);
+            throw TypeDBClientException.of(e);
         }
     }
 
-    public static class Core extends GraknStub {
+    public static class Core extends TypeDBStub {
 
-        private final GraknCoreGrpc.GraknCoreBlockingStub blockingStub;
-        private final GraknCoreGrpc.GraknCoreStub asyncStub;
+        private final TypeDBCoreGrpc.TypeDBCoreBlockingStub blockingStub;
+        private final TypeDBCoreGrpc.TypeDBCoreStub asyncStub;
 
         private Core(ManagedChannel channel) {
             super(channel);
-            this.blockingStub = GraknCoreGrpc.newBlockingStub(channel);
-            this.asyncStub = GraknCoreGrpc.newStub(channel);
+            this.blockingStub = TypeDBCoreGrpc.newBlockingStub(channel);
+            this.asyncStub = TypeDBCoreGrpc.newStub(channel);
         }
 
         public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
@@ -120,13 +120,13 @@ public abstract class GraknStub {
         }
     }
 
-    public static class Cluster extends GraknStub {
+    public static class Cluster extends TypeDBStub {
 
-        private final GraknClusterGrpc.GraknClusterBlockingStub blockingStub;
+        private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
 
         private Cluster(ManagedChannel channel) {
             super(channel);
-            this.blockingStub = GraknClusterGrpc.newBlockingStub(channel);
+            this.blockingStub = TypeDBClusterGrpc.newBlockingStub(channel);
         }
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {

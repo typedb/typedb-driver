@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.api.logic;
+package typedb.client.api.logic;
 
-import grakn.client.api.answer.ConceptMap;
+import typedb.client.api.answer.ConceptMap;
 
 import java.util.Map;
 import java.util.Set;

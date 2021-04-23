@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.api.logic;
+package typedb.client.api.logic;
 
 import graql.lang.pattern.Pattern;
 

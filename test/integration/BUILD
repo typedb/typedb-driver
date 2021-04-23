@@ -26,7 +26,7 @@ grakn_java_test(
     server_mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
     server_linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
     server_windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
-    test_class = "grakn.client.test.integration.ClientQueryTest",
+    test_class = "typedb.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
         "//:client-java",

@@ -17,39 +17,39 @@
  * under the License.
  */
 
-package grakn.client.common.exception;
+package typedb.client.common.exception;
 
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
-public class GraknClientException extends RuntimeException {
+public class TypeDBClientException extends RuntimeException {
 
     @Nullable
     private final ErrorMessage errorMessage;
 
-    public GraknClientException(ErrorMessage error, Object... parameters) {
+    public TypeDBClientException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
         assert !getMessage().contains("%s");
         this.errorMessage = error;
     }
 
-    public GraknClientException(String message, Throwable cause) {
+    public TypeDBClientException(String message, Throwable cause) {
         super(message, cause);
         this.errorMessage = null;
     }
 
-    public static GraknClientException of(StatusRuntimeException statusRuntimeException) {
+    public static TypeDBClientException of(StatusRuntimeException statusRuntimeException) {
         // "Received Rst Stream" occurs if the server is in the process of shutting down.
         if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE
                 || statusRuntimeException.getStatus().getCode() == Status.Code.UNKNOWN
                 || statusRuntimeException.getMessage().contains("Received Rst Stream")) {
-            return new GraknClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
+            return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
         } else if (isReplicaNotPrimaryException(statusRuntimeException)) {
-            return new GraknClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
+            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
         }
-        return new GraknClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
+        return new TypeDBClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
     }
 
     public String getName() {

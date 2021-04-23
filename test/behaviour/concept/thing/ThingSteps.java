@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.thing;
+package typedb.client.test.behaviour.concept.thing;
 
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.Label;
-import grakn.client.test.behaviour.config.Parameters.RootLabel;
+import typedb.client.api.concept.thing.Thing;
+import typedb.client.api.concept.type.ThingType;
+import typedb.client.common.Label;
+import typedb.client.test.behaviour.config.Parameters.RootLabel;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -30,9 +30,9 @@ import io.cucumber.java.en.When;
 import java.util.HashMap;
 import java.util.Map;
 
-import static grakn.client.test.behaviour.concept.type.thingtype.ThingTypeSteps.get_thing_type;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static typedb.client.test.behaviour.concept.type.thingtype.ThingTypeSteps.get_thing_type;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static typedb.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

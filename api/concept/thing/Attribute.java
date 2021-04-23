@@ -17,11 +17,11 @@
  * under the License.
  */
 
-package grakn.client.api.concept.thing;
+package typedb.client.api.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.ThingType;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.type.AttributeType;
+import typedb.client.api.concept.type.ThingType;
 
 import javax.annotation.CheckReturnValue;
 import java.time.LocalDateTime;
@@ -84,7 +84,7 @@ public interface Attribute<VALUE> extends Thing {
 
     @Override
     @CheckReturnValue
-    Attribute.Remote<VALUE> asRemote(GraknTransaction transaction);
+    Attribute.Remote<VALUE> asRemote(TypeDBTransaction transaction);
 
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
@@ -133,7 +133,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         @CheckReturnValue
-        Attribute.Boolean.Remote asRemote(GraknTransaction transaction);
+        Attribute.Boolean.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {}
     }
@@ -152,7 +152,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         @CheckReturnValue
-        Attribute.Long.Remote asRemote(GraknTransaction transaction);
+        Attribute.Long.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {}
     }
@@ -171,7 +171,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         @CheckReturnValue
-        Attribute.Double.Remote asRemote(GraknTransaction transaction);
+        Attribute.Double.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {}
     }
@@ -190,7 +190,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         @CheckReturnValue
-        Attribute.String.Remote asRemote(GraknTransaction transaction);
+        Attribute.String.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {}
     }
@@ -209,7 +209,7 @@ public interface Attribute<VALUE> extends Thing {
 
         @Override
         @CheckReturnValue
-        Attribute.DateTime.Remote asRemote(GraknTransaction transaction);
+        Attribute.DateTime.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {}
     }

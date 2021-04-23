@@ -17,14 +17,18 @@
  * under the License.
  */
 
-package grakn.client.api;
+package typedb.client.api;
 
-import grakn.client.api.database.Database;
-import grakn.protocol.SessionProto;
+import typedb.client.api.concept.ConceptManager;
+import typedb.client.api.logic.LogicManager;
+import typedb.client.api.query.QueryFuture;
+import typedb.client.api.query.QueryManager;
+import typedb.protocol.TransactionProto;
 
 import javax.annotation.CheckReturnValue;
+import java.util.stream.Stream;
 
-public interface GraknSession extends AutoCloseable {
+public interface TypeDBTransaction extends AutoCloseable {
 
     @CheckReturnValue
     boolean isOpen();
@@ -33,29 +37,33 @@ public interface GraknSession extends AutoCloseable {
     Type type();
 
     @CheckReturnValue
-    Database database();
+    TypeDBOptions options();
 
     @CheckReturnValue
-    GraknOptions options();
+    ConceptManager concepts();
 
     @CheckReturnValue
-    GraknTransaction transaction(GraknTransaction.Type type);
+    LogicManager logic();
 
     @CheckReturnValue
-    GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options);
+    QueryManager query();
+
+    void commit();
+
+    void rollback();
 
     void close();
 
     enum Type {
-        DATA(0),
-        SCHEMA(1);
+        READ(0),
+        WRITE(1);
 
         private final int id;
-        private final boolean isSchema;
+        private final boolean isWrite;
 
         Type(int id) {
             this.id = id;
-            this.isSchema = id == 1;
+            this.isWrite = id == 1;
         }
 
         public static Type of(int value) {
@@ -69,12 +77,21 @@ public interface GraknSession extends AutoCloseable {
             return id;
         }
 
-        public boolean isData() { return !isSchema; }
+        public boolean isRead() { return !isWrite; }
 
-        public boolean isSchema() { return isSchema; }
+        public boolean isWrite() { return isWrite; }
 
-        public SessionProto.Session.Type proto() {
-            return SessionProto.Session.Type.forNumber(id);
+        public TransactionProto.Transaction.Type proto() {
+            return TransactionProto.Transaction.Type.forNumber(id);
         }
+    }
+
+    interface Extended extends TypeDBTransaction {
+
+        TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
+
+        QueryFuture<TransactionProto.Transaction.Res> query(TransactionProto.Transaction.Req.Builder request);
+
+        Stream<TransactionProto.Transaction.ResPart> stream(TransactionProto.Transaction.Req.Builder request);
     }
 }

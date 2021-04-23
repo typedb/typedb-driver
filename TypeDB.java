@@ -17,41 +17,41 @@
  * under the License.
  */
 
-package grakn.client;
+package typedb.client;
 
-import grakn.client.api.GraknClient;
-import grakn.client.cluster.ClusterClient;
-import grakn.client.core.CoreClient;
+import typedb.client.api.TypeDBClient;
+import typedb.client.cluster.ClusterClient;
+import typedb.client.core.CoreClient;
 
 import java.util.Set;
 
 import static grakn.common.collection.Collections.set;
 
-public class Grakn {
+public class TypeDB {
 
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
-    public static GraknClient coreClient(String address) {
+    public static TypeDBClient coreClient(String address) {
         return new CoreClient(address);
     }
 
-    public static GraknClient coreClient(String address, int parallelisation) {
+    public static TypeDBClient coreClient(String address, int parallelisation) {
         return new CoreClient(address, parallelisation);
     }
 
-    public static GraknClient.Cluster clusterClient(String address) {
+    public static TypeDBClient.Cluster clusterClient(String address) {
         return new ClusterClient(set(address));
     }
 
-    public static GraknClient.Cluster clusterClient(String address, int parallelisation) {
+    public static TypeDBClient.Cluster clusterClient(String address, int parallelisation) {
         return new ClusterClient(set(address), parallelisation);
     }
 
-    public static GraknClient.Cluster clusterClient(Set<String> addresses) {
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses) {
         return new ClusterClient(addresses);
     }
 
-    public static GraknClient.Cluster clusterClient(Set<String> addresses, int parallelisation) {
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, int parallelisation) {
         return new ClusterClient(addresses, parallelisation);
     }
 }

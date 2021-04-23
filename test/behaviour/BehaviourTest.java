@@ -17,22 +17,22 @@
  * under the License.
  */
 
-package grakn.core.test.behaviour;
+package typedb.core.test.behaviour;
 
 import grakn.common.test.server.GraknRunner;
 import grakn.common.test.server.GraknSingleton;
 import org.junit.AfterClass;
 
 public abstract class BehaviourTest {
-    // The following code is for running the Grakn Core distribution imported as an artifact.
-    // If you wish to debug locally against an instance of Grakn that is already running in
+    // The following code is for running the TypeDB Core distribution imported as an artifact.
+    // If you wish to debug locally against an instance of TypeDB that is already running in
     // the background, comment out all the code in this file that references 'runner'
-    // and update ConnectionSteps to connect to GraknClient.DEFAULT_URI.
+    // and update ConnectionSteps to connect to TypeDBClient.DEFAULT_URI.
 
-    @AfterClass
-    public static void afterAll() {
-        GraknRunner server = GraknSingleton.getGraknRunner();
-        assert server != null;
-        server.stop();
-    }
+//    @AfterClass
+//    public static void afterAll() {
+//        GraknRunner server = GraknSingleton.getGraknRunner();
+//        assert server != null;
+//        server.stop();
+//    }
 }

@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.api;
+package typedb.client.api;
 
-import grakn.client.api.database.DatabaseManager;
+import typedb.client.api.database.DatabaseManager;
 
 import javax.annotation.CheckReturnValue;
 
-public interface GraknClient extends AutoCloseable {
+public interface TypeDBClient extends AutoCloseable {
 
     @CheckReturnValue
     boolean isOpen();
@@ -32,20 +32,20 @@ public interface GraknClient extends AutoCloseable {
     DatabaseManager databases();
 
     @CheckReturnValue
-    GraknSession session(String database, GraknSession.Type type);
+    TypeDBSession session(String database, TypeDBSession.Type type);
 
     @CheckReturnValue
-    GraknSession session(String database, GraknSession.Type type, GraknOptions options);
+    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
 
     @CheckReturnValue
     boolean isCluster();
 
     @CheckReturnValue
-    GraknClient.Cluster asCluster();
+    TypeDBClient.Cluster asCluster();
 
     void close();
 
-    interface Cluster extends GraknClient {
+    interface Cluster extends TypeDBClient {
 
         @Override
         @CheckReturnValue

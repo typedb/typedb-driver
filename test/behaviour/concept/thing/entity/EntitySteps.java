@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.thing.entity;
+package typedb.client.test.behaviour.concept.thing.entity;
 
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.thing.Entity;
-import grakn.client.common.Label;
+import typedb.client.api.concept.thing.Attribute;
+import typedb.client.api.concept.thing.Entity;
+import typedb.client.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 
-import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
-import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static typedb.client.test.behaviour.concept.thing.ThingSteps.get;
+import static typedb.client.test.behaviour.concept.thing.ThingSteps.put;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static typedb.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

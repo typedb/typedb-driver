@@ -17,14 +17,14 @@
  * under the License.
  */
 
-package grakn.client.api.query;
+package typedb.client.api.query;
 
-import grakn.client.api.GraknOptions;
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.answer.ConceptMapGroup;
-import grakn.client.api.logic.Explanation;
-import grakn.client.api.answer.Numeric;
-import grakn.client.api.answer.NumericGroup;
+import typedb.client.api.TypeDBOptions;
+import typedb.client.api.answer.ConceptMap;
+import typedb.client.api.answer.ConceptMapGroup;
+import typedb.client.api.logic.Explanation;
+import typedb.client.api.answer.Numeric;
+import typedb.client.api.answer.NumericGroup;
 import graql.lang.query.GraqlDefine;
 import graql.lang.query.GraqlDelete;
 import graql.lang.query.GraqlInsert;
@@ -41,47 +41,47 @@ public interface QueryManager {
     Stream<ConceptMap> match(GraqlMatch query);
 
     @CheckReturnValue
-    Stream<ConceptMap> match(GraqlMatch query, GraknOptions options);
+    Stream<ConceptMap> match(GraqlMatch query, TypeDBOptions options);
 
     @CheckReturnValue
     QueryFuture<Numeric> match(GraqlMatch.Aggregate query);
 
     @CheckReturnValue
-    QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options);
+    QueryFuture<Numeric> match(GraqlMatch.Aggregate query, TypeDBOptions options);
 
     @CheckReturnValue
     Stream<ConceptMapGroup> match(GraqlMatch.Group query);
 
     @CheckReturnValue
-    Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options);
+    Stream<ConceptMapGroup> match(GraqlMatch.Group query, TypeDBOptions options);
 
     @CheckReturnValue
     Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query);
 
     @CheckReturnValue
-    Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options);
+    Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, TypeDBOptions options);
 
     Stream<ConceptMap> insert(GraqlInsert query);
 
-    Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options);
+    Stream<ConceptMap> insert(GraqlInsert query, TypeDBOptions options);
 
     QueryFuture<Void> delete(GraqlDelete query);
 
-    QueryFuture<Void> delete(GraqlDelete query, GraknOptions options);
+    QueryFuture<Void> delete(GraqlDelete query, TypeDBOptions options);
 
     Stream<ConceptMap> update(GraqlUpdate query);
 
-    Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options);
+    Stream<ConceptMap> update(GraqlUpdate query, TypeDBOptions options);
 
     Stream<Explanation> explain(ConceptMap.Explainable explainable);
 
-    Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options);
+    Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options);
 
     QueryFuture<Void> define(GraqlDefine query);
 
-    QueryFuture<Void> define(GraqlDefine query, GraknOptions options);
+    QueryFuture<Void> define(GraqlDefine query, TypeDBOptions options);
 
     QueryFuture<Void> undefine(GraqlUndefine query);
 
-    QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options);
+    QueryFuture<Void> undefine(GraqlUndefine query, TypeDBOptions options);
 }

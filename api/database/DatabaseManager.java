@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.api.database;
+package typedb.client.api.database;
 
 import javax.annotation.CheckReturnValue;
 import java.util.List;

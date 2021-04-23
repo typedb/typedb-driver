@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.graql.language.update;
+package typedb.client.test.behaviour.graql.language.update;
 
-import grakn.core.test.behaviour.BehaviourTest;
+import typedb.core.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "grakn.client.test.behaviour",
+        glue = "typedb.client.test.behaviour",
         features = "external/graknlabs_behaviour/graql/language/update.feature",
         tags = "not @ignore and not @ignore-client-java"
 )
@@ -46,13 +46,13 @@ public class UpdateTest extends BehaviourTest {
     //    b) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=grakn.client.*'
+    //    a) Remove the line that says: '--test_filter=typedb.client.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed
     //       --subcommands : to print the low-level commands and execution paths
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
-    //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run Grakn)
+    //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
     // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 }

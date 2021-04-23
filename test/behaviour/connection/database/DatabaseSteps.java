@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.database;
+package typedb.client.test.behaviour.connection.database;
 
-import grakn.client.api.database.Database;
+import typedb.client.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,9 +28,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static grakn.common.collection.Collections.list;
 import static grakn.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;

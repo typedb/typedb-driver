@@ -17,17 +17,17 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.graql;
+package typedb.client.test.behaviour.graql;
 
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.answer.ConceptMapGroup;
-import grakn.client.api.answer.Numeric;
-import grakn.client.api.answer.NumericGroup;
-import grakn.client.api.concept.Concept;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.query.QueryFuture;
-import grakn.client.common.Label;
+import typedb.client.api.answer.ConceptMap;
+import typedb.client.api.answer.ConceptMapGroup;
+import typedb.client.api.answer.Numeric;
+import typedb.client.api.answer.NumericGroup;
+import typedb.client.api.concept.Concept;
+import typedb.client.api.concept.thing.Attribute;
+import typedb.client.api.concept.type.AttributeType;
+import typedb.client.api.query.QueryFuture;
+import typedb.client.common.Label;
 import graql.lang.Graql;
 import graql.lang.common.exception.GraqlException;
 import graql.lang.query.GraqlDefine;
@@ -53,9 +53,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
-import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
+import static typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static typedb.client.test.behaviour.util.Util.assertThrows;
+import static typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package typedb.client.concept.answer;
 
-import grakn.client.api.answer.Numeric;
-import grakn.client.api.answer.NumericGroup;
-import grakn.client.api.concept.Concept;
-import grakn.client.concept.ConceptImpl;
-import grakn.protocol.AnswerProto;
+import typedb.client.api.answer.Numeric;
+import typedb.client.api.answer.NumericGroup;
+import typedb.client.api.concept.Concept;
+import typedb.client.concept.ConceptImpl;
+import typedb.protocol.AnswerProto;
 
 import java.util.Objects;
 

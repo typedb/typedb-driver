@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.logic;
+package typedb.client.logic;
 
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.logic.Explanation;
-import grakn.client.api.logic.Rule;
-import grakn.client.concept.answer.ConceptMapImpl;
-import grakn.protocol.LogicProto;
+import typedb.client.api.answer.ConceptMap;
+import typedb.client.api.logic.Explanation;
+import typedb.client.api.logic.Rule;
+import typedb.client.concept.answer.ConceptMapImpl;
+import typedb.protocol.LogicProto;
 
 import java.util.HashMap;
 import java.util.HashSet;

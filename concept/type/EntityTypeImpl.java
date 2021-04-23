@@ -17,18 +17,18 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.common.Label;
-import grakn.client.concept.thing.EntityImpl;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
+import typedb.client.api.TypeDBTransaction;
+import typedb.client.api.concept.type.EntityType;
+import typedb.client.common.Label;
+import typedb.client.concept.thing.EntityImpl;
+import typedb.client.concept.thing.ThingImpl;
+import typedb.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
+import static typedb.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -41,7 +41,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public EntityTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -52,12 +52,12 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public EntityTypeImpl.Remote asRemote(GraknTransaction transaction) {
+        public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 
