@@ -67,6 +67,10 @@ public class CoreDatabaseManager implements DatabaseManager {
         return client.stub();
     }
 
+    public String address() {
+        return client.channel().authority();
+    }
+
     static String nonNull(String name) {
         if (name == null) throw new GraknClientException(MISSING_DB_NAME);
         return name;
