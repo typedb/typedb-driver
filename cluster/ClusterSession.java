@@ -29,7 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ClusterSession implements GraknSession {
+
     private static final Logger LOG = LoggerFactory.getLogger(GraknSession.class);
+
     private final ClusterClient clusterClient;
     private final GraknOptions.Cluster options;
     private CoreClient coreClient;

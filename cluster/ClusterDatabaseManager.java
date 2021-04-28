@@ -22,21 +22,28 @@ package grakn.client.cluster;
 import grakn.client.api.database.Database;
 import grakn.client.api.database.DatabaseManager;
 import grakn.client.common.exception.GraknClientException;
+import grakn.client.common.rpc.GraknStub;
 import grakn.client.core.CoreDatabaseManager;
 import grakn.common.collection.Pair;
+import grakn.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
+import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.allReq;
+import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 import static grakn.common.collection.Collections.pair;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
+
     private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
 
     private final Map<String, CoreDatabaseManager> databaseMgrs;
@@ -51,12 +58,12 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     @Override
     public boolean contains(String name) {
-        return failsafeTask(name, coreDbMgr -> coreDbMgr.contains(name));
+        return failsafeTask(name, (stub, coreDbMgr) -> coreDbMgr.contains(name));
     }
 
     @Override
     public void create(String name) {
-        failsafeTask(name, coreDbMgr -> {
+        failsafeTask(name, (stub, coreDbMgr) -> {
             coreDbMgr.create(name);
             return null;
         });
@@ -64,24 +71,39 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     @Override
     public Database.Cluster get(String name) {
-        throw new UnsupportedOperationException();
+        return failsafeTask(name, (stub, coreDbMgr) -> {
+            if (contains(name)) {
+                ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
+                return ClusterDatabase.of(res.getDatabase(), this);
+            }
+            else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
+        });
     }
 
     @Override
     public List<Database.Cluster> all() {
-        throw new UnsupportedOperationException();
+        StringBuilder errors = new StringBuilder();
+        for (String address : databaseMgrs.keySet()) {
+            try {
+                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
+                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());
+            } catch (GraknClientException e) {
+                errors.append("- ").append(address).append(": ").append(e).append("\n");
+            }
+        }
+        throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
     }
 
     Map<String, CoreDatabaseManager> databaseMgrs() {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, Function<CoreDatabaseManager, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<GraknStub.Cluster, CoreDatabaseManager, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override
             RESULT run(ClusterDatabase.Replica replica) {
-                return task.apply(client.coreClient(replica.address()).databases());
+                return task.apply(client.stub(replica.address()), client.coreClient(replica.address()).databases());
             }
 
             @Override
