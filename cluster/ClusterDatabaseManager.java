@@ -74,7 +74,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return failsafeTask(name, (stub, coreDbMgr) -> {
             if (contains(name)) {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
-                return ClusterDatabase.of(res.getDatabase(), this);
+                return ClusterDatabase.of(res.getDatabase(), client, this);
             }
             else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
         });
@@ -86,7 +86,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         for (String address : databaseMgrs.keySet()) {
             try {
                 ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
-                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, this)).collect(toList());
+                return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, client, this)).collect(toList());
             } catch (GraknClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
             }

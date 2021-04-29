@@ -41,11 +41,13 @@ class ClusterDatabase implements Database.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterDatabase.class);
     private final String name;
     private final Map<String, CoreDatabase> databases;
+    private ClusterClient client;
     private final ClusterDatabaseManager databaseMgr;
     private final Set<Replica> replicas;
 
-    private ClusterDatabase(String database, ClusterDatabaseManager clusterDatabaseMgr) {
+    private ClusterDatabase(String database, ClusterClient client, ClusterDatabaseManager clusterDatabaseMgr) {
         this.name = database;
+        this.client = client;
         this.databaseMgr = clusterDatabaseMgr;
         this.databases = new HashMap<>();
         this.replicas = new HashSet<>();
@@ -55,10 +57,10 @@ class ClusterDatabase implements Database.Cluster {
         }
     }
 
-    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterDatabaseManager clusterDatabaseMgr) {
+    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterClient client, ClusterDatabaseManager clusterDatabaseMgr) {
         assert protoDB.getReplicasCount() > 0;
         String database = protoDB.getName();
-        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, clusterDatabaseMgr);
+        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, client, clusterDatabaseMgr);
         databaseClusterRPC.replicas().addAll(protoDB.getReplicasList().stream().map(
                 rep -> Replica.of(rep, databaseClusterRPC)
         ).collect(toSet()));
@@ -79,9 +81,20 @@ class ClusterDatabase implements Database.Cluster {
 
     @Override
     public void delete() {
-        for (String address : databases.keySet()) {
-            if (databaseMgr.databaseMgrs().get(address).contains(name)) databases.get(address).delete();
-        }
+        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, name) {
+            @Override
+            Void run(Replica replica) {
+                databases.get(replica.address()).delete();
+                return null;
+            }
+
+            @Override
+            Void rerun(Replica replica) {
+                run(replica);
+                return null;
+            }
+        };
+        failsafeTask.runPrimaryReplica();
     }
 
     @Override
