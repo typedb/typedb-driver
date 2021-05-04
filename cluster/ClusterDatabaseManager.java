@@ -108,8 +108,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
             @Override
             RESULT rerun(ClusterDatabase.Replica replica) {
-                run(replica);
-                return null;
+                return run(replica);
             }
         };
         try {
