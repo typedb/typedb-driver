@@ -27,10 +27,11 @@ def graknlabs_graql():
     )
 
 def graknlabs_common():
+# TODO: revert to mainline
     git_repository(
         name = "graknlabs_common",
-        remote = "https://github.com/graknlabs/common",
-        tag = "2.0.0" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
+        remote = "https://github.com/lolski/common",
+        commit = "c1c94aaaaedaf6c696634eeccf5813d78abf39cc" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_common
     )
 
 def graknlabs_dependencies():
