@@ -28,7 +28,7 @@ typedb_java_test(
     server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
     server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
     server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    test_class = "typedb.client.test.integration.ClientQueryTest",
+    test_class = "com.vaticle.typedb.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
         "//:client-java",
