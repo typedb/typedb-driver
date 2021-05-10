@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,13 +19,13 @@
  * under the License.
  */
 
-package grakn.client.logic;
+package com.vaticle.typedb.client.logic;
 
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.logic.Explanation;
-import grakn.client.api.logic.Rule;
-import grakn.client.concept.answer.ConceptMapImpl;
-import grakn.protocol.LogicProto;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
+import com.vaticle.typedb.protocol.LogicProto;
 
 import java.util.HashMap;
 import java.util.HashSet;

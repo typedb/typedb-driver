@@ -1,20 +1,20 @@
-Documentation: http://dev.docs.grakn.ai/docs/client-api/java
+Documentation: http://docs.vaticle.com/docs/client-api/java
 
 ## Distribution
 
-Available through https://repo.grakn.ai
+Available through https://repo.vaticle.com
 
 ```xml
 <repositories>
     <repository>
-        <id>repo.grakn.ai</id>
-        <url>https://repo.grakn.ai/repository/maven/</url>
+        <id>repo.vaticle.com</id>
+        <url>https://repo.vaticle.com/repository/maven/</url>
     </repository>
 </repositories>
 <dependencies>
     <dependency>
-        <groupid>io.grakn.client</groupid>
-        <artifactid>grakn-client</artifactid>
+        <groupid>com.vaticle.typedb</groupid>
+        <artifactid>typedb-client</artifactid>
         <version>{version}</version>
     </dependency>
 </dependencies>
@@ -24,4 +24,4 @@ Available through https://repo.grakn.ai
 
 ---
 
-**Please refer to [full release notes of 2.0.0-alpha](https://github.com/graknlabs/client-java/releases/tag/2.0.0-alpha) to see the changes contained in 2.0.0.**
+**Please refer to [full release notes of 2.0.0-alpha](https://github.com/vaticle/typedb-client-java/releases/tag/2.0.0-alpha) to see the changes contained in 2.0.0.**

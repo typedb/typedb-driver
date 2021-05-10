@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.api.logic;
+package com.vaticle.typedb.client.api.logic;
 
-import grakn.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
 
 import java.util.Map;
 import java.util.Set;

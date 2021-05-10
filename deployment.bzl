@@ -18,6 +18,6 @@
 #
 
 deployment = {
-    "github.organisation": "graknlabs",
+    "github.organisation": "vaticle",
     "github.repository": "client-java"
 }

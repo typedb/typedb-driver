@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package grakn.client.api.concept.type;
+package com.vaticle.typedb.client.api.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface AttributeType extends ThingType {
 
@@ -71,7 +71,7 @@ public interface AttributeType extends ThingType {
 
     @Override
     @CheckReturnValue
-    AttributeType.Remote asRemote(GraknTransaction transaction);
+    AttributeType.Remote asRemote(TypeDBTransaction transaction);
 
     @CheckReturnValue
     AttributeType.Boolean asBoolean();
@@ -114,7 +114,7 @@ public interface AttributeType extends ThingType {
                     return t;
                 }
             }
-            throw new GraknClientException(BAD_VALUE_TYPE);
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
         }
 
         @CheckReturnValue
@@ -212,7 +212,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Boolean.Remote asRemote(GraknTransaction transaction);
+        AttributeType.Boolean.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
@@ -250,7 +250,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Long.Remote asRemote(GraknTransaction transaction);
+        AttributeType.Long.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends AttributeType.Long, AttributeType.Remote {
 
@@ -288,7 +288,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.Double.Remote asRemote(GraknTransaction transaction);
+        AttributeType.Double.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends AttributeType.Double, AttributeType.Remote {
 
@@ -326,7 +326,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.String.Remote asRemote(GraknTransaction transaction);
+        AttributeType.String.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends AttributeType.String, AttributeType.Remote {
 
@@ -370,7 +370,7 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
-        AttributeType.DateTime.Remote asRemote(GraknTransaction transaction);
+        AttributeType.DateTime.Remote asRemote(TypeDBTransaction transaction);
 
         interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 

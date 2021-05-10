@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.thing.entity;
+package com.vaticle.typedb.client.test.behaviour.concept.thing.entity;
 
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.thing.Entity;
-import grakn.client.common.Label;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
+import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 
-import static grakn.client.test.behaviour.concept.thing.ThingSteps.get;
-import static grakn.client.test.behaviour.concept.thing.ThingSteps.put;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.get;
+import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.put;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

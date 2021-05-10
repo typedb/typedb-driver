@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.common.collection;
+package com.vaticle.typedb.client.common.collection;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;

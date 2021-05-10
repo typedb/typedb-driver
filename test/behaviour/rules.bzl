@@ -17,32 +17,32 @@
 # under the License.
 #
 
-load("@graknlabs_common//test:rules.bzl", "grakn_java_test")
+load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 
-def grakn_behaviour_java_test(
+def typedb_behaviour_java_test(
         name,
         connection_steps_core,
         connection_steps_cluster,
         steps,
-        grakn_core_artifact_mac,
-        grakn_core_artifact_linux,
-        grakn_core_artifact_windows,
+        typedb_artifact_mac,
+        typedb_artifact_linux,
+        typedb_artifact_windows,
         grakn_cluster_artifact_mac,
         grakn_cluster_artifact_linux,
         grakn_cluster_artifact_windows,
         runtime_deps = [],
         **kwargs):
 
-    grakn_java_test(
+    typedb_java_test(
         name = name + "-core",
-        server_mac_artifact = grakn_core_artifact_mac,
-        server_linux_artifact = grakn_core_artifact_linux,
-        server_windows_artifact = grakn_core_artifact_windows,
+        server_mac_artifact = typedb_artifact_mac,
+        server_linux_artifact = typedb_artifact_linux,
+        server_windows_artifact = typedb_artifact_windows,
         runtime_deps = runtime_deps + [connection_steps_core] + steps,
         **kwargs,
     )
 
-    grakn_java_test(
+    typedb_java_test(
         name = name + "-cluster",
         server_mac_artifact = grakn_cluster_artifact_mac,
         server_linux_artifact = grakn_cluster_artifact_linux,

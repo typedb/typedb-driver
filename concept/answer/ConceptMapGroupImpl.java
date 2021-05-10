@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package com.vaticle.typedb.client.concept.answer;
 
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.answer.ConceptMapGroup;
-import grakn.client.api.concept.Concept;
-import grakn.client.concept.ConceptImpl;
-import grakn.protocol.AnswerProto;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.protocol.AnswerProto;
 
 import java.util.List;
 import java.util.Objects;

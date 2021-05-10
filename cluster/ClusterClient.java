@@ -17,16 +17,16 @@
  * under the License.
  */
 
-package grakn.client.cluster;
+package com.vaticle.typedb.client.cluster;
 
-import grakn.client.api.GraknClient;
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.GraknStub;
-import grakn.client.core.CoreClient;
-import grakn.common.collection.Pair;
-import grakn.protocol.ClusterServerProto;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.core.CoreClient;
+import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,18 +35,18 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
-import static grakn.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
-import static grakn.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
-import static grakn.common.collection.Collections.pair;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
+import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
-public class ClusterClient implements GraknClient.Cluster {
+public class ClusterClient implements TypeDBClient.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
     private final Map<String, CoreClient> coreClients;
-    private final Map<String, GraknStub.Cluster> stubs;
+    private final Map<String, TypeDBStub.Cluster> stubs;
     private final ClusterDatabaseManager databaseMgrs;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
@@ -60,7 +60,7 @@ public class ClusterClient implements GraknClient.Cluster {
                 .map(address -> pair(address, new CoreClient(address, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         stubs = coreClients.entrySet().stream()
-                .map(client -> pair(client.getKey(), GraknStub.cluster(client.getValue().channel())))
+                .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
         databaseMgrs = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
@@ -71,12 +71,12 @@ public class ClusterClient implements GraknClient.Cluster {
         for (String address : addresses) {
             try (CoreClient client = new CoreClient(address)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                GraknStub.Cluster stub = GraknStub.cluster(client.channel());
+                TypeDBStub.Cluster stub = TypeDBStub.cluster(client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
                 return members;
-            } catch (GraknClientException e) {
+            } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.error("Fetching cluster servers from {} failed.", address);
                 } else {
@@ -84,7 +84,7 @@ public class ClusterClient implements GraknClient.Cluster {
                 }
             }
         }
-        throw new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
+        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
     }
 
     @Override
@@ -98,13 +98,13 @@ public class ClusterClient implements GraknClient.Cluster {
     }
 
     @Override
-    public ClusterSession session(String database, GraknSession.Type type) {
-        return session(database, type, GraknOptions.cluster());
+    public ClusterSession session(String database, TypeDBSession.Type type) {
+        return session(database, type, TypeDBOptions.cluster());
     }
 
     @Override
-    public ClusterSession session(String database, GraknSession.Type type, GraknOptions options) {
-        GraknOptions.Cluster clusterOptions = options.asCluster();
+    public ClusterSession session(String database, TypeDBSession.Type type, TypeDBOptions options) {
+        TypeDBOptions.Cluster clusterOptions = options.asCluster();
         if (clusterOptions.readAnyReplica().isPresent() && clusterOptions.readAnyReplica().get()) {
             return sessionAnyReplica(database, type, clusterOptions);
         } else {
@@ -112,16 +112,16 @@ public class ClusterClient implements GraknClient.Cluster {
         }
     }
 
-    private ClusterSession sessionPrimaryReplica(String database, GraknSession.Type type, GraknOptions.Cluster options) {
+    private ClusterSession sessionPrimaryReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
         return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
-    private ClusterSession sessionAnyReplica(String database, GraknSession.Type type, GraknOptions.Cluster options) {
+    private ClusterSession sessionAnyReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
         return openSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
     private FailsafeTask<ClusterSession> openSessionFailsafeTask(
-            String database, GraknSession.Type type, GraknOptions.Cluster options, ClusterClient client) {
+            String database, TypeDBSession.Type type, TypeDBOptions.Cluster options, ClusterClient client) {
         return new FailsafeTask<ClusterSession>(this, database) {
             @Override
             ClusterSession run(ClusterDatabase.Replica replica) {
@@ -147,7 +147,7 @@ public class ClusterClient implements GraknClient.Cluster {
         return coreClients.get(address);
     }
 
-    GraknStub.Cluster stub(String address) {
+    TypeDBStub.Cluster stub(String address) {
         return stubs.get(address);
     }
 

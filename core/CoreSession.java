@@ -17,17 +17,17 @@
  * under the License.
  */
 
-package grakn.client.core;
+package com.vaticle.typedb.client.core;
 
 import com.google.protobuf.ByteString;
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.GraknStub;
-import grakn.client.stream.RequestTransmitter;
-import grakn.common.collection.ConcurrentSet;
-import grakn.protocol.SessionProto;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.stream.RequestTransmitter;
+import com.vaticle.typedb.common.collection.ConcurrentSet;
+import com.vaticle.typedb.protocol.SessionProto;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -37,27 +37,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static grakn.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
-import static grakn.client.common.rpc.RequestBuilder.Session.closeReq;
-import static grakn.client.common.rpc.RequestBuilder.Session.openReq;
-import static grakn.client.common.rpc.RequestBuilder.Session.pulseReq;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.closeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.openReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.pulseReq;
 
-public class CoreSession implements GraknSession {
+public class CoreSession implements TypeDBSession {
 
     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
     private final CoreClient client;
     private final CoreDatabase database;
     private final ByteString sessionID;
-    private final ConcurrentSet<GraknTransaction.Extended> transactions;
+    private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
     private final Type type;
-    private final GraknOptions options;
+    private final TypeDBOptions options;
     private final Timer pulse;
     private final ReadWriteLock accessLock;
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
 
-    public CoreSession(CoreClient client, String database, Type type, GraknOptions options) {
+    public CoreSession(CoreClient client, String database, Type type, TypeDBOptions options) {
         this.client = client;
         this.type = type;
         this.options = options;
@@ -86,19 +86,19 @@ public class CoreSession implements GraknSession {
     public CoreDatabase database() { return database; }
 
     @Override
-    public GraknOptions options() { return options; }
+    public TypeDBOptions options() { return options; }
 
     @Override
-    public GraknTransaction transaction(GraknTransaction.Type type) {
-        return transaction(type, GraknOptions.core());
+    public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
+        return transaction(type, TypeDBOptions.core());
     }
 
     @Override
-    public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
+    public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
         try {
             accessLock.readLock().lock();
-            if (!isOpen.get()) throw new GraknClientException(SESSION_CLOSED);
-            GraknTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
+            if (!isOpen.get()) throw new TypeDBClientException(SESSION_CLOSED);
+            TypeDBTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
             transactions.add(transactionRPC);
             return transactionRPC;
         } finally {
@@ -108,7 +108,7 @@ public class CoreSession implements GraknSession {
 
     ByteString id() { return sessionID; }
 
-    GraknStub.Core stub() {
+    TypeDBStub.Core stub() {
         return client.stub();
     }
 
@@ -123,12 +123,12 @@ public class CoreSession implements GraknSession {
         try {
             accessLock.writeLock().lock();
             if (isOpen.compareAndSet(true, false)) {
-                transactions.forEach(GraknTransaction.Extended::close);
+                transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
                 pulse.cancel();
                 try {
                     stub().sessionClose(closeReq(sessionID));
-                } catch (GraknClientException e) {
+                } catch (TypeDBClientException e) {
                     // Most likely the session is already closed or the server is no longer running.
                 }
             }
@@ -145,7 +145,7 @@ public class CoreSession implements GraknSession {
             boolean alive;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (GraknClientException exception) {
+            } catch (TypeDBClientException exception) {
                 alive = false;
             }
             if (!alive) {

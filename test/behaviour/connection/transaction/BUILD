@@ -19,8 +19,8 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -35,8 +35,8 @@ java_library(
         "//test/behaviour/util:util",
 
         # Internal Repository Dependencies
-        "@graknlabs_common//:common",
-        "@graknlabs_graql//java:graql",
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql_lang_java//:typeql-lang",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -45,18 +45,18 @@ java_library(
     ],
 )
 
-grakn_behaviour_java_test(
+typedb_behaviour_java_test(
     name = "test",
     srcs = [
         "TransactionTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.transaction.TransactionTest",
+    test_class = "typedb.client.test.behaviour.connection.transaction.TransactionTest",
     data = [
-        "@graknlabs_behaviour//connection:transaction.feature",
+        "@vaticle_typedb_behaviour//connection:transaction.feature",
     ],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
+    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
+    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
+    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
     grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
     grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
     grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
@@ -66,7 +66,7 @@ grakn_behaviour_java_test(
         ":steps",
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
-        "//test/behaviour/graql:steps",
+        "//test/behaviour/typeql:steps",
     ],
     deps = [
         # Internal Package Dependencies

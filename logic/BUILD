@@ -19,7 +19,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "logic",
@@ -30,11 +30,11 @@ java_library(
         "//common:common",
         "//concept:concept",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_common//:common",
-        "@graknlabs_graql//java:graql",
-        "@graknlabs_graql//java/pattern",
-        "@graknlabs_protocol//grpc/java:protocol",
+        # External dependencies from @vaticle
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql_lang_java//:typeql-lang",
+        "@vaticle_typeql_lang_java//pattern",
+        "@vaticle_typedb_protocol//grpc/java:protocol",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

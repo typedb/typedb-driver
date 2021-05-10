@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.database;
+package com.vaticle.typedb.client.test.behaviour.connection.database;
 
-import grakn.client.api.database.Database;
+import com.vaticle.typedb.client.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,11 +28,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static grakn.common.collection.Collections.list;
-import static grakn.common.collection.Collections.set;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.common.collection.Collections.list;
+import static com.vaticle.typedb.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

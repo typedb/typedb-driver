@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection;
+package com.vaticle.typedb.client.test.behaviour.connection;
 
-import grakn.client.Grakn;
-import grakn.client.api.GraknClient;
-import grakn.common.test.server.GraknCoreRunner;
-import grakn.common.test.server.GraknSingleton;
+import com.vaticle.typedb.client.TypeDB;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
+import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -31,17 +31,17 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectionStepsCore extends ConnectionStepsBase {
-    private GraknCoreRunner server;
+    private TypeDBCoreRunner server;
 
     @Override
     void beforeAll() {
         try {
-            server = new GraknCoreRunner();
+            server = new TypeDBCoreRunner();
         } catch (InterruptedException | TimeoutException | IOException e) {
             throw new RuntimeException(e);
         }
         server.start();
-        GraknSingleton.setGraknRunner(server);
+        TypeDBSingleton.setTypeDBRunner(server);
     }
 
     @Before
@@ -55,8 +55,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    GraknClient createGraknClient(String address) {
-        return Grakn.coreClient(address);
+    TypeDBClient createTypeDBClient(String address) {
+        return TypeDB.coreClient(address);
     }
 
     @Given("connection has been opened")

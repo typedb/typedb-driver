@@ -19,7 +19,7 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "util",
@@ -28,7 +28,7 @@ java_library(
     deps = [
 
         # Internal Repository Dependencies
-        # "@graknlabs_common//:common",
+        # "@vaticle_typedb_common//:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

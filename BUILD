@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -20,14 +22,14 @@
 package(default_visibility = ["//visibility:public"])
 exports_files(["VERSION"], visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_deps")
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_dependencies//distribution/maven:version.bzl", "version")
-load("@graknlabs_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("@vaticle_dependencies//tool/release:rules.bzl", "release_validate_deps")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
+load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
 load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
-load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
+load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
 exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
@@ -41,11 +43,11 @@ java_library(
         "//cluster:cluster",
         "//core:core",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_common//:common",
+        # External dependencies from @vaticle
+        "@vaticle_typedb_common//:common",
     ],
     resources = ["LICENSE"],
-    tags = ["maven_coordinates=io.grakn.client:grakn-client:{pom_version}"],
+    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client:{pom_version}"],
 )
 
 checkstyle_test(
@@ -59,13 +61,13 @@ checkstyle_test(
 assemble_maven(
     name = "assemble-maven",
     target = ":client-java",
-    source_jar_prefix = "grakn/client/",
-    workspace_refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    source_jar_prefix = "com/vaticle/typedb/client/",
+    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
     version_overrides = version(artifacts_org, artifacts_repo),
-    project_name = "Grakn Client Java",
-    project_description = "Grakn Client API for Java",
-    project_url = "https://github.com/graknlabs/client-java",
-    scm_url = "https://github.com/graknlabs/client-java",
+    project_name = "TypeDB Client Java",
+    project_description = "TypeDB Client API for Java",
+    project_url = "https://github.com/vaticle/typedb-client-java",
+    scm_url = "https://github.com/vaticle/typedb-client-java",
 )
 
 deploy_maven(
@@ -80,19 +82,19 @@ deploy_github(
     organisation = github_deployment["github.organisation"],
     repository = github_deployment["github.repository"],
     release_description = "//:RELEASE_TEMPLATE.md",
-    title = "Grakn Client Java",
+    title = "TypeDB Client Java",
     title_append_version = True,
     draft = False
 )
 
 release_validate_deps(
     name = "release-validate-deps",
-    refs = "@graknlabs_client_java_workspace_refs//:refs.json",
+    refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
     tagged_deps = [
-        "@graknlabs_common",
-        "@graknlabs_graql",
-        "@graknlabs_protocol",
-        "@graknlabs_grabl_tracing",
+        "@vaticle_typedb_common",
+        "@vaticle_typeql_lang_java",
+        "@vaticle_typedb_protocol",
+        "@vaticle_factory_tracing",
     ],
     tags = ["manual"]  # in order for bazel test //... to not fail
 )
@@ -101,9 +103,9 @@ release_validate_deps(
 filegroup(
     name = "ci",
     data = [
-        "@graknlabs_dependencies//tool/checkstyle:test-coverage",
-        "@graknlabs_dependencies//tool/release:create-notes",
-        "@graknlabs_dependencies//tool/sonarcloud:code-analysis",
-        "@graknlabs_dependencies//tool/unuseddeps:unused-deps",
+        "@vaticle_dependencies//tool/checkstyle:test-coverage",
+        "@vaticle_dependencies//tool/release:create-notes",
+        "@vaticle_dependencies//tool/sonarcloud:code-analysis",
+        "@vaticle_dependencies//tool/unuseddeps:unused-deps",
     ],
 )

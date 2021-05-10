@@ -19,8 +19,8 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -42,18 +42,18 @@ java_library(
     ],
 )
 
-grakn_behaviour_java_test(
+typedb_behaviour_java_test(
     name = "test",
     srcs = [
         "EntityTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.concept.thing.entity.EntityTest",
+    test_class = "typedb.client.test.behaviour.concept.thing.entity.EntityTest",
     data = [
-        "@graknlabs_behaviour//concept/thing:entity.feature",
+        "@vaticle_typedb_behaviour//concept/thing:entity.feature",
     ],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
+    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
+    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
+    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
     grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
     grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
     grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",

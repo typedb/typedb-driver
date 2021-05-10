@@ -17,33 +17,33 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package com.vaticle.typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.AttributeType.ValueType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.Label;
-import grakn.client.common.rpc.RequestBuilder;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setPlaysReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.setSupertypeReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setPlaysReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setSupertypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
+import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -64,7 +64,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
                 return new ThingTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_ENCODING, typeProto.getEncoding());
+                throw new TypeDBClientException(BAD_ENCODING, typeProto.getEncoding());
         }
     }
 
@@ -73,7 +73,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public ThingTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -84,7 +84,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -198,7 +198,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public ThingTypeImpl.Remote asRemote(GraknTransaction transaction) {
+        public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

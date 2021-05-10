@@ -17,17 +17,17 @@
  * under the License.
  */
 
-package grakn.client.concept.thing;
+package com.vaticle.typedb.client.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Relation;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.concept.type.RelationTypeImpl;
-import grakn.client.concept.type.RoleTypeImpl;
-import grakn.client.concept.type.TypeImpl;
-import grakn.common.collection.Bytes;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.thing.Relation;
+import com.vaticle.typedb.client.api.concept.thing.Thing;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
+import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
+import com.vaticle.typedb.client.concept.type.TypeImpl;
+import com.vaticle.typedb.common.collection.Bytes;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,14 +36,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.addPlayerReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.getRelatingReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Relation.removePlayerReq;
-import static grakn.client.common.rpc.RequestBuilder.Thing.protoThing;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
-import static grakn.client.concept.type.TypeImpl.protoTypes;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.addPlayerReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getRelatingReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.removePlayerReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.protoThing;
+import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
+import static com.vaticle.typedb.client.concept.type.TypeImpl.protoTypes;
 import static java.util.Arrays.asList;
 
 public class RelationImpl extends ThingImpl implements Relation {
@@ -62,7 +62,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public RelationImpl.Remote asRemote(GraknTransaction transaction) {
+    public RelationImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
     }
 
@@ -80,13 +80,13 @@ public class RelationImpl extends ThingImpl implements Relation {
 
         private final RelationTypeImpl type;
 
-        public Remote(GraknTransaction transaction, String iid, boolean isInferred, RelationTypeImpl type) {
+        public Remote(TypeDBTransaction transaction, String iid, boolean isInferred, RelationTypeImpl type) {
             super(transaction, iid, isInferred);
             this.type = type;
         }
 
         @Override
-        public RelationImpl.Remote asRemote(GraknTransaction transaction) {
+        public RelationImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
         }
 

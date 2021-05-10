@@ -55,7 +55,7 @@ artifacts = [
   "org.zeroturnaround:zt-exec"
 ]
 
-# Override libraries conflicting with versions defined in @graknlabs_dependencies
+# Override libraries conflicting with versions defined in @vaticle_dependencies
 overrides = {
     "io.netty:netty-all": "4.1.38.Final",
     "io.netty:netty-codec-http2": "4.1.38.Final",
