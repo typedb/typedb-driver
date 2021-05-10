@@ -124,7 +124,7 @@ abstract class FailsafeTask<RESULT> {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
-                ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client, client.databases());
+                ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client);
                 client.databaseByName().put(database, clusterDatabase);
                 return clusterDatabase;
             } catch (GraknClientException e) {

@@ -41,26 +41,26 @@ class ClusterDatabase implements Database.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterDatabase.class);
     private final String name;
     private final Map<String, CoreDatabase> databases;
-    private ClusterClient client;
-    private final ClusterDatabaseManager databaseMgr;
+    private final ClusterClient client;
     private final Set<Replica> replicas;
 
-    private ClusterDatabase(String database, ClusterClient client, ClusterDatabaseManager clusterDatabaseMgr) {
+    private ClusterDatabase(String database, ClusterClient client) {
         this.name = database;
         this.client = client;
-        this.databaseMgr = clusterDatabaseMgr;
         this.databases = new HashMap<>();
         this.replicas = new HashSet<>();
-        for (String address : clusterDatabaseMgr.databaseMgrs().keySet()) {
-            CoreDatabaseManager coreDatabaseMgr = clusterDatabaseMgr.databaseMgrs().get(address);
+
+        ClusterDatabaseManager clusterDbMgr = client.databases();
+        for (String address : clusterDbMgr.databaseMgrs().keySet()) {
+            CoreDatabaseManager coreDatabaseMgr = clusterDbMgr.databaseMgrs().get(address);
             databases.put(address, new CoreDatabase(coreDatabaseMgr, database));
         }
     }
 
-    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterClient client, ClusterDatabaseManager clusterDatabaseMgr) {
+    static ClusterDatabase of(ClusterDatabaseProto.ClusterDatabase protoDB, ClusterClient client) {
         assert protoDB.getReplicasCount() > 0;
         String database = protoDB.getName();
-        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, client, clusterDatabaseMgr);
+        ClusterDatabase databaseClusterRPC = new ClusterDatabase(database, client);
         databaseClusterRPC.replicas().addAll(protoDB.getReplicasList().stream().map(
                 rep -> Replica.of(rep, databaseClusterRPC)
         ).collect(toSet()));
