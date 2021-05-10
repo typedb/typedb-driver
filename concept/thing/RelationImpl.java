@@ -57,8 +57,8 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     public static RelationImpl of(ConceptProto.Thing protoThing) {
         return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()),
-                protoThing.getInferred(),
-                RelationTypeImpl.of(protoThing.getType()));
+                                protoThing.getInferred(),
+                                RelationTypeImpl.of(protoThing.getType()));
     }
 
     @Override

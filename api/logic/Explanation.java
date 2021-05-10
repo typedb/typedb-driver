@@ -33,5 +33,5 @@ public interface Explanation {
     ConceptMap condition();
 
     Map<String, Set<String>> variableMapping();
-    
+
 }

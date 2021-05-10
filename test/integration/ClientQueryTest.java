@@ -55,7 +55,6 @@ import static com.vaticle.typeql.lang.TypeQL.type;
 import static com.vaticle.typeql.lang.TypeQL.var;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
@@ -92,12 +91,12 @@ public class ClientQueryTest {
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
             TypeQLDefine ruleQuery = TypeQL.define(rule("infer-parentship-from-mating-and-child-bearing")
-                                                         .when(and(
-                                                                 rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                                                                 var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
-                                                         .then(rel("parent", var("male"))
-                                                                       .rel("parent", var("female"))
-                                                                       .rel("child", var("offspring")).isa("parentship")));
+                                                           .when(and(
+                                                                   rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                                                                   var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                                                           .then(rel("parent", var("male"))
+                                                                         .rel("parent", var("female"))
+                                                                         .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
@@ -467,20 +466,20 @@ public class ClientQueryTest {
     public void testSimpleExplanation() {
         localhostTypeDBTX(tx -> {
             TypeQLDefine schema = TypeQL.parseQuery("define " +
-                    "person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;" +
-                    "name sub attribute, value string;" +
-                    "friendship sub relation, relates friend;" +
-                    "marriage sub relation, relates husband, relates wife;" +
-                    "rule marriage-is-friendship: when {" +
-                    "   $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; " +
-                    "} then {" +
-                    "   (friend: $x, friend: $y) isa friendship;" +
-                    "};" +
-                    "rule everyone-is-friends: when {" +
-                    "   $x isa person; $y isa person; not { $x is $y; };" +
-                    "} then {" +
-                    "   (friend: $x, friend: $y) isa friendship;" +
-                    "};").asDefine();
+                                                            "person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;" +
+                                                            "name sub attribute, value string;" +
+                                                            "friendship sub relation, relates friend;" +
+                                                            "marriage sub relation, relates husband, relates wife;" +
+                                                            "rule marriage-is-friendship: when {" +
+                                                            "   $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; " +
+                                                            "} then {" +
+                                                            "   (friend: $x, friend: $y) isa friendship;" +
+                                                            "};" +
+                                                            "rule everyone-is-friends: when {" +
+                                                            "   $x isa person; $y isa person; not { $x is $y; };" +
+                                                            "} then {" +
+                                                            "   (friend: $x, friend: $y) isa friendship;" +
+                                                            "};").asDefine();
             tx.query().define(schema);
             tx.commit();
         }, TypeDBSession.Type.SCHEMA);

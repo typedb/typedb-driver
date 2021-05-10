@@ -129,7 +129,7 @@ abstract class FailsafeTask<RESULT> {
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
-                            serverAddress + ". Attempting next server.", e);
+                                      serverAddress + ". Attempting next server.", e);
                 } else {
                     throw e;
                 }
