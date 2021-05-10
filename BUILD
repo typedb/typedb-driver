@@ -61,7 +61,6 @@ checkstyle_test(
 assemble_maven(
     name = "assemble-maven",
     target = ":client-java",
-    source_jar_prefix = "com/vaticle/typedb/client/",
     workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
     version_overrides = version(artifacts_org, artifacts_repo),
     project_name = "TypeDB Client Java",
