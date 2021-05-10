@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package grakn.client.stream;
+package com.vaticle.typedb.client.stream;
 
 import com.google.protobuf.ByteString;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.GraknStub;
-import grakn.protocol.TransactionProto.Transaction.Req;
-import grakn.protocol.TransactionProto.Transaction.Res;
-import grakn.protocol.TransactionProto.Transaction.ResPart;
-import grakn.protocol.TransactionProto.Transaction.Server;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.protocol.TransactionProto.Transaction.Req;
+import com.vaticle.typedb.protocol.TransactionProto.Transaction.Res;
+import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
+import com.vaticle.typedb.protocol.TransactionProto.Transaction.Server;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
@@ -35,10 +35,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static grakn.client.common.collection.Bytes.bytesToUUID;
-import static grakn.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
-import static grakn.client.common.rpc.RequestBuilder.UUIDAsByteString;
+import static com.vaticle.typedb.client.common.collection.Bytes.bytesToUUID;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.UUIDAsByteString;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
@@ -50,7 +50,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(GraknStub.Core stub, RequestTransmitter transmitter) {
+    public BidirectionalStream(TypeDBStub.Core stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);
@@ -83,14 +83,14 @@ public class BidirectionalStream implements AutoCloseable {
         UUID requestID = byteStringAsUUID(res.getReqId());
         ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
         if (collector != null) collector.put(res);
-        else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
+        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID);
     }
 
     private void collect(ResPart resPart) {
         UUID requestID = byteStringAsUUID(resPart.getReqId());
         ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
         if (collector != null) collector.put(resPart);
-        else throw new GraknClientException(UNKNOWN_REQUEST_ID, requestID);
+        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID);
     }
 
     private static UUID byteStringAsUUID(ByteString byteString) {
@@ -109,7 +109,7 @@ public class BidirectionalStream implements AutoCloseable {
             try {
                 dispatcher.close();
             } catch (StatusRuntimeException e) {
-                throw GraknClientException.of(e);
+                throw TypeDBClientException.of(e);
             }
         }
     }
@@ -142,7 +142,7 @@ public class BidirectionalStream implements AutoCloseable {
                     break;
                 default:
                 case SERVER_NOT_SET:
-                    throw new GraknClientException(ILLEGAL_ARGUMENT);
+                    throw new TypeDBClientException(ILLEGAL_ARGUMENT);
             }
         }
 

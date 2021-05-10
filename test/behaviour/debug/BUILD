@@ -18,15 +18,15 @@
 #
 
 package(default_visibility = ["//visibility:__subpackages__"])
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test:rules.bzl", "grakn_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 
-grakn_java_test(
+typedb_java_test(
     name = "test",
     srcs = [
         "DebugTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.debug.DebugTest",
+    test_class = "typedb.client.test.behaviour.debug.DebugTest",
     deps = [
         # Internal package dependencies
         "//test/behaviour:behaviour",
@@ -41,15 +41,15 @@ grakn_java_test(
     runtime_deps = [
         "//test/behaviour/connection:steps-core",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/graql:steps",
+        "//test/behaviour/typeql:steps",
         "//test/behaviour/connection/session:steps",
     ],
     data = [
         ":debug.feature",
     ],
-    server_mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    server_linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    server_windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
+    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
+    server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
+    server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
     size = "medium",
     tags = ["manual"]
 )

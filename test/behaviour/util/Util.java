@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.util;
+package com.vaticle.typedb.client.test.behaviour.util;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;

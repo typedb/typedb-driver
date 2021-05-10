@@ -19,7 +19,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "cluster",
@@ -30,9 +30,9 @@ java_library(
         "//common:common",
         "//core:core",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_common//:common",
-        "@graknlabs_protocol//grpc/java:protocol",
+        # External dependencies from @vaticle
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typedb_protocol//grpc/java:protocol",
 
         # External dependencies from Maven
         "@maven//:io_grpc_grpc_api",

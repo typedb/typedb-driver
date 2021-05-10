@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package grakn.client.stream;
+package com.vaticle.typedb.client.stream;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.RequestBuilder;
-import grakn.common.collection.ConcurrentSet;
-import grakn.common.concurrent.NamedThreadFactory;
-import grakn.protocol.TransactionProto;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.common.collection.ConcurrentSet;
+import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
+import com.vaticle.typedb.protocol.TransactionProto;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static grakn.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
-import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 
 public class RequestTransmitter implements AutoCloseable {
 
@@ -70,7 +70,7 @@ public class RequestTransmitter implements AutoCloseable {
     public Dispatcher dispatcher(StreamObserver<TransactionProto.Transaction.Client> requestObserver) {
         try {
             accessLock.readLock().lock();
-            if (!isOpen) throw new GraknClientException(CLIENT_CLOSED);
+            if (!isOpen) throw new TypeDBClientException(CLIENT_CLOSED);
             Executor executor = nextExecutor();
             Dispatcher dispatcher = new Dispatcher(executor, requestObserver);
             executor.dispatchers.add(dispatcher);
@@ -162,7 +162,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatch(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED);
                 requestQueue.add(requestProto);
                 executor.mayStartRunning();
             } finally {
@@ -173,7 +173,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatchNow(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen.get()) throw new GraknClientException(TRANSACTION_CLOSED);
+                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED);
                 requestQueue.add(requestProto);
                 sendBatchedRequests();
             } finally {

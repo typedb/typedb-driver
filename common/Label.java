@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.common;
+package com.vaticle.typedb.client.common;
 
 import javax.annotation.Nullable;
 import java.util.Objects;

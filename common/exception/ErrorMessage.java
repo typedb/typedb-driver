@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.common.exception;
+package com.vaticle.typedb.client.common.exception;
 
-public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
+public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.ErrorMessage {
 
     private ErrorMessage(String codePrefix, int codeNumber, String messagePrefix, String messageBody) {
         super(codePrefix, codeNumber, messagePrefix, messageBody);
@@ -33,7 +33,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client TRANSACTION_CLOSED =
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
         public static final Client UNABLE_TO_CONNECT =
-                new Client(4, "Unable to connect to Grakn server.");
+                new Client(4, "Unable to connect to TypeDB server.");
         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
                 new Client(5, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
@@ -47,7 +47,7 @@ public abstract class ErrorMessage extends grakn.common.exception.ErrorMessage {
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
                 new Client(10, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
-                new Client(11, "Unable to connect to Grakn Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
+                new Client(11, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
                 new Client(12, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =

@@ -18,4 +18,4 @@
 # under the License.
 #
 
-bazel run @graknlabs_dependencies//library/maven:update
+bazel run @vaticle_dependencies//library/maven:update

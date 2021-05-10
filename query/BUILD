@@ -19,7 +19,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "query",
@@ -31,9 +31,9 @@ java_library(
         "//concept:concept",
         "//logic:logic",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_graql//java/query",
-        "@graknlabs_protocol//grpc/java:protocol",
+        # External dependencies from @vaticle
+        "@vaticle_typeql_lang_java//query",
+        "@vaticle_typedb_protocol//grpc/java:protocol",
 
         # External dependencies from Maven
     ],

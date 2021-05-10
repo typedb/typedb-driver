@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package com.vaticle.typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.common.Label;
-import grakn.client.common.rpc.RequestBuilder;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Type.RoleType.getPlayersReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayersReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -47,7 +47,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public RoleTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public RoleTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -58,7 +58,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
@@ -80,7 +80,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public RoleType.Remote asRemote(GraknTransaction transaction) {
+        public RoleType.Remote asRemote(TypeDBTransaction transaction) {
             return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

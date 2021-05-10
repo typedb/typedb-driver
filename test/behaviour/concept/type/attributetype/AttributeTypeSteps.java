@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.type.attributetype;
+package com.vaticle.typedb.client.test.behaviour.concept.type.attributetype;
 
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.AttributeType.ValueType;
-import grakn.client.api.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -72,7 +72,7 @@ public class AttributeTypeSteps {
             case DATETIME:
                 return attributeType.asDateTime();
             default:
-                throw new GraknClientException(BAD_VALUE_TYPE, valueType);
+                throw new TypeDBClientException(BAD_VALUE_TYPE, valueType);
         }
     }
 

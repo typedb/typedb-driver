@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.api.answer;
+package com.vaticle.typedb.client.api.answer;
 
-import grakn.client.api.concept.Concept;
-import grakn.common.collection.Pair;
+import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Collection;

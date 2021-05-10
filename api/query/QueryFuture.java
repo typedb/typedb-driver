@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package grakn.client.api.query;
+package com.vaticle.typedb.client.api.query;
 
 import java.util.function.Function;
 

@@ -17,58 +17,58 @@
  * under the License.
  */
 
-package grakn.client.concept;
+package com.vaticle.typedb.client.concept;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.ConceptManager;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.client.concept.type.AttributeTypeImpl;
-import grakn.client.concept.type.EntityTypeImpl;
-import grakn.client.concept.type.RelationTypeImpl;
-import grakn.client.concept.type.ThingTypeImpl;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
-import graql.lang.common.GraqlToken;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.ConceptManager;
+import com.vaticle.typedb.client.api.concept.thing.Thing;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
+import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
+import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
+import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.Nullable;
 
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
-import static grakn.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
-    private final GraknTransaction.Extended transactionExt;
+    private final TypeDBTransaction.Extended transactionExt;
 
-    public ConceptManagerImpl(GraknTransaction.Extended transactionExt) {
+    public ConceptManagerImpl(TypeDBTransaction.Extended transactionExt) {
         this.transactionExt = transactionExt;
     }
 
     @Override
     public ThingType getRootThingType() {
-        return getThingType(GraqlToken.Type.THING.toString());
+        return getThingType(TypeQLToken.Type.THING.toString());
     }
 
     @Override
     public EntityType getRootEntityType() {
-        return getEntityType(GraqlToken.Type.ENTITY.toString());
+        return getEntityType(TypeQLToken.Type.ENTITY.toString());
     }
 
     @Override
     public RelationType getRootRelationType() {
-        return getRelationType(GraqlToken.Type.RELATION.toString());
+        return getRelationType(TypeQLToken.Type.RELATION.toString());
     }
 
     @Override
     public AttributeType getRootAttributeType() {
-        return getAttributeType(GraqlToken.Type.ATTRIBUTE.toString());
+        return getAttributeType(TypeQLToken.Type.ATTRIBUTE.toString());
     }
 
     @Override

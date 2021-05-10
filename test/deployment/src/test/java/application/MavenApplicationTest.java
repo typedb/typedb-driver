@@ -19,11 +19,11 @@
 
 package application;
 
-import grakn.client.Grakn;
-import grakn.client.api.GraknClient;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.TypeDB;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-// TODO: implement more advanced tests using Graql queries once Grakn 2.0 supports them
+// TODO: implement more advanced tests using TypeQL queries once TypeDB 2.0 supports them
 public class MavenApplicationTest {
 
     @Test
     public void test() {
-        GraknClient client = Grakn.coreClient(Grakn.DEFAULT_ADDRESS);
-        client.databases().create("grakn");
-        GraknSession session = client.session("grakn", GraknSession.Type.DATA);
-        GraknTransaction tx = session.transaction(GraknTransaction.Type.WRITE);
+        TypeDBClient client = TypeDB.coreClient(TypeDB.DEFAULT_ADDRESS);
+        client.databases().create("typedb");
+        TypeDBSession session = client.session("typedb", TypeDBSession.Type.DATA);
+        TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE);
         ThingType root = tx.concepts().getRootThingType();
         assertNotNull(root);
         assertEquals(4, root.asRemote(tx).getSubtypes().collect(Collectors.toList()).size());

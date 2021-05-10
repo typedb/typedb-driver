@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.session;
+package com.vaticle.typedb.client.test.behaviour.connection.session;
 
-import grakn.core.test.behaviour.BehaviourTest;
+import com.vaticle.typedb.client.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -28,9 +28,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_behaviour/connection/session.feature",
-        tags = "not @ignore and not @ignore-client-java"
+        glue = "typedb.client.test.behaviour",
+        features = "external/vaticle_typedb_behaviour/connection/session.feature",
+        tags = "not @ignore and not @ignore-typedb-client-java"
 )
 public class SessionTest extends BehaviourTest {
     // ATTENTION:
@@ -42,17 +42,17 @@ public class SessionTest extends BehaviourTest {
     // 3) Select 'Bazel test SessionTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-core' to test against grakn-core
-    //    b) Use '//<this>/<package>/<name>:test-kgms' to test against grakn-kgms
+    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
+    //    b) Use '//<this>/<package>/<name>:test-kgms' to test against typedb-cluster
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=grakn.client.*'
+    //    a) Remove the line that says: '--test_filter=typedb.client.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed
     //       --subcommands : to print the low-level commands and execution paths
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
-    //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run Grakn)
+    //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static GraknCoreRunner runner;
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static TypeDBCoreRunner runner;
 }

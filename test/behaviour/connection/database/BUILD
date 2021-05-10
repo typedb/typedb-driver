@@ -19,8 +19,8 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test:rules.bzl", "grakn_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 
 java_library(
     name = "steps",
@@ -34,7 +34,7 @@ java_library(
         "//test/behaviour/connection:steps-base",
 
         # Internal Repository Dependencies
-        "@graknlabs_common//:common",
+        "@vaticle_typedb_common//:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -42,25 +42,25 @@ java_library(
     ],
 )
 
-grakn_java_test(
+typedb_java_test(
     name = "test-core",
     srcs = [
         "DatabaseTestCore.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTestCore",
+    test_class = "typedb.client.test.behaviour.connection.database.DatabaseTestCore",
     data = [
-        "@graknlabs_behaviour//connection:database.feature",
+        "@vaticle_typedb_behaviour//connection:database.feature",
     ],
-    server_mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    server_linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    server_windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
+    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
+    server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
+    server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
     runtime_deps = [
         "//test/behaviour/connection:steps-core",
 
         ":steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/graql:steps",
+        "//test/behaviour/typeql:steps",
 
         "//test/behaviour/config:parameters",
     ],
@@ -74,14 +74,14 @@ grakn_java_test(
     size = "medium",
 )
 
-grakn_java_test(
+typedb_java_test(
     name = "test-cluster",
     srcs = [
         "DatabaseTestCluster.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.database.DatabaseTestCluster",
+    test_class = "typedb.client.test.behaviour.connection.database.DatabaseTestCluster",
     data = [
-        "@graknlabs_behaviour//connection:database.feature",
+        "@vaticle_typedb_behaviour//connection:database.feature",
     ],
     server_mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
     server_linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
@@ -92,7 +92,7 @@ grakn_java_test(
         ":steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/graql:steps",
+        "//test/behaviour/typeql:steps",
 
         "//test/behaviour/config:parameters",
     ],

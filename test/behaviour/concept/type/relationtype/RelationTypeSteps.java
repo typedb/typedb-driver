@@ -17,19 +17,19 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.type.relationtype;
+package com.vaticle.typedb.client.test.behaviour.concept.type.relationtype;
 
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.api.concept.type.Type;
-import grakn.client.common.Label;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;

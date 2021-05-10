@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.api.concept.thing;
+package com.vaticle.typedb.client.api.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
@@ -38,7 +38,7 @@ public interface Entity extends Thing {
 
     @Override
     @CheckReturnValue
-    Entity.Remote asRemote(GraknTransaction transaction);
+    Entity.Remote asRemote(TypeDBTransaction transaction);
 
     interface Remote extends Thing.Remote, Entity {}
 }

@@ -17,42 +17,42 @@
 # under the License.
 #
 
-workspace(name = "graknlabs_client_java")
+workspace(name = "vaticle_typedb_client_java")
 
 ################################
-# Load @graknlabs_dependencies #
+# Load @vaticle_dependencies #
 ################################
 
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_dependencies")
-graknlabs_dependencies()
+load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
+vaticle_dependencies()
 
 # Load //builder/bazel for RBE
-load("@graknlabs_dependencies//builder/bazel:deps.bzl", "bazel_toolchain")
+load("@vaticle_dependencies//builder/bazel:deps.bzl", "bazel_toolchain")
 bazel_toolchain()
 
 # Load //builder/java
-load("@graknlabs_dependencies//builder/java:deps.bzl", java_deps = "deps")
+load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
 
 # Load //builder/kotlin
-load("@graknlabs_dependencies//builder/kotlin:deps.bzl", kotlin_deps = "deps")
+load("@vaticle_dependencies//builder/kotlin:deps.bzl", kotlin_deps = "deps")
 kotlin_deps()
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
 kotlin_repositories()
 kt_register_toolchains()
 
 # Load //builder/python
-load("@graknlabs_dependencies//builder/python:deps.bzl", python_deps = "deps")
+load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
 # Load //builder/antlr
-load("@graknlabs_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps")
+load("@vaticle_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps")
 antlr_deps()
 load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
 antlr_dependencies()
 
 # Load //builder/grpc
-load("@graknlabs_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
+load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
 com_github_grpc_grpc_deps = "grpc_deps")
@@ -61,82 +61,85 @@ load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()
 
 # Load //tool/common
-load("@graknlabs_dependencies//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip",
-    graknlabs_dependencies_tool_maven_artifacts = "maven_artifacts")
-graknlabs_dependencies_ci_pip()
+load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip",
+    vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
+vaticle_dependencies_ci_pip()
 
 # Load //tool/checkstyle
-load("@graknlabs_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
+load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
 
 # Load //tool/sonarcloud
-load("@graknlabs_dependencies//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
+load("@vaticle_dependencies//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
 # Load //tool/unuseddeps
-load("@graknlabs_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
+load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
 ######################################
-# Load @graknlabs_bazel_distribution #
+# Load @vaticle_bazel_distribution #
 ######################################
 
-load("@graknlabs_dependencies//distribution:deps.bzl", "graknlabs_bazel_distribution")
-graknlabs_bazel_distribution()
+load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
+vaticle_bazel_distribution()
 
 # Load //common
-load("@graknlabs_bazel_distribution//common:deps.bzl", "rules_pkg")
+load("@vaticle_bazel_distribution//common:deps.bzl", "rules_pkg")
 rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load //github
-load("@graknlabs_bazel_distribution//github:deps.bzl", github_deps = "deps")
+load("@vaticle_bazel_distribution//github:deps.bzl", github_deps = "deps")
 github_deps()
 
 # Load //maven
-load("@graknlabs_bazel_distribution//maven:deps.bzl", graknlabs_bazel_distribution_maven_artifacts = "maven_artifacts")
+load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 ################################
-# Load @graknlabs dependencies #
+# Load @vaticle dependencies #
 ################################
 
 # Load repositories
-load("//dependencies/graknlabs:repositories.bzl", "graknlabs_common", "graknlabs_graql", "graknlabs_behaviour", "graknlabs_grabl_tracing", "graknlabs_protocol")
-graknlabs_common()
-graknlabs_graql()
-graknlabs_behaviour()
-graknlabs_grabl_tracing()
-graknlabs_protocol()
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql_lang_java", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
+vaticle_typedb_common()
+vaticle_typeql_lang_java()
+vaticle_typedb_behaviour()
+vaticle_factory_tracing()
+vaticle_typedb_protocol()
+
+load("@vaticle_typeql_lang_java//dependencies/vaticle:repositories.bzl", "vaticle_typeql")
+vaticle_typeql()
 
 # Load artifacts
-load("//dependencies/graknlabs:artifacts.bzl", "graknlabs_grakn_core_artifact", "graknlabs_grakn_cluster_artifact")
-graknlabs_grakn_core_artifact()
+load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "graknlabs_grakn_cluster_artifact")
+vaticle_typedb_artifact()
 graknlabs_grakn_cluster_artifact()
 
 # Load maven
-load("@graknlabs_graql//dependencies/maven:artifacts.bzl", graknlabs_graql_artifacts = "artifacts")
-load("@graknlabs_grabl_tracing//dependencies/maven:artifacts.bzl", graknlabs_grabl_tracing_artifacts = "artifacts")
-load("//dependencies/maven:artifacts.bzl", graknlabs_client_java_artifacts = "artifacts", graknlabs_client_java_overrides = "overrides")
+load("@vaticle_typeql_lang_java//dependencies/maven:artifacts.bzl", vaticle_typeql_lang_java_artifacts = "artifacts")
+load("@vaticle_factory_tracing//dependencies/maven:artifacts.bzl", vaticle_factory_tracing_artifacts = "artifacts")
+load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_artifacts = "artifacts", vaticle_typedb_client_java_overrides = "overrides")
 
 ###############
 # Load @maven #
 ###############
 
-load("@graknlabs_dependencies//library/maven:rules.bzl", "maven")
+load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
-    graknlabs_grabl_tracing_artifacts +
-    graknlabs_graql_artifacts +
-    graknlabs_dependencies_tool_maven_artifacts +
-    graknlabs_client_java_artifacts +
-    graknlabs_bazel_distribution_maven_artifacts,
-    graknlabs_client_java_overrides
+    vaticle_factory_tracing_artifacts +
+    vaticle_typeql_lang_java_artifacts +
+    vaticle_dependencies_tool_maven_artifacts +
+    vaticle_typedb_client_java_artifacts +
+    vaticle_bazel_distribution_maven_artifacts,
+    vaticle_typedb_client_java_overrides
 )
 
 ############################################
-# Create @graknlabs_client_java_workspace_refs #
+# Create @vaticle_typedb_client_java_workspace_refs #
 ############################################
-load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
+load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
-    name = "graknlabs_client_java_workspace_refs"
+    name = "vaticle_typedb_client_java_workspace_refs"
 )

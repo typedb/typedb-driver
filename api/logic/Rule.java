@@ -17,10 +17,10 @@
  * under the License.
  */
 
-package grakn.client.api.logic;
+package com.vaticle.typedb.client.api.logic;
 
-import grakn.client.api.GraknTransaction;
-import graql.lang.pattern.Pattern;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
 
@@ -36,7 +36,7 @@ public interface Rule {
     Pattern getThen();
 
     @CheckReturnValue
-    Rule.Remote asRemote(GraknTransaction transaction);
+    Rule.Remote asRemote(TypeDBTransaction transaction);
 
     @CheckReturnValue
     boolean isRemote();
