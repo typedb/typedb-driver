@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "typedb.client.test.behaviour",
+        glue = "com.vaticle.typedb.client.test.behaviour",
         features = "external/vaticle_typedb_behaviour/concept/thing/attribute.feature",
         tags = "not @ignore and not @ignore-typedb"
 )

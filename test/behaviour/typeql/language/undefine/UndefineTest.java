@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "typedb.client.test.behaviour",
+        glue = "com.vaticle.typedb.client.test.behaviour",
         features = "external/vaticle_typedb_behaviour/typeql/language/undefine.feature",
         tags = "not @ignore and not @ignore-typedb-client-java"
 )
@@ -48,7 +48,7 @@ public class UndefineTest extends BehaviourTest {
     //    b) Use '//<this>/<package>/<name>:test-kgms' to test against typedb-cluster
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=typedb.client.*'
+    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed
