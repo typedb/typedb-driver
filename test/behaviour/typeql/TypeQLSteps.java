@@ -544,6 +544,17 @@ public class TypeQLSteps {
         }
     }
 
+    @Then("each answer does not satisfy")
+    public void each_answer_does_not_satisfy(String templatedTypeQLQuery) {
+        String templatedQuery = String.join("\n", templatedTypeQLQuery);
+        for (ConceptMap answer : answers) {
+            String queryString = applyQueryTemplate(templatedQuery, answer);
+            TypeQLMatch query = TypeQL.parseQuery(queryString).asMatch();
+            long answerSize = tx().query().match(query).count();
+            assertEquals(0, answerSize);
+        }
+    }
+
     private String applyQueryTemplate(String template, ConceptMap templateFiller) {
         // find shortest matching strings between <>
         Pattern pattern = Pattern.compile("<.+?>");
