@@ -20,7 +20,11 @@
 #
 
 package(default_visibility = ["//visibility:public"])
-exports_files(["VERSION"], visibility = ["//visibility:public"])
+
+exports_files(
+    ["VERSION"],
+    visibility = ["//visibility:public"],
+)
 
 load("@vaticle_dependencies//tool/release:rules.bzl", "release_validate_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
@@ -32,59 +36,65 @@ load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-exports_files(["VERSION", "RELEASE_TEMPLATE.md", "deployment.bzl"])
+exports_files([
+    "VERSION",
+    "RELEASE_TEMPLATE.md",
+    "deployment.bzl",
+])
 
 java_library(
     name = "client-java",
     srcs = glob(["*.java"]),
+    resources = ["LICENSE"],
+    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client:{pom_version}"],
     deps = [
         # Internal dependencies
-        "//api:api",
-        "//cluster:cluster",
-        "//common:common",
-        "//core:core",
+        "//api",
+        "//cluster",
+        "//core",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
     ],
-    resources = ["LICENSE"],
-    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client:{pom_version}"],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", ".grabl/*"]),
+    size = "small",
+    include = glob([
+        "*",
+        ".grabl/*",
+    ]),
     exclude = glob(["docs/*"]),
     license_type = "apache",
-    size = "small",
 )
 
 assemble_maven(
     name = "assemble-maven",
-    target = ":client-java",
-    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
-    version_overrides = version(artifacts_org, artifacts_repo),
-    project_name = "TypeDB Client Java",
     project_description = "TypeDB Client API for Java",
+    project_name = "TypeDB Client Java",
     project_url = "https://github.com/vaticle/typedb-client-java",
     scm_url = "https://github.com/vaticle/typedb-client-java",
+    target = ":client-java",
+    version_overrides = version(artifacts_org, artifacts_repo),
+    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
 )
 
 deploy_maven(
     name = "deploy-maven",
-    target = ":assemble-maven",
-    snapshot = deployment["maven.snapshot"],
     release = deployment["maven.release"],
+    snapshot = deployment["maven.snapshot"],
+    target = ":assemble-maven",
 )
 
 deploy_github(
     name = "deploy-github",
+    draft = False,
     organisation = github_deployment["github.organisation"],
-    repository = github_deployment["github.repository"],
     release_description = "//:RELEASE_TEMPLATE.md",
+    repository = github_deployment["github.repository"],
     title = "TypeDB Client Java",
     title_append_version = True,
-    draft = False
 )
 
 release_validate_deps(
@@ -96,7 +106,7 @@ release_validate_deps(
         "@vaticle_typedb_protocol",
         "@vaticle_factory_tracing",
     ],
-    tags = ["manual"]  # in order for bazel test //... to not fail
+    tags = ["manual"],  # in order for bazel test //... to not fail
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally
