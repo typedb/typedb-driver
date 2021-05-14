@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,21 +19,21 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package com.vaticle.typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.common.Label;
-import grakn.client.concept.thing.RelationImpl;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.concept.thing.RelationImpl;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
@@ -44,7 +46,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -55,12 +57,12 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public RelationTypeImpl.Remote asRemote(GraknTransaction transaction) {
+        public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

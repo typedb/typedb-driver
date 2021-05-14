@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -19,8 +21,8 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -40,18 +42,18 @@ java_library(
         "@maven//:io_cucumber_cucumber_java",
     ],
 )
-grakn_behaviour_java_test(
+typedb_behaviour_java_test(
     name = "test",
     srcs = [
         "AttributeTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.concept.thing.attribute.AttributeTest",
+    test_class = "com.vaticle.typedb.client.test.behaviour.concept.thing.attribute.AttributeTest",
     data = [
-        "@graknlabs_behaviour//concept/thing:attribute.feature",
+        "@vaticle_typedb_behaviour//concept/thing:attribute.feature",
     ],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
+    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
+    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
+    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
     grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
     grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
     grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,14 +19,14 @@
  * under the License.
  */
 
-package grakn.client.concept.answer;
+package com.vaticle.typedb.client.concept.answer;
 
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.concept.Concept;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.ConceptImpl;
-import grakn.common.collection.Pair;
-import grakn.protocol.AnswerProto;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.protocol.AnswerProto;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,9 +35,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
-import static grakn.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-import static grakn.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 
 public class ConceptMapImpl implements ConceptMap {
 
@@ -88,7 +90,7 @@ public class ConceptMapImpl implements ConceptMap {
     @Override
     public Concept get(String variable) {
         Concept concept = map.get(variable);
-        if (concept == null) throw new GraknClientException(VARIABLE_DOES_NOT_EXIST, variable);
+        if (concept == null) throw new TypeDBClientException(VARIABLE_DOES_NOT_EXIST, variable);
         return concept;
     }
 
@@ -137,14 +139,14 @@ public class ConceptMapImpl implements ConceptMap {
         @Override
         public Explainable relation(String variable) {
             Explainable explainable = explainableRelations.get(variable);
-            if (explainable == null) throw new GraknClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
+            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return explainable;
         }
 
         @Override
         public Explainable attribute(String variable) {
             Explainable explainable = explainableAttributes.get(variable);
-            if (explainable == null) throw new GraknClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
+            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return explainable;
         }
 
@@ -152,7 +154,7 @@ public class ConceptMapImpl implements ConceptMap {
         public Explainable ownership(String owner, String attribute) {
             Explainable explainable = explainableOwnerships.get(new Pair<>(owner, attribute));
             if (explainable == null)
-                throw new GraknClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
+                throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
             return explainable;
         }
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,26 +19,25 @@
  * under the License.
  */
 
-package grakn.client.cluster;
+package com.vaticle.typedb.client.cluster;
 
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.database.Database;
-import grakn.client.core.CoreSession;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.core.CoreSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ClusterSession implements GraknSession {
+public class ClusterSession implements TypeDBSession {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GraknSession.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(TypeDBSession.class);
     private final ClusterClient clusterClient;
-    private final GraknOptions.Cluster options;
+    private final TypeDBOptions.Cluster options;
     private ClusterNodeClient clusterNodeClient;
     private CoreSession coreSession;
 
-    public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, GraknOptions.Cluster options) {
+    public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, TypeDBOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.clusterNodeClient = clusterClient.clusterNodeClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
@@ -45,13 +46,13 @@ public class ClusterSession implements GraknSession {
     }
 
     @Override
-    public GraknTransaction transaction(GraknTransaction.Type type) {
-        return transaction(type, GraknOptions.cluster());
+    public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
+        return transaction(type, TypeDBOptions.cluster());
     }
 
     @Override
-    public GraknTransaction transaction(GraknTransaction.Type type, GraknOptions options) {
-        GraknOptions.Cluster clusterOpt = options.asCluster();
+    public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
+        TypeDBOptions.Cluster clusterOpt = options.asCluster();
         if (clusterOpt.readAnyReplica().isPresent() && clusterOpt.readAnyReplica().get()) {
             return transactionAnyReplica(type, clusterOpt);
         } else {
@@ -59,24 +60,24 @@ public class ClusterSession implements GraknSession {
         }
     }
 
-    private GraknTransaction transactionPrimaryReplica(GraknTransaction.Type type, GraknOptions options) {
+    private TypeDBTransaction transactionPrimaryReplica(TypeDBTransaction.Type type, TypeDBOptions options) {
         return transactionFailsafeTask(type, options).runPrimaryReplica();
     }
 
-    private GraknTransaction transactionAnyReplica(GraknTransaction.Type type, GraknOptions.Cluster options) {
+    private TypeDBTransaction transactionAnyReplica(TypeDBTransaction.Type type, TypeDBOptions.Cluster options) {
         return transactionFailsafeTask(type, options).runAnyReplica();
     }
 
-    private FailsafeTask<GraknTransaction> transactionFailsafeTask(GraknTransaction.Type type, GraknOptions options) {
-        return new FailsafeTask<GraknTransaction>(clusterClient, database().name()) {
+    private FailsafeTask<TypeDBTransaction> transactionFailsafeTask(TypeDBTransaction.Type type, TypeDBOptions options) {
+        return new FailsafeTask<TypeDBTransaction>(clusterClient, database().name()) {
 
             @Override
-            GraknTransaction run(ClusterDatabase.Replica replica) {
+            TypeDBTransaction run(ClusterDatabase.Replica replica) {
                 return coreSession.transaction(type, options);
             }
 
             @Override
-            GraknTransaction rerun(ClusterDatabase.Replica replica) {
+            TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
                 clusterNodeClient = clusterClient.clusterNodeClient(replica.address());
                 coreSession = clusterNodeClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
@@ -86,12 +87,12 @@ public class ClusterSession implements GraknSession {
     }
 
     @Override
-    public GraknSession.Type type() {
+    public TypeDBSession.Type type() {
         return coreSession.type();
     }
 
     @Override
-    public GraknOptions.Cluster options() {
+    public TypeDBOptions.Cluster options() {
         return options;
     }
 

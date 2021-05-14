@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,14 +19,14 @@
  * under the License.
  */
 
-package grakn.client.core;
+package com.vaticle.typedb.client.core;
 
-import grakn.client.api.database.Database;
-import grakn.client.common.rpc.GraknStub;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
-import static grakn.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-import static grakn.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static grakn.client.core.CoreDatabaseManager.nonNull;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
+import static com.vaticle.typedb.client.core.CoreDatabaseManager.nonNull;
 
 public class CoreDatabase implements Database {
 
@@ -36,7 +38,7 @@ public class CoreDatabase implements Database {
         this.name = nonNull((name));
     }
 
-    private GraknStub.Core stub() {
+    private TypeDBStub.Core stub() {
         return databaseMgr.stub();
     }
 

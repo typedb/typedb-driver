@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,12 +19,12 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection;
+package com.vaticle.typedb.client.test.behaviour.connection;
 
-import grakn.client.Grakn;
-import grakn.client.api.GraknClient;
-import grakn.common.test.server.GraknClusterRunner;
-import grakn.common.test.server.GraknSingleton;
+import com.vaticle.typedb.client.TypeDB;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.common.test.server.TypeDBClusterRunner;
+import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -31,17 +33,17 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
-    private GraknClusterRunner server;
+    private TypeDBClusterRunner server;
 
     @Override
     void beforeAll() {
         try {
-            server = new GraknClusterRunner();
+            server = new TypeDBClusterRunner();
         } catch (InterruptedException | TimeoutException | IOException e) {
             throw new RuntimeException(e);
         }
         server.start();
-        GraknSingleton.setGraknRunner(server);
+        TypeDBSingleton.setTypeDBRunner(server);
     }
 
     @Before
@@ -55,8 +57,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    GraknClient createGraknClient(String address) {
-        return Grakn.coreClient(address);
+    TypeDBClient createTypeDBClient(String address) {
+        return TypeDB.coreClient(address);
     }
 
     @Given("connection has been opened")

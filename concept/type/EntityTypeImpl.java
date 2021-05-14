@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,18 +19,18 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package com.vaticle.typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.common.Label;
-import grakn.client.concept.thing.EntityImpl;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.concept.thing.EntityImpl;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -41,7 +43,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public EntityTypeImpl.Remote asRemote(GraknTransaction transaction) {
+    public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
     }
 
@@ -52,12 +54,12 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        Remote(GraknTransaction transaction, Label label, boolean isRoot) {
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
             super(transaction, label, isRoot);
         }
 
         @Override
-        public EntityTypeImpl.Remote asRemote(GraknTransaction transaction) {
+        public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
         }
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,9 +19,9 @@
  * under the License.
  */
 
-package grakn.client.api.concept.type;
+package com.vaticle.typedb.client.api.concept.type;
 
-import grakn.client.api.GraknTransaction;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 
 import java.util.stream.Stream;
 
@@ -31,7 +33,7 @@ public interface RoleType extends Type {
     }
 
     @Override
-    RoleType.Remote asRemote(GraknTransaction transaction);
+    RoleType.Remote asRemote(TypeDBTransaction transaction);
 
     interface Remote extends Type.Remote, RoleType {
 

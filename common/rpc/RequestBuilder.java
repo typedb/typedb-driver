@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,25 +19,25 @@
  * under the License.
  */
 
-package grakn.client.common.rpc;
+package com.vaticle.typedb.client.common.rpc;
 
 import com.google.protobuf.ByteString;
-import grabl.tracing.client.GrablTracingThreadStatic;
-import grakn.client.common.Label;
-import grakn.protocol.ClusterDatabaseProto;
-import grakn.protocol.ClusterServerProto;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.CoreDatabaseProto;
-import grakn.protocol.LogicProto;
-import grakn.protocol.OptionsProto;
-import grakn.protocol.QueryProto;
-import grakn.protocol.SessionProto;
-import grakn.protocol.TransactionProto;
-import graql.lang.query.GraqlDefine;
-import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlInsert;
-import graql.lang.query.GraqlMatch;
-import graql.lang.query.GraqlUndefine;
+import com.vaticle.factory.tracing.client.FactoryTracingThreadStatic;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.protocol.ClusterDatabaseProto;
+import com.vaticle.typedb.protocol.ClusterServerProto;
+import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.protocol.CoreDatabaseProto;
+import com.vaticle.typedb.protocol.LogicProto;
+import com.vaticle.typedb.protocol.OptionsProto;
+import com.vaticle.typedb.protocol.QueryProto;
+import com.vaticle.typedb.protocol.SessionProto;
+import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typeql.lang.query.TypeQLDefine;
+import com.vaticle.typeql.lang.query.TypeQLDelete;
+import com.vaticle.typeql.lang.query.TypeQLInsert;
+import com.vaticle.typeql.lang.query.TypeQLMatch;
+import com.vaticle.typeql.lang.query.TypeQLUndefine;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -45,18 +47,18 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.google.protobuf.ByteString.copyFrom;
-import static grabl.tracing.client.GrablTracingThreadStatic.currentThreadTrace;
-import static grabl.tracing.client.GrablTracingThreadStatic.isTracingEnabled;
-import static grakn.client.common.collection.Bytes.uuidToBytes;
-import static grakn.client.common.rpc.RequestBuilder.Thing.byteString;
-import static grakn.common.collection.Bytes.hexStringToBytes;
+import static com.vaticle.factory.tracing.client.FactoryTracingThreadStatic.currentThreadTrace;
+import static com.vaticle.factory.tracing.client.FactoryTracingThreadStatic.isTracingEnabled;
+import static com.vaticle.typedb.client.common.collection.Bytes.uuidToBytes;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.byteString;
+import static com.vaticle.typedb.common.collection.Bytes.hexStringToBytes;
 import static java.util.Collections.emptyMap;
 
 public class RequestBuilder {
 
     public static Map<String, String> tracingData() {
         if (isTracingEnabled()) {
-            GrablTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
+            FactoryTracingThreadStatic.ThreadTrace threadTrace = currentThreadTrace();
             if (threadTrace == null) return emptyMap();
             if (threadTrace.getId() == null || threadTrace.getRootId() == null) return emptyMap();
 
@@ -182,52 +184,52 @@ public class RequestBuilder {
             return TransactionProto.Transaction.Req.newBuilder().setQueryManagerReq(queryReq.setOptions(options));
         }
 
-        public static TransactionProto.Transaction.Req.Builder defineReq(GraqlDefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder defineReq(TypeQLDefine query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDefineReq(
                     QueryProto.QueryManager.Define.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder undefineReq(GraqlUndefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder undefineReq(TypeQLUndefine query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUndefineReq(
                     QueryProto.QueryManager.Undefine.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder matchReq(GraqlMatch query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder matchReq(TypeQLMatch query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchReq(
                     QueryProto.QueryManager.Match.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchAggregateReq(
-                GraqlMatch.Aggregate query, OptionsProto.Options options) {
+                TypeQLMatch.Aggregate query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchAggregateReq(
                     QueryProto.QueryManager.MatchAggregate.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchGroupReq(
-                GraqlMatch.Group query, OptionsProto.Options options) {
+                TypeQLMatch.Group query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupReq(
                     QueryProto.QueryManager.MatchGroup.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchGroupAggregateReq(
-                GraqlMatch.Group.Aggregate query, OptionsProto.Options options) {
+                TypeQLMatch.Group.Aggregate query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupAggregateReq(
                     QueryProto.QueryManager.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder insertReq(GraqlInsert query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder insertReq(TypeQLInsert query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setInsertReq(
                     QueryProto.QueryManager.Insert.Req.newBuilder().setQuery(query.toString())
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder deleteReq(GraqlDelete query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder deleteReq(TypeQLDelete query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDeleteReq(
                     QueryProto.QueryManager.Delete.Req.newBuilder().setQuery(query.toString())
             ), options);

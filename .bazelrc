@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,7 +19,7 @@
 # under the License.
 #
 
-build --incompatible_strict_action_env --javacopt='--release 8'
+build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11'
 run --incompatible_strict_action_env
 test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no
 

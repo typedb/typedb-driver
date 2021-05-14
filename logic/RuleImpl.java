@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,24 +19,24 @@
  * under the License.
  */
 
-package grakn.client.logic;
+package com.vaticle.typedb.client.logic;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.logic.Rule;
-import grakn.client.common.exception.GraknClientException;
-import grakn.protocol.LogicProto;
-import graql.lang.Graql;
-import graql.lang.pattern.Conjunction;
-import graql.lang.pattern.Pattern;
-import graql.lang.pattern.variable.ThingVariable;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.protocol.LogicProto;
+import com.vaticle.typeql.lang.TypeQL;
+import com.vaticle.typeql.lang.pattern.Conjunction;
+import com.vaticle.typeql.lang.pattern.Pattern;
+import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
 
 import java.util.Objects;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-import static grakn.client.common.rpc.RequestBuilder.Rule.deleteReq;
-import static grakn.client.common.rpc.RequestBuilder.Rule.setLabelReq;
-import static grakn.common.util.Objects.className;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Rule.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Rule.setLabelReq;
+import static com.vaticle.typedb.common.util.Objects.className;
 
 public class RuleImpl implements Rule {
 
@@ -44,7 +46,7 @@ public class RuleImpl implements Rule {
     private final int hash;
 
     RuleImpl(String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
-        if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         this.label = label;
         this.when = when;
         this.then = then;
@@ -54,8 +56,8 @@ public class RuleImpl implements Rule {
     public static RuleImpl of(LogicProto.Rule ruleProto) {
         return new RuleImpl(
                 ruleProto.getLabel(),
-                Graql.parsePattern(ruleProto.getWhen()).asConjunction(),
-                Graql.parseVariable(ruleProto.getThen()).asThing()
+                TypeQL.parsePattern(ruleProto.getWhen()).asConjunction(),
+                TypeQL.parseVariable(ruleProto.getThen()).asThing()
         );
     }
 
@@ -75,7 +77,7 @@ public class RuleImpl implements Rule {
     }
 
     @Override
-    public RuleImpl.Remote asRemote(GraknTransaction transaction) {
+    public RuleImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
     }
 
@@ -105,16 +107,16 @@ public class RuleImpl implements Rule {
 
     public static class Remote implements Rule.Remote {
 
-        final GraknTransaction.Extended transactionExt;
+        final TypeDBTransaction.Extended transactionExt;
         private String label;
         private final Conjunction<? extends Pattern> when;
         private final ThingVariable<?> then;
         private final int hash;
 
-        public Remote(GraknTransaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
-            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            if (label == null || label.isEmpty()) throw new GraknClientException(MISSING_LABEL);
-            this.transactionExt = (GraknTransaction.Extended) transaction;
+        public Remote(TypeDBTransaction transaction, String label, Conjunction<? extends Pattern> when, ThingVariable<?> then) {
+            if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
+            if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+            this.transactionExt = (TypeDBTransaction.Extended) transaction;
             this.label = label;
             this.when = when;
             this.then = then;
@@ -153,7 +155,7 @@ public class RuleImpl implements Rule {
         }
 
         @Override
-        public Remote asRemote(GraknTransaction transaction) {
+        public Remote asRemote(TypeDBTransaction transaction) {
             return new RuleImpl.Remote(transaction, getLabel(), getWhen(), getThen());
         }
 

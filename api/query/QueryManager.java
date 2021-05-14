@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,20 +19,20 @@
  * under the License.
  */
 
-package grakn.client.api.query;
+package com.vaticle.typedb.client.api.query;
 
-import grakn.client.api.GraknOptions;
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.answer.ConceptMapGroup;
-import grakn.client.api.logic.Explanation;
-import grakn.client.api.answer.Numeric;
-import grakn.client.api.answer.NumericGroup;
-import graql.lang.query.GraqlDefine;
-import graql.lang.query.GraqlDelete;
-import graql.lang.query.GraqlInsert;
-import graql.lang.query.GraqlMatch;
-import graql.lang.query.GraqlUndefine;
-import graql.lang.query.GraqlUpdate;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.client.api.answer.Numeric;
+import com.vaticle.typedb.client.api.answer.NumericGroup;
+import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typeql.lang.query.TypeQLDefine;
+import com.vaticle.typeql.lang.query.TypeQLDelete;
+import com.vaticle.typeql.lang.query.TypeQLInsert;
+import com.vaticle.typeql.lang.query.TypeQLMatch;
+import com.vaticle.typeql.lang.query.TypeQLUndefine;
+import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -38,50 +40,50 @@ import java.util.stream.Stream;
 public interface QueryManager {
 
     @CheckReturnValue
-    Stream<ConceptMap> match(GraqlMatch query);
+    Stream<ConceptMap> match(TypeQLMatch query);
 
     @CheckReturnValue
-    Stream<ConceptMap> match(GraqlMatch query, GraknOptions options);
+    Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options);
 
     @CheckReturnValue
-    QueryFuture<Numeric> match(GraqlMatch.Aggregate query);
+    QueryFuture<Numeric> match(TypeQLMatch.Aggregate query);
 
     @CheckReturnValue
-    QueryFuture<Numeric> match(GraqlMatch.Aggregate query, GraknOptions options);
+    QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options);
 
     @CheckReturnValue
-    Stream<ConceptMapGroup> match(GraqlMatch.Group query);
+    Stream<ConceptMapGroup> match(TypeQLMatch.Group query);
 
     @CheckReturnValue
-    Stream<ConceptMapGroup> match(GraqlMatch.Group query, GraknOptions options);
+    Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options);
 
     @CheckReturnValue
-    Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query);
+    Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query);
 
     @CheckReturnValue
-    Stream<NumericGroup> match(GraqlMatch.Group.Aggregate query, GraknOptions options);
+    Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options);
 
-    Stream<ConceptMap> insert(GraqlInsert query);
+    Stream<ConceptMap> insert(TypeQLInsert query);
 
-    Stream<ConceptMap> insert(GraqlInsert query, GraknOptions options);
+    Stream<ConceptMap> insert(TypeQLInsert query, TypeDBOptions options);
 
-    QueryFuture<Void> delete(GraqlDelete query);
+    QueryFuture<Void> delete(TypeQLDelete query);
 
-    QueryFuture<Void> delete(GraqlDelete query, GraknOptions options);
+    QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options);
 
-    Stream<ConceptMap> update(GraqlUpdate query);
+    Stream<ConceptMap> update(TypeQLUpdate query);
 
-    Stream<ConceptMap> update(GraqlUpdate query, GraknOptions options);
+    Stream<ConceptMap> update(TypeQLUpdate query, TypeDBOptions options);
 
     Stream<Explanation> explain(ConceptMap.Explainable explainable);
 
-    Stream<Explanation> explain(ConceptMap.Explainable explainable, GraknOptions options);
+    Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options);
 
-    QueryFuture<Void> define(GraqlDefine query);
+    QueryFuture<Void> define(TypeQLDefine query);
 
-    QueryFuture<Void> define(GraqlDefine query, GraknOptions options);
+    QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options);
 
-    QueryFuture<Void> undefine(GraqlUndefine query);
+    QueryFuture<Void> undefine(TypeQLUndefine query);
 
-    QueryFuture<Void> undefine(GraqlUndefine query, GraknOptions options);
+    QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options);
 }

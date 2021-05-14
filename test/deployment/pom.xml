@@ -1,4 +1,6 @@
 <!--
+Copyright (C) 2021 Vaticle
+
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -20,7 +22,7 @@ under the License.
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>grakn.client</groupId>
+    <groupId>typedb.client</groupId>
     <artifactId>maven-application-test</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -28,14 +30,14 @@ under the License.
     <url>https://maven.apache.org</url>
     <repositories>
         <repository>
-            <id>repo.grakn.ai.release</id>
-            <name>repo.grakn.ai</name>
-            <url>https://repo.grakn.ai/repository/maven/</url>
+            <id>repo.vaticle.com.release</id>
+            <name>repo.vaticle.com</name>
+            <url>https://repo.vaticle.com/repository/maven/</url>
         </repository>
         <repository>
-            <id>repo.grakn.ai.snapshot</id>
-            <name>repo.grakn.ai</name>
-            <url>https://repo.grakn.ai/repository/maven-snapshot/</url>
+            <id>repo.vaticle.com.snapshot</id>
+            <name>repo.vaticle.com</name>
+            <url>https://repo.vaticle.com/repository/maven-snapshot/</url>
         </repository>
     </repositories>
     <build>
@@ -53,8 +55,8 @@ under the License.
     </build>
     <dependencies>
         <dependency>
-            <groupId>io.grakn.client</groupId>
-            <artifactId>grakn-client</artifactId>
+            <groupId>com.vaticle.typedb</groupId>
+            <artifactId>typedb-client</artifactId>
             <version>CLIENT_JAVA_VERSION_MARKER</version>
         </dependency>
         <dependency>

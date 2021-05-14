@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,13 +19,13 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection;
+package com.vaticle.typedb.client.test.behaviour.connection;
 
-import grakn.client.api.GraknClient;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.database.Database;
-import grakn.common.test.server.GraknSingleton;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,15 +45,15 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static GraknClient client;
-    public static List<GraknSession> sessions = new ArrayList<>();
-    public static List<CompletableFuture<GraknSession>> sessionsParallel = new ArrayList<>();
-    public static Map<GraknSession, List<GraknTransaction>> sessionsToTransactions = new HashMap<>();
-    public static Map<GraknSession, List<CompletableFuture<GraknTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
-    public static Map<CompletableFuture<GraknSession>, List<CompletableFuture<GraknTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
+    public static TypeDBClient client;
+    public static List<TypeDBSession> sessions = new ArrayList<>();
+    public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
+    public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
+    public static Map<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
+    public static Map<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
     private static boolean isBeforeAllRan = false;
 
-    public static GraknTransaction tx() {
+    public static TypeDBTransaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
@@ -66,21 +68,21 @@ public abstract class ConnectionStepsBase {
             }
         }
         assertNull(client);
-        String address = GraknSingleton.getGraknRunner().address();
+        String address = TypeDBSingleton.getTypeDBRunner().address();
         assertNotNull(address);
-        client = createGraknClient(address);
+        client = createTypeDBClient(address);
         client.databases().all().forEach(Database::delete);
         System.out.println("ConnectionSteps.before");
     }
 
     void after() {
-        // TODO: Remove this once the server segfault issue is fixed (grakn#6135)
+        // TODO: Remove this once the server segfault issue is fixed (typedb#6135)
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        sessions.parallelStream().forEach(GraknSession::close);
+        sessions.parallelStream().forEach(TypeDBSession::close);
         sessions.clear();
 
         Stream<CompletableFuture<Void>> closures = sessionsParallel
@@ -101,7 +103,7 @@ public abstract class ConnectionStepsBase {
         System.out.println("ConnectionSteps.after");
     }
 
-    abstract GraknClient createGraknClient(String address);
+    abstract TypeDBClient createTypeDBClient(String address);
 
     void connection_has_been_opened() {
         assertNotNull(client);

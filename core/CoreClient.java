@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,32 +19,32 @@
  * under the License.
  */
 
-package grakn.client.core;
+package com.vaticle.typedb.client.core;
 
 import com.google.protobuf.ByteString;
-import grakn.client.api.GraknClient;
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.ManagedChannelFactory;
-import grakn.client.common.rpc.GraknStub;
-import grakn.client.stream.RequestTransmitter;
-import grakn.common.concurrent.NamedThreadFactory;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.stream.RequestTransmitter;
+import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static grakn.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static grakn.common.util.Objects.className;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.vaticle.typedb.common.util.Objects.className;
 
-public class CoreClient implements GraknClient {
+public class CoreClient implements TypeDBClient {
 
-    private static final String GRAKN_CLIENT_RPC_THREAD_NAME = "grakn-client-rpc";
+    private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
     private final ManagedChannel channel;
-    private final GraknStub.Core stub;
+    private final TypeDBStub.Core stub;
     private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
@@ -52,9 +54,9 @@ public class CoreClient implements GraknClient {
     }
 
     protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        NamedThreadFactory threadFactory = NamedThreadFactory.create(GRAKN_CLIENT_RPC_THREAD_NAME);
+        NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         channel = managedChannelFactory.forAddress(address);
-        stub = GraknStub.core(channel);
+        stub = TypeDBStub.core(channel);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
@@ -77,12 +79,12 @@ public class CoreClient implements GraknClient {
     }
 
     @Override
-    public CoreSession session(String database, GraknSession.Type type) {
-        return session(database, type, GraknOptions.core());
+    public CoreSession session(String database, TypeDBSession.Type type) {
+        return session(database, type, TypeDBOptions.core());
     }
 
     @Override
-    public CoreSession session(String database, GraknSession.Type type, GraknOptions options) {
+    public CoreSession session(String database, TypeDBSession.Type type, TypeDBOptions options) {
         CoreSession session = new CoreSession(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
@@ -106,14 +108,14 @@ public class CoreClient implements GraknClient {
 
     @Override
     public Cluster asCluster() {
-        throw new GraknClientException(ILLEGAL_CAST, className(GraknClient.Cluster.class));
+        throw new TypeDBClientException(ILLEGAL_CAST, className(TypeDBClient.Cluster.class));
     }
 
     public ManagedChannel channel() {
         return channel;
     }
 
-    GraknStub.Core stub() {
+    TypeDBStub.Core stub() {
         return stub;
     }
 

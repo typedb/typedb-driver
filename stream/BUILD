@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -19,7 +21,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "stream",
@@ -28,9 +30,9 @@ java_library(
         # Internal dependencies
         "//common:common",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_common//:common",
-        "@graknlabs_protocol//grpc/java:protocol",
+        # External dependencies from @vaticle
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typedb_protocol//grpc/java:protocol",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

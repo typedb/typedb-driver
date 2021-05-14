@@ -1,6 +1,6 @@
-package grakn.client.common.rpc;
+package com.vaticle.typedb.client.common.rpc;
 
-import grakn.client.common.exception.GraknClientException;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
@@ -45,7 +45,7 @@ public interface ManagedChannelFactory {
                 }
                 return NettyChannelBuilder.forTarget(address).useTransportSecurity().sslContext(sslContext).build();
             } catch (SSLException e) {
-                throw new GraknClientException(e.getMessage(), e);
+                throw new TypeDBClientException(e.getMessage(), e);
             }
         }
     }

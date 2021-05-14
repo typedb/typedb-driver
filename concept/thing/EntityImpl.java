@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,13 +19,13 @@
  * under the License.
  */
 
-package grakn.client.concept.thing;
+package com.vaticle.typedb.client.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Entity;
-import grakn.client.concept.type.EntityTypeImpl;
-import grakn.common.collection.Bytes;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
+import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
+import com.vaticle.typedb.common.collection.Bytes;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 public class EntityImpl extends ThingImpl implements Entity {
 
@@ -44,7 +46,7 @@ public class EntityImpl extends ThingImpl implements Entity {
     }
 
     @Override
-    public EntityImpl.Remote asRemote(GraknTransaction transaction) {
+    public EntityImpl.Remote asRemote(TypeDBTransaction transaction) {
         return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
     }
 
@@ -57,13 +59,13 @@ public class EntityImpl extends ThingImpl implements Entity {
 
         private final EntityTypeImpl type;
 
-        public Remote(GraknTransaction transaction, String iid, boolean isInferred, EntityTypeImpl type) {
+        public Remote(TypeDBTransaction transaction, String iid, boolean isInferred, EntityTypeImpl type) {
             super(transaction, iid, isInferred);
             this.type = type;
         }
 
         @Override
-        public EntityImpl.Remote asRemote(GraknTransaction transaction) {
+        public EntityImpl.Remote asRemote(TypeDBTransaction transaction) {
             return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
         }
 

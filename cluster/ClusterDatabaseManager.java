@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,15 +19,15 @@
  * under the License.
  */
 
-package grakn.client.cluster;
+package com.vaticle.typedb.client.cluster;
 
-import grakn.client.api.database.Database;
-import grakn.client.api.database.DatabaseManager;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.GraknStub;
-import grakn.client.core.CoreDatabaseManager;
-import grakn.common.collection.Pair;
-import grakn.protocol.ClusterDatabaseProto;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.core.CoreDatabaseManager;
+import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +35,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import static grakn.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
-import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.allReq;
-import static grakn.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
-import static grakn.common.collection.Collections.pair;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.allReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
+import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -76,7 +78,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), client);
             }
-            else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
+            else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
         });
     }
 
@@ -87,18 +89,18 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
             try {
                 ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
                 return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, client)).collect(toList());
-            } catch (GraknClientException e) {
+            } catch (TypeDBClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
             }
         }
-        throw new GraknClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
+        throw new TypeDBClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
     }
 
     Map<String, CoreDatabaseManager> databaseMgrs() {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<GraknStub.Cluster, CoreDatabaseManager, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.Cluster, CoreDatabaseManager, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override
@@ -113,7 +115,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         };
         try {
             return failsafeTask.runAnyReplica();
-        } catch (GraknClientException e) {
+        } catch (TypeDBClientException e) {
             if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
                 return failsafeTask.runPrimaryReplica();
             } else throw e;

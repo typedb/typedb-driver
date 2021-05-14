@@ -1,7 +1,7 @@
-package grakn.client.cluster;
+package com.vaticle.typedb.client.cluster;
 
-import grakn.client.common.rpc.ManagedChannelFactory;
-import grakn.client.core.CoreClient;
+import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
+import com.vaticle.typedb.client.core.CoreClient;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;

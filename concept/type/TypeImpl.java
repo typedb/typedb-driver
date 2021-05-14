@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,28 +19,28 @@
  * under the License.
  */
 
-package grakn.client.concept.type;
+package com.vaticle.typedb.client.concept.type;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.thing.Entity;
-import grakn.client.api.concept.thing.Relation;
-import grakn.client.api.concept.thing.Thing;
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.api.concept.type.Type;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.Label;
-import grakn.client.concept.ConceptImpl;
-import grakn.client.concept.thing.AttributeImpl;
-import grakn.client.concept.thing.EntityImpl;
-import grakn.client.concept.thing.RelationImpl;
-import grakn.client.concept.thing.ThingImpl;
-import grakn.protocol.ConceptProto;
-import grakn.protocol.TransactionProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
+import com.vaticle.typedb.client.api.concept.thing.Relation;
+import com.vaticle.typedb.client.api.concept.thing.Thing;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.client.concept.thing.AttributeImpl;
+import com.vaticle.typedb.client.concept.thing.EntityImpl;
+import com.vaticle.typedb.client.concept.thing.RelationImpl;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.protocol.TransactionProto;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -46,19 +48,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
-import static grakn.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-import static grakn.client.common.rpc.RequestBuilder.Type.deleteReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.getSubtypesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.isAbstractReq;
-import static grakn.client.common.rpc.RequestBuilder.Type.setLabelReq;
-import static grakn.client.concept.type.RoleTypeImpl.protoRoleType;
-import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
-import static grakn.common.util.Objects.className;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.isAbstractReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.setLabelReq;
+import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
+import static com.vaticle.typedb.client.concept.type.ThingTypeImpl.protoThingType;
+import static com.vaticle.typedb.common.util.Objects.className;
 import static java.util.stream.Collectors.toList;
 
 public abstract class TypeImpl extends ConceptImpl implements Type {
@@ -68,7 +70,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     private final int hash;
 
     TypeImpl(Label label, boolean isRoot) {
-        if (label == null) throw new GraknClientException(MISSING_LABEL);
+        if (label == null) throw new TypeDBClientException(MISSING_LABEL);
         this.label = label;
         this.isRoot = isRoot;
         this.hash = Objects.hash(this.label);
@@ -79,7 +81,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             case ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);
             case UNRECOGNIZED:
-                throw new GraknClientException(BAD_ENCODING, typeProto.getEncoding());
+                throw new TypeDBClientException(BAD_ENCODING, typeProto.getEncoding());
             default:
                 return ThingTypeImpl.of(typeProto);
         }
@@ -144,15 +146,15 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     public abstract static class Remote extends ConceptImpl.Remote implements Type.Remote {
 
-        final GraknTransaction.Extended transactionExt;
+        final TypeDBTransaction.Extended transactionExt;
         private Label label;
         private final boolean isRoot;
         private int hash;
 
-        Remote(GraknTransaction transaction, Label label, boolean isRoot) {
-            if (transaction == null) throw new GraknClientException(MISSING_TRANSACTION);
-            if (label == null) throw new GraknClientException(MISSING_LABEL);
-            this.transactionExt = (GraknTransaction.Extended) transaction;
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
+            if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
+            if (label == null) throw new TypeDBClientException(MISSING_LABEL);
+            this.transactionExt = (TypeDBTransaction.Extended) transaction;
             this.label = label;
             this.isRoot = isRoot;
             this.hash = Objects.hash(this.transactionExt, label);
@@ -187,47 +189,47 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
         @Override
         public ThingTypeImpl.Remote asThingType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
         }
 
         @Override
         public EntityTypeImpl.Remote asEntityType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
         }
 
         @Override
         public RelationTypeImpl.Remote asRelationType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
         }
 
         @Override
         public AttributeTypeImpl.Remote asAttributeType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
         }
 
         @Override
         public RoleTypeImpl.Remote asRoleType() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
         }
 
         @Override
         public ThingImpl.Remote asThing() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
         }
 
         @Override
         public EntityImpl.Remote asEntity() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
         }
 
         @Override
         public AttributeImpl.Remote<?> asAttribute() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
         }
 
         @Override
         public RelationImpl.Remote asRelation() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
         }
 
         @Nullable
@@ -262,7 +264,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             execute(deleteReq(getLabel()));
         }
 
-        final GraknTransaction tx() {
+        final TypeDBTransaction tx() {
             return transactionExt;
         }
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,12 +19,12 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.transaction;
+package com.vaticle.typedb.client.test.behaviour.connection.transaction;
 
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import graql.lang.Graql;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typeql.lang.TypeQL;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.hamcrest.Matchers;
@@ -33,16 +35,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessions;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
-import static grakn.client.test.behaviour.util.Util.assertThrowsWithMessage;
-import static grakn.common.collection.Collections.list;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
+import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -57,16 +59,16 @@ public class TransactionSteps {
     // =============================================//
 
     @When("(for each )session(,) open(s) transaction(s) of type: {transaction_type}")
-    public void session_opens_transaction_of_type(GraknTransaction.Type type) {
+    public void session_opens_transaction_of_type(TypeDBTransaction.Type type) {
         for_each_session_open_transactions_of_type(list(type));
     }
 
     @When("(for each )session(,) open transaction(s) of type:")
-    public void for_each_session_open_transactions_of_type(List<GraknTransaction.Type> types) {
-        for (GraknSession session : sessions) {
-            List<GraknTransaction> transactions = new ArrayList<>();
-            for (GraknTransaction.Type type : types) {
-                GraknTransaction transaction = session.transaction(type, GraknOptions.core().infer(true));
+    public void for_each_session_open_transactions_of_type(List<TypeDBTransaction.Type> types) {
+        for (TypeDBSession session : sessions) {
+            List<TypeDBTransaction> transactions = new ArrayList<>();
+            for (TypeDBTransaction.Type type : types) {
+                TypeDBTransaction transaction = session.transaction(type, TypeDBOptions.core().infer(true));
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);
@@ -74,14 +76,14 @@ public class TransactionSteps {
     }
 
     @When("(for each )session(,) open transaction(s) of type; throws exception: {transaction_type}")
-    public void for_each_session_open_transactions_of_type_throws_exception(GraknTransaction.Type type) {
+    public void for_each_session_open_transactions_of_type_throws_exception(TypeDBTransaction.Type type) {
         for_each_session_open_transactions_of_type_throws_exception(list(type));
     }
 
     @Then("(for each )session(,) open transaction(s) of type; throws exception")
-    public void for_each_session_open_transactions_of_type_throws_exception(List<GraknTransaction.Type> types) {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction.Type type : types) {
+    public void for_each_session_open_transactions_of_type_throws_exception(List<TypeDBTransaction.Type> types) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction.Type type : types) {
                 assertThrows(() -> session.transaction(type));
             }
         }
@@ -114,8 +116,8 @@ public class TransactionSteps {
 
     @Then("(for each )session(,) transaction(s) commit(s)")
     public void for_each_session_transactions_commit() {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 transaction.commit();
             }
         }
@@ -123,8 +125,8 @@ public class TransactionSteps {
 
     @Then("(for each )session(,) transaction(s) commit(s); throws exception")
     public void for_each_session_transactions_commits_throws_exception() {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 assertThrows(transaction::commit);
             }
         }
@@ -132,34 +134,34 @@ public class TransactionSteps {
 
     @Then("(for each )session(,) transaction close(s)")
     public void for_each_session_transaction_closes() {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 transaction.close();
             }
         }
     }
 
-    private void for_each_session_transactions_are(Consumer<GraknTransaction> assertion) {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
+    private void for_each_session_transactions_are(Consumer<TypeDBTransaction> assertion) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 assertion.accept(transaction);
             }
         }
     }
 
     @Then("(for each )session(,) transaction(s) has/have type: {transaction_type}")
-    public void for_each_session_transactions_have_type(GraknTransaction.Type type) {
+    public void for_each_session_transactions_have_type(TypeDBTransaction.Type type) {
         for_each_session_transactions_have_type(list(type));
     }
 
     @Then("(for each )session(,) transaction(s) has/have type:")
-    public void for_each_session_transactions_have_type(List<GraknTransaction.Type> types) {
-        for (GraknSession session : sessions) {
-            List<GraknTransaction> transactions = sessionsToTransactions.get(session);
+    public void for_each_session_transactions_have_type(List<TypeDBTransaction.Type> types) {
+        for (TypeDBSession session : sessions) {
+            List<TypeDBTransaction> transactions = sessionsToTransactions.get(session);
             assertEquals(types.size(), transactions.size());
 
-            Iterator<GraknTransaction.Type> typesIterator = types.iterator();
-            Iterator<GraknTransaction> transactionIterator = transactions.iterator();
+            Iterator<TypeDBTransaction.Type> typesIterator = types.iterator();
+            Iterator<TypeDBTransaction> transactionIterator = transactions.iterator();
             while (typesIterator.hasNext()) {
                 assertEquals(typesIterator.next(), transactionIterator.next().type());
             }
@@ -171,11 +173,11 @@ public class TransactionSteps {
     // ===========================================//
 
     @When("for each session, open transaction(s) in parallel of type:")
-    public void for_each_session_open_transactions_in_parallel_of_type(List<GraknTransaction.Type> types) {
+    public void for_each_session_open_transactions_in_parallel_of_type(List<TypeDBTransaction.Type> types) {
         assertTrue(THREAD_POOL_SIZE >= types.size());
-        for (GraknSession session : sessions) {
-            List<CompletableFuture<GraknTransaction>> transactionsParallel = new ArrayList<>();
-            for (GraknTransaction.Type type : types) {
+        for (TypeDBSession session : sessions) {
+            List<CompletableFuture<TypeDBTransaction>> transactionsParallel = new ArrayList<>();
+            for (TypeDBTransaction.Type type : types) {
                 transactionsParallel.add(CompletableFuture.supplyAsync(() -> session.transaction(type), threadPool));
             }
             sessionsToTransactionsParallel.put(session, transactionsParallel);
@@ -192,10 +194,10 @@ public class TransactionSteps {
         for_each_session_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
 
-    private void for_each_session_transactions_in_parallel_are(Consumer<GraknTransaction> assertion) {
+    private void for_each_session_transactions_in_parallel_are(Consumer<TypeDBTransaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (GraknSession session : sessions) {
-            for (CompletableFuture<GraknTransaction> futureTransaction :
+        for (TypeDBSession session : sessions) {
+            for (CompletableFuture<TypeDBTransaction> futureTransaction :
                     sessionsToTransactionsParallel.get(session)) {
 
                 assertions.add(futureTransaction.thenApply(transaction -> {
@@ -208,19 +210,19 @@ public class TransactionSteps {
     }
 
     @Then("for each session, transactions in parallel have type:")
-    public void for_each_session_transactions_in_parallel_have_type(List<GraknTransaction.Type> types) {
+    public void for_each_session_transactions_in_parallel_have_type(List<TypeDBTransaction.Type> types) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (GraknSession session : sessions) {
-            List<CompletableFuture<GraknTransaction>> futureTxs =
+        for (TypeDBSession session : sessions) {
+            List<CompletableFuture<TypeDBTransaction>> futureTxs =
                     sessionsToTransactionsParallel.get(session);
 
             assertEquals(types.size(), futureTxs.size());
 
-            Iterator<GraknTransaction.Type> typesIter = types.iterator();
-            Iterator<CompletableFuture<GraknTransaction>> futureTxsIter = futureTxs.iterator();
+            Iterator<TypeDBTransaction.Type> typesIter = types.iterator();
+            Iterator<CompletableFuture<TypeDBTransaction>> futureTxsIter = futureTxs.iterator();
 
             while (typesIter.hasNext()) {
-                GraknTransaction.Type type = typesIter.next();
+                TypeDBTransaction.Type type = typesIter.next();
                 futureTxsIter.next().thenApplyAsync(tx -> {
                     assertEquals(type, tx.type());
                     return null;
@@ -245,10 +247,10 @@ public class TransactionSteps {
         for_each_session_in_parallel_transactions_in_parallel_are(transaction -> assertEquals(isOpen, transaction.isOpen()));
     }
 
-    private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<GraknTransaction> assertion) {
+    private void for_each_session_in_parallel_transactions_in_parallel_are(Consumer<TypeDBTransaction> assertion) {
         List<CompletableFuture<Void>> assertions = new ArrayList<>();
-        for (CompletableFuture<GraknSession> futureSession : sessionsParallel) {
-            for (CompletableFuture<GraknTransaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
+        for (CompletableFuture<TypeDBSession> futureSession : sessionsParallel) {
+            for (CompletableFuture<TypeDBTransaction> futureTransaction : sessionsParallelToTransactionsParallel.get(futureSession)) {
                 assertions.add(futureTransaction.thenApply(transaction -> {
                     assertion.accept(transaction);
                     return null;
@@ -265,10 +267,10 @@ public class TransactionSteps {
 
     @Then("for each transaction, define query; throws exception containing {string}")
     public void for_each_transaction_execute_define_throws_exception(String expectedException, String defineQueryStatements) {
-        for (GraknSession session : sessions) {
-            for (GraknTransaction transaction : sessionsToTransactions.get(session)) {
+        for (TypeDBSession session : sessions) {
+            for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 try {
-                    transaction.query().define(Graql.parseQuery(defineQueryStatements).asDefine()).get();
+                    transaction.query().define(TypeQL.parseQuery(defineQueryStatements).asDefine()).get();
                     fail();
                 } catch (Exception e) {
                     assertThat(e.getMessage(), Matchers.containsString(expectedException));

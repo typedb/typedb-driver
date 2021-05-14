@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,21 +19,21 @@
  * under the License.
  */
 
-package grakn.client.test.integration;
+package com.vaticle.typedb.client.test.integration;
 
-import grakn.client.Grakn;
-import grakn.client.api.GraknClient;
-import grakn.client.api.GraknOptions;
-import grakn.client.api.GraknSession;
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.answer.ConceptMap;
-import grakn.client.api.logic.Explanation;
-import grakn.common.test.server.GraknCoreRunner;
-import graql.lang.Graql;
-import graql.lang.common.GraqlArg;
-import graql.lang.query.GraqlDefine;
-import graql.lang.query.GraqlInsert;
-import graql.lang.query.GraqlMatch;
+import com.vaticle.typedb.client.TypeDB;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
+import com.vaticle.typeql.lang.TypeQL;
+import com.vaticle.typeql.lang.common.TypeQLArg;
+import com.vaticle.typeql.lang.query.TypeQLDefine;
+import com.vaticle.typeql.lang.query.TypeQLInsert;
+import com.vaticle.typeql.lang.query.TypeQLMatch;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,70 +47,69 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static grakn.client.api.GraknSession.Type.DATA;
-import static grakn.client.api.GraknTransaction.Type.READ;
-import static grakn.client.api.GraknTransaction.Type.WRITE;
-import static graql.lang.Graql.and;
-import static graql.lang.Graql.rel;
-import static graql.lang.Graql.rule;
-import static graql.lang.Graql.type;
-import static graql.lang.Graql.var;
+import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typeql.lang.TypeQL.and;
+import static com.vaticle.typeql.lang.TypeQL.rel;
+import static com.vaticle.typeql.lang.TypeQL.rule;
+import static com.vaticle.typeql.lang.TypeQL.type;
+import static com.vaticle.typeql.lang.TypeQL.var;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 @SuppressWarnings("Duplicates")
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
-    private static GraknCoreRunner grakn;
-    private static GraknClient graknClient;
+    private static TypeDBCoreRunner typedb;
+    private static TypeDBClient typedbClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        grakn = new GraknCoreRunner();
-        grakn.start();
-        graknClient = Grakn.coreClient(grakn.address());
-        if (graknClient.databases().contains("grakn")) graknClient.databases().get("grakn").delete();
-        graknClient.databases().create("grakn");
+        typedb = new TypeDBCoreRunner();
+        typedb.start();
+        typedbClient = TypeDB.coreClient(typedb.address());
+        if (typedbClient.databases().contains("typedb")) typedbClient.databases().get("typedb").delete();
+        typedbClient.databases().create("typedb");
     }
 
     @AfterClass
     public static void closeSession() {
-        graknClient.close();
-        grakn.stop();
+        typedbClient.close();
+        typedb.stop();
     }
 
     @Test
     public void applicationTest() {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
 
-        localhostGraknTx(tx -> {
-            GraqlDefine defineQuery = Graql.define(
+        localhostTypeDBTX(tx -> {
+            TypeQLDefine defineQuery = TypeQL.define(
                     type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
                     type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearing", "child-bearer"),
                     type("parentship").sub("relation").relates("parent").relates("child"),
 
-                    type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
+                    type("name").sub("attribute").value(TypeQLArg.ValueType.STRING),
                     type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
             );
-            GraqlDefine ruleQuery = Graql.define(rule("infer-parentship-from-mating-and-child-bearing")
-                                                         .when(and(
-                                                                 rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                                                                 var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
-                                                         .then(rel("parent", var("male"))
-                                                                       .rel("parent", var("female"))
-                                                                       .rel("child", var("offspring")).isa("parentship")));
+            TypeQLDefine ruleQuery = TypeQL.define(rule("infer-parentship-from-mating-and-child-bearing")
+                                                           .when(and(
+                                                                   rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
+                                                                   var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
+                                                           .then(rel("parent", var("male"))
+                                                                         .rel("parent", var("female"))
+                                                                         .rel("child", var("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
             tx.query().define(ruleQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        }, GraknSession.Type.SCHEMA);
+        }, TypeDBSession.Type.SCHEMA);
 
         // TODO: re-enable when match is implemented
-//        localhostGraknTx(tx -> {
-//            final GraqlMatch getThingQuery = Graql.match(var("t").sub("thing"));
+//        localhostTypeDBTX(tx -> {
+//            final TypeQLMatch getThingQuery = TypeQL.match(var("t").sub("thing"));
 //            LOG.info("clientJavaE2E() - assert if schema defined...");
 //            LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
 //            final List<String> definedSchema = tx.query().match(getThingQuery).get()
@@ -119,9 +120,9 @@ public class ClientQueryTest {
 //            LOG.info("clientJavaE2E() - done.");
 //        });
 
-        localhostGraknTx(tx -> {
+        localhostTypeDBTX(tx -> {
             String[] names = lionNames();
-            GraqlInsert insertLionQuery = Graql.insert(
+            TypeQLInsert insertLionQuery = TypeQL.insert(
                     var().isa("lion").has("name", names[0]),
                     var().isa("lion").has("name", names[1]),
                     var().isa("lion").has("name", names[2])
@@ -134,10 +135,10 @@ public class ClientQueryTest {
         }, WRITE);
 
         // TODO: uncomment when match is implemented
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            final String[] familyMembers = lionNames();
 //            LOG.info("clientJavaE2E() - inserting mating relations...");
-//            final GraqlInsert insertMatingQuery = Graql.match(
+//            final TypeQLInsert insertMatingQuery = TypeQL.match(
 //                    var("lion").isa("lion").has("name", familyMembers[0]),
 //                    var("lioness").isa("lion").has("name", familyMembers[1]))
 //                    .insert(rel("male-partner", "lion").rel("female-partner", var("lioness")).isa("mating"));
@@ -145,7 +146,7 @@ public class ClientQueryTest {
 //            final long insertedMating = tx.query().insert(insertMatingQuery).get().count();
 //
 //            LOG.info("clientJavaE2E() - inserting child-bearing relations...");
-//            final GraqlInsert insertChildBearingQuery = Graql.match(
+//            final TypeQLInsert insertChildBearingQuery = TypeQL.match(
 //                    var("lion").isa("lion").has("name", familyMembers[0]),
 //                    var("lioness").isa("lion").has("name", familyMembers[1]),
 //                    var("offspring").isa("lion").has("name", familyMembers[2]),
@@ -163,31 +164,31 @@ public class ClientQueryTest {
 //        });
 //
 //
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            LOG.info("clientJavaE2E() - execute match get on the lion instances...");
-//            final GraqlMatch getLionQuery = Graql.match(var("p").isa("lion").has("name", var("n")));
+//            final TypeQLMatch getLionQuery = TypeQL.match(var("p").isa("lion").has("name", var("n")));
 //            LOG.info("clientJavaE2E() - '" + getLionQuery + "'");
 //            final Stream<ConceptMap> insertedLions = tx.query().match(getLionQuery).get();
 //            final List<String> insertedNames = insertedLions.map(answer -> answer.get("n").asThing().asAttribute().asString().getValue()).collect(Collectors.toList());
 //            assertThat(insertedNames, containsInAnyOrder(lionNames()));
 //
 //            LOG.info("clientJavaE2E() - execute match get on the mating relations...");
-//            final GraqlMatch getMatingQuery = Graql.match(var("m").isa("mating"));
+//            final TypeQLMatch getMatingQuery = TypeQL.match(var("m").isa("mating"));
 //            LOG.info("clientJavaE2E() - '" + getMatingQuery + "'");
 //            final long insertedMating = tx.query().match(getMatingQuery).get().count();
 //            assertEquals(1, insertedMating);
 //
 //            LOG.info("clientJavaE2E() - execute match get on the child-bearing...");
-//            final GraqlMatch getChildBearingQuery = Graql.match(var("cb").isa("child-bearing"));
+//            final TypeQLMatch getChildBearingQuery = TypeQL.match(var("cb").isa("child-bearing"));
 //            LOG.info("clientJavaE2E() - '" + getChildBearingQuery + "'");
 //            final long insertedChildBearing = tx.query().match(getChildBearingQuery).get().count();
 //            assertEquals(1, insertedChildBearing);
 //            LOG.info("clientJavaE2E() - done.");
 //        });
 //
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            LOG.info("clientJavaE2E() - match get inferred relations...");
-//            final GraqlMatch getParentship = Graql.match(
+//            final TypeQLMatch getParentship = TypeQL.match(
 //                    var("parentship")
 //                            .rel("parent", var("parent"))
 //                            .rel("child", var("child"))
@@ -200,9 +201,9 @@ public class ClientQueryTest {
 //        });
 
         // TODO: uncomment when aggregate is implemented
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            LOG.info("clientJavaE2E() - match aggregate...");
-//            GraqlMatch.Aggregate aggregateQuery = Graql.match(var("p").isa("lion")).count();
+//            TypeQLMatch.Aggregate aggregateQuery = TypeQL.match(var("p").isa("lion")).count();
 //            LOG.info("clientJavaE2E() - '" + aggregateQuery + "'");
 //            int aggregateCount = tx.query().aggregate(aggregateQuery).get().get(0).number().intValue();
 //            assertThat(aggregateCount, equalTo(lionNames().length));
@@ -210,9 +211,9 @@ public class ClientQueryTest {
 //        });
 
         // TODO: uncomment when compute is implemented
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            LOG.info("clientJavaE2E() - compute count...");
-//            final GraqlCompute.Statistics computeQuery = Graql.compute().count().in("lion");
+//            final TypeQLCompute.Statistics computeQuery = TypeQL.compute().count().in("lion");
 //            LOG.info("clientJavaE2E() - '" + computeQuery + "'");
 //            int computeCount = tx.execute(computeQuery).get().get(0).number().intValue();
 //            assertThat(computeCount, equalTo(lionNames().length));
@@ -220,12 +221,12 @@ public class ClientQueryTest {
 //        });
 
         // TODO: uncomment when match is implemented
-//        localhostGraknTx(tx -> {
+//        localhostTypeDBTX(tx -> {
 //            LOG.info("clientJavaE2E() - match delete...");
-//            GraqlDelete deleteQuery = Graql.match(var("m").isa("mating")).delete(var("m").isa("mating"));
+//            TypeQLDelete deleteQuery = TypeQL.match(var("m").isa("mating")).delete(var("m").isa("mating"));
 //            LOG.info("clientJavaE2E() - '" + deleteQuery + "'");
 //            tx.query().delete(deleteQuery).get();
-//            final long matings = tx.query().match(Graql.match(var("m").isa("mating"))).get().count();
+//            final long matings = tx.query().match(TypeQL.match(var("m").isa("mating"))).get().count();
 //            assertEquals(0, matings);
 //            LOG.info("clientJavaE2E() - done.");
 //        });
@@ -252,12 +253,12 @@ public class ClientQueryTest {
 
     @Test
     public void parallelQueriesInTransactionTest() {
-        localhostGraknTx(tx -> {
-            GraqlDefine defineQuery = Graql.define(
-                    type("symbol").sub("attribute").value(GraqlArg.ValueType.STRING),
-                    type("name").sub("attribute").value(GraqlArg.ValueType.STRING),
-                    type("status").sub("attribute").value(GraqlArg.ValueType.STRING),
-                    type("latest").sub("attribute").value(GraqlArg.ValueType.BOOLEAN),
+        localhostTypeDBTX(tx -> {
+            TypeQLDefine defineQuery = TypeQL.define(
+                    type("symbol").sub("attribute").value(TypeQLArg.ValueType.STRING),
+                    type("name").sub("attribute").value(TypeQLArg.ValueType.STRING),
+                    type("status").sub("attribute").value(TypeQLArg.ValueType.STRING),
+                    type("latest").sub("attribute").value(TypeQLArg.ValueType.BOOLEAN),
 
                     type("commit").sub("entity")
                             .owns("symbol")
@@ -284,12 +285,12 @@ public class ClientQueryTest {
             tx.query().define(defineQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
-        }, GraknSession.Type.SCHEMA);
+        }, TypeDBSession.Type.SCHEMA);
 
 
-        localhostGraknTx(tx -> {
+        localhostTypeDBTX(tx -> {
             String[] commits = commitSHAs();
-            GraqlInsert insertCommitQuery = Graql.insert(
+            TypeQLInsert insertCommitQuery = TypeQL.insert(
                     var().isa("commit").has("symbol", commits[0]),
                     var().isa("commit").has("symbol", commits[1]),
                     var().isa("commit").has("symbol", commits[3]),
@@ -308,8 +309,8 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - done.");
         }, WRITE);
 
-        localhostGraknTx(tx -> {
-            GraqlInsert insertWorkflowQuery = Graql.insert(
+        localhostTypeDBTX(tx -> {
+            TypeQLInsert insertWorkflowQuery = TypeQL.insert(
                     var().isa("workflow")
                             .has("name", "workflow-A")
                             .has("status", "running")
@@ -327,8 +328,8 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - done.");
         }, WRITE);
 
-        localhostGraknTx(tx -> {
-            GraqlInsert insertPipelineQuery = Graql.insert(
+        localhostTypeDBTX(tx -> {
+            TypeQLInsert insertPipelineQuery = TypeQL.insert(
                     var().isa("pipeline")
                             .has("name", "pipeline-A")
                             .has("latest", true),
@@ -344,12 +345,12 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - done.");
         }, WRITE);
 
-        localhostGraknTx(tx -> {
+        localhostTypeDBTX(tx -> {
             String[] commitShas = commitSHAs();
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
             for (int i = 0; i < commitShas.length / 2; i++) {
-                GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
                         var("commit").isa("commit").has("symbol", commitShas[i]),
                         var("pipeline").isa("pipeline").has("name", "pipeline-A")
                 )
@@ -362,7 +363,7 @@ public class ClientQueryTest {
 
 
             for (int i = commitShas.length / 2; i < commitShas.length; i++) {
-                GraqlInsert insertPipelineAutomationQuery = Graql.match(
+                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
                         var("commit").isa("commit").has("symbol", commitShas[i]),
                         var("pipeline").isa("pipeline").has("name", "pipeline-B")
                 )
@@ -378,10 +379,10 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - done.");
         }, WRITE);
 
-        localhostGraknTx(tx -> {
+        localhostTypeDBTX(tx -> {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
-            GraqlInsert insertPipelineWorkflowQuery = Graql.match(
+            TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(
                     var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
                     var("workflowA").isa("workflow").has("name", "workflow-A"),
                     var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
@@ -451,11 +452,11 @@ public class ClientQueryTest {
                         "get $pipeline-name, $workflow-name, $workflow-status;"
         };
 
-        localhostGraknTx(tx -> {
+        localhostTypeDBTX(tx -> {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
             Stream.of(queries).parallel().forEach(x -> {
-                GraqlMatch q = Graql.parseQuery(x).asMatch();
+                TypeQLMatch q = TypeQL.parseQuery(x).asMatch();
                 List<ConceptMap> res = tx.query().match(q).collect(toList());
             });
 
@@ -465,29 +466,29 @@ public class ClientQueryTest {
 
     @Test
     public void testSimpleExplanation() {
-        localhostGraknTx(tx -> {
-            GraqlDefine schema = Graql.parseQuery("define " +
-                    "person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;" +
-                    "name sub attribute, value string;" +
-                    "friendship sub relation, relates friend;" +
-                    "marriage sub relation, relates husband, relates wife;" +
-                    "rule marriage-is-friendship: when {" +
-                    "   $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; " +
-                    "} then {" +
-                    "   (friend: $x, friend: $y) isa friendship;" +
-                    "};" +
-                    "rule everyone-is-friends: when {" +
-                    "   $x isa person; $y isa person; not { $x is $y; };" +
-                    "} then {" +
-                    "   (friend: $x, friend: $y) isa friendship;" +
-                    "};").asDefine();
+        localhostTypeDBTX(tx -> {
+            TypeQLDefine schema = TypeQL.parseQuery("define " +
+                                                            "person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;" +
+                                                            "name sub attribute, value string;" +
+                                                            "friendship sub relation, relates friend;" +
+                                                            "marriage sub relation, relates husband, relates wife;" +
+                                                            "rule marriage-is-friendship: when {" +
+                                                            "   $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; " +
+                                                            "} then {" +
+                                                            "   (friend: $x, friend: $y) isa friendship;" +
+                                                            "};" +
+                                                            "rule everyone-is-friends: when {" +
+                                                            "   $x isa person; $y isa person; not { $x is $y; };" +
+                                                            "} then {" +
+                                                            "   (friend: $x, friend: $y) isa friendship;" +
+                                                            "};").asDefine();
             tx.query().define(schema);
             tx.commit();
-        }, GraknSession.Type.SCHEMA);
+        }, TypeDBSession.Type.SCHEMA);
 
 
-        localhostGraknTx(tx -> {
-            GraqlInsert data = Graql.parseQuery(
+        localhostTypeDBTX(tx -> {
+            TypeQLInsert data = TypeQL.parseQuery(
                     "insert " +
                             "$x isa person, has name 'Zack'; " +
                             "$y isa person, has name 'Yasmin'; " +
@@ -497,14 +498,14 @@ public class ClientQueryTest {
             tx.commit();
         }, WRITE);
 
-        localhostGraknTx(tx -> {
-            GraqlInsert data = Graql.parseQuery(
+        localhostTypeDBTX(tx -> {
+            TypeQLInsert data = TypeQL.parseQuery(
                     "insert " +
                             "$x isa person, has name 'Zack'; " +
                             "$y isa person, has name 'Yasmin'; " +
                             "(husband: $x, wife: $y) isa marriage;"
             ).asInsert();
-            List<ConceptMap> answers = tx.query().match(Graql.parseQuery(
+            List<ConceptMap> answers = tx.query().match(TypeQL.parseQuery(
                     "match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"
             ).asMatch()).collect(toList());
 
@@ -514,30 +515,30 @@ public class ClientQueryTest {
             assertEquals(3, explanations.size());
             List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().relations().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
-        }, READ, GraknOptions.core().infer(true).explain(true));
+        }, READ, TypeDBOptions.core().infer(true).explain(true));
     }
 
     private String[] lionNames() {
         return new String[]{"male-partner", "female-partner", "young-lion"};
     }
 
-    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknTransaction.Type type) {
-        localhostGraknTx(fn, type, GraknOptions.core());
+    private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type) {
+        localhostTypeDBTX(fn, type, TypeDBOptions.core());
     }
 
-    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknTransaction.Type type, GraknOptions options) {
-        String database = "grakn";
-        try (GraknSession session = graknClient.session(database, DATA)) {
-            try (GraknTransaction transaction = session.transaction(type, options)) {
+    private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type, TypeDBOptions options) {
+        String database = "typedb";
+        try (TypeDBSession session = typedbClient.session(database, DATA)) {
+            try (TypeDBTransaction transaction = session.transaction(type, options)) {
                 fn.accept(transaction);
             }
         }
     }
 
-    private void localhostGraknTx(Consumer<GraknTransaction> fn, GraknSession.Type sessionType) {
-        String database = "grakn";
-        try (GraknSession session = graknClient.session(database, sessionType)) {
-            try (GraknTransaction transaction = session.transaction(WRITE)) {
+    private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBSession.Type sessionType) {
+        String database = "typedb";
+        try (TypeDBSession session = typedbClient.session(database, sessionType)) {
+            try (TypeDBTransaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }
         }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,9 +19,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.connection.session;
+package com.vaticle.typedb.client.test.behaviour.connection.session;
 
-import grakn.client.api.GraknSession;
+import com.vaticle.typedb.client.api.TypeDBSession;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -28,14 +30,14 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import static grakn.client.api.GraknSession.Type.DATA;
-import static grakn.client.api.GraknSession.Type.SCHEMA;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.client;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessions;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static grakn.common.collection.Collections.list;
+import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.client.api.TypeDBSession.Type.SCHEMA;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -77,7 +79,7 @@ public class SessionSteps {
 
     @When("connection close all sessions")
     public void connection_close_all_sessions() {
-        for (GraknSession session : sessions) {
+        for (TypeDBSession session : sessions) {
             session.close();
         }
         sessions.clear();
@@ -85,14 +87,14 @@ public class SessionSteps {
 
     @Then("session(s) is/are null: {bool}")
     public void sessions_are_null(Boolean isNull) {
-        for (GraknSession session : sessions) {
+        for (TypeDBSession session : sessions) {
             assertEquals(isNull, isNull(session));
         }
     }
 
     @Then("session(s) is/are open: {bool}")
     public void sessions_are_open(Boolean isOpen) {
-        for (GraknSession session : sessions) {
+        for (TypeDBSession session : sessions) {
             assertEquals(isOpen, session.isOpen());
         }
     }
@@ -127,7 +129,7 @@ public class SessionSteps {
     @Then("session(s) has/have database(s):")
     public void sessions_have_databases(List<String> names) {
         assertEquals(names.size(), sessions.size());
-        Iterator<GraknSession> sessionIter = sessions.iterator();
+        Iterator<TypeDBSession> sessionIter = sessions.iterator();
 
         for (String name : names) {
             assertEquals(name, sessionIter.next().database().name());
@@ -137,7 +139,7 @@ public class SessionSteps {
     @Then("sessions in parallel have databases:")
     public void sessions_in_parallel_have_databases(List<String> names) {
         assertEquals(names.size(), sessionsParallel.size());
-        Iterator<CompletableFuture<GraknSession>> futureSessionIter = sessionsParallel.iterator();
+        Iterator<CompletableFuture<TypeDBSession>> futureSessionIter = sessionsParallel.iterator();
         CompletableFuture[] assertions = new CompletableFuture[names.size()];
 
         int i = 0;

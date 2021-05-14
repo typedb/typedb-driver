@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,9 +19,9 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.type.entitytype;
+package com.vaticle.typedb.client.test.behaviour.concept.type.entitytype;
 
-import grakn.core.test.behaviour.BehaviourTest;
+import com.vaticle.typedb.client.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -28,9 +30,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "grakn.client.test.behaviour",
-        features = "external/graknlabs_behaviour/concept/type/entitytype.feature",
-        tags = "not @ignore and not @ignore-grakn"
+        glue = "com.vaticle.typedb.client.test.behaviour",
+        features = "external/vaticle_typedb_behaviour/concept/type/entitytype.feature",
+        tags = "not @ignore and not @ignore-typedb"
 )
 public class EntityTypeTest extends BehaviourTest {
     // ATTENTION:
@@ -44,7 +46,7 @@ public class EntityTypeTest extends BehaviourTest {
     // 4) Ensure 'Target Expression' is set correctly: '//<this>/<package>/<name>:test'
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=grakn.core.*'
+    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed

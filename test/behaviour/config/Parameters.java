@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,11 +19,11 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.config;
+package com.vaticle.typedb.client.test.behaviour.config;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.type.AttributeType.ValueType;
-import grakn.client.common.Label;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -31,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static grakn.client.api.GraknTransaction.Type.READ;
-import static grakn.client.api.GraknTransaction.Type.WRITE;
+import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -108,7 +110,7 @@ public class Parameters {
     }
 
     @ParameterType("read|write")
-    public GraknTransaction.Type transaction_type(String type) {
+    public TypeDBTransaction.Type transaction_type(String type) {
         if (type.equals("read")) {
             return READ;
         } else if (type.equals("write")) {
@@ -118,10 +120,10 @@ public class Parameters {
     }
 
     @DataTableType
-    public List<GraknTransaction.Type> transaction_types(List<String> values) {
-        List<GraknTransaction.Type> typeList = new ArrayList<>();
+    public List<TypeDBTransaction.Type> transaction_types(List<String> values) {
+        List<TypeDBTransaction.Type> typeList = new ArrayList<>();
         for (String value : values) {
-            GraknTransaction.Type type = transaction_type(value);
+            TypeDBTransaction.Type type = transaction_type(value);
             assertNotNull(type);
             typeList.add(type);
         }

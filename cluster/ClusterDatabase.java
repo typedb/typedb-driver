@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,12 +19,12 @@
  * under the License.
  */
 
-package grakn.client.cluster;
+package com.vaticle.typedb.client.cluster;
 
-import grakn.client.api.database.Database;
-import grakn.client.core.CoreDatabase;
-import grakn.client.core.CoreDatabaseManager;
-import grakn.protocol.ClusterDatabaseProto;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.core.CoreDatabase;
+import com.vaticle.typedb.client.core.CoreDatabaseManager;
+import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

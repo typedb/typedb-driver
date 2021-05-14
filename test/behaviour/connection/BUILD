@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -18,7 +20,7 @@
 #
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "steps-base",
@@ -26,7 +28,7 @@ java_library(
     deps = [
         # Package dependencies
         "//api:api",
-        "@graknlabs_common//test:grakn-runner",
+        "@vaticle_typedb_common//test:typedb-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
@@ -44,7 +46,7 @@ java_library(
         ":steps-base",
         "//:client-java",
         "//api:api",
-        "@graknlabs_common//test:grakn-runner",
+        "@vaticle_typedb_common//test:typedb-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
@@ -63,7 +65,7 @@ java_library(
         ":steps-base",
         "//:client-java",
         "//api:api",
-        "@graknlabs_common//test:grakn-runner",
+        "@vaticle_typedb_common//test:typedb-runner",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

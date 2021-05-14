@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,27 +19,27 @@
  * under the License.
  */
 
-package grakn.client.logic;
+package com.vaticle.typedb.client.logic;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.logic.LogicManager;
-import grakn.client.api.logic.Rule;
-import grakn.protocol.LogicProto;
-import grakn.protocol.TransactionProto;
-import graql.lang.pattern.Pattern;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.logic.LogicManager;
+import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.protocol.LogicProto;
+import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
-import static grakn.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
 
 public final class LogicManagerImpl implements LogicManager {
 
-    private final GraknTransaction.Extended transactionRPC;
+    private final TypeDBTransaction.Extended transactionRPC;
 
-    public LogicManagerImpl(GraknTransaction.Extended transactionRPC) {
+    public LogicManagerImpl(TypeDBTransaction.Extended transactionRPC) {
         this.transactionRPC = transactionRPC;
     }
 

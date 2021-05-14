@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -19,8 +21,8 @@
 
 package(default_visibility = ["//test/behaviour:__subpackages__"])
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 
 java_library(
     name = "steps",
@@ -34,7 +36,7 @@ java_library(
         "//test/behaviour/connection:steps-base",
 
         # Internal Repository Dependencies
-        "@graknlabs_common//:common",
+        "@vaticle_typedb_common//:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -42,18 +44,18 @@ java_library(
     ],
 )
 
-grakn_behaviour_java_test(
+typedb_behaviour_java_test(
     name = "test",
     srcs = [
         "SessionTest.java",
     ],
-    test_class = "grakn.client.test.behaviour.connection.session.SessionTest",
+    test_class = "com.vaticle.typedb.client.test.behaviour.connection.session.SessionTest",
     data = [
-        "@graknlabs_behaviour//connection:session.feature",
+        "@vaticle_typedb_behaviour//connection:session.feature",
     ],
-    grakn_core_artifact_mac = "@graknlabs_grakn_core_artifact_mac//file",
-    grakn_core_artifact_linux = "@graknlabs_grakn_core_artifact_linux//file",
-    grakn_core_artifact_windows = "@graknlabs_grakn_core_artifact_windows//file",
+    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
+    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
+    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
     grakn_cluster_artifact_mac = "@graknlabs_grakn_cluster_artifact_mac//file",
     grakn_cluster_artifact_linux = "@graknlabs_grakn_cluster_artifact_linux//file",
     grakn_cluster_artifact_windows = "@graknlabs_grakn_cluster_artifact_windows//file",
@@ -63,7 +65,7 @@ grakn_behaviour_java_test(
         ":steps",
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/transaction:steps",
-        "//test/behaviour/graql:steps",
+        "//test/behaviour/typeql:steps",
     ],
     deps = [
         # Internal Package Dependencies

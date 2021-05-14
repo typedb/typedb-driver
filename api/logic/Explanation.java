@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,9 +19,9 @@
  * under the License.
  */
 
-package grakn.client.api.logic;
+package com.vaticle.typedb.client.api.logic;
 
-import grakn.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -33,5 +35,5 @@ public interface Explanation {
     ConceptMap condition();
 
     Map<String, Set<String>> variableMapping();
-    
+
 }

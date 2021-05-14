@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,10 +19,10 @@
  * under the License.
  */
 
-package grakn.client.stream;
+package com.vaticle.typedb.client.stream;
 
-import grakn.client.common.exception.GraknClientException;
-import grakn.common.collection.Either;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
@@ -31,8 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static grakn.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static grakn.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class ResponseCollector<R> {
 
@@ -69,10 +71,10 @@ public class ResponseCollector<R> {
             try {
                 Either<Response<R>, Done> response = responseQueue.take();
                 if (response.isFirst()) return response.first().message();
-                else if (!response.second().error().isPresent()) throw new GraknClientException(TRANSACTION_CLOSED);
-                else throw GraknClientException.of(response.second().error().get());
+                else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+                else throw TypeDBClientException.of(response.second().error().get());
             } catch (InterruptedException e) {
-                throw new GraknClientException(UNEXPECTED_INTERRUPTION);
+                throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
         }
 

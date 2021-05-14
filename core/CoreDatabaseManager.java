@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,20 +19,20 @@
  * under the License.
  */
 
-package grakn.client.core;
+package com.vaticle.typedb.client.core;
 
-import grakn.client.api.database.Database;
-import grakn.client.api.database.DatabaseManager;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.common.rpc.GraknStub;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
 import java.util.List;
 
-import static grakn.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
-import static grakn.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
-import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
-import static grakn.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
 import static java.util.stream.Collectors.toList;
 
 public class CoreDatabaseManager implements DatabaseManager {
@@ -44,7 +46,7 @@ public class CoreDatabaseManager implements DatabaseManager {
     @Override
     public Database get(String name) {
         if (contains(name)) return new CoreDatabase(this, name);
-        else throw new GraknClientException(DB_DOES_NOT_EXIST, name);
+        else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
     }
 
     @Override
@@ -63,12 +65,12 @@ public class CoreDatabaseManager implements DatabaseManager {
         return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
     }
 
-    GraknStub.Core stub() {
+    TypeDBStub.Core stub() {
         return client.stub();
     }
 
     static String nonNull(String name) {
-        if (name == null) throw new GraknClientException(MISSING_DB_NAME);
+        if (name == null) throw new TypeDBClientException(MISSING_DB_NAME);
         return name;
     }
 }

@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,25 +19,25 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_common//test:rules.bzl", "grakn_java_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 
-grakn_java_test(
+typedb_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
-    server_mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    server_linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    server_windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
-    test_class = "grakn.client.test.integration.ClientQueryTest",
+    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
+    server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
+    server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
+    test_class = "com.vaticle.typedb.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
         "//:client-java",
         "//api:api",
 
-        # External dependencies from @graknlabs
-        "@graknlabs_graql//java:graql",
-        "@graknlabs_graql//java/common",
-        "@graknlabs_graql//java/query",
+        # External dependencies from @vaticle
+        "@vaticle_typeql_lang_java//:typeql-lang",
+        "@vaticle_typeql_lang_java//common",
+        "@vaticle_typeql_lang_java//query",
 
         # External dependencies from Maven
         "@maven//:org_hamcrest_hamcrest_library",

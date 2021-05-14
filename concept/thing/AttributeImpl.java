@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,26 +19,26 @@
  * under the License.
  */
 
-package grakn.client.concept.thing;
+package com.vaticle.typedb.client.concept.thing;
 
-import grakn.client.api.GraknTransaction;
-import grakn.client.api.concept.thing.Attribute;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.common.exception.GraknClientException;
-import grakn.client.concept.type.AttributeTypeImpl;
-import grakn.protocol.ConceptProto;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-import static grakn.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static grakn.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static grakn.client.common.rpc.RequestBuilder.Thing.Attribute.getOwnersReq;
-import static grakn.client.concept.type.ThingTypeImpl.protoThingType;
-import static grakn.common.collection.Bytes.bytesToHexString;
-import static grakn.common.util.Objects.className;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.getOwnersReq;
+import static com.vaticle.typedb.client.concept.type.ThingTypeImpl.protoThingType;
+import static com.vaticle.typedb.common.collection.Bytes.bytesToHexString;
+import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribute<VALUE> {
 
@@ -58,7 +60,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
                 return AttributeImpl.DateTime.of(thingProto);
             case UNRECOGNIZED:
             default:
-                throw new GraknClientException(BAD_VALUE_TYPE, thingProto.getType().getValueType());
+                throw new TypeDBClientException(BAD_VALUE_TYPE, thingProto.getType().getValueType());
         }
     }
 
@@ -72,34 +74,34 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
     @Override
     public AttributeImpl.Boolean asBoolean() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Boolean.class));
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Boolean.class));
     }
 
     @Override
     public AttributeImpl.Long asLong() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Long.class));
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Long.class));
     }
 
     @Override
     public AttributeImpl.Double asDouble() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Double.class));
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Double.class));
     }
 
     @Override
     public AttributeImpl.String asString() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.String.class));
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.String.class));
     }
 
     @Override
     public AttributeImpl.DateTime asDateTime() {
-        throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.DateTime.class));
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.DateTime.class));
     }
 
     public abstract VALUE getValue();
 
     public abstract static class Remote<VALUE> extends ThingImpl.Remote implements Attribute.Remote<VALUE> {
 
-        Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred) {
+        Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred) {
             super(transaction, iid, isInferred);
         }
 
@@ -127,27 +129,27 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
 
         @Override
         public AttributeImpl.Boolean.Remote asBoolean() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Boolean.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Boolean.class));
         }
 
         @Override
         public AttributeImpl.Long.Remote asLong() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Long.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Long.class));
         }
 
         @Override
         public AttributeImpl.Double.Remote asDouble() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Double.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.Double.class));
         }
 
         @Override
         public AttributeImpl.String.Remote asString() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.String.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.String.class));
         }
 
         @Override
         public AttributeImpl.DateTime.Remote asDateTime() {
-            throw new GraknClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.DateTime.class));
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.DateTime.class));
         }
 
         public abstract VALUE getValue();
@@ -189,7 +191,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Boolean.Remote asRemote(GraknTransaction transaction) {
+        public AttributeImpl.Boolean.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.Boolean.Remote(transaction, getIID(), isInferred(), type, value);
         }
 
@@ -198,14 +200,14 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             private final AttributeTypeImpl.Boolean type;
             private final java.lang.Boolean value;
 
-            Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Boolean type, java.lang.Boolean value) {
+            Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Boolean type, java.lang.Boolean value) {
                 super(transaction, iid, isInferred);
                 this.type = type;
                 this.value = value;
             }
 
             @Override
-            public Attribute.Boolean.Remote asRemote(GraknTransaction transaction) {
+            public Attribute.Boolean.Remote asRemote(TypeDBTransaction transaction) {
                 return new AttributeImpl.Boolean.Remote(transaction, getIID(), isInferred(), type, value);
             }
 
@@ -262,7 +264,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Long.Remote asRemote(GraknTransaction transaction) {
+        public AttributeImpl.Long.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.Long.Remote(transaction, getIID(), isInferred(), type, value);
         }
 
@@ -271,14 +273,14 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             private final AttributeTypeImpl.Long type;
             private final long value;
 
-            Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Long type, long value) {
+            Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Long type, long value) {
                 super(transaction, iid, isInferred);
                 this.type = type;
                 this.value = value;
             }
 
             @Override
-            public Attribute.Long.Remote asRemote(GraknTransaction transaction) {
+            public Attribute.Long.Remote asRemote(TypeDBTransaction transaction) {
                 return new AttributeImpl.Long.Remote(transaction, getIID(), isInferred(), type, value);
             }
 
@@ -335,7 +337,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.Double.Remote asRemote(GraknTransaction transaction) {
+        public AttributeImpl.Double.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.Double.Remote(transaction, getIID(), isInferred(), type, value);
         }
 
@@ -344,14 +346,14 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             private final AttributeTypeImpl.Double type;
             private final double value;
 
-            Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Double type, double value) {
+            Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.Double type, double value) {
                 super(transaction, iid, isInferred);
                 this.type = type;
                 this.value = value;
             }
 
             @Override
-            public Attribute.Double.Remote asRemote(GraknTransaction transaction) {
+            public Attribute.Double.Remote asRemote(TypeDBTransaction transaction) {
                 return new AttributeImpl.Double.Remote(transaction, getIID(), isInferred(), type, value);
             }
 
@@ -408,7 +410,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.String.Remote asRemote(GraknTransaction transaction) {
+        public AttributeImpl.String.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.String.Remote(transaction, getIID(), isInferred(), type, value);
         }
 
@@ -417,14 +419,14 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             private final AttributeTypeImpl.String type;
             private final java.lang.String value;
 
-            Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.String type, java.lang.String value) {
+            Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.String type, java.lang.String value) {
                 super(transaction, iid, isInferred);
                 this.type = type;
                 this.value = value;
             }
 
             @Override
-            public Attribute.String.Remote asRemote(GraknTransaction transaction) {
+            public Attribute.String.Remote asRemote(TypeDBTransaction transaction) {
                 return new AttributeImpl.String.Remote(transaction, getIID(), isInferred(), type, value);
             }
 
@@ -481,7 +483,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public AttributeImpl.DateTime.Remote asRemote(GraknTransaction transaction) {
+        public AttributeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.DateTime.Remote(transaction, getIID(), isInferred(), type, value);
         }
 
@@ -494,14 +496,14 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             private final AttributeTypeImpl.DateTime type;
             private final LocalDateTime value;
 
-            Remote(GraknTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.DateTime type, LocalDateTime value) {
+            Remote(TypeDBTransaction transaction, java.lang.String iid, boolean isInferred, AttributeTypeImpl.DateTime type, LocalDateTime value) {
                 super(transaction, iid, isInferred);
                 this.type = type;
                 this.value = value;
             }
 
             @Override
-            public Attribute.DateTime.Remote asRemote(GraknTransaction transaction) {
+            public Attribute.DateTime.Remote asRemote(TypeDBTransaction transaction) {
                 return new AttributeImpl.DateTime.Remote(transaction, getIID(), isInferred(), type, value);
             }
 

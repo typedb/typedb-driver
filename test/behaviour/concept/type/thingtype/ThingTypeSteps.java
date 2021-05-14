@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,24 +19,24 @@
  * under the License.
  */
 
-package grakn.client.test.behaviour.concept.type.thingtype;
+package com.vaticle.typedb.client.test.behaviour.concept.type.thingtype;
 
-import grakn.client.api.concept.type.AttributeType;
-import grakn.client.api.concept.type.EntityType;
-import grakn.client.api.concept.type.RelationType;
-import grakn.client.api.concept.type.RoleType;
-import grakn.client.api.concept.type.ThingType;
-import grakn.client.api.concept.type.Type;
-import grakn.client.common.Label;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static grakn.client.test.behaviour.config.Parameters.RootLabel;
-import static grakn.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static grakn.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.client.test.behaviour.config.Parameters.RootLabel;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;

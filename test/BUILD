@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,20 +19,20 @@
 # under the License.
 #
 
-load("@graknlabs_common//test:rules.bzl", "native_grakn_artifact")
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 
-native_grakn_artifact(
-    name = "native-grakn-core-artifact",
-    mac_artifact = "@graknlabs_grakn_core_artifact_mac//file",
-    linux_artifact = "@graknlabs_grakn_core_artifact_linux//file",
-    windows_artifact = "@graknlabs_grakn_core_artifact_windows//file",
-    output = "grakn-core-server-artifact.tar.gz",
+native_typedb_artifact(
+    name = "native-typedb-artifact",
+    mac_artifact = "@vaticle_typedb_artifact_mac//file",
+    linux_artifact = "@vaticle_typedb_artifact_linux//file",
+    windows_artifact = "@vaticle_typedb_artifact_windows//file",
+    output = "typedb-server-artifact.tar.gz",
     visibility = ["//test:__subpackages__"],
 )
 
-native_grakn_artifact(
+native_typedb_artifact(
     name = "native-grakn-cluster-artifact",
     mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
     linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
@@ -50,6 +52,6 @@ checkstyle_test(
 )
 
 artifact_extractor(
-    name = "grakn-extractor-linux",
-    artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    name = "typedb-extractor-linux",
+    artifact = "@vaticle_typedb_artifact_linux//file",
 )
