@@ -25,23 +25,23 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.core.CoreClient;
 import com.vaticle.typedb.client.core.CoreSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ClusterSession implements TypeDBSession {
+
     private static final Logger LOG = LoggerFactory.getLogger(TypeDBSession.class);
     private final ClusterClient clusterClient;
     private final TypeDBOptions.Cluster options;
-    private CoreClient coreClient;
+    private ClusterNodeClient clusterNodeClient;
     private CoreSession coreSession;
 
     public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, TypeDBOptions.Cluster options) {
         this.clusterClient = clusterClient;
-        this.coreClient = clusterClient.coreClient(serverAddress);
+        this.clusterNodeClient = clusterClient.clusterNodeClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
-        this.coreSession = coreClient.session(database, type, options);
+        this.coreSession = clusterNodeClient.session(database, type, options);
         this.options = options;
     }
 
@@ -79,8 +79,8 @@ public class ClusterSession implements TypeDBSession {
             @Override
             TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
-                coreClient = clusterClient.coreClient(replica.address());
-                coreSession = coreClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                clusterNodeClient = clusterClient.clusterNodeClient(replica.address());
+                coreSession = clusterNodeClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
                 return coreSession.transaction(type, options);
             }
         };

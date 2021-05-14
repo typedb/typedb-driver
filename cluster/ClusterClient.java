@@ -32,6 +32,9 @@ import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,21 +50,29 @@ import static java.util.stream.Collectors.toSet;
 public class ClusterClient implements TypeDBClient.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
-    private final Map<String, CoreClient> coreClients;
+
+    private final boolean tlsEnabled;
+    @Nullable
+    private final Path tlsRootCA;
+    private final int parallelisation;
+    private final Map<String, ClusterNodeClient> clusterNodeClients;
     private final Map<String, TypeDBStub.Cluster> stubs;
     private final ClusterDatabaseManager databaseMgrs;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    public ClusterClient(Set<String> addresses) {
-        this(addresses, CoreClient.calculateParallelisation());
+    ClusterClient(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA) {
+        this(addresses, tlsEnabled, tlsRootCA, ClusterNodeClient.calculateParallelisation());
     }
 
-    public ClusterClient(Set<String> addresses, int parallelisation) {
-        coreClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, new CoreClient(address, parallelisation)))
+    ClusterClient(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA, int parallelisation) {
+        this.tlsEnabled = tlsEnabled;
+        this.tlsRootCA = tlsRootCA != null ? Paths.get(tlsRootCA) : null;
+        this.parallelisation = parallelisation;
+        clusterNodeClients = fetchServerAddresses(addresses).stream()
+                .map(address -> pair(address, ClusterNodeClient.create(address, tlsEnabled, this.tlsRootCA, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
-        stubs = coreClients.entrySet().stream()
+        stubs = clusterNodeClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
         databaseMgrs = new ClusterDatabaseManager(this);
@@ -69,9 +80,17 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = true;
     }
 
+    public static ClusterClient create(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA) {
+        return new ClusterClient(addresses, tlsEnabled, tlsRootCA);
+    }
+
+    public static ClusterClient create(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA, int parallelisation) {
+        return new ClusterClient(addresses, tlsEnabled, tlsRootCA, parallelisation);
+    }
+
     private Set<String> fetchServerAddresses(Set<String> addresses) {
         for (String address : addresses) {
-            try (CoreClient client = new CoreClient(address)) {
+            try (ClusterNodeClient client = ClusterNodeClient.create(address, tlsEnabled, tlsRootCA, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 TypeDBStub.Cluster stub = TypeDBStub.cluster(client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
@@ -137,16 +156,16 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterDatabases;
     }
 
-    Map<String, CoreClient> coreClients() {
-        return coreClients;
+    Map<String, ClusterNodeClient> clusterNodeClients() {
+        return clusterNodeClients;
     }
 
-    Set<String> clusterMembers() {
-        return coreClients.keySet();
+    Set<String> clusterNodes() {
+        return clusterNodeClients.keySet();
     }
 
-    CoreClient coreClient(String address) {
-        return coreClients.get(address);
+    ClusterNodeClient clusterNodeClient(String address) {
+        return clusterNodeClients.get(address);
     }
 
     TypeDBStub.Cluster stub(String address) {
@@ -165,7 +184,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     @Override
     public void close() {
-        coreClients.values().forEach(CoreClient::close);
+        clusterNodeClients.values().forEach(ClusterNodeClient::close);
         isOpen = false;
     }
 }

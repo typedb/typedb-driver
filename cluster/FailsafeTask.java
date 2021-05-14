@@ -121,11 +121,11 @@ abstract class FailsafeTask<RESULT> {
     }
 
     private ClusterDatabase fetchDatabaseReplicas() {
-        for (String serverAddress : client.clusterMembers()) {
+        for (String serverAddress : client.clusterNodes()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
-                ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client.databases());
+                ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client);
                 client.databaseByName().put(database, clusterDatabase);
                 return clusterDatabase;
             } catch (TypeDBClientException e) {
@@ -149,6 +149,6 @@ abstract class FailsafeTask<RESULT> {
     }
 
     private TypeDBClientException clusterNotAvailableException() {
-        return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterMembers()));
+        return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterNodes()));
     }
 }

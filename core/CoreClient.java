@@ -26,11 +26,11 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -49,17 +49,25 @@ public class CoreClient implements TypeDBClient {
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    public CoreClient(String address) {
-        this(address, calculateParallelisation());
+    private CoreClient(String address, ManagedChannelFactory managedChannelFactory) {
+        this(address, managedChannelFactory, calculateParallelisation());
     }
 
-    public CoreClient(String address, int parallelisation) {
+    protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
-        channel = ManagedChannelBuilder.forTarget(address).usePlaintext().build();
+        channel = managedChannelFactory.forAddress(address);
         stub = TypeDBStub.core(channel);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
+    }
+
+    public static CoreClient create(String address) {
+        return new CoreClient(address, new ManagedChannelFactory.PlainText());
+    }
+
+    public static CoreClient create(String address, int parallelisation) {
+        return new CoreClient(address, new ManagedChannelFactory.PlainText(), parallelisation);
     }
 
     public static int calculateParallelisation() {
