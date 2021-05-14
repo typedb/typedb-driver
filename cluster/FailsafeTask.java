@@ -21,7 +21,6 @@ package grakn.client.cluster;
 
 import grakn.client.common.exception.GraknClientException;
 import grakn.protocol.ClusterDatabaseProto;
-import io.grpc.StatusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +119,7 @@ abstract class FailsafeTask<RESULT> {
     }
 
     private ClusterDatabase fetchDatabaseReplicas() {
-        for (String serverAddress : client.clusterMembers()) {
+        for (String serverAddress : client.clusterNodes()) {
             try {
                 LOG.debug("Fetching replica info from {}", serverAddress);
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
@@ -148,6 +147,6 @@ abstract class FailsafeTask<RESULT> {
     }
 
     private GraknClientException clusterNotAvailableException() {
-        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterMembers()));
+        return new GraknClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterNodes()));
     }
 }

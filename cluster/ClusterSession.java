@@ -23,7 +23,6 @@ import grakn.client.api.GraknOptions;
 import grakn.client.api.GraknSession;
 import grakn.client.api.GraknTransaction;
 import grakn.client.api.database.Database;
-import grakn.client.core.CoreClient;
 import grakn.client.core.CoreSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +33,14 @@ public class ClusterSession implements GraknSession {
 
     private final ClusterClient clusterClient;
     private final GraknOptions.Cluster options;
-    private CoreClient coreClient;
+    private ClusterNodeClient clusterNodeClient;
     private CoreSession coreSession;
 
     public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, GraknOptions.Cluster options) {
         this.clusterClient = clusterClient;
-        this.coreClient = clusterClient.coreClient(serverAddress);
+        this.clusterNodeClient = clusterClient.clusterNodeClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
-        this.coreSession = coreClient.session(database, type, options);
+        this.coreSession = clusterNodeClient.session(database, type, options);
         this.options = options;
     }
 
@@ -79,8 +78,8 @@ public class ClusterSession implements GraknSession {
             @Override
             GraknTransaction rerun(ClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
-                coreClient = clusterClient.coreClient(replica.address());
-                coreSession = coreClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                clusterNodeClient = clusterClient.clusterNodeClient(replica.address());
+                coreSession = clusterNodeClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
                 return coreSession.transaction(type, options);
             }
         };

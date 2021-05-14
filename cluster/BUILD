@@ -35,6 +35,7 @@ java_library(
         "@graknlabs_protocol//grpc/java:protocol",
 
         # External dependencies from Maven
+        "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:io_grpc_grpc_api",
         "@maven//:org_slf4j_slf4j_api",
     ],

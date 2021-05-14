@@ -51,7 +51,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     public ClusterDatabaseManager(ClusterClient client) {
         this.client = client;
-        this.databaseMgrs = client.coreClients().entrySet().stream()
+        this.databaseMgrs = client.clusterNodeClients().entrySet().stream()
                 .map(c -> pair(c.getKey(), c.getValue().databases()))
                 .collect(toMap(Pair::first, Pair::second));
     }
@@ -103,7 +103,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
             @Override
             RESULT run(ClusterDatabase.Replica replica) {
-                return task.apply(client.stub(replica.address()), client.coreClient(replica.address()).databases());
+                return task.apply(client.stub(replica.address()), client.clusterNodeClient(replica.address()).databases());
             }
 
             @Override

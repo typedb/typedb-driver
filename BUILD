@@ -39,6 +39,7 @@ java_library(
         # Internal dependencies
         "//api:api",
         "//cluster:cluster",
+        "//common:common",
         "//core:core",
 
         # External dependencies from @graknlabs
