@@ -43,31 +43,37 @@ public class CoreClient implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
+    private final TypeDBOptions options;
     private final ManagedChannel channel;
     private final TypeDBStub.Core stub;
     private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    private CoreClient(String address, ManagedChannelFactory managedChannelFactory) {
-        this(address, managedChannelFactory, calculateParallelisation());
-    }
-
-    protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
+    protected CoreClient(String address, TypeDBOptions options, ManagedChannelFactory managedChannelFactory, int parallelisation) {
+        this.options = options;
         channel = managedChannelFactory.forAddress(address);
         stub = TypeDBStub.core(channel);
+        NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
     }
 
     public static CoreClient create(String address) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText());
+        return new CoreClient(address, TypeDBOptions.core(), new ManagedChannelFactory.PlainText(), calculateParallelisation());
+    }
+
+    public static CoreClient create(String address, TypeDBOptions options) {
+        return new CoreClient(address, options, new ManagedChannelFactory.PlainText(), calculateParallelisation());
     }
 
     public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText(), parallelisation);
+        return new CoreClient(address, TypeDBOptions.core(), new ManagedChannelFactory.PlainText(), parallelisation);
+    }
+
+    public static CoreClient create(String address, TypeDBOptions options, int parallelisation) {
+        return new CoreClient(address, options, new ManagedChannelFactory.PlainText(), parallelisation);
     }
 
     public static int calculateParallelisation() {
@@ -80,7 +86,7 @@ public class CoreClient implements TypeDBClient {
 
     @Override
     public CoreSession session(String database, TypeDBSession.Type type) {
-        return session(database, type, TypeDBOptions.core());
+        return session(database, type, options);
     }
 
     @Override

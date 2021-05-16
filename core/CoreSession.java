@@ -92,7 +92,7 @@ public class CoreSession implements TypeDBSession {
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
-        return transaction(type, TypeDBOptions.core());
+        return transaction(type, options);
     }
 
     @Override
