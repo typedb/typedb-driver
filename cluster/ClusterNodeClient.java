@@ -21,24 +21,23 @@
 
 package com.vaticle.typedb.client.cluster;
 
-import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
 import com.vaticle.typedb.client.core.CoreClient;
 
 class ClusterNodeClient extends CoreClient {
-    public ClusterNodeClient(String address, TypeDBOptions.Cluster options, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        super(address, options, managedChannelFactory, parallelisation);
+    public ClusterNodeClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
+        super(address, managedChannelFactory, parallelisation);
     }
 
-    static ClusterNodeClient create(String address, TypeDBOptions.Cluster options, int parallelisation) {
-        assert options.tlsEnabled().isPresent();
+    static ClusterNodeClient create(String address, TypeDBCredential credential, int parallelisation) {
         ManagedChannelFactory channel;
-        if (options.tlsEnabled().get()) {
-            channel = options.tlsRootCA().isPresent() ? new ManagedChannelFactory.TLS(options.tlsRootCA().get()) : new ManagedChannelFactory.TLS();
+        if (credential.tlsEnabled()) {
+            channel = credential.tlsRootCA() != null ? new ManagedChannelFactory.TLS(credential.tlsRootCA()) : new ManagedChannelFactory.TLS();
 
         } else {
             channel = new ManagedChannelFactory.PlainText();
         }
-        return new ClusterNodeClient(address, options, channel, parallelisation);
+        return new ClusterNodeClient(address, channel, parallelisation);
     }
 }

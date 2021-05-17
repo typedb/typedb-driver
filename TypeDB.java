@@ -22,11 +22,9 @@
 package com.vaticle.typedb.client;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.cluster.ClusterClient;
 import com.vaticle.typedb.client.core.CoreClient;
-
-import java.util.Set;
 
 import static com.vaticle.typedb.common.collection.Collections.set;
 
@@ -35,26 +33,18 @@ public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
     public static TypeDBClient coreClient(String address) {
-        return CoreClient.create(address, TypeDBOptions.core());
-    }
-
-    public static TypeDBClient coreClient(String address, TypeDBOptions options) {
-        return CoreClient.create(address, options);
+        return CoreClient.create(address);
     }
 
     public static TypeDBClient coreClient(String address, int parallelisation) {
-        return CoreClient.create(address, TypeDBOptions.core(), parallelisation);
+        return CoreClient.create(address, parallelisation);
     }
 
-    public static TypeDBClient coreClient(String address, TypeDBOptions options, int parallelisation) {
-        return CoreClient.create(address, options, parallelisation);
+    public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential) {
+        return ClusterClient.create(set(address), credential);
     }
 
-    public static TypeDBClient.Cluster clusterClient(String address, TypeDBOptions.Cluster options) {
-        return ClusterClient.create(set(address), options);
-    }
-
-    public static TypeDBClient.Cluster clusterClient(String address, TypeDBOptions.Cluster options, int parallelisation) {
-        return ClusterClient.create(set(address), options, parallelisation);
+    public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential, int parallelisation) {
+        return ClusterClient.create(set(address), credential, parallelisation);
     }
 }

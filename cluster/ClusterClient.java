@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
@@ -38,7 +39,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.MISSING_ARGUMENT;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
 import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
@@ -48,7 +48,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
 
-    private final TypeDBOptions.Cluster options;
+    private final TypeDBCredential credential;
     private final int parallelisation;
     private final Map<String, ClusterNodeClient> clusterNodeClients;
     private final Map<String, TypeDBStub.Cluster> stubs;
@@ -56,12 +56,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    public ClusterClient(Set<String> addresses, TypeDBOptions.Cluster options, int parallelisation) {
-        if (!options.tlsEnabled().isPresent()) throw new TypeDBClientException(MISSING_ARGUMENT, "tlsEnabled");
-        this.options = options;
+    private ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        this.credential = credential;
         this.parallelisation = parallelisation;
         clusterNodeClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, ClusterNodeClient.create(address, options, parallelisation)))
+                .map(address -> pair(address, ClusterNodeClient.create(address, credential, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         stubs = clusterNodeClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
@@ -71,17 +70,17 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = true;
     }
 
-    public static Cluster create(Set<String> addresses, TypeDBOptions.Cluster options) {
-        return new ClusterClient(addresses, options, ClusterNodeClient.calculateParallelisation());
+    public static Cluster create(Set<String> addresses, TypeDBCredential credential) {
+        return new ClusterClient(addresses, credential, ClusterNodeClient.calculateParallelisation());
     }
 
-    public static Cluster create(Set<String> addresses, TypeDBOptions.Cluster options, int parallelisation) {
-        return new ClusterClient(addresses, options, parallelisation);
+    public static Cluster create(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        return new ClusterClient(addresses, credential, parallelisation);
     }
 
     private Set<String> fetchServerAddresses(Set<String> addresses) {
         for (String address : addresses) {
-            try (ClusterNodeClient client = ClusterNodeClient.create(address, options, parallelisation)) {
+            try (ClusterNodeClient client = ClusterNodeClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 TypeDBStub.Cluster stub = TypeDBStub.cluster(client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());

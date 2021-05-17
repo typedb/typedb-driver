@@ -43,15 +43,13 @@ public class CoreClient implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
-    private final TypeDBOptions options;
     private final ManagedChannel channel;
     private final TypeDBStub.Core stub;
     private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    protected CoreClient(String address, TypeDBOptions options, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        this.options = options;
+    protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
         channel = managedChannelFactory.forAddress(address);
         stub = TypeDBStub.core(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
@@ -61,19 +59,11 @@ public class CoreClient implements TypeDBClient {
     }
 
     public static CoreClient create(String address) {
-        return new CoreClient(address, TypeDBOptions.core(), new ManagedChannelFactory.PlainText(), calculateParallelisation());
-    }
-
-    public static CoreClient create(String address, TypeDBOptions options) {
-        return new CoreClient(address, options, new ManagedChannelFactory.PlainText(), calculateParallelisation());
+        return new CoreClient(address, new ManagedChannelFactory.PlainText(), calculateParallelisation());
     }
 
     public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, TypeDBOptions.core(), new ManagedChannelFactory.PlainText(), parallelisation);
-    }
-
-    public static CoreClient create(String address, TypeDBOptions options, int parallelisation) {
-        return new CoreClient(address, options, new ManagedChannelFactory.PlainText(), parallelisation);
+        return new CoreClient(address, new ManagedChannelFactory.PlainText(), parallelisation);
     }
 
     public static int calculateParallelisation() {

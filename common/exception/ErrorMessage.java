@@ -54,6 +54,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(12, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
                 new Client(13, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
+        public static final Client CLUSTER_ROOT_CA_SUPPLIED_WHEN_TLS_DISABLED =
+                new Client(14, "TLS Root CA can only be supplied when TLS is enabled");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";
