@@ -1,9 +1,14 @@
 package com.vaticle.typedb.client.cluster;
 
+import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.allReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.containsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.createReq;
 
@@ -34,7 +39,7 @@ public class ClusterUserManager implements UserManager {
             @Override
             Boolean run(ClusterDatabase.Replica replica) {
                 return client.stub(replica.address())
-                        .userContains(containsReq(name))
+                        .usersContains(containsReq(name))
                         .getContains();
             }
         }.runPrimaryReplica();
@@ -52,8 +57,26 @@ public class ClusterUserManager implements UserManager {
             @Override
             Void run(ClusterDatabase.Replica replica) {
                 client.stub(replica.address())
-                        .userCreate(createReq(name, password));
+                        .usersCreate(createReq(name, password));
                 return null;
+            }
+        }.runPrimaryReplica();
+    }
+
+    @Override
+    public Set<User> all() {
+        return new FailsafeTask<Set<User>>(client, SYSTEM_DB) {
+            @Override
+            Set<User> rerun(ClusterDatabase.Replica replica) {
+                return run(replica);
+            }
+
+            @Override
+            Set<User> run(ClusterDatabase.Replica replica) {
+                return client.stub(replica.address())
+                        .usersAll(allReq()).getNamesList().stream()
+                        .map(name -> new ClusterUser(client, name))
+                        .collect(Collectors.toSet());
             }
         }.runPrimaryReplica();
     }

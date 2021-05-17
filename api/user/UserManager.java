@@ -1,6 +1,7 @@
 package com.vaticle.typedb.client.api.user;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Set;
 
 public interface UserManager {
     @CheckReturnValue
@@ -11,4 +12,6 @@ public interface UserManager {
     // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
 
     void create(String name, String password);
+
+    Set<User> all();
 }

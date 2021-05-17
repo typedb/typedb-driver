@@ -137,12 +137,16 @@ public abstract class TypeDBStub {
             return resilientCall(() -> blockingStub.serversAll(request));
         }
 
-        public ClusterUserManager.Contains.Res userContains(ClusterUserManager.Contains.Req request) {
+        public ClusterUserManager.Contains.Res usersContains(ClusterUserManager.Contains.Req request) {
             return resilientCall(() -> blockingStub.usersContains(request));
         }
 
-        public ClusterUserProto.ClusterUserManager.Create.Res userCreate(ClusterUserManager.Create.Req request) {
+        public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserManager.Create.Req request) {
             return resilientCall(() -> blockingStub.usersCreate(request));
+        }
+
+        public ClusterUserManager.All.Res usersAll(ClusterUserManager.All.Req request) {
+            return resilientCall(() -> blockingStub.usersAll(request));
         }
 
         public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
