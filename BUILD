@@ -112,9 +112,11 @@ ts_project(
     declaration = True,
     deps = [
         "@npm//@grpc/grpc-js",
-        "@npm//grakn-protocol",
         "@npm//@types/node",
+        "@npm//@types/uuid",
+        "@npm//grakn-protocol",
         "@npm//typescript",
+        "@npm//uuid",
     ],
 )
 
