@@ -2,6 +2,9 @@ package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 
+import static com.vaticle.typedb.client.cluster.ClusterUserManager.SYSTEM_DB;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
+
 public class ClusterUser implements User {
 
     private final ClusterClient client;
@@ -29,6 +32,13 @@ public class ClusterUser implements User {
 
     @Override
     public void delete() {
-        throw new UnsupportedOperationException();
+        new FailsafeTask<Void>(client, SYSTEM_DB) {
+
+            @Override
+            Void run(ClusterDatabase.Replica replica) {
+                client.stub(replica.address()).userDelete(deleteReq(name));
+                return null;
+            }
+        };
     }
 }

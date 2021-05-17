@@ -9,7 +9,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserMa
 
 public class ClusterUserManager implements UserManager {
 
-    private static final String SYSTEM_DB = "_system";
+    static final String SYSTEM_DB = "_system";
 
     private final ClusterClient client;
 

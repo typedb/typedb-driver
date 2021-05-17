@@ -124,6 +124,12 @@ public class RequestBuilder {
             }
         }
 
+        public static class User {
+            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String name) {
+                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setName(name).build();
+            }
+        }
+
         public static class DatabaseManager {
 
             public static ClusterDatabaseProto.ClusterDatabaseManager.Get.Req getReq(String name) {
