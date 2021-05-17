@@ -86,7 +86,7 @@ public class CoreClient implements TypeDBClient {
 
     @Override
     public CoreSession session(String database, TypeDBSession.Type type) {
-        return session(database, type, options);
+        return session(database, type, TypeDBOptions.core());
     }
 
     @Override

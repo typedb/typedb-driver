@@ -111,7 +111,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     @Override
     public ClusterSession session(String database, TypeDBSession.Type type) {
-        return session(database, type, options);
+        return session(database, type, TypeDBOptions.cluster());
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ClusterSession implements TypeDBSession {
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
-        return transaction(type, options);
+        return transaction(type, TypeDBOptions.cluster());
     }
 
     @Override
