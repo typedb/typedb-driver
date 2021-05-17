@@ -25,12 +25,9 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.core.CoreSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
 
 public class ClusterSession implements TypeDBSession {
 
