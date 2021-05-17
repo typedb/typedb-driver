@@ -21,11 +21,6 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public String password() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void password(String password) {
         throw new UnsupportedOperationException();
     }
@@ -33,7 +28,6 @@ public class ClusterUser implements User {
     @Override
     public void delete() {
         new FailsafeTask<Void>(client, SYSTEM_DB) {
-
             @Override
             Void run(ClusterDatabase.Replica replica) {
                 client.stub(replica.address()).userDelete(deleteReq(name));
