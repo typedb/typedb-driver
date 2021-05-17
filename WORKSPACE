@@ -117,9 +117,9 @@ load("@vaticle_typeql_lang_java//dependencies/vaticle:repositories.bzl", "vaticl
 vaticle_typeql()
 
 # Load artifacts
-load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "graknlabs_grakn_cluster_artifact")
+load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
 vaticle_typedb_artifact()
-graknlabs_grakn_cluster_artifact()
+vaticle_typedb_cluster_artifact()
 
 # Load maven
 load("@vaticle_typeql_lang_java//dependencies/maven:artifacts.bzl", vaticle_typeql_lang_java_artifacts = "artifacts")
