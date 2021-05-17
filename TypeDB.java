@@ -26,6 +26,8 @@ import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.cluster.ClusterClient;
 import com.vaticle.typedb.client.core.CoreClient;
 
+import java.util.Set;
+
 import static com.vaticle.typedb.common.collection.Collections.set;
 
 public class TypeDB {
@@ -47,4 +49,13 @@ public class TypeDB {
     public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential, int parallelisation) {
         return ClusterClient.create(set(address), credential, parallelisation);
     }
+
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential) {
+        return ClusterClient.create(addresses, credential);
+    }
+
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        return ClusterClient.create(addresses, credential, parallelisation);
+    }
+
 }

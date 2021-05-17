@@ -43,7 +43,7 @@ public class TypeDBOptions {
     private Integer schemaLockAcquireTimeoutMillis = null;
 
     private TypeDBOptions() {}
-    
+
     @CheckReturnValue
     public static TypeDBOptions core() {
         return new TypeDBOptions();
