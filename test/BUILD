@@ -34,9 +34,9 @@ native_typedb_artifact(
 
 native_typedb_artifact(
     name = "native-grakn-cluster-artifact",
-    mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
-    linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
-    windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
+    mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
+    linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
+    windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
     output = "grakn-cluster-server-artifact.tar.gz",
     visibility = ["//test:__subpackages__"],
 )

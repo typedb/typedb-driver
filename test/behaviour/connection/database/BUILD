@@ -85,9 +85,9 @@ typedb_java_test(
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
-    server_mac_artifact = "@graknlabs_grakn_cluster_artifact_mac//file",
-    server_linux_artifact = "@graknlabs_grakn_cluster_artifact_linux//file",
-    server_windows_artifact = "@graknlabs_grakn_cluster_artifact_windows//file",
+    server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
+    server_linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
+    server_windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
     runtime_deps = [
         "//test/behaviour/connection:steps-cluster",
 
