@@ -19,7 +19,7 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public ClusterUser get(String name) {
-        if (contains(name)) return new ClusterUser(name);
+        if (contains(name)) return new ClusterUser(client, name);
         else throw new TypeDBClientException(CLUSTER_USER_DOES_NOT_EXIST, name);
     }
 

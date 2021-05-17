@@ -4,13 +4,17 @@ import com.vaticle.typedb.client.api.user.User;
 
 public class ClusterUser implements User {
 
-    public ClusterUser(String name) {
-        throw new UnsupportedOperationException();
+    private final ClusterClient client;
+    private final String name;
+
+    public ClusterUser(ClusterClient client, String name) {
+        this.client = client;
+        this.name = name;
     }
 
     @Override
     public String name() {
-        throw new UnsupportedOperationException();
+        return name;
     }
 
     @Override
