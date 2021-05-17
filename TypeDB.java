@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.cluster.ClusterClient;
 import com.vaticle.typedb.client.core.CoreClient;
 
@@ -41,35 +42,20 @@ public class TypeDB {
         return CoreClient.create(address, parallelisation);
     }
 
-    public static TypeDBClient.Cluster clusterClient(String address, boolean tlsEnabled) {
-        return ClusterClient.create(set(address), tlsEnabled, null);
+    public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential) {
+        return ClusterClient.create(set(address), credential);
     }
 
-    public static TypeDBClient.Cluster clusterClient(String address, boolean tlsEnabled, String tlsRootCA) {
-        return ClusterClient.create(set(address), tlsEnabled, tlsRootCA);
+    public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential, int parallelisation) {
+        return ClusterClient.create(set(address), credential, parallelisation);
     }
 
-    public static TypeDBClient.Cluster clusterClient(String address, boolean tlsEnabled, int parallelisation) {
-        return ClusterClient.create(set(address), tlsEnabled, null, parallelisation);
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential) {
+        return ClusterClient.create(addresses, credential);
     }
 
-    public static TypeDBClient.Cluster clusterClient(String address, boolean tlsEnabled, String tlsRootCA, int parallelisation) {
-        return ClusterClient.create(set(address), tlsEnabled, tlsRootCA, parallelisation);
+    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        return ClusterClient.create(addresses, credential, parallelisation);
     }
 
-    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, boolean tlsEnabled) {
-        return ClusterClient.create(addresses, tlsEnabled, null);
-    }
-
-    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, boolean tlsEnabled, String tlsRootCA) {
-        return ClusterClient.create(addresses, tlsEnabled, tlsRootCA);
-    }
-
-    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, boolean tlsEnabled, int parallelisation) {
-        return ClusterClient.create(addresses, tlsEnabled, null, parallelisation);
-    }
-
-    public static TypeDBClient.Cluster clusterClient(Set<String> addresses, boolean tlsEnabled, String tlsRootCA, int parallelisation) {
-        return ClusterClient.create(addresses, tlsEnabled, tlsRootCA, parallelisation);
-    }
 }

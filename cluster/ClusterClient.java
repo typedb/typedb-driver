@@ -22,19 +22,16 @@
 package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.core.CoreClient;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,9 +48,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
 
-    private final boolean tlsEnabled;
-    @Nullable
-    private final Path tlsRootCA;
+    private final TypeDBCredential credential;
     private final int parallelisation;
     private final Map<String, ClusterNodeClient> clusterNodeClients;
     private final Map<String, TypeDBStub.Cluster> stubs;
@@ -61,16 +56,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    ClusterClient(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA) {
-        this(addresses, tlsEnabled, tlsRootCA, ClusterNodeClient.calculateParallelisation());
-    }
-
-    ClusterClient(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA, int parallelisation) {
-        this.tlsEnabled = tlsEnabled;
-        this.tlsRootCA = tlsRootCA != null ? Paths.get(tlsRootCA) : null;
+    private ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        this.credential = credential;
         this.parallelisation = parallelisation;
         clusterNodeClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, ClusterNodeClient.create(address, tlsEnabled, this.tlsRootCA, parallelisation)))
+                .map(address -> pair(address, ClusterNodeClient.create(address, credential, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         stubs = clusterNodeClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
@@ -80,17 +70,17 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = true;
     }
 
-    public static ClusterClient create(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA) {
-        return new ClusterClient(addresses, tlsEnabled, tlsRootCA);
+    public static Cluster create(Set<String> addresses, TypeDBCredential credential) {
+        return new ClusterClient(addresses, credential, ClusterNodeClient.calculateParallelisation());
     }
 
-    public static ClusterClient create(Set<String> addresses, boolean tlsEnabled, @Nullable String tlsRootCA, int parallelisation) {
-        return new ClusterClient(addresses, tlsEnabled, tlsRootCA, parallelisation);
+    public static Cluster create(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+        return new ClusterClient(addresses, credential, parallelisation);
     }
 
     private Set<String> fetchServerAddresses(Set<String> addresses) {
         for (String address : addresses) {
-            try (ClusterNodeClient client = ClusterNodeClient.create(address, tlsEnabled, tlsRootCA, parallelisation)) {
+            try (ClusterNodeClient client = ClusterNodeClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 TypeDBStub.Cluster stub = TypeDBStub.cluster(client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());

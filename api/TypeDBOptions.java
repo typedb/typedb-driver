@@ -42,6 +42,8 @@ public class TypeDBOptions {
     private Integer sessionIdleTimeoutMillis = null;
     private Integer schemaLockAcquireTimeoutMillis = null;
 
+    private TypeDBOptions() {}
+
     @CheckReturnValue
     public static TypeDBOptions core() {
         return new TypeDBOptions();
