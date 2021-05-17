@@ -25,8 +25,6 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.OptionsProto;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
-import java.nio.file.Path;
 import java.util.Optional;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
@@ -43,8 +41,6 @@ public class TypeDBOptions {
     private Integer prefetchSize = null;
     private Integer sessionIdleTimeoutMillis = null;
     private Integer schemaLockAcquireTimeoutMillis = null;
-
-    private TypeDBOptions() { }
 
     @CheckReturnValue
     public static TypeDBOptions core() {
@@ -173,27 +169,7 @@ public class TypeDBOptions {
 
     public static class Cluster extends TypeDBOptions {
 
-        private Boolean tlsEnabled = null;
-        private Path tlsRootCA = null;
         private Boolean readAnyReplica = null;
-
-        public Optional<Boolean> tlsEnabled() {
-            return Optional.ofNullable(tlsEnabled);
-        }
-
-        public Cluster tlsEnabled(boolean tlsEnabled) {
-            this.tlsEnabled = tlsEnabled;
-            return this;
-        }
-
-        public Optional<Path> tlsRootCA() {
-            return Optional.ofNullable(tlsRootCA);
-        }
-
-        public Cluster tlsRootCA(Path tlsRootCA) {
-            this.tlsRootCA = tlsRootCA;
-            return this;
-        }
 
         @CheckReturnValue
         public Optional<Boolean> readAnyReplica() {

@@ -56,10 +56,6 @@ public class ClusterSession implements TypeDBSession {
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
         TypeDBOptions.Cluster clusterOpt = options.asCluster();
-        if (clusterOpt.tlsEnabled().isPresent())
-            throw new TypeDBClientException(ILLEGAL_ARGUMENT, "tlsEnabled");
-        if (clusterOpt.tlsRootCA().isPresent())
-            throw new TypeDBClientException(ILLEGAL_ARGUMENT, "tlsRootCA");
         if (clusterOpt.readAnyReplica().isPresent() && clusterOpt.readAnyReplica().get()) {
             return transactionAnyReplica(type, clusterOpt);
         } else {
