@@ -1,25 +1,30 @@
 package com.vaticle.typedb.client.api;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_ROOT_CA_SUPPLIED_WHEN_TLS_DISABLED;
 
 public class TypeDBCredential {
     private final boolean tlsEnabled;
     @Nullable
     private final Path tlsRootCA;
 
-    public TypeDBCredential(boolean tlsEnabled) {
-        this(tlsEnabled, null);
-    }
+    private TypeDBCredential(boolean tlsEnabled, @Nullable Path tlsRootCA) {
+        if (!tlsEnabled && tlsRootCA != null) assert false;
 
-    public TypeDBCredential(boolean tlsEnabled, @Nullable Path tlsRootCA) {
-        if (!tlsEnabled && tlsRootCA != null) throw new TypeDBClientException(CLUSTER_ROOT_CA_SUPPLIED_WHEN_TLS_DISABLED);
         this.tlsEnabled = tlsEnabled;
         this.tlsRootCA = tlsRootCA;
+    }
+
+    public static TypeDBCredential plainText() {
+        return new TypeDBCredential(false, null);
+    }
+
+    public static TypeDBCredential tls() {
+        return new TypeDBCredential(true, null);
+    }
+
+    public static TypeDBCredential tls(Path rootCA) {
+        return new TypeDBCredential(true, rootCA);
     }
 
     public boolean tlsEnabled() {
