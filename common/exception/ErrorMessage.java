@@ -118,10 +118,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Internal(2, "Illegal state has been reached!");
         public static final Internal ILLEGAL_ARGUMENT =
                 new Internal(3, "Illegal argument provided: '%s'");
-        public static final Internal MISSING_ARGUMENT =
-                new Internal(4, "Required argument is not provided: '%s'");
         public static final Internal ILLEGAL_CAST =
-                new Internal(5, "Illegal casting operation to '%s'.");
+                new Internal(4, "Illegal casting operation to '%s'.");
 
         private static final String codePrefix = "INT";
         private static final String messagePrefix = "Internal Error";
