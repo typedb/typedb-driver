@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.api;
 
 import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.api.user.UserManager;
 
 import javax.annotation.CheckReturnValue;
 
@@ -48,6 +49,9 @@ public interface TypeDBClient extends AutoCloseable {
     void close();
 
     interface Cluster extends TypeDBClient {
+
+        @CheckReturnValue
+        UserManager users();
 
         @Override
         @CheckReturnValue

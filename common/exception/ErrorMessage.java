@@ -53,7 +53,9 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
                 new Client(12, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
-                new Client(13, "Attempted connecting to all cluster members, but the following errors occurred: \n%s");
+                new Client(13, "Attempted connecting to all cluster members, but the following errors occurred: \n%s.");
+        public static final Client CLUSTER_USER_DOES_NOT_EXIST =
+                new Client(14, "The user '%s' does not exist.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";

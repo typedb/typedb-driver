@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.common.collection.Pair;
@@ -52,7 +53,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final int parallelisation;
     private final Map<String, ClusterNodeClient> clusterNodeClients;
     private final Map<String, TypeDBStub.Cluster> stubs;
-    private final ClusterDatabaseManager databaseMgrs;
+    private final ClusterUserManager userMgr;
+    private final ClusterDatabaseManager databaseMgr;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
@@ -65,7 +67,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
         stubs = clusterNodeClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
-        databaseMgrs = new ClusterDatabaseManager(this);
+        userMgr = new ClusterUserManager();
+        databaseMgr = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
     }
@@ -104,8 +107,13 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     @Override
+    public UserManager users() {
+        return userMgr;
+    }
+
+    @Override
     public ClusterDatabaseManager databases() {
-        return databaseMgrs;
+        return databaseMgr;
     }
 
     @Override
