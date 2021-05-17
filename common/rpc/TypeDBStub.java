@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.common.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.ClusterServerProto;
+import com.vaticle.typedb.protocol.ClusterUserProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
 import com.vaticle.typedb.protocol.SessionProto.Session;
@@ -37,6 +38,7 @@ import io.grpc.stub.StreamObserver;
 import java.util.function.Supplier;
 
 import static com.vaticle.typedb.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
+import static com.vaticle.typedb.protocol.ClusterUserProto.ClusterUserManager;
 
 public abstract class TypeDBStub {
 
@@ -133,6 +135,14 @@ public abstract class TypeDBStub {
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
             return resilientCall(() -> blockingStub.serversAll(request));
+        }
+
+        public ClusterUserManager.Contains.Res userContains(ClusterUserManager.Contains.Req request) {
+            return resilientCall(() -> blockingStub.usersContains(request));
+        }
+
+        public ClusterUserProto.ClusterUserManager.Create.Res userCreate(ClusterUserManager.Create.Req request) {
+            return resilientCall(() -> blockingStub.usersCreate(request));
         }
 
         public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {

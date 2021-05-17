@@ -67,7 +67,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         stubs = clusterNodeClients.entrySet().stream()
                 .map(client -> pair(client.getKey(), TypeDBStub.cluster(client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
-        userMgr = new ClusterUserManager();
+        userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;

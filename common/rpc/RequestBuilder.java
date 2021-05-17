@@ -26,6 +26,7 @@ import com.vaticle.factory.tracing.client.FactoryTracingThreadStatic;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
+import com.vaticle.typedb.protocol.ClusterUserProto;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.LogicProto;
@@ -110,6 +111,16 @@ public class RequestBuilder {
 
             public static ClusterServerProto.ServerManager.All.Req allReq() {
                 return ClusterServerProto.ServerManager.All.Req.newBuilder().build();
+            }
+        }
+
+        public static class UserManager {
+            public static ClusterUserProto.ClusterUserManager.Contains.Req containsReq(String name) {
+                return ClusterUserProto.ClusterUserManager.Contains.Req.newBuilder().setName(name).build();
+            }
+
+            public static ClusterUserProto.ClusterUserManager.Create.Req createReq(String name, String password) {
+                return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setName(name).setPassword(password).build();
             }
         }
 
