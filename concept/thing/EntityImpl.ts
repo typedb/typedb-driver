@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,12 +19,12 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
 import {EntityTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";
 import {Bytes} from "../../common/util/Bytes";
-import {Thing as ThingProto} from "grakn-protocol/common/concept_pb";
+import {Thing as ThingProto} from "typedb-protocol/common/concept_pb";
 
 export class EntityImpl extends ThingImpl implements Entity {
 
@@ -33,8 +35,8 @@ export class EntityImpl extends ThingImpl implements Entity {
         this._type = type;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteEntity {
-        return new EntityImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
+    asRemote(transaction: TypeDBTransaction): RemoteEntity {
+        return new EntityImpl.RemoteImpl(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
     }
 
     getType(): EntityType {
@@ -61,12 +63,12 @@ export namespace EntityImpl {
 
         private readonly _type: EntityType;
 
-        constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean, type: EntityType) {
+        constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: EntityType) {
             super(transaction, iid, isInferred);
             this._type = type;
         }
 
-        asRemote(transaction: GraknTransaction): RemoteEntity {
+        asRemote(transaction: TypeDBTransaction): RemoteEntity {
             return this;
         }
 

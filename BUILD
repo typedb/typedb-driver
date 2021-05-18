@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -26,12 +28,12 @@ exports_files([
 ])
 
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
-load("@graknlabs_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@graknlabs_dependencies//tool/release:rules.bzl", "release_validate_nodejs_deps")
-load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
+load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
+load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/release:rules.bzl", "release_validate_nodejs_deps")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
@@ -78,7 +80,7 @@ behaviour_steps_common = [
     "//test/behaviour/connection/database:DatabaseSteps.ts",
     "//test/behaviour/connection/session:SessionSteps.ts",
     "//test/behaviour/connection/transaction:TransactionSteps.ts",
-    "//test/behaviour/graql:GraqlSteps.ts",
+    "//test/behaviour/typeql:TypeQLSteps.ts",
     "//test/behaviour/util:Util.ts",
     "//test:tsconfig.json"
 ] + glob(["node_modules/**"])
@@ -114,7 +116,7 @@ ts_project(
         "@npm//@grpc/grpc-js",
         "@npm//@types/node",
         "@npm//@types/uuid",
-        "@npm//grakn-protocol",
+        "@npm//typedb-protocol",
         "@npm//typescript",
         "@npm//uuid",
     ],
@@ -122,13 +124,13 @@ ts_project(
 
 pkg_npm(
     name = "client-nodejs-npm-package",
-    package_name = "grakn-client",
+    package_name = "typedb-client",
     srcs = glob([
        "package.json",
        "README.md",
     ]),
     deps = [
-        "@npm//grakn-protocol",
+        "@npm//typedb-protocol",
         "@npm//@grpc/grpc-js",
         "@npm//google-protobuf",
         ":client-nodejs",
@@ -152,7 +154,7 @@ deploy_npm(
 deploy_github(
     name = "deploy-github",
     release_description = "//:RELEASE_TEMPLATE.md",
-    title = "Grakn Client Node.js",
+    title = "TypeDB Client Node.js",
     title_append_version = True,
     organisation = github_deployment["github.organisation"],
     repository = github_deployment["github.repository"],
@@ -169,21 +171,21 @@ NODEJS_TEST_DEPENDENCIES = [
 ]
 
 genrule(
-    name = "grakn-artifact-path",
-    srcs = ["@graknlabs_grakn_core_artifact_mac//file"],
-    outs = ["grakn-artifact-path.txt"],
-    cmd = "echo $(location @graknlabs_grakn_core_artifact_mac//file) > \"$@\"",
+    name = "typedb-artifact-path",
+    srcs = ["@vaticle_typedb_artifact_mac//file"],
+    outs = ["typedb-artifact-path.txt"],
+    cmd = "echo $(location @vaticle_typedb_artifact_mac//file) > \"$@\"",
 )
 
 artifact_extractor(
-    name = "grakn-extractor",
-    artifact = "@graknlabs_grakn_core_artifact_linux//file",
+    name = "typedb-extractor",
+    artifact = "@vaticle_typedb_artifact_linux//file",
 )
 
 release_validate_nodejs_deps(
     name = "release-validate-nodejs-deps",
     package_json = "//:package.json",
-    tagged_deps = ["grakn-protocol"]
+    tagged_deps = ["typedb-protocol"]
 )
 
 checkstyle_test(
@@ -214,10 +216,8 @@ checkstyle_test(
 filegroup(
     name = "ci",
     data = [
-        "@graknlabs_dependencies//tool/bazelrun:rbe",
-        "@graknlabs_dependencies//distribution/artifact:create-netrc",
-        "@graknlabs_dependencies//tool/sync:dependencies",
-        "@graknlabs_dependencies//tool/release:approval",
-        "@graknlabs_dependencies//tool/release:create-notes",
+        "@vaticle_dependencies//tool/bazelrun:rbe",
+        "@vaticle_dependencies//distribution/artifact:create-netrc",
+        "@vaticle_dependencies//tool/release:create-notes",
     ],
 )

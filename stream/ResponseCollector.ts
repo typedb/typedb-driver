@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +21,7 @@
 
 import {BlockingQueue} from "../common/util/BlockingQueue";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 
 export class ResponseCollector<T> {
 
@@ -63,9 +65,9 @@ export namespace ResponseCollector {
             if (element.isResponse()) return (element as Response<T>).value();
             else {
                 if ((element as Done).hasError()) {
-                    throw new GraknClientError((element as Done).error());
+                    throw new TypeDBClientError((element as Done).error());
                 } else {
-                    throw new GraknClientError(TRANSACTION_CLOSED);
+                    throw new TypeDBClientError(TRANSACTION_CLOSED);
                 }
             }
         }

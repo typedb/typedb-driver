@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,29 +20,29 @@
  */
 
 
-import {GraknOptions} from "./GraknOptions";
-import {GraknSession, SessionType} from "./GraknSession";
+import {TypeDBOptions} from "./TypeDBOptions";
+import {TypeDBSession, SessionType} from "./TypeDBSession";
 import {DatabaseManager} from "./database/DatabaseManager";
 
-export interface GraknClient {
+export interface TypeDBClient {
 
     isOpen(): boolean;
 
     databases(): DatabaseManager;
 
-    session(database: string, type: SessionType, options?: GraknOptions): Promise<GraknSession>;
+    session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
     isCluster(): boolean;
 
-    asCluster(): GraknClient.Cluster;
+    asCluster(): TypeDBClient.Cluster;
 
     close(): void;
 
 }
 
-export namespace GraknClient {
+export namespace TypeDBClient {
 
-    export interface Cluster extends GraknClient {
+    export interface Cluster extends TypeDBClient {
 
         databases(): DatabaseManager.Cluster;
 

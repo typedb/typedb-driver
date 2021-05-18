@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {Options} from "grakn-protocol/common/options_pb";
+import {Options} from "typedb-protocol/common/options_pb";
 
 namespace Opts {
     export class Core {
@@ -54,7 +56,7 @@ namespace Opts {
     }
 }
 
-export class GraknOptions extends Opts.Core {
+export class TypeDBOptions extends Opts.Core {
 
     constructor(obj: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
         super();
@@ -70,7 +72,7 @@ export class GraknOptions extends Opts.Core {
     }
 }
 
-export class GraknClusterOptions extends Opts.Cluster {
+export class TypeDBClusterOptions extends Opts.Cluster {
 
     constructor(obj: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
         super();
@@ -86,13 +88,13 @@ export class GraknClusterOptions extends Opts.Cluster {
     }
 }
 
-export namespace GraknOptions {
+export namespace TypeDBOptions {
 
     export function core(options: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
-        return new GraknOptions(options);
+        return new TypeDBOptions(options);
     }
 
     export function cluster(options: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
-        return new GraknClusterOptions(options);
+        return new TypeDBClusterOptions(options);
     }
 }

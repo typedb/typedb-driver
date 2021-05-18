@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {ThingType} from "../../api/concept/type/ThingType";
@@ -27,12 +29,12 @@ import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {
     Attribute as AttributeProto,
     AttributeType as AttributeTypeProto,
     Type as TypeProto
-} from "grakn-protocol/common/concept_pb";
+} from "typedb-protocol/common/concept_pb";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
@@ -42,8 +44,8 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         super(name, isRoot);
     }
 
-    asRemote(transaction: GraknTransaction): AttributeType.Remote {
-        return new AttributeTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+    asRemote(transaction: TypeDBTransaction): AttributeType.Remote {
+        return new AttributeTypeImpl.RemoteImpl(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isAttributeType(): boolean {
@@ -62,35 +64,35 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         if (this.isRoot()) {
             return new AttributeTypeImpl.Boolean(this.getLabel().name(), this.isRoot());
         }
-        throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Boolean"));
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Boolean"));
     }
 
     asLong(): AttributeType.Long {
         if (this.isRoot()) {
             return new AttributeTypeImpl.Long(this.getLabel().name(), this.isRoot());
         }
-        throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Long"));
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Long"));
     }
 
     asDouble(): AttributeType.Double {
         if (this.isRoot()) {
             return new AttributeTypeImpl.Double(this.getLabel().name(), this.isRoot());
         }
-        throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Double"));
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.Double"));
     }
 
     asString(): AttributeType.String {
         if (this.isRoot()) {
             return new AttributeTypeImpl.String(this.getLabel().name(), this.isRoot());
         }
-        throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.String"));
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.String"));
     }
 
     asDateTime(): AttributeType.DateTime {
         if (this.isRoot()) {
             return new AttributeTypeImpl.DateTime(this.getLabel().name(), this.isRoot());
         }
-        throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.DateTime"));
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType", "AttributeType.DateTime"));
     }
 
     isBoolean(): boolean {
@@ -132,17 +134,17 @@ export namespace AttributeTypeImpl {
             case AttributeTypeProto.ValueType.OBJECT:
                 return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getRoot());
             default:
-                throw new GraknClientError(BAD_VALUE_TYPE.message(attributeTypeProto.getValueType()));
+                throw new TypeDBClientError(BAD_VALUE_TYPE.message(attributeTypeProto.getValueType()));
         }
     }
 
     export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements AttributeType.Remote {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.Remote {
+        asRemote(transaction: TypeDBTransaction): AttributeType.Remote {
             return this;
         }
 
@@ -210,28 +212,28 @@ export namespace AttributeTypeImpl {
             if (this.isRoot()) {
                 return new AttributeTypeImpl.RemoteBoolean(this._transaction, this.getLabel(), this.isRoot());
             }
-            throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteBoolean"));
+            throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteBoolean"));
         }
 
         asLong(): AttributeType.RemoteLong {
             if (this.isRoot()) {
                 return new AttributeTypeImpl.RemoteLong(this._transaction, this.getLabel(), this.isRoot());
             }
-            throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteLong"));
+            throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteLong"));
         }
 
         asDouble(): AttributeType.RemoteDouble {
             if (this.isRoot()) {
                 return new AttributeTypeImpl.RemoteDouble(this._transaction, this.getLabel(), this.isRoot());
             }
-            throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteDouble"));
+            throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteDouble"));
         }
 
         asString(): AttributeType.RemoteString {
             if (this.isRoot()) {
                 return new AttributeTypeImpl.RemoteString(this._transaction, this.getLabel(), this.isRoot());
             }
-            throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteString"));
+            throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteString"));
 
         }
 
@@ -239,7 +241,7 @@ export namespace AttributeTypeImpl {
             if (this.isRoot()) {
                 return new AttributeTypeImpl.RemoteDateTime(this._transaction, this.getLabel(), this.isRoot());
             }
-            throw new GraknClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteDateTime"));
+            throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message("AttributeType.Remote", "AttributeType.RemoteDateTime"));
 
         }
     }
@@ -250,8 +252,8 @@ export namespace AttributeTypeImpl {
             super(label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteBoolean {
-            return new AttributeTypeImpl.RemoteBoolean(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteBoolean {
+            return new AttributeTypeImpl.RemoteBoolean(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         getValueType(): AttributeType.ValueType {
@@ -270,11 +272,11 @@ export namespace AttributeTypeImpl {
 
     export class RemoteBoolean extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteBoolean {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteBoolean {
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteBoolean {
             return this;
         }
 
@@ -315,8 +317,8 @@ export namespace AttributeTypeImpl {
             super(label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteLong {
-            return new AttributeTypeImpl.RemoteLong(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteLong {
+            return new AttributeTypeImpl.RemoteLong(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         getValueType(): AttributeType.ValueType {
@@ -334,11 +336,11 @@ export namespace AttributeTypeImpl {
 
     export class RemoteLong extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteLong {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteLong {
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteLong {
             return this;
         }
 
@@ -379,8 +381,8 @@ export namespace AttributeTypeImpl {
             super(label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDouble {
-            return new AttributeTypeImpl.RemoteDouble(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDouble {
+            return new AttributeTypeImpl.RemoteDouble(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         getValueType(): AttributeType.ValueType {
@@ -398,11 +400,11 @@ export namespace AttributeTypeImpl {
 
     export class RemoteDouble extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteDouble {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDouble {
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDouble {
             return this;
         }
 
@@ -443,8 +445,8 @@ export namespace AttributeTypeImpl {
             super(label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteString {
-            return new AttributeTypeImpl.RemoteString(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot())
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteString {
+            return new AttributeTypeImpl.RemoteString(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot())
         }
 
         getValueType(): AttributeType.ValueType {
@@ -462,11 +464,11 @@ export namespace AttributeTypeImpl {
 
     export class RemoteString extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteString {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteString {
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteString {
             return this;
         }
 
@@ -517,8 +519,8 @@ export namespace AttributeTypeImpl {
             super(label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDateTime {
-            return new AttributeTypeImpl.RemoteDateTime(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDateTime {
+            return new AttributeTypeImpl.RemoteDateTime(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         getValueType(): AttributeType.ValueType {
@@ -536,11 +538,11 @@ export namespace AttributeTypeImpl {
 
     export class RemoteDateTime extends AttributeTypeImpl.RemoteImpl implements AttributeType.RemoteDateTime {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDateTime {
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDateTime {
             return this;
         }
 

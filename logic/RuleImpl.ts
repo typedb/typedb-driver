@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,10 +19,10 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../api/GraknTransaction";
+import {TypeDBTransaction} from "../api/TypeDBTransaction";
 import {RemoteRule, Rule} from "../api/logic/Rule";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Rule as RuleProto} from "grakn-protocol/common/logic_pb";
+import {Rule as RuleProto} from "typedb-protocol/common/logic_pb";
 import setLabelReq = RequestBuilder.Rule.setLabelReq;
 import deleteReq = RequestBuilder.Rule.deleteReq;
 
@@ -36,8 +38,8 @@ export class RuleImpl implements Rule {
         this._then = then;
     }
 
-    asRemote(transaction: GraknTransaction): RemoteRule {
-        return new RemoteRuleImpl((transaction as GraknTransaction.Extended), this._label, this._when, this._then);
+    asRemote(transaction: TypeDBTransaction): RemoteRule {
+        return new RemoteRuleImpl((transaction as TypeDBTransaction.Extended), this._label, this._when, this._then);
     }
 
     getLabel(): string {
@@ -63,9 +65,9 @@ export class RuleImpl implements Rule {
 }
 
 export class RemoteRuleImpl extends RuleImpl implements RemoteRule {
-    private _transaction: GraknTransaction.Extended;
+    private _transaction: TypeDBTransaction.Extended;
 
-    constructor(transaction: GraknTransaction.Extended, label: string, when: string, then: string) {
+    constructor(transaction: TypeDBTransaction.Extended, label: string, when: string, then: string) {
         super(label, when, then);
         this._transaction = transaction;
     }

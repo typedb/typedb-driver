@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,16 +19,16 @@
  * under the License.
  */
 
-const { Grakn} = require("../../dist/Grakn");
-const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
-const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
+const { TypeDB} = require("../../dist/TypeDB");
+const {TypeDBSession, SessionType} = require("../../dist/api/TypeDBSession")
+const {TypeDBTransaction, TransactionType} = require("../../dist/api/TypeDBTransaction")
 const assert = require("assert");
 const { spawn, spawnSync } = require("child_process");
 
 async function seekPrimaryReplica(databases) {
     for (let retryNum = 0; retryNum < 10; retryNum++) {
-        console.info("Discovering replicas for database 'grakn'...");
-        const db = await databases.get("grakn");
+        console.info("Discovering replicas for database 'typedb'...");
+        const db = await databases.get("typedb");
         console.info(`Discovered ${db.replicas()}`);
         if (db.primaryReplica()) return db.primaryReplica();
         retryNum++;
@@ -37,16 +39,16 @@ async function seekPrimaryReplica(databases) {
 }
 
 async function run() {
-    const client = await Grakn.clusterClient(["localhost:11729", "localhost:21729", "localhost:31729"]);
+    const client = await TypeDB.clusterClient(["localhost:11729", "localhost:21729", "localhost:31729"]);
     try {
-        if (await client.databases().contains("grakn")) {
-            await (await client.databases().get("grakn")).delete();
+        if (await client.databases().contains("typedb")) {
+            await (await client.databases().get("typedb")).delete();
         }
-        await client.databases().create("grakn");
+        await client.databases().create("typedb");
         let primaryReplica = await seekPrimaryReplica(client.databases());
         console.info(`Performing operations against the primary replica ${primaryReplica}`);
 
-        let session = await client.session("grakn", SessionType.SCHEMA);
+        let session = await client.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
         let person = await tx.concepts().putEntityType("person");
         console.info(`Put the entity type '${person.getLabel().scopedName()}'.`);
@@ -66,13 +68,13 @@ async function run() {
             spawnSync("kill", ["-9", primaryReplicaServerPID]);
             console.info("Primary replica stopped successfully.");
             await new Promise(resolve => setTimeout(resolve, 1000));
-            session = await client.session("grakn", SessionType.SCHEMA);
+            session = await client.session("typedb", SessionType.SCHEMA);
             tx = await session.transaction(TransactionType.READ);
             person = await tx.concepts().putEntityType("person");
             console.info(`Retrieved entity type with label '${person.getLabel().scopedName()}' from new primary replica`);
             assert(person.getLabel().scopedName() === "person");
             const idx = primaryReplica.address()[10];
-            spawn(`./${idx}/grakn`, ["server", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730`,
+            spawn(`./${idx}/typedb`, ["server", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730`,
                 "--peer", "127.0.0.1:11729:11730", "--peer", "127.0.0.1:21729:21730", "--peer", "127.0.0.1:31729:31730"]);
             await new Promise(resolve => setTimeout(resolve, 11000));
         }

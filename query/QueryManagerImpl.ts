@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,12 +20,12 @@
  */
 
 import {QueryManager} from "../api/query/QueryManager";
-import {GraknOptions} from "../api/GraknOptions";
+import {TypeDBOptions} from "../api/TypeDBOptions";
 import {ConceptMap} from "../api/answer/ConceptMap";
 import {Numeric} from "../api/answer/Numeric";
 import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
 import {NumericGroup} from "../api/answer/NumericGroup";
-import {GraknTransaction} from "../api/GraknTransaction";
+import {TypeDBTransaction} from "../api/TypeDBTransaction";
 import {Explanation} from "../api/logic/Explanation";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
@@ -32,20 +34,20 @@ import {NumericImpl} from "../concept/answer/NumericImpl";
 import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
 import {Stream} from "../common/util/Stream";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
 
 
 export class QueryManagerImpl implements QueryManager {
 
-    private _transaction: GraknTransaction.Extended;
+    private _transaction: TypeDBTransaction.Extended;
 
-    constructor(transaction: GraknTransaction.Extended) {
+    constructor(transaction: TypeDBTransaction.Extended) {
         this._transaction = transaction;
     }
 
-    match(query: string, options?: GraknOptions): Stream<ConceptMap> {
-        if (!options) options = GraknOptions.core();
+    match(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.matchReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
             Stream.array(queryResPart.getMatchResPart().getAnswersList())
@@ -53,14 +55,14 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    matchAggregate(query: string, options?: GraknOptions): Promise<Numeric> {
-        if (!options) options = GraknOptions.core();
+    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.matchAggregateReq(query, options.proto());
         return this.query(request).then((res) => NumericImpl.of(res.getMatchAggregateRes().getAnswer()));
     }
 
-    matchGroup(query: string, options?: GraknOptions): Stream<ConceptMapGroup> {
-        if (!options) options = GraknOptions.core();
+    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.matchGroupReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
             Stream.array(queryResPart.getMatchGroupResPart().getAnswersList())
@@ -68,8 +70,8 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    matchGroupAggregate(query: string, options?: GraknOptions): Stream<NumericGroup> {
-        if (!options) options = GraknOptions.core();
+    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.matchGroupAggregateReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
             Stream.array(queryResPart.getMatchGroupAggregateResPart().getAnswersList())
@@ -77,8 +79,8 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    insert(query: string, options?: GraknOptions): Stream<ConceptMap> {
-        if (!options) options = GraknOptions.core();
+    insert(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.insertReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
             Stream.array(queryResPart.getInsertResPart().getAnswersList())
@@ -86,14 +88,14 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    delete(query: string, options?: GraknOptions): Promise<void> {
-        if (!options) options = GraknOptions.core();
+    delete(query: string, options?: TypeDBOptions): Promise<void> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.deleteReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
-    update(query: string, options?: GraknOptions): Stream<ConceptMap> {
-        if (!options) options = GraknOptions.core();
+    update(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.updateReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
             Stream.array(queryResPart.getUpdateResPart().getAnswersList())
@@ -101,20 +103,20 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    define(query: string, options?: GraknOptions): Promise<void> {
-        if (!options) options = GraknOptions.core();
+    define(query: string, options?: TypeDBOptions): Promise<void> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.defineReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
-    undefine(query: string, options?: GraknOptions): Promise<void> {
-        if (!options) options = GraknOptions.core();
+    undefine(query: string, options?: TypeDBOptions): Promise<void> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.undefineReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
-    explain(explainable: ConceptMap.Explainable, options?: GraknOptions): Stream<Explanation> {
-        if (!options) options = GraknOptions.core();
+    explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation> {
+        if (!options) options = TypeDBOptions.core();
         const request = RequestBuilder.QueryManager.explainReq(explainable.id(), options.proto());
         return this.stream(request)
             .flatMap((resPart) => Stream.array(resPart.getExplainResPart().getExplanationsList()))

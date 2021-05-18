@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,9 +24,9 @@ import {Database} from "../api/database/Database";
 import {ClusterClient} from "./ClusterClient";
 import {ClusterDatabase, DatabaseReplica} from "./ClusterDatabase";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ClusterDatabaseManager} from "grakn-protocol/cluster/cluster_database_pb";
+import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
@@ -59,7 +61,7 @@ export abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof GraknClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.errorMessage())) {
+                if (e instanceof TypeDBClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.errorMessage())) {
                     console.info("Unable to open a session or transaction, retrying in 2s...", e);
                     await this.waitForPrimaryReplicaSelection();
                     replica = await this.seekPrimaryReplica();
@@ -82,7 +84,7 @@ export abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof GraknClientError && UNABLE_TO_CONNECT === e.errorMessage()) {
+                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.errorMessage()) {
                     console.info("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
                 } else throw e;
             }
@@ -118,8 +120,8 @@ export abstract class FailsafeTask<TResult> {
             try {
                 console.info(`Fetching replica info from ${serverAddress}`);
                 const res: ClusterDatabaseManager.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(serverAddress).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(this._database), (err, res) => {
-                        if (err) reject(new GraknClientError(err));
+                    this._client.typeDBClusterRPC(serverAddress).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(this._database), (err, res) => {
+                        if (err) reject(new TypeDBClientError(err));
                         else resolve(res);
                     });
                 });
@@ -137,8 +139,8 @@ export abstract class FailsafeTask<TResult> {
         return new Promise(resolve => setTimeout(resolve, WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS));
     }
 
-    private clusterNotAvailableError(): GraknClientError {
+    private clusterNotAvailableError(): TypeDBClientError {
         const addresses = this._client.clusterMembers().join(",");
-        return new GraknClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses));
+        return new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses));
     }
 }

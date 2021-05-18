@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
@@ -25,7 +27,7 @@ import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_inte
 import {Stream} from "../../common/util/Stream";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -33,8 +35,8 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
         super(Label.scoped(scope, label), isRoot);
     }
 
-    asRemote(transaction: GraknTransaction): RemoteRoleType {
-        return new RoleTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+    asRemote(transaction: TypeDBTransaction): RemoteRoleType {
+        return new RoleTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
     }
 
     isRoleType(): boolean {
@@ -52,11 +54,11 @@ export namespace RoleTypeImpl {
 
     export class RemoteImpl extends TypeImpl.RemoteImpl implements RemoteRoleType {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): RemoteRoleType {
+        asRemote(transaction: TypeDBTransaction): RemoteRoleType {
             return this;
         }
 

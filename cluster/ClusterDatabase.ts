@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,7 @@
 import {Database} from "../api/database/Database";
 import {CoreDatabase} from "../core/CoreDatabase";
 import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
-import {ClusterDatabase as ClusterDatabaseProto} from "grakn-protocol/cluster/cluster_database_pb";
+import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
 
 export class ClusterDatabase implements Database.Cluster {
 

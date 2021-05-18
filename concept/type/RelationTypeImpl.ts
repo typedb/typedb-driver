@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {RelationType, RemoteRelationType} from "../../api/concept/type/RelationType";
 import {Relation} from "../../api/concept/thing/Relation";
 import {RoleType} from "../../api/concept/type/RoleType";
@@ -26,7 +28,7 @@ import {RelationImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_inte
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
@@ -34,8 +36,8 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         super(label, isRoot);
     }
 
-    asRemote(transaction: GraknTransaction): RemoteRelationType {
-        return new RelationTypeImpl.RemoteImpl(transaction as GraknTransaction.Extended, this.getLabel(), this.isRoot());
+    asRemote(transaction: TypeDBTransaction): RemoteRelationType {
+        return new RelationTypeImpl.RemoteImpl(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isRelationType(): boolean {
@@ -52,11 +54,11 @@ export namespace RelationTypeImpl {
 
     export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteRelationType {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): RemoteRelationType {
+        asRemote(transaction: TypeDBTransaction): RemoteRelationType {
             return this;
         }
 

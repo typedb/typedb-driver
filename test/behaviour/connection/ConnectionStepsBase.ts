@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,24 +20,24 @@
  */
 
 import { Given, After, Before, setDefaultTimeout } from "@cucumber/cucumber";
-import { GraknClient } from "../../../dist/api/GraknClient";
-import { GraknSession } from "../../../dist/api/GraknSession";
-import { GraknTransaction } from "../../../dist/api/GraknTransaction";
+import { TypeDBClient } from "../../../dist/api/TypeDBClient";
+import { TypeDBSession } from "../../../dist/api/TypeDBSession";
+import { TypeDBTransaction } from "../../../dist/api/TypeDBTransaction";
 import assert = require("assert");
 
 export const THREAD_POOL_SIZE = 32;
 
-export let client: GraknClient;
-export const sessions: GraknSession[] = [];
-export const sessionsToTransactions: Map<GraknSession, GraknTransaction[]> = new Map<GraknSession, GraknTransaction[]>();
+export let client: TypeDBClient;
+export const sessions: TypeDBSession[] = [];
+export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = new Map<TypeDBSession, TypeDBTransaction[]>();
 
 setDefaultTimeout(20000); // Some steps may take longer than the default limit of 5s, eg create parallel dbs
 
-export function tx(): GraknTransaction {
+export function tx(): TypeDBTransaction {
     return sessionsToTransactions.get(sessions[0])[0];
 }
 
-export function setClient(value: GraknClient) {
+export function setClient(value: TypeDBClient) {
     client = value;
 }
 

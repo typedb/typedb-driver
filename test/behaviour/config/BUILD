@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,8 +19,8 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_node_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
 exports_files(["Parameters.ts"])
 

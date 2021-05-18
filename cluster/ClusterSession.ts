@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,34 +19,34 @@
  * under the License.
  */
 
-import {GraknClient} from "../api/GraknClient";
-import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
+import {TypeDBClient} from "../api/TypeDBClient";
+import {TypeDBClusterOptions, TypeDBOptions} from "../api/TypeDBOptions";
 import {Database} from "../api/database/Database";
-import {GraknSession, SessionType} from "../api/GraknSession";
-import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
+import {TypeDBSession, SessionType} from "../api/TypeDBSession";
+import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
 import {ClusterClient} from "./ClusterClient";
 import {FailsafeTask} from "./FailsafeTask";
 
-export class ClusterSession implements GraknSession {
+export class ClusterSession implements TypeDBSession {
 
     private readonly _clusterClient: ClusterClient;
-    private _coreClient: GraknClient;
-    private _coreSession: GraknSession;
-    private _options: GraknClusterOptions;
+    private _coreClient: TypeDBClient;
+    private _coreSession: TypeDBSession;
+    private _options: TypeDBClusterOptions;
 
     constructor(clusterClient: ClusterClient, serverAddress: string) {
         this._clusterClient = clusterClient;
         this._coreClient = clusterClient.coreClient(serverAddress.toString());
     }
 
-    async open(serverAddress: string, database: string, type: SessionType, options: GraknClusterOptions): Promise<ClusterSession> {
+    async open(serverAddress: string, database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
         console.info(`Opening a session to '${serverAddress}'`);
         this._coreSession = await this._coreClient.session(database, type, options);
         this._options = options;
         return this;
     }
 
-    transaction(type: TransactionType, options: GraknClusterOptions = GraknOptions.cluster()): Promise<GraknTransaction> {
+    transaction(type: TransactionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<TypeDBTransaction> {
         if (options.readAnyReplica) {
             return this.transactionAnyReplica(type, options);
         } else {
@@ -52,11 +54,11 @@ export class ClusterSession implements GraknSession {
         }
     }
 
-    private transactionPrimaryReplica(type: TransactionType, options: GraknClusterOptions): Promise<GraknTransaction> {
+    private transactionPrimaryReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
         return new TransactionFailsafeTask(this, type, options).runPrimaryReplica();
     }
 
-    private transactionAnyReplica(type: TransactionType, options: GraknClusterOptions): Promise<GraknTransaction> {
+    private transactionAnyReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
         return new TransactionFailsafeTask(this, type, options).runAnyReplica();
     }
 
@@ -68,7 +70,7 @@ export class ClusterSession implements GraknSession {
         return this._coreSession.isOpen();
     }
 
-    options(): GraknClusterOptions {
+    options(): TypeDBClusterOptions {
         return this._options;
     }
 
@@ -84,40 +86,40 @@ export class ClusterSession implements GraknSession {
         return this._clusterClient;
     }
 
-    get coreClient(): GraknClient {
+    get coreClient(): TypeDBClient {
         return this._coreClient;
     }
 
-    set coreClient(client: GraknClient) {
+    set coreClient(client: TypeDBClient) {
         this._coreClient = client;
     }
 
-    get coreSession(): GraknSession {
+    get coreSession(): TypeDBSession {
         return this._coreSession;
     }
 
-    set coreSession(session: GraknSession) {
+    set coreSession(session: TypeDBSession) {
         this._coreSession = session;
     }
 }
 
-class TransactionFailsafeTask extends FailsafeTask<GraknTransaction> {
+class TransactionFailsafeTask extends FailsafeTask<TypeDBTransaction> {
     private readonly _clusterSession: ClusterSession;
     private readonly _type: TransactionType;
-    private readonly _options: GraknClusterOptions;
+    private readonly _options: TypeDBClusterOptions;
 
-    constructor(clusterSession: ClusterSession, type: TransactionType, options: GraknClusterOptions) {
+    constructor(clusterSession: ClusterSession, type: TransactionType, options: TypeDBClusterOptions) {
         super(clusterSession.clusterClient(), clusterSession.database().name());
         this._clusterSession = clusterSession;
         this._type = type;
         this._options = options;
     }
 
-    run(replica: Database.Replica): Promise<GraknTransaction> {
+    run(replica: Database.Replica): Promise<TypeDBTransaction> {
         return this._clusterSession.coreSession.transaction(this._type, this._options);
     }
 
-    async rerun(replica: Database.Replica): Promise<GraknTransaction> {
+    async rerun(replica: Database.Replica): Promise<TypeDBTransaction> {
         if (this._clusterSession.coreSession) await this._clusterSession.coreSession.close();
         this._clusterSession.coreClient = this._clusterSession.clusterClient().coreClient(replica.address());
         this._clusterSession.coreSession = await this._clusterSession.coreClient.session(this.database, this._clusterSession.type(), this._clusterSession.options());

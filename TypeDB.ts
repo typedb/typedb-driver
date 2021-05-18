@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,19 +19,19 @@
  * under the License.
  */
 
-import {GraknClient as GraknClient} from "./api/GraknClient";
+import {TypeDBClient as TypeDBClient} from "./api/TypeDBClient";
 import {CoreClient} from "./core/CoreClient";
 import {ClusterClient} from "./cluster/ClusterClient";
 
-export namespace Grakn {
+export namespace TypeDB {
 
     export const DEFAULT_ADDRESS = "localhost:1729";
 
-    export function coreClient(address: string = DEFAULT_ADDRESS): GraknClient {
+    export function coreClient(address: string = DEFAULT_ADDRESS): TypeDBClient {
         return new CoreClient(address);
     }
 
-    export function clusterClient(addresses: string | string[]): Promise<GraknClient.Cluster> {
+    export function clusterClient(addresses: string | string[]): Promise<TypeDBClient.Cluster> {
         if (typeof addresses === 'string' ) addresses = [addresses];
         return new ClusterClient().open(addresses);
     }

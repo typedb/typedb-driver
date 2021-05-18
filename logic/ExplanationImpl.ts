@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,7 +24,7 @@ import {Explanation} from "../api/logic/Explanation";
 import {Rule} from "../api/logic/Rule";
 import {RuleImpl} from "./RuleImpl";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-import {Explanation as ExplanationProto} from "grakn-protocol/common/logic_pb";
+import {Explanation as ExplanationProto} from "typedb-protocol/common/logic_pb";
 
 export class ExplanationImpl implements Explanation {
 

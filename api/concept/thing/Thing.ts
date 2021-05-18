@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {Relation} from "./Relation";
 import {Attribute} from "./Attribute";
 import {RoleType} from "../type/RoleType";
@@ -29,7 +31,7 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Thing extends Concept {
 
-    asRemote(transaction: GraknTransaction): RemoteThing;
+    asRemote(transaction: TypeDBTransaction): RemoteThing;
 
     getIID(): string;
 
@@ -40,7 +42,7 @@ export interface Thing extends Concept {
 
 export interface RemoteThing extends Thing, RemoteConcept {
 
-    asRemote(transaction: GraknTransaction): RemoteThing;
+    asRemote(transaction: TypeDBTransaction): RemoteThing;
 
     setHas(attribute: Attribute<AttributeType.ValueClass>): Promise<void>;
 

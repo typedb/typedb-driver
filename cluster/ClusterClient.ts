@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,10 +20,10 @@
  */
 
 
-import {GraknClient} from "../api/GraknClient";
-import {GraknClusterOptions, GraknOptions} from "../api/GraknOptions";
+import {TypeDBClient} from "../api/TypeDBClient";
+import {TypeDBClusterOptions, TypeDBOptions} from "../api/TypeDBOptions";
 import {Database} from "../api/database/Database";
-import {SessionType} from "../api/GraknSession";
+import {SessionType} from "../api/TypeDBSession";
 import {CoreClient} from "../core/CoreClient";
 import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {ClusterDatabase} from "./ClusterDatabase";
@@ -29,16 +31,16 @@ import {ClusterSession} from "./ClusterSession";
 import {FailsafeTask} from "./FailsafeTask";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {GraknClusterClient} from "grakn-protocol/cluster/cluster_service_grpc_pb";
-import {ServerManager} from "grakn-protocol/cluster/cluster_server_pb";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
+import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
 import {ChannelCredentials} from "@grpc/grpc-js";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
-export class ClusterClient implements GraknClient.Cluster {
+export class ClusterClient implements TypeDBClient.Cluster {
 
     private _coreClients: { [serverAddress: string]: CoreClient };
-    private _graknClusterRPCs: { [serverAddress: string]: GraknClusterClient };
+    private _typeDBClusterRPCs: { [serverAddress: string]: TypeDBClusterClient };
     private _databaseManagers: ClusterDatabaseManager;
     private _clusterDatabases: { [db: string]: ClusterDatabase };
     private _isOpen: boolean;
@@ -49,9 +51,9 @@ export class ClusterClient implements GraknClient.Cluster {
         serverAddresses.forEach((addr) => {
             this._coreClients[addr] = new CoreClient(addr);
         });
-        this._graknClusterRPCs = {};
+        this._typeDBClusterRPCs = {};
         serverAddresses.forEach((addr) => {
-            this._graknClusterRPCs[addr] = new GraknClusterClient(addr, ChannelCredentials.createInsecure());
+            this._typeDBClusterRPCs[addr] = new TypeDBClusterClient(addr, ChannelCredentials.createInsecure());
         });
 
         this._databaseManagers = new ClusterDatabaseManager(this);
@@ -60,7 +62,7 @@ export class ClusterClient implements GraknClient.Cluster {
         return this;
     }
 
-    session(database: string, type: SessionType, options: GraknClusterOptions = GraknOptions.cluster()): Promise<ClusterSession> {
+    session(database: string, type: SessionType, options: TypeDBClusterOptions = TypeDBOptions.cluster()): Promise<ClusterSession> {
         if (options.readAnyReplica) {
             return this.sessionAnyReplica(database, type, options);
         } else {
@@ -68,11 +70,11 @@ export class ClusterClient implements GraknClient.Cluster {
         }
     }
 
-    private sessionPrimaryReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<ClusterSession> {
+    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
         return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
     }
 
-    private sessionAnyReplica(database: string, type: SessionType, options: GraknClusterOptions): Promise<ClusterSession> {
+    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
         return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
     }
 
@@ -103,7 +105,7 @@ export class ClusterClient implements GraknClient.Cluster {
         return Object.keys(this._coreClients);
     }
 
-    coreClient(address: string): GraknClient {
+    coreClient(address: string): TypeDBClient {
         return this._coreClients[address];
     }
 
@@ -111,8 +113,8 @@ export class ClusterClient implements GraknClient.Cluster {
         return this._coreClients;
     }
 
-    graknClusterRPC(address: string): GraknClusterClient {
-        return this._graknClusterRPCs[address];
+    typeDBClusterRPC(address: string): TypeDBClusterClient {
+        return this._typeDBClusterRPCs[address];
     }
 
     private async fetchClusterServers(addresses: string[]): Promise<string[]> {
@@ -120,10 +122,10 @@ export class ClusterClient implements GraknClient.Cluster {
             const client = new CoreClient(address);
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
-                const grpcClusterClient = new GraknClusterClient(address, ChannelCredentials.createInsecure());
+                const grpcClusterClient = new TypeDBClusterClient(address, ChannelCredentials.createInsecure());
                 const res = await new Promise<ServerManager.All.Res>((resolve, reject) => {
                     grpcClusterClient.servers_all(RequestBuilder.Cluster.ServerManager.allReq(), (err, res) => {
-                        if (err) reject(new GraknClientError(err));
+                        if (err) reject(new TypeDBClientError(err));
                         else resolve(res);
                     });
                 });
@@ -136,19 +138,19 @@ export class ClusterClient implements GraknClient.Cluster {
                 client.close();
             }
         }
-        throw new GraknClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses.join(",")));
+        throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses.join(",")));
     }
 
-    asCluster(): GraknClient.Cluster {
+    asCluster(): TypeDBClient.Cluster {
         return this;
     }
 }
 
 class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {
     private readonly _type: SessionType;
-    private readonly _options: GraknClusterOptions;
+    private readonly _options: TypeDBClusterOptions;
 
-    constructor(database: string, type: SessionType, options: GraknClusterOptions, client: ClusterClient) {
+    constructor(database: string, type: SessionType, options: TypeDBClusterOptions, client: ClusterClient) {
         super(client, database);
         this._type = type;
         this._options = options;

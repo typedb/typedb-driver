@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,23 +19,12 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "grakn_behaviour_node_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
+    include = glob([
+        "*",
+    ]),
     license_type = "apache",
-)
-
-grakn_behaviour_node_test(
-    name = "test",
-    features = ["@graknlabs_behaviour//graql/language:match.feature"],
-    node_modules = "//:node_modules",
-    package_json = "//:package.json",
-    native_grakn_artifact_core = "//test:native-grakn-core-artifact",
-    native_grakn_artifact_cluster = "//test:native-grakn-cluster-artifact",
-    client = "//:client-nodejs-targz",
-    steps_core = "//test/behaviour:steps-core-targz",
-    steps_cluster = "//test/behaviour:steps-cluster-targz",
 )

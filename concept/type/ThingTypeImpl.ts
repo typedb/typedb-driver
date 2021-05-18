@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {Thing} from "../../api/concept/thing/Thing";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {AttributeType} from "../../api/concept/type/AttributeType";
@@ -34,8 +36,8 @@ import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -44,8 +46,8 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
         super(Label.of(name), isRoot);
     }
 
-    asRemote(transaction: GraknTransaction): RemoteThingType {
-        return new ThingTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+    asRemote(transaction: TypeDBTransaction): RemoteThingType {
+        return new ThingTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
     }
 
     isThingType(): boolean {
@@ -68,17 +70,17 @@ export namespace ThingTypeImpl {
             case TypeProto.Encoding.THING_TYPE:
                 return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getRoot());
             default:
-                throw new GraknClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
+                throw new TypeDBClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
         }
     }
 
     export class RemoteImpl extends TypeImpl.RemoteImpl implements RemoteThingType {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): RemoteThingType {
+        asRemote(transaction: TypeDBTransaction): RemoteThingType {
             return this;
         }
 

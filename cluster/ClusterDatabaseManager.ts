@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,8 +26,8 @@ import {ClusterClient} from "./ClusterClient";
 import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "grakn-protocol/cluster/cluster_database_pb";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
@@ -50,7 +52,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
                 errors += `- ${address}: ${e}\n`;
             }
         }
-        throw new GraknClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
     async create(name: string): Promise<void> {
@@ -66,8 +68,8 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         for (const address of Object.keys(this._databaseManagers)) {
             try {
                 const res: ClusterDatabaseManagerProto.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(address).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(name), (err, res) => {
-                        if (err) reject(new GraknClientError(err));
+                    this._client.typeDBClusterRPC(address).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(name), (err, res) => {
+                        if (err) reject(new TypeDBClientError(err));
                         else resolve(res);
                     });
                 });
@@ -76,7 +78,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
                 errors += `- ${address}: ${e}\n`;
             }
         }
-        throw new GraknClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
     async all(): Promise<Database.Cluster[]> {
@@ -84,8 +86,8 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         for (const address of Object.keys(this._databaseManagers)) {
             try {
                 const res: ClusterDatabaseManagerProto.All.Res = await new Promise((resolve, reject) => {
-                    this._client.graknClusterRPC(address).databases_all(RequestBuilder.Cluster.DatabaseManager.allReq(), (err, res) => {
-                        if (err) reject(new GraknClientError(err));
+                    this._client.typeDBClusterRPC(address).databases_all(RequestBuilder.Cluster.DatabaseManager.allReq(), (err, res) => {
+                        if (err) reject(new TypeDBClientError(err));
                         else resolve(res);
                     });
                 });
@@ -94,7 +96,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
                 errors += `- ${address}: ${e}\n`;
             }
         }
-        throw new GraknClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
     databaseManagers(): { [address: string]: CoreDatabaseManager } {

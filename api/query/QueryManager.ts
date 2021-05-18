@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {GraknOptions} from "../GraknOptions";
+import {TypeDBOptions} from "../TypeDBOptions";
 import {ConceptMap} from "../answer/ConceptMap";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
 import {Numeric} from "../answer/Numeric";
@@ -27,24 +29,24 @@ import {Stream} from "../../common/util/Stream";
 
 export interface QueryManager {
 
-    match(query: string, options?: GraknOptions): Stream<ConceptMap>;
+    match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    matchAggregate(query: string, options?: GraknOptions): Promise<Numeric>;
+    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;
 
-    matchGroup(query: string, options?: GraknOptions): Stream<ConceptMapGroup>;
+    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
 
-    matchGroupAggregate(query: string, options?: GraknOptions): Stream<NumericGroup>;
+    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup>;
 
-    insert(query: string, options?: GraknOptions): Stream<ConceptMap>;
+    insert(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    delete(query: string, options?: GraknOptions): Promise<void>;
+    delete(query: string, options?: TypeDBOptions): Promise<void>;
 
-    update(query: string, options?: GraknOptions): Stream<ConceptMap>;
+    update(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    define(query: string, options?: GraknOptions): Promise<void>;
+    define(query: string, options?: TypeDBOptions): Promise<void>;
 
-    undefine(query: string, options?: GraknOptions): Promise<void>;
+    undefine(query: string, options?: TypeDBOptions): Promise<void>;
 
-    explain(explainable: ConceptMap.Explainable, options?: GraknOptions): Stream<Explanation>;
+    explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation>;
 
 }

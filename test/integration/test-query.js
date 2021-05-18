@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,24 +19,24 @@
  * under the License.
  */
 
-const {Grakn} = require("../../dist/Grakn");
-const {SessionType} = require("../../dist/api/GraknSession")
-const {TransactionType} = require("../../dist/api/GraknTransaction")
-const {GraknOptions} = require("../../dist/api/GraknOptions");
+const {TypeDB} = require("../../dist/TypeDB");
+const {SessionType} = require("../../dist/api/TypeDBSession")
+const {TransactionType} = require("../../dist/api/TypeDBTransaction")
+const {TypeDBOptions} = require("../../dist/api/TypeDBOptions");
 const assert = require("assert");
 
 async function run() {
-    const client = Grakn.coreClient();
+    const client = TypeDB.coreClient();
     try {
         const dbs = await client.databases().all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
-        const grakn = dbs.find(x => x.name() === "grakn");
-        if (grakn) {
-            await grakn.delete();
-            console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
+        const typedb = dbs.find(x => x.name() === "typedb");
+        if (typedb) {
+            await typedb.delete();
+            console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases().create("grakn");
-        console.log("create database - SUCCESS - 'grakn' has been created");
+        await client.databases().create("typedb");
+        console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
@@ -44,7 +46,7 @@ async function run() {
     let session;
     let tx;
     try {
-        session = await client.session("grakn", SessionType.SCHEMA);
+        session = await client.session("typedb", SessionType.SCHEMA);
         tx = await session.transaction(TransactionType.WRITE);
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
@@ -141,7 +143,7 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("grakn", SessionType.DATA, GraknOptions.core({
+        session = await client.session("typedb", SessionType.DATA, TypeDBOptions.core({
             sessionIdleTimeoutMillis: 3600000,
         }));
         console.log("open data session - SUCCESS");
@@ -201,7 +203,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(TransactionType.READ, GraknOptions.core({infer: true, explain: true}));
+        tx = await session.transaction(TransactionType.READ, TypeDBOptions.core({infer: true, explain: true}));
         const answers = await tx.query().match("match $x has inferred-age $a;").collect();
         const ans = answers[0];
         assert(ans.explainables().ownerships().size > 0);

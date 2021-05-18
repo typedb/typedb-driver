@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,25 +19,25 @@
  * under the License.
  */
 
-const {Grakn} = require("../../dist/Grakn");
-const {GraknSession, SessionType} = require("../../dist/api/GraknSession")
-const {GraknTransaction, TransactionType} = require("../../dist/api/GraknTransaction")
+const {TypeDB} = require("../../dist/TypeDB");
+const {TypeDBSession, SessionType} = require("../../dist/api/TypeDBSession")
+const {TypeDBTransaction, TransactionType} = require("../../dist/api/TypeDBTransaction")
 const {AttributeType} = require("../../dist/api/concept/type/AttributeType");
 const assert = require("assert");
 
 async function run() {
-    const client = Grakn.coreClient();
+    const client = TypeDB.coreClient();
 
     try {
         const dbs = await client.databases().all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
-        const grakn = dbs.find(x => x.name() === "grakn");
-        if (grakn) {
-            await grakn.delete();
-            console.log(`delete database - SUCCESS - 'grakn' has been deleted`);
+        const typedb = dbs.find(x => x.name() === "typedb");
+        if (typedb) {
+            await typedb.delete();
+            console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases().create("grakn");
-        console.log("create database - SUCCESS - 'grakn' has been created");
+        await client.databases().create("typedb");
+        console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
         client.close();
@@ -49,7 +51,7 @@ async function run() {
     let session, tx;
     let lion, lionFamily, lionCub, maneSize;
     try {
-        session = await client.session("grakn", SessionType.SCHEMA);
+        session = await client.session("typedb", SessionType.SCHEMA);
         tx = await session.transaction(TransactionType.WRITE);
         lion = await tx.concepts().putEntityType("lion");
         await tx.commit();
@@ -294,7 +296,7 @@ async function run() {
     /////////////////////
 
     try {
-        session = await client.session("grakn", SessionType.DATA);
+        session = await client.session("typedb", SessionType.DATA);
         tx = await session.transaction(TransactionType.WRITE);
         for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
         const lions = await lion.asRemote(tx).getInstances().collect();

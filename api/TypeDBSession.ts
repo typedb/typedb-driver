@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,12 +19,12 @@
  * under the License.
  */
 
-import {GraknOptions} from "./GraknOptions";
+import {TypeDBOptions} from "./TypeDBOptions";
 import {Database} from "./database/Database";
-import {GraknTransaction, TransactionType} from "./GraknTransaction";
-import {Session} from "grakn-protocol/common/session_pb";
+import {TypeDBTransaction, TransactionType} from "./TypeDBTransaction";
+import {Session} from "typedb-protocol/common/session_pb";
 
-export interface GraknSession {
+export interface TypeDBSession {
 
     isOpen(): boolean;
 
@@ -30,9 +32,9 @@ export interface GraknSession {
 
     database(): Database;
 
-    options(): GraknOptions;
+    options(): TypeDBOptions;
 
-    transaction(type: TransactionType, options?: GraknOptions): Promise<GraknTransaction>;
+    transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction>;
 
     close(): Promise<void>;
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,19 +19,19 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../api/GraknTransaction";
+import {TypeDBTransaction} from "../api/TypeDBTransaction";
 import {LogicManager} from "../api/logic/LogicManager";
 import {Rule} from "../api/logic/Rule";
 import {RuleImpl} from "./RuleImpl";
 import {Stream} from "../common/util/Stream";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {LogicManager as LogicProto} from "grakn-protocol/common/logic_pb";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {LogicManager as LogicProto} from "typedb-protocol/common/logic_pb";
 
 export class LogicManagerImpl implements LogicManager {
-    private _transaction: GraknTransaction.Extended;
+    private _transaction: TypeDBTransaction.Extended;
 
-    constructor(transaction: GraknTransaction.Extended) {
+    constructor(transaction: TypeDBTransaction.Extended) {
         this._transaction = transaction;
     }
 

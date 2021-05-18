@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 
 
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {RemoteType, Type} from "./Type";
 import {RoleType} from "./RoleType";
 import {AttributeType} from "./AttributeType";
@@ -28,13 +30,13 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface ThingType extends Type {
 
-    asRemote(transaction: GraknTransaction): RemoteThingType;
+    asRemote(transaction: TypeDBTransaction): RemoteThingType;
 
 }
 
 export interface RemoteThingType extends ThingType, RemoteType {
 
-    asRemote(transaction: GraknTransaction): RemoteThingType;
+    asRemote(transaction: TypeDBTransaction): RemoteThingType;
 
     getSupertype(): Promise<ThingType>;
 

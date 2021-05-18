@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,13 +19,13 @@
  * under the License.
  */
 
-import {CoreDatabase, CoreDatabaseManager} from "grakn-protocol/core/core_database_pb";
-import {ClusterDatabaseManager} from "grakn-protocol/cluster/cluster_database_pb";
-import {ServerManager as ServerManagerProto} from "grakn-protocol/cluster/cluster_server_pb";
-import {Session as SessionProto} from "grakn-protocol/common/session_pb";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {LogicManager as LogicProto, Rule as RuleProto} from "grakn-protocol/common/logic_pb";
-import {QueryManager as QueryProto} from "grakn-protocol/common/query_pb";
+import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
+import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import {ServerManager as ServerManagerProto} from "typedb-protocol/cluster/cluster_server_pb";
+import {Session as SessionProto} from "typedb-protocol/common/session_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {LogicManager as LogicProto, Rule as RuleProto} from "typedb-protocol/common/logic_pb";
+import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
 import {
     Attribute as AttributeProto,
     AttributeType as AttributeTypeProto,
@@ -35,8 +37,8 @@ import {
     Thing as ThingProto,
     ThingType as ThingTypeProto,
     Type as TypeProto
-} from "grakn-protocol/common/concept_pb";
-import {Options} from "grakn-protocol/common/options_pb";
+} from "typedb-protocol/common/concept_pb";
+import {Options} from "typedb-protocol/common/options_pb";
 import * as uuid from "uuid";
 import {Label} from "../Label";
 import {Bytes} from "../util/Bytes";

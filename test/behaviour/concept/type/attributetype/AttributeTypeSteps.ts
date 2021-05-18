@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,7 +23,7 @@ import {tx} from "../../../connection/ConnectionStepsBase";
 import {Then, When} from "@cucumber/cucumber";
 import assert from "assert";
 import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
-import {GraknClientError} from "../../../../../dist/common/errors/GraknClientError";
+import {TypeDBClientError} from "../../../../../dist/common/errors/TypeDBClientError";
 import {ErrorMessage} from "../../../../../dist/common/errors/ErrorMessage";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {parseList} from "../../../config/Parameters";
@@ -56,7 +58,7 @@ async function attributeTypeAsValueType(typeLabel: string, valueType: ValueType)
         case ValueType.DATETIME:
             return attributeType.asDateTime();
         default:
-            throw new GraknClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));
+            throw new TypeDBClientError(ErrorMessage.Concept.BAD_VALUE_TYPE.message(valueType));
     }
 }
 

@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,25 +19,25 @@
 # under the License.
 #
 
-load("@graknlabs_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
-load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
+load("@vaticle_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
 
-def graknlabs_grakn_core_artifacts():
+def vaticle_typedb_artifacts():
     native_artifact_files(
-        name = "graknlabs_grakn_core_artifact",
-        group_name = "graknlabs_grakn_core",
-        artifact_name = "grakn-core-server-{platform}-{version}.{ext}",
+        name = "vaticle_typedb_artifact",
+        group_name = "vaticle_typedb",
+        artifact_name = "typedb-server-{platform}-{version}.{ext}",
         tag_source = deployment["artifact.release"],
         commit_source = deployment["artifact.snapshot"],
-        commit = "922f9e50d05fd24187c5f020a8fc720722d49a60",
+        commit = "447615e8a612c2a071dee1f2f9061776598892f2",
     )
 
-def graknlabs_grakn_cluster_artifacts():
+def vaticle_typedb_cluster_artifacts():
     native_artifact_files(
-        name = "graknlabs_grakn_cluster_artifact",
-        group_name = "graknlabs_grakn_cluster",
-        artifact_name = "grakn-cluster-all-{platform}-{version}.{ext}",
+        name = "vaticle_typedb_cluster_artifact",
+        group_name = "vaticle_typedb_cluster",
+        artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
-        commit = "ff24c81c3ce821d25df802192db05d6084365161",
+        commit = "1542ced2796ffd418a4516abee0ddc290841122a",
     )

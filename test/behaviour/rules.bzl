@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -17,13 +19,13 @@
 # under the License.
 #
 
-def node_cucumber_test(name, features, node_modules, package_json, native_grakn_artifact, client, steps):
+def node_cucumber_test(name, features, node_modules, package_json, native_typedb_artifact, client, steps):
     native.sh_test (
         name = name,
         data = [
             node_modules,
             package_json,
-            native_grakn_artifact,
+            native_typedb_artifact,
             client,
             steps,
         ] + features,
@@ -31,14 +33,14 @@ def node_cucumber_test(name, features, node_modules, package_json, native_grakn_
             "//test/behaviour:cucumber_test.sh",
         ],
         args = [
-            "$(rootpath " + native_grakn_artifact + ")",
+            "$(rootpath " + native_typedb_artifact + ")",
         ],
     )
 
-def grakn_behaviour_node_test(
+def typedb_behaviour_node_test(
         name,
-        native_grakn_artifact_core,
-        native_grakn_artifact_cluster,
+        native_typedb_artifact_core,
+        native_typedb_artifact_cluster,
         steps_core,
         steps_cluster,
         **kwargs):
@@ -46,13 +48,13 @@ def grakn_behaviour_node_test(
     node_cucumber_test(
         name = name + "-core",
         steps = steps_core,
-        native_grakn_artifact = native_grakn_artifact_core,
+        native_typedb_artifact = native_typedb_artifact_core,
         **kwargs,
     )
 
     node_cucumber_test(
         name = name + "-cluster",
         steps = steps_cluster,
-        native_grakn_artifact = native_grakn_artifact_cluster,
+        native_typedb_artifact = native_typedb_artifact_cluster,
         **kwargs,
     )

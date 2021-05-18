@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,9 +24,9 @@ import {ResponseCollector} from "./ResponseCollector";
 import {ResponsePartIterator} from "./ResponsePartIterator";
 import {Stream} from "../common/util/Stream";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
-import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import * as uuid from "uuid";
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
@@ -41,7 +43,7 @@ export class BidirectionalStream {
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _isOpen: boolean;
 
-    constructor(rpcClient: GraknCoreClient, requestTransmitter: RequestTransmitter) {
+    constructor(rpcClient: TypeDBClient, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
         this._responsePartCollector = new ResponseCollector();
@@ -84,20 +86,20 @@ export class BidirectionalStream {
     private collectRes(res: Transaction.Res): void {
         const requestId = res.getReqId();
         const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 
     private collectResPart(res: Transaction.ResPart): void {
         const requestId = res.getReqId();
         const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new GraknClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
         transactionStream.on("data", (res: Transaction.Server) => {
-            if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+            if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
 
             switch (res.getServerCase()) {
                 case Transaction.Server.ServerCase.RES:
@@ -108,7 +110,7 @@ export class BidirectionalStream {
                     return;
                 case Transaction.Server.ServerCase.SERVER_NOT_SET:
                 default:
-                    throw new GraknClientError(MISSING_RESPONSE.message(res));
+                    throw new TypeDBClientError(MISSING_RESPONSE.message(res));
             }
 
         });

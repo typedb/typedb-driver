@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,34 +20,34 @@
  */
 
 
-import {GraknSession, SessionType} from "../api/GraknSession";
-import {GraknOptions} from "../api/GraknOptions";
+import {TypeDBSession, SessionType} from "../api/TypeDBSession";
+import {TypeDBOptions} from "../api/TypeDBOptions";
 import {Database} from "../api/database/Database";
-import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
+import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {Session} from "grakn-protocol/common/session_pb";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {Session} from "typedb-protocol/common/session_pb";
 import {CoreClient} from "./CoreClient";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {CoreTransaction} from "./CoreTransaction";
-import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 import {RequestTransmitter} from "../stream/RequestTransmitter";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
-export class CoreSession implements GraknSession {
+export class CoreSession implements TypeDBSession {
 
     private readonly _databaseName: string;
     private readonly _type: SessionType;
-    private readonly _options: GraknOptions;
+    private readonly _options: TypeDBOptions;
     private readonly _client: CoreClient;
     private _sessionId: string;
     private _database : Database;
     private _isOpen: boolean;
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
-    private _transactions: Set<GraknTransaction.Extended>;
+    private _transactions: Set<TypeDBTransaction.Extended>;
 
-    constructor(database: string, type: SessionType, options: GraknOptions, client: CoreClient) {
+    constructor(database: string, type: SessionType, options: TypeDBOptions, client: CoreClient) {
         this._databaseName = database;
         this._type = type;
         this._options = options;
@@ -62,7 +64,7 @@ export class CoreSession implements GraknSession {
         const res = await new Promise<Session.Open.Res>((resolve, reject) => {
             end = (new Date()).getMilliseconds();
             this._client.rpc().session_open(openReq, (err, res) => {
-                if (err) reject(new GraknClientError(err));
+                if (err) reject(new TypeDBClientError(err));
                 else resolve(res);
             });
         });
@@ -87,9 +89,9 @@ export class CoreSession implements GraknSession {
         }
     }
 
-    public async transaction(type: TransactionType, options?: GraknOptions): Promise<GraknTransaction> {
-        if (!this.isOpen()) throw new GraknClientError(SESSION_CLOSED);
-        if (!options) options = GraknOptions.core();
+    public async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
+        if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
+        if (!options) options = TypeDBOptions.core();
         const transaction = new CoreTransaction(this, this._sessionId, type, options);
         await transaction.open();
         this._transactions.add(transaction);
@@ -104,7 +106,7 @@ export class CoreSession implements GraknSession {
         return this._isOpen;
     }
 
-    public options(): GraknOptions {
+    public options(): TypeDBOptions {
         return this._options;
     }
 
@@ -125,7 +127,7 @@ export class CoreSession implements GraknSession {
         });
     }
 
-    public rpc(): GraknCoreClient {
+    public rpc(): TypeDBClient {
         return this._client.rpc();
     }
 

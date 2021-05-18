@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,11 +21,11 @@
 
 import {EntityType} from "../type/EntityType";
 import {RemoteThing, Thing} from "./Thing";
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 
 export interface Entity extends Thing {
 
-    asRemote(transaction: GraknTransaction): RemoteEntity;
+    asRemote(transaction: TypeDBTransaction): RemoteEntity;
 
     getType(): EntityType;
 
@@ -31,7 +33,7 @@ export interface Entity extends Thing {
 
 export interface RemoteEntity extends RemoteThing {
 
-    asRemote(transaction: GraknTransaction): RemoteEntity;
+    asRemote(transaction: TypeDBTransaction): RemoteEntity;
 
     getType(): EntityType;
 

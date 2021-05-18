@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +20,9 @@
  */
 
 import { BeforeAll } from "@cucumber/cucumber";
-import { Grakn} from "../../../dist/Grakn";
+import { TypeDB} from "../../../dist/TypeDB";
 import { setClient } from "./ConnectionStepsBase";
 
 BeforeAll(async () => {
-    setClient(await Grakn.clusterClient([Grakn.DEFAULT_ADDRESS]));
+    setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS]));
 });

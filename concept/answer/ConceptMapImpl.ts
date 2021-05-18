@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,13 +23,13 @@ import {
     ConceptMap as ConceptMapProto,
     Explainable as ExplainableProto, Explainables,
     Explainables as ExplainablesProto
-} from "grakn-protocol/common/answer_pb";
-import {Concept as ConceptProto} from "grakn-protocol/common/concept_pb";
+} from "typedb-protocol/common/answer_pb";
+import {Concept as ConceptProto} from "typedb-protocol/common/concept_pb";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 
 export class ConceptMapImpl implements ConceptMap {
 
@@ -112,13 +114,13 @@ export namespace ConceptMapImpl {
 
         relation(variable: string): ConceptMap.Explainable {
             const explainable = this._relations.get(variable);
-            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            if (!explainable) throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
         attribute(variable: string): ConceptMap.Explainable {
             const explainable = this._attributes.get(variable);
-            if (!explainable) throw new GraknClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            if (!explainable) throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
@@ -126,7 +128,7 @@ export namespace ConceptMapImpl {
             for (const entry of this._ownerships) {
                 if (entry[0][0] === owner && entry[0][1] === attribute) return entry[1];
             }
-            throw new GraknClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
+            throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
         }
 
         relations(): Map<string, ConceptMap.Explainable> {

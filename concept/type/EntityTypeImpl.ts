@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,14 +20,14 @@
  */
 
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {Entity} from "../../api/concept/thing/Entity";
 import {EntityImpl, ThingTypeImpl} from "../../dependencies_internal";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -33,8 +35,8 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         super(name, isRoot);
     }
 
-    asRemote(transaction: GraknTransaction): RemoteEntityType {
-        return new EntityTypeImpl.RemoteImpl((transaction as GraknTransaction.Extended), this.getLabel(), this.isRoot());
+    asRemote(transaction: TypeDBTransaction): RemoteEntityType {
+        return new EntityTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
     }
 
     isEntityType(): boolean {
@@ -51,11 +53,11 @@ export namespace EntityTypeImpl {
 
     export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteEntityType {
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: GraknTransaction): RemoteEntityType {
+        asRemote(transaction: TypeDBTransaction): RemoteEntityType {
             return this;
         }
 

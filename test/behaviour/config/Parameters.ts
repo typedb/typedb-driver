@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,7 @@
 import {defineParameterType} from "@cucumber/cucumber";
 import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {TransactionType} from "../../../dist/api/GraknTransaction";
+import {TransactionType} from "../../../dist/api/TypeDBTransaction";
 
 export function parseBool(value: string): boolean {
     return value === "true";

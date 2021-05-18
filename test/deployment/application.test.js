@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,16 +19,16 @@
  * under the License.
  */
 
-const { Grakn } = require("grakn-client/Grakn");
-const { SessionType } = require("grakn-client/api/GraknSession");
-const { TransactionType } = require("grakn-client/api/GraknTransaction");
+const { TypeDB } = require("typedb-client/TypeDB");
+const { SessionType } = require("typedb-client/api/TypeDBSession");
+const { TransactionType } = require("typedb-client/api/TypeDBTransaction");
 
 jest.setTimeout(15000);
 
 let client;
 
 beforeEach(async () => {
-    client = Grakn.coreClient();
+    client = TypeDB.coreClient();
     await client.databases().create("thisisadatabase");
 })
 
@@ -37,7 +39,7 @@ afterEach(async () => {
 });
 
 
-describe("Basic GraknClient Tests", () => {
+describe("Basic TypeDBClient Tests", () => {
     test("define with concepts client", async () => {
         let session = await client.session("thisisadatabase", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);

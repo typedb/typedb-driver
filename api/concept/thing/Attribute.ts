@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,14 +20,14 @@
  */
 
 import {RemoteThing, Thing} from "./Thing";
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {Stream} from "../../../common/util/Stream";
 import {ThingType} from "../type/ThingType";
 import {AttributeType} from "../type/AttributeType";
 
 export interface Attribute<T extends AttributeType.ValueClass> extends Thing {
 
-    asRemote(transaction: GraknTransaction): Attribute.Remote<T>;
+    asRemote(transaction: TypeDBTransaction): Attribute.Remote<T>;
 
     getType(): AttributeType;
 
@@ -47,7 +49,7 @@ export namespace Attribute {
 
     export interface Remote<T extends AttributeType.ValueClass> extends Attribute<T>, RemoteThing {
 
-        asRemote(transaction: GraknTransaction): Attribute.Remote<T>;
+        asRemote(transaction: TypeDBTransaction): Attribute.Remote<T>;
 
         getType(): AttributeType;
 
@@ -57,7 +59,7 @@ export namespace Attribute {
 
     export interface Boolean extends Attribute<boolean> {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteBoolean;
 
         getType(): AttributeType.Boolean;
 
@@ -65,7 +67,7 @@ export namespace Attribute {
 
     export interface RemoteBoolean extends Attribute.Remote<boolean>, Attribute.Boolean {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteBoolean;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteBoolean;
 
         getType(): AttributeType.Boolean;
 
@@ -73,7 +75,7 @@ export namespace Attribute {
 
     export interface Long extends Attribute<number> {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteLong;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteLong;
 
         getType(): AttributeType.Long;
 
@@ -81,7 +83,7 @@ export namespace Attribute {
 
     export interface RemoteLong extends Attribute.Remote<number>, Attribute.Long {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteLong;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteLong;
 
         getType(): AttributeType.Long;
 
@@ -89,7 +91,7 @@ export namespace Attribute {
 
     export interface Double extends Attribute<number> {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDouble;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDouble;
 
         getType(): AttributeType.Double;
 
@@ -97,7 +99,7 @@ export namespace Attribute {
 
     export interface RemoteDouble extends Attribute.Remote<number>, Attribute.Double {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDouble;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDouble;
 
         getType(): AttributeType.Double;
 
@@ -105,7 +107,7 @@ export namespace Attribute {
 
     export interface String extends Attribute<string> {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteString;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteString;
 
         getType(): AttributeType.String;
 
@@ -113,7 +115,7 @@ export namespace Attribute {
 
     export interface RemoteString extends Attribute.Remote<string>, Attribute.String {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteString;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteString;
 
         getType(): AttributeType.String;
 
@@ -121,7 +123,7 @@ export namespace Attribute {
 
     export interface DateTime extends Attribute<Date> {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDateTime;
 
         getType(): AttributeType.DateTime;
 
@@ -129,7 +131,7 @@ export namespace Attribute {
 
     export interface RemoteDateTime extends Attribute.Remote<Date>, Attribute.DateTime {
 
-        asRemote(transaction: GraknTransaction): Attribute.RemoteDateTime;
+        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDateTime;
 
         getType(): AttributeType.DateTime;
 

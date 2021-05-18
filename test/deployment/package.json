@@ -1,4 +1,4 @@
 {
-  "name": "grakn-client-test-deployment",
+  "name": "typedb-client-test-deployment",
   "main": "application.test.js"
 }

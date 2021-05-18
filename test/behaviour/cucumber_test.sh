@@ -1,4 +1,6 @@
 #
+# Copyright (C) 2021 Vaticle
+#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -18,54 +20,54 @@
 #
 
 set -e
-GRAKN_DISTRO=$1
-if test -d grakn_distribution; then
+TYPEDB_DISTRO=$1
+if test -d typedb_distribution; then
   echo Existing distribution detected. Cleaning.
-  rm -rf grakn_distribution
+  rm -rf typedb_distribution
 fi
-mkdir grakn_distribution
-if [[ $GRAKN_DISTRO == *"cluster"* ]]; then
+mkdir typedb_distribution
+if [[ $TYPEDB_DISTRO == *"cluster"* ]]; then
   PRODUCT=Cluster
 else
   PRODUCT=Core
 fi
-echo Attempting to unarchive Grakn $PRODUCT distribution from $GRAKN_DISTRO
-if [[ ${GRAKN_DISTRO: -7} == ".tar.gz" ]]; then
-  tar -xf $GRAKN_DISTRO -C ./grakn_distribution
+echo Attempting to unarchive TypeDB $PRODUCT distribution from $TYPEDB_DISTRO
+if [[ ${TYPEDB_DISTRO: -7} == ".tar.gz" ]]; then
+  tar -xf $TYPEDB_DISTRO -C ./typedb_distribution
 else
-  if [[ ${GRAKN_DISTRO: -4} == ".zip" ]]; then
-    unzip -q $GRAKN_DISTRO -d ./grakn_distribution
+  if [[ ${TYPEDB_DISTRO: -4} == ".zip" ]]; then
+    unzip -q $TYPEDB_DISTRO -d ./typedb_distribution
   else
     echo Supplied artifact file was not in a recognised format. Only .tar.gz and .zip artifacts are acceptable.
     exit 1
   fi
 fi
-DIRECTORY=$(ls ./grakn_distribution)
-echo Successfully unarchived Grakn $PRODUCT distribution.
-echo Starting Grakn $PRODUCT Server
-mkdir ./grakn_distribution/"$DIRECTORY"/grakn_test
+DIRECTORY=$(ls ./typedb_distribution)
+echo Successfully unarchived TypeDB $PRODUCT distribution.
+echo Starting TypeDB $PRODUCT Server
+mkdir ./typedb_distribution/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
-  ./grakn_distribution/"$DIRECTORY"/grakn server --data grakn_test &
+  ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
 else
-  ./grakn_distribution/"$DIRECTORY"/grakn server --address "127.0.0.1:1729:1730" &
+  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730" &
 fi
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
 echo Client unarchived.
-echo Unarchiving Grakn $PRODUCT behaviour step implementations.
+echo Unarchiving TypeDB $PRODUCT behaviour step implementations.
 if [[ $PRODUCT == "Core" ]]; then
   tar -xf test/behaviour/behaviour-steps-core.tar.gz -C test
 else
   tar -xf test/behaviour/behaviour-steps-cluster.tar.gz -C test
 fi
-echo Grakn $PRODUCT behaviour step implementations unarchived.
+echo TypeDB $PRODUCT behaviour step implementations unarchived.
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60
 RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for Grakn $PRODUCT server to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB $PRODUCT server to start \($(($RETRY_NUM / 2))s\)...
   fi
   lsof -i :1729 && STARTED=1 || STARTED=0
   if [[ $STARTED -eq 1 ]]; then
@@ -74,12 +76,12 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   sleep $POLL_INTERVAL_SECS
 done
 if [[ $STARTED -eq 0 ]]; then
-  echo Failed to start Grakn $PRODUCT server
+  echo Failed to start TypeDB $PRODUCT server
   exit 1
 fi
-echo Grakn $PRODUCT database server started
-node ./node_modules/.bin/cucumber-js ./external/graknlabs_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
+echo TypeDB $PRODUCT database server started
+node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
-kill $(jps | awk '/GraknServer/ {print $1}')
+kill $(jps | awk '/TypeDBServer/ {print $1}')
 exit $RESULT

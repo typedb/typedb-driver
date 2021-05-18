@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug here, or visit discuss.grakn.ai for troubleshooting discussions
+about: Report a bug here, or visit forum.vaticle.com for troubleshooting discussions
 labels: bug
 ---
 
@@ -12,9 +12,9 @@ Please replace every line in curly brackets ( { like this } ) with appropriate a
 
 ## Environment
 
-1. OS (where Grakn server runs): { e.g. Mac OS 10, Windows 10, Ubuntu 16.4, etc. }
-2. Grakn version (and platform): { e.g. Grakn Core 1.4, or Grakn KGMS 1.4.3 on Google Cloud }
-3. Grakn client-nodejs version: { e.g. client-nodejs 1.3 }
+1. OS (where TypeDB server runs): { e.g. Mac OS 10, Windows 10, Ubuntu 16.4, etc. }
+2. TypeDB version (and platform): { e.g. TypeDB Core 1.4, or TypeDB KGMS 1.4.3 on Google Cloud }
+3. TypeDB client-nodejs version: { e.g. client-nodejs 1.3 }
 4. Node.js version: { e.g. 6.5 }
 5. Other environment details:
 

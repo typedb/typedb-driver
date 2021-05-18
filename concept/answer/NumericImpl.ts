@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,9 +21,9 @@
 
 
 import {Numeric} from "../../api/answer/Numeric";
-import {Numeric as NumericProto} from "grakn-protocol/common/answer_pb";
+import {Numeric as NumericProto} from "typedb-protocol/common/answer_pb";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import BAD_ANSWER_TYPE = ErrorMessage.Query.BAD_ANSWER_TYPE;
 
@@ -35,7 +37,7 @@ export class NumericImpl implements Numeric {
 
     asNumber(): number {
         if (this.isNumber()) return this._value;
-        else throw new GraknClientError(ILLEGAL_CAST.message("NaN", "number"));
+        else throw new TypeDBClientError(ILLEGAL_CAST.message("NaN", "number"));
     }
 
     isNaN(): boolean {
@@ -63,7 +65,7 @@ export namespace NumericImpl {
                 return new NumericImpl(numericProto.getLongValue());
             case NumericProto.ValueCase.VALUE_NOT_SET:
             default:
-                throw new GraknClientError(BAD_ANSWER_TYPE.message(numericProto.getValueCase()));
+                throw new TypeDBClientError(BAD_ANSWER_TYPE.message(numericProto.getValueCase()));
         }
     }
 

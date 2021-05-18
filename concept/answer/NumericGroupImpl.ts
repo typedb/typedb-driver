@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,7 @@
 import {NumericGroup} from "../../api/answer/NumericGroup";
 import {Numeric} from "../../api/answer/Numeric";
 import {Concept} from "../../api/concept/Concept";
-import {NumericGroup as NumericGroupProto} from "grakn-protocol/common/answer_pb";
+import {NumericGroup as NumericGroupProto} from "typedb-protocol/common/answer_pb";
 import {NumericImpl} from "./NumericImpl";
 import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 

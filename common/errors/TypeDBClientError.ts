@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,17 +26,17 @@ import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
-    return e instanceof GraknClientError && e.message.includes("[RPL01]");
+    return e instanceof TypeDBClientError && e.message.includes("[RPL01]");
 }
 
-export class GraknClientError extends Error {
+export class TypeDBClientError extends Error {
     private readonly _errorMessage: ErrorMessage;
 
     constructor(error: string | Error | ServiceError | ErrorMessage) {
         if (typeof error === "string") super(error);
         else super(error.toString());
 
-        this.name = "GraknClientError"; // Required to correctly report error type in default throw
+        this.name = "TypeDBClientError"; // Required to correctly report error type in default throw
 
         if (error instanceof ErrorMessage) {
             this._errorMessage = error;

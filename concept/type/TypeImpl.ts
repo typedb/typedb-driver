@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,16 +19,16 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {RemoteType, Type} from "../../api/concept/type/Type";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
 import {ConceptImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
@@ -37,12 +39,12 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     protected constructor(label: Label, isRoot: boolean) {
         super();
-        if (!label) throw new GraknClientError(MISSING_LABEL.message());
+        if (!label) throw new TypeDBClientError(MISSING_LABEL.message());
         this._label = label;
         this._isRoot = isRoot;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteType;
+    abstract asRemote(transaction: TypeDBTransaction): RemoteType;
 
     isRoot(): boolean {
         return this._isRoot;
@@ -83,18 +85,18 @@ export namespace TypeImpl {
 
         private _label: Label;
         private _isRoot: boolean;
-        protected _transaction: GraknTransaction.Extended;
+        protected _transaction: TypeDBTransaction.Extended;
 
-        constructor(transaction: GraknTransaction.Extended, label: Label, isRoot: boolean) {
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super();
-            if (!transaction) throw new GraknClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
-            if (!label) throw new GraknClientError(ErrorMessage.Concept.MISSING_LABEL.message());
+            if (!transaction) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_TRANSACTION.message());
+            if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL.message());
             this._transaction = transaction;
             this._label = label;
             this._isRoot = isRoot;
         }
 
-        asRemote(transaction: GraknTransaction): RemoteType {
+        asRemote(transaction: TypeDBTransaction): RemoteType {
             return this;
         }
 

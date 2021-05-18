@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,7 +24,7 @@ import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ConceptMapImpl} from "./ConceptMapImpl";
 import {ThingImpl, TypeImpl} from "../../dependencies_internal";
-import {ConceptMapGroup as MapGroupProto} from "grakn-protocol/common/answer_pb";
+import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/common/answer_pb";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
 

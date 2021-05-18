@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 
 
-import {GraknTransaction} from "../../api/GraknTransaction";
+import {TypeDBTransaction} from "../../api/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {AttributeType} from "../../api/concept/type/AttributeType";
@@ -30,9 +32,9 @@ import {AttributeImpl, ConceptImpl, EntityImpl, RelationImpl, RoleTypeImpl} from
 import {Stream} from "../../common/util/Stream";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../common/errors/GraknClientError";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
-import {Thing as ThingProto, Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {Thing as ThingProto, Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
@@ -42,12 +44,12 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
     protected constructor(iid: string, isInferred: boolean) {
         super();
-        if (!iid) throw new GraknClientError(ErrorMessage.Concept.MISSING_IID.message());
+        if (!iid) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_IID.message());
         this._iid = iid;
         this._isInferred = isInferred;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+    abstract asRemote(transaction: TypeDBTransaction): RemoteThing;
 
     equals(concept: Concept): boolean {
         if (concept.isType()) return false;
@@ -73,14 +75,14 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
 export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
 
-    private _transaction: GraknTransaction.Extended;
+    private _transaction: TypeDBTransaction.Extended;
 
-    protected constructor(transaction: GraknTransaction.Extended, iid: string, isInferred: boolean) {
+    protected constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean) {
         super(iid, isInferred);
         this._transaction = transaction;
     }
 
-    abstract asRemote(transaction: GraknTransaction): RemoteThing;
+    abstract asRemote(transaction: TypeDBTransaction): RemoteThing;
 
     abstract getType(): ThingType;
 
@@ -122,7 +124,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
             else if (arg.isDouble) return attributes as Stream<Attribute.Double>;
             else if (arg.isString) return attributes as Stream<Attribute.String>;
             else if (arg.isDateTime()) return attributes as Stream<Attribute.DateTime>;
-            else throw new GraknClientError(BAD_VALUE_TYPE.message(arg));
+            else throw new TypeDBClientError(BAD_VALUE_TYPE.message(arg));
         } else {
             return attributes;
         }
@@ -178,7 +180,7 @@ export namespace ThingImpl {
             case TypeProto.Encoding.ATTRIBUTE_TYPE:
                 return AttributeImpl.of(thingProto);
             default:
-                throw new GraknClientError(BAD_ENCODING.message(thingProto.getType().getEncoding()));
+                throw new TypeDBClientError(BAD_ENCODING.message(thingProto.getType().getEncoding()));
         }
     }
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,23 +20,23 @@
  */
 
 import {Database} from "../api/database/Database";
-import {GraknClientError} from "../common/errors/GraknClientError";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {GraknCoreClient} from "grakn-protocol/core/core_service_grpc_pb";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
 
 export class CoreDatabase implements Database {
 
     private readonly _name: string;
-    private readonly _rpcClient: GraknCoreClient;
+    private readonly _rpcClient: TypeDBClient;
 
-    constructor(name: string, rpcClient: GraknCoreClient) {
+    constructor(name: string, rpcClient: TypeDBClient) {
         this._name = name;
         this._rpcClient = rpcClient;
     }
 
     delete(): Promise<void> {
-        if (!this._name) throw new GraknClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
+        if (!this._name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME.message());
         const req = RequestBuilder.Core.Database.deleteReq(this._name);
         return new Promise((resolve, reject) => {
             this._rpcClient.database_delete(req, (err) => {

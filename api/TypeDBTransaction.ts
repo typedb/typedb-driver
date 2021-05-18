@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,20 +20,20 @@
  */
 
 
-import {GraknOptions} from "./GraknOptions";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {TypeDBOptions} from "./TypeDBOptions";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import {ConceptManager} from "./concept/ConceptManager";
 import {LogicManager} from "./logic/LogicManager";
 import {QueryManager} from "./query/QueryManager";
 import {Stream} from "../common/util/Stream";
 
-export interface GraknTransaction {
+export interface TypeDBTransaction {
 
     isOpen(): boolean;
 
     type(): TransactionType;
 
-    options(): GraknOptions;
+    options(): TypeDBOptions;
 
     concepts(): ConceptManager;
 
@@ -84,9 +86,9 @@ export namespace TransactionType {
     export const WRITE = new TransactionTypeImpl(Transaction.Type.WRITE);
 }
 
-export namespace GraknTransaction {
+export namespace TypeDBTransaction {
 
-    export interface Extended extends GraknTransaction {
+    export interface Extended extends TypeDBTransaction {
 
         rpcExecute(request: Transaction.Req): Promise<Transaction.Res>;
 

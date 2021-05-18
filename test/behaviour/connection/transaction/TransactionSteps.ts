@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,18 +22,18 @@
 import { Then } from "@cucumber/cucumber";
 import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { GraknClient } from "../../../../dist/api/GraknClient";
-import { GraknSession, SessionType } from "../../../../dist/api/GraknSession";
-import { GraknTransaction, TransactionType } from "../../../../dist/api/GraknTransaction";
+import { TypeDBClient } from "../../../../dist/api/TypeDBClient";
+import { TypeDBSession, SessionType } from "../../../../dist/api/TypeDBSession";
+import { TypeDBTransaction, TransactionType } from "../../../../dist/api/TypeDBTransaction";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
 import assert = require("assert");
-import { GraknOptions } from "../../../../dist/api/GraknOptions";
+import { TypeDBOptions } from "../../../../dist/api/TypeDBOptions";
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {
-        const transactions: GraknTransaction[] = []
+        const transactions: TypeDBTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType, GraknOptions.core({infer: true}));
+            const transaction = await session.transaction(transactionType, TypeDBOptions.core({infer: true}));
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);
@@ -132,8 +134,8 @@ Then('(for each )session(,) transaction(s)( in parallel) has/have type(s):', fun
 
 Then('(for each )session(,) open transaction(s) in parallel of type:', async function (transactionTypeTable: DataTable) {
     const typeArray = dataTableToTransactionTypes(transactionTypeTable);
-    const openings: Promise<GraknTransaction>[] = []
-    const sessionList: GraknSession[] = []
+    const openings: Promise<TypeDBTransaction>[] = []
+    const sessionList: TypeDBSession[] = []
     for (const type of typeArray) {
         for (const session of sessions) {
             openings.push(session.transaction(type));

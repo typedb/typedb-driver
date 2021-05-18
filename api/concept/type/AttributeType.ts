@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,11 +20,11 @@
  */
 
 
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {RemoteThingType, ThingType} from "./ThingType";
 import {Attribute} from "../thing/Attribute";
 import {Stream} from "../../../common/util/Stream";
-import {AttributeType as AttributeTypeProto} from "grakn-protocol/common/concept_pb";
+import {AttributeType as AttributeTypeProto} from "typedb-protocol/common/concept_pb";
 
 export interface AttributeType extends ThingType {
 
@@ -50,7 +52,7 @@ export interface AttributeType extends ThingType {
 
     asDateTime(): AttributeType.DateTime;
 
-    asRemote(transaction: GraknTransaction): AttributeType.Remote;
+    asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
 
 }
 
@@ -79,19 +81,19 @@ export namespace AttributeType {
 
         asDateTime(): AttributeType.RemoteDateTime;
 
-        asRemote(transaction: GraknTransaction): AttributeType.Remote;
+        asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
 
     }
 
     export interface Boolean extends AttributeType {
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteBoolean;
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteBoolean;
 
     }
 
     export interface RemoteBoolean extends AttributeType.Remote, Boolean {
 
-        asRemote(transaction: GraknTransaction): RemoteBoolean;
+        asRemote(transaction: TypeDBTransaction): RemoteBoolean;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
@@ -118,13 +120,13 @@ export namespace AttributeType {
 
     export interface Long extends AttributeType {
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteLong;
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteLong;
 
     }
 
     export interface RemoteLong extends AttributeType.Remote, Long {
 
-        asRemote(transaction: GraknTransaction): RemoteLong;
+        asRemote(transaction: TypeDBTransaction): RemoteLong;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
@@ -151,12 +153,12 @@ export namespace AttributeType {
 
     export interface Double extends AttributeType {
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDouble;
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDouble;
 
     }
 
     export interface RemoteDouble extends AttributeType.Remote, Double {
-        asRemote(transaction: GraknTransaction): RemoteDouble;
+        asRemote(transaction: TypeDBTransaction): RemoteDouble;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
@@ -182,13 +184,13 @@ export namespace AttributeType {
 
     export interface String extends AttributeType {
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteString;
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteString;
 
     }
 
     export interface RemoteString extends AttributeType.Remote, String {
 
-        asRemote(transaction: GraknTransaction): RemoteString;
+        asRemote(transaction: TypeDBTransaction): RemoteString;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;
@@ -219,13 +221,13 @@ export namespace AttributeType {
 
     export interface DateTime extends AttributeType {
 
-        asRemote(transaction: GraknTransaction): AttributeType.RemoteDateTime;
+        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDateTime;
 
     }
 
     export interface RemoteDateTime extends AttributeType.Remote, DateTime {
 
-        asRemote(transaction: GraknTransaction): RemoteDateTime;
+        asRemote(transaction: TypeDBTransaction): RemoteDateTime;
 
         // TODO avoid this re-declaration typing workaround
         asBoolean(): RemoteBoolean;

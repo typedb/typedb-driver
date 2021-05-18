@@ -1,14 +1,14 @@
 {
-  "name": "grakn-client",
+  "name": "typedb-client",
   "version": "2.0.0",
-  "description": "Grakn Client for Node.js",
-  "author": "Grakn Labs",
+  "description": "TypeDB Client for Node.js",
+  "author": "Vaticle",
   "license": "Apache-2.0",
-  "homepage": "https://grakn.ai",
+  "homepage": "https://vaticle.com",
   "type": "commonjs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/graknlabs/client-nodejs"
+    "url": "https://github.com/vaticle/typedb-client-nodejs"
   },
   "scripts": {
     "clean": "rimraf dist",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.2.1",
     "google-protobuf": "3.14.0",
-    "grakn-protocol": "https://repo.grakn.ai/repository/npm-snapshot/grakn-protocol/-/grakn-protocol-0.0.0-efac95a542c5f23b0ee881f7bd618224b0aa7d6c.tgz",
+    "typedb-protocol": "https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-d608bb39f21013ed0e569581b599900d1d60ede2.tgz",
     "uuid": "8.3.2"
   },
   "devDependencies": {

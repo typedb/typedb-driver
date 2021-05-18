@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +21,7 @@
 
 
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
 import {ClientDuplexStream} from "@grpc/grpc-js";
 
 export class BatchDispatcher {

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,7 +20,7 @@
  */
 
 
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {RelationType} from "../type/RelationType";
 import {RoleType} from "../type/RoleType";
 import {RemoteThing, Thing} from "./Thing";
@@ -26,7 +28,7 @@ import {Stream} from "../../../common/util/Stream";
 
 export interface Relation extends Thing {
 
-    asRemote(transaction: GraknTransaction): RemoteRelation;
+    asRemote(transaction: TypeDBTransaction): RemoteRelation;
 
     getType(): RelationType;
 
@@ -34,7 +36,7 @@ export interface Relation extends Thing {
 
 export interface RemoteRelation extends Relation, RemoteThing {
 
-    asRemote(transaction: GraknTransaction): RemoteRelation;
+    asRemote(transaction: TypeDBTransaction): RemoteRelation;
 
     getType(): RelationType;
 

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,8 +24,8 @@ import {BatchDispatcher} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {GraknClientError} from "../common/errors/GraknClientError";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import ResCase = Transaction.ResPart.ResCase;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
@@ -56,7 +58,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
         const res = await this._responseCollector.take();
         switch (res.getResCase()) {
             case ResCase.RES_NOT_SET:
-                throw new GraknClientError(MISSING_RESPONSE.message(this._requestId));
+                throw new TypeDBClientError(MISSING_RESPONSE.message(this._requestId));
             case ResCase.STREAM_RES_PART :
                 switch (res.getStreamResPart().getState()) {
                     case Transaction.Stream.State.DONE:
@@ -65,7 +67,7 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
                         this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
                         return this.next();
                     default:
-                        throw new GraknClientError(UNKNOWN_STREAM_STATE.message(res.getStreamResPart()));
+                        throw new TypeDBClientError(UNKNOWN_STREAM_STATE.message(res.getStreamResPart()));
                 }
             default:
                 return res;

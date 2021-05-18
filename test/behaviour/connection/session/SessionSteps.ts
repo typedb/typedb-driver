@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +22,7 @@
 import {Then, When} from "@cucumber/cucumber";
 import {client, sessions} from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {GraknSession, SessionType} from "../../../../dist/api/GraknSession";
+import {TypeDBSession, SessionType} from "../../../../dist/api/TypeDBSession";
 import assert = require("assert");
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
@@ -40,7 +42,7 @@ When("connection open(s) (data )session(s) for database(s):", async (names: Data
 });
 
 When("connection open(s) (data )sessions in parallel for databases:", async (names: DataTable) => {
-    const openings: Promise<GraknSession>[] = []
+    const openings: Promise<TypeDBSession>[] = []
     for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
     sessions.push(... await Promise.all(openings));
 });

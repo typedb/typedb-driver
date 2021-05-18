@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +19,7 @@
  * under the License.
  */
 
-import {GraknTransaction} from "../api/GraknTransaction";
+import {TypeDBTransaction} from "../api/TypeDBTransaction";
 import {ConceptManager} from "../api/concept/ConceptManager";
 import {Thing} from "../api/concept/thing/Thing";
 import {ThingType} from "../api/concept/type/ThingType";
@@ -26,14 +28,14 @@ import {RelationType} from "../api/concept/type/RelationType";
 import {AttributeType} from "../api/concept/type/AttributeType";
 import {AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl,} from "../dependencies_internal";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ConceptManager as ConceptProto} from "grakn-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "grakn-protocol/common/transaction_pb";
+import {ConceptManager as ConceptProto} from "typedb-protocol/common/concept_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
 
 export class ConceptManagerImpl implements ConceptManager {
 
-    private _transaction: GraknTransaction.Extended;
+    private _transaction: TypeDBTransaction.Extended;
 
-    constructor(client: GraknTransaction.Extended) {
+    constructor(client: TypeDBTransaction.Extended) {
         this._transaction = client;
     }
 

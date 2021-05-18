@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,13 +19,13 @@
  * under the License.
  */
 
-import {GraknTransaction, TransactionType} from "../api/GraknTransaction";
+import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
 import {CoreSession} from "./CoreSession";
-import {GraknOptions} from "../api/GraknOptions";
+import {TypeDBOptions} from "../api/TypeDBOptions";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
-import {Transaction} from "grakn-protocol/common/transaction_pb";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {GraknClientError} from "../common/errors/GraknClientError";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {ConceptManager} from "../api/concept/ConceptManager";
 import {LogicManager} from "../api/logic/LogicManager";
@@ -34,17 +36,17 @@ import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import {Stream} from "../common/util/Stream";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
-export class CoreTransaction implements GraknTransaction.Extended {
+export class CoreTransaction implements TypeDBTransaction.Extended {
     private readonly _session: CoreSession;
     private readonly _sessionId: string;
     private readonly _type: TransactionType;
-    private readonly _options: GraknOptions;
+    private readonly _options: TypeDBOptions;
     private _bidirectionalStream: BidirectionalStream;
     private _conceptManager: ConceptManager;
     private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
-    constructor(session: CoreSession, _sessionId: string, type: TransactionType, options: GraknOptions) {
+    constructor(session: CoreSession, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
         this._session = session;
         this._sessionId = _sessionId;
         this._type = type;
@@ -91,7 +93,7 @@ export class CoreTransaction implements GraknTransaction.Extended {
         return this._queryManager;
     }
 
-    public options(): GraknOptions {
+    public options(): TypeDBOptions {
         return this._options;
     }
 
@@ -104,13 +106,13 @@ export class CoreTransaction implements GraknTransaction.Extended {
     }
 
     public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
-        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+        if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
         const useBatch = batch !== false;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
     public rpcStream(request: Transaction.Req): Stream<Transaction.ResPart> {
-        if (!this.isOpen()) throw new GraknClientError(TRANSACTION_CLOSED);
+        if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
         return this._bidirectionalStream.stream(request);
     }
 

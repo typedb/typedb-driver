@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,13 +20,13 @@
  */
 
 
-import {GraknTransaction} from "../../GraknTransaction";
+import {TypeDBTransaction} from "../../TypeDBTransaction";
 import {Concept, RemoteConcept} from "../Concept";
 import {Label} from "../../../common/Label";
 import {Stream} from "../../../common/util/Stream";
 import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {GraknClientError} from "../../../common/errors/GraknClientError";
-import {Type as TypeProto} from "grakn-protocol/common/concept_pb";
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export interface Type extends Concept {
@@ -33,13 +35,13 @@ export interface Type extends Concept {
 
     isRoot(): boolean;
 
-    asRemote(transaction: GraknTransaction): RemoteType;
+    asRemote(transaction: TypeDBTransaction): RemoteType;
 
 }
 
 export interface RemoteType extends Type, RemoteConcept {
 
-    asRemote(transaction: GraknTransaction): RemoteType;
+    asRemote(transaction: TypeDBTransaction): RemoteType;
 
     setLabel(label: string): Promise<void>;
 
@@ -67,7 +69,7 @@ export namespace Type {
         } else if (type.isThingType()) {
             return TypeProto.Encoding.THING_TYPE;
         } else {
-            throw new GraknClientError(BAD_ENCODING);
+            throw new TypeDBClientError(BAD_ENCODING);
         }
     }
 }

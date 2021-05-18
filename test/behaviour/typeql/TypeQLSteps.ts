@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2021 Vaticle
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -52,105 +54,105 @@ Then("the integrity is validated", async () => {
     // TODO
 });
 
-When("graql define", (query: string) => {
+When("typeql define", (query: string) => {
     tx().query().define(query);
 });
 
-Then("graql define; throws exception containing {string}", async (exceptionString: string, query: string) => {
+Then("typeql define; throws exception containing {string}", async (exceptionString: string, query: string) => {
     await assertThrowsWithMessage(async () => await tx().query().define(query), exceptionString);
 });
 
-Then("graql define; throws exception", async (query: string) => {
+Then("typeql define; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().define(query));
 });
 
-When("graql undefine", (query: string) => {
+When("typeql undefine", (query: string) => {
     tx().query().undefine(query);
 });
 
-Then("graql undefine; throws exception containing {string}", async (exceptionString: string, query: string) => {
+Then("typeql undefine; throws exception containing {string}", async (exceptionString: string, query: string) => {
     await assertThrowsWithMessage(async () => await tx().query().undefine(query), exceptionString);
 });
 
-Then("graql undefine; throws exception", async (query: string) => {
+Then("typeql undefine; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().undefine(query));
 });
 
-When("graql insert", (query: string) => {
+When("typeql insert", (query: string) => {
     tx().query().insert(query);
 });
 
-Then("graql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
+Then("typeql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
     await assertThrowsWithMessage(async () => await tx().query().insert(query).first(), exceptionString);
 });
 
-Then("graql insert; throws exception", async (query: string) => {
+Then("typeql insert; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().insert(query).first());
 });
 
-When("graql delete", (query: string) => {
+When("typeql delete", (query: string) => {
     tx().query().delete(query);
 });
 
-Then("graql delete; throws exception containing {string}", async (exceptionString: string, query: string) => {
+Then("typeql delete; throws exception containing {string}", async (exceptionString: string, query: string) => {
     await assertThrowsWithMessage(async () => await tx().query().delete(query), exceptionString);
 });
 
-Then("graql delete; throws exception", async (query: string) => {
+Then("typeql delete; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().delete(query));
 });
 
-When("graql update", (query: string) => {
+When("typeql update", (query: string) => {
     tx().query().update(query);
 });
 
-Then("graql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
+Then("typeql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
     await assertThrowsWithMessage(async () => await tx().query().update(query).first(), exceptionString);
 });
 
-Then("graql update; throws exception", async (query: string) => {
+Then("typeql update; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().update(query).first());
 });
 
-When("get answers of graql insert", async (query: string) => {
+When("get answers of typeql insert", async (query: string) => {
     clearAnswers();
     answers = await tx().query().insert(query).collect();
 });
 
-When("get answers of graql update", async (query: string) => {
+When("get answers of typeql update", async (query: string) => {
     clearAnswers();
     answers = await tx().query().update(query).collect();
 });
 
-When("get answers of graql match", async (query: string) => {
+When("get answers of typeql match", async (query: string) => {
     clearAnswers();
     answers = await tx().query().match(query).collect();
 });
 
-Then("graql match; throws exception", async (query: string) => {
+Then("typeql match; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().match(query).first());
 });
 
-When("get answer of graql match aggregate", async (query: string) => {
+When("get answer of typeql match aggregate", async (query: string) => {
     clearAnswers();
     numericAnswer = await tx().query().matchAggregate(query);
 });
 
-When("get answers of graql match group", async (query: string) => {
+When("get answers of typeql match group", async (query: string) => {
     clearAnswers();
     answerGroups = await tx().query().matchGroup(query).collect();
 });
 
-When("graql match group; throws exception", async (query: string) => {
+When("typeql match group; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().matchGroup(query).first());
 })
 
-When("get answers of graql match group aggregate", async (query: string) => {
+When("get answers of typeql match group aggregate", async (query: string) => {
     clearAnswers();
     numericAnswerGroups = await tx().query().matchGroupAggregate(query).collect();
 });
 
-When("graql match aggregate; throws exception", async (query: string) => {
+When("typeql match aggregate; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().matchAggregate(query));
 
 })
