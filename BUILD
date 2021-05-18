@@ -202,7 +202,7 @@ checkstyle_test(
         "query/**/*.ts",
         "stream/**/*.ts",
         "tsconfig.json",
-        ".grabl/automation.yml",
+        ".grabl/*",
     ]),
     exclude = glob([
         "dist/**/*.*",

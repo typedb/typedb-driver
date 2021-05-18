@@ -70,46 +70,85 @@ build:
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
-    test-behaviour-connection:
+    test-behaviour-connection-core:
       image: vaticle-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/connection/... --test_output=errors --jobs=1
-    test-behaviour-concept:
+        .grabl/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    test-behaviour-connection-cluster:
       image: vaticle-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/concept/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    test-behaviour-concept-core:
+      image: vaticle-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/concept/... --test_output=errors --jobs=1
+    test-behaviour-concept-cluster:
+      image: vaticle-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/concept/... --test_output=errors --jobs=1
     # TODO: Delete --jobs=1 once tests are parallelisable
-    test-behaviour-match:
+    test-behaviour-match-core:
       image: vaticle-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
-    test-behaviour-writable:
+        .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
+    test-behaviour-match-cluster:
       image: vaticle-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
-    test-behaviour-definable:
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors --jobs=1
+    test-behaviour-writable-core:
       image: vaticle-ubuntu-20.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
-        bazel test //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
+    test-behaviour-writable-cluster:
+      image: vaticle-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors --jobs=1
+    test-behaviour-definable-core:
+      image: vaticle-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
+        .grabl/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
+    test-behaviour-definable-cluster:
+      image: vaticle-ubuntu-20.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors --jobs=1
+        .grabl/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1
     deploy-npm-snapshot:
       filter:
         owner: vaticle
