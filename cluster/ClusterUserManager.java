@@ -30,7 +30,7 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public boolean contains(String name) {
-        return new FailsafeTask<Boolean>(client, SYSTEM_DB) {
+        FailsafeTask<Boolean> failsafeTask = new FailsafeTask<Boolean>(client, SYSTEM_DB) {
             @Override
             Boolean rerun(ClusterDatabase.Replica replica) {
                 return run(replica);
@@ -42,12 +42,13 @@ public class ClusterUserManager implements UserManager {
                         .usersContains(containsReq(name))
                         .getContains();
             }
-        }.runPrimaryReplica();
+        };
+        return failsafeTask.runPrimaryReplica();
     }
 
     @Override
     public void create(String name, String password) {
-        new FailsafeTask<Void>(client, SYSTEM_DB) {
+        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
             @Override
             Void rerun(ClusterDatabase.Replica replica) {
                 run(replica);
@@ -60,12 +61,13 @@ public class ClusterUserManager implements UserManager {
                         .usersCreate(createReq(name, password));
                 return null;
             }
-        }.runPrimaryReplica();
+        };
+        failsafeTask.runPrimaryReplica();
     }
 
     @Override
     public Set<User> all() {
-        return new FailsafeTask<Set<User>>(client, SYSTEM_DB) {
+        FailsafeTask<Set<User>> failsafeTask = new FailsafeTask<Set<User>>(client, SYSTEM_DB) {
             @Override
             Set<User> rerun(ClusterDatabase.Replica replica) {
                 return run(replica);
@@ -78,6 +80,7 @@ public class ClusterUserManager implements UserManager {
                         .map(name -> new ClusterUser(client, name))
                         .collect(Collectors.toSet());
             }
-        }.runPrimaryReplica();
+        };
+        return failsafeTask.runPrimaryReplica();
     }
 }

@@ -27,12 +27,13 @@ public class ClusterUser implements User {
 
     @Override
     public void delete() {
-        new FailsafeTask<Void>(client, SYSTEM_DB) {
+        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
             @Override
             Void run(ClusterDatabase.Replica replica) {
                 client.stub(replica.address()).userDelete(deleteReq(name));
                 return null;
             }
         };
+        failsafeTask.runPrimaryReplica();
     }
 }
