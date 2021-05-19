@@ -176,6 +176,7 @@ build:
         owner: vaticle
         branch: master
       image: vaticle-ubuntu-20.04
+      # dependencies: [deploy-npm-snapshot]
       command: |
         ./test/common/start-core-server.sh
         cd test/deployment/
@@ -185,7 +186,6 @@ build:
         jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         kill $(jps | awk '/TypeDBServer/ {print $1}')
         exit $TEST_SUCCESS
-      dependencies: [deploy-npm-snapshot]
 
 release:
   filter:
