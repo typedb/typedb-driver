@@ -453,3 +453,10 @@ Then("each answer satisfies", async (template: string) => {
         assert.strictEqual((await tx().query().match(query).collect()).length, 1);
     }
 });
+
+Then("each answer does not satisfy", async (template: string) => {
+    for (const answer of answers) {
+        const query = applyQueryTemplate(template, answer);
+        assert.strictEqual((await tx().query().match(query).collect()).length, 0);
+    }
+});

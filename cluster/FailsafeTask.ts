@@ -125,7 +125,7 @@ export abstract class FailsafeTask<TResult> {
                         else resolve(res);
                     });
                 });
-                const databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), this._client.databases());
+                const databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), this._client);
                 this._client.clusterDatabases()[this._database] = databaseClusterRPC;
                 return databaseClusterRPC;
             } catch (e) {

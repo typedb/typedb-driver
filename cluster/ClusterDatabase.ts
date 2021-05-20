@@ -21,30 +21,32 @@
 
 import {Database} from "../api/database/Database";
 import {CoreDatabase} from "../core/CoreDatabase";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
 import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
+import { ClusterClient } from "./ClusterClient";
+import { FailsafeTask } from "./FailsafeTask";
 
 export class ClusterDatabase implements Database.Cluster {
 
     private readonly _name: string;
-    private readonly _databases: { [address: string]: Database };
-    private readonly _databaseManagerCluster: ClusterDatabaseManager;
+    private readonly _databases: { [address: string]: CoreDatabase };
+    private readonly _client: ClusterClient;
     private readonly _replicas: DatabaseReplica[];
 
-    private constructor(databaseManagerCluster: ClusterDatabaseManager, database: string) {
+    private constructor(client: ClusterClient, database: string) {
         this._databases = {};
-        for (const address of Object.keys(databaseManagerCluster.databaseManagers())) {
-            const databaseManager = databaseManagerCluster.databaseManagers()[address];
+        const clusterDbMgr = client.databases();
+        for (const address of Object.keys(clusterDbMgr.databaseManagers())) {
+            const databaseManager = clusterDbMgr.databaseManagers()[address];
             this._databases[address] = new CoreDatabase(database, databaseManager.rpcClient());
         }
         this._name = database;
-        this._databaseManagerCluster = databaseManagerCluster;
+        this._client = client;
         this._replicas = [];
     }
 
-    static of(protoDB: ClusterDatabaseProto, databaseManagerCluster: ClusterDatabaseManager): ClusterDatabase {
+    static of(protoDB: ClusterDatabaseProto, client: ClusterClient): ClusterDatabase {
         const database = protoDB.getName();
-        const databaseClusterRPC = new ClusterDatabase(databaseManagerCluster, database);
+        const databaseClusterRPC = new ClusterDatabase(client, database);
         databaseClusterRPC.replicas().push(...protoDB.getReplicasList().map(rep => DatabaseReplica.of(rep, databaseClusterRPC)));
         console.info(`Discovered database cluster: ${databaseClusterRPC}`);
         return databaseClusterRPC;
@@ -65,11 +67,8 @@ export class ClusterDatabase implements Database.Cluster {
     }
 
     async delete(): Promise<void> {
-        for (const address of Object.keys(this._databases)) {
-            if (await this._databaseManagerCluster.databaseManagers()[address].contains(this._name)) {
-                await this._databases[address].delete();
-            }
-        }
+        const deleteDbTask = new DeleteDatabaseFailsafeTask(this._client, this._name, this._databases);
+        await deleteDbTask.runPrimaryReplica();
     }
 
     async schema(): Promise<string> {
@@ -160,5 +159,19 @@ class ReplicaId {
 
     toString(): string {
         return `${this._address}/${this._databaseName}`;
+    }
+}
+
+class DeleteDatabaseFailsafeTask extends FailsafeTask<void> {
+
+    private readonly _databases: {[key: string]: CoreDatabase};
+
+    constructor(client: ClusterClient, database: string, databases: {[key: string]: CoreDatabase}) {
+        super(client, database);
+        this._databases = databases;
+    }
+
+    async run(replica: Database.Replica): Promise<void> {
+        await this._databases[replica.address()].delete();
     }
 }

@@ -26,7 +26,7 @@ import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
-    return e instanceof TypeDBClientError && e.message.includes("[RPL01]");
+    return e.message.includes("[RPL01]");
 }
 
 export class TypeDBClientError extends Error {

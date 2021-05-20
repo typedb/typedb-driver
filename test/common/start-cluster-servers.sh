@@ -23,9 +23,9 @@ bazel run //test:typedb-cluster-extractor -- typedb_distribution
 echo Successfully unarchived TypeDB distribution. Creating 3 copies.
 cp -r typedb_distribution/$TYPEDB/ 1 && cp -r typedb_distribution/$TYPEDB/ 2 && cp -r typedb_distribution/$TYPEDB/ 3
 echo Starting 3 TypeDB servers.
-./1/typedb server --data server/data --address 127.0.0.1:11729:11730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
-./2/typedb server --data server/data --address 127.0.0.1:21729:21730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
-./3/typedb server --data server/data --address 127.0.0.1:31729:31730 --peer 127.0.0.1:11729:11730 --peer 127.0.0.1:21729:21730 --peer 127.0.0.1:31729:31730 &
+./1/typedb server --data server/data --address 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 &
+./2/typedb server --data server/data --address 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 &
+./3/typedb server --data server/data --address 127.0.0.1:31729:31730:31731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 &
 
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60

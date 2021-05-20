@@ -19,4 +19,4 @@
 # under the License.
 #
 
-kill $(jps | awk '/TypeDBServer/ {print $1}' | paste -sd " " -)
+kill $(jps | awk '/TypeDBNode/ {print $1}' | paste -sd " " -)
