@@ -184,7 +184,7 @@ build:
         npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-client/-/typedb-client-$(cat ../../VERSION).tgz
         sudo -H npm install jest --global
         jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        ./test/common/stop-core-server.sh
+        ../common/stop-core-server.sh
         exit $TEST_SUCCESS
 
 release:
