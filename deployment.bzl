@@ -21,5 +21,5 @@
 
 deployment = {
     "github.organisation" : "vaticle",
-    "github.repository" : "client-nodejs",
+    "github.repository" : "typedb-client-nodejs",
 }
