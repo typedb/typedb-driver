@@ -90,10 +90,10 @@ deploy_maven(
 deploy_github(
     name = "deploy-github",
     draft = False,
-    organisation = github_deployment["github.organisation"],
-    release_description = "//:RELEASE_TEMPLATE.md",
-    repository = github_deployment["github.repository"],
     title = "TypeDB Client Java",
+    release_description = "//:RELEASE_TEMPLATE.md",
+    organisation = github_deployment["github.organisation"],
+    repository = github_deployment["github.repository"],
     title_append_version = True,
 )
 

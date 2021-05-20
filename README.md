@@ -29,7 +29,7 @@ To learn about the methods available on the concepts retrieved as the answers to
     <dependency>
         <groupId>com.vaticle.typedb</groupId>
         <artifactId>typedb-client</artifactId>
-        <version>2.0.0</version>
+        <version>{version}</version>
     </dependency>
 </dependencies>
 ```
