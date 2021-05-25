@@ -143,14 +143,13 @@ public abstract class TypeDBStub {
                         Metadata headers = new Metadata();
                         headers.put(USERNAME, username);
                         headers.put(PASSWORD, password);
+                        System.out.println("GRAKN CLIENT - USERNAME: " + username + ", PASSWORD: " + password);
                         applier.apply(headers);
                     });
                 }
 
                 @Override
-                public void thisUsesUnstableApi() {
-
-                }
+                public void thisUsesUnstableApi() {}
             });
         }
 
