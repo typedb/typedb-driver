@@ -31,32 +31,55 @@ import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
 import java.nio.file.Path;
 
-public interface ManagedChannelFactory {
-    ManagedChannel forAddress(String address);
+public interface ConnectionFactory {
+    ManagedChannel newManagedChannel(String address);
+    TypeDBStub.Core newTypeDBStub(ManagedChannel channel);
 
-    class PlainText implements ManagedChannelFactory {
+    class Core implements ConnectionFactory {
         @Override
-        public ManagedChannel forAddress(String address) {
+        public ManagedChannel newManagedChannel(String address) {
             return NettyChannelBuilder.forTarget(address)
                     .usePlaintext()
                     .build();
         }
+
+        @Override
+        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
+            return TypeDBStub.core(channel);
+        }
     }
 
-    class TLS implements ManagedChannelFactory {
+    class Cluster implements ConnectionFactory {
+
+        private final String username;
+        private final String password;
+        private final boolean tlsEnabled;
         @Nullable
         private final Path tlsRootCA;
 
-        public TLS() {
-            this.tlsRootCA = null;
-        }
-
-        public TLS(Path tlsRootCA) {
+        public Cluster(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
+            this.username = username;
+            this.password = password;
+            this.tlsEnabled = tlsEnabled;
             this.tlsRootCA = tlsRootCA;
         }
 
         @Override
-        public ManagedChannel forAddress(String address) {
+        public ManagedChannel newManagedChannel(String address) {
+            if (!tlsEnabled) {
+                return plainTextChannel(address);
+            } else {
+                return tlsChannel(address);
+            }
+        }
+
+        private ManagedChannel plainTextChannel(String address) {
+            return NettyChannelBuilder.forTarget(address)
+                    .usePlaintext()
+                    .build();
+        }
+
+        private ManagedChannel tlsChannel(String address) {
             try {
                 SslContext sslContext;
                 if (tlsRootCA != null) {
@@ -68,6 +91,11 @@ public interface ManagedChannelFactory {
             } catch (SSLException e) {
                 throw new TypeDBClientException(e.getMessage(), e);
             }
+        }
+
+        @Override
+        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
+            return TypeDBStub.cluster(username, password, channel);
         }
     }
 }

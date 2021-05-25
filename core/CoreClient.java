@@ -26,7 +26,7 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
+import com.vaticle.typedb.client.common.rpc.ConnectionFactory;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
@@ -49,9 +49,9 @@ public class CoreClient implements TypeDBClient {
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        channel = managedChannelFactory.forAddress(address);
-        stub = TypeDBStub.core(channel);
+    protected CoreClient(String address, ConnectionFactory connectionFactory, int parallelisation) {
+        channel = connectionFactory.newManagedChannel(address);
+        stub = connectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
@@ -59,11 +59,11 @@ public class CoreClient implements TypeDBClient {
     }
 
     public static CoreClient create(String address) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText(), calculateParallelisation());
+        return new CoreClient(address, new ConnectionFactory.Core(), calculateParallelisation());
     }
 
     public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText(), parallelisation);
+        return new CoreClient(address, new ConnectionFactory.Core(), parallelisation);
     }
 
     public static int calculateParallelisation() {

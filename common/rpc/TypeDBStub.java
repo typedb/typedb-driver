@@ -128,7 +128,7 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class Cluster extends TypeDBStub {
+    public static class Cluster extends TypeDBStub.Core {
 
         private static final Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
         private static final Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
