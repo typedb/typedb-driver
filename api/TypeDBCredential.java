@@ -21,31 +21,41 @@
 
 package com.vaticle.typedb.client.api;
 
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT_COMBINATION;
+
 public class TypeDBCredential {
+    private final String username;
+    private final String password;
     private final boolean tlsEnabled;
     @Nullable
     private final Path tlsRootCA;
 
-    private TypeDBCredential(boolean tlsEnabled, @Nullable Path tlsRootCA) {
-        if (!tlsEnabled && tlsRootCA != null) assert false;
+    public TypeDBCredential(String username, String password, boolean tlsEnabled) {
+        this(username, password, tlsEnabled, null);
+    }
+
+    public TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
+        this.username = username;
+        this.password = password;
+        if (!tlsEnabled && tlsRootCA != null) {
+            throw new TypeDBClientException(ILLEGAL_ARGUMENT_COMBINATION, "tlsEnabled=" + tlsEnabled + ", tlsRootCA = " + tlsRootCA);
+        }
 
         this.tlsEnabled = tlsEnabled;
         this.tlsRootCA = tlsRootCA;
     }
 
-    public static TypeDBCredential plainText() {
-        return new TypeDBCredential(false, null);
+    public String username() {
+        return username;
     }
 
-    public static TypeDBCredential tls() {
-        return new TypeDBCredential(true, null);
-    }
-
-    public static TypeDBCredential tls(Path rootCA) {
-        return new TypeDBCredential(true, rootCA);
+    public String password() {
+        return password;
     }
 
     public boolean tlsEnabled() {

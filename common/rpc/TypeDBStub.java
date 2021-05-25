@@ -30,15 +30,19 @@ import com.vaticle.typedb.protocol.SessionProto.Session;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBClusterGrpc;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
+import io.grpc.CallCredentials;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
+import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 import static com.vaticle.typedb.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
 import static com.vaticle.typedb.protocol.ClusterUserProto.ClusterUserManager;
+import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public abstract class TypeDBStub {
 
@@ -52,8 +56,8 @@ public abstract class TypeDBStub {
         return new Core(channel);
     }
 
-    public static Cluster cluster(ManagedChannel channel) {
-        return new Cluster(channel);
+    public static Cluster cluster(String username, String password, ManagedChannel channel) {
+        return new Cluster(username, password, channel);
     }
 
     private void ensureConnected() {
@@ -126,11 +130,28 @@ public abstract class TypeDBStub {
 
     public static class Cluster extends TypeDBStub {
 
+        private static final Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+        private static final Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
         private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
 
-        private Cluster(ManagedChannel channel) {
+        private Cluster(String username, String password, ManagedChannel channel) {
             super(channel);
-            this.blockingStub = TypeDBClusterGrpc.newBlockingStub(channel);
+            this.blockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(new CallCredentials() {
+                @Override
+                public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                    appExecutor.execute(() -> {
+                        Metadata headers = new Metadata();
+                        headers.put(USERNAME, username);
+                        headers.put(PASSWORD, password);
+                        applier.apply(headers);
+                    });
+                }
+
+                @Override
+                public void thisUsesUnstableApi() {
+
+                }
+            });
         }
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {

@@ -120,6 +120,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Internal(3, "Illegal argument provided: '%s'");
         public static final Internal ILLEGAL_CAST =
                 new Internal(4, "Illegal casting operation to '%s'.");
+        public static final Internal ILLEGAL_ARGUMENT_COMBINATION =
+                new Internal(5, "Illegal argument combination provided: '%s'");
 
         private static final String codePrefix = "INT";
         private static final String messagePrefix = "Internal Error";
