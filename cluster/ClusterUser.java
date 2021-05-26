@@ -21,11 +21,6 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public void password(String password) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void delete() {
         FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
             @Override
