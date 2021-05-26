@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT_COMBINATION;
 
@@ -62,8 +63,7 @@ public class TypeDBCredential {
         return tlsEnabled;
     }
 
-    @Nullable
-    public Path tlsRootCA() {
-        return tlsRootCA;
+    public Optional<Path> tlsRootCA() {
+        return Optional.ofNullable(tlsRootCA);
     }
 }

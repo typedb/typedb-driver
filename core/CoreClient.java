@@ -49,7 +49,7 @@ public class CoreClient implements TypeDBClient {
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    protected CoreClient(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
+    protected CoreClient(String address, TypeDBConnectionFactory.Core typeDBConnectionFactory, int parallelisation) {
         channel = typeDBConnectionFactory.newManagedChannel(address);
         stub = typeDBConnectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
