@@ -32,6 +32,7 @@ import javax.net.ssl.SSLException;
 import java.nio.file.Path;
 
 public abstract class TypeDBConnectionFactory {
+
     public abstract ManagedChannel newManagedChannel(String address);
     public abstract TypeDBStub.Core newTypeDBStub(ManagedChannel channel);
 
@@ -42,6 +43,7 @@ public abstract class TypeDBConnectionFactory {
     }
 
     public static class Core extends TypeDBConnectionFactory {
+
         @Override
         public ManagedChannel newManagedChannel(String address) {
             return plainTextChannel(address);

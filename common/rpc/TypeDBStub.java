@@ -53,11 +53,35 @@ public abstract class TypeDBStub {
     }
 
     public static Core core(ManagedChannel channel) {
-        return new Core(channel);
+        return new Core(channel, TypeDBGrpc.newBlockingStub(channel), TypeDBGrpc.newStub(channel));
     }
 
     public static ClusterNode clusterNode(String username, String password, ManagedChannel channel) {
-        return new ClusterNode(username, password, channel);
+        Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+        Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+        CallCredentials callCredentials = new CallCredentials() {
+
+            @Override
+            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                appExecutor.execute(() -> {
+                    Metadata headers = new Metadata();
+                    headers.put(USERNAME, username);
+                    headers.put(PASSWORD, password);
+                    System.out.println("GRAKN CLIENT - USERNAME: " + username + ", PASSWORD: " + password);
+                    applier.apply(headers);
+                });
+            }
+
+            @Override
+            public void thisUsesUnstableApi() { }
+        };
+
+        return new ClusterNode(
+                channel,
+                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(callCredentials),
+                TypeDBGrpc.newStub(channel).withCallCredentials(callCredentials),
+                TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(callCredentials)
+        );
     }
 
     private void ensureConnected() {
@@ -85,10 +109,10 @@ public abstract class TypeDBStub {
         private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
         private final TypeDBGrpc.TypeDBStub asyncStub;
 
-        private Core(ManagedChannel channel) {
+        private Core(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub) {
             super(channel);
-            this.blockingStub = TypeDBGrpc.newBlockingStub(channel);
-            this.asyncStub = TypeDBGrpc.newStub(channel);
+            this.blockingStub = blockingStub;
+            this.asyncStub = asyncStub;
         }
 
         public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
@@ -130,27 +154,13 @@ public abstract class TypeDBStub {
 
     public static class ClusterNode extends TypeDBStub.Core {
 
-        private static final Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-        private static final Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
         private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
 
-        private ClusterNode(String username, String password, ManagedChannel channel) {
-            super(channel);
-            this.blockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(new CallCredentials() {
-                @Override
-                public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-                    appExecutor.execute(() -> {
-                        Metadata headers = new Metadata();
-                        headers.put(USERNAME, username);
-                        headers.put(PASSWORD, password);
-                        System.out.println("GRAKN CLIENT - USERNAME: " + username + ", PASSWORD: " + password);
-                        applier.apply(headers);
-                    });
-                }
-
-                @Override
-                public void thisUsesUnstableApi() {}
-            });
+        private ClusterNode(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub,
+                            TypeDBGrpc.TypeDBStub asyncStub,
+                            TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub) {
+            super(channel, blockingStub, asyncStub);
+            this.blockingStub = clusterBlockingStub;
         }
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
