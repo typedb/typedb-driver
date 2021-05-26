@@ -33,7 +33,7 @@ import java.nio.file.Path;
 
 public class TypeDBConnectionFactory {
 
-    public static class Core extends TypeDBConnectionFactory {
+    public static class Core {
 
         public ManagedChannel newManagedChannel(String address) {
             return plainTextChannel(address);
@@ -74,6 +74,11 @@ public class TypeDBConnectionFactory {
             }
         }
 
+        @Override
+        public TypeDBStub.ClusterNode newTypeDBStub(ManagedChannel channel) {
+            return TypeDBStub.clusterNode(username, password, channel);
+        }
+
         private ManagedChannel TLSChannel(String address) {
             try {
                 SslContext sslContext;
@@ -86,11 +91,6 @@ public class TypeDBConnectionFactory {
             } catch (SSLException e) {
                 throw new TypeDBClientException(e.getMessage(), e);
             }
-        }
-
-        @Override
-        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
-            return TypeDBStub.clusterNode(username, password, channel);
         }
     }
 }
