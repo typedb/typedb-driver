@@ -100,7 +100,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.Cluster, CoreDatabaseManager, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterNode, CoreDatabaseManager, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override

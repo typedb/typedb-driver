@@ -31,16 +31,20 @@ import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
 import java.nio.file.Path;
 
-public interface ConnectionFactory {
-    ManagedChannel newManagedChannel(String address);
-    TypeDBStub.Core newTypeDBStub(ManagedChannel channel);
+public abstract class TypeDBConnectionFactory {
+    public abstract ManagedChannel newManagedChannel(String address);
+    public abstract TypeDBStub.Core newTypeDBStub(ManagedChannel channel);
 
-    class Core implements ConnectionFactory {
+    ManagedChannel plainTextChannel(String address) {
+        return NettyChannelBuilder.forTarget(address)
+                .usePlaintext()
+                .build();
+    }
+
+    public static class Core extends TypeDBConnectionFactory {
         @Override
         public ManagedChannel newManagedChannel(String address) {
-            return NettyChannelBuilder.forTarget(address)
-                    .usePlaintext()
-                    .build();
+            return plainTextChannel(address);
         }
 
         @Override
@@ -49,7 +53,7 @@ public interface ConnectionFactory {
         }
     }
 
-    class Cluster implements ConnectionFactory {
+    public static class ClusterNode extends TypeDBConnectionFactory {
 
         private final String username;
         private final String password;
@@ -57,7 +61,7 @@ public interface ConnectionFactory {
         @Nullable
         private final Path tlsRootCA;
 
-        public Cluster(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
+        public ClusterNode(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
             this.username = username;
             this.password = password;
             this.tlsEnabled = tlsEnabled;
@@ -69,17 +73,11 @@ public interface ConnectionFactory {
             if (!tlsEnabled) {
                 return plainTextChannel(address);
             } else {
-                return tlsChannel(address);
+                return TLSChannel(address);
             }
         }
 
-        private ManagedChannel plainTextChannel(String address) {
-            return NettyChannelBuilder.forTarget(address)
-                    .usePlaintext()
-                    .build();
-        }
-
-        private ManagedChannel tlsChannel(String address) {
+        private ManagedChannel TLSChannel(String address) {
             try {
                 SslContext sslContext;
                 if (tlsRootCA != null) {
@@ -95,7 +93,7 @@ public interface ConnectionFactory {
 
         @Override
         public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
-            return TypeDBStub.cluster(username, password, channel);
+            return TypeDBStub.clusterNode(username, password, channel);
         }
     }
 }

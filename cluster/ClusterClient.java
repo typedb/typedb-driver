@@ -52,7 +52,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final TypeDBCredential credential;
     private final int parallelisation;
     private final Map<String, ClusterNodeClient> clusterNodeClients;
-    private final Map<String, TypeDBStub.Cluster> stubs;
+    private final Map<String, TypeDBStub.ClusterNode> stubs;
     private final ClusterUserManager userMgr;
     private final ClusterDatabaseManager databaseMgr;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
@@ -65,7 +65,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 .map(address -> pair(address, ClusterNodeClient.create(address, credential, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         stubs = clusterNodeClients.entrySet().stream()
-                .map(client -> pair(client.getKey(), TypeDBStub.cluster(credential.username(), credential.password(), client.getValue().channel())))
+                .map(client -> pair(client.getKey(), TypeDBStub.clusterNode(credential.username(), credential.password(), client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -85,7 +85,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         for (String address : addresses) {
             try (ClusterNodeClient client = ClusterNodeClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                TypeDBStub.Cluster stub = TypeDBStub.cluster(credential.username(), credential.password(), client.channel());
+                TypeDBStub.ClusterNode stub = TypeDBStub.clusterNode(credential.username(), credential.password(), client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
@@ -166,7 +166,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterNodeClients.get(address);
     }
 
-    TypeDBStub.Cluster stub(String address) {
+    TypeDBStub.ClusterNode stub(String address) {
         return stubs.get(address);
     }
 

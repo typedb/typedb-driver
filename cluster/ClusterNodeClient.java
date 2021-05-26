@@ -22,21 +22,21 @@
 package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.common.rpc.ConnectionFactory;
+import com.vaticle.typedb.client.common.rpc.TypeDBConnectionFactory;
 import com.vaticle.typedb.client.core.CoreClient;
 
 class ClusterNodeClient extends CoreClient {
-    public ClusterNodeClient(String address, ConnectionFactory connectionFactory, int parallelisation) {
-        super(address, connectionFactory, parallelisation);
+    private ClusterNodeClient(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
+        super(address, typeDBConnectionFactory, parallelisation);
     }
 
     static ClusterNodeClient create(String address, TypeDBCredential credential, int parallelisation) {
-        ConnectionFactory connectionFactory = new ConnectionFactory.Cluster(
+        TypeDBConnectionFactory typeDBConnectionFactory = new TypeDBConnectionFactory.ClusterNode(
                 credential.username(),
                 credential.password(),
                 credential.tlsEnabled(),
                 credential.tlsRootCA()
         );
-        return new ClusterNodeClient(address, connectionFactory, parallelisation);
+        return new ClusterNodeClient(address, typeDBConnectionFactory, parallelisation);
     }
 }

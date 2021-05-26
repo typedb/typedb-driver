@@ -56,8 +56,8 @@ public abstract class TypeDBStub {
         return new Core(channel);
     }
 
-    public static Cluster cluster(String username, String password, ManagedChannel channel) {
-        return new Cluster(username, password, channel);
+    public static ClusterNode clusterNode(String username, String password, ManagedChannel channel) {
+        return new ClusterNode(username, password, channel);
     }
 
     private void ensureConnected() {
@@ -128,13 +128,13 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class Cluster extends TypeDBStub.Core {
+    public static class ClusterNode extends TypeDBStub.Core {
 
         private static final Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
         private static final Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
         private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
 
-        private Cluster(String username, String password, ManagedChannel channel) {
+        private ClusterNode(String username, String password, ManagedChannel channel) {
             super(channel);
             this.blockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(new CallCredentials() {
                 @Override
