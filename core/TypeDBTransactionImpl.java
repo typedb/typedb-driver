@@ -44,7 +44,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.co
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.openReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.rollbackReq;
 
-public class CoreTransaction implements TypeDBTransaction.Extended {
+public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
@@ -54,7 +54,7 @@ public class CoreTransaction implements TypeDBTransaction.Extended {
 
     private final BidirectionalStream bidirectionalStream;
 
-    CoreTransaction(CoreSession session, ByteString sessionId, Type type, TypeDBOptions options) {
+    TypeDBTransactionImpl(TypeDBSessionImpl session, ByteString sessionId, Type type, TypeDBOptions options) {
         this.type = type;
         this.options = options;
         conceptMgr = new ConceptManagerImpl(this);

@@ -59,8 +59,8 @@ public abstract class TypeDBStub {
                 TypeDBGrpc.newStub(channel).withCallCredentials(credential) : TypeDBGrpc.newStub(channel);
     }
 
-    public static ActualCore core(ManagedChannel channel) {
-        return new ActualCore(channel);
+    public static Core core(ManagedChannel channel) {
+        return new Core(channel);
     }
 
     public static ClusterServer clusterServer(String username, String password, ManagedChannel channel) {
@@ -123,9 +123,9 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class ActualCore extends TypeDBStub {
+    public static class Core extends TypeDBStub {
 
-        private ActualCore(ManagedChannel channel) {
+        private Core(ManagedChannel channel) {
             super(channel, null);
         }
     }

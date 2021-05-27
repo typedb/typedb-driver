@@ -42,7 +42,7 @@ public abstract class TypeDBConnectionFactory {
                 .build();
     }
 
-    public static class ActualCore extends TypeDBConnectionFactory {
+    public static class Core extends TypeDBConnectionFactory {
 
         @Override
         public ManagedChannel newManagedChannel(String address) {
@@ -50,7 +50,7 @@ public abstract class TypeDBConnectionFactory {
         }
 
         @Override
-        public TypeDBStub.ActualCore newTypeDBStub(ManagedChannel channel) {
+        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
             return TypeDBStub.core(channel);
         }
     }

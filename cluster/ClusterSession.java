@@ -25,7 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.core.CoreSession;
+import com.vaticle.typedb.client.core.TypeDBSessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +35,13 @@ public class ClusterSession implements TypeDBSession {
     private final ClusterClient clusterClient;
     private final TypeDBOptions.Cluster options;
     private ClusterServerClient clusterServerClient;
-    private CoreSession coreSession;
+    private TypeDBSessionImpl typeDBSessionImpl;
 
     public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, TypeDBOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.clusterServerClient = clusterClient.clusterServerClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
-        this.coreSession = clusterServerClient.session(database, type, options);
+        this.typeDBSessionImpl = clusterServerClient.session(database, type, options);
         this.options = options;
     }
 
@@ -73,22 +73,22 @@ public class ClusterSession implements TypeDBSession {
 
             @Override
             TypeDBTransaction run(ClusterDatabase.Replica replica) {
-                return coreSession.transaction(type, options);
+                return typeDBSessionImpl.transaction(type, options);
             }
 
             @Override
             TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
-                if (coreSession != null) coreSession.close();
+                if (typeDBSessionImpl != null) typeDBSessionImpl.close();
                 clusterServerClient = clusterClient.clusterServerClient(replica.address());
-                coreSession = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
-                return coreSession.transaction(type, options);
+                typeDBSessionImpl = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                return typeDBSessionImpl.transaction(type, options);
             }
         };
     }
 
     @Override
     public TypeDBSession.Type type() {
-        return coreSession.type();
+        return typeDBSessionImpl.type();
     }
 
     @Override
@@ -98,16 +98,16 @@ public class ClusterSession implements TypeDBSession {
 
     @Override
     public boolean isOpen() {
-        return coreSession.isOpen();
+        return typeDBSessionImpl.isOpen();
     }
 
     @Override
     public void close() {
-        coreSession.close();
+        typeDBSessionImpl.close();
     }
 
     @Override
     public Database database() {
-        return coreSession.database();
+        return typeDBSessionImpl.database();
     }
 }

@@ -22,8 +22,8 @@
 package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.core.CoreDatabase;
-import com.vaticle.typedb.client.core.CoreDatabaseManager;
+import com.vaticle.typedb.client.core.TypeDBDatabaseImpl;
+import com.vaticle.typedb.client.core.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ class ClusterDatabase implements Database.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClusterDatabase.class);
     private final String name;
-    private final Map<String, CoreDatabase> databases;
+    private final Map<String, TypeDBDatabaseImpl> databases;
     private final ClusterClient client;
     private final Set<Replica> replicas;
 
@@ -54,8 +54,8 @@ class ClusterDatabase implements Database.Cluster {
 
         ClusterDatabaseManager clusterDbMgr = client.databases();
         for (String address : clusterDbMgr.databaseMgrs().keySet()) {
-            CoreDatabaseManager coreDatabaseMgr = clusterDbMgr.databaseMgrs().get(address);
-            databases.put(address, new CoreDatabase(coreDatabaseMgr, database));
+            TypeDBDatabaseManagerImpl coreDatabaseMgr = clusterDbMgr.databaseMgrs().get(address);
+            databases.put(address, new TypeDBDatabaseImpl(coreDatabaseMgr, database));
         }
     }
 

@@ -35,17 +35,17 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseM
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
 import static java.util.stream.Collectors.toList;
 
-public class CoreDatabaseManager implements DatabaseManager {
+public class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
-    private final CoreClient client;
+    private final TypeDBClientImpl client;
 
-    public CoreDatabaseManager(CoreClient client) {
+    public TypeDBDatabaseManagerImpl(TypeDBClientImpl client) {
         this.client = client;
     }
 
     @Override
     public Database get(String name) {
-        if (contains(name)) return new CoreDatabase(this, name);
+        if (contains(name)) return new TypeDBDatabaseImpl(this, name);
         else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
     }
 
@@ -60,9 +60,9 @@ public class CoreDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<CoreDatabase> all() {
+    public List<TypeDBDatabaseImpl> all() {
         List<String> databases = stub().databasesAll(allReq()).getNamesList();
-        return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
+        return databases.stream().map(name -> new TypeDBDatabaseImpl(this, name)).collect(toList());
     }
 
     TypeDBStub stub() {

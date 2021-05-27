@@ -26,14 +26,14 @@ import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static com.vaticle.typedb.client.core.CoreDatabaseManager.nonNull;
+import static com.vaticle.typedb.client.core.TypeDBDatabaseManagerImpl.nonNull;
 
-public class CoreDatabase implements Database {
+public class TypeDBDatabaseImpl implements Database {
 
     private final String name;
-    private final CoreDatabaseManager databaseMgr;
+    private final TypeDBDatabaseManagerImpl databaseMgr;
 
-    public CoreDatabase(CoreDatabaseManager databaseMgr, String name) {
+    public TypeDBDatabaseImpl(TypeDBDatabaseManagerImpl databaseMgr, String name) {
         this.databaseMgr = databaseMgr;
         this.name = nonNull((name));
     }

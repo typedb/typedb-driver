@@ -44,12 +44,12 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.closeR
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.openReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.pulseReq;
 
-public class CoreSession implements TypeDBSession {
+public class TypeDBSessionImpl implements TypeDBSession {
 
     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
-    private final CoreClient client;
-    private final CoreDatabase database;
+    private final TypeDBClientImpl client;
+    private final TypeDBDatabaseImpl database;
     private final ByteString sessionID;
     private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
     private final Type type;
@@ -59,7 +59,7 @@ public class CoreSession implements TypeDBSession {
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
 
-    public CoreSession(CoreClient client, String database, Type type, TypeDBOptions options) {
+    public TypeDBSessionImpl(TypeDBClientImpl client, String database, Type type, TypeDBOptions options) {
         this.client = client;
         this.type = type;
         this.options = options;
@@ -68,7 +68,7 @@ public class CoreSession implements TypeDBSession {
                 openReq(database, type.proto(), options.proto())
         );
         Instant endTime = Instant.now();
-        this.database = new CoreDatabase(client.databases(), database);
+        this.database = new TypeDBDatabaseImpl(client.databases(), database);
         networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
         sessionID = res.getSessionId();
         transactions = new ConcurrentSet<>();
@@ -85,7 +85,7 @@ public class CoreSession implements TypeDBSession {
     public Type type() { return type; }
 
     @Override
-    public CoreDatabase database() { return database; }
+    public TypeDBDatabaseImpl database() { return database; }
 
     @Override
     public TypeDBOptions options() { return options; }
@@ -100,7 +100,7 @@ public class CoreSession implements TypeDBSession {
         try {
             accessLock.readLock().lock();
             if (!isOpen.get()) throw new TypeDBClientException(SESSION_CLOSED);
-            TypeDBTransaction.Extended transactionRPC = new CoreTransaction(this, sessionID, type, options);
+            TypeDBTransaction.Extended transactionRPC = new TypeDBTransactionImpl(this, sessionID, type, options);
             transactions.add(transactionRPC);
             return transactionRPC;
         } finally {

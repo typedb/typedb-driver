@@ -25,7 +25,7 @@ import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.core.CoreDatabaseManager;
+import com.vaticle.typedb.client.core.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
 
-    private final Map<String, CoreDatabaseManager> databaseMgrs;
+    private final Map<String, TypeDBDatabaseManagerImpl> databaseMgrs;
     private final ClusterClient client;
 
     public ClusterDatabaseManager(ClusterClient client) {
@@ -96,11 +96,11 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         throw new TypeDBClientException(CLUSTER_ALL_NODES_FAILED, errors.toString());
     }
 
-    Map<String, CoreDatabaseManager> databaseMgrs() {
+    Map<String, TypeDBDatabaseManagerImpl> databaseMgrs() {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterServer, CoreDatabaseManager, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterServer, TypeDBDatabaseManagerImpl, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override
