@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.cluster;
+package com.vaticle.typedb.client.rpc.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.common.rpc.TypeDBConnectionFactory;
-import com.vaticle.typedb.client.core.AbstractClient;
+import com.vaticle.typedb.client.rpc.TypeDBConnectionFactory;
+import com.vaticle.typedb.client.rpc.TypeDBClientAbstract;
 
-class ClusterServerClient extends AbstractClient {
+class ClusterServerClient extends TypeDBClientAbstract {
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
         super(address, createConnectionFactory(credential), parallelisation);

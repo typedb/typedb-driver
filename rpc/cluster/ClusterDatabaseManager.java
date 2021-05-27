@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.cluster;
+package com.vaticle.typedb.client.rpc.cluster;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.core.TypeDBDatabaseManagerImpl;
+import com.vaticle.typedb.client.rpc.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;

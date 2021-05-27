@@ -24,13 +24,16 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "cluster",
-    srcs = glob(["*.java"], exclude=["test/**"]),
+    name = "rpc",
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
     deps = [
         # Internal dependencies
         "//api:api",
         "//common:common",
-        "//core:core",
+        "//concept:concept",
+        "//logic:logic",
+        "//query:query",
+        "//stream:stream",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
@@ -38,8 +41,16 @@ java_library(
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_protobuf_protobuf_java",
         "@maven//:io_grpc_grpc_api",
+        "@maven//:io_grpc_grpc_netty",
+        "@maven//:io_netty_netty_all",
         "@maven//:org_slf4j_slf4j_api",
+    ],
+    runtime_deps = [
+        "@maven//:ch_qos_logback_logback_classic",
+        "@maven//:ch_qos_logback_logback_core",
+        "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 

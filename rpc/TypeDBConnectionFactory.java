@@ -19,9 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common.rpc;
+package com.vaticle.typedb.client.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.core;
+package com.vaticle.typedb.client.rpc;
 
 import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBOptions;

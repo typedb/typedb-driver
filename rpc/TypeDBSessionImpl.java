@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.core;
+package com.vaticle.typedb.client.rpc;
 
 import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBOptions;
@@ -48,7 +48,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
-    private final AbstractClient client;
+    private final TypeDBClientAbstract client;
     private final TypeDBDatabaseImpl database;
     private final ByteString sessionID;
     private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
@@ -59,7 +59,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
 
-    public TypeDBSessionImpl(AbstractClient client, String database, Type type, TypeDBOptions options) {
+    public TypeDBSessionImpl(TypeDBClientAbstract client, String database, Type type, TypeDBOptions options) {
         this.client = client;
         this.type = type;
         this.options = options;

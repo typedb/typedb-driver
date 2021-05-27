@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.cluster;
+package com.vaticle.typedb.client.rpc.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;

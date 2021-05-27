@@ -19,21 +19,27 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.cluster;
+package com.vaticle.typedb.client.rpc;
 
-import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
-import static com.vaticle.typedb.client.cluster.ClusterUserManager.SYSTEM_DB;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
+import static com.vaticle.typedb.client.rpc.TypeDBDatabaseManagerImpl.nonNull;
 
-public class ClusterUser implements User {
+public class TypeDBDatabaseImpl implements Database {
 
-    private final ClusterClient client;
     private final String name;
+    private final TypeDBDatabaseManagerImpl databaseMgr;
 
-    public ClusterUser(ClusterClient client, String name) {
-        this.client = client;
-        this.name = name;
+    public TypeDBDatabaseImpl(TypeDBDatabaseManagerImpl databaseMgr, String name) {
+        this.databaseMgr = databaseMgr;
+        this.name = nonNull((name));
+    }
+
+    private TypeDBStub stub() {
+        return databaseMgr.stub();
     }
 
     @Override
@@ -42,14 +48,17 @@ public class ClusterUser implements User {
     }
 
     @Override
+    public String schema() {
+        return stub().databaseSchema(schemaReq(name)).getSchema();
+    }
+
+    @Override
     public void delete() {
-        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
-            @Override
-            Void run(ClusterDatabase.Replica replica) {
-                client.stub(replica.address()).userDelete(deleteReq(name));
-                return null;
-            }
-        };
-        failsafeTask.runPrimaryReplica();
+        stub().databaseDelete(deleteReq(name));
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

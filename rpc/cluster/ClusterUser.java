@@ -19,27 +19,21 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.core;
+package com.vaticle.typedb.client.rpc.cluster;
 
-import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.api.user.User;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static com.vaticle.typedb.client.core.TypeDBDatabaseManagerImpl.nonNull;
+import static com.vaticle.typedb.client.rpc.cluster.ClusterUserManager.SYSTEM_DB;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
 
-public class TypeDBDatabaseImpl implements Database {
+public class ClusterUser implements User {
 
+    private final ClusterClient client;
     private final String name;
-    private final TypeDBDatabaseManagerImpl databaseMgr;
 
-    public TypeDBDatabaseImpl(TypeDBDatabaseManagerImpl databaseMgr, String name) {
-        this.databaseMgr = databaseMgr;
-        this.name = nonNull((name));
-    }
-
-    private TypeDBStub stub() {
-        return databaseMgr.stub();
+    public ClusterUser(ClusterClient client, String name) {
+        this.client = client;
+        this.name = name;
     }
 
     @Override
@@ -48,17 +42,14 @@ public class TypeDBDatabaseImpl implements Database {
     }
 
     @Override
-    public String schema() {
-        return stub().databaseSchema(schemaReq(name)).getSchema();
-    }
-
-    @Override
     public void delete() {
-        stub().databaseDelete(deleteReq(name));
-    }
-
-    @Override
-    public String toString() {
-        return name;
+        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
+            @Override
+            Void run(ClusterDatabase.Replica replica) {
+                client.stub(replica.address()).userDelete(deleteReq(name));
+                return null;
+            }
+        };
+        failsafeTask.runPrimaryReplica();
     }
 }
