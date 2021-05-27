@@ -23,21 +23,21 @@ package com.vaticle.typedb.client.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.common.rpc.TypeDBConnectionFactory;
-import com.vaticle.typedb.client.core.TypeDBClientImpl;
+import com.vaticle.typedb.client.core.AbstractClient;
 
-class ClusterServerClient extends TypeDBClientImpl {
+class ClusterServerClient extends AbstractClient {
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
         super(address, createConnectionFactory(credential), parallelisation);
+    }
+
+    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
+        return new ClusterServerClient(address, credential, parallelisation);
     }
 
     private static TypeDBConnectionFactory.ClusterServer createConnectionFactory(TypeDBCredential credential) {
         return new TypeDBConnectionFactory.ClusterServer(
                 credential.username(), credential.password(), credential.tlsEnabled(), credential.tlsRootCA().orElse(null)
         );
-    }
-
-    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
-        return new ClusterServerClient(address, credential, parallelisation);
     }
 }

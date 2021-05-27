@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.common.util.Objects.className;
 
-public abstract class TypeDBClientImpl implements TypeDBClient {
+public abstract class AbstractClient implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
@@ -49,7 +49,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
 
-    protected TypeDBClientImpl(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
+    protected AbstractClient(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
         channel = typeDBConnectionFactory.newManagedChannel(address);
         stub = typeDBConnectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);

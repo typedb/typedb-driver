@@ -37,9 +37,9 @@ import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
-    private final TypeDBClientImpl client;
+    private final AbstractClient client;
 
-    public TypeDBDatabaseManagerImpl(TypeDBClientImpl client) {
+    public TypeDBDatabaseManagerImpl(AbstractClient client) {
         this.client = client;
     }
 
