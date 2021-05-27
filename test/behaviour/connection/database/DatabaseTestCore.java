@@ -41,11 +41,11 @@ public class DatabaseTestCore extends BehaviourTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DatabaseTest'
+    // 3) Select 'Bazel test DatabaseTestCore'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-kgms' to test against typedb-cluster
+    //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'

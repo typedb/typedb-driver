@@ -44,7 +44,7 @@ public class DebugTest extends BehaviourTest {
     //
     // 4) Ensure 'Target Expression' is set correctly:
     // 1) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    // 2) Use '//<this>/<package>/<name>:test-kgms' to test against typedb-cluster
+    // 2) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'
