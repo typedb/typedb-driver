@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.common.rpc.TypeDBConnectionFactory;
 import com.vaticle.typedb.client.core.CoreClient;
 
 class ClusterServerClient extends CoreClient {
+
     private ClusterServerClient(String address, TypeDBConnectionFactory.ClusterServer typeDBConnectionFactory, int parallelisation) {
         super(address, typeDBConnectionFactory, parallelisation);
     }
