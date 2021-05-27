@@ -51,12 +51,12 @@ public abstract class TypeDBStub {
     private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
     private final TypeDBGrpc.TypeDBStub asyncStub;
 
-    private TypeDBStub(ManagedChannel channel, @Nullable Credential credential) {
+    private TypeDBStub(ManagedChannel channel, @Nullable CredentialEmbedder credentialEmbedder) {
         this.channel = channel;
-        this.blockingStub = credential != null ?
-                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credential) : TypeDBGrpc.newBlockingStub(channel);
-        this.asyncStub = credential != null ?
-                TypeDBGrpc.newStub(channel).withCallCredentials(credential) : TypeDBGrpc.newStub(channel);
+        this.blockingStub = credentialEmbedder != null ?
+                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder) : TypeDBGrpc.newBlockingStub(channel);
+        this.asyncStub = credentialEmbedder != null ?
+                TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder) : TypeDBGrpc.newStub(channel);
     }
 
     public static Core core(ManagedChannel channel) {
@@ -64,7 +64,7 @@ public abstract class TypeDBStub {
     }
 
     public static ClusterServer clusterServer(String username, String password, ManagedChannel channel) {
-        return new ClusterServer(new Credential(username, password), channel);
+        return new ClusterServer(new CredentialEmbedder(username, password), channel);
     }
 
     public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
@@ -134,9 +134,9 @@ public abstract class TypeDBStub {
 
         private final TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub;
 
-        public ClusterServer(Credential credential, ManagedChannel channel) {
-            super(channel, credential);
-            this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credential);
+        public ClusterServer(CredentialEmbedder credentialEmbedder, ManagedChannel channel) {
+            super(channel, credentialEmbedder);
+            this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
         }
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
@@ -169,14 +169,14 @@ public abstract class TypeDBStub {
 
     }
 
-    private static class Credential extends CallCredentials {
+    private static class CredentialEmbedder extends CallCredentials {
         private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
         private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
 
         private final String username;
         private final String password;
 
-        public Credential(String username, String password) {
+        public CredentialEmbedder(String username, String password) {
             this.username = username;
             this.password = password;
         }
