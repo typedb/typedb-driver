@@ -26,17 +26,18 @@ import com.vaticle.typedb.client.common.rpc.TypeDBConnectionFactory;
 import com.vaticle.typedb.client.core.TypeDBClientImpl;
 
 class ClusterServerClient extends TypeDBClientImpl {
-    private ClusterServerClient(String address, TypeDBConnectionFactory.ClusterServer typeDBConnectionFactory, int parallelisation) {
-        super(address, typeDBConnectionFactory, parallelisation);
+
+    private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
+        super(address, createConnectionFactory(credential), parallelisation);
+    }
+
+    private static TypeDBConnectionFactory.ClusterServer createConnectionFactory(TypeDBCredential credential) {
+        return new TypeDBConnectionFactory.ClusterServer(
+                credential.username(), credential.password(), credential.tlsEnabled(), credential.tlsRootCA().orElse(null)
+        );
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
-        TypeDBConnectionFactory.ClusterServer typeDBConnectionFactory = new TypeDBConnectionFactory.ClusterServer(
-                credential.username(),
-                credential.password(),
-                credential.tlsEnabled(),
-                credential.tlsRootCA().orElse(null)
-        );
-        return new ClusterServerClient(address, typeDBConnectionFactory, parallelisation);
+        return new ClusterServerClient(address, credential, parallelisation);
     }
 }
