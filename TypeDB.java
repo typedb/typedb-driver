@@ -24,7 +24,7 @@ package com.vaticle.typedb.client;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.cluster.ClusterClient;
-import com.vaticle.typedb.client.core.CoreClient;
+import com.vaticle.typedb.client.core.ActualCoreClient;
 
 import java.util.Set;
 
@@ -35,11 +35,11 @@ public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
     public static TypeDBClient coreClient(String address) {
-        return CoreClient.create(address);
+        return ActualCoreClient.create(address);
     }
 
     public static TypeDBClient coreClient(String address, int parallelisation) {
-        return CoreClient.create(address, parallelisation);
+        return ActualCoreClient.create(address, parallelisation);
     }
 
     public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential) {

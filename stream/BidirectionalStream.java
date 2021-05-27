@@ -52,7 +52,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
 
-    public BidirectionalStream(TypeDBStub.Core stub, RequestTransmitter transmitter) {
+    public BidirectionalStream(TypeDBStub stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
         resCollector = new ResponseCollector<>();
         isOpen = new AtomicBoolean(false);

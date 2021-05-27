@@ -31,26 +31,31 @@ import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
 import java.nio.file.Path;
 
-public class TypeDBConnectionFactory {
+public abstract class TypeDBConnectionFactory {
 
-    public static class Core {
+    public abstract ManagedChannel newManagedChannel(String address);
+    public abstract TypeDBStub newTypeDBStub(ManagedChannel channel);
 
+    ManagedChannel plainTextChannel(String address) {
+        return NettyChannelBuilder.forTarget(address)
+                .usePlaintext()
+                .build();
+    }
+
+    public static class ActualCore extends TypeDBConnectionFactory {
+
+        @Override
         public ManagedChannel newManagedChannel(String address) {
             return plainTextChannel(address);
         }
 
-        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
+        @Override
+        public TypeDBStub.ActualCore newTypeDBStub(ManagedChannel channel) {
             return TypeDBStub.core(channel);
-        }
-
-        ManagedChannel plainTextChannel(String address) {
-            return NettyChannelBuilder.forTarget(address)
-                    .usePlaintext()
-                    .build();
         }
     }
 
-    public static class ClusterServer extends Core {
+    public static class ClusterServer extends TypeDBConnectionFactory {
 
         private final String username;
         private final String password;

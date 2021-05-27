@@ -39,31 +39,23 @@ import java.util.concurrent.TimeUnit;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.common.util.Objects.className;
 
-public class CoreClient implements TypeDBClient {
+public abstract class CoreClient implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
     private final ManagedChannel channel;
-    private final TypeDBStub.Core stub;
+    private final TypeDBStub stub;
     private final RequestTransmitter transmitter;
     private final CoreDatabaseManager databaseMgr;
     private final ConcurrentMap<ByteString, CoreSession> sessions;
 
-    protected CoreClient(String address, TypeDBConnectionFactory.Core typeDBConnectionFactory, int parallelisation) {
+    protected CoreClient(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
         channel = typeDBConnectionFactory.newManagedChannel(address);
         stub = typeDBConnectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new CoreDatabaseManager(this);
         sessions = new ConcurrentHashMap<>();
-    }
-
-    public static CoreClient create(String address) {
-        return new CoreClient(address, new TypeDBConnectionFactory.Core(), calculateParallelisation());
-    }
-
-    public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, new TypeDBConnectionFactory.Core(), parallelisation);
     }
 
     public static int calculateParallelisation() {
@@ -111,7 +103,7 @@ public class CoreClient implements TypeDBClient {
         return channel;
     }
 
-    TypeDBStub.Core stub() {
+    TypeDBStub stub() {
         return stub;
     }
 
@@ -133,4 +125,5 @@ public class CoreClient implements TypeDBClient {
             Thread.currentThread().interrupt();
         }
     }
+
 }

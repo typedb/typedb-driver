@@ -37,6 +37,7 @@ import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -47,24 +48,59 @@ import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 public abstract class TypeDBStub {
 
     private final ManagedChannel channel;
+    private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
+    private final TypeDBGrpc.TypeDBStub asyncStub;
 
-    private TypeDBStub(ManagedChannel channel) {
+    private TypeDBStub(ManagedChannel channel, @Nullable Credential credential) {
         this.channel = channel;
+        this.blockingStub = credential != null ?
+                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credential) : TypeDBGrpc.newBlockingStub(channel);
+        this.asyncStub = credential != null ?
+                TypeDBGrpc.newStub(channel).withCallCredentials(credential) : TypeDBGrpc.newStub(channel);
     }
 
-    public static Core core(ManagedChannel channel) {
-        return new Core(channel, TypeDBGrpc.newBlockingStub(channel), TypeDBGrpc.newStub(channel));
+    public static ActualCore core(ManagedChannel channel) {
+        return new ActualCore(channel);
     }
 
     public static ClusterServer clusterServer(String username, String password, ManagedChannel channel) {
-        CallCredentials credential = new ClusterServer.Credential(username, password);
+        return new ClusterServer(new Credential(username, password), channel);
+    }
 
-        return new ClusterServer(
-                channel,
-                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credential),
-                TypeDBGrpc.newStub(channel).withCallCredentials(credential),
-                TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credential)
-        );
+    public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
+        return resilientCall(() -> blockingStub.databasesContains(request));
+    }
+
+    public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
+        return resilientCall(() -> blockingStub.databasesCreate(request));
+    }
+
+    public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
+        return resilientCall(() -> blockingStub.databasesAll(request));
+    }
+
+    public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
+        return resilientCall(() -> blockingStub.databaseSchema(request));
+    }
+
+    public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
+        return resilientCall(() -> blockingStub.databaseDelete(request));
+    }
+
+    public Session.Open.Res sessionOpen(Session.Open.Req request) {
+        return resilientCall(() -> blockingStub.sessionOpen(request));
+    }
+
+    public Session.Close.Res sessionClose(Session.Close.Req request) {
+        return resilientCall(() -> blockingStub.sessionClose(request));
+    }
+
+    public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
+        return resilientCall(() -> blockingStub.sessionPulse(request));
+    }
+
+    public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
+        return resilientCall(() -> asyncStub.transaction(responseObserver));
     }
 
     private void ensureConnected() {
@@ -87,117 +123,75 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class Core extends TypeDBStub {
+    public static class ActualCore extends TypeDBStub {
 
-        private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
-        private final TypeDBGrpc.TypeDBStub asyncStub;
-
-        private Core(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub) {
-            super(channel);
-            this.blockingStub = blockingStub;
-            this.asyncStub = asyncStub;
-        }
-
-        public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
-            return resilientCall(() -> blockingStub.databasesContains(request));
-        }
-
-        public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
-            return resilientCall(() -> blockingStub.databasesCreate(request));
-        }
-
-        public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
-            return resilientCall(() -> blockingStub.databasesAll(request));
-        }
-
-        public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
-            return resilientCall(() -> blockingStub.databaseSchema(request));
-        }
-
-        public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
-            return resilientCall(() -> blockingStub.databaseDelete(request));
-        }
-
-        public Session.Open.Res sessionOpen(Session.Open.Req request) {
-            return resilientCall(() -> blockingStub.sessionOpen(request));
-        }
-
-        public Session.Close.Res sessionClose(Session.Close.Req request) {
-            return resilientCall(() -> blockingStub.sessionClose(request));
-        }
-
-        public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
-            return resilientCall(() -> blockingStub.sessionPulse(request));
-        }
-
-        public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
-            return resilientCall(() -> asyncStub.transaction(responseObserver));
+        private ActualCore(ManagedChannel channel) {
+            super(channel, null);
         }
     }
 
-    public static class ClusterServer extends TypeDBStub.Core {
+    public static class ClusterServer extends TypeDBStub {
 
-        private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
+        private final TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub;
 
-        private ClusterServer(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub,
-                              TypeDBGrpc.TypeDBStub asyncStub,
-                              TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub) {
-            super(channel, blockingStub, asyncStub);
-            this.blockingStub = clusterBlockingStub;
+        public ClusterServer(Credential credential, ManagedChannel channel) {
+            super(channel, credential);
+            this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credential);
         }
 
         public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
-            return resilientCall(() -> blockingStub.serversAll(request));
+            return resilientCall(() -> clusterBlockingStub.serversAll(request));
         }
 
         public ClusterUserManager.Contains.Res usersContains(ClusterUserManager.Contains.Req request) {
-            return resilientCall(() -> blockingStub.usersContains(request));
+            return resilientCall(() -> clusterBlockingStub.usersContains(request));
         }
 
         public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserManager.Create.Req request) {
-            return resilientCall(() -> blockingStub.usersCreate(request));
+            return resilientCall(() -> clusterBlockingStub.usersCreate(request));
         }
 
         public ClusterUserManager.All.Res usersAll(ClusterUserManager.All.Req request) {
-            return resilientCall(() -> blockingStub.usersAll(request));
+            return resilientCall(() -> clusterBlockingStub.usersAll(request));
         }
 
         public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-            return resilientCall(() -> blockingStub.usersDelete(request));
+            return resilientCall(() -> clusterBlockingStub.usersDelete(request));
         }
 
         public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {
-            return resilientCall(() -> blockingStub.databasesGet(request));
+            return resilientCall(() -> clusterBlockingStub.databasesGet(request));
         }
 
         public ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseManager.All.Req request) {
-            return resilientCall(() -> blockingStub.databasesAll(request));
+            return resilientCall(() -> clusterBlockingStub.databasesAll(request));
         }
 
-        private static class Credential extends CallCredentials {
-            private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-            private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+    }
 
-            private final String username;
-            private final String password;
+    private static class Credential extends CallCredentials {
+        private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+        private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
 
-            public Credential(String username, String password) {
-                this.username = username;
-                this.password = password;
-            }
+        private final String username;
+        private final String password;
 
-            @Override
-            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-                appExecutor.execute(() -> {
-                    Metadata headers = new Metadata();
-                    headers.put(USERNAME_FIELD, username);
-                    headers.put(PASSWORD_FIELD, password);
-                    applier.apply(headers);
-                });
-            }
-
-            @Override
-            public void thisUsesUnstableApi() { }
+        public Credential(String username, String password) {
+            this.username = username;
+            this.password = password;
         }
+
+        @Override
+        public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+            appExecutor.execute(() -> {
+                Metadata headers = new Metadata();
+                headers.put(USERNAME_FIELD, username);
+                headers.put(PASSWORD_FIELD, password);
+                applier.apply(headers);
+            });
+        }
+
+        @Override
+        public void thisUsesUnstableApi() { }
     }
 }

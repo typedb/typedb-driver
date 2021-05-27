@@ -65,7 +65,7 @@ public class CoreDatabaseManager implements DatabaseManager {
         return databases.stream().map(name -> new CoreDatabase(this, name)).collect(toList());
     }
 
-    TypeDBStub.Core stub() {
+    TypeDBStub stub() {
         return client.stub();
     }
 

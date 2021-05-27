@@ -110,7 +110,7 @@ public class CoreSession implements TypeDBSession {
 
     ByteString id() { return sessionID; }
 
-    TypeDBStub.Core stub() {
+    TypeDBStub stub() {
         return client.stub();
     }
 

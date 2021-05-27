@@ -38,7 +38,7 @@ public class CoreDatabase implements Database {
         this.name = nonNull((name));
     }
 
-    private TypeDBStub.Core stub() {
+    private TypeDBStub stub() {
         return databaseMgr.stub();
     }
 
