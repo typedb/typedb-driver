@@ -57,30 +57,13 @@ public abstract class TypeDBStub {
     }
 
     public static ClusterNode clusterNode(String username, String password, ManagedChannel channel) {
-        Metadata.Key<String> USERNAME = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-        Metadata.Key<String> PASSWORD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
-        CallCredentials callCredentials = new CallCredentials() {
-
-            @Override
-            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-                appExecutor.execute(() -> {
-                    Metadata headers = new Metadata();
-                    headers.put(USERNAME, username);
-                    headers.put(PASSWORD, password);
-                    System.out.println("GRAKN CLIENT - USERNAME: " + username + ", PASSWORD: " + password);
-                    applier.apply(headers);
-                });
-            }
-
-            @Override
-            public void thisUsesUnstableApi() { }
-        };
+        CallCredentials credential = new ClusterNode.Credential(username, password);
 
         return new ClusterNode(
                 channel,
-                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(callCredentials),
-                TypeDBGrpc.newStub(channel).withCallCredentials(callCredentials),
-                TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(callCredentials)
+                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credential),
+                TypeDBGrpc.newStub(channel).withCallCredentials(credential),
+                TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credential)
         );
     }
 
@@ -189,6 +172,32 @@ public abstract class TypeDBStub {
 
         public ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseManager.All.Req request) {
             return resilientCall(() -> blockingStub.databasesAll(request));
+        }
+
+        private static class Credential extends CallCredentials {
+            private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+            private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+
+            private final String username;
+            private final String password;
+
+            public Credential(String username, String password) {
+                this.username = username;
+                this.password = password;
+            }
+
+            @Override
+            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                appExecutor.execute(() -> {
+                    Metadata headers = new Metadata();
+                    headers.put(USERNAME_FIELD, username);
+                    headers.put(PASSWORD_FIELD, password);
+                    applier.apply(headers);
+                });
+            }
+
+            @Override
+            public void thisUsesUnstableApi() { }
         }
     }
 }
