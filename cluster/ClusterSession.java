@@ -34,14 +34,14 @@ public class ClusterSession implements TypeDBSession {
     private static final Logger LOG = LoggerFactory.getLogger(TypeDBSession.class);
     private final ClusterClient clusterClient;
     private final TypeDBOptions.Cluster options;
-    private ClusterNodeClient clusterNodeClient;
+    private ClusterServerClient clusterServerClient;
     private CoreSession coreSession;
 
     public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, TypeDBOptions.Cluster options) {
         this.clusterClient = clusterClient;
-        this.clusterNodeClient = clusterClient.clusterNodeClient(serverAddress);
+        this.clusterServerClient = clusterClient.clusterServerClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
-        this.coreSession = clusterNodeClient.session(database, type, options);
+        this.coreSession = clusterServerClient.session(database, type, options);
         this.options = options;
     }
 
@@ -79,8 +79,8 @@ public class ClusterSession implements TypeDBSession {
             @Override
             TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
                 if (coreSession != null) coreSession.close();
-                clusterNodeClient = clusterClient.clusterNodeClient(replica.address());
-                coreSession = clusterNodeClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                clusterServerClient = clusterClient.clusterServerClient(replica.address());
+                coreSession = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
                 return coreSession.transaction(type, options);
             }
         };

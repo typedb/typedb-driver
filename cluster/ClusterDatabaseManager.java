@@ -53,7 +53,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     public ClusterDatabaseManager(ClusterClient client) {
         this.client = client;
-        this.databaseMgrs = client.clusterNodeClients().entrySet().stream()
+        this.databaseMgrs = client.clusterServerClients().entrySet().stream()
                 .map(c -> pair(c.getKey(), c.getValue().databases()))
                 .collect(toMap(Pair::first, Pair::second));
     }
@@ -100,12 +100,12 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterNode, CoreDatabaseManager, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterServer, CoreDatabaseManager, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override
             RESULT run(ClusterDatabase.Replica replica) {
-                return task.apply(client.stub(replica.address()), client.clusterNodeClient(replica.address()).databases());
+                return task.apply(client.stub(replica.address()), client.clusterServerClient(replica.address()).databases());
             }
 
             @Override

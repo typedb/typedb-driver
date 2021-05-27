@@ -56,10 +56,10 @@ public abstract class TypeDBStub {
         return new Core(channel, TypeDBGrpc.newBlockingStub(channel), TypeDBGrpc.newStub(channel));
     }
 
-    public static ClusterNode clusterNode(String username, String password, ManagedChannel channel) {
-        CallCredentials credential = new ClusterNode.Credential(username, password);
+    public static ClusterServer clusterServer(String username, String password, ManagedChannel channel) {
+        CallCredentials credential = new ClusterServer.Credential(username, password);
 
-        return new ClusterNode(
+        return new ClusterServer(
                 channel,
                 TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credential),
                 TypeDBGrpc.newStub(channel).withCallCredentials(credential),
@@ -135,13 +135,13 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class ClusterNode extends TypeDBStub.Core {
+    public static class ClusterServer extends TypeDBStub.Core {
 
         private final TypeDBClusterGrpc.TypeDBClusterBlockingStub blockingStub;
 
-        private ClusterNode(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub,
-                            TypeDBGrpc.TypeDBStub asyncStub,
-                            TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub) {
+        private ClusterServer(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub,
+                              TypeDBGrpc.TypeDBStub asyncStub,
+                              TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub) {
             super(channel, blockingStub, asyncStub);
             this.blockingStub = clusterBlockingStub;
         }

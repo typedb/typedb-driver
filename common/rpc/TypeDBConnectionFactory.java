@@ -50,7 +50,7 @@ public class TypeDBConnectionFactory {
         }
     }
 
-    public static class ClusterNode extends Core {
+    public static class ClusterServer extends Core {
 
         private final String username;
         private final String password;
@@ -58,7 +58,7 @@ public class TypeDBConnectionFactory {
         @Nullable
         private final Path tlsRootCA;
 
-        public ClusterNode(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
+        public ClusterServer(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
             this.username = username;
             this.password = password;
             this.tlsEnabled = tlsEnabled;
@@ -75,8 +75,8 @@ public class TypeDBConnectionFactory {
         }
 
         @Override
-        public TypeDBStub.ClusterNode newTypeDBStub(ManagedChannel channel) {
-            return TypeDBStub.clusterNode(username, password, channel);
+        public TypeDBStub.ClusterServer newTypeDBStub(ManagedChannel channel) {
+            return TypeDBStub.clusterServer(username, password, channel);
         }
 
         private ManagedChannel TLSChannel(String address) {
