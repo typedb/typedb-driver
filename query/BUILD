@@ -35,7 +35,7 @@ java_library(
 
         # External dependencies from @vaticle
         "@vaticle_typeql_lang_java//query",
-        "@vaticle_typedb_protocol//grpc/java:protocol",
+        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
     ],

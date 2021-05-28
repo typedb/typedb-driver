@@ -19,14 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.core;
+package com.vaticle.typedb.client.rpc;
 
 import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
@@ -39,31 +38,23 @@ import java.util.concurrent.TimeUnit;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.common.util.Objects.className;
 
-public class CoreClient implements TypeDBClient {
+public abstract class TypeDBClientAbstract implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
     private final ManagedChannel channel;
-    private final TypeDBStub.Core stub;
+    private final TypeDBStub stub;
     private final RequestTransmitter transmitter;
-    private final CoreDatabaseManager databaseMgr;
-    private final ConcurrentMap<ByteString, CoreSession> sessions;
+    private final TypeDBDatabaseManagerImpl databaseMgr;
+    private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
 
-    protected CoreClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        channel = managedChannelFactory.forAddress(address);
-        stub = TypeDBStub.core(channel);
+    protected TypeDBClientAbstract(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
+        channel = typeDBConnectionFactory.newManagedChannel(address);
+        stub = typeDBConnectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
-        databaseMgr = new CoreDatabaseManager(this);
+        databaseMgr = new TypeDBDatabaseManagerImpl(this);
         sessions = new ConcurrentHashMap<>();
-    }
-
-    public static CoreClient create(String address) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText(), calculateParallelisation());
-    }
-
-    public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, new ManagedChannelFactory.PlainText(), parallelisation);
     }
 
     public static int calculateParallelisation() {
@@ -75,20 +66,20 @@ public class CoreClient implements TypeDBClient {
     }
 
     @Override
-    public CoreSession session(String database, TypeDBSession.Type type) {
+    public TypeDBSessionImpl session(String database, TypeDBSession.Type type) {
         return session(database, type, TypeDBOptions.core());
     }
 
     @Override
-    public CoreSession session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        CoreSession session = new CoreSession(this, database, type, options);
+    public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
+        TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
         return session;
     }
 
     @Override
-    public CoreDatabaseManager databases() {
+    public TypeDBDatabaseManagerImpl databases() {
         return databaseMgr;
     }
 
@@ -111,7 +102,7 @@ public class CoreClient implements TypeDBClient {
         return channel;
     }
 
-    TypeDBStub.Core stub() {
+    TypeDBStub stub() {
         return stub;
     }
 
@@ -119,18 +110,19 @@ public class CoreClient implements TypeDBClient {
         return transmitter;
     }
 
-    void removeSession(CoreSession session) {
+    void removeSession(TypeDBSessionImpl session) {
         sessions.remove(session.id());
     }
 
     @Override
     public void close() {
         try {
-            sessions.values().forEach(CoreSession::close);
+            sessions.values().forEach(TypeDBSessionImpl::close);
             channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
             transmitter.close();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
+
 }

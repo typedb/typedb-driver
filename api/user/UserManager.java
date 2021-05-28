@@ -19,42 +19,19 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
-
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.api.user.UserManager;
+package com.vaticle.typedb.client.api.user;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Set;
 
-public interface TypeDBClient extends AutoCloseable {
+public interface UserManager {
+    @CheckReturnValue
+    User get(String name);
 
     @CheckReturnValue
-    boolean isOpen();
+    boolean contains(String name);
 
-    @CheckReturnValue
-    DatabaseManager databases();
+    void create(String name, String password);
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type);
-
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
-
-    @CheckReturnValue
-    boolean isCluster();
-
-    @CheckReturnValue
-    TypeDBClient.Cluster asCluster();
-
-    void close();
-
-    interface Cluster extends TypeDBClient {
-
-        @CheckReturnValue
-        UserManager users();
-
-        @Override
-        @CheckReturnValue
-        DatabaseManager.Cluster databases();
-    }
+    Set<User> all();
 }

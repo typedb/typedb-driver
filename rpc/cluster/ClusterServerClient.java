@@ -19,25 +19,25 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.cluster;
+package com.vaticle.typedb.client.rpc.cluster;
 
 import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.common.rpc.ManagedChannelFactory;
-import com.vaticle.typedb.client.core.CoreClient;
+import com.vaticle.typedb.client.rpc.TypeDBClientAbstract;
+import com.vaticle.typedb.client.rpc.TypeDBConnectionFactory;
 
-class ClusterNodeClient extends CoreClient {
-    public ClusterNodeClient(String address, ManagedChannelFactory managedChannelFactory, int parallelisation) {
-        super(address, managedChannelFactory, parallelisation);
+class ClusterServerClient extends TypeDBClientAbstract {
+
+    private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
+        super(address, createConnectionFactory(credential), parallelisation);
     }
 
-    static ClusterNodeClient create(String address, TypeDBCredential credential, int parallelisation) {
-        ManagedChannelFactory channel;
-        if (credential.tlsEnabled()) {
-            channel = credential.tlsRootCA() != null ? new ManagedChannelFactory.TLS(credential.tlsRootCA()) : new ManagedChannelFactory.TLS();
+    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
+        return new ClusterServerClient(address, credential, parallelisation);
+    }
 
-        } else {
-            channel = new ManagedChannelFactory.PlainText();
-        }
-        return new ClusterNodeClient(address, channel, parallelisation);
+    private static TypeDBConnectionFactory.ClusterServer createConnectionFactory(TypeDBCredential credential) {
+        return new TypeDBConnectionFactory.ClusterServer(
+                credential.username(), credential.password(), credential.tlsEnabled(), credential.tlsRootCA().orElse(null)
+        );
     }
 }

@@ -23,8 +23,8 @@ package com.vaticle.typedb.client;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.cluster.ClusterClient;
-import com.vaticle.typedb.client.core.CoreClient;
+import com.vaticle.typedb.client.rpc.cluster.ClusterClient;
+import com.vaticle.typedb.client.rpc.core.CoreClient;
 
 import java.util.Set;
 

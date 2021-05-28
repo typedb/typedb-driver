@@ -36,6 +36,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
@@ -68,7 +69,8 @@ public class TransactionSteps {
         for (TypeDBSession session : sessions) {
             List<TypeDBTransaction> transactions = new ArrayList<>();
             for (TypeDBTransaction.Type type : types) {
-                TypeDBTransaction transaction = session.transaction(type, TypeDBOptions.core().infer(true));
+                TypeDBOptions options = !client.isCluster() ? TypeDBOptions.core() : TypeDBOptions.cluster();
+                TypeDBTransaction transaction = session.transaction(type, options.infer(true));
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);

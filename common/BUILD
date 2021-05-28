@@ -30,7 +30,7 @@ java_library(
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
         "@vaticle_typeql_lang_java//query",
-        "@vaticle_typedb_protocol//grpc/java:protocol",
+        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
         "@vaticle_factory_tracing//client",
 
         # External dependencies from Maven
