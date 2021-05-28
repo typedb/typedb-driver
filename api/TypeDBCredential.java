@@ -30,6 +30,7 @@ import java.util.Optional;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT_COMBINATION;
 
 public class TypeDBCredential {
+
     private final String username;
     private final String password;
     private final boolean tlsEnabled;

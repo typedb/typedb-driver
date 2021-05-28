@@ -25,6 +25,7 @@ import javax.annotation.CheckReturnValue;
 import java.util.Set;
 
 public interface UserManager {
+
     @CheckReturnValue
     User get(String name);
 
