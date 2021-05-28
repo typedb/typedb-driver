@@ -68,7 +68,7 @@ public class TransactionSteps {
         for (TypeDBSession session : sessions) {
             List<TypeDBTransaction> transactions = new ArrayList<>();
             for (TypeDBTransaction.Type type : types) {
-                TypeDBTransaction transaction = session.transaction(type, TypeDBOptions.core().infer(true));
+                TypeDBTransaction transaction = session.transaction(type, TypeDBOptions.cluster().infer(true));
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);
