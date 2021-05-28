@@ -23,8 +23,8 @@ package com.vaticle.typedb.client.rpc.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 
-import static com.vaticle.typedb.client.rpc.cluster.ClusterUserManager.SYSTEM_DB;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
+import static com.vaticle.typedb.client.rpc.cluster.ClusterUserManager.SYSTEM_DB;
 
 public class ClusterUser implements User {
 
