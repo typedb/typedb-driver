@@ -44,7 +44,9 @@ public class TypeDBCredential {
         this.username = username;
         this.password = password;
         if (!tlsEnabled && tlsRootCA != null) {
-            throw new TypeDBClientException(ILLEGAL_ARGUMENT_COMBINATION, "tlsEnabled=" + tlsEnabled + ", tlsRootCA = " + tlsRootCA);
+            throw new TypeDBClientException(
+                    ILLEGAL_ARGUMENT_COMBINATION, "tlsEnabled: '" + tlsEnabled + "', tlsRootCA: '" + tlsRootCA + "'"
+            );
         }
 
         this.tlsEnabled = tlsEnabled;
