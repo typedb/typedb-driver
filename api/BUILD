@@ -34,7 +34,7 @@ java_library(
         "@vaticle_typedb_common//:common",
         "@vaticle_typeql_lang_java//pattern",
         "@vaticle_typeql_lang_java//query",
-        "@vaticle_typedb_protocol//grpc/java:protocol",
+        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

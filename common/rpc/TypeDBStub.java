@@ -156,7 +156,7 @@ public abstract class TypeDBStub {
         }
 
         public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-            return resilientCall(() -> clusterBlockingStub.usersDelete(request));
+            return resilientCall(() -> clusterBlockingStub.userDelete(request));
         }
 
         public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {
