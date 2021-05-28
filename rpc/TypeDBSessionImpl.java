@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.database.TypeDBDatabaseImpl;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.collection.ConcurrentSet;
 import com.vaticle.typedb.protocol.SessionProto;

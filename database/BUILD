@@ -31,7 +31,6 @@ java_library(
         "//api:api",
         "//common:common",
         "//concept:concept",
-        "//database:database",
         "//logic:logic",
         "//query:query",
         "//stream:stream",
