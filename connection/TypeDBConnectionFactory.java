@@ -21,82 +21,20 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import io.grpc.ManagedChannel;
-import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
-import io.netty.handler.ssl.SslContext;
-
-import javax.annotation.Nullable;
-import javax.net.ssl.SSLException;
-import java.nio.file.Path;
 
 public abstract class TypeDBConnectionFactory {
 
     public abstract ManagedChannel newManagedChannel(String address);
+
     public abstract TypeDBStub newTypeDBStub(ManagedChannel channel);
 
-    ManagedChannel plainTextChannel(String address) {
+    protected ManagedChannel plainTextChannel(String address) {
         return NettyChannelBuilder.forTarget(address)
                 .usePlaintext()
                 .build();
     }
 
-    public static class Core extends TypeDBConnectionFactory {
-
-        @Override
-        public ManagedChannel newManagedChannel(String address) {
-            return plainTextChannel(address);
-        }
-
-        @Override
-        public TypeDBStub.Core newTypeDBStub(ManagedChannel channel) {
-            return TypeDBStub.core(channel);
-        }
-    }
-
-    public static class ClusterServer extends TypeDBConnectionFactory {
-
-        private final String username;
-        private final String password;
-        private final boolean tlsEnabled;
-        @Nullable
-        private final Path tlsRootCA;
-
-        public ClusterServer(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
-            this.username = username;
-            this.password = password;
-            this.tlsEnabled = tlsEnabled;
-            this.tlsRootCA = tlsRootCA;
-        }
-
-        @Override
-        public ManagedChannel newManagedChannel(String address) {
-            if (!tlsEnabled) {
-                return plainTextChannel(address);
-            } else {
-                return TLSChannel(address);
-            }
-        }
-
-        @Override
-        public TypeDBStub.ClusterServer newTypeDBStub(ManagedChannel channel) {
-            return TypeDBStub.clusterServer(username, password, channel);
-        }
-
-        private ManagedChannel TLSChannel(String address) {
-            try {
-                SslContext sslContext;
-                if (tlsRootCA != null) {
-                    sslContext = GrpcSslContexts.forClient().trustManager(tlsRootCA.toFile()).build();
-                } else {
-                    sslContext = GrpcSslContexts.forClient().build();
-                }
-                return NettyChannelBuilder.forTarget(address).useTransportSecurity().sslContext(sslContext).build();
-            } catch (SSLException e) {
-                throw new TypeDBClientException(e.getMessage(), e);
-            }
-        }
-    }
 }

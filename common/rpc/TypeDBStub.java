@@ -22,28 +22,17 @@
 package com.vaticle.typedb.client.common.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.ClusterServerProto;
-import com.vaticle.typedb.protocol.ClusterUserProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
 import com.vaticle.typedb.protocol.SessionProto.Session;
 import com.vaticle.typedb.protocol.TransactionProto;
-import com.vaticle.typedb.protocol.TypeDBClusterGrpc;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
-import io.grpc.CallCredentials;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
-import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-import javax.annotation.Nullable;
-import java.util.concurrent.Executor;
 import java.util.function.Supplier;
-
-import static com.vaticle.typedb.protocol.ClusterDatabaseProto.ClusterDatabaseManager;
-import static com.vaticle.typedb.protocol.ClusterUserProto.ClusterUserManager;
-import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public abstract class TypeDBStub {
 
@@ -51,20 +40,10 @@ public abstract class TypeDBStub {
     private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
     private final TypeDBGrpc.TypeDBStub asyncStub;
 
-    private TypeDBStub(ManagedChannel channel, @Nullable CredentialEmbedder credentialEmbedder) {
+    protected TypeDBStub(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub) {
         this.channel = channel;
-        this.blockingStub = credentialEmbedder != null ?
-                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder) : TypeDBGrpc.newBlockingStub(channel);
-        this.asyncStub = credentialEmbedder != null ?
-                TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder) : TypeDBGrpc.newStub(channel);
-    }
-
-    public static Core core(ManagedChannel channel) {
-        return new Core(channel);
-    }
-
-    public static ClusterServer clusterServer(String username, String password, ManagedChannel channel) {
-        return new ClusterServer(new CredentialEmbedder(username, password), channel);
+        this.blockingStub = blockingStub;
+        this.asyncStub = asyncStub;
     }
 
     public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
@@ -123,75 +102,4 @@ public abstract class TypeDBStub {
         }
     }
 
-    public static class Core extends TypeDBStub {
-
-        private Core(ManagedChannel channel) {
-            super(channel, null);
-        }
-    }
-
-    public static class ClusterServer extends TypeDBStub {
-
-        private final TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub;
-
-        public ClusterServer(CredentialEmbedder credentialEmbedder, ManagedChannel channel) {
-            super(channel, credentialEmbedder);
-            this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
-        }
-
-        public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
-            return resilientCall(() -> clusterBlockingStub.serversAll(request));
-        }
-
-        public ClusterUserManager.Contains.Res usersContains(ClusterUserManager.Contains.Req request) {
-            return resilientCall(() -> clusterBlockingStub.usersContains(request));
-        }
-
-        public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserManager.Create.Req request) {
-            return resilientCall(() -> clusterBlockingStub.usersCreate(request));
-        }
-
-        public ClusterUserManager.All.Res usersAll(ClusterUserManager.All.Req request) {
-            return resilientCall(() -> clusterBlockingStub.usersAll(request));
-        }
-
-        public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-            return resilientCall(() -> clusterBlockingStub.userDelete(request));
-        }
-
-        public ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseManager.Get.Req request) {
-            return resilientCall(() -> clusterBlockingStub.databasesGet(request));
-        }
-
-        public ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseManager.All.Req request) {
-            return resilientCall(() -> clusterBlockingStub.databasesAll(request));
-        }
-
-    }
-
-    private static class CredentialEmbedder extends CallCredentials {
-        private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-        private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
-
-        private final String username;
-        private final String password;
-
-        public CredentialEmbedder(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        @Override
-        public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-            appExecutor.execute(() -> {
-                Metadata headers = new Metadata();
-                headers.put(USERNAME_FIELD, username);
-                headers.put(PASSWORD_FIELD, password);
-                applier.apply(headers);
-            });
-        }
-
-        @Override
-        public void thisUsesUnstableApi() { }
-    }
 }

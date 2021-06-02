@@ -27,7 +27,6 @@ import com.vaticle.typedb.client.api.connection.TypeDBOptions;
 import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.api.connection.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final TypeDBCredential credential;
     private final int parallelisation;
     private final Map<String, ClusterServerClient> clusterServerClients;
-    private final Map<String, TypeDBStub.ClusterServer> stubs;
+    private final Map<String, ClusterServerStub> stubs;
     private final ClusterUserManager userMgr;
     private final ClusterDatabaseManager databaseMgr;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
@@ -65,7 +64,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 .map(address -> pair(address, ClusterServerClient.create(address, credential, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         stubs = clusterServerClients.entrySet().stream()
-                .map(client -> pair(client.getKey(), TypeDBStub.clusterServer(credential.username(), credential.password(), client.getValue().channel())))
+                .map(client -> pair(client.getKey(), ClusterServerStub.create(credential.username(), credential.password(), client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -85,7 +84,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         for (String address : addresses) {
             try (ClusterServerClient client = ClusterServerClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                TypeDBStub.ClusterServer stub = TypeDBStub.clusterServer(credential.username(), credential.password(), client.channel());
+                ClusterServerStub stub = ClusterServerStub.create(credential.username(), credential.password(), client.channel());
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
@@ -166,7 +165,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterServerClients.get(address);
     }
 
-    TypeDBStub.ClusterServer stub(String address) {
+    ClusterServerStub stub(String address) {
         return stubs.get(address);
     }
 

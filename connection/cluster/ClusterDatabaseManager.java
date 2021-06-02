@@ -24,7 +24,6 @@ package com.vaticle.typedb.client.connection.cluster;
 import com.vaticle.typedb.client.api.connection.database.Database;
 import com.vaticle.typedb.client.api.connection.database.DatabaseManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
@@ -77,8 +76,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
             if (contains(name)) {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), client);
-            }
-            else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
+            } else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
         });
     }
 
@@ -100,7 +98,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<TypeDBStub.ClusterServer, TypeDBDatabaseManagerImpl, RESULT> task) {
+    private <RESULT> RESULT failsafeTask(String name, BiFunction<ClusterServerStub, TypeDBDatabaseManagerImpl, RESULT> task) {
         FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
 
             @Override

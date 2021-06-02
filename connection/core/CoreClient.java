@@ -27,7 +27,7 @@ import com.vaticle.typedb.client.connection.TypeDBConnectionFactory;
 public class CoreClient extends TypeDBClientImpl {
 
     public CoreClient(String address, int parallelisation) {
-        super(address, new TypeDBConnectionFactory.Core(), parallelisation);
+        super(address, new CoreConnectionFactory(), parallelisation);
     }
 
     public static CoreClient create(String address) {

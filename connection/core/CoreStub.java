@@ -19,22 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.connection.cluster;
+package com.vaticle.typedb.client.connection.core;
 
-import com.vaticle.typedb.client.api.connection.TypeDBCredential;
-import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.protocol.TypeDBGrpc;
+import io.grpc.ManagedChannel;
 
-class ClusterServerClient extends TypeDBClientImpl {
+public class CoreStub extends TypeDBStub {
 
-    private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
-        super(address, createConnectionFactory(credential), parallelisation);
+    private CoreStub(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub) {
+        super(channel, blockingStub, asyncStub);
     }
 
-    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
-        return new ClusterServerClient(address, credential, parallelisation);
+    public static CoreStub create(ManagedChannel channel) {
+        return new CoreStub(channel, TypeDBGrpc.newBlockingStub(channel), TypeDBGrpc.newStub(channel));
     }
 
-    private static ClusterServerConnectionFactory createConnectionFactory(TypeDBCredential credential) {
-        return new ClusterServerConnectionFactory(credential);
-    }
 }
