@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.config;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.DataTableType;
@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typedb.client.api.connection.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.client.api.connection.TypeDBTransaction.Type.WRITE;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 

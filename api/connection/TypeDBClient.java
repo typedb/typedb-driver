@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.client.api.connection;
 
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.client.api.connection.database.DatabaseManager;
+import com.vaticle.typedb.client.api.connection.user.UserManager;
 
 import javax.annotation.CheckReturnValue;
 

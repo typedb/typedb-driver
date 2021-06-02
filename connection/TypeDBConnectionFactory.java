@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc;
+package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;

@@ -19,11 +19,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc;
+package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.connection.TypeDBOptions;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryFuture;

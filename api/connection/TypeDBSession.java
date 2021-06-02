@@ -19,18 +19,14 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.client.api.connection;
 
-import com.vaticle.typedb.client.api.concept.ConceptManager;
-import com.vaticle.typedb.client.api.logic.LogicManager;
-import com.vaticle.typedb.client.api.query.QueryFuture;
-import com.vaticle.typedb.client.api.query.QueryManager;
-import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typedb.client.api.connection.database.Database;
+import com.vaticle.typedb.protocol.SessionProto;
 
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
 
-public interface TypeDBTransaction extends AutoCloseable {
+public interface TypeDBSession extends AutoCloseable {
 
     @CheckReturnValue
     boolean isOpen();
@@ -39,33 +35,29 @@ public interface TypeDBTransaction extends AutoCloseable {
     Type type();
 
     @CheckReturnValue
+    Database database();
+
+    @CheckReturnValue
     TypeDBOptions options();
 
     @CheckReturnValue
-    ConceptManager concepts();
+    TypeDBTransaction transaction(TypeDBTransaction.Type type);
 
     @CheckReturnValue
-    LogicManager logic();
-
-    @CheckReturnValue
-    QueryManager query();
-
-    void commit();
-
-    void rollback();
+    TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options);
 
     void close();
 
     enum Type {
-        READ(0),
-        WRITE(1);
+        DATA(0),
+        SCHEMA(1);
 
         private final int id;
-        private final boolean isWrite;
+        private final boolean isSchema;
 
         Type(int id) {
             this.id = id;
-            this.isWrite = id == 1;
+            this.isSchema = id == 1;
         }
 
         public static Type of(int value) {
@@ -79,21 +71,12 @@ public interface TypeDBTransaction extends AutoCloseable {
             return id;
         }
 
-        public boolean isRead() { return !isWrite; }
+        public boolean isData() { return !isSchema; }
 
-        public boolean isWrite() { return isWrite; }
+        public boolean isSchema() { return isSchema; }
 
-        public TransactionProto.Transaction.Type proto() {
-            return TransactionProto.Transaction.Type.forNumber(id);
+        public SessionProto.Session.Type proto() {
+            return SessionProto.Session.Type.forNumber(id);
         }
-    }
-
-    interface Extended extends TypeDBTransaction {
-
-        TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
-
-        QueryFuture<TransactionProto.Transaction.Res> query(TransactionProto.Transaction.Req.Builder request);
-
-        Stream<TransactionProto.Transaction.ResPart> stream(TransactionProto.Transaction.Req.Builder request);
     }
 }

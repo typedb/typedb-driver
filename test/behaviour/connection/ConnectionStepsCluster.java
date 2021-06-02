@@ -22,8 +22,8 @@
 package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
+import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.common.test.server.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;

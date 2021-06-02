@@ -19,12 +19,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc;
+package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBOptions;
+import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.common.util.Objects.className;
 
-public abstract class TypeDBClientAbstract implements TypeDBClient {
+public abstract class TypeDBClientImpl implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
@@ -48,7 +48,7 @@ public abstract class TypeDBClientAbstract implements TypeDBClient {
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
 
-    protected TypeDBClientAbstract(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
+    protected TypeDBClientImpl(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
         channel = typeDBConnectionFactory.newManagedChannel(address);
         stub = typeDBConnectionFactory.newTypeDBStub(channel);
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);

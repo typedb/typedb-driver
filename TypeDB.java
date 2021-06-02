@@ -21,10 +21,10 @@
 
 package com.vaticle.typedb.client;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.rpc.cluster.ClusterClient;
-import com.vaticle.typedb.client.rpc.core.CoreClient;
+import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.connection.cluster.ClusterClient;
+import com.vaticle.typedb.client.connection.core.CoreClient;
 
 import java.util.Set;
 
