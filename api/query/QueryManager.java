@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.api.query;
 
-import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.connection.TypeDBOptions;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.client.api.answer.Numeric;

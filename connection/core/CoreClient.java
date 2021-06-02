@@ -19,12 +19,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc.core;
+package com.vaticle.typedb.client.connection.core;
 
-import com.vaticle.typedb.client.rpc.TypeDBClientAbstract;
-import com.vaticle.typedb.client.rpc.TypeDBConnectionFactory;
+import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.client.connection.TypeDBConnectionFactory;
 
-public class CoreClient extends TypeDBClientAbstract {
+public class CoreClient extends TypeDBClientImpl {
 
     public CoreClient(String address, int parallelisation) {
         super(address, new TypeDBConnectionFactory.Core(), parallelisation);

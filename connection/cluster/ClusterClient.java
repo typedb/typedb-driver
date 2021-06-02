@@ -19,12 +19,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc.cluster;
+package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.api.connection.TypeDBOptions;
+import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;

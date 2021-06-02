@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.api.concept.type;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 

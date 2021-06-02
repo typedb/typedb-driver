@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.rpc;
+package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
@@ -37,9 +37,9 @@ import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
-    private final TypeDBClientAbstract client;
+    private final TypeDBClientImpl client;
 
-    public TypeDBDatabaseManagerImpl(TypeDBClientAbstract client) {
+    public TypeDBDatabaseManagerImpl(TypeDBClientImpl client) {
         this.client = client;
     }
 

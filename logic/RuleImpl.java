@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.logic;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.LogicProto;

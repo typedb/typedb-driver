@@ -50,7 +50,7 @@ java_library(
     deps = [
         # Internal dependencies
         "//api",
-        "//rpc",
+        "//connection",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",

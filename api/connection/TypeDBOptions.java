@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.client.api.connection;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.OptionsProto;

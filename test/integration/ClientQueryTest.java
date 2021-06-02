@@ -22,10 +22,10 @@
 package com.vaticle.typedb.client.test.integration;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBOptions;
+import com.vaticle.typedb.client.api.connection.TypeDBSession;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
@@ -47,9 +47,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typedb.client.api.connection.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.client.api.connection.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.client.api.connection.TypeDBTransaction.Type.WRITE;
 import static com.vaticle.typeql.lang.TypeQL.and;
 import static com.vaticle.typeql.lang.TypeQL.rel;
 import static com.vaticle.typeql.lang.TypeQL.rule;
