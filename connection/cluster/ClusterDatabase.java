@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.connection.database.Database;
 import com.vaticle.typedb.client.connection.TypeDBDatabaseImpl;
 import com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;

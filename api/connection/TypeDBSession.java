@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.api.connection;
 
-import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.connection.database.Database;
 import com.vaticle.typedb.protocol.SessionProto;
 
 import javax.annotation.CheckReturnValue;

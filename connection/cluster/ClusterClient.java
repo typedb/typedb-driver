@@ -25,7 +25,7 @@ import com.vaticle.typedb.client.api.connection.TypeDBClient;
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.client.api.connection.TypeDBOptions;
 import com.vaticle.typedb.client.api.connection.TypeDBSession;
-import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.client.api.connection.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.common.collection.Pair;

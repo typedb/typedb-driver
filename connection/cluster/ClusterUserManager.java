@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.client.api.connection.user.User;
+import com.vaticle.typedb.client.api.connection.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.Set;
