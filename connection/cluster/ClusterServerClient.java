@@ -27,14 +27,11 @@ import com.vaticle.typedb.client.connection.TypeDBClientImpl;
 class ClusterServerClient extends TypeDBClientImpl {
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
-        super(address, createConnectionFactory(credential), parallelisation);
+        super(address, new ClusterServerConnectionFactory(credential), parallelisation);
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
         return new ClusterServerClient(address, credential, parallelisation);
     }
 
-    private static ClusterServerConnectionFactory createConnectionFactory(TypeDBCredential credential) {
-        return new ClusterServerConnectionFactory(credential);
-    }
 }
