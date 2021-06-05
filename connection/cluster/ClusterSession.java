@@ -35,13 +35,13 @@ public class ClusterSession implements TypeDBSession {
     private final ClusterClient clusterClient;
     private final TypeDBOptions.Cluster options;
     private ClusterServerClient clusterServerClient;
-    private TypeDBSessionImpl typeDBSessionImpl;
+    private TypeDBSessionImpl typeDBSession;
 
     public ClusterSession(ClusterClient clusterClient, String serverAddress, String database, Type type, TypeDBOptions.Cluster options) {
         this.clusterClient = clusterClient;
         this.clusterServerClient = clusterClient.clusterServerClient(serverAddress);
         LOG.debug("Opening a session to '{}'", serverAddress);
-        this.typeDBSessionImpl = clusterServerClient.session(database, type, options);
+        this.typeDBSession = clusterServerClient.session(database, type, options);
         this.options = options;
     }
 
@@ -73,22 +73,22 @@ public class ClusterSession implements TypeDBSession {
 
             @Override
             TypeDBTransaction run(ClusterDatabase.Replica replica) {
-                return typeDBSessionImpl.transaction(type, options);
+                return typeDBSession.transaction(type, options);
             }
 
             @Override
             TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
-                if (typeDBSessionImpl != null) typeDBSessionImpl.close();
+                if (typeDBSession != null) typeDBSession.close();
                 clusterServerClient = clusterClient.clusterServerClient(replica.address());
-                typeDBSessionImpl = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
-                return typeDBSessionImpl.transaction(type, options);
+                typeDBSession = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                return typeDBSession.transaction(type, options);
             }
         };
     }
 
     @Override
     public TypeDBSession.Type type() {
-        return typeDBSessionImpl.type();
+        return typeDBSession.type();
     }
 
     @Override
@@ -98,16 +98,16 @@ public class ClusterSession implements TypeDBSession {
 
     @Override
     public boolean isOpen() {
-        return typeDBSessionImpl.isOpen();
+        return typeDBSession.isOpen();
     }
 
     @Override
     public void close() {
-        typeDBSessionImpl.close();
+        typeDBSession.close();
     }
 
     @Override
     public Database database() {
-        return typeDBSessionImpl.database();
+        return typeDBSession.database();
     }
 }

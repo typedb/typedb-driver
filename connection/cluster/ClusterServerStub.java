@@ -53,7 +53,6 @@ public class ClusterServerStub extends TypeDBStub {
                 TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder));
     }
 
-
     public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
         return resilientCall(() -> clusterBlockingStub.serversAll(request));
     }
