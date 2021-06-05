@@ -34,7 +34,6 @@ java_library(
         # Internal Package Dependencies
         "//api:api",
         "//test/behaviour/connection:steps-base",
-        "//test/behaviour/util:util",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
