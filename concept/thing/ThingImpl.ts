@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {AttributeType} from "../../api/concept/type/AttributeType";
@@ -160,7 +160,7 @@ export abstract class RemoteThingImpl extends ThingImpl implements RemoteThing {
     }
 
     protected async execute(request: TransactionProto.Req): Promise<ThingProto.Res> {
-        return (await this._transaction.rpcExecute(request)).getThingRes();
+        return (await this._transaction.rpcExecute(request, false)).getThingRes();
     }
 
     protected stream(request: TransactionProto.Req): Stream<ThingProto.ResPart> {

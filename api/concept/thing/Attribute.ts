@@ -20,7 +20,7 @@
  */
 
 import {RemoteThing, Thing} from "./Thing";
-import {TypeDBTransaction} from "../../TypeDBTransaction";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Stream} from "../../../common/util/Stream";
 import {ThingType} from "../type/ThingType";
 import {AttributeType} from "../type/AttributeType";

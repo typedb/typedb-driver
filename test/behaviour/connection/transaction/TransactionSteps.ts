@@ -22,12 +22,11 @@
 import { Then } from "@cucumber/cucumber";
 import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TypeDBClient } from "../../../../dist/api/TypeDBClient";
-import { TypeDBSession, SessionType } from "../../../../dist/api/TypeDBSession";
-import { TypeDBTransaction, TransactionType } from "../../../../dist/api/TypeDBTransaction";
+import { TypeDBSession } from "../../../../dist/api/connection/TypeDBSession";
+import { TypeDBTransaction, TransactionType } from "../../../../dist/api/connection/TypeDBTransaction";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
+import { TypeDBOptions } from "../../../../dist/api/connection/TypeDBOptions";
 import assert = require("assert");
-import { TypeDBOptions } from "../../../../dist/api/TypeDBOptions";
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {

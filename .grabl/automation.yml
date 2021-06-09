@@ -55,6 +55,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         npm install
         ./test/common/start-core-server.sh
+        sleep 10
         npm run test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-core-server.sh
         exit $TEST_SUCCESS
@@ -66,7 +67,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         npm install
-        ./test/common/start-cluster-servers.sh
+        source test/common/start-cluster-servers.sh # use source to receive export vars
         npm run test-cluster-failover && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS

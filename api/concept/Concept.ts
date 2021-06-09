@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../TypeDBTransaction";
+import {TypeDBTransaction} from "../connection/TypeDBTransaction";
 
 export interface Concept {
 

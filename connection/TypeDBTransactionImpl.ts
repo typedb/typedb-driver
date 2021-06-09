@@ -19,14 +19,9 @@
  * under the License.
  */
 
-import {TypeDBTransaction, TransactionType} from "../api/TypeDBTransaction";
-import {CoreSession} from "./CoreSession";
-import {TypeDBOptions} from "../api/TypeDBOptions";
-import {BidirectionalStream} from "../stream/BidirectionalStream";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
+import {TypeDBTransaction, TransactionType} from "../api/connection/TypeDBTransaction";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {ConceptManager} from "../api/concept/ConceptManager";
 import {LogicManager} from "../api/logic/LogicManager";
 import {QueryManager} from "../api/query/QueryManager";
@@ -34,10 +29,15 @@ import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
 import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import {Stream} from "../common/util/Stream";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {BidirectionalStream} from "../stream/BidirectionalStream";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
-export class CoreTransaction implements TypeDBTransaction.Extended {
-    private readonly _session: CoreSession;
+export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
+    private readonly _session: TypeDBSessionImpl;
     private readonly _sessionId: string;
     private readonly _type: TransactionType;
     private readonly _options: TypeDBOptions;
@@ -46,12 +46,12 @@ export class CoreTransaction implements TypeDBTransaction.Extended {
     private _logicManager: LogicManager;
     private _queryManager: QueryManager;
 
-    constructor(session: CoreSession, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
+    constructor(session: TypeDBSessionImpl, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
         this._session = session;
         this._sessionId = _sessionId;
         this._type = type;
         this._options = options;
-        const rpcClient = this._session.rpc();
+        const rpcClient = this._session.stub();
         this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
         this._conceptManager = new ConceptManagerImpl(this);
         this._logicManager = new LogicManagerImpl(this);
@@ -70,7 +70,7 @@ export class CoreTransaction implements TypeDBTransaction.Extended {
     public async commit(): Promise<void> {
         const commitReq = RequestBuilder.Transaction.commitReq();
         try {
-            await this.rpcExecute(commitReq);
+            await this.rpcExecute(commitReq, false);
         } finally {
             await this.close();
         }
@@ -78,7 +78,7 @@ export class CoreTransaction implements TypeDBTransaction.Extended {
 
     public async rollback(): Promise<void> {
         const rollbackReq = RequestBuilder.Transaction.rollbackReq();
-        await this.rpcExecute(rollbackReq);
+        await this.rpcExecute(rollbackReq, false);
     }
 
     public concepts(): ConceptManager {

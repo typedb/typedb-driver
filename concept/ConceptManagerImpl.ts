@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {ConceptManager} from "../api/concept/ConceptManager";
 import {Thing} from "../api/concept/thing/Thing";
 import {ThingType} from "../api/concept/type/ThingType";
@@ -112,7 +112,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     private execute(request: TransactionProto.Req): Promise<ConceptProto.Res> {
-        return this._transaction.rpcExecute(request).then((res) => res.getConceptManagerRes());
+        return this._transaction.rpcExecute(request ).then((res) => res.getConceptManagerRes());
     }
 
 }

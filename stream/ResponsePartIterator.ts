@@ -36,14 +36,12 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
     private readonly _requestId: string;
     private readonly _dispatcher: BatchDispatcher;
     private readonly _responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>;
-    private _next: Transaction.ResPart;
 
     constructor(requestId: string, responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>,
                 dispatcher: BatchDispatcher) {
         this._requestId = requestId;
         this._dispatcher = dispatcher;
         this._responseCollector = responseCollector;
-        this._next = null;
     }
 
     async* [Symbol.asyncIterator](): AsyncIterator<Transaction.ResPart, any, undefined> {

@@ -20,9 +20,9 @@
  */
 
 const {TypeDB} = require("../../dist/TypeDB");
-const {SessionType} = require("../../dist/api/TypeDBSession")
-const {TransactionType} = require("../../dist/api/TypeDBTransaction")
-const {TypeDBOptions} = require("../../dist/api/TypeDBOptions");
+const {SessionType} = require("../../dist/api/connection/TypeDBSession")
+const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
+const {TypeDBOptions} = require("../../dist/api/connection/TypeDBOptions");
 const assert = require("assert");
 
 async function run() {

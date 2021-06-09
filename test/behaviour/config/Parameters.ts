@@ -22,7 +22,7 @@
 import {defineParameterType} from "@cucumber/cucumber";
 import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {TransactionType} from "../../../dist/api/TypeDBTransaction";
+import {TransactionType} from "../../../dist/api/connection/TypeDBTransaction";
 
 export function parseBool(value: string): boolean {
     return value === "true";

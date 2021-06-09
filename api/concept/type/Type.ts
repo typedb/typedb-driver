@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../../TypeDBTransaction";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Concept, RemoteConcept} from "../Concept";
 import {Label} from "../../../common/Label";
 import {Stream} from "../../../common/util/Stream";

@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {Concept, RemoteConcept} from "../api/concept/Concept";
 
 export abstract class ConceptImpl implements Concept {

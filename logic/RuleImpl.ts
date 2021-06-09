@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {RemoteRule, Rule} from "../api/logic/Rule";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Rule as RuleProto} from "typedb-protocol/common/logic_pb";

@@ -25,14 +25,13 @@ import {ResponsePartIterator} from "./ResponsePartIterator";
 import {Stream} from "../common/util/Stream";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import ResponseQueue = ResponseCollector.ResponseQueue;
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import * as uuid from "uuid";
-import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
-import ResponseQueue = ResponseCollector.ResponseQueue;
-import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
+import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 
 
 export class BidirectionalStream {
@@ -43,11 +42,11 @@ export class BidirectionalStream {
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _isOpen: boolean;
 
-    constructor(rpcClient: TypeDBClient, requestTransmitter: RequestTransmitter) {
+    constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
         this._responsePartCollector = new ResponseCollector();
-        const transactionStream = rpcClient.transaction();
+        const transactionStream = stub.transaction();
         this.registerObserver(transactionStream);
         this._dispatcher = requestTransmitter.dispatcher(transactionStream);
         this._isOpen = true;
@@ -80,7 +79,6 @@ export class BidirectionalStream {
         this._responseCollector.close(error);
         this._responsePartCollector.close(error);
         this._dispatcher.close();
-
     }
 
     private collectRes(res: Transaction.Res): void {
@@ -99,7 +97,9 @@ export class BidirectionalStream {
 
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
         transactionStream.on("data", (res: Transaction.Server) => {
-            if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
+            if (!this.isOpen()) {
+                return;
+            }
 
             switch (res.getServerCase()) {
                 case Transaction.Server.ServerCase.RES:

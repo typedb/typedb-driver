@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
 import {Entity} from "../../api/concept/thing/Entity";
 import {EntityImpl, ThingTypeImpl} from "../../dependencies_internal";

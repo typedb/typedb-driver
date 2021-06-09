@@ -19,29 +19,29 @@
  * under the License.
  */
 
-import {Database} from "../api/database/Database";
-import {DatabaseManager} from "../api/database/DatabaseManager";
+import {ClusterServerStub} from "./ClusterServerStub";
 import {ClusterDatabase} from "./ClusterDatabase";
 import {ClusterClient} from "./ClusterClient";
-import {CoreDatabaseManager} from "../core/CoreDatabaseManager";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {FailsafeTask} from "./FailsafeTask";
+import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
+import {Database} from "../../api/connection/database/Database";
+import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import { FailsafeTask } from "./FailsafeTask";
-import { TypeDBClusterClient as TypeDBClusterStub } from "typedb-protocol/cluster/cluster_service_grpc_pb";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;
 
 export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
-    private readonly _databaseManagers: { [serverAddress: string]: CoreDatabaseManager };
+    private readonly _databaseManagers: { [serverAddress: string]: TypeDBDatabaseManagerImpl };
     private readonly _client: ClusterClient;
 
     constructor(client: ClusterClient) {
         this._client = client;
-        this._databaseManagers = Object.entries(this._client.coreClients()).reduce((obj: { [address: string]: CoreDatabaseManager }, [addr, client]) => {
+        this._databaseManagers = Object.entries(this._client.clusterServerClients()).reduce((obj: { [address: string]: TypeDBDatabaseManagerImpl }, [addr, client]) => {
             obj[addr] = client.databases();
             return obj;
         }, {});
@@ -58,12 +58,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
     async get(name: string): Promise<Database.Cluster> {
         return await this.failsafeTask(name, (async (stub, dbMgr) => {
             if (await this.contains(name)) {
-                const res: ClusterDatabaseManagerProto.Get.Res = await new Promise((resolve, reject) => {
-                    stub.databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(name), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res: ClusterDatabaseManagerProto.Get.Res = await stub.databasesClusterGet(RequestBuilder.Cluster.DatabaseManager.getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), this._client);
             }
             throw new TypeDBClientError(DB_DOES_NOT_EXIST.message(name));
@@ -74,12 +69,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         let errors = "";
         for (const address of Object.keys(this._databaseManagers)) {
             try {
-                const res: ClusterDatabaseManagerProto.All.Res = await new Promise((resolve, reject) => {
-                    this._client.typeDBClusterRPC(address).databases_all(RequestBuilder.Cluster.DatabaseManager.allReq(), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res = await this._client.stub(address).databasesClusterAll(RequestBuilder.Cluster.DatabaseManager.allReq());
                 return res.getDatabasesList().map(db => ClusterDatabase.of(db, this._client));
             } catch (e) {
                 errors += `- ${address}: ${e}\n`;
@@ -88,7 +78,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
     }
 
-    databaseManagers(): { [address: string]: CoreDatabaseManager } {
+    databaseManagers(): { [address: string]: TypeDBDatabaseManagerImpl } {
         return this._databaseManagers;
     }
 
@@ -96,7 +86,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return this._client;
     }
 
-    private async failsafeTask<T>(name: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
+    private async failsafeTask<T>(name: string, task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>): Promise<T> {
         const failsafeTask = new DatabaseManagerFailsafeTask(this._client, name, task);
         try {
             return await failsafeTask.runAnyReplica();
@@ -110,14 +100,14 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
 class DatabaseManagerFailsafeTask<T> extends FailsafeTask<T> {
 
-    private readonly _task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>;
+    private readonly _task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>;
 
-    constructor(client: ClusterClient, database: string, task: (stub: TypeDBClusterStub, dbMgr: DatabaseManager) => Promise<T>) {
+    constructor(client: ClusterClient, database: string, task: (stub: ClusterServerStub, dbMgr: DatabaseManager) => Promise<T>) {
         super(client, database);
         this._task = task;
     }
 
     async run(replica: Database.Replica): Promise<T> {
-        return this._task(this.client.typeDBClusterRPC(replica.address()), this.client.coreClient(replica.address()).databases());
+        return this._task(this.client.stub(replica.address()), this.client.clusterServerClient(replica.address()).databases());
     }
 }

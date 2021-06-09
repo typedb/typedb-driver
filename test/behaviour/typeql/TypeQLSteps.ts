@@ -54,8 +54,8 @@ Then("the integrity is validated", async () => {
     // TODO
 });
 
-When("typeql define", (query: string) => {
-    tx().query().define(query);
+When("typeql define", async (query: string) => {
+    await tx().query().define(query);
 });
 
 Then("typeql define; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -66,8 +66,8 @@ Then("typeql define; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().define(query));
 });
 
-When("typeql undefine", (query: string) => {
-    tx().query().undefine(query);
+When("typeql undefine", async (query: string) => {
+    await tx().query().undefine(query);
 });
 
 Then("typeql undefine; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -78,8 +78,8 @@ Then("typeql undefine; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().undefine(query));
 });
 
-When("typeql insert", (query: string) => {
-    tx().query().insert(query);
+When("typeql insert", async (query: string) => {
+    await tx().query().insert(query).collect();
 });
 
 Then("typeql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -90,8 +90,8 @@ Then("typeql insert; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().insert(query).first());
 });
 
-When("typeql delete", (query: string) => {
-    tx().query().delete(query);
+When("typeql delete", async (query: string) => {
+    await tx().query().delete(query);
 });
 
 Then("typeql delete; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -102,8 +102,8 @@ Then("typeql delete; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query().delete(query));
 });
 
-When("typeql update", (query: string) => {
-    tx().query().update(query);
+When("typeql update", async (query: string) => {
+    await tx().query().update(query).collect();
 });
 
 Then("typeql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
@@ -246,9 +246,9 @@ class ThingKeyMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = (concept as Thing).asRemote(tx()).getHas(true);
+        const keys = await (concept as Thing).asRemote(tx()).getHas(true).collect();
 
-        for await (const key of keys) {
+        for (const key of keys) {
             if (key.getType().getLabel().scopedName() === this.typeLabel) {
                 return this.check(key);
             }
@@ -303,7 +303,7 @@ Then("order of answer concepts is", async (answerIdentifiersTable: DataTable) =>
         `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
     for (let i = 0; i < answers.length; i++) {
         const [answer, answerIdentifier] = [answers[i], answerIdentifiers[i]];
-        assert(answerConceptsMatch(answerIdentifier, answer),
+        assert(await answerConceptsMatch(answerIdentifier, answer),
             `The answer at index [${i}] does not match the identifier [${JSON.stringify(answerIdentifier)}].`);
     }
 });

@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import {Database} from "../api/database/Database";
-import {CoreDatabase} from "../core/CoreDatabase";
+import {ClusterClient} from "./ClusterClient";
+import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
+import {FailsafeTask} from "../../dependencies_internal";
+import {Database} from "../../api/connection/database/Database";
 import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
-import { ClusterClient } from "./ClusterClient";
-import { FailsafeTask } from "./FailsafeTask";
 
 export class ClusterDatabase implements Database.Cluster {
 
     private readonly _name: string;
-    private readonly _databases: { [address: string]: CoreDatabase };
+    private readonly _databases: { [address: string]: TypeDBDatabaseImpl };
     private readonly _client: ClusterClient;
     private readonly _replicas: DatabaseReplica[];
 
@@ -37,7 +37,7 @@ export class ClusterDatabase implements Database.Cluster {
         const clusterDbMgr = client.databases();
         for (const address of Object.keys(clusterDbMgr.databaseManagers())) {
             const databaseManager = clusterDbMgr.databaseManagers()[address];
-            this._databases[address] = new CoreDatabase(database, databaseManager.rpcClient());
+            this._databases[address] = new TypeDBDatabaseImpl(database, databaseManager.stub());
         }
         this._name = database;
         this._client = client;
@@ -164,9 +164,9 @@ class ReplicaId {
 
 class DeleteDatabaseFailsafeTask extends FailsafeTask<void> {
 
-    private readonly _databases: {[key: string]: CoreDatabase};
+    private readonly _databases: { [key: string]: TypeDBDatabaseImpl };
 
-    constructor(client: ClusterClient, database: string, databases: {[key: string]: CoreDatabase}) {
+    constructor(client: ClusterClient, database: string, databases: { [key: string]: TypeDBDatabaseImpl }) {
         super(client, database);
         this._databases = databases;
     }

@@ -19,61 +19,46 @@
  * under the License.
  */
 
-import {DatabaseManager} from "../api/database/DatabaseManager";
-import {Database} from "../api/database/Database";
+import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
+import {DatabaseManager} from "../api/connection/database/DatabaseManager";
+import {Database} from "../api/connection/database/Database";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {CoreDatabase} from "./CoreDatabase";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
 
-export class CoreDatabaseManager implements DatabaseManager {
+export class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
-    private readonly _rpcClient: TypeDBClient;
+    private readonly _stub: TypeDBStub;
 
-    constructor(client: TypeDBClient) {
-        this._rpcClient = client;
+    constructor(client: TypeDBStub) {
+        this._stub = client;
     }
 
     public async get(name: string): Promise<Database> {
-        if (await this.contains(name)) return new CoreDatabase(name, this._rpcClient);
+        if (await this.contains(name)) return new TypeDBDatabaseImpl(name, this._stub);
         else throw new TypeDBClientError(ErrorMessage.Client.DB_DOES_NOT_EXIST);
     }
 
     public create(name: string): Promise<void> {
         if (!name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME);
         const req = RequestBuilder.Core.DatabaseManager.createReq(name);
-        return new Promise((resolve, reject) => {
-            this._rpcClient.databases_create(req, (err) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve();
-            });
-        });
+        return this._stub.databasesCreate(req);
     }
 
     public contains(name: string): Promise<boolean> {
         if (!name) throw new TypeDBClientError(ErrorMessage.Client.MISSING_DB_NAME);
         const req = RequestBuilder.Core.DatabaseManager.containsReq(name);
-        return new Promise((resolve, reject) => {
-            this._rpcClient.databases_contains(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getContains());
-            });
-        });
+        return this._stub.databasesContains(req);
     }
 
     public all(): Promise<Database[]> {
         const req = RequestBuilder.Core.DatabaseManager.allReq();
-        return new Promise((resolve, reject) => {
-            this._rpcClient.databases_all(req, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
-                else resolve(res.getNamesList().map(name => new CoreDatabase(name, this._rpcClient)));
-            })
-        })
+        return this._stub.databasesAll(req);
     }
 
-    rpcClient() {
-        return this._rpcClient;
+    stub() {
+        return this._stub;
     }
 
 }

@@ -20,8 +20,8 @@
  */
 
 const {TypeDB} = require("../../dist/TypeDB");
-const {TypeDBSession, SessionType} = require("../../dist/api/TypeDBSession")
-const {TypeDBTransaction, TransactionType} = require("../../dist/api/TypeDBTransaction")
+const {SessionType} = require("../../dist/api/connection/TypeDBSession")
+const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
 const {AttributeType} = require("../../dist/api/concept/type/AttributeType");
 const assert = require("assert");
 

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../TypeDBTransaction";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Relation} from "./Relation";
 import {Attribute} from "./Attribute";
 import {RoleType} from "../type/RoleType";

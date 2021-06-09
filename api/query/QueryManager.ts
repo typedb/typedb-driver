@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBOptions} from "../TypeDBOptions";
+import {TypeDBOptions} from "../connection/TypeDBOptions";
 import {ConceptMap} from "../answer/ConceptMap";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
 import {Numeric} from "../answer/Numeric";

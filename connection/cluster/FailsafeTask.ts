@@ -20,13 +20,12 @@
  */
 
 
-import {Database} from "../api/database/Database";
 import {ClusterClient} from "./ClusterClient";
-import {ClusterDatabase, DatabaseReplica} from "./ClusterDatabase";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import {ClusterDatabase, DatabaseReplica} from "../../dependencies_internal";
+import {Database} from "../../api/connection/database/Database";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
@@ -76,7 +75,7 @@ export abstract class FailsafeTask<TResult> {
         if (!databaseClusterRPC) databaseClusterRPC = await this.fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        const replicas: DatabaseReplica[] = [databaseClusterRPC.preferredReplica()]
+        const replicas: Database.Replica[] = [databaseClusterRPC.preferredReplica()]
             .concat(databaseClusterRPC.replicas().filter(rep => !rep.isPreferred()));
 
         let retries = 0;
@@ -85,7 +84,7 @@ export abstract class FailsafeTask<TResult> {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
                 if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.errorMessage()) {
-                    console.info("Unable to open a session or transaction to " + replica.id() + ". Attempting next replica.", e);
+                    console.info("Unable to open a session or transaction to " + replica + ". Attempting next replica.", e);
                 } else throw e;
             }
             retries++;
@@ -119,12 +118,7 @@ export abstract class FailsafeTask<TResult> {
         for (const serverAddress of this._client.clusterMembers()) {
             try {
                 console.info(`Fetching replica info from ${serverAddress}`);
-                const res: ClusterDatabaseManager.Get.Res = await new Promise((resolve, reject) => {
-                    this._client.typeDBClusterRPC(serverAddress).databases_get(RequestBuilder.Cluster.DatabaseManager.getReq(this._database), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const res = await this._client.stub(serverAddress).databasesClusterGet(RequestBuilder.Cluster.DatabaseManager.getReq(this._database));
                 const databaseClusterRPC = ClusterDatabase.of(res.getDatabase(), this._client);
                 this._client.clusterDatabases()[this._database] = databaseClusterRPC;
                 return databaseClusterRPC;

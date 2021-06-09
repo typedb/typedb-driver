@@ -19,32 +19,14 @@
  * under the License.
  */
 
+import {CoreStub} from "./CoreStub";
+import {TypeDBStubFactory} from "../TypeDBStubFactory";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 
-import {TypeDBOptions} from "./TypeDBOptions";
-import {TypeDBSession, SessionType} from "./TypeDBSession";
-import {DatabaseManager} from "./database/DatabaseManager";
+export class CoreStubFactory extends TypeDBStubFactory {
 
-export interface TypeDBClient {
-
-    isOpen(): boolean;
-
-    databases(): DatabaseManager;
-
-    session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
-
-    isCluster(): boolean;
-
-    asCluster(): TypeDBClient.Cluster;
-
-    close(): void;
-
-}
-
-export namespace TypeDBClient {
-
-    export interface Cluster extends TypeDBClient {
-
-        databases(): DatabaseManager.Cluster;
-
+    newTypeDBStub(address: string): TypeDBStub {
+        return CoreStub.create(address);
     }
+
 }

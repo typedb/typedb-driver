@@ -20,42 +20,51 @@
  */
 
 
-import {TypeDBClient} from "../api/TypeDBClient";
-import {TypeDBClusterOptions, TypeDBOptions} from "../api/TypeDBOptions";
-import {Database} from "../api/database/Database";
-import {SessionType} from "../api/TypeDBSession";
-import {CoreClient} from "../core/CoreClient";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
-import {ClusterDatabase} from "./ClusterDatabase";
-import {ClusterSession} from "./ClusterSession";
 import {FailsafeTask} from "./FailsafeTask";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {TypeDBClusterClient} from "typedb-protocol/cluster/cluster_service_grpc_pb";
-import {ServerManager} from "typedb-protocol/cluster/cluster_server_pb";
-import {ChannelCredentials} from "@grpc/grpc-js";
+import {ClusterSession} from "./ClusterSession";
+import {ClusterServerStub} from "./ClusterServerStub";
+import {ClusterServerClient} from "./ClusterServerClient";
+import {ClusterUserManager} from "./ClusterUserManager";
+import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
+import {Database} from "../../api/connection/database/Database";
+import {TypeDBClient} from "../../api/connection/TypeDBClient";
+import {SessionType} from "../../api/connection/TypeDBSession";
+import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
+import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
 export class ClusterClient implements TypeDBClient.Cluster {
 
-    private _coreClients: { [serverAddress: string]: CoreClient };
-    private _typeDBClusterRPCs: { [serverAddress: string]: TypeDBClusterClient };
+    private readonly _addresses: string[];
+    private readonly _credential: TypeDBCredential;
+
+    private _serverClients: { [serverAddress: string]: ClusterServerClient };
+    private _clusterStubs: { [serverAddress: string]: ClusterServerStub };
     private _databaseManagers: ClusterDatabaseManager;
-    private _clusterDatabases: { [db: string]: ClusterDatabase };
+    private _clusterDatabases: { [db: string]: Database.Cluster };
+    private _userManager: ClusterUserManager;
     private _isOpen: boolean;
 
-    async open(addresses: string[]): Promise<this> {
-        const serverAddresses = await this.fetchClusterServers(addresses);
-        this._coreClients = {}
+    constructor(addresses: string[], credential: TypeDBCredential) {
+        this._addresses = addresses;
+        this._credential = credential;
+    }
+
+    async open(): Promise<this> {
+        const serverAddresses = await this.fetchClusterServers();
+        this._serverClients = {}
         serverAddresses.forEach((addr) => {
-            this._coreClients[addr] = new CoreClient(addr);
+            this._serverClients[addr] = new ClusterServerClient(addr, this._credential);
         });
-        this._typeDBClusterRPCs = {};
+        this._clusterStubs = {};
         serverAddresses.forEach((addr) => {
-            this._typeDBClusterRPCs[addr] = new TypeDBClusterClient(addr, ChannelCredentials.createInsecure());
+            this._clusterStubs[addr] = ClusterServerStub.create(addr, this._credential);
         });
 
+        this._userManager = new ClusterUserManager(this);
         this._databaseManagers = new ClusterDatabaseManager(this);
         this._clusterDatabases = {};
         this._isOpen = true;
@@ -82,6 +91,10 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return this._databaseManagers;
     }
 
+    users(): ClusterUserManager {
+        return this._userManager;
+    }
+
     isOpen(): boolean {
         return this._isOpen;
     }
@@ -89,7 +102,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
     close(): void {
         if (this._isOpen) {
             this._isOpen = false;
-            Object.values(this._coreClients).forEach(client => client.close());
+            Object.values(this._serverClients).forEach(client => client.close());
         }
     }
 
@@ -97,53 +110,46 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return true;
     }
 
-    clusterDatabases(): { [db: string]: ClusterDatabase } {
+    clusterDatabases(): { [db: string]: Database.Cluster } {
         return this._clusterDatabases;
     }
 
     clusterMembers(): string[] {
-        return Object.keys(this._coreClients);
+        return Object.keys(this._serverClients);
     }
 
-    coreClient(address: string): TypeDBClient {
-        return this._coreClients[address];
+    clusterServerClient(address: string): ClusterServerClient {
+        return this._serverClients[address];
     }
 
-    coreClients() {
-        return this._coreClients;
+    clusterServerClients() {
+        return this._serverClients;
     }
 
-    typeDBClusterRPC(address: string): TypeDBClusterClient {
-        return this._typeDBClusterRPCs[address];
+    stub(address: string): ClusterServerStub {
+        return this._clusterStubs[address];
     }
 
-    private async fetchClusterServers(addresses: string[]): Promise<string[]> {
-        for (const address of addresses) {
-            const client = new CoreClient(address);
+    private async fetchClusterServers(): Promise<string[]> {
+        for (const address of this._addresses) {
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
-                const grpcClusterClient = new TypeDBClusterClient(address, ChannelCredentials.createInsecure());
-                const res = await new Promise<ServerManager.All.Res>((resolve, reject) => {
-                    grpcClusterClient.servers_all(RequestBuilder.Cluster.ServerManager.allReq(), (err, res) => {
-                        if (err) reject(new TypeDBClientError(err));
-                        else resolve(res);
-                    });
-                });
+                const clusterStub = ClusterServerStub.create(address, this._credential);
+                const res = await clusterStub.serversAll(RequestBuilder.Cluster.ServerManager.allReq());
                 const members = res.getServersList().map(x => x.getAddress());
                 console.info(`The cluster servers are ${members}`);
                 return members;
             } catch (e) {
                 console.error(`Fetching cluster servers from ${address} failed.`, e);
-            } finally {
-                client.close();
             }
         }
-        throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses.join(",")));
+        throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._addresses.join(",")));
     }
 
     asCluster(): TypeDBClient.Cluster {
         return this;
     }
+
 }
 
 class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {

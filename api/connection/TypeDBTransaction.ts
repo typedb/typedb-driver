@@ -22,10 +22,10 @@
 
 import {TypeDBOptions} from "./TypeDBOptions";
 import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {ConceptManager} from "./concept/ConceptManager";
-import {LogicManager} from "./logic/LogicManager";
-import {QueryManager} from "./query/QueryManager";
-import {Stream} from "../common/util/Stream";
+import {ConceptManager} from "../concept/ConceptManager";
+import {LogicManager} from "../logic/LogicManager";
+import {QueryManager} from "../query/QueryManager";
+import {Stream} from "../../common/util/Stream";
 
 export interface TypeDBTransaction {
 
@@ -90,7 +90,7 @@ export namespace TypeDBTransaction {
 
     export interface Extended extends TypeDBTransaction {
 
-        rpcExecute(request: Transaction.Req): Promise<Transaction.Res>;
+        rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res>;
 
         rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;
 

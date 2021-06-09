@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {RelationType} from "../../api/concept/type/RelationType";
@@ -97,8 +97,8 @@ export namespace RoleTypeImpl {
         }
 
         async isDeleted(): Promise<boolean> {
-            return !this.getRelationType() ||
-                (!(await this.getRelationType()).asRemote(this._transaction).getRelates(this.getLabel().name()))
+            const relationType = await this.getRelationType();
+            return !(relationType) || (!(await relationType.asRemote(this._transaction).getRelates(this.getLabel().name())));
         }
     }
 

@@ -21,6 +21,10 @@
 
 import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
 import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import {
+    ClusterUser as ClusterUserProto,
+    ClusterUserManager as ClusterUserManagerProto
+} from "typedb-protocol/cluster/cluster_user_pb";
 import {ServerManager as ServerManagerProto} from "typedb-protocol/cluster/cluster_server_pb";
 import {Session as SessionProto} from "typedb-protocol/common/session_pb";
 import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
@@ -83,6 +87,27 @@ export namespace RequestBuilder {
             export function allReq() {
                 return new ServerManagerProto.All.Req();
             }
+        }
+
+        export namespace UserManager {
+            export function containsReq(name: string): ClusterUserManagerProto.Contains.Req {
+                return new ClusterUserManagerProto.Contains.Req().setName(name);
+            }
+
+            export function createReq(name: string, password: string): ClusterUserManagerProto.Create.Req {
+                return new ClusterUserManagerProto.Create.Req().setName(name).setPassword(password);
+            }
+
+            export function allReq(): ClusterUserManagerProto.All.Req {
+                return new ClusterUserManagerProto.All.Req();
+            }
+        }
+
+        export namespace User {
+            export function deleteReq(name: string): ClusterUserProto.Delete.Req {
+                return new ClusterUserProto.Delete.Req().setName(name);
+            }
+
         }
 
         export namespace DatabaseManager {

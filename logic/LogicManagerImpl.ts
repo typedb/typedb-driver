@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {LogicManager} from "../api/logic/LogicManager";
 import {Rule} from "../api/logic/Rule";
 import {RuleImpl} from "./RuleImpl";

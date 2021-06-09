@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {Concept} from "../../api/concept/Concept";
 import {RemoteType, Type} from "../../api/concept/type/Type";
 import {Label} from "../../common/Label";
@@ -156,7 +156,7 @@ export namespace TypeImpl {
         }
 
         protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {
-            return (await this._transaction.rpcExecute(request)).getTypeRes();
+            return (await this._transaction.rpcExecute(request, false)).getTypeRes();
         }
 
         protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {

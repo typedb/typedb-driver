@@ -21,7 +21,7 @@
 
 
 import {RemoteThingType, ThingType} from "./ThingType";
-import {TypeDBTransaction} from "../../TypeDBTransaction";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Stream} from "../../../common/util/Stream";
 import {RoleType} from "./RoleType";
 import {Relation} from "../thing/Relation";

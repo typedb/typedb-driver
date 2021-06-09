@@ -21,7 +21,7 @@
 
 import {EntityType} from "../type/EntityType";
 import {RemoteThing, Thing} from "./Thing";
-import {TypeDBTransaction} from "../../TypeDBTransaction";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 
 export interface Entity extends Thing {
 

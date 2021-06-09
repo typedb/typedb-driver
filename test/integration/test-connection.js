@@ -20,8 +20,8 @@
  */
 
 const {TypeDB} = require("../../dist/TypeDB");
-const {SessionType} = require("../../dist/api/TypeDBSession")
-const {TransactionType} = require("../../dist/api/TypeDBTransaction")
+const {SessionType} = require("../../dist/api/connection/TypeDBSession")
+const {TransactionType} = require("../../dist/api/connection/TypeDBTransaction")
 
 async function run() {
     const client = TypeDB.coreClient();

@@ -24,6 +24,10 @@
  * Superclasses must always be loaded before their subclasses, otherwise an error will occur
  * whenever either class is instantiated at runtime.
  * NOTE: this does not apply to interfaces, which are erased at runtime.
+ *
+ * A good to way to find circular dependencies is to install `madge` and run it on the `dist` folder
+ * containing the resulting `.js` files (can be forced with `npx tsc`).
+ * Then reduce multi-hop circular dependencies one by one by pointing both circular dependents at each other via this file.
  */
 
 
@@ -43,3 +47,9 @@ export * from "./concept/type/AttributeTypeImpl";
 export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";
 export * from "./concept/type/RoleTypeImpl";
+
+/* cluster components */
+export * from "./connection/cluster/FailsafeTask";
+export * from "./connection/cluster/ClusterDatabase";
+export * from "./connection/cluster/ClusterUser";
+export * from "./connection/cluster/ClusterUserManager";

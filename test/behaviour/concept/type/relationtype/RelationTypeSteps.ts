@@ -82,13 +82,13 @@ async function getActualRelatedRoles(relationLabel: string) {
 Then("relation\\({type_label}) get related roles contain:", async (relationLabel: string, roleLabelsTable: DataTable) => {
     const roleLabels = parseList(roleLabelsTable);
     const actuals = await getActualRelatedRoles(relationLabel);
-    actuals.every(rl => assert(roleLabels.includes(rl)));
+    await actuals.every(rl => assert(roleLabels.includes(rl)));
 });
 
 Then("relation\\({type_label}) get related roles do not contain:", async (relationLabel: string, roleLabelsTable: DataTable) => {
     const roleLabels = parseList(roleLabelsTable);
     const actuals = await getActualRelatedRoles(relationLabel);
-    actuals.every(rl => assert(!roleLabels.includes(rl)));
+    await actuals.every(rl => assert(!roleLabels.includes(rl)));
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get supertype: {scoped_label}", async (relationLabel: string, roleLabel: string, superLabel: ScopedLabel) => {
@@ -105,13 +105,13 @@ async function getActualSupertypesForRelatedRole(relationLabel: string, roleLabe
 Then("relation\\({type_label}) get role\\({type_label}) get supertypes contain:", async (relationLabel: string, roleLabel: string, superLabelsTable: DataTable) => {
     const superLabels = parseList(superLabelsTable);
     const actuals = await getActualSupertypesForRelatedRole(relationLabel, roleLabel);
-    actuals.every(rl => assert(superLabels.includes(rl)));
+    await actuals.every(rl => assert(superLabels.includes(rl)));
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get supertypes do not contain:", async (relationLabel: string, roleLabel: string, superLabelsTable: DataTable) => {
     const superLabels = parseList(superLabelsTable);
     const actuals = await getActualSupertypesForRelatedRole(relationLabel, roleLabel);
-    actuals.every(rl => assert(!superLabels.includes(rl)));
+    await actuals.every(rl => assert(!superLabels.includes(rl)));
 });
 
 async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: string) {
@@ -122,15 +122,13 @@ async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: 
 Then("relation\\({type_label}) get role\\({type_label}) get players contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {
     const playerLabels = parseList(playerLabelsTable);
     const actuals = await getActualPlayersForRelatedRole(relationLabel, roleLabel);
-    console.log(playerLabels);
-    console.log(actuals);
-    actuals.every(pl => assert(playerLabels.includes(pl)));
+    await actuals.every(pl => assert(playerLabels.includes(pl)));
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get players do not contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {
     const playerLabels = parseList(playerLabelsTable);
     const actuals = await getActualPlayersForRelatedRole(relationLabel, roleLabel);
-    actuals.every(pl => assert(!playerLabels.includes(pl)));
+    await actuals.every(pl => assert(!playerLabels.includes(pl)));
 });
 
 async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel: string) {
@@ -141,11 +139,11 @@ async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel:
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const actuals = await getActualSubtypesForRelatedRole(relationLabel, roleLabel);
-    actuals.every(rl => assert(subLabels.includes(rl)));
+    await actuals.every(rl => assert(subLabels.includes(rl)));
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes do not contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const actuals = await getActualSubtypesForRelatedRole(relationLabel, roleLabel);
-    actuals.every(rl => assert(!subLabels.includes(rl)));
+    await actuals.every(rl => assert(!subLabels.includes(rl)));
 });

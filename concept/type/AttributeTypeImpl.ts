@@ -20,7 +20,7 @@
  */
 
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {ThingType} from "../../api/concept/type/ThingType";

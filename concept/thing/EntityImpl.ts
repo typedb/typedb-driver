@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/TypeDBTransaction";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
 import {EntityTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";

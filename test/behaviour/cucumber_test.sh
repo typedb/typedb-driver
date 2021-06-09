@@ -49,7 +49,9 @@ mkdir ./typedb_distribution/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
   ./typedb_distribution/"$DIRECTORY"/typedb server --data typedb_test &
 else
-  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" &
+  ./typedb_distribution/"$DIRECTORY"/typedb server --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
+  ROOT_CA=`realpath ./typedb_distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`
+  export ROOT_CA
 fi
 echo Unarchiving client.
 tar -xf client-nodejs.tar.gz
@@ -83,9 +85,5 @@ echo TypeDB $PRODUCT database server started
 node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
-if [[ $PRODUCT == "Core" ]]; then
-  kill $(jps | awk '/TypeDBServer/ {print $1}')
-else
-  kill $(jps | awk '/TypeDBNode/ {print $1}')
-fi
+kill $(lsof -i :1729 | awk '/java/ {print $2}')
 exit $RESULT

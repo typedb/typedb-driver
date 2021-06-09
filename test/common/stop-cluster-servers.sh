@@ -19,4 +19,8 @@
 # under the License.
 #
 
-kill $(jps | awk '/TypeDBNode/ {print $1}' | paste -sd " " -)
+procs=$(jps | awk '/TypeDBClusterServer/ {print $1}' | paste -sd " " -)
+echo $procs
+if [ -n "$procs" ]; then
+    kill $procs
+fi
