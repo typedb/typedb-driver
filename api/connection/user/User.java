@@ -27,6 +27,6 @@ public interface User {
 
     @CheckReturnValue
     String name();
-
+    void password(String password);
     void delete();
 }

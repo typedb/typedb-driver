@@ -24,6 +24,7 @@ package com.vaticle.typedb.client.connection.cluster;
 import com.vaticle.typedb.client.api.connection.user.User;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordReq;
 import static com.vaticle.typedb.client.connection.cluster.ClusterUserManager.SYSTEM_DB;
 
 public class ClusterUser implements User {
@@ -39,6 +40,18 @@ public class ClusterUser implements User {
     @Override
     public String name() {
         return name;
+    }
+
+    @Override
+    public void password(String password) {
+        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
+            @Override
+            Void run(ClusterDatabase.Replica replica) {
+                client.stub(replica.address()).userPassword(passwordReq(name, password));
+                return null;
+            }
+        };
+        failsafeTask.runPrimaryReplica();
     }
 
     @Override
