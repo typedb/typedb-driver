@@ -23,7 +23,8 @@ package com.vaticle.typedb.client.test.behaviour.connection.user;
 
 import com.vaticle.typedb.client.api.connection.TypeDBClient;
 import com.vaticle.typedb.client.api.connection.user.User;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,26 +41,30 @@ public class UserSteps {
         return (TypeDBClient.Cluster) client;
     }
 
-    @When("users contains: {word}")
+    @Given("users contains: {word}")
     public void users_contains(String name) {
         Set<String> users = getClient().users().all().stream().map(User::name).collect(Collectors.toSet());
         assertTrue(users.contains(name));
     }
 
-    @When("not users contains: {word}")
+    @Then("users not contains: {word}")
     public void not_users_contains(String name) {
         Set<String> users = getClient().users().all().stream().map(User::name).collect(Collectors.toSet());
         assertFalse(users.contains(name));
     }
 
-    @When("users create: {word}, {word}")
+    @Then("users create: {word}, {word}")
     public void users_create(String name, String password) {
         getClient().users().create(name, password);
     }
 
-    @When("user delete: {word}")
+    @Then("user password: {word}, {word}")
+    public void user_password(String name, String password) {
+        getClient().users().get(name).password(password);
+    }
+
+    @Then("user delete: {word}")
     public void user_delete(String name) {
         getClient().users().get(name).delete();
     }
-
 }

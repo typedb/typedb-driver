@@ -129,6 +129,10 @@ public class RequestBuilder {
         }
 
         public static class User {
+            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String name, String password) {
+                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setName(name).setPassword(password).build();
+            }
+
             public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String name) {
                 return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setName(name).build();
             }

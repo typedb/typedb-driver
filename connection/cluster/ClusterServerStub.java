@@ -69,6 +69,10 @@ public class ClusterServerStub extends TypeDBStub {
         return resilientCall(() -> clusterBlockingStub.usersAll(request));
     }
 
+    public ClusterUserProto.ClusterUser.Password.Res userPassword(ClusterUserProto.ClusterUser.Password.Req request) {
+        return resilientCall(() -> clusterBlockingStub.userPassword(request));
+    }
+
     public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
         return resilientCall(() -> clusterBlockingStub.userDelete(request));
     }
