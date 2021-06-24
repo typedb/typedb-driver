@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -18,6 +19,8 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
+set -e
 
 procs=$(jps | awk '/TypeDBClusterServer/ {print $1}' | paste -sd " " -)
 echo $procs

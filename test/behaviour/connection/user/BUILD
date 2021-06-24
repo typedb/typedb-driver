@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -20,6 +19,23 @@
 # under the License.
 #
 
-set -e
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "node_cucumber_test")
 
-kill $(jps | awk '/TypeDBServer/ {print $1}')
+exports_files(["UserSteps.ts"])
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache",
+)
+
+node_cucumber_test(
+    name = "test-cluster",
+    steps = "//test/behaviour:steps-cluster-targz",
+    native_typedb_artifact = "//test:native-typedb-cluster-artifact",
+    features = ["@vaticle_typedb_behaviour//connection:user.feature"],
+    node_modules = "//:node_modules",
+    package_json = "//:package.json",
+    client = "//:client-nodejs-targz",
+)

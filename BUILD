@@ -92,7 +92,10 @@ filegroup(
 
 filegroup(
     name = "behaviour-steps-cluster",
-    srcs = behaviour_steps_common + ["//test/behaviour/connection:ConnectionStepsCluster.ts"],
+    srcs = behaviour_steps_common + [
+        "//test/behaviour/connection/user:UserSteps.ts",
+        "//test/behaviour/connection:ConnectionStepsCluster.ts"
+        ],
     visibility = ["//test/behaviour:__pkg__"],
 )
 

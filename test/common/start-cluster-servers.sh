@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -19,15 +20,19 @@
 # under the License.
 #
 
-bazel run //test:typedb-cluster-extractor -- typedb_distribution
-echo Successfully unarchived TypeDB distribution. Creating 3 copies.
-cp -r typedb_distribution/$TYPEDB/ 1 && cp -r typedb_distribution/$TYPEDB/ 2 && cp -r typedb_distribution/$TYPEDB/ 3
-echo Starting 3 TypeDB servers.
-./1/typedb server --data server/data --address 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
-./2/typedb server --data server/data --address 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
-./3/typedb server --data server/data --address 127.0.0.1:31729:31730:31731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
+set -e
 
-ROOT_CA=`realpath typedb_distribution/$TYPEDB/server/conf/encryption/rpc-root-ca.pem`
+rm -rf 1 2 3 typedb-cluster-all
+
+bazel run //test:typedb-cluster-extractor -- typedb-cluster-all
+echo Successfully unarchived TypeDB distribution. Creating 3 copies.
+cp -r typedb-cluster-all/$TYPEDB/ 1 && cp -r typedb-cluster-all/$TYPEDB/ 2 && cp -r typedb-cluster-all/$TYPEDB/ 3
+echo Starting 3 TypeDB servers.
+./1/typedb cluster --data server/data --address 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
+./2/typedb cluster --data server/data --address 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
+./3/typedb cluster --data server/data --address 127.0.0.1:31729:31730:31731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
+
+ROOT_CA=`realpath typedb-cluster-all/$TYPEDB/server/conf/encryption/rpc-root-ca.pem`
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5

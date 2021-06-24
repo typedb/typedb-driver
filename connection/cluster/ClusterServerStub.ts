@@ -75,6 +75,15 @@ export class ClusterServerStub extends TypeDBStub {
         });
     }
 
+    userPassword(req: ClusterUser.Password.Req) {
+        return new Promise<ClusterUser.Password.Res>((resolve, reject) => {
+            this._clusterStub.user_password(req, (err, res) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve();
+            })
+        });
+    }
+
     userDelete(req: ClusterUser.Delete.Req) {
         return new Promise<ClusterUser.Delete.Res>((resolve, reject) => {
             this._clusterStub.user_delete(req, (err, res) => {

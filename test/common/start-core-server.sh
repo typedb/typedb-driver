@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -19,5 +20,9 @@
 # under the License.
 #
 
-bazel run //test:typedb-extractor -- typedb-all-linux
-./typedb-all-linux/typedb server &
+set -e
+
+rm -rf typedb-all
+
+bazel run //test:typedb-extractor -- typedb-all
+./typedb-all/typedb server &
