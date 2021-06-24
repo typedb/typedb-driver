@@ -35,7 +35,10 @@ java_library(
         "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
+
+        # Internal Repository Dependencies
         "@vaticle_typedb_common//test:typedb-runner",
+        
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
