@@ -34,10 +34,10 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
-    private TypeDBClusterRunner server;
 
     @Override
     void beforeAll() {
+        TypeDBClusterRunner server;
         try {
             server = new TypeDBClusterRunner();
         } catch (InterruptedException | TimeoutException | IOException e) {

@@ -32,9 +32,10 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
+        "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
-
+        "@vaticle_typedb_common//test:typedb-runner",
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
