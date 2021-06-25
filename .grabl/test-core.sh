@@ -20,5 +20,5 @@
 # under the License.
 #
 
-set -x
+set -ex
 bazel test $(bazel query "filter('^.*(?<!cluster)$', kind(.*_test, $1))") "${@:2}"
