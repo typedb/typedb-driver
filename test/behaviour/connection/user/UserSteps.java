@@ -21,11 +21,16 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.user;
 
+import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.connection.TypeDBClient;
+import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.api.connection.database.Database;
 import com.vaticle.typedb.client.api.connection.user.User;
+import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,6 +66,15 @@ public class UserSteps {
     @Then("user password: {word}, {word}")
     public void user_password(String name, String password) {
         getClient().users().get(name).password(password);
+    }
+
+    @Then("user connect: {word}, {word}")
+    public void user_connect(String name, String password) {
+        String address = TypeDBSingleton.getTypeDBRunner().address();
+        TypeDBCredential credential = new TypeDBCredential(name, password, false);
+        try (TypeDBClient.Cluster client = TypeDB.clusterClient(address, credential)) {
+            List<Database.Cluster> ignored = client.databases().all();
+        }
     }
 
     @Then("user delete: {word}")
