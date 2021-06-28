@@ -184,7 +184,8 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req.Builder openReq(
-                ByteString sessionID, TransactionProto.Transaction.Type type, OptionsProto.Options options, int networkLatencyMillis) {
+                ByteString sessionID, TransactionProto.Transaction.Type type,
+                OptionsProto.Options options, int networkLatencyMillis) {
             return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
                     TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
                             .setType(type).setOptions(options).setNetworkLatencyMillis(networkLatencyMillis)
@@ -209,54 +210,54 @@ public class RequestBuilder {
             return TransactionProto.Transaction.Req.newBuilder().setQueryManagerReq(queryReq.setOptions(options));
         }
 
-        public static TransactionProto.Transaction.Req.Builder defineReq(TypeQLDefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder defineReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDefineReq(
-                    QueryProto.QueryManager.Define.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.Define.Req.newBuilder().setQuery(query)
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder undefineReq(TypeQLUndefine query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder undefineReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setUndefineReq(
-                    QueryProto.QueryManager.Undefine.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.Undefine.Req.newBuilder().setQuery(query)
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder matchReq(TypeQLMatch query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder matchReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchReq(
-                    QueryProto.QueryManager.Match.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.Match.Req.newBuilder().setQuery(query)
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchAggregateReq(
-                TypeQLMatch.Aggregate query, OptionsProto.Options options) {
+                String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchAggregateReq(
-                    QueryProto.QueryManager.MatchAggregate.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.MatchAggregate.Req.newBuilder().setQuery(query)
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchGroupReq(
-                TypeQLMatch.Group query, OptionsProto.Options options) {
+                String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupReq(
-                    QueryProto.QueryManager.MatchGroup.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.MatchGroup.Req.newBuilder().setQuery(query)
             ), options);
         }
 
         public static TransactionProto.Transaction.Req.Builder matchGroupAggregateReq(
-                TypeQLMatch.Group.Aggregate query, OptionsProto.Options options) {
+                String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setMatchGroupAggregateReq(
-                    QueryProto.QueryManager.MatchGroupAggregate.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.MatchGroupAggregate.Req.newBuilder().setQuery(query)
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder insertReq(TypeQLInsert query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder insertReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setInsertReq(
-                    QueryProto.QueryManager.Insert.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.Insert.Req.newBuilder().setQuery(query)
             ), options);
         }
 
-        public static TransactionProto.Transaction.Req.Builder deleteReq(TypeQLDelete query, OptionsProto.Options options) {
+        public static TransactionProto.Transaction.Req.Builder deleteReq(String query, OptionsProto.Options options) {
             return queryManagerReq(QueryProto.QueryManager.Req.newBuilder().setDeleteReq(
-                    QueryProto.QueryManager.Delete.Req.newBuilder().setQuery(query.toString())
+                    QueryProto.QueryManager.Delete.Req.newBuilder().setQuery(query)
             ), options);
         }
 

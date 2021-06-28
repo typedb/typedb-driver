@@ -67,11 +67,21 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> match(TypeQLMatch query) {
-        return match(query, TypeDBOptions.core());
+        return match(query.toString());
     }
 
     @Override
     public Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options) {
+        return match(query.toString(), options);
+    }
+
+    @Override
+    public Stream<ConceptMap> match(String query) {
+        return match(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public Stream<ConceptMap> match(String query, TypeDBOptions options) {
         return stream(matchReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
@@ -79,11 +89,21 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query) {
-        return match(query, TypeDBOptions.core());
+        return matchAggregate(query.toString());
     }
 
     @Override
     public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options) {
+        return matchAggregate(query.toString(), options);
+    }
+
+    @Override
+    public QueryFuture<Numeric> matchAggregate(String query) {
+        return matchAggregate(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public QueryFuture<Numeric> matchAggregate(String query, TypeDBOptions options) {
         return query(matchAggregateReq(query, options.proto()))
                 .map(r -> r.getMatchAggregateRes().getAnswer())
                 .map(NumericImpl::of);
@@ -91,11 +111,21 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMapGroup> match(TypeQLMatch.Group query) {
-        return match(query, TypeDBOptions.core());
+        return matchGroup(query.toString());
     }
 
     @Override
     public Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options) {
+        return matchGroup(query.toString(), options);
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> matchGroup(String query) {
+        return matchGroup(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options) {
         return stream(matchGroupReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchGroupResPart().getAnswersList().stream())
                 .map(ConceptMapGroupImpl::of);
@@ -103,11 +133,21 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query) {
-        return match(query, TypeDBOptions.core());
+        return matchGroupAggregate(query.toString());
     }
 
     @Override
     public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options) {
+        return matchGroupAggregate(query.toString(), options);
+    }
+
+    @Override
+    public Stream<NumericGroup> matchGroupAggregate(String query) {
+        return matchGroupAggregate(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options) {
         return stream(matchGroupAggregateReq(query, options.proto()))
                 .flatMap(rp -> rp.getMatchGroupAggregateResPart().getAnswersList().stream())
                 .map(NumericGroupImpl::of);
@@ -115,11 +155,21 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> insert(TypeQLInsert query) {
-        return insert(query, TypeDBOptions.core());
+        return insert(query.toString());
     }
 
     @Override
     public Stream<ConceptMap> insert(TypeQLInsert query, TypeDBOptions options) {
+        return insert(query.toString(), options);
+    }
+
+    @Override
+    public Stream<ConceptMap> insert(String query) {
+        return insert(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public Stream<ConceptMap> insert(String query, TypeDBOptions options) {
         return stream(insertReq(query, options.proto()))
                 .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
@@ -127,24 +177,84 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> delete(TypeQLDelete query) {
-        return delete(query, TypeDBOptions.core());
+        return delete(query.toString());
     }
 
     @Override
     public QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options) {
+        return delete(query.toString(), options);
+    }
+
+    @Override
+    public QueryFuture<Void> delete(String query) {
+        return delete(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public QueryFuture<Void> delete(String query, TypeDBOptions options) {
         return queryVoid(deleteReq(query, options.proto()));
     }
 
     @Override
     public Stream<ConceptMap> update(TypeQLUpdate query) {
-        return update(query, TypeDBOptions.core());
+        return update(query.toString());
     }
 
     @Override
     public Stream<ConceptMap> update(TypeQLUpdate query, TypeDBOptions options) {
-        return stream(updateReq(query.toString(), options.proto()))
+        return update(query.toString(), options);
+    }
+
+    @Override
+    public Stream<ConceptMap> update(String query) {
+        return update(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public Stream<ConceptMap> update(String query, TypeDBOptions options) {
+        return stream(updateReq(query, options.proto()))
                 .flatMap(rp -> rp.getUpdateResPart().getAnswersList().stream())
                 .map(ConceptMapImpl::of);
+    }
+
+    @Override
+    public QueryFuture<Void> define(TypeQLDefine query) {
+        return define(query.toString());
+    }
+
+    @Override
+    public QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options) {
+        return define(query.toString(), options);
+    }
+
+    @Override
+    public QueryFuture<Void> define(String query) {
+        return define(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public QueryFuture<Void> define(String query, TypeDBOptions options) {
+        return queryVoid(defineReq(query, options.proto()));
+    }
+
+    @Override
+    public QueryFuture<Void> undefine(TypeQLUndefine query) {
+        return undefine(query.toString());
+    }
+
+    @Override
+    public QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options) {
+        return define(query.toString(), options);
+    }
+
+    @Override
+    public QueryFuture<Void> undefine(String query) {
+        return undefine(query, TypeDBOptions.core());
+    }
+
+    @Override
+    public QueryFuture<Void> undefine(String query, TypeDBOptions options) {
+        return queryVoid(undefineReq(query, options.proto()));
     }
 
     @Override
@@ -157,26 +267,6 @@ public final class QueryManagerImpl implements QueryManager {
         return stream(explainReq(explainable.id(), options.proto()))
                 .flatMap(rp -> rp.getExplainResPart().getExplanationsList().stream())
                 .map(ExplanationImpl::of);
-    }
-
-    @Override
-    public QueryFuture<Void> define(TypeQLDefine query) {
-        return define(query, TypeDBOptions.core());
-    }
-
-    @Override
-    public QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options) {
-        return queryVoid(defineReq(query, options.proto()));
-    }
-
-    @Override
-    public QueryFuture<Void> undefine(TypeQLUndefine query) {
-        return undefine(query, TypeDBOptions.core());
-    }
-
-    @Override
-    public QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options) {
-        return queryVoid(undefineReq(query, options.proto()));
     }
 
     private QueryFuture<Void> queryVoid(TransactionProto.Transaction.Req.Builder req) {

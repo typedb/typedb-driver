@@ -46,10 +46,22 @@ public interface QueryManager {
     Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options);
 
     @CheckReturnValue
+    Stream<ConceptMap> match(String query);
+
+    @CheckReturnValue
+    Stream<ConceptMap> match(String query, TypeDBOptions options);
+
+    @CheckReturnValue
     QueryFuture<Numeric> match(TypeQLMatch.Aggregate query);
 
     @CheckReturnValue
     QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options);
+
+    @CheckReturnValue
+    QueryFuture<Numeric> matchAggregate(String query);
+
+    @CheckReturnValue
+    QueryFuture<Numeric> matchAggregate(String query, TypeDBOptions options);
 
     @CheckReturnValue
     Stream<ConceptMapGroup> match(TypeQLMatch.Group query);
@@ -58,32 +70,66 @@ public interface QueryManager {
     Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options);
 
     @CheckReturnValue
+    Stream<ConceptMapGroup> matchGroup(String query);
+
+    @CheckReturnValue
+    Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options);
+
+    @CheckReturnValue
     Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query);
 
     @CheckReturnValue
     Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options);
 
+    @CheckReturnValue
+    Stream<NumericGroup> matchGroupAggregate(String query);
+
+    @CheckReturnValue
+    Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options);
+
     Stream<ConceptMap> insert(TypeQLInsert query);
 
     Stream<ConceptMap> insert(TypeQLInsert query, TypeDBOptions options);
+
+    Stream<ConceptMap> insert(String query);
+
+    Stream<ConceptMap> insert(String query, TypeDBOptions options);
 
     QueryFuture<Void> delete(TypeQLDelete query);
 
     QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options);
 
+    QueryFuture<Void> delete(String query);
+
+    QueryFuture<Void> delete(String query, TypeDBOptions options);
+
     Stream<ConceptMap> update(TypeQLUpdate query);
 
     Stream<ConceptMap> update(TypeQLUpdate query, TypeDBOptions options);
 
-    Stream<Explanation> explain(ConceptMap.Explainable explainable);
+    Stream<ConceptMap> update(String query);
 
-    Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options);
+    Stream<ConceptMap> update(String query, TypeDBOptions options);
 
     QueryFuture<Void> define(TypeQLDefine query);
 
     QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options);
 
+    QueryFuture<Void> define(String query);
+
+    QueryFuture<Void> define(String query, TypeDBOptions options);
+
     QueryFuture<Void> undefine(TypeQLUndefine query);
 
     QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options);
+
+    QueryFuture<Void> undefine(String query);
+
+    QueryFuture<Void> undefine(String query, TypeDBOptions options);
+
+    @CheckReturnValue
+    Stream<Explanation> explain(ConceptMap.Explainable explainable);
+
+    @CheckReturnValue
+    Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options);
 }
