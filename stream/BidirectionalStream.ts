@@ -19,19 +19,19 @@
  * under the License.
  */
 
-import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
-import {ResponseCollector} from "./ResponseCollector";
-import {ResponsePartIterator} from "./ResponsePartIterator";
-import {Stream} from "../common/util/Stream";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
-import ResponseQueue = ResponseCollector.ResponseQueue;
-import {ClientDuplexStream} from "@grpc/grpc-js";
+import { ClientDuplexStream } from "@grpc/grpc-js";
+import { Transaction } from "typedb-protocol/common/transaction_pb";
 import * as uuid from "uuid";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
+import { Stream } from "../common/util/Stream";
+import { BatchDispatcher, RequestTransmitter } from "./RequestTransmitter";
+import { ResponseCollector } from "./ResponseCollector";
+import { ResponsePartIterator } from "./ResponsePartIterator";
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import ResponseQueue = ResponseCollector.ResponseQueue;
 
 
 export class BidirectionalStream {
@@ -81,20 +81,6 @@ export class BidirectionalStream {
         this._dispatcher.close();
     }
 
-    private collectRes(res: Transaction.Res): void {
-        const requestId = res.getReqId();
-        const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
-        queue.put(res);
-    }
-
-    private collectResPart(res: Transaction.ResPart): void {
-        const requestId = res.getReqId();
-        const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
-        queue.put(res);
-    }
-
     registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
         transactionStream.on("data", (res: Transaction.Server) => {
             if (!this.isOpen()) {
@@ -122,5 +108,19 @@ export class BidirectionalStream {
         transactionStream.on("done", () => {
             this.close();
         });
+    }
+
+    private collectRes(res: Transaction.Res): void {
+        const requestId = res.getReqId();
+        const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
+        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        queue.put(res);
+    }
+
+    private collectResPart(res: Transaction.ResPart): void {
+        const requestId = res.getReqId();
+        const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
+        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        queue.put(res);
     }
 }

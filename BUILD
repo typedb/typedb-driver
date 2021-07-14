@@ -45,7 +45,6 @@ genrule(
     tools = [
         "//:client-nodejs-ts",
         "//:package.json",
-        "//:package-lock.json",
     ],
     visibility = ["//visibility:public"],
 )
@@ -207,6 +206,7 @@ checkstyle_test(
     exclude = glob([
         "dist/**/*.*",
         "*.json",
+        "yarn.lock",
         ".eslintrc",
     ]),
     license_type = "apache",

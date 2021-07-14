@@ -19,28 +19,55 @@
  * under the License.
  */
 
-
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {RemoteThingType, ThingType} from "./ThingType";
-import {Stream} from "../../../common/util/Stream";
-import {Entity} from "../thing/Entity";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Attribute } from "../thing/Attribute";
+import { Entity } from "../thing/Entity";
+import { Relation } from "../thing/Relation";
+import { Thing } from "../thing/Thing";
+import { AttributeType } from "./AttributeType";
+import { RelationType } from "./RelationType";
+import { RoleType } from "./RoleType";
+import { ThingType } from "./ThingType";
+import { Type } from "./Type";
 
 export interface EntityType extends ThingType {
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntityType;
-
+    asRemote(transaction: TypeDBTransaction): EntityType.Remote;
 }
 
-export interface RemoteEntityType extends ThingType, RemoteThingType {
+export namespace EntityType {
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntityType;
+    export interface Remote extends EntityType, ThingType.Remote {
 
-    create(): Promise<Entity>;
+        asRemote(transaction: TypeDBTransaction): EntityType.Remote;
 
-    getInstances(): Stream<Entity>;
+        asType(): Type.Remote;
 
-    getSubtypes(): Stream<EntityType>;
+        asThingType(): ThingType.Remote;
 
-    setSupertype(superEntityType: EntityType): Promise<void>;
+        asEntityType(): EntityType.Remote;
 
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        create(): Promise<Entity>;
+
+        getInstances(): Stream<Entity>;
+
+        getSubtypes(): Stream<EntityType>;
+
+        setSupertype(superEntityType: EntityType): Promise<void>;
+    }
 }

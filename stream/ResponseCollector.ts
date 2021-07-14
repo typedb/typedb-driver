@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {BlockingQueue} from "../common/util/BlockingQueue";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { BlockingQueue } from "../common/util/BlockingQueue";
 
 export class ResponseCollector<T> {
 

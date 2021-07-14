@@ -20,11 +20,21 @@
  */
 
 
-import {TypeDBTransaction} from "../connection/TypeDBTransaction";
+import { TypeDBTransaction } from "../connection/TypeDBTransaction";
+import { Attribute } from "./thing/Attribute";
+import { Entity } from "./thing/Entity";
+import { Relation } from "./thing/Relation";
+import { Thing } from "./thing/Thing";
+import { AttributeType } from "./type/AttributeType";
+import { EntityType } from "./type/EntityType";
+import { RelationType } from "./type/RelationType";
+import { RoleType } from "./type/RoleType";
+import { ThingType } from "./type/ThingType";
+import { Type } from "./type/Type";
 
 export interface Concept {
 
-    asRemote(transaction: TypeDBTransaction): RemoteConcept;
+    asRemote(transaction: TypeDBTransaction): Concept.Remote;
 
     isRemote(): boolean;
 
@@ -48,14 +58,56 @@ export interface Concept {
 
     isRelation(): boolean;
 
+    asType(): Type;
+
+    asThingType(): ThingType;
+
+    asEntityType(): EntityType;
+
+    asAttributeType(): AttributeType;
+
+    asRelationType(): RelationType;
+
+    asRoleType(): RoleType;
+
+    asThing(): Thing;
+
+    asEntity(): Entity;
+
+    asAttribute(): Attribute;
+
+    asRelation(): Relation;
+
     equals(concept: Concept): boolean;
 
 }
 
-export interface RemoteConcept extends Concept {
+export namespace Concept {
 
-    delete(): Promise<void>;
+    export interface Remote extends Concept {
 
-    isDeleted(): Promise<boolean>;
+        delete(): Promise<void>;
 
+        isDeleted(): Promise<boolean>;
+
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+    }
 }

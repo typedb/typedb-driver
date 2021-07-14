@@ -15,20 +15,31 @@ To learn about the methods available for executing queries and retrieving their 
 ## Concept API
 To learn about the methods available on the concepts retrieved as the answers to TypeQL queries, refer to [TypeDB > Concept API > Overview](http://docs.vaticle.com/docs/concept-api/overview).
 
-## Import TypeDB Client for Node.js through `npm`
+## Installation
+
+[Node.js](https://nodejs.org/) version 14 or above is recommended.
 
 ```shell script
 npm install typedb-client
 ```
 Further documentation: https://docs.vaticle.com/docs/client-api/nodejs
 
+## Using TypeScript
+`typedb-client` is a TypeScript project and provides its own type definitions out of the box - for example:
+
+```ts
+import { EntityType } from 'typedb-client';
+```
+
 ## Build TypeDB Client for Node.js from Source
 
 > Note: You don't need to compile TypeDB Client from source if you just want to use it in your code. See the _"Import TypeDB Client for Node.js"_ section above.
+>
+> We recommend using `yarn`, see https://yarnpkg.com/ for information about `yarn`.
 
-1. Make sure you have [Node.js](https://nodejs.org/) (version 14 or above) and its `npm` package manager installed on your machine
-1. Clone the project and run `npm install` at its root directory (containing `package.json`)
-1. Run `npm run build`
+1. Make sure you have the following installed: Node.js (version 14 or above); `npm` package manager; `yarn` package manager.
+1. Clone the project and run `yarn` at the root directory (containing `package.json`)
+1. Run `yarn run build`
 1. The JavaScript files, and their matching TypeScript type definitions are compiled to the `dist` directory.
 
-> Note: TypeScript is not required in order to run TypeDB Client, however its type assertions may make development smoother.
+> Note: TypeDB Client can be run without TypeScript, however its type assertions may make development smoother.

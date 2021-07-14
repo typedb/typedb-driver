@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import {Then, When} from "@cucumber/cucumber";
-import {client, sessions} from "../ConnectionStepsBase";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {SessionType, TypeDBSession} from "../../../../dist/api/connection/TypeDBSession";
+import { SessionType, TypeDBSession } from "../../../../dist";
+import { client, sessions } from "../ConnectionStepsBase";
 import assert = require("assert");
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
@@ -34,24 +34,30 @@ When("connection open(s) (data )session for database: {word}", async (name: stri
 });
 
 When("connection open(s) schema session(s) for database(s):", async (names: DataTable) => {
-    for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.SCHEMA))}
+    for (const name of names.raw()) {
+        sessions.push(await client.session(name[0], SessionType.SCHEMA))
+    }
 });
 
 When("connection open(s) (data )session(s) for database(s):", async (names: DataTable) => {
-    for (const name of names.raw()) {sessions.push(await client.session(name[0], SessionType.DATA))}
+    for (const name of names.raw()) {
+        sessions.push(await client.session(name[0], SessionType.DATA))
+    }
 });
 
 When("connection open(s) (data )sessions in parallel for databases:", async (names: DataTable) => {
     const openings: Promise<TypeDBSession>[] = []
-    for (const name of names.raw()) {openings.push(client.session(name[0], SessionType.DATA))}
-    sessions.push(... await Promise.all(openings));
+    for (const name of names.raw()) {
+        openings.push(client.session(name[0], SessionType.DATA))
+    }
+    sessions.push(...await Promise.all(openings));
 });
 
 When("connection close all sessions", async () => {
     for (const session of sessions) {
         try {
             if (session.isOpen()) await session.close()
-        } catch (err){
+        } catch (err) {
             //Pass
         }
     }

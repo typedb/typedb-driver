@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {TypeDBStubFactory} from "../TypeDBStubFactory";
-import {ClusterServerStub} from "./ClusterServerStub";
-import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
+import { TypeDBCredential } from "../../api/connection/TypeDBCredential";
+import { TypeDBStubFactory } from "../TypeDBStubFactory";
+import { ClusterServerStub } from "./ClusterServerStub";
 
 export class ClusterServerStubFactory extends TypeDBStubFactory {
 

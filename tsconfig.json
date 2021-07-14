@@ -70,6 +70,7 @@
   },
   "include": [
     "dependencies_internal.ts",
+    "index.ts",
     "TypeDB.ts",
     "api",
     "common",

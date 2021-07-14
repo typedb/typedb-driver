@@ -21,7 +21,6 @@
 
 workspace(
     name = "vaticle_typedb_client_nodejs",
-    managed_directories = {"@npm": ["node_modules"]},
 )
 
 ################################
@@ -53,7 +52,7 @@ python_deps()
 # Load //builder/nodejs
 load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
 # Load //tool/checkstyle
 load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
@@ -66,13 +65,15 @@ checkstyle_deps()
 
 # Load package.json
 node_repositories(
-    preserve_symlinks = False,
+    package_json = ["//:package.json"]
 )
-npm_install(
+yarn_install(
     name = "npm",
     package_json = "//:package.json",
-    package_lock_json = "//:package-lock.json",
+    yarn_lock = "//:yarn.lock",
 )
+load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
+install_bazel_dependencies()
 
 # Load //builder/grpc
 load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")

@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {ErrorMessage} from "./ErrorMessage";
-import {ServiceError} from "@grpc/grpc-js";
-import {Status} from "@grpc/grpc-js/build/src/constants";
-import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
+import { ServiceError } from "@grpc/grpc-js";
+import { Status } from "@grpc/grpc-js/build/src/constants";
+import { ErrorMessage } from "./ErrorMessage";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");

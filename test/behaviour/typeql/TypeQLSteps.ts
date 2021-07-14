@@ -19,24 +19,14 @@
  * under the License.
  */
 
-import {Then, When} from "@cucumber/cucumber";
-import {tx} from "../connection/ConnectionStepsBase";
-import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
-import {ConceptMap} from "../../../dist/api/answer/ConceptMap";
-import {Numeric} from "../../../dist/api/answer/Numeric";
-import {ConceptMapGroup} from "../../../dist/api/answer/ConceptMapGroup";
-import {NumericGroup} from "../../../dist/api/answer/NumericGroup";
-import {Concept} from "../../../dist/api/concept/Concept";
-import {RoleType} from "../../../dist/api/concept/type/RoleType";
-import {Type} from "../../../dist/api/concept/type/Type";
-import {AttributeType} from "../../../dist/api/concept/type/AttributeType";
-import {Attribute} from "../../../dist/api/concept/thing/Attribute";
-import {Thing} from "../../../dist/api/concept/thing/Thing";
-import {parseBool} from "../config/Parameters";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {fail} from "assert";
+import { fail } from "assert";
+import { Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, RoleType, Thing, Type } from "../../../dist";
+import { parseBool } from "../config/Parameters";
+import { tx } from "../connection/ConnectionStepsBase";
+import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
 import assert = require("assert");
-import ValueClass = AttributeType.ValueClass;
 
 let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -214,14 +204,12 @@ abstract class AttributeMatcher implements ConceptMatcher {
         return this._value;
     }
 
-    check(attribute: Attribute<ValueClass>) {
-        if (attribute.isBoolean()) return attribute.getValue() === parseBool(this.value);
-        else if (attribute.isLong()) {
-            return attribute.getValue() === parseInt(this.value);
-        }
-        else if (attribute.isDouble()) return attribute.getValue() === parseFloat(this.value);
-        else if (attribute.isString()) return attribute.getValue() === this.value;
-        else if (attribute.isDateTime()) return (attribute.getValue() as Date).getTime() === new Date(this.value).getTime();
+    check(attribute: Attribute) {
+        if (attribute.isBoolean()) return attribute.asBoolean().getValue() === parseBool(this.value);
+        else if (attribute.isLong()) return attribute.asLong().getValue() === parseInt(this.value);
+        else if (attribute.isDouble()) return attribute.asDouble().getValue() === parseFloat(this.value);
+        else if (attribute.isString()) return attribute.asString().getValue() === this.value;
+        else if (attribute.isDateTime()) return attribute.asDateTime().getValue().getTime() === new Date(this.value).getTime();
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
@@ -233,7 +221,7 @@ class AttributeValueMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isAttribute()) return false;
 
-        const attribute = concept as Attribute<ValueClass>;
+        const attribute = concept as Attribute;
 
         if (this.typeLabel !== attribute.getType().getLabel().scopedName()) return false;
 
@@ -261,10 +249,14 @@ class ThingKeyMatcher extends AttributeMatcher {
 function parseConceptIdentifier(value: string): ConceptMatcher {
     const [identifierType, identifierBody] = splitString(value, ":", 1);
     switch (identifierType) {
-        case "label": return new TypeLabelMatcher(identifierBody);
-        case "key": return new ThingKeyMatcher(identifierBody);
-        case "value": return new AttributeValueMatcher(identifierBody);
-        default: throw new Error(`Failed to parse concept identifier: ${value}`);
+        case "label":
+            return new TypeLabelMatcher(identifierBody);
+        case "key":
+            return new ThingKeyMatcher(identifierBody);
+        case "value":
+            return new AttributeValueMatcher(identifierBody);
+        default:
+            throw new Error(`Failed to parse concept identifier: ${value}`);
     }
 }
 
@@ -340,9 +332,9 @@ class AnswerIdentifierGroup {
     constructor(rawAnswerIdentifiers: AnswerIdentifier[]) {
         this._ownerIdentifier = rawAnswerIdentifiers[0][AnswerIdentifierGroup.GROUP_COLUMN_NAME];
         this._answerIdentifiers = rawAnswerIdentifiers.map(rawAnswerIdentifier => {
-             const answerIdentifier = Object.assign({}, rawAnswerIdentifier);
-             delete answerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
-             return answerIdentifier;
+            const answerIdentifier = Object.assign({}, rawAnswerIdentifier);
+            delete answerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+            return answerIdentifier;
         });
     }
 

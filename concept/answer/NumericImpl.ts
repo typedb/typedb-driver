@@ -20,10 +20,10 @@
  */
 
 
-import {Numeric} from "../../api/answer/Numeric";
-import {Numeric as NumericProto} from "typedb-protocol/common/answer_pb";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import { Numeric as NumericProto } from "typedb-protocol/common/answer_pb";
+import { Numeric } from "../../api/answer/Numeric";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import BAD_ANSWER_TYPE = ErrorMessage.Query.BAD_ANSWER_TYPE;
 

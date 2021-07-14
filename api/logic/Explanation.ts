@@ -19,8 +19,8 @@
  * under the License.
  */
 
-import {Rule} from "./Rule";
-import {ConceptMap} from "../answer/ConceptMap";
+import { ConceptMap } from "../answer/ConceptMap";
+import { Rule } from "./Rule";
 
 export interface Explanation {
 

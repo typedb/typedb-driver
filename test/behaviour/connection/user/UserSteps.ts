@@ -19,12 +19,9 @@
  * under the License.
  */
 
-import {Given, Then, When} from "@cucumber/cucumber";
-import {client} from "../ConnectionStepsBase";
-import {TypeDB} from "../../../../dist/TypeDB";
-import {TypeDBClient} from "../../../../dist/api/connection/TypeDBClient";
-import {TypeDBCredential} from "../../../../dist/api/connection/TypeDBCredential";
-import {User} from "../../../../dist/api/connection/user/User";
+import { Given, Then } from "@cucumber/cucumber";
+import { TypeDB, TypeDBClient, TypeDBCredential, User } from "../../../../dist"
+import { client } from "../ConnectionStepsBase";
 import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
@@ -37,21 +34,21 @@ Then("users not contains: {word}", async (name: string) => {
     !users.map((user: User) => user.name()).includes(name);
 });
 
-Then("users create: {word}, {word}", async(name: string, password: string) => {
+Then("users create: {word}, {word}", async (name: string, password: string) => {
     await getClient().users().create(name, password);
 });
 
-Then("user password: {word}, {word}", async(name: string, password: string) => {
+Then("user password: {word}, {word}", async (name: string, password: string) => {
     const user = await getClient().users().get(name);
     await user.password(password);
 });
 
-Then("user connect: {word}, {word}", async(name: string, password: string) => {
+Then("user connect: {word}, {word}", async (name: string, password: string) => {
     const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(name, password, process.env.ROOT_CA));
     await client.databases().all()
 })
 
-Then("user delete: {word}", async(name: string) => {
+Then("user delete: {word}", async (name: string) => {
     const user = await getClient().users().get(name);
     await user.delete();
 });

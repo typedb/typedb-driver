@@ -20,12 +20,12 @@
  */
 
 
-import {TypeDBClientError} from "../errors/TypeDBClientError";
-import {CoreDatabaseManager as CoreDatabaseMgrProto, CoreDatabase as CoreDatabaseProto} from "typedb-protocol/core/core_database_pb";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {TypeDBDatabaseImpl} from "../../connection/TypeDBDatabaseImpl";
-import {Session} from "typedb-protocol/common/session_pb";
-import {closeClient, ServiceError} from "@grpc/grpc-js";
+import { ServiceError } from "@grpc/grpc-js";
+import { Session } from "typedb-protocol/common/session_pb";
+import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseMgrProto } from "typedb-protocol/core/core_database_pb";
+import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
+import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
+import { TypeDBClientError } from "../errors/TypeDBClientError";
 
 /*
 TODO implement ResilientCall

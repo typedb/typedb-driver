@@ -19,19 +19,25 @@
  * under the License.
  */
 
-import {RemoteThing, Thing} from "./Thing";
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {Stream} from "../../../common/util/Stream";
-import {ThingType} from "../type/ThingType";
-import {AttributeType} from "../type/AttributeType";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { AttributeType } from "../type/AttributeType";
+import { EntityType } from "../type/EntityType";
+import { RelationType } from "../type/RelationType";
+import { RoleType } from "../type/RoleType";
+import { ThingType } from "../type/ThingType";
+import { Type } from "../type/Type";
+import { Entity } from "./Entity";
+import { Relation } from "./Relation";
+import { Thing } from "./Thing";
 
-export interface Attribute<T extends AttributeType.ValueClass> extends Thing {
+export interface Attribute extends Thing {
 
-    asRemote(transaction: TypeDBTransaction): Attribute.Remote<T>;
+    asRemote(transaction: TypeDBTransaction): Attribute.Remote;
 
     getType(): AttributeType;
 
-    getValue(): T;
+    getValue(): boolean | string | number | Date;
 
     isBoolean(): boolean;
 
@@ -43,97 +49,310 @@ export interface Attribute<T extends AttributeType.ValueClass> extends Thing {
 
     isDateTime(): boolean;
 
+    asBoolean(): Attribute.Boolean;
+
+    asLong(): Attribute.Long;
+
+    asDouble(): Attribute.Double;
+
+    asString(): Attribute.String;
+
+    asDateTime(): Attribute.DateTime;
 }
 
 export namespace Attribute {
 
-    export interface Remote<T extends AttributeType.ValueClass> extends Attribute<T>, RemoteThing {
+    export interface Remote extends Attribute, Thing.Remote {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.Remote<T>;
+        asRemote(transaction: TypeDBTransaction): Attribute.Remote;
 
         getType(): AttributeType;
 
         getOwners(ownerType?: ThingType): Stream<Thing>;
 
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        asBoolean(): Attribute.Boolean.Remote;
+
+        asLong(): Attribute.Long.Remote;
+
+        asDouble(): Attribute.Double.Remote;
+
+        asString(): Attribute.String.Remote;
+
+        asDateTime(): Attribute.DateTime.Remote;
     }
 
-    export interface Boolean extends Attribute<boolean> {
+    export interface Boolean extends Attribute {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteBoolean;
+        asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote;
 
         getType(): AttributeType.Boolean;
 
+        getValue(): boolean;
     }
 
-    export interface RemoteBoolean extends Attribute.Remote<boolean>, Attribute.Boolean {
+    export namespace Boolean {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteBoolean;
+        export interface Remote extends Attribute.Remote, Attribute.Boolean {
 
-        getType(): AttributeType.Boolean;
+            asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote;
 
+            getType(): AttributeType.Boolean;
+
+            getValue(): boolean;
+
+            asType(): Type.Remote;
+
+            asThingType(): ThingType.Remote;
+
+            asEntityType(): EntityType.Remote;
+
+            asAttributeType(): AttributeType.Remote;
+
+            asRelationType(): RelationType.Remote;
+
+            asRoleType(): RoleType.Remote;
+
+            asThing(): Thing.Remote;
+
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): Attribute.Boolean.Remote;
+
+            asLong(): Attribute.Long.Remote;
+
+            asDouble(): Attribute.Double.Remote;
+
+            asString(): Attribute.String.Remote;
+
+            asDateTime(): Attribute.DateTime.Remote;
+        }
     }
 
-    export interface Long extends Attribute<number> {
+    export interface Long extends Attribute {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteLong;
+        asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote;
 
         getType(): AttributeType.Long;
 
+        getValue(): number;
     }
 
-    export interface RemoteLong extends Attribute.Remote<number>, Attribute.Long {
+    export namespace Long {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteLong;
+        export interface Remote extends Attribute.Remote, Attribute.Long {
 
-        getType(): AttributeType.Long;
+            asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote;
 
+            getType(): AttributeType.Long;
+
+            getValue(): number;
+
+            asType(): Type.Remote;
+
+            asThingType(): ThingType.Remote;
+
+            asEntityType(): EntityType.Remote;
+
+            asAttributeType(): AttributeType.Remote;
+
+            asRelationType(): RelationType.Remote;
+
+            asRoleType(): RoleType.Remote;
+
+            asThing(): Thing.Remote;
+
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): Attribute.Boolean.Remote;
+
+            asLong(): Attribute.Long.Remote;
+
+            asDouble(): Attribute.Double.Remote;
+
+            asString(): Attribute.String.Remote;
+
+            asDateTime(): Attribute.DateTime.Remote;
+        }
     }
 
-    export interface Double extends Attribute<number> {
+    export interface Double extends Attribute {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDouble;
+        asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote;
 
         getType(): AttributeType.Double;
 
+        getValue(): number;
     }
 
-    export interface RemoteDouble extends Attribute.Remote<number>, Attribute.Double {
+    export namespace Double {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDouble;
+        export interface Remote extends Attribute.Remote, Attribute.Double {
 
-        getType(): AttributeType.Double;
+            asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote;
 
+            getType(): AttributeType.Double;
+
+            getValue(): number;
+
+            asType(): Type.Remote;
+
+            asThingType(): ThingType.Remote;
+
+            asEntityType(): EntityType.Remote;
+
+            asAttributeType(): AttributeType.Remote;
+
+            asRelationType(): RelationType.Remote;
+
+            asRoleType(): RoleType.Remote;
+
+            asThing(): Thing.Remote;
+
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): Attribute.Boolean.Remote;
+
+            asLong(): Attribute.Long.Remote;
+
+            asDouble(): Attribute.Double.Remote;
+
+            asString(): Attribute.String.Remote;
+
+            asDateTime(): Attribute.DateTime.Remote;
+        }
     }
 
-    export interface String extends Attribute<string> {
+    export interface String extends Attribute {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteString;
+        asRemote(transaction: TypeDBTransaction): Attribute.String.Remote;
 
         getType(): AttributeType.String;
 
+        getValue(): string;
     }
 
-    export interface RemoteString extends Attribute.Remote<string>, Attribute.String {
+    export namespace String {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteString;
+        export interface Remote extends Attribute.Remote, Attribute.String {
 
-        getType(): AttributeType.String;
+            asRemote(transaction: TypeDBTransaction): Attribute.String.Remote;
 
+            getType(): AttributeType.String;
+
+            getValue(): string;
+
+            asType(): Type.Remote;
+
+            asThingType(): ThingType.Remote;
+
+            asEntityType(): EntityType.Remote;
+
+            asAttributeType(): AttributeType.Remote;
+
+            asRelationType(): RelationType.Remote;
+
+            asRoleType(): RoleType.Remote;
+
+            asThing(): Thing.Remote;
+
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): Attribute.Boolean.Remote;
+
+            asLong(): Attribute.Long.Remote;
+
+            asDouble(): Attribute.Double.Remote;
+
+            asString(): Attribute.String.Remote;
+
+            asDateTime(): Attribute.DateTime.Remote;
+        }
     }
 
-    export interface DateTime extends Attribute<Date> {
+    export interface DateTime extends Attribute {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDateTime;
+        asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote;
 
         getType(): AttributeType.DateTime;
 
+        getValue(): Date;
     }
 
-    export interface RemoteDateTime extends Attribute.Remote<Date>, Attribute.DateTime {
+    export namespace DateTime {
 
-        asRemote(transaction: TypeDBTransaction): Attribute.RemoteDateTime;
+        export interface Remote extends Attribute.Remote, Attribute.DateTime {
 
-        getType(): AttributeType.DateTime;
+            asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote;
 
+            getType(): AttributeType.DateTime;
+
+            getValue(): Date;
+
+            asType(): Type.Remote;
+
+            asThingType(): ThingType.Remote;
+
+            asEntityType(): EntityType.Remote;
+
+            asAttributeType(): AttributeType.Remote;
+
+            asRelationType(): RelationType.Remote;
+
+            asRoleType(): RoleType.Remote;
+
+            asThing(): Thing.Remote;
+
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): Attribute.Boolean.Remote;
+
+            asLong(): Attribute.Long.Remote;
+
+            asDouble(): Attribute.Double.Remote;
+
+            asString(): Attribute.String.Remote;
+
+            asDateTime(): Attribute.DateTime.Remote;
+        }
     }
 }

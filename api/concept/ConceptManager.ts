@@ -19,12 +19,11 @@
  * under the License.
  */
 
-
-import {Thing} from "./thing/Thing";
-import {ThingType} from "./type/ThingType";
-import {EntityType} from "./type/EntityType";
-import {RelationType} from "./type/RelationType";
-import {AttributeType} from "./type/AttributeType";
+import { Thing } from "./thing/Thing";
+import { AttributeType } from "./type/AttributeType";
+import { EntityType } from "./type/EntityType";
+import { RelationType } from "./type/RelationType";
+import { ThingType } from "./type/ThingType";
 
 export interface ConceptManager {
 

@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-import {LogicManager} from "../api/logic/LogicManager";
-import {Rule} from "../api/logic/Rule";
-import {RuleImpl} from "./RuleImpl";
-import {Stream} from "../common/util/Stream";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
-import {LogicManager as LogicProto} from "typedb-protocol/common/logic_pb";
+import { LogicManager as LogicProto } from "typedb-protocol/common/logic_pb";
+import { Transaction } from "typedb-protocol/common/transaction_pb";
+import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
+import { LogicManager } from "../api/logic/LogicManager";
+import { Rule } from "../api/logic/Rule";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { Stream } from "../common/util/Stream";
+import { RuleImpl } from "./RuleImpl";
 
 export class LogicManagerImpl implements LogicManager {
     private _transaction: TypeDBTransaction.Extended;

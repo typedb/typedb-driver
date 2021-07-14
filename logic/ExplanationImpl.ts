@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {ConceptMap} from "../api/answer/ConceptMap";
-import {Explanation} from "../api/logic/Explanation";
-import {Rule} from "../api/logic/Rule";
-import {RuleImpl} from "./RuleImpl";
-import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-import {Explanation as ExplanationProto} from "typedb-protocol/common/logic_pb";
+import { Explanation as ExplanationProto } from "typedb-protocol/common/logic_pb";
+import { ConceptMap } from "../api/answer/ConceptMap";
+import { Explanation } from "../api/logic/Explanation";
+import { Rule } from "../api/logic/Rule";
+import { ConceptMapImpl } from "../concept/answer/ConceptMapImpl";
+import { RuleImpl } from "./RuleImpl";
 
 export class ExplanationImpl implements Explanation {
 

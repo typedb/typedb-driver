@@ -19,21 +19,21 @@
  * under the License.
  */
 
-import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
-import {TypeDBTransaction, TransactionType} from "../api/connection/TypeDBTransaction";
-import {TypeDBOptions} from "../api/connection/TypeDBOptions";
-import {ConceptManager} from "../api/concept/ConceptManager";
-import {LogicManager} from "../api/logic/LogicManager";
-import {QueryManager} from "../api/query/QueryManager";
-import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
-import {LogicManagerImpl} from "../logic/LogicManagerImpl";
-import {QueryManagerImpl} from "../query/QueryManagerImpl";
-import {Stream} from "../common/util/Stream";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {BidirectionalStream} from "../stream/BidirectionalStream";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
+import { Transaction } from "typedb-protocol/common/transaction_pb";
+import { ConceptManager } from "../api/concept/ConceptManager";
+import { TypeDBOptions } from "../api/connection/TypeDBOptions";
+import { TransactionType, TypeDBTransaction } from "../api/connection/TypeDBTransaction";
+import { LogicManager } from "../api/logic/LogicManager";
+import { QueryManager } from "../api/query/QueryManager";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { Stream } from "../common/util/Stream";
+import { ConceptManagerImpl } from "../concept/ConceptManagerImpl";
+import { LogicManagerImpl } from "../logic/LogicManagerImpl";
+import { QueryManagerImpl } from "../query/QueryManagerImpl";
+import { BidirectionalStream } from "../stream/BidirectionalStream";
+import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
 import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {

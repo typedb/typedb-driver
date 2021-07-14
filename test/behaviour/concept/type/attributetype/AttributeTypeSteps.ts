@@ -19,14 +19,12 @@
  * under the License.
  */
 
-import {tx} from "../../../connection/ConnectionStepsBase";
-import {Then, When} from "@cucumber/cucumber";
-import assert from "assert";
-import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
-import {TypeDBClientError} from "../../../../../dist/common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../../../../dist/common/errors/ErrorMessage";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {parseList} from "../../../config/Parameters";
+import assert from "assert";
+import { AttributeType, ErrorMessage, TypeDBClientError } from "../../../../../dist";
+import { parseList } from "../../../config/Parameters";
+import { tx } from "../../../connection/ConnectionStepsBase";
 import ValueType = AttributeType.ValueType;
 
 When("put attribute type: {type_label}, with value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {

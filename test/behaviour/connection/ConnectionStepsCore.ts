@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {BeforeAll} from "@cucumber/cucumber";
-import {TypeDB} from "../../../dist/TypeDB";
-import {setClient} from "./ConnectionStepsBase";
+import { BeforeAll } from "@cucumber/cucumber";
+import { TypeDB } from "../../../dist";
+import { setClient } from "./ConnectionStepsBase";
 
 BeforeAll(() => {
     setClient(TypeDB.coreClient());

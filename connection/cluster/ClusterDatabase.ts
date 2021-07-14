@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {ClusterClient} from "./ClusterClient";
-import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
-import {FailsafeTask} from "../../dependencies_internal";
-import {Database} from "../../api/connection/database/Database";
-import {ClusterDatabase as ClusterDatabaseProto} from "typedb-protocol/cluster/cluster_database_pb";
+import { ClusterDatabase as ClusterDatabaseProto } from "typedb-protocol/cluster/cluster_database_pb";
+import { Database } from "../../api/connection/database/Database";
+import { FailsafeTask } from "../../dependencies_internal";
+import { TypeDBDatabaseImpl } from "../TypeDBDatabaseImpl";
+import { ClusterClient } from "./ClusterClient";
 
 export class ClusterDatabase implements Database.Cluster {
 
@@ -54,7 +54,8 @@ export class ClusterDatabase implements Database.Cluster {
 
     primaryReplica(): DatabaseReplica {
         const primaryReplicas = this._replicas.filter(rep => rep.isPrimary());
-        if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term() > current.term() ? next : current);
+        if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term() > current.term() ?
+            next : current);
         else return null;
     }
 

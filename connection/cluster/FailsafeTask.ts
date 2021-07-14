@@ -20,15 +20,15 @@
  */
 
 
-import {ClusterClient} from "./ClusterClient";
-import {ClusterDatabase, DatabaseReplica} from "../../dependencies_internal";
-import {Database} from "../../api/connection/database/Database";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import { Database } from "../../api/connection/database/Database";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { ClusterDatabase, DatabaseReplica } from "../../dependencies_internal";
+import { ClusterClient } from "./ClusterClient";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
 const FETCH_REPLICAS_MAX_RETRIES = 10;
@@ -42,6 +42,14 @@ export abstract class FailsafeTask<TResult> {
     protected constructor(client: ClusterClient, database: string) {
         this._client = client;
         this._database = database;
+    }
+
+    protected get client(): ClusterClient {
+        return this._client;
+    }
+
+    protected get database(): string {
+        return this._database;
     }
 
     abstract run(replica: Database.Replica): Promise<TResult>;
@@ -90,14 +98,6 @@ export abstract class FailsafeTask<TResult> {
             retries++;
         }
         throw this.clusterNotAvailableError();
-    }
-
-    protected get client(): ClusterClient {
-        return this._client;
-    }
-
-    protected get database(): string {
-        return this._database;
     }
 
     private async seekPrimaryReplica(): Promise<DatabaseReplica> {

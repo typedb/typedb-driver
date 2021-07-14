@@ -19,18 +19,22 @@
  * under the License.
  */
 
-
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {RemoteThingType, ThingType} from "./ThingType";
-import {Attribute} from "../thing/Attribute";
-import {Stream} from "../../../common/util/Stream";
-import {AttributeType as AttributeTypeProto} from "typedb-protocol/common/concept_pb";
+import { AttributeType as AttributeTypeProto } from "typedb-protocol/common/concept_pb";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Attribute } from "../thing/Attribute";
+import { Entity } from "../thing/Entity";
+import { Relation } from "../thing/Relation";
+import { Thing } from "../thing/Thing";
+import { EntityType } from "./EntityType";
+import { RelationType } from "./RelationType";
+import { RoleType } from "./RoleType";
+import { ThingType } from "./ThingType";
+import { Type } from "./Type";
 
 export interface AttributeType extends ThingType {
 
     getValueType(): AttributeType.ValueType;
-
-    isKeyable(): boolean;
 
     isBoolean(): boolean;
 
@@ -59,197 +63,318 @@ export interface AttributeType extends ThingType {
 /* eslint @typescript-eslint/ban-types: "off" */
 export namespace AttributeType {
 
-    export interface Remote extends RemoteThingType, AttributeType {
+    export interface Remote extends AttributeType, ThingType.Remote {
 
         setSupertype(type: AttributeType): Promise<void>;
 
         getSubtypes(): Stream<AttributeType>;
 
-        getInstances(): Stream<Attribute<AttributeType.ValueClass>>;
+        getInstances(): Stream<Attribute>;
 
         getOwners(): Stream<ThingType>;
 
         getOwners(onlyKey: boolean): Stream<ThingType>;
 
-        asBoolean(): AttributeType.RemoteBoolean;
+        asType(): Type.Remote;
 
-        asLong(): AttributeType.RemoteLong;
+        asThingType(): ThingType.Remote;
 
-        asDouble(): AttributeType.RemoteDouble;
+        asEntityType(): EntityType.Remote;
 
-        asString(): AttributeType.RemoteString;
+        asAttributeType(): AttributeType.Remote;
 
-        asDateTime(): AttributeType.RemoteDateTime;
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        asBoolean(): AttributeType.Boolean.Remote;
+
+        asLong(): AttributeType.Long.Remote;
+
+        asDouble(): AttributeType.Double.Remote;
+
+        asString(): AttributeType.String.Remote;
+
+        asDateTime(): AttributeType.DateTime.Remote;
 
         asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
-
     }
 
     export interface Boolean extends AttributeType {
 
-        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteBoolean;
-
+        asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote;
     }
 
-    export interface RemoteBoolean extends AttributeType.Remote, Boolean {
+    export namespace Boolean {
 
-        asRemote(transaction: TypeDBTransaction): RemoteBoolean;
+        export interface Remote extends AttributeType.Boolean, AttributeType.Remote {
 
-        // TODO avoid this re-declaration typing workaround
-        asBoolean(): RemoteBoolean;
+            asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote;
 
-        asLong(): RemoteLong;
+            asType(): Type.Remote;
 
-        asDouble(): RemoteDouble;
+            asThingType(): ThingType.Remote;
 
-        asString(): RemoteString;
+            asEntityType(): EntityType.Remote;
 
-        asDateTime(): RemoteDateTime;
+            asAttributeType(): AttributeType.Remote;
 
-        setSupertype(type: Boolean): Promise<void>;
+            asRelationType(): RelationType.Remote;
 
-        getSubtypes(): Stream<Boolean>;
+            asRoleType(): RoleType.Remote;
 
-        getInstances(): Stream<Attribute.Boolean>;
+            asThing(): Thing.Remote;
 
-        put(value: boolean): Promise<Attribute.Boolean>;
+            asEntity(): Entity.Remote;
 
-        get(value: boolean): Promise<Attribute.Boolean>;
+            asAttribute(): Attribute.Remote;
 
+            asRelation(): Relation.Remote;
+
+            asBoolean(): AttributeType.Boolean.Remote;
+
+            asLong(): AttributeType.Long.Remote;
+
+            asDouble(): AttributeType.Double.Remote;
+
+            asString(): AttributeType.String.Remote;
+
+            asDateTime(): AttributeType.DateTime.Remote;
+
+            setSupertype(type: Boolean): Promise<void>;
+
+            getSubtypes(): Stream<Boolean>;
+
+            getInstances(): Stream<Attribute.Boolean>;
+
+            put(value: boolean): Promise<Attribute.Boolean>;
+
+            get(value: boolean): Promise<Attribute.Boolean>;
+        }
     }
 
     export interface Long extends AttributeType {
 
-        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteLong;
-
+        asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote;
     }
 
-    export interface RemoteLong extends AttributeType.Remote, Long {
+    export namespace Long {
 
-        asRemote(transaction: TypeDBTransaction): RemoteLong;
+        export interface Remote extends AttributeType.Long, AttributeType.Remote {
 
-        // TODO avoid this re-declaration typing workaround
-        asBoolean(): RemoteBoolean;
+            asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote;
 
-        asLong(): RemoteLong;
+            asType(): Type.Remote;
 
-        asDouble(): RemoteDouble;
+            asThingType(): ThingType.Remote;
 
-        asString(): RemoteString;
+            asEntityType(): EntityType.Remote;
 
-        asDateTime(): RemoteDateTime;
+            asAttributeType(): AttributeType.Remote;
 
-        setSupertype(type: Long): Promise<void>;
+            asRelationType(): RelationType.Remote;
 
-        getSubtypes(): Stream<Long>;
+            asRoleType(): RoleType.Remote;
 
-        getInstances(): Stream<Attribute.Long>;
+            asThing(): Thing.Remote;
 
-        put(value: number): Promise<Attribute.Long>;
+            asEntity(): Entity.Remote;
 
-        get(value: number): Promise<Attribute.Long>;
+            asAttribute(): Attribute.Remote;
 
+            asRelation(): Relation.Remote;
+
+            asBoolean(): AttributeType.Boolean.Remote;
+
+            asLong(): AttributeType.Long.Remote;
+
+            asDouble(): AttributeType.Double.Remote;
+
+            asString(): AttributeType.String.Remote;
+
+            asDateTime(): AttributeType.DateTime.Remote;
+
+            setSupertype(type: Long): Promise<void>;
+
+            getSubtypes(): Stream<Long>;
+
+            getInstances(): Stream<Attribute.Long>;
+
+            put(value: number): Promise<Attribute.Long>;
+
+            get(value: number): Promise<Attribute.Long>;
+        }
     }
 
     export interface Double extends AttributeType {
 
-        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDouble;
-
+        asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote;
     }
 
-    export interface RemoteDouble extends AttributeType.Remote, Double {
-        asRemote(transaction: TypeDBTransaction): RemoteDouble;
+    export namespace Double {
 
-        // TODO avoid this re-declaration typing workaround
-        asBoolean(): RemoteBoolean;
+        export interface Remote extends AttributeType.Double, AttributeType.Remote {
 
-        asLong(): RemoteLong;
+            asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote;
 
-        asDouble(): RemoteDouble;
+            asType(): Type.Remote;
 
-        asString(): RemoteString;
+            asThingType(): ThingType.Remote;
 
-        asDateTime(): RemoteDateTime;
+            asEntityType(): EntityType.Remote;
 
-        setSupertype(type: Double): Promise<void>;
+            asAttributeType(): AttributeType.Remote;
 
-        getSubtypes(): Stream<Double>;
+            asRelationType(): RelationType.Remote;
 
-        getInstances(): Stream<Attribute.Double>;
+            asRoleType(): RoleType.Remote;
 
-        put(value: number): Promise<Attribute.Double>;
+            asThing(): Thing.Remote;
 
-        get(value: number): Promise<Attribute.Double>;
+            asEntity(): Entity.Remote;
+
+            asAttribute(): Attribute.Remote;
+
+            asRelation(): Relation.Remote;
+
+            asBoolean(): AttributeType.Boolean.Remote;
+
+            asLong(): AttributeType.Long.Remote;
+
+            asDouble(): AttributeType.Double.Remote;
+
+            asString(): AttributeType.String.Remote;
+
+            asDateTime(): AttributeType.DateTime.Remote;
+
+            setSupertype(type: Double): Promise<void>;
+
+            getSubtypes(): Stream<Double>;
+
+            getInstances(): Stream<Attribute.Double>;
+
+            put(value: number): Promise<Attribute.Double>;
+
+            get(value: number): Promise<Attribute.Double>;
+        }
     }
 
     export interface String extends AttributeType {
 
-        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteString;
-
+        asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote;
     }
 
-    export interface RemoteString extends AttributeType.Remote, String {
+    export namespace String {
 
-        asRemote(transaction: TypeDBTransaction): RemoteString;
+        export interface Remote extends AttributeType.String, AttributeType.Remote {
 
-        // TODO avoid this re-declaration typing workaround
-        asBoolean(): RemoteBoolean;
+            asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote;
 
-        asLong(): RemoteLong;
+            asType(): Type.Remote;
 
-        asDouble(): RemoteDouble;
+            asThingType(): ThingType.Remote;
 
-        asString(): RemoteString;
+            asEntityType(): EntityType.Remote;
 
-        asDateTime(): RemoteDateTime;
+            asAttributeType(): AttributeType.Remote;
 
-        setSupertype(type: String): Promise<void>;
+            asRelationType(): RelationType.Remote;
 
-        getSubtypes(): Stream<String>;
+            asRoleType(): RoleType.Remote;
 
-        getInstances(): Stream<Attribute.String>;
+            asThing(): Thing.Remote;
 
-        put(value: string): Promise<Attribute.String>;
+            asEntity(): Entity.Remote;
 
-        get(value: string): Promise<Attribute.String>;
+            asAttribute(): Attribute.Remote;
 
-        getRegex(): Promise<string>;
+            asRelation(): Relation.Remote;
 
-        setRegex(regex: string): Promise<void>;
+            asBoolean(): AttributeType.Boolean.Remote;
 
+            asLong(): AttributeType.Long.Remote;
+
+            asDouble(): AttributeType.Double.Remote;
+
+            asString(): AttributeType.String.Remote;
+
+            asDateTime(): AttributeType.DateTime.Remote;
+
+            setSupertype(type: String): Promise<void>;
+
+            getSubtypes(): Stream<String>;
+
+            getInstances(): Stream<Attribute.String>;
+
+            put(value: string): Promise<Attribute.String>;
+
+            get(value: string): Promise<Attribute.String>;
+
+            getRegex(): Promise<string>;
+
+            setRegex(regex: string): Promise<void>;
+        }
     }
 
     export interface DateTime extends AttributeType {
 
-        asRemote(transaction: TypeDBTransaction): AttributeType.RemoteDateTime;
-
+        asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote;
     }
 
-    export interface RemoteDateTime extends AttributeType.Remote, DateTime {
+    export namespace DateTime {
 
-        asRemote(transaction: TypeDBTransaction): RemoteDateTime;
+        export interface Remote extends AttributeType.DateTime, AttributeType.Remote {
 
-        // TODO avoid this re-declaration typing workaround
-        asBoolean(): RemoteBoolean;
+            asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote;
 
-        asLong(): RemoteLong;
+            asType(): Type.Remote;
 
-        asDouble(): RemoteDouble;
+            asThingType(): ThingType.Remote;
 
-        asString(): RemoteString;
+            asEntityType(): EntityType.Remote;
 
-        asDateTime(): RemoteDateTime;
+            asAttributeType(): AttributeType.Remote;
 
-        setSupertype(type: DateTime): Promise<void>;
+            asRelationType(): RelationType.Remote;
 
-        getSubtypes(): Stream<DateTime>;
+            asRoleType(): RoleType.Remote;
 
-        getInstances(): Stream<Attribute.DateTime>;
+            asThing(): Thing.Remote;
 
-        put(value: Date): Promise<Attribute.DateTime>;
+            asEntity(): Entity.Remote;
 
-        get(value: Date): Promise<Attribute.DateTime>;
+            asAttribute(): Attribute.Remote;
 
+            asRelation(): Relation.Remote;
+
+            asBoolean(): AttributeType.Boolean.Remote;
+
+            asLong(): AttributeType.Long.Remote;
+
+            asDouble(): AttributeType.Double.Remote;
+
+            asString(): AttributeType.String.Remote;
+
+            asDateTime(): AttributeType.DateTime.Remote;
+
+            setSupertype(type: DateTime): Promise<void>;
+
+            getSubtypes(): Stream<DateTime>;
+
+            getInstances(): Stream<Attribute.DateTime>;
+
+            put(value: Date): Promise<Attribute.DateTime>;
+
+            get(value: Date): Promise<Attribute.DateTime>;
+        }
     }
 
     export interface ValueType {
@@ -259,12 +384,11 @@ export namespace AttributeType {
         isWritable(): boolean;
 
         proto(): AttributeTypeProto.ValueType;
-
     }
 
     export namespace ValueType {
 
-        class ValueTypeImpl implements ValueType {
+        class Impl implements ValueType {
 
             private readonly _attrTypeProto: AttributeTypeProto.ValueType;
             private readonly _name: string;
@@ -291,14 +415,11 @@ export namespace AttributeType {
             }
         }
 
-        export const OBJECT = new ValueTypeImpl(AttributeTypeProto.ValueType.OBJECT, "OBJECT");
-        export const BOOLEAN = new ValueTypeImpl(AttributeTypeProto.ValueType.BOOLEAN, "BOOLEAN");
-        export const LONG = new ValueTypeImpl(AttributeTypeProto.ValueType.LONG, "LONG");
-        export const DOUBLE = new ValueTypeImpl(AttributeTypeProto.ValueType.DOUBLE, "DOUBLE");
-        export const STRING = new ValueTypeImpl(AttributeTypeProto.ValueType.STRING, "STRING");
-        export const DATETIME = new ValueTypeImpl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
-
+        export const OBJECT = new Impl(AttributeTypeProto.ValueType.OBJECT, "OBJECT");
+        export const BOOLEAN = new Impl(AttributeTypeProto.ValueType.BOOLEAN, "BOOLEAN");
+        export const LONG = new Impl(AttributeTypeProto.ValueType.LONG, "LONG");
+        export const DOUBLE = new Impl(AttributeTypeProto.ValueType.DOUBLE, "DOUBLE");
+        export const STRING = new Impl(AttributeTypeProto.ValueType.STRING, "STRING");
+        export const DATETIME = new Impl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
     }
-
-    export type ValueClass = number | string | boolean | Date;
 }

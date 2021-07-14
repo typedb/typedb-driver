@@ -20,20 +20,20 @@
  */
 
 
-import {FailsafeTask} from "./FailsafeTask";
-import {ClusterSession} from "./ClusterSession";
-import {ClusterServerStub} from "./ClusterServerStub";
-import {ClusterServerClient} from "./ClusterServerClient";
-import {ClusterUserManager} from "./ClusterUserManager";
-import {ClusterDatabaseManager} from "./ClusterDatabaseManager";
-import {Database} from "../../api/connection/database/Database";
-import {TypeDBClient} from "../../api/connection/TypeDBClient";
-import {SessionType} from "../../api/connection/TypeDBSession";
-import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
-import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import { Database } from "../../api/connection/database/Database";
+import { TypeDBClient } from "../../api/connection/TypeDBClient";
+import { TypeDBCredential } from "../../api/connection/TypeDBCredential";
+import { TypeDBClusterOptions, TypeDBOptions } from "../../api/connection/TypeDBOptions";
+import { SessionType } from "../../api/connection/TypeDBSession";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { ClusterDatabaseManager } from "./ClusterDatabaseManager";
+import { ClusterServerClient } from "./ClusterServerClient";
+import { ClusterServerStub } from "./ClusterServerStub";
+import { ClusterSession } from "./ClusterSession";
+import { ClusterUserManager } from "./ClusterUserManager";
+import { FailsafeTask } from "./FailsafeTask";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 
 export class ClusterClient implements TypeDBClient.Cluster {
@@ -79,14 +79,6 @@ export class ClusterClient implements TypeDBClient.Cluster {
         }
     }
 
-    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
-    }
-
-    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
-        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
-    }
-
     databases(): ClusterDatabaseManager {
         return this._databaseManagers;
     }
@@ -130,6 +122,18 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return this._clusterStubs[address];
     }
 
+    asCluster(): TypeDBClient.Cluster {
+        return this;
+    }
+
+    private sessionPrimaryReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
+        return new OpenSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
+    }
+
+    private sessionAnyReplica(database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
+        return new OpenSessionFailsafeTask(database, type, options, this).runAnyReplica();
+    }
+
     private async fetchClusterServers(): Promise<string[]> {
         for (const address of this._addresses) {
             try {
@@ -144,10 +148,6 @@ export class ClusterClient implements TypeDBClient.Cluster {
             }
         }
         throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._addresses.join(",")));
-    }
-
-    asCluster(): TypeDBClient.Cluster {
-        return this;
     }
 
 }

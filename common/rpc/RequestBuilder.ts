@@ -19,33 +19,19 @@
  * under the License.
  */
 
-import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
-import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
-import {
-    ClusterUser as ClusterUserProto,
-    ClusterUserManager as ClusterUserManagerProto
-} from "typedb-protocol/cluster/cluster_user_pb";
-import {ServerManager as ServerManagerProto} from "typedb-protocol/cluster/cluster_server_pb";
-import {Session as SessionProto} from "typedb-protocol/common/session_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {LogicManager as LogicProto, Rule as RuleProto} from "typedb-protocol/common/logic_pb";
-import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
-import {
-    Attribute as AttributeProto,
-    AttributeType as AttributeTypeProto,
-    ConceptManager as ConceptMgrProto,
-    EntityType as EntityTypeProto,
-    Relation as RelationProto,
-    RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto,
-    Thing as ThingProto,
-    ThingType as ThingTypeProto,
-    Type as TypeProto
-} from "typedb-protocol/common/concept_pb";
-import {Options} from "typedb-protocol/common/options_pb";
+import { ClusterDatabaseManager } from "typedb-protocol/cluster/cluster_database_pb";
+import { ServerManager as ServerManagerProto } from "typedb-protocol/cluster/cluster_server_pb";
+import { ClusterUser as ClusterUserProto, ClusterUserManager as ClusterUserManagerProto } from "typedb-protocol/cluster/cluster_user_pb";
+import { Attribute as AttributeProto, AttributeType as AttributeTypeProto, ConceptManager as ConceptMgrProto, EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { LogicManager as LogicProto, Rule as RuleProto } from "typedb-protocol/common/logic_pb";
+import { Options } from "typedb-protocol/common/options_pb";
+import { QueryManager as QueryProto } from "typedb-protocol/common/query_pb";
+import { Session as SessionProto } from "typedb-protocol/common/session_pb";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { CoreDatabase, CoreDatabaseManager } from "typedb-protocol/core/core_database_pb";
 import * as uuid from "uuid";
-import {Label} from "../Label";
-import {Bytes} from "../util/Bytes";
+import { Label } from "../Label";
+import { Bytes } from "../util/Bytes";
 
 /* eslint no-inner-declarations: "off" */
 export namespace RequestBuilder {

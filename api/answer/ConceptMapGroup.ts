@@ -19,8 +19,8 @@
  * under the License.
  */
 
-import {ConceptMap} from "./ConceptMap";
-import {Concept} from "../concept/Concept";
+import { Concept } from "../concept/Concept";
+import { ConceptMap } from "./ConceptMap";
 
 export interface ConceptMapGroup {
 

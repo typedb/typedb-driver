@@ -20,17 +20,17 @@
  */
 
 
-import {CoreClient} from "./core/CoreClient";
-import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
-import {TypeDBTransaction, TransactionType} from "../api/connection/TypeDBTransaction";
-import {TypeDBSession, SessionType} from "../api/connection/TypeDBSession";
-import {TypeDBOptions} from "../api/connection/TypeDBOptions";
-import {Database} from "../api/connection/database/Database";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {RequestTransmitter} from "../stream/RequestTransmitter";
+import { Database } from "../api/connection/database/Database";
+import { TypeDBOptions } from "../api/connection/TypeDBOptions";
+import { SessionType, TypeDBSession } from "../api/connection/TypeDBSession";
+import { TransactionType, TypeDBTransaction } from "../api/connection/TypeDBTransaction";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
+import { RequestTransmitter } from "../stream/RequestTransmitter";
+import { CoreClient } from "./core/CoreClient";
+import { TypeDBTransactionImpl } from "./TypeDBTransactionImpl";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class TypeDBSessionImpl implements TypeDBSession {
@@ -40,7 +40,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private readonly _options: TypeDBOptions;
     private readonly _client: CoreClient;
     private _sessionId: string;
-    private _database : Database;
+    private _database: Database;
     private _isOpen: boolean;
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
@@ -107,15 +107,6 @@ export class TypeDBSessionImpl implements TypeDBSession {
         return this._sessionId;
     }
 
-    private pulse(): void {
-        if (!this._isOpen) return;
-        const pulse = RequestBuilder.Session.pulseReq(this._sessionId);
-        this._client.stub().sessionPulse(pulse, (err, res) => {
-            if (err || !res.getAlive()) this._isOpen = false;
-            else this._pulse = setTimeout(() => this.pulse(), 5000);
-        });
-    }
-
     public stub(): TypeDBStub {
         return this._client.stub();
     }
@@ -126,5 +117,14 @@ export class TypeDBSessionImpl implements TypeDBSession {
 
     public networkLatency() {
         return this._networkLatencyMillis;
+    }
+
+    private pulse(): void {
+        if (!this._isOpen) return;
+        const pulse = RequestBuilder.Session.pulseReq(this._sessionId);
+        this._client.stub().sessionPulse(pulse, (err, res) => {
+            if (err || !res.getAlive()) this._isOpen = false;
+            else this._pulse = setTimeout(() => this.pulse(), 5000);
+        });
     }
 }

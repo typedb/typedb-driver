@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {ClusterClient} from "./ClusterClient";
-import {ClusterUserManager, FailsafeTask} from "../../dependencies_internal";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {User} from "../../api/connection/user/User";
-import {Database} from "../../api/connection/database/Database";
+import { Database } from "../../api/connection/database/Database";
+import { User } from "../../api/connection/user/User";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { ClusterUserManager, FailsafeTask } from "../../dependencies_internal";
+import { ClusterClient } from "./ClusterClient";
 
 export class ClusterUser implements User {
 

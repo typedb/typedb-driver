@@ -20,15 +20,15 @@
  */
 
 
-import {BatchDispatcher} from "./RequestTransmitter";
-import {ResponseCollector} from "./ResponseCollector";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
-import ResCase = Transaction.ResPart.ResCase;
+import { Transaction } from "typedb-protocol/common/transaction_pb";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { BatchDispatcher } from "./RequestTransmitter";
+import { ResponseCollector } from "./ResponseCollector";
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
+import ResCase = Transaction.ResPart.ResCase;
 
 
 export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> {

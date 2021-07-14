@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../connection/TypeDBTransaction";
+import { TypeDBTransaction } from "../connection/TypeDBTransaction";
 
 export interface Rule {
 

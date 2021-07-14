@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {Database} from "../api/connection/database/Database";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import { Database } from "../api/connection/database/Database";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
 
 export class TypeDBDatabaseImpl implements Database {
 

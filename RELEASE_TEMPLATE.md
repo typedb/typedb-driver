@@ -1,9 +1,7 @@
 NPM package: https://www.npmjs.com/package/typedb-client
 Documentation: https://docs.vaticle.com/docs/client-api/nodejs
 
-## Distribution
-
-Now officially available through https://npmjs.com
+## Installation
 
 ```
 npm install typedb-client@{version}

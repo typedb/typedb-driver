@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import {DatabaseManager} from "../api/connection/database/DatabaseManager";
-import {Database} from "../api/connection/database/Database";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import { Database } from "../api/connection/database/Database";
+import { DatabaseManager } from "../api/connection/database/DatabaseManager";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
+import { TypeDBDatabaseImpl } from "./TypeDBDatabaseImpl";
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {
 

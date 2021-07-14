@@ -19,17 +19,13 @@
  * under the License.
  */
 
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
-import {Concept} from "../../api/concept/Concept";
-import {ConceptMap} from "../../api/answer/ConceptMap";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {Concept as ConceptProto} from "typedb-protocol/common/concept_pb";
-import {
-    ConceptMap as ConceptMapProto,
-    Explainable as ExplainableProto, Explainables,
-    Explainables as ExplainablesProto
-} from "typedb-protocol/common/answer_pb";
+import { ConceptMap as ConceptMapProto, Explainable as ExplainableProto, Explainables, Explainables as ExplainablesProto } from "typedb-protocol/common/answer_pb";
+import { Concept as ConceptProto } from "typedb-protocol/common/concept_pb";
+import { ConceptMap } from "../../api/answer/ConceptMap";
+import { Concept } from "../../api/concept/Concept";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { ThingImpl, TypeImpl } from "../../dependencies_internal";
 
 export class ConceptMapImpl implements ConceptMap {
 

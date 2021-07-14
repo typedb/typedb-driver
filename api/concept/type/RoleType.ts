@@ -19,42 +19,64 @@
  * under the License.
  */
 
-
-import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
-import {RemoteType, Type} from "./Type";
-import {ThingType} from "./ThingType";
-import {RelationType} from "./RelationType";
-import {Stream} from "../../../common/util/Stream";
-import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
+import { Stream } from "../../../common/util/Stream";
+import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
+import { Attribute } from "../thing/Attribute";
+import { Entity } from "../thing/Entity";
+import { Relation } from "../thing/Relation";
+import { Thing } from "../thing/Thing";
+import { AttributeType } from "./AttributeType";
+import { EntityType } from "./EntityType";
+import { RelationType } from "./RelationType";
+import { ThingType } from "./ThingType";
+import { Type } from "./Type";
 
 export interface RoleType extends Type {
 
-    asRemote(transaction: TypeDBTransaction): RemoteRoleType;
-
-}
-
-export interface RemoteRoleType extends RoleType, RemoteType {
-
-    asRemote(transaction: TypeDBTransaction): RemoteRoleType;
-
-    getSupertype(): Promise<RoleType>;
-
-    getSupertypes(): Stream<RoleType>;
-
-    getSubtypes(): Stream<RoleType>;
-
-    getRelationType(): Promise<RelationType>;
-
-    getRelationTypes(): Stream<RelationType>;
-
-    getPlayers(): Stream<ThingType>;
-
+    asRemote(transaction: TypeDBTransaction): RoleType.Remote;
 }
 
 export namespace RoleType {
 
+    export interface Remote extends RoleType, Type.Remote {
+
+        asRemote(transaction: TypeDBTransaction): RoleType.Remote;
+
+        asType(): Type.Remote;
+
+        asThingType(): ThingType.Remote;
+
+        asEntityType(): EntityType.Remote;
+
+        asAttributeType(): AttributeType.Remote;
+
+        asRelationType(): RelationType.Remote;
+
+        asRoleType(): RoleType.Remote;
+
+        asThing(): Thing.Remote;
+
+        asEntity(): Entity.Remote;
+
+        asAttribute(): Attribute.Remote;
+
+        asRelation(): Relation.Remote;
+
+        getSupertype(): Promise<RoleType>;
+
+        getSupertypes(): Stream<RoleType>;
+
+        getSubtypes(): Stream<RoleType>;
+
+        getRelationType(): Promise<RelationType>;
+
+        getRelationTypes(): Stream<RelationType>;
+
+        getPlayers(): Stream<ThingType>;
+    }
+
     export function proto(roleType: RoleType) {
         return RequestBuilder.Type.RoleType.protoRoleType(roleType.getLabel(), Type.encoding(roleType));
     }
-
 }

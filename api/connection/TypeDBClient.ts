@@ -20,10 +20,10 @@
  */
 
 
-import {TypeDBOptions} from "./TypeDBOptions";
-import {TypeDBSession, SessionType} from "./TypeDBSession";
-import {DatabaseManager} from "./database/DatabaseManager";
-import {UserManager} from "./user/UserManager";
+import { DatabaseManager } from "./database/DatabaseManager";
+import { TypeDBOptions } from "./TypeDBOptions";
+import { SessionType, TypeDBSession } from "./TypeDBSession";
+import { UserManager } from "./user/UserManager";
 
 export interface TypeDBClient {
 

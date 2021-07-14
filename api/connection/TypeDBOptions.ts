@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {Options} from "typedb-protocol/common/options_pb";
+import { Options } from "typedb-protocol/common/options_pb";
 
 namespace Opts {
     export class Core {

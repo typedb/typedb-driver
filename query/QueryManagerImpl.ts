@@ -19,23 +19,23 @@
  * under the License.
  */
 
-import {QueryManager} from "../api/query/QueryManager";
-import {TypeDBOptions} from "../api/connection/TypeDBOptions";
-import {ConceptMap} from "../api/answer/ConceptMap";
-import {Numeric} from "../api/answer/Numeric";
-import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
-import {NumericGroup} from "../api/answer/NumericGroup";
-import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-import {Explanation} from "../api/logic/Explanation";
-import {ExplanationImpl} from "../logic/ExplanationImpl";
-import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
-import {NumericImpl} from "../concept/answer/NumericImpl";
-import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
-import {Stream} from "../common/util/Stream";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
+import { QueryManager as QueryProto } from "typedb-protocol/common/query_pb";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { ConceptMap } from "../api/answer/ConceptMap";
+import { ConceptMapGroup } from "../api/answer/ConceptMapGroup";
+import { Numeric } from "../api/answer/Numeric";
+import { NumericGroup } from "../api/answer/NumericGroup";
+import { TypeDBOptions } from "../api/connection/TypeDBOptions";
+import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
+import { Explanation } from "../api/logic/Explanation";
+import { QueryManager } from "../api/query/QueryManager";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { Stream } from "../common/util/Stream";
+import { ConceptMapGroupImpl } from "../concept/answer/ConceptMapGroupImpl";
+import { ConceptMapImpl } from "../concept/answer/ConceptMapImpl";
+import { NumericGroupImpl } from "../concept/answer/NumericGroupImpl";
+import { NumericImpl } from "../concept/answer/NumericImpl";
+import { ExplanationImpl } from "../logic/ExplanationImpl";
 
 
 export class QueryManagerImpl implements QueryManager {
@@ -128,6 +128,8 @@ export class QueryManagerImpl implements QueryManager {
     }
 
     private stream(req: TransactionProto.Req): Stream<QueryProto.ResPart> {
-        return this._transaction.rpcStream(req).map((res) => { return res.getQueryManagerResPart() });
+        return this._transaction.rpcStream(req).map((res) => {
+            return res.getQueryManagerResPart()
+        });
     }
 }

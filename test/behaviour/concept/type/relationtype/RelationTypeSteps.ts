@@ -19,11 +19,11 @@
  * under the License.
  */
 
-import {tx} from "../../../connection/ConnectionStepsBase";
-import {Then, When} from "@cucumber/cucumber";
-import {parseList, ScopedLabel} from "../../../config/Parameters";
-import {assertThrows} from "../../../util/Util";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
+import { parseList, ScopedLabel } from "../../../config/Parameters";
+import { tx } from "../../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../../util/Util";
 import assert = require("assert");
 
 

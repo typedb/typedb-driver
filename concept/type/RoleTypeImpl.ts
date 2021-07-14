@@ -19,15 +19,15 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {RemoteRoleType, RoleType} from "../../api/concept/type/RoleType";
-import {ThingType} from "../../api/concept/type/ThingType";
-import {RelationType} from "../../api/concept/type/RelationType";
-import {RelationTypeImpl, ThingTypeImpl, TypeImpl} from "../../dependencies_internal";
-import {Stream} from "../../common/util/Stream";
-import {Label} from "../../common/Label";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { RelationType } from "../../api/concept/type/RelationType";
+import { RoleType } from "../../api/concept/type/RoleType";
+import { ThingType } from "../../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { RelationTypeImpl, ThingTypeImpl, TypeImpl } from "../../dependencies_internal";
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -35,14 +35,21 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
         super(Label.scoped(scope, label), isRoot);
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteRoleType {
-        return new RoleTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
+    protected get className(): string {
+        return "RoleType";
+    }
+
+    asRemote(transaction: TypeDBTransaction): RoleType.Remote {
+        return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isRoleType(): boolean {
         return true;
     }
 
+    asRoleType(): RoleType {
+        return this;
+    }
 }
 
 export namespace RoleTypeImpl {
@@ -52,18 +59,26 @@ export namespace RoleTypeImpl {
         return new RoleTypeImpl(typeProto.getScope(), typeProto.getLabel(), typeProto.getRoot());
     }
 
-    export class RemoteImpl extends TypeImpl.RemoteImpl implements RemoteRoleType {
+    export class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteRoleType {
-            return this;
+        protected get className(): string {
+            return "RoleType";
+        }
+
+        asRemote(transaction: TypeDBTransaction): RoleType.Remote {
+            return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         isRoleType(): boolean {
             return true;
+        }
+
+        asRoleType(): RoleType.Remote {
+            return this;
         }
 
         getSubtypes(): Stream<RoleType> {
@@ -79,7 +94,7 @@ export namespace RoleTypeImpl {
         }
 
         getRelationType(): Promise<RelationType> {
-            return this._transaction.concepts().getRelationType(this.getLabel().scope());
+            return this.transaction.concepts().getRelationType(this.getLabel().scope());
         }
 
         getRelationTypes(): Stream<RelationType> {
@@ -98,8 +113,7 @@ export namespace RoleTypeImpl {
 
         async isDeleted(): Promise<boolean> {
             const relationType = await this.getRelationType();
-            return !(relationType) || (!(await relationType.asRemote(this._transaction).getRelates(this.getLabel().name())));
+            return !(relationType) || (!(await relationType.asRemote(this.transaction).getRelates(this.getLabel().name())));
         }
     }
-
 }

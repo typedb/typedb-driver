@@ -20,7 +20,7 @@
  */
 
 
-import {Concept} from "../concept/Concept";
+import { Concept } from "../concept/Concept";
 
 export interface ConceptMap {
 

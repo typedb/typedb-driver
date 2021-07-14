@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import {CoreClient} from "./connection/core/CoreClient";
-import {ClusterClient} from "./connection/cluster/ClusterClient";
-import {TypeDBCredential} from "./api/connection/TypeDBCredential";
-import {TypeDBClient as TypeDBClient} from "./api/connection/TypeDBClient";
+import { TypeDBClient as TypeDBClient } from "./api/connection/TypeDBClient";
+import { TypeDBCredential } from "./api/connection/TypeDBCredential";
+import { ClusterClient } from "./connection/cluster/ClusterClient";
+import { CoreClient } from "./connection/core/CoreClient";
 
 export namespace TypeDB {
 
@@ -33,7 +33,7 @@ export namespace TypeDB {
     }
 
     export function clusterClient(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBClient.Cluster> {
-        if (typeof addresses === 'string' ) addresses = [addresses];
+        if (typeof addresses === 'string') addresses = [addresses];
         return new ClusterClient(addresses, credential).open();
     }
 

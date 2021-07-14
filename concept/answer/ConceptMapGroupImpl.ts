@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
-import {ConceptMap} from "../../api/answer/ConceptMap";
-import {Concept} from "../../api/concept/Concept";
-import {ConceptMapImpl} from "./ConceptMapImpl";
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
-import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/common/answer_pb";
+import { ConceptMapGroup as MapGroupProto } from "typedb-protocol/common/answer_pb";
+import { ConceptMap } from "../../api/answer/ConceptMap";
+import { ConceptMapGroup } from "../../api/answer/ConceptMapGroup";
+import { Concept } from "../../api/concept/Concept";
+import { ThingImpl, TypeImpl } from "../../dependencies_internal";
+import { ConceptMapImpl } from "./ConceptMapImpl";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
 

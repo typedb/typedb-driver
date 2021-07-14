@@ -19,14 +19,13 @@
  * under the License.
  */
 
-import {When} from "@cucumber/cucumber";
-import {get, put} from "../ThingSteps";
-import {tx} from "../../../connection/ConnectionStepsBase";
-import {assertThrows} from "../../../util/Util";
-import {AttributeType} from "../../../../../dist/api/concept/type/AttributeType";
-import {Relation} from "../../../../../dist/api/concept/thing/Relation";
+import { When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {parseVar} from "../../../config/Parameters";
+import { AttributeType, Relation } from "../../../../../dist";
+import { parseVar } from "../../../config/Parameters";
+import { tx } from "../../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../../util/Util";
+import { get, put } from "../ThingSteps";
 import assert = require("assert");
 
 When("{var} = relation\\({type_label}) create new instance", async (var0: string, typeLabel: string) => {
@@ -142,14 +141,14 @@ When("relation\\({type_label}) get instances is empty", async (typeLabel: string
     assert.strictEqual((await (await tx().concepts().getRelationType(typeLabel)).asRemote(tx()).getInstances().collect()).length, 0);
 });
 
-When("relation {var} add player for role\\({type_label}): {var}", async (relationName:string, typeLabel: string, playerName: string) => {
+When("relation {var} add player for role\\({type_label}): {var}", async (relationName: string, typeLabel: string, playerName: string) => {
     const relation = get(relationName) as Relation;
     const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
     const player = get(playerName);
     await relation.asRemote(tx()).addPlayer(roleType, player);
 });
 
-When("relation {var} add player for role\\({type_label}): {var}; throws exception", async (relationName:string, typeLabel: string, playerName: string) => {
+When("relation {var} add player for role\\({type_label}): {var}; throws exception", async (relationName: string, typeLabel: string, playerName: string) => {
     await assertThrows(async () => {
         const relation = get(relationName) as Relation;
         const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
@@ -158,7 +157,7 @@ When("relation {var} add player for role\\({type_label}): {var}; throws exceptio
     });
 });
 
-When("relation {var} remove player for role\\({type_label}): {var}", async (relationName:string, typeLabel: string, playerName: string) => {
+When("relation {var} remove player for role\\({type_label}): {var}", async (relationName: string, typeLabel: string, playerName: string) => {
     const relation = get(relationName) as Relation;
     const roleType = await relation.getType().asRemote(tx()).getRelates(typeLabel);
     const player = get(playerName);

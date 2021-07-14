@@ -29,12 +29,6 @@ export class BlockingQueue<T> {
         this._resolvers = [];
     }
 
-    private addPromise(): void {
-        this._promises.push(new Promise(resolve => {
-            this._resolvers.push(resolve);
-        }));
-    }
-
     add(t: T): void {
         if (!this._resolvers.length) this.addPromise();
         const resolve = this._resolvers.shift();
@@ -44,5 +38,11 @@ export class BlockingQueue<T> {
     take(): Promise<T> {
         if (!this._promises.length) this.addPromise();
         return this._promises.shift();
+    }
+
+    private addPromise(): void {
+        this._promises.push(new Promise(resolve => {
+            this._resolvers.push(resolve);
+        }));
     }
 }

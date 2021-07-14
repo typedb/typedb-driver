@@ -19,20 +19,20 @@
  * under the License.
  */
 
-import {ClusterClient} from "./ClusterClient";
-import {ClusterUser, FailsafeTask} from "../../dependencies_internal";
-import {User} from "../../api/connection/user/User";
-import {Database} from "../../api/connection/database/Database";
-import {UserManager} from "../../api/connection/user/UserManager";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import { Database } from "../../api/connection/database/Database";
+import { User } from "../../api/connection/user/User";
+import { UserManager } from "../../api/connection/user/UserManager";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { ClusterUser, FailsafeTask } from "../../dependencies_internal";
+import { ClusterClient } from "./ClusterClient";
 import CLUSTER_USER_DOES_NOT_EXIST = ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
 
 export class ClusterUserManager implements UserManager {
 
-    private readonly _client: ClusterClient;
     static _SYSTEM_DB = "_system";
+    private readonly _client: ClusterClient;
 
     constructor(client: ClusterClient) {
         this._client = client;

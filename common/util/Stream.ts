@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBClientError} from "../errors/TypeDBClientError";
+import { TypeDBClientError } from "../errors/TypeDBClientError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 
@@ -136,6 +136,7 @@ export namespace Stream {
             this._filter = filter;
 
         }
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
             for await (const val of this._source) {
@@ -154,6 +155,7 @@ export namespace Stream {
             this._source = source;
             this._mapper = mapper;
         }
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async* [Symbol.asyncIterator](): AsyncIterator<U, any, undefined> {
             for await (const val of this._source) {

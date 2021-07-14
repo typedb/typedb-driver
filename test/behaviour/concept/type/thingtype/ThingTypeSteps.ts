@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import {tx} from "../../../connection/ConnectionStepsBase";
-import {Then, When} from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import assert from "assert";
-import {parseList, RootLabel, ScopedLabel} from "../../../config/Parameters";
-import {assertThrows} from "../../../util/Util";
-import {ThingType} from "../../../../../dist/api/concept/type/ThingType";
+import { ThingType } from "../../../../../dist";
+import { parseList, RootLabel, ScopedLabel } from "../../../config/Parameters";
+import { tx } from "../../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../../util/Util";
 
 export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<ThingType> {
     switch (rootLabel) {

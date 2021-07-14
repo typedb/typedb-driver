@@ -19,17 +19,17 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
-import {ConceptManager} from "../api/concept/ConceptManager";
-import {Thing} from "../api/concept/thing/Thing";
-import {ThingType} from "../api/concept/type/ThingType";
-import {EntityType} from "../api/concept/type/EntityType";
-import {RelationType} from "../api/concept/type/RelationType";
-import {AttributeType} from "../api/concept/type/AttributeType";
-import {AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl,} from "../dependencies_internal";
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ConceptManager as ConceptProto} from "typedb-protocol/common/concept_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import { ConceptManager as ConceptProto } from "typedb-protocol/common/concept_pb";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { ConceptManager } from "../api/concept/ConceptManager";
+import { Thing } from "../api/concept/thing/Thing";
+import { AttributeType } from "../api/concept/type/AttributeType";
+import { EntityType } from "../api/concept/type/EntityType";
+import { RelationType } from "../api/concept/type/RelationType";
+import { ThingType } from "../api/concept/type/ThingType";
+import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl, } from "../dependencies_internal";
 
 export class ConceptManagerImpl implements ConceptManager {
 
@@ -112,7 +112,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     private execute(request: TransactionProto.Req): Promise<ConceptProto.Res> {
-        return this._transaction.rpcExecute(request ).then((res) => res.getConceptManagerRes());
+        return this._transaction.rpcExecute(request).then((res) => res.getConceptManagerRes());
     }
 
 }

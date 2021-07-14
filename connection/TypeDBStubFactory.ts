@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
 
 export abstract class TypeDBStubFactory {
 

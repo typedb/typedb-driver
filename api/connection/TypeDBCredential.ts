@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_CA_PATH;
 import * as fs from "fs";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_CA_PATH;
 
 export class TypeDBCredential {
 

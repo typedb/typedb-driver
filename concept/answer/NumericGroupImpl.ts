@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {NumericGroup} from "../../api/answer/NumericGroup";
-import {Numeric} from "../../api/answer/Numeric";
-import {Concept} from "../../api/concept/Concept";
-import {NumericGroup as NumericGroupProto} from "typedb-protocol/common/answer_pb";
-import {NumericImpl} from "./NumericImpl";
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
+import { NumericGroup as NumericGroupProto } from "typedb-protocol/common/answer_pb";
+import { Numeric } from "../../api/answer/Numeric";
+import { NumericGroup } from "../../api/answer/NumericGroup";
+import { Concept } from "../../api/concept/Concept";
+import { ThingImpl, TypeImpl } from "../../dependencies_internal";
+import { NumericImpl } from "./NumericImpl";
 
 export class NumericGroupImpl implements NumericGroup {
 

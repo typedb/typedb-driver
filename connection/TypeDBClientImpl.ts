@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
-import {TypeDBStubFactory} from "./TypeDBStubFactory";
-import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
-import {TypeDBClient} from "../api/connection/TypeDBClient";
-import {TypeDBOptions} from "../api/connection/TypeDBOptions";
-import {SessionType} from "../api/connection/TypeDBSession";
-import {RequestTransmitter} from "../stream/RequestTransmitter";
-import {TypeDBStub} from "../common/rpc/TypeDBStub";
-import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
-import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
+import { TypeDBClient } from "../api/connection/TypeDBClient";
+import { TypeDBOptions } from "../api/connection/TypeDBOptions";
+import { SessionType } from "../api/connection/TypeDBSession";
+import { ErrorMessage } from "../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../common/errors/TypeDBClientError";
+import { TypeDBStub } from "../common/rpc/TypeDBStub";
+import { RequestTransmitter } from "../stream/RequestTransmitter";
+import { TypeDBDatabaseManagerImpl } from "./TypeDBDatabaseManagerImpl";
+import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
+import { TypeDBStubFactory } from "./TypeDBStubFactory";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
+import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 
 export abstract class TypeDBClientImpl implements TypeDBClient {
 

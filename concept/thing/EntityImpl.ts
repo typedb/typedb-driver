@@ -19,12 +19,12 @@
  * under the License.
  */
 
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {EntityType} from "../../api/concept/type/EntityType";
-import {Entity, RemoteEntity} from "../../api/concept/thing/Entity";
-import {EntityTypeImpl, RemoteThingImpl, ThingImpl} from "../../dependencies_internal";
-import {Bytes} from "../../common/util/Bytes";
-import {Thing as ThingProto} from "typedb-protocol/common/concept_pb";
+import { Thing as ThingProto } from "typedb-protocol/common/concept_pb";
+import { Entity } from "../../api/concept/thing/Entity";
+import { EntityType } from "../../api/concept/type/EntityType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { Bytes } from "../../common/util/Bytes";
+import { EntityTypeImpl, ThingImpl } from "../../dependencies_internal";
 
 export class EntityImpl extends ThingImpl implements Entity {
 
@@ -35,8 +35,12 @@ export class EntityImpl extends ThingImpl implements Entity {
         this._type = type;
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntity {
-        return new EntityImpl.RemoteImpl(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
+    protected get className(): string {
+        return "Entity";
+    }
+
+    asRemote(transaction: TypeDBTransaction): Entity.Remote {
+        return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
     }
 
     getType(): EntityType {
@@ -47,8 +51,10 @@ export class EntityImpl extends ThingImpl implements Entity {
         return true;
     }
 
+    asEntity(): Entity {
+        return this;
+    }
 }
-
 
 export namespace EntityImpl {
 
@@ -58,8 +64,7 @@ export namespace EntityImpl {
         return new EntityImpl(iid, thingProto.getInferred(), EntityTypeImpl.of(thingProto.getType()));
     }
 
-
-    export class RemoteImpl extends RemoteThingImpl implements RemoteEntity {
+    export class Remote extends ThingImpl.Remote implements Entity.Remote {
 
         private readonly _type: EntityType;
 
@@ -68,8 +73,12 @@ export namespace EntityImpl {
             this._type = type;
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteEntity {
-            return this;
+        protected get className(): string {
+            return "Entity";
+        }
+
+        asRemote(transaction: TypeDBTransaction): Entity.Remote {
+            return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
         }
 
         getType(): EntityType {
@@ -78,6 +87,10 @@ export namespace EntityImpl {
 
         isEntity(): boolean {
             return true;
+        }
+
+        asEntity(): Entity.Remote {
+            return this;
         }
     }
 }

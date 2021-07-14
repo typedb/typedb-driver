@@ -20,19 +20,17 @@
  */
 
 import { Then } from "@cucumber/cucumber";
-import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TypeDBSession } from "../../../../dist/api/connection/TypeDBSession";
-import { TypeDBTransaction, TransactionType } from "../../../../dist/api/connection/TypeDBTransaction";
+import { TransactionType, TypeDBOptions, TypeDBSession, TypeDBTransaction } from "../../../../dist";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
-import { TypeDBOptions } from "../../../../dist/api/connection/TypeDBOptions";
+import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
 import assert = require("assert");
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {
         const transactions: TypeDBTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType, TypeDBOptions.core({infer: true}));
+            const transaction = await session.transaction(transactionType, TypeDBOptions.core({ infer: true }));
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);
@@ -151,7 +149,7 @@ Then('(for each )session(,) open transaction(s) in parallel of type:', async fun
 function dataTableToTransactionTypes(transactionTypeTable: DataTable): TransactionType[] {
     const typeArray: TransactionType[] = [];
     for (const transactionTypeRow of transactionTypeTable.raw()) {
-        switch (transactionTypeRow[0])  {
+        switch (transactionTypeRow[0]) {
             case "write":
                 typeArray.push(TransactionType.WRITE);
                 break;

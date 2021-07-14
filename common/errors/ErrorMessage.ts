@@ -22,15 +22,14 @@
 type Stringable = { toString: () => string; };
 
 export abstract class ErrorMessage {
+    private static knownErrors = new Map<string, Map<number, ErrorMessage>>();
+    private static maxCodeNumber = 0;
+    private static maxCodeDigits: number;
     private readonly _codePrefix: string;
     private readonly _codeNumber: number;
     private readonly _messagePrefix: string;
     private readonly _messageBody: (args?: Stringable[]) => string;
     private _code: string;
-
-    private static knownErrors = new Map<string, Map<number, ErrorMessage>>();
-    private static maxCodeNumber = 0;
-    private static maxCodeDigits: number;
 
     protected constructor(codePrefix: string, codeNumber: number, messagePrefix: string, messageBody: (args: Stringable[]) => string) {
         this._codePrefix = codePrefix;

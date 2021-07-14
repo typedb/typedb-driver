@@ -20,8 +20,7 @@
  */
 
 import { BeforeAll } from "@cucumber/cucumber";
-import { TypeDB} from "../../../dist/TypeDB";
-import { TypeDBCredential} from "../../../dist/api/connection/TypeDBCredential";
+import { TypeDB, TypeDBCredential } from "../../../dist";
 import { setClient } from "./ConnectionStepsBase";
 
 

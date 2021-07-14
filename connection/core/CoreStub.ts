@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {TypeDBStub} from "../../common/rpc/TypeDBStub";
-import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
-import {ChannelCredentials} from "@grpc/grpc-js";
+import { ChannelCredentials } from "@grpc/grpc-js";
+import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
+import { TypeDBStub } from "../../common/rpc/TypeDBStub";
 
 export class CoreStub extends TypeDBStub {
 

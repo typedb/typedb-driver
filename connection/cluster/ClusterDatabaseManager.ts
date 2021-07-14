@@ -19,17 +19,17 @@
  * under the License.
  */
 
-import {ClusterServerStub} from "./ClusterServerStub";
-import {ClusterDatabase} from "./ClusterDatabase";
-import {ClusterClient} from "./ClusterClient";
-import {FailsafeTask} from "./FailsafeTask";
-import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
-import {Database} from "../../api/connection/database/Database";
-import {DatabaseManager} from "../../api/connection/database/DatabaseManager";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import {ClusterDatabaseManager as ClusterDatabaseManagerProto} from "typedb-protocol/cluster/cluster_database_pb";
+import { ClusterDatabaseManager as ClusterDatabaseManagerProto } from "typedb-protocol/cluster/cluster_database_pb";
+import { Database } from "../../api/connection/database/Database";
+import { DatabaseManager } from "../../api/connection/database/DatabaseManager";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { TypeDBDatabaseManagerImpl } from "../TypeDBDatabaseManagerImpl";
+import { ClusterClient } from "./ClusterClient";
+import { ClusterDatabase } from "./ClusterDatabase";
+import { ClusterServerStub } from "./ClusterServerStub";
+import { FailsafeTask } from "./FailsafeTask";
 import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DB_DOES_NOT_EXIST;

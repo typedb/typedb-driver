@@ -19,25 +19,43 @@
  * under the License.
  */
 
-import {FailsafeTask} from "./FailsafeTask";
-import {ClusterClient} from "./ClusterClient";
-import {ClusterServerClient} from "./ClusterServerClient";
-import {TypeDBSessionImpl} from "../TypeDBSessionImpl";
-import {Database} from "../../api/connection/database/Database";
-import {SessionType, TypeDBSession} from "../../api/connection/TypeDBSession";
-import {TypeDBClusterOptions, TypeDBOptions} from "../../api/connection/TypeDBOptions";
-import {TransactionType, TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import { Database } from "../../api/connection/database/Database";
+import { TypeDBClusterOptions, TypeDBOptions } from "../../api/connection/TypeDBOptions";
+import { SessionType, TypeDBSession } from "../../api/connection/TypeDBSession";
+import { TransactionType, TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { TypeDBSessionImpl } from "../TypeDBSessionImpl";
+import { ClusterClient } from "./ClusterClient";
+import { ClusterServerClient } from "./ClusterServerClient";
+import { FailsafeTask } from "./FailsafeTask";
 
 export class ClusterSession implements TypeDBSession {
 
     private readonly _clusterClient: ClusterClient;
-    private _clusterServerClient: ClusterServerClient;
-    private _typeDBSession: TypeDBSessionImpl;
     private _options: TypeDBClusterOptions;
 
     constructor(clusterClient: ClusterClient, serverAddress: string) {
         this._clusterClient = clusterClient;
         this._clusterServerClient = clusterClient.clusterServerClient(serverAddress.toString());
+    }
+
+    private _clusterServerClient: ClusterServerClient;
+
+    get clusterServerClient(): ClusterServerClient {
+        return this._clusterServerClient;
+    }
+
+    set clusterServerClient(client: ClusterServerClient) {
+        this._clusterServerClient = client;
+    }
+
+    private _typeDBSession: TypeDBSessionImpl;
+
+    get typeDBSession(): TypeDBSessionImpl {
+        return this._typeDBSession;
+    }
+
+    set typeDBSession(session: TypeDBSessionImpl) {
+        this._typeDBSession = session;
     }
 
     async open(serverAddress: string, database: string, type: SessionType, options: TypeDBClusterOptions): Promise<ClusterSession> {
@@ -53,14 +71,6 @@ export class ClusterSession implements TypeDBSession {
         } else {
             return this.transactionPrimaryReplica(type, options);
         }
-    }
-
-    private transactionPrimaryReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
-        return new TransactionFailsafeTask(this, type, options).runPrimaryReplica();
-    }
-
-    private transactionAnyReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
-        return new TransactionFailsafeTask(this, type, options).runAnyReplica();
     }
 
     type(): SessionType {
@@ -87,20 +97,12 @@ export class ClusterSession implements TypeDBSession {
         return this._clusterClient;
     }
 
-    get clusterServerClient(): ClusterServerClient {
-        return this._clusterServerClient;
+    private transactionPrimaryReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
+        return new TransactionFailsafeTask(this, type, options).runPrimaryReplica();
     }
 
-    set clusterServerClient(client: ClusterServerClient) {
-        this._clusterServerClient = client;
-    }
-
-    get typeDBSession(): TypeDBSessionImpl {
-        return this._typeDBSession;
-    }
-
-    set typeDBSession(session: TypeDBSessionImpl) {
-        this._typeDBSession = session;
+    private transactionAnyReplica(type: TransactionType, options: TypeDBClusterOptions): Promise<TypeDBTransaction> {
+        return new TransactionFailsafeTask(this, type, options).runAnyReplica();
     }
 }
 

@@ -33,7 +33,6 @@ genrule(
         "//:behaviour-steps-core",
         "//:client-nodejs-targz",
         "//:package.json",
-        "//:package-lock.json",
     ],
     visibility = ["//visibility:public"],
 )
@@ -46,7 +45,6 @@ genrule(
         "//:behaviour-steps-cluster",
         "//:client-nodejs-targz",
         "//:package.json",
-        "//:package-lock.json",
     ],
     visibility = ["//visibility:public"],
 )

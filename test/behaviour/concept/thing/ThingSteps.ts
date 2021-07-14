@@ -19,16 +19,13 @@
  * under the License.
  */
 
-import {After, When} from "@cucumber/cucumber";
-import {tx} from "../../connection/ConnectionStepsBase";
-import {getThingType} from "../type/thingtype/ThingTypeSteps";
-import {assertThrows} from "../../util/Util";
-import {Thing} from "../../../../dist/api/concept/thing/Thing";
-import {Attribute} from "../../../../dist/api/concept/thing/Attribute";
-import {AttributeType} from "../../../../dist/api/concept/type/AttributeType";
-import {RootLabel, ScopedLabel} from "../../config/Parameters";
+import { After, When } from "@cucumber/cucumber";
+import { Attribute, Thing } from "../../../../dist";
+import { RootLabel, ScopedLabel } from "../../config/Parameters";
+import { tx } from "../../connection/ConnectionStepsBase";
+import { assertThrows } from "../../util/Util";
+import { getThingType } from "../type/thingtype/ThingTypeSteps";
 import assert = require("assert");
-import ValueClass = AttributeType.ValueClass;
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const get: (name: string) => Thing = (name: string) => things.get(name);
@@ -56,15 +53,15 @@ When("delete entity:/attribute:/relation: {var}", async (thingName: string) => {
 });
 
 When("entity/attribute/relation {var} set has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute<ValueClass>);
+    await get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute);
 });
 
 When("entity/attribute/relation {var} set has: {var}; throws exception", async (thingName: string, attributeName: string) => {
-    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute<ValueClass>));
+    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute));
 });
 
 When("entity/attribute/relation {var} unset has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).unsetHas(get(attributeName) as Attribute<ValueClass>);
+    await get(thingName).asRemote(tx()).unsetHas(get(attributeName) as Attribute);
 });
 
 When("entity/attribute/relation {var} get keys contain: {var}", async (thingName: string, attributeName: string) => {

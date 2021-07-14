@@ -20,10 +20,9 @@
  */
 
 
-import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
-import {ClientDuplexStream} from "@grpc/grpc-js";
-import * as uuid from "uuid";
+import { ClientDuplexStream } from "@grpc/grpc-js";
+import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
+import { RequestBuilder } from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {
 
@@ -40,6 +39,21 @@ export class BatchDispatcher {
         this._transactionStream = transactionStream;
         this._bufferedRequests = new Array<TransactionProto.Req>();
         this._isRunning = false;
+    }
+
+    public dispatch(req: TransactionProto.Req): void {
+        this._bufferedRequests.push(req);
+        this.sendScheduledBatch();
+    }
+
+    public dispatchNow(req: TransactionProto.Req): void {
+        this._bufferedRequests.push(req);
+        this.sendNow();
+    }
+
+    public close(): void {
+        this._transmitter._dispatchers.delete(this);
+        this._transactionStream.end();
     }
 
     private sendNow(): void {
@@ -66,27 +80,12 @@ export class BatchDispatcher {
         }, wait);
     }
 
-    public dispatch(req: TransactionProto.Req): void {
-        this._bufferedRequests.push(req);
-        this.sendScheduledBatch();
-    }
-
-    public dispatchNow(req: TransactionProto.Req): void {
-        this._bufferedRequests.push(req);
-        this.sendNow();
-    }
-
-    public close(): void {
-        this._transmitter._dispatchers.delete(this);
-        this._transactionStream.end();
-    }
-
 }
 
 export class RequestTransmitter {
 
-    private _isOpen: boolean;
     readonly _dispatchers: Set<BatchDispatcher>;
+    private _isOpen: boolean;
 
     constructor() {
         this._dispatchers = new Set<BatchDispatcher>();

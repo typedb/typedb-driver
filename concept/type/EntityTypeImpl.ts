@@ -19,15 +19,14 @@
  * under the License.
  */
 
-
-import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
-import {EntityType, RemoteEntityType} from "../../api/concept/type/EntityType";
-import {Entity} from "../../api/concept/thing/Entity";
-import {EntityImpl, ThingTypeImpl} from "../../dependencies_internal";
-import {Label} from "../../common/Label";
-import {Stream} from "../../common/util/Stream";
-import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
+import { Entity } from "../../api/concept/thing/Entity";
+import { EntityType } from "../../api/concept/type/EntityType";
+import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
+import { Label } from "../../common/Label";
+import { RequestBuilder } from "../../common/rpc/RequestBuilder";
+import { Stream } from "../../common/util/Stream";
+import { EntityImpl, ThingTypeImpl } from "../../dependencies_internal";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
@@ -35,14 +34,21 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         super(name, isRoot);
     }
 
-    asRemote(transaction: TypeDBTransaction): RemoteEntityType {
-        return new EntityTypeImpl.RemoteImpl((transaction as TypeDBTransaction.Extended), this.getLabel(), this.isRoot());
+    protected get className(): string {
+        return "EntityType";
+    }
+
+    asRemote(transaction: TypeDBTransaction): EntityType.Remote {
+        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
     }
 
     isEntityType(): boolean {
         return true;
     }
 
+    asEntityType(): EntityType {
+        return this;
+    }
 }
 
 export namespace EntityTypeImpl {
@@ -51,18 +57,26 @@ export namespace EntityTypeImpl {
         return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getRoot());
     }
 
-    export class RemoteImpl extends ThingTypeImpl.RemoteImpl implements RemoteEntityType {
+    export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
         constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
             super(transaction, label, isRoot);
         }
 
-        asRemote(transaction: TypeDBTransaction): RemoteEntityType {
-            return this;
+        protected get className(): string {
+            return "EntityType";
+        }
+
+        asRemote(transaction: TypeDBTransaction): EntityType.Remote {
+            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
         }
 
         isEntityType(): boolean {
             return true;
+        }
+
+        asEntityType(): EntityType.Remote {
+            return this;
         }
 
         create(): Promise<Entity> {
@@ -81,7 +95,5 @@ export namespace EntityTypeImpl {
         getSubtypes(): Stream<EntityType> {
             return super.getSubtypes() as Stream<EntityType>;
         }
-
     }
-
 }
