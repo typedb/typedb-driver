@@ -52,6 +52,6 @@ export namespace ConceptMapGroupImpl {
         if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
         else owner = TypeImpl.of(mapGroupProto.getOwner().getType());
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
-            .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)) as ConceptMap[]);
+            .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)));
     }
 }

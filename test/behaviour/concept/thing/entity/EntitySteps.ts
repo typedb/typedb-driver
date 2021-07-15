@@ -38,7 +38,7 @@ When("entity\\({type_label}) create new instance; throws exception", async (type
 
 When("{var} = entity\\({type_label}) create new instance with key\\({type_label}): {bool}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: boolean) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.Boolean).asRemote(tx()).put(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asBoolean()).asRemote(tx()).put(value);
         const entity = await (await tx().concepts.getEntityType(thingTypeLabel)).asRemote(tx()).create();
         await entity.asRemote(tx()).setHas(key)
         put(thingName, entity);
@@ -47,7 +47,7 @@ When("{var} = entity\\({type_label}) create new instance with key\\({type_label}
 
 When("{var} = entity\\({type_label}) create new instance with key\\({type_label}): {int}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: number) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.Long).asRemote(tx()).put(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asLong()).asRemote(tx()).put(value);
         const entity = await (await tx().concepts.getEntityType(thingTypeLabel)).asRemote(tx()).create();
         await entity.asRemote(tx()).setHas(key)
         put(thingName, entity);
@@ -56,7 +56,7 @@ When("{var} = entity\\({type_label}) create new instance with key\\({type_label}
 
 When("{var} = entity\\({type_label}) create new instance with key\\({type_label}): {word}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: string) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.String).asRemote(tx()).put(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asString()).asRemote(tx()).put(value);
         const entity = await (await tx().concepts.getEntityType(thingTypeLabel)).asRemote(tx()).create();
         await entity.asRemote(tx()).setHas(key)
         put(thingName, entity);
@@ -65,7 +65,7 @@ When("{var} = entity\\({type_label}) create new instance with key\\({type_label}
 
 When("{var} = entity\\({type_label}) create new instance with key\\({type_label}): {datetime}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: Date) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.DateTime).asRemote(tx()).put(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asDateTime()).asRemote(tx()).put(value);
         const entity = await (await tx().concepts.getEntityType(thingTypeLabel)).asRemote(tx()).create();
         await entity.asRemote(tx()).setHas(key)
         put(thingName, entity);
@@ -74,7 +74,7 @@ When("{var} = entity\\({type_label}) create new instance with key\\({type_label}
 
 When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {bool}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: boolean) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.Boolean).asRemote(tx()).get(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asBoolean()).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
             if (owner.type.label.scopedName === thingTypeLabel) {
                 put(thingName, owner);
@@ -87,7 +87,7 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {boo
 
 When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {int}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: number) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.Long).asRemote(tx()).get(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asLong()).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
             if (owner.type.label.scopedName === thingTypeLabel) {
                 put(thingName, owner);
@@ -100,7 +100,7 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {int
 
 When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {word}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: string) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.String).asRemote(tx()).get(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asString()).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
             if (owner.type.label.scopedName === thingTypeLabel) {
                 put(thingName, owner);
@@ -113,7 +113,7 @@ When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {wor
 
 When("{var} = entity\\({type_label}) get instance with key\\({type_label}): {datetime}",
     async (thingName: string, thingTypeLabel: string, keyTypeLabel: string, value: Date) => {
-        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)) as AttributeType.DateTime).asRemote(tx()).get(value);
+        const key = await ((await tx().concepts.getAttributeType(keyTypeLabel)).asDateTime()).asRemote(tx()).get(value);
         for await (const owner of key.asRemote(tx()).getOwners()) {
             if ((await owner.asRemote(tx()).type).equals(await tx().concepts.getEntityType(thingTypeLabel))) {
                 put(thingName, owner);

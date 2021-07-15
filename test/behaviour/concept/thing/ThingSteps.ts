@@ -53,15 +53,15 @@ When("delete entity:/attribute:/relation: {var}", async (thingName: string) => {
 });
 
 When("entity/attribute/relation {var} set has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute);
+    await get(thingName).asRemote(tx()).setHas(get(attributeName).asAttribute());
 });
 
 When("entity/attribute/relation {var} set has: {var}; throws exception", async (thingName: string, attributeName: string) => {
-    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName) as Attribute));
+    await assertThrows(async () => get(thingName).asRemote(tx()).setHas(get(attributeName).asAttribute()));
 });
 
 When("entity/attribute/relation {var} unset has: {var}", async (thingName: string, attributeName: string) => {
-    await get(thingName).asRemote(tx()).unsetHas(get(attributeName) as Attribute);
+    await get(thingName).asRemote(tx()).unsetHas(get(attributeName).asAttribute());
 });
 
 When("entity/attribute/relation {var} get keys contain: {var}", async (thingName: string, attributeName: string) => {

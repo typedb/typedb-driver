@@ -32,93 +32,93 @@ When("attribute\\({type_label}) get instances contain: {var}", async (typeLabel:
 });
 
 When("attribute {var} get owners contain: {var}", async (var1: string, var2: string) => {
-    assert(await (get(var1) as Attribute).asRemote(tx()).getOwners().some(x => x.equals(get(var2))));
+    assert(await get(var1).asAttribute().asRemote(tx()).getOwners().some(x => x.equals(get(var2))));
 });
 
 When("attribute {var} get owners do not contain: {var}", async (var1: string, var2: string) => {
-    assert(!(await (get(var1) as Attribute).asRemote(tx()).getOwners().some(x => x.equals(get(var2)))));
+    assert(!(await get(var1).asAttribute().asRemote(tx()).getOwners().some(x => x.equals(get(var2)))));
 });
 
 When("attribute {var} has value type: {value_type}", async (var0: string, valueType: ValueType) => {
-    assert.strictEqual(valueType, (get(var0) as Attribute).type.valueType);
+    assert.strictEqual(valueType, get(var0).asAttribute().type.valueType);
 });
 
 When("{var} = attribute\\({type_label}) as\\(boolean) put: {bool}", async (var0: string, typeLabel: string, value: boolean) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Boolean).asRemote(tx()).put(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asBoolean().asRemote(tx()).put(value));
 });
 
 When("attribute\\({type_label}) as\\(boolean) put: {bool}; throws exception", async (typeLabel: string, value: boolean) => {
-    await assertThrows(async () => await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Boolean).asRemote(tx()).put(value))
+    await assertThrows(async () => await (await tx().concepts.getAttributeType(typeLabel)).asBoolean().asRemote(tx()).put(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(long) put: {int}", async (var0: string, typeLabel: string, value: number) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Long).asRemote(tx()).put(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asLong().asRemote(tx()).put(value));
 });
 
 When("attribute\\({type_label}) as\\(long) put: {int}; throws exception", async (typeLabel: string, value: number) => {
-    await assertThrows(async () => await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Long).asRemote(tx()).put(value))
+    await assertThrows(async () => await (await tx().concepts.getAttributeType(typeLabel)).asLong().asRemote(tx()).put(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(double) put: {float}", async (var0: string, typeLabel: string, value: number) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Double).asRemote(tx()).put(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asDouble().asRemote(tx()).put(value));
 });
 
 When("attribute\\({type_label}) as\\(double) put: {float}; throws exception", async (typeLabel: string, value: number) => {
-    await assertThrows(async () => await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Double).asRemote(tx()).put(value))
+    await assertThrows(async () => await (await tx().concepts.getAttributeType(typeLabel)).asDouble().asRemote(tx()).put(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(string) put: {word}", async (var0: string, typeLabel: string, value: string) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.String).asRemote(tx()).put(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asString().asRemote(tx()).put(value));
 });
 
 When("attribute\\({type_label}) as\\(string) put: {word}; throws exception", async (typeLabel: string, value: string) => {
-    await assertThrows(async () => await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.String).asRemote(tx()).put(value))
+    await assertThrows(async () => await (await tx().concepts.getAttributeType(typeLabel)).asString().asRemote(tx()).put(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(datetime) put: {datetime}", async (var0: string, typeLabel: string, value: Date) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.DateTime).asRemote(tx()).put(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asDateTime().asRemote(tx()).put(value));
 });
 
 When("attribute\\({type_label}) as\\(datetime) put: {datetime}; throws exception", async (typeLabel: string, value: Date) => {
-    await assertThrows(async () => await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.DateTime).asRemote(tx()).put(value))
+    await assertThrows(async () => await (await tx().concepts.getAttributeType(typeLabel)).asDateTime().asRemote(tx()).put(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(boolean) get: {bool}", async (var0: string, typeLabel: string, value: boolean) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Boolean).asRemote(tx()).get(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asBoolean().asRemote(tx()).get(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(long) get: {int}", async (var0: string, typeLabel: string, value: number) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Long).asRemote(tx()).get(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asLong().asRemote(tx()).get(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(double) get: {float}", async (var0: string, typeLabel: string, value: number) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.Double).asRemote(tx()).get(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asDouble().asRemote(tx()).get(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(string) get: {word}", async (var0: string, typeLabel: string, value: string) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.String).asRemote(tx()).get(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asString().asRemote(tx()).get(value));
 });
 
 When("{var} = attribute\\({type_label}) as\\(datetime) get: {datetime}", async (var0: string, typeLabel: string, value: Date) => {
-    put(var0, await ((await tx().concepts.getAttributeType(typeLabel)) as AttributeType.DateTime).asRemote(tx()).get(value))
+    put(var0, await (await tx().concepts.getAttributeType(typeLabel)).asDateTime().asRemote(tx()).get(value));
 });
 
 When("attribute {var} has boolean value: {bool}", async (var0: string, value: boolean) => {
-    assert.strictEqual(value, (get(var0) as Attribute.Boolean).value)
+    assert.strictEqual(value, get(var0).asAttribute().asBoolean().value);
 });
 
 When("attribute {var} has long value: {int}", async (var0: string, value: number) => {
-    assert.strictEqual(value, (get(var0) as Attribute.Long).value)
+    assert.strictEqual(value, get(var0).asAttribute().asLong().value);
 });
 
 When("attribute {var} has double value: {float}", async (var0: string, value: number) => {
-    assert.strictEqual(value, (get(var0) as Attribute.Double).value)
+    assert.strictEqual(value, get(var0).asAttribute().asDouble().value);
 });
 
 When("attribute {var} has string value: {word}", async (var0: string, value: string) => {
-    assert.strictEqual(value, (get(var0) as Attribute.String).value)
+    assert.strictEqual(value, get(var0).asAttribute().asString().value);
 });
 
 When("attribute {var} has datetime value: {datetime}", async (var0: string, value: Date) => {
-    assert.strictEqual(value.getTime(), (get(var0) as Attribute.DateTime).value.getTime())
+    assert.strictEqual(value.getTime(), get(var0).asAttribute().asDateTime().value.getTime());
 });

@@ -114,7 +114,7 @@ export namespace TypeImpl {
 
         equals(concept: Concept): boolean {
             if (!concept.isType()) return false;
-            return (concept as Type).label.equals(this.label);
+            return concept.asType().label.equals(this.label);
         }
 
         toString(): string {

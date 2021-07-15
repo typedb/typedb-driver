@@ -48,7 +48,7 @@ describe("Basic TypeDBClient Tests", () => {
     test("define by running query", async () => {
         let session = await client.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.query.match("define person sub entity, owns name; name sub attribute, value string;");
+        await tx.query.define("define person sub entity, owns name; name sub attribute, value string;");
         await tx.commit();
         return await session.close();
     });

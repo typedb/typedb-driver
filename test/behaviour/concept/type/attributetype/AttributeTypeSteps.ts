@@ -37,7 +37,7 @@ Then("attribute\\({type_label}) get value type: {value_type}", async (typeLabel:
 
 Then("attribute\\({type_label}) get supertype value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {
     const supertype = await (await tx().concepts.getAttributeType(typeLabel)).asRemote(tx()).getSupertype();
-    assert.strictEqual((supertype as AttributeType).valueType, valueType);
+    assert.strictEqual(supertype.asAttributeType().valueType, valueType);
 });
 
 async function attributeTypeAsValueType(typeLabel: string, valueType: ValueType) {

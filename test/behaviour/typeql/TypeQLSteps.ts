@@ -176,8 +176,7 @@ class TypeLabelMatcher implements ConceptMatcher {
     }
 
     async matches(concept: Concept): Promise<boolean> {
-        if (concept.isRoleType()) return this.label == (concept as RoleType).label.scopedName;
-        else if (concept.isType()) return this.label == (concept as Type).label.scopedName;
+        if (concept.isType()) return this.label == concept.asType().label.scopedName;
         else throw new TypeError("A Concept was matched by label, but it is not a Type.");
     }
 }
@@ -217,7 +216,7 @@ class AttributeValueMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isAttribute()) return false;
 
-        const attribute = concept as Attribute;
+        const attribute = concept.asAttribute();
 
         if (this.typeLabel !== attribute.type.label.scopedName) return false;
 
@@ -230,7 +229,7 @@ class ThingKeyMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = await (concept as Thing).asRemote(tx()).getHas(true).collect();
+        const keys = await concept.asThing().asRemote(tx()).getHas(true).collect();
 
         for (const key of keys) {
             if (key.type.label.scopedName === this.typeLabel) {
@@ -425,7 +424,7 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
         if (answer.map.has(requiredVariable)) {
             const concept = answer.get(requiredVariable);
             if (!concept.isThing()) throw new TypeError("Cannot apply IID templating to Types");
-            query += (concept as Thing).iid;
+            query += concept.asThing().iid;
         } else {
             throw new Error(`No IID available for template placeholder: [${match[0]}]`);
         }

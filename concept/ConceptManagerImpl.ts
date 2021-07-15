@@ -67,19 +67,19 @@ export class ConceptManagerImpl implements ConceptManager {
 
     async getEntityType(label: string): Promise<EntityType> {
         const type = await this.getThingType(label);
-        if (type && type.isEntityType()) return type as EntityType;
+        if (type?.isEntityType()) return type.asEntityType();
         else return null;
     }
 
     async getRelationType(label: string): Promise<RelationType> {
         const type = await this.getThingType(label);
-        if (type && type.isRelationType()) return type as RelationType;
+        if (type?.isRelationType()) return type.asRelationType();
         else return null;
     }
 
-    async getAttributeType(label: string): Promise<AttributeType | null> {
+    async getAttributeType(label: string): Promise<AttributeType> {
         const type = await this.getThingType(label);
-        if (type && type.isAttributeType()) return type as AttributeType;
+        if (type?.isAttributeType()) return type.asAttributeType();
         else return null;
     }
 
