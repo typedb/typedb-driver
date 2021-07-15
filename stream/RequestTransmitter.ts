@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { ClientDuplexStream } from "@grpc/grpc-js";
 import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
 import { RequestBuilder } from "../common/rpc/RequestBuilder";
@@ -41,17 +40,17 @@ export class BatchDispatcher {
         this._isRunning = false;
     }
 
-    public dispatch(req: TransactionProto.Req): void {
+    dispatch(req: TransactionProto.Req): void {
         this._bufferedRequests.push(req);
         this.sendScheduledBatch();
     }
 
-    public dispatchNow(req: TransactionProto.Req): void {
+    dispatchNow(req: TransactionProto.Req): void {
         this._bufferedRequests.push(req);
         this.sendNow();
     }
 
-    public close(): void {
+    close(): void {
         this._transmitter._dispatchers.delete(this);
         this._transactionStream.end();
     }
@@ -79,7 +78,6 @@ export class BatchDispatcher {
             }
         }, wait);
     }
-
 }
 
 export class RequestTransmitter {
@@ -92,17 +90,16 @@ export class RequestTransmitter {
         this._isOpen = true;
     }
 
-    public close(): void {
+    close(): void {
         if (this._isOpen) {
             this._isOpen = false;
             this._dispatchers.forEach(dispatcher => dispatcher.close());
         }
     }
 
-    public dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>): BatchDispatcher {
+    dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>): BatchDispatcher {
         const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;
     }
-
 }

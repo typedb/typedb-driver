@@ -104,6 +104,6 @@ export namespace ThingType {
     }
 
     export function proto(thingType: ThingType) {
-        return RequestBuilder.Type.ThingType.protoThingType(thingType.getLabel(), Type.encoding(thingType));
+        return RequestBuilder.Type.ThingType.protoThingType(thingType.label, Type.encoding(thingType));
     }
 }

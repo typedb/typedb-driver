@@ -37,11 +37,11 @@ export interface Thing extends Concept {
 
     asRemote(transaction: TypeDBTransaction): Thing.Remote;
 
-    getIID(): string;
+    readonly iid: string;
 
-    getType(): ThingType;
+    readonly type: ThingType;
 
-    isInferred(): boolean;
+    readonly inferred: boolean;
 }
 
 export namespace Thing {
@@ -98,6 +98,6 @@ export namespace Thing {
     }
 
     export function proto(thing: Thing) {
-        return RequestBuilder.Thing.protoThing(thing.getIID());
+        return RequestBuilder.Thing.protoThing(thing.iid);
     }
 }

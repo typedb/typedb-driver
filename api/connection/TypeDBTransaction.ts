@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Transaction } from "typedb-protocol/common/transaction_pb";
 import { Stream } from "../../common/util/Stream";
 import { ConceptManager } from "../concept/ConceptManager";
@@ -31,26 +30,25 @@ export interface TypeDBTransaction {
 
     isOpen(): boolean;
 
-    type(): TransactionType;
+    readonly type: TransactionType;
 
-    options(): TypeDBOptions;
+    readonly options: TypeDBOptions;
 
-    concepts(): ConceptManager;
+    readonly concepts: ConceptManager;
 
-    logic(): LogicManager;
+    readonly logic: LogicManager;
 
-    query(): QueryManager;
+    readonly query: QueryManager;
 
     commit(): void;
 
     rollback(): void;
 
     close(): void;
-
 }
 
-
 export interface TransactionType {
+
     proto(): Transaction.Type;
 
     isRead(): boolean;
@@ -62,7 +60,7 @@ export namespace TransactionType {
 
     class TransactionTypeImpl implements TransactionType {
 
-        private _type: Transaction.Type;
+        private readonly _type: Transaction.Type;
 
         constructor(type: Transaction.Type) {
             this._type = type;
@@ -79,7 +77,6 @@ export namespace TransactionType {
         isWrite(): boolean {
             return this == WRITE;
         }
-
     }
 
     export const READ = new TransactionTypeImpl(Transaction.Type.READ);
@@ -93,7 +90,5 @@ export namespace TypeDBTransaction {
         rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res>;
 
         rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;
-
     }
-
 }

@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { DatabaseManager } from "./database/DatabaseManager";
 import { TypeDBOptions } from "./TypeDBOptions";
 import { SessionType, TypeDBSession } from "./TypeDBSession";
@@ -29,7 +28,7 @@ export interface TypeDBClient {
 
     isOpen(): boolean;
 
-    databases(): DatabaseManager;
+    readonly databases: DatabaseManager;
 
     session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
@@ -38,16 +37,14 @@ export interface TypeDBClient {
     asCluster(): TypeDBClient.Cluster;
 
     close(): void;
-
 }
 
 export namespace TypeDBClient {
 
     export interface Cluster extends TypeDBClient {
 
-        users(): UserManager;
+        readonly users: UserManager;
 
-        databases(): DatabaseManager.Cluster;
-
+        readonly databases: DatabaseManager.Cluster;
     }
 }

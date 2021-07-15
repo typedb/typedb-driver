@@ -23,16 +23,15 @@ import { TypeDBTransaction } from "../connection/TypeDBTransaction";
 
 export interface Rule {
 
-    getLabel(): string;
+    readonly label: string;
 
-    getWhen(): string;
+    readonly when: string;
 
-    getThen(): string;
+    readonly then: string;
 
     isRemote(): boolean;
 
     asRemote(transaction: TypeDBTransaction): RemoteRule;
-
 }
 
 export interface RemoteRule extends Rule {
@@ -42,5 +41,4 @@ export interface RemoteRule extends Rule {
     delete(): Promise<void>;
 
     isDeleted(): Promise<boolean>;
-
 }

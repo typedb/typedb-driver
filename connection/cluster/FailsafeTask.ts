@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Database } from "../../api/connection/database/Database";
 import { ErrorMessage } from "../../common/errors/ErrorMessage";
 import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
@@ -59,16 +58,16 @@ export abstract class FailsafeTask<TResult> {
     }
 
     async runPrimaryReplica(): Promise<TResult> {
-        if (!this._client.clusterDatabases()[this._database]?.primaryReplica()) {
+        if (!this._client.clusterDatabases()[this._database]?.primaryReplica) {
             await this.seekPrimaryReplica();
         }
-        let replica = this._client.clusterDatabases()[this._database].primaryReplica();
+        let replica = this._client.clusterDatabases()[this._database].primaryReplica;
         let retries = 0;
         while (true) { // eslint-disable-line no-constant-condition
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof TypeDBClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.errorMessage())) {
+                if (e instanceof TypeDBClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.errorMessage)) {
                     console.info("Unable to open a session or transaction, retrying in 2s...", e);
                     await this.waitForPrimaryReplicaSelection();
                     replica = await this.seekPrimaryReplica();
@@ -83,15 +82,15 @@ export abstract class FailsafeTask<TResult> {
         if (!databaseClusterRPC) databaseClusterRPC = await this.fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
-        const replicas: Database.Replica[] = [databaseClusterRPC.preferredReplica()]
-            .concat(databaseClusterRPC.replicas().filter(rep => !rep.isPreferred()));
+        const replicas: Database.Replica[] = [databaseClusterRPC.preferredReplica]
+            .concat(databaseClusterRPC.replicas.filter(rep => !rep.preferred));
 
         let retries = 0;
         for (const replica of replicas) {
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.errorMessage()) {
+                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.errorMessage) {
                     console.info("Unable to open a session or transaction to " + replica + ". Attempting next replica.", e);
                 } else throw e;
             }
@@ -104,8 +103,8 @@ export abstract class FailsafeTask<TResult> {
         let retries = 0;
         while (retries < FETCH_REPLICAS_MAX_RETRIES) {
             const databaseClusterRPC = await this.fetchDatabaseReplicas();
-            if (databaseClusterRPC.primaryReplica()) {
-                return databaseClusterRPC.primaryReplica();
+            if (databaseClusterRPC.primaryReplica) {
+                return databaseClusterRPC.primaryReplica;
             } else {
                 await this.waitForPrimaryReplicaSelection();
                 retries++;

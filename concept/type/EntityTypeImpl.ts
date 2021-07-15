@@ -30,8 +30,8 @@ import { EntityImpl, ThingTypeImpl } from "../../dependencies_internal";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    constructor(name: string, isRoot: boolean) {
-        super(name, isRoot);
+    constructor(name: string, root: boolean) {
+        super(name, root);
     }
 
     protected get className(): string {
@@ -39,7 +39,7 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
     }
 
     isEntityType(): boolean {
@@ -59,8 +59,8 @@ export namespace EntityTypeImpl {
 
     export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-            super(transaction, label, isRoot);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+            super(transaction, label, root);
         }
 
         protected get className(): string {
@@ -68,7 +68,7 @@ export namespace EntityTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
         isEntityType(): boolean {
@@ -80,7 +80,7 @@ export namespace EntityTypeImpl {
         }
 
         create(): Promise<Entity> {
-            const request = RequestBuilder.Type.EntityType.createReq(this.getLabel());
+            const request = RequestBuilder.Type.EntityType.createReq(this.label);
             return this.execute(request).then((res) => EntityImpl.of(res.getEntityTypeCreateRes().getEntity()));
         }
 

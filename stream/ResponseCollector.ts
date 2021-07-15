@@ -62,10 +62,10 @@ export namespace ResponseCollector {
 
         async take(): Promise<T> {
             const element = await this._queue.take();
-            if (element.isResponse()) return (element as Response<T>).value();
+            if (element.isResponse()) return (element as Response<T>).value;
             else {
                 if ((element as Done).hasError()) {
-                    throw new TypeDBClientError((element as Done).error());
+                    throw new TypeDBClientError((element as Done).error);
                 } else {
                     throw new TypeDBClientError(TRANSACTION_CLOSED);
                 }
@@ -103,7 +103,7 @@ export namespace ResponseCollector {
             this._value = value;
         }
 
-        value(): R {
+        get value(): R {
             return this._value;
         }
 
@@ -124,7 +124,7 @@ export namespace ResponseCollector {
             return this._error != null;
         }
 
-        error(): Error | string {
+        get error(): Error | string {
             return this._error;
         }
 

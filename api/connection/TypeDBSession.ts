@@ -28,19 +28,19 @@ export interface TypeDBSession {
 
     isOpen(): boolean;
 
-    type(): SessionType;
+    readonly type: SessionType;
 
-    database(): Database;
+    readonly database: Database;
 
-    options(): TypeDBOptions;
+    readonly options: TypeDBOptions;
 
     transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction>;
 
     close(): Promise<void>;
-
 }
 
 export interface SessionType {
+
     proto(): Session.Type;
 
     isData(): boolean;
@@ -52,7 +52,7 @@ export namespace SessionType {
 
     class SessionTypeImpl implements SessionType {
 
-        private _type: Session.Type;
+        private readonly _type: Session.Type;
 
         constructor(type: Session.Type) {
             this._type = type;
@@ -69,7 +69,6 @@ export namespace SessionType {
         isSchema(): boolean {
             return this == SCHEMA;
         }
-
     }
 
     export const DATA = new SessionTypeImpl(Session.Type.DATA);

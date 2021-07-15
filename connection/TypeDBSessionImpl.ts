@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Database } from "../api/connection/database/Database";
 import { TypeDBOptions } from "../api/connection/TypeDBOptions";
 import { SessionType, TypeDBSession } from "../api/connection/TypeDBSession";
@@ -39,7 +38,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private readonly _type: SessionType;
     private readonly _options: TypeDBOptions;
     private readonly _client: CoreClient;
-    private _sessionId: string;
+    private _id: string;
     private _database: Database;
     private _isOpen: boolean;
     private _pulse: NodeJS.Timeout;
@@ -55,73 +54,73 @@ export class TypeDBSessionImpl implements TypeDBSession {
         this._transactions = new Set();
     }
 
-    public async open(): Promise<void> {
+    async open(): Promise<void> {
         const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
-        this._database = await this._client.databases().get(this._databaseName);
+        this._database = await this._client.databases.get(this._databaseName);
         const start = (new Date()).getMilliseconds();
         const res = await this._client.stub().sessionOpen(openReq);
         const end = (new Date()).getMilliseconds(); // TODO will this work?
-        this._sessionId = res.getSessionId_asB64();
+        this._id = res.getSessionId_asB64();
         this._networkLatencyMillis = (end - start) - res.getServerDurationMillis();
         this._isOpen = true;
         this._pulse = setTimeout(() => this.pulse(), 5000);
     }
 
-    public async close(): Promise<void> {
+    async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
             this._transactions.forEach(tx => tx.close());
             this._client.closedSession(this);
             clearTimeout(this._pulse);
-            const req = RequestBuilder.Session.closeReq(this._sessionId);
+            const req = RequestBuilder.Session.closeReq(this._id);
             await this._client.stub().sessionClose(req);
         }
     }
 
-    public async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
+    async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
         if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
         if (!options) options = TypeDBOptions.core();
-        const transaction = new TypeDBTransactionImpl(this, this._sessionId, type, options);
+        const transaction = new TypeDBTransactionImpl(this, type, options);
         await transaction.open();
         this._transactions.add(transaction);
         return transaction;
     }
 
-    public database(): Database {
+    get database(): Database {
         return this._database;
     }
 
-    public isOpen(): boolean {
+    isOpen(): boolean {
         return this._isOpen;
     }
 
-    public options(): TypeDBOptions {
+    get options(): TypeDBOptions {
         return this._options;
     }
 
-    public type(): SessionType {
+    get type(): SessionType {
         return this._type;
     }
 
-    public sessionId() {
-        return this._sessionId;
+    get id() {
+        return this._id;
     }
 
-    public stub(): TypeDBStub {
+    get stub(): TypeDBStub {
         return this._client.stub();
     }
 
-    public requestTransmitter(): RequestTransmitter {
+    get requestTransmitter(): RequestTransmitter {
         return this._client.transmitter();
     }
 
-    public networkLatency() {
+    get networkLatency() {
         return this._networkLatencyMillis;
     }
 
     private pulse(): void {
         if (!this._isOpen) return;
-        const pulse = RequestBuilder.Session.pulseReq(this._sessionId);
+        const pulse = RequestBuilder.Session.pulseReq(this._id);
         this._client.stub().sessionPulse(pulse, (err, res) => {
             if (err || !res.getAlive()) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);

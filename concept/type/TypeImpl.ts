@@ -35,22 +35,22 @@ import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 export abstract class TypeImpl extends ConceptImpl implements Type {
 
     private readonly _label: Label;
-    private readonly _isRoot: boolean;
+    private readonly _root: boolean;
 
-    protected constructor(label: Label, isRoot: boolean) {
+    protected constructor(label: Label, root: boolean) {
         super();
         if (!label) throw new TypeDBClientError(MISSING_LABEL);
         this._label = label;
-        this._isRoot = isRoot;
+        this._root = root;
     }
 
     abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
-    isRoot(): boolean {
-        return this._isRoot;
+    get root(): boolean {
+        return this._root;
     }
 
-    getLabel(): Label {
+    get label(): Label {
         return this._label;
     }
 
@@ -64,7 +64,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     equals(concept: Concept): boolean {
         if (!concept.isType()) return false;
-        return concept.asType().getLabel().equals(this.getLabel());
+        return concept.asType().label.equals(this.label);
     }
 
     toString(): string {
@@ -85,22 +85,22 @@ export namespace TypeImpl {
     export abstract class Remote extends ConceptImpl.Remote implements Type.Remote {
 
         private _label: Label;
-        private readonly _isRoot: boolean;
+        private readonly _root: boolean;
 
-        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
+        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
             super(transaction);
             if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL);
             this._label = label;
-            this._isRoot = isRoot;
+            this._root = root;
         }
 
         abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
-        isRoot(): boolean {
-            return this._isRoot;
+        get root(): boolean {
+            return this._root;
         }
 
-        getLabel(): Label {
+        get label(): Label {
             return this._label;
         }
 
@@ -114,7 +114,7 @@ export namespace TypeImpl {
 
         equals(concept: Concept): boolean {
             if (!concept.isType()) return false;
-            return (concept as Type).getLabel().equals(this.getLabel());
+            return (concept as Type).label.equals(this.label);
         }
 
         toString(): string {
@@ -148,7 +148,7 @@ export namespace TypeImpl {
         async setLabel(label: string): Promise<void> {
             const request = RequestBuilder.Type.setLabelReq(this._label, label);
             await this.execute(request);
-            this._label = new Label(this.getLabel().scope(), label);
+            this._label = new Label(this.label.scope, label);
         }
 
         async isAbstract(): Promise<boolean> {

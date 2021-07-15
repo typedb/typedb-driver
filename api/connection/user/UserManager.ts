@@ -30,5 +30,4 @@ export interface UserManager {
     create(name: string, password: string): Promise<void>;
 
     all(): Promise<User[]>;
-
 }

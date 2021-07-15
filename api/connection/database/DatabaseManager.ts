@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Database } from "./Database";
 
 export interface DatabaseManager {
@@ -31,7 +30,6 @@ export interface DatabaseManager {
     get(name: string): Promise<Database>;
 
     all(): Promise<Database[]>;
-
 }
 
 export namespace DatabaseManager {
@@ -41,7 +39,5 @@ export namespace DatabaseManager {
         get(name: string): Promise<Database.Cluster>;
 
         all(): Promise<Database.Cluster[]>;
-
     }
-
 }

@@ -21,10 +21,9 @@
 
 export interface User {
 
-    name(): string;
+    readonly name: string;
 
     password(password: string): Promise<void>;
 
     delete(): Promise<void>;
-
 }

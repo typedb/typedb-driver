@@ -35,7 +35,7 @@ export class TypeDBDatabaseImpl implements Database {
         this._stub = typeDBStub;
     }
 
-    name(): string {
+    get name(): string {
         return this._name;
     }
 
@@ -46,12 +46,11 @@ export class TypeDBDatabaseImpl implements Database {
     }
 
     schema(): Promise<string> {
-        const req = RequestBuilder.Core.Database.schemaReq(this.name());
+        const req = RequestBuilder.Core.Database.schemaReq(this.name);
         return this._stub.databaseSchema(req);
     }
 
     toString(): string {
         return "Database[" + this._name + "]";
     }
-
 }

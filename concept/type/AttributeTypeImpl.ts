@@ -36,8 +36,8 @@ import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
 export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
-    constructor(name: string, isRoot: boolean) {
-        super(name, isRoot);
+    constructor(name: string, root: boolean) {
+        super(name, root);
     }
 
     protected get className(): string {
@@ -45,10 +45,10 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     asRemote(transaction: TypeDBTransaction): AttributeType.Remote {
-        return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+        return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
     }
 
-    getValueType(): AttributeType.ValueType {
+    get valueType(): AttributeType.ValueType {
         return AttributeType.ValueType.OBJECT;
     }
 
@@ -81,36 +81,36 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     asBoolean(): AttributeType.Boolean {
-        if (this.isRoot()) {
-            return new AttributeTypeImpl.Boolean(this.getLabel().name(), this.isRoot());
+        if (this.root) {
+            return new AttributeTypeImpl.Boolean(this.label.name, this.root);
         }
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Boolean"));
     }
 
     asLong(): AttributeType.Long {
-        if (this.isRoot()) {
-            return new AttributeTypeImpl.Long(this.getLabel().name(), this.isRoot());
+        if (this.root) {
+            return new AttributeTypeImpl.Long(this.label.name, this.root);
         }
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Long"));
     }
 
     asDouble(): AttributeType.Double {
-        if (this.isRoot()) {
-            return new AttributeTypeImpl.Double(this.getLabel().name(), this.isRoot());
+        if (this.root) {
+            return new AttributeTypeImpl.Double(this.label.name, this.root);
         }
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Double"));
     }
 
     asString(): AttributeType.String {
-        if (this.isRoot()) {
-            return new AttributeTypeImpl.String(this.getLabel().name(), this.isRoot());
+        if (this.root) {
+            return new AttributeTypeImpl.String(this.label.name, this.root);
         }
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.String"));
     }
 
     asDateTime(): AttributeType.DateTime {
-        if (this.isRoot()) {
-            return new AttributeTypeImpl.DateTime(this.getLabel().name(), this.isRoot());
+        if (this.root) {
+            return new AttributeTypeImpl.DateTime(this.label.name, this.root);
         }
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.DateTime"));
     }
@@ -139,8 +139,8 @@ export namespace AttributeTypeImpl {
 
     export class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-            super(transaction, label, isRoot);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+            super(transaction, label, root);
         }
 
         protected get className(): string {
@@ -148,10 +148,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.Remote {
-            return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.OBJECT;
         }
 
@@ -184,36 +184,36 @@ export namespace AttributeTypeImpl {
         }
 
         asBoolean(): AttributeType.Boolean.Remote {
-            if (this.isRoot()) {
-                return new AttributeTypeImpl.Boolean.Remote(this.transaction, this.getLabel(), this.isRoot());
+            if (this.root) {
+                return new AttributeTypeImpl.Boolean.Remote(this.transaction, this.label, this.root);
             }
             throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Boolean"));
         }
 
         asLong(): AttributeType.Long.Remote {
-            if (this.isRoot()) {
-                return new AttributeTypeImpl.Long.Remote(this.transaction, this.getLabel(), this.isRoot());
+            if (this.root) {
+                return new AttributeTypeImpl.Long.Remote(this.transaction, this.label, this.root);
             }
             throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Long"));
         }
 
         asDouble(): AttributeType.Double.Remote {
-            if (this.isRoot()) {
-                return new AttributeTypeImpl.Double.Remote(this.transaction, this.getLabel(), this.isRoot());
+            if (this.root) {
+                return new AttributeTypeImpl.Double.Remote(this.transaction, this.label, this.root);
             }
             throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.Double"));
         }
 
         asString(): AttributeType.String.Remote {
-            if (this.isRoot()) {
-                return new AttributeTypeImpl.String.Remote(this.transaction, this.getLabel(), this.isRoot());
+            if (this.root) {
+                return new AttributeTypeImpl.String.Remote(this.transaction, this.label, this.root);
             }
             throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.String"));
         }
 
         asDateTime(): AttributeType.DateTime.Remote {
-            if (this.isRoot()) {
-                return new AttributeTypeImpl.DateTime.Remote(this.transaction, this.getLabel(), this.isRoot());
+            if (this.root) {
+                return new AttributeTypeImpl.DateTime.Remote(this.transaction, this.label, this.root);
             }
             throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType.DateTime"));
         }
@@ -231,14 +231,14 @@ export namespace AttributeTypeImpl {
         }
 
         getOwners(onlyKey?: boolean): Stream<ThingType> {
-            const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.getLabel(), !!onlyKey);
+            const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.label, !!onlyKey);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getOwnersList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 
         protected getImpl(valueProto: AttributeProto.Value): Promise<Attribute> {
-            const request = RequestBuilder.Type.AttributeType.getReq(this.getLabel(), valueProto);
+            const request = RequestBuilder.Type.AttributeType.getReq(this.label, valueProto);
             return this.execute(request)
                 .then((attrProto) => AttributeImpl.of(attrProto.getAttributeTypeGetRes().getAttribute()));
         }
@@ -246,8 +246,8 @@ export namespace AttributeTypeImpl {
 
     export class Boolean extends AttributeTypeImpl implements AttributeType.Boolean {
 
-        constructor(label: string, isRoot: boolean) {
-            super(label, isRoot);
+        constructor(label: string, root: boolean) {
+            super(label, root);
         }
 
         protected get className(): string {
@@ -255,10 +255,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote {
-            return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.BOOLEAN;
         }
 
@@ -275,8 +275,8 @@ export namespace AttributeTypeImpl {
 
         export class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-                super(transaction, label, isRoot);
+            constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+                super(transaction, label, root);
             }
 
             protected get className(): string {
@@ -284,10 +284,10 @@ export namespace AttributeTypeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote {
-                return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+                return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
             }
 
-            getValueType(): AttributeType.ValueType {
+            get valueType(): AttributeType.ValueType {
                 return AttributeType.ValueType.BOOLEAN;
             }
 
@@ -312,7 +312,7 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: boolean): Promise<Attribute.Boolean> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Boolean>);
             }
         }
@@ -320,8 +320,8 @@ export namespace AttributeTypeImpl {
 
     export class Long extends AttributeTypeImpl implements AttributeType.Long {
 
-        constructor(label: string, isRoot: boolean) {
-            super(label, isRoot);
+        constructor(label: string, root: boolean) {
+            super(label, root);
         }
 
         protected get className(): string {
@@ -329,10 +329,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote {
-            return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.LONG;
         }
 
@@ -349,8 +349,8 @@ export namespace AttributeTypeImpl {
 
         export class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-                super(transaction, label, isRoot);
+            constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+                super(transaction, label, root);
             }
 
             protected get className(): string {
@@ -358,10 +358,10 @@ export namespace AttributeTypeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote {
-                return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+                return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
             }
 
-            getValueType(): AttributeType.ValueType {
+            get valueType(): AttributeType.ValueType {
                 return AttributeType.ValueType.LONG;
             }
 
@@ -386,7 +386,7 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: number): Promise<Attribute.Long> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueLongReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueLongReq(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Long>);
             }
         }
@@ -394,8 +394,8 @@ export namespace AttributeTypeImpl {
 
     export class Double extends AttributeTypeImpl implements AttributeType.Double {
 
-        constructor(label: string, isRoot: boolean) {
-            super(label, isRoot);
+        constructor(label: string, root: boolean) {
+            super(label, root);
         }
 
         protected get className(): string {
@@ -403,10 +403,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote {
-            return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.DOUBLE;
         }
 
@@ -423,8 +423,8 @@ export namespace AttributeTypeImpl {
 
         export class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-                super(transaction, label, isRoot);
+            constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+                super(transaction, label, root);
             }
 
             protected get className(): string {
@@ -432,10 +432,10 @@ export namespace AttributeTypeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote {
-                return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+                return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
             }
 
-            getValueType(): AttributeType.ValueType {
+            get valueType(): AttributeType.ValueType {
                 return AttributeType.ValueType.DOUBLE;
             }
 
@@ -460,7 +460,7 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: number): Promise<Attribute.Double> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Double>);
             }
         }
@@ -468,8 +468,8 @@ export namespace AttributeTypeImpl {
 
     export class String extends AttributeTypeImpl implements AttributeType.String {
 
-        constructor(label: string, isRoot: boolean) {
-            super(label, isRoot);
+        constructor(label: string, root: boolean) {
+            super(label, root);
         }
 
         protected get className(): string {
@@ -477,10 +477,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote {
-            return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot())
+            return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root)
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.STRING;
         }
 
@@ -497,8 +497,8 @@ export namespace AttributeTypeImpl {
 
         export class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-                super(transaction, label, isRoot);
+            constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+                super(transaction, label, root);
             }
 
             protected get className(): string {
@@ -506,10 +506,10 @@ export namespace AttributeTypeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote {
-                return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot())
+                return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root)
             }
 
-            getValueType(): AttributeType.ValueType {
+            get valueType(): AttributeType.ValueType {
                 return AttributeType.ValueType.STRING;
             }
 
@@ -534,17 +534,17 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: string): Promise<Attribute.String> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueStringReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueStringReq(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.String>);
             }
 
             async getRegex(): Promise<string> {
-                const request = RequestBuilder.Type.AttributeType.getRegexReq(this.getLabel());
+                const request = RequestBuilder.Type.AttributeType.getRegexReq(this.label);
                 return await this.execute(request).then((res) => res.getAttributeTypeGetRegexRes().getRegex());
             }
 
             async setRegex(regex: string): Promise<void> {
-                const request = RequestBuilder.Type.AttributeType.setRegexReq(this.getLabel(), regex);
+                const request = RequestBuilder.Type.AttributeType.setRegexReq(this.label, regex);
                 await this.execute(request);
             }
         }
@@ -552,8 +552,8 @@ export namespace AttributeTypeImpl {
 
     export class DateTime extends AttributeTypeImpl implements AttributeType.DateTime {
 
-        constructor(label: string, isRoot: boolean) {
-            super(label, isRoot);
+        constructor(label: string, root: boolean) {
+            super(label, root);
         }
 
         protected get className(): string {
@@ -561,10 +561,10 @@ export namespace AttributeTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote {
-            return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
-        getValueType(): AttributeType.ValueType {
+        get valueType(): AttributeType.ValueType {
             return AttributeType.ValueType.DATETIME;
         }
 
@@ -581,8 +581,8 @@ export namespace AttributeTypeImpl {
 
         export class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-                super(transaction, label, isRoot);
+            constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+                super(transaction, label, root);
             }
 
             protected get className(): string {
@@ -590,10 +590,10 @@ export namespace AttributeTypeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote {
-                return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+                return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
             }
 
-            getValueType(): AttributeType.ValueType {
+            get valueType(): AttributeType.ValueType {
                 return AttributeType.ValueType.DATETIME;
             }
 
@@ -618,7 +618,7 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: Date): Promise<Attribute.DateTime> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.getLabel(), RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.DateTime>);
             }
         }

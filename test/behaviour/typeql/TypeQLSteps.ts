@@ -40,110 +40,106 @@ function clearAnswers() {
     numericAnswerGroups.length = 0;
 }
 
-Then("the integrity is validated", async () => {
-    // TODO
-});
-
 When("typeql define", async (query: string) => {
-    await tx().query().define(query);
+    await tx().query.define(query);
 });
 
 Then("typeql define; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().define(query), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query.define(query), exceptionString);
 });
 
 Then("typeql define; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().define(query));
+    await assertThrows(async () => await tx().query.define(query));
 });
 
 When("typeql undefine", async (query: string) => {
-    await tx().query().undefine(query);
+    await tx().query.undefine(query);
 });
 
 Then("typeql undefine; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().undefine(query), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query.undefine(query), exceptionString);
 });
 
 Then("typeql undefine; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().undefine(query));
+    await assertThrows(async () => await tx().query.undefine(query));
 });
 
 When("typeql insert", async (query: string) => {
-    await tx().query().insert(query).collect();
+    await tx().query.insert(query).collect();
 });
 
 Then("typeql insert; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().insert(query).first(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query.insert(query).first(), exceptionString);
 });
 
 Then("typeql insert; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().insert(query).first());
+    await assertThrows(async () => await tx().query.insert(query).first());
 });
 
 When("typeql delete", async (query: string) => {
-    await tx().query().delete(query);
+    await tx().query.delete(query);
 });
 
 Then("typeql delete; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().delete(query), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query.delete(query), exceptionString);
 });
 
 Then("typeql delete; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().delete(query));
+    await assertThrows(async () => await tx().query.delete(query));
 });
 
 When("typeql update", async (query: string) => {
-    await tx().query().update(query).collect();
+    await tx().query.update(query).collect();
 });
 
 Then("typeql update; throws exception containing {string}", async (exceptionString: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query().update(query).first(), exceptionString);
+    await assertThrowsWithMessage(async () => await tx().query.update(query).first(), exceptionString);
 });
 
 Then("typeql update; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().update(query).first());
+    await assertThrows(async () => await tx().query.update(query).first());
 });
 
 When("get answers of typeql insert", async (query: string) => {
     clearAnswers();
-    answers = await tx().query().insert(query).collect();
+    answers = await tx().query.insert(query).collect();
 });
 
 When("get answers of typeql update", async (query: string) => {
     clearAnswers();
-    answers = await tx().query().update(query).collect();
+    answers = await tx().query.update(query).collect();
 });
 
 When("get answers of typeql match", async (query: string) => {
     clearAnswers();
-    answers = await tx().query().match(query).collect();
+    answers = await tx().query.match(query).collect();
 });
 
 Then("typeql match; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().match(query).first());
+    await assertThrows(async () => await tx().query.match(query).first());
 });
 
 When("get answer of typeql match aggregate", async (query: string) => {
     clearAnswers();
-    numericAnswer = await tx().query().matchAggregate(query);
+    numericAnswer = await tx().query.matchAggregate(query);
 });
 
 When("get answers of typeql match group", async (query: string) => {
     clearAnswers();
-    answerGroups = await tx().query().matchGroup(query).collect();
+    answerGroups = await tx().query.matchGroup(query).collect();
 });
 
 When("typeql match group; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().matchGroup(query).first());
+    await assertThrows(async () => await tx().query.matchGroup(query).first());
 })
 
 When("get answers of typeql match group aggregate", async (query: string) => {
     clearAnswers();
-    numericAnswerGroups = await tx().query().matchGroupAggregate(query).collect();
+    numericAnswerGroups = await tx().query.matchGroupAggregate(query).collect();
 });
 
 When("typeql match aggregate; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query().matchAggregate(query));
+    await assertThrows(async () => await tx().query.matchAggregate(query));
 
 })
 
@@ -152,15 +148,15 @@ Then("answer size is: {number}", async (expectedAnswers: number) => {
 });
 
 Then("rules contain: {type_label}", async (ruleLabel: string) => {
-    for await (const rule of (await tx().logic().getRules())) {
-        if (rule.getLabel() === ruleLabel) return;
+    for await (const rule of (await tx().logic.getRules())) {
+        if (rule.label === ruleLabel) return;
     }
     assert.fail();
 });
 
 Then("rules do not contain: {type_label}", async (ruleLabel: string) => {
-    for await (const rule of (await tx().logic().getRules())) {
-        if (rule.getLabel() === ruleLabel) assert.fail();
+    for await (const rule of (await tx().logic.getRules())) {
+        if (rule.label === ruleLabel) assert.fail();
     }
 });
 
@@ -180,8 +176,8 @@ class TypeLabelMatcher implements ConceptMatcher {
     }
 
     async matches(concept: Concept): Promise<boolean> {
-        if (concept.isRoleType()) return this.label == (concept as RoleType).getLabel().scopedName();
-        else if (concept.isType()) return this.label == (concept as Type).getLabel().scopedName();
+        if (concept.isRoleType()) return this.label == (concept as RoleType).label.scopedName;
+        else if (concept.isType()) return this.label == (concept as Type).label.scopedName;
         else throw new TypeError("A Concept was matched by label, but it is not a Type.");
     }
 }
@@ -205,11 +201,11 @@ abstract class AttributeMatcher implements ConceptMatcher {
     }
 
     check(attribute: Attribute) {
-        if (attribute.isBoolean()) return attribute.asBoolean().getValue() === parseBool(this.value);
-        else if (attribute.isLong()) return attribute.asLong().getValue() === parseInt(this.value);
-        else if (attribute.isDouble()) return attribute.asDouble().getValue() === parseFloat(this.value);
-        else if (attribute.isString()) return attribute.asString().getValue() === this.value;
-        else if (attribute.isDateTime()) return attribute.asDateTime().getValue().getTime() === new Date(this.value).getTime();
+        if (attribute.isBoolean()) return attribute.asBoolean().value === parseBool(this.value);
+        else if (attribute.isLong()) return attribute.asLong().value === parseInt(this.value);
+        else if (attribute.isDouble()) return attribute.asDouble().value === parseFloat(this.value);
+        else if (attribute.isString()) return attribute.asString().value === this.value;
+        else if (attribute.isDateTime()) return attribute.asDateTime().value.getTime() === new Date(this.value).getTime();
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
@@ -223,7 +219,7 @@ class AttributeValueMatcher extends AttributeMatcher {
 
         const attribute = concept as Attribute;
 
-        if (this.typeLabel !== attribute.getType().getLabel().scopedName()) return false;
+        if (this.typeLabel !== attribute.type.label.scopedName) return false;
 
         return this.check(attribute);
     }
@@ -237,7 +233,7 @@ class ThingKeyMatcher extends AttributeMatcher {
         const keys = await (concept as Thing).asRemote(tx()).getHas(true).collect();
 
         for (const key of keys) {
-            if (key.getType().getLabel().scopedName() === this.typeLabel) {
+            if (key.type.label.scopedName === this.typeLabel) {
                 return this.check(key);
             }
         }
@@ -364,7 +360,7 @@ Then("answer groups are", async (answerIdentifiersTable: DataTable) => {
         const identifier = parseConceptIdentifier(answerIdentifierGroup.ownerIdentifier);
         let answerGroup: ConceptMapGroup;
         for (const group of answerGroups) {
-            if (await identifier.matches(group.owner())) {
+            if (await identifier.matches(group.owner)) {
                 answerGroup = group;
                 break;
             }
@@ -372,7 +368,7 @@ Then("answer groups are", async (answerIdentifiersTable: DataTable) => {
         assert(answerGroup, `The group identifier [${JSON.stringify(answerIdentifierGroup.ownerIdentifier)}] does not match any of the answer group owners.`);
 
         const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifierGroup.answerIdentifiers.map(ai => [ai, []]);
-        for (const answer0 of answerGroup.conceptMaps()) {
+        for (const answer0 of answerGroup.conceptMaps) {
             for (const [answerIdentifier, matchedAnswers] of resultSet) {
                 if (await answerConceptsMatch(answerIdentifier, answer0)) {
                     matchedAnswers.push(answer0);
@@ -400,15 +396,15 @@ Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => 
         const identifier = parseConceptIdentifier(ownerIdentifier);
         let numericGroup;
         for (const group of numericAnswerGroups) {
-            if (await identifier.matches(group.owner())) {
+            if (await identifier.matches(group.owner)) {
                 numericGroup = group;
                 break;
             }
         }
         assert(numericGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
 
-        const actualAnswer = getNumericValue(numericGroup.numeric());
-        assertNumericValue(numericGroup.numeric(), expectedAnswer,
+        const actualAnswer = getNumericValue(numericGroup.numeric);
+        assertNumericValue(numericGroup.numeric, expectedAnswer,
             `Expected answer [${expectedAnswer}] for group [${JSON.stringify(ownerIdentifier)}], but got [${actualAnswer}]`);
     }
 });
@@ -426,10 +422,10 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
     while ((match = pattern.exec(template))) {
         const requiredVariable = variableFromTemplatePlaceholder(match[1]);
         query += template.substring(i, match.index);
-        if (answer.map().has(requiredVariable)) {
+        if (answer.map.has(requiredVariable)) {
             const concept = answer.get(requiredVariable);
             if (!concept.isThing()) throw new TypeError("Cannot apply IID templating to Types");
-            query += (concept as Thing).getIID();
+            query += (concept as Thing).iid;
         } else {
             throw new Error(`No IID available for template placeholder: [${match[0]}]`);
         }
@@ -442,13 +438,13 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
 Then("each answer satisfies", async (template: string) => {
     for (const answer of answers) {
         const query = applyQueryTemplate(template, answer);
-        assert.strictEqual((await tx().query().match(query).collect()).length, 1);
+        assert.strictEqual((await tx().query.match(query).collect()).length, 1);
     }
 });
 
 Then("each answer does not satisfy", async (template: string) => {
     for (const answer of answers) {
         const query = applyQueryTemplate(template, answer);
-        assert.strictEqual((await tx().query().match(query).collect()).length, 0);
+        assert.strictEqual((await tx().query.match(query).collect()).length, 0);
     }
 });

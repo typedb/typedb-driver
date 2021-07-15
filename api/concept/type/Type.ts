@@ -40,9 +40,9 @@ import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export interface Type extends Concept {
 
-    getLabel(): Label;
+    readonly label: Label;
 
-    isRoot(): boolean;
+    readonly root: boolean;
 
     asRemote(transaction: TypeDBTransaction): Type.Remote;
 }

@@ -79,7 +79,6 @@ export interface Concept {
     asRelation(): Relation;
 
     equals(concept: Concept): boolean;
-
 }
 
 export namespace Concept {

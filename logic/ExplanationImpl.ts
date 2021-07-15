@@ -28,10 +28,10 @@ import { RuleImpl } from "./RuleImpl";
 
 export class ExplanationImpl implements Explanation {
 
-    private _rule: Rule;
-    private _condition: ConceptMap;
-    private _conclusion: ConceptMap;
-    private _variableMapping: Map<string, Set<string>>;
+    private readonly _rule: Rule;
+    private readonly _condition: ConceptMap;
+    private readonly _conclusion: ConceptMap;
+    private readonly _variableMapping: Map<string, Set<string>>;
 
     constructor(rule: Rule, condition: ConceptMap, conclusion: ConceptMap, variableMapping: Map<string, Set<string>>) {
         this._rule = rule;
@@ -40,22 +40,21 @@ export class ExplanationImpl implements Explanation {
         this._variableMapping = variableMapping;
     }
 
-    rule(): Rule {
+    get rule(): Rule {
         return this._rule;
     }
 
-    conclusion(): ConceptMap {
+    get conclusion(): ConceptMap {
         return this._conclusion;
     }
 
-    condition(): ConceptMap {
+    get condition(): ConceptMap {
         return this._condition;
     }
 
-    variableMapping(): Map<string, Set<string>> {
+    get variableMapping(): Map<string, Set<string>> {
         return this._variableMapping;
     }
-
 }
 
 export namespace ExplanationImpl {

@@ -24,8 +24,7 @@ import { ConceptMap } from "./ConceptMap";
 
 export interface ConceptMapGroup {
 
-    owner(): Concept;
+    readonly owner: Concept;
 
-    conceptMaps(): ConceptMap[];
-
+    readonly conceptMaps: ConceptMap[];
 }

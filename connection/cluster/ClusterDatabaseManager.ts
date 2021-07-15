@@ -42,7 +42,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
     constructor(client: ClusterClient) {
         this._client = client;
         this._databaseManagers = Object.entries(this._client.clusterServerClients()).reduce((obj: { [address: string]: TypeDBDatabaseManagerImpl }, [addr, client]) => {
-            obj[addr] = client.databases();
+            obj[addr] = client.databases;
             return obj;
         }, {});
     }
@@ -91,7 +91,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         try {
             return await failsafeTask.runAnyReplica();
         } catch (e) {
-            if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.errorMessage()) {
+            if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.errorMessage) {
                 return await failsafeTask.runPrimaryReplica();
             } else throw e;
         }
@@ -108,6 +108,6 @@ class DatabaseManagerFailsafeTask<T> extends FailsafeTask<T> {
     }
 
     async run(replica: Database.Replica): Promise<T> {
-        return this._task(this.client.stub(replica.address()), this.client.clusterServerClient(replica.address()).databases());
+        return this._task(this.client.stub(replica.address), this.client.clusterServerClient(replica.address).databases);
     }
 }

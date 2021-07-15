@@ -117,7 +117,7 @@ export class QueryManagerImpl implements QueryManager {
 
     explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation> {
         if (!options) options = TypeDBOptions.core();
-        const request = RequestBuilder.QueryManager.explainReq(explainable.id(), options.proto());
+        const request = RequestBuilder.QueryManager.explainReq(explainable.id, options.proto());
         return this.stream(request)
             .flatMap((resPart) => Stream.array(resPart.getExplainResPart().getExplanationsList()))
             .map((explanationProto) => ExplanationImpl.of(explanationProto));

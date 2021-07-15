@@ -34,8 +34,7 @@ export interface Entity extends Thing {
 
     asRemote(transaction: TypeDBTransaction): Entity.Remote;
 
-    getType(): EntityType;
-
+    readonly type: EntityType;
 }
 
 export namespace Entity {
@@ -44,7 +43,7 @@ export namespace Entity {
 
         asRemote(transaction: TypeDBTransaction): Entity.Remote;
 
-        getType(): EntityType;
+        readonly type: EntityType;
 
         asType(): Type.Remote;
 

@@ -36,5 +36,4 @@ export namespace TypeDB {
         if (typeof addresses === 'string') addresses = [addresses];
         return new ClusterClient(addresses, credential).open();
     }
-
 }

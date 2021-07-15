@@ -28,5 +28,4 @@ export class CoreStubFactory extends TypeDBStubFactory {
     newTypeDBStub(address: string): TypeDBStub {
         return CoreStub.create(address);
     }
-
 }

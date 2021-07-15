@@ -314,8 +314,8 @@ export namespace RequestBuilder {
         }
 
         function newReqBuilder(label: Label) {
-            const builder = new TypeProto.Req().setLabel(label.name());
-            if (label.scope()) builder.setScope(label.scope());
+            const builder = new TypeProto.Req().setLabel(label.name);
+            if (label.scope) builder.setScope(label.scope);
             return builder;
         }
 
@@ -358,7 +358,7 @@ export namespace RequestBuilder {
         export namespace RoleType {
 
             export function protoRoleType(label: Label, encoding: TypeProto.Encoding) {
-                return new TypeProto().setScope(label.scope()).setLabel(label.name()).setEncoding(encoding);
+                return new TypeProto().setScope(label.scope).setLabel(label.name).setEncoding(encoding);
             }
 
             export function getRelationTypesReq(label: Label) {
@@ -377,7 +377,7 @@ export namespace RequestBuilder {
         export namespace ThingType {
 
             export function protoThingType(label: Label, encoding: TypeProto.Encoding) {
-                return new TypeProto().setLabel(label.name()).setEncoding(encoding);
+                return new TypeProto().setLabel(label.name).setEncoding(encoding);
             }
 
             export function setAbstractReq(label: Label) {
@@ -668,7 +668,5 @@ export namespace RequestBuilder {
                 return new AttributeProto.Value().setDateTime(value.getTime());
             }
         }
-
     }
-
 }

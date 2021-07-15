@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { TypeDBClientImpl } from "../TypeDBClientImpl";
 import { CoreStubFactory } from "./CoreStubFactory";
 
@@ -28,5 +27,4 @@ export class CoreClient extends TypeDBClientImpl {
     constructor(address: string) {
         super(address, new CoreStubFactory());
     }
-
 }

@@ -36,14 +36,13 @@ export class NumericGroupImpl implements NumericGroup {
         this._numeric = numeric;
     }
 
-    owner(): Concept {
+    get owner(): Concept {
         return this._owner;
     }
 
-    numeric(): Numeric {
+    get numeric(): Numeric {
         return this._numeric;
     }
-
 }
 
 export namespace NumericGroupImpl {
@@ -54,5 +53,4 @@ export namespace NumericGroupImpl {
         else concept = TypeImpl.of(numericGroupProto.getOwner().getType());
         return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
     }
-
 }

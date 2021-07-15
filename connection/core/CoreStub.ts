@@ -28,7 +28,6 @@ export class CoreStub extends TypeDBStub {
     constructor(stub: TypeDBClient) {
         super(stub);
     }
-
 }
 
 export namespace CoreStub {
@@ -38,5 +37,4 @@ export namespace CoreStub {
             new TypeDBClient(address, ChannelCredentials.createInsecure()),
         );
     }
-
 }

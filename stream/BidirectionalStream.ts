@@ -33,7 +33,6 @@ import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
 
-
 export class BidirectionalStream {
 
     private readonly _requestTransmitter: RequestTransmitter;

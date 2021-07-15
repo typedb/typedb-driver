@@ -68,5 +68,4 @@ export namespace NumericImpl {
                 throw new TypeDBClientError(BAD_ANSWER_TYPE.message(numericProto.getValueCase()));
         }
     }
-
 }

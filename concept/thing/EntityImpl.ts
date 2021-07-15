@@ -28,10 +28,10 @@ import { EntityTypeImpl, ThingImpl } from "../../dependencies_internal";
 
 export class EntityImpl extends ThingImpl implements Entity {
 
-    private _type: EntityType;
+    private readonly _type: EntityType;
 
-    constructor(iid: string, isInferred: boolean, type: EntityType) {
-        super(iid, isInferred);
+    constructor(iid: string, inferred: boolean, type: EntityType) {
+        super(iid, inferred);
         this._type = type;
     }
 
@@ -40,10 +40,10 @@ export class EntityImpl extends ThingImpl implements Entity {
     }
 
     asRemote(transaction: TypeDBTransaction): Entity.Remote {
-        return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
+        return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type);
     }
 
-    getType(): EntityType {
+    get type(): EntityType {
         return this._type;
     }
 
@@ -68,8 +68,8 @@ export namespace EntityImpl {
 
         private readonly _type: EntityType;
 
-        constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: EntityType) {
-            super(transaction, iid, isInferred);
+        constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: EntityType) {
+            super(transaction, iid, inferred);
             this._type = type;
         }
 
@@ -78,10 +78,10 @@ export namespace EntityImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Entity.Remote {
-            return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType());
+            return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type);
         }
 
-        getType(): EntityType {
+        get type(): EntityType {
             return this._type;
         }
 

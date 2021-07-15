@@ -77,6 +77,6 @@ export namespace RoleType {
     }
 
     export function proto(roleType: RoleType) {
-        return RequestBuilder.Type.RoleType.protoRoleType(roleType.getLabel(), Type.encoding(roleType));
+        return RequestBuilder.Type.RoleType.protoRoleType(roleType.label, Type.encoding(roleType));
     }
 }

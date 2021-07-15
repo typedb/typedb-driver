@@ -77,11 +77,11 @@ export class ScopedLabel {
         return new ScopedLabel(split[0], split[1]);
     }
 
-    scope(): string {
+    get scope(): string {
         return this._scope;
     }
 
-    role(): string {
+    get role(): string {
         return this._role;
     }
 

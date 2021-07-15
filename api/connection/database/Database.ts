@@ -19,42 +19,36 @@
  * under the License.
  */
 
-
 export interface Database {
 
-    name(): string;
+    readonly name: string;
 
     delete(): Promise<void>;
 
     schema(): Promise<string>;
-
 }
 
 export namespace Database {
 
     export interface Cluster extends Database {
 
-        replicas(): Replica[];
+        readonly replicas: Replica[];
 
-        primaryReplica(): Replica;
+        readonly primaryReplica: Replica;
 
-        preferredReplica(): Replica;
-
+        readonly preferredReplica: Replica;
     }
-
 
     export interface Replica extends Database {
 
-        database(): Cluster;
+        readonly database: Cluster;
 
-        term(): number;
+        readonly term: number;
 
-        isPrimary(): boolean;
+        readonly primary: boolean;
 
-        isPreferred(): boolean;
+        readonly preferred: boolean;
 
-        address(): string;
-
+        readonly address: string;
     }
-
 }

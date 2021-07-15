@@ -38,28 +38,26 @@ import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _session: TypeDBSessionImpl;
-    private readonly _sessionId: string;
     private readonly _type: TransactionType;
     private readonly _options: TypeDBOptions;
     private _bidirectionalStream: BidirectionalStream;
-    private _conceptManager: ConceptManager;
-    private _logicManager: LogicManager;
-    private _queryManager: QueryManager;
+    private readonly _conceptManager: ConceptManager;
+    private readonly _logicManager: LogicManager;
+    private readonly _queryManager: QueryManager;
 
-    constructor(session: TypeDBSessionImpl, _sessionId: string, type: TransactionType, options: TypeDBOptions) {
+    constructor(session: TypeDBSessionImpl, type: TransactionType, options: TypeDBOptions) {
         this._session = session;
-        this._sessionId = _sessionId;
         this._type = type;
         this._options = options;
-        const rpcClient = this._session.stub();
-        this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter());
+        const rpcClient = this._session.stub;
+        this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
         this._conceptManager = new ConceptManagerImpl(this);
         this._logicManager = new LogicManagerImpl(this);
         this._queryManager = new QueryManagerImpl(this);
     }
 
     public async open(): Promise<void> {
-        const openReq = RequestBuilder.Transaction.openReq(this._sessionId, this._type.proto(), this._options.proto(), this._session.networkLatency());
+        const openReq = RequestBuilder.Transaction.openReq(this._session.id, this._type.proto(), this._options.proto(), this._session.networkLatency);
         await this.rpcExecute(openReq, false);
     }
 
@@ -81,23 +79,23 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         await this.rpcExecute(rollbackReq, false);
     }
 
-    public concepts(): ConceptManager {
+    public get concepts(): ConceptManager {
         return this._conceptManager;
     }
 
-    public logic(): LogicManager {
+    public get logic(): LogicManager {
         return this._logicManager;
     }
 
-    public query(): QueryManager {
+    public get query(): QueryManager {
         return this._queryManager;
     }
 
-    public options(): TypeDBOptions {
+    public get options(): TypeDBOptions {
         return this._options;
     }
 
-    public type(): TransactionType {
+    public get type(): TransactionType {
         return this._type;
     }
 
@@ -115,5 +113,4 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         if (!this.isOpen()) throw new TypeDBClientError(TRANSACTION_CLOSED);
         return this._bidirectionalStream.stream(request);
     }
-
 }

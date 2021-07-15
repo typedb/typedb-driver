@@ -73,15 +73,15 @@ export class ClusterSession implements TypeDBSession {
         }
     }
 
-    type(): SessionType {
-        return this._typeDBSession.type();
+    get type(): SessionType {
+        return this._typeDBSession.type;
     }
 
     isOpen(): boolean {
         return this._typeDBSession.isOpen();
     }
 
-    options(): TypeDBClusterOptions {
+    get options(): TypeDBClusterOptions {
         return this._options;
     }
 
@@ -89,8 +89,8 @@ export class ClusterSession implements TypeDBSession {
         return this._typeDBSession.close();
     }
 
-    database(): Database {
-        return this._typeDBSession.database();
+    get database(): Database {
+        return this._typeDBSession.database;
     }
 
     clusterClient(): ClusterClient {
@@ -112,7 +112,7 @@ class TransactionFailsafeTask extends FailsafeTask<TypeDBTransaction> {
     private readonly _options: TypeDBClusterOptions;
 
     constructor(clusterSession: ClusterSession, type: TransactionType, options: TypeDBClusterOptions) {
-        super(clusterSession.clusterClient(), clusterSession.database().name());
+        super(clusterSession.clusterClient(), clusterSession.database.name);
         this._clusterSession = clusterSession;
         this._type = type;
         this._options = options;
@@ -124,8 +124,8 @@ class TransactionFailsafeTask extends FailsafeTask<TypeDBTransaction> {
 
     async rerun(replica: Database.Replica): Promise<TypeDBTransaction> {
         if (this._clusterSession.typeDBSession) await this._clusterSession.typeDBSession.close();
-        this._clusterSession.clusterServerClient = this._clusterSession.clusterClient().clusterServerClient(replica.address());
-        this._clusterSession.typeDBSession = await this._clusterSession.clusterServerClient.session(this.database, this._clusterSession.type(), this._clusterSession.options());
+        this._clusterSession.clusterServerClient = this._clusterSession.clusterClient().clusterServerClient(replica.address);
+        this._clusterSession.typeDBSession = await this._clusterSession.clusterServerClient.session(this.database, this._clusterSession.type, this._clusterSession.options);
         return await this._clusterSession.typeDBSession.transaction(this._type, this._options);
     }
 }

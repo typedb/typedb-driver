@@ -60,5 +60,4 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
     stub() {
         return this._stub;
     }
-
 }

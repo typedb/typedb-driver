@@ -35,9 +35,9 @@ export interface Attribute extends Thing {
 
     asRemote(transaction: TypeDBTransaction): Attribute.Remote;
 
-    getType(): AttributeType;
+    readonly type: AttributeType;
 
-    getValue(): boolean | string | number | Date;
+    readonly value: boolean | string | number | Date;
 
     isBoolean(): boolean;
 
@@ -66,7 +66,7 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.Remote;
 
-        getType(): AttributeType;
+        readonly type: AttributeType;
 
         getOwners(ownerType?: ThingType): Stream<Thing>;
 
@@ -105,9 +105,9 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote;
 
-        getType(): AttributeType.Boolean;
+        readonly type: AttributeType.Boolean;
 
-        getValue(): boolean;
+        readonly value: boolean;
     }
 
     export namespace Boolean {
@@ -116,9 +116,9 @@ export namespace Attribute {
 
             asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote;
 
-            getType(): AttributeType.Boolean;
+            readonly type: AttributeType.Boolean;
 
-            getValue(): boolean;
+            readonly value: boolean;
 
             asType(): Type.Remote;
 
@@ -156,9 +156,9 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote;
 
-        getType(): AttributeType.Long;
+        readonly type: AttributeType.Long;
 
-        getValue(): number;
+        readonly value: number;
     }
 
     export namespace Long {
@@ -167,9 +167,9 @@ export namespace Attribute {
 
             asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote;
 
-            getType(): AttributeType.Long;
+            readonly type: AttributeType.Long;
 
-            getValue(): number;
+            readonly value: number;
 
             asType(): Type.Remote;
 
@@ -207,9 +207,9 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote;
 
-        getType(): AttributeType.Double;
+        readonly type: AttributeType.Double;
 
-        getValue(): number;
+        readonly value: number;
     }
 
     export namespace Double {
@@ -218,9 +218,9 @@ export namespace Attribute {
 
             asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote;
 
-            getType(): AttributeType.Double;
+            readonly type: AttributeType.Double;
 
-            getValue(): number;
+            readonly value: number;
 
             asType(): Type.Remote;
 
@@ -258,9 +258,9 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.String.Remote;
 
-        getType(): AttributeType.String;
+        readonly type: AttributeType.String;
 
-        getValue(): string;
+        readonly value: string;
     }
 
     export namespace String {
@@ -269,9 +269,9 @@ export namespace Attribute {
 
             asRemote(transaction: TypeDBTransaction): Attribute.String.Remote;
 
-            getType(): AttributeType.String;
+            readonly type: AttributeType.String;
 
-            getValue(): string;
+            readonly value: string;
 
             asType(): Type.Remote;
 
@@ -309,9 +309,9 @@ export namespace Attribute {
 
         asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote;
 
-        getType(): AttributeType.DateTime;
+        readonly type: AttributeType.DateTime;
 
-        getValue(): Date;
+        readonly value: Date;
     }
 
     export namespace DateTime {
@@ -320,9 +320,9 @@ export namespace Attribute {
 
             asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote;
 
-            getType(): AttributeType.DateTime;
+            readonly type: AttributeType.DateTime;
 
-            getValue(): Date;
+            readonly value: Date;
 
             asType(): Type.Remote;
 

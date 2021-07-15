@@ -25,7 +25,7 @@ import { ClusterServerStub } from "./ClusterServerStub";
 
 export class ClusterServerStubFactory extends TypeDBStubFactory {
 
-    private _credential: TypeDBCredential;
+    private readonly _credential: TypeDBCredential;
 
     constructor(credential: TypeDBCredential) {
         super();
@@ -35,5 +35,4 @@ export class ClusterServerStubFactory extends TypeDBStubFactory {
     newTypeDBStub(address: string): ClusterServerStub {
         return ClusterServerStub.create(address, this._credential);
     }
-
 }

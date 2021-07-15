@@ -20,9 +20,12 @@
  */
 
 import { Options } from "typedb-protocol/common/options_pb";
+import { ErrorMessage } from "../../common/errors/ErrorMessage";
+import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
 
 namespace Opts {
-    export class Core {
+    export interface Core {
         infer?: boolean;
         traceInference?: boolean;
         explain?: boolean;
@@ -33,11 +36,11 @@ namespace Opts {
         schemaLockAcquireTimeoutMillis?: number;
     }
 
-    export class Cluster extends Core {
+    export interface Cluster extends Core {
         readAnyReplica?: boolean;
     }
 
-    export function proto(options: Opts.Core | Opts.Cluster): Options {
+    export function proto(options: TypeDBOptions): Options {
         const optionsProto = new Options();
         if (options) {
             if (options.infer != null) optionsProto.setInfer(options.infer);
@@ -48,43 +51,130 @@ namespace Opts {
             if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
             if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
             if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);
-            if (options instanceof Opts.Cluster) {
-                if ((options as Opts.Cluster).readAnyReplica != null) optionsProto.setReadAnyReplica((options as Opts.Cluster).readAnyReplica);
+            if (options.isCluster()) {
+                const clusterOptions = options as Opts.Cluster;
+                if (clusterOptions.readAnyReplica != null) optionsProto.setReadAnyReplica(clusterOptions.readAnyReplica);
             }
         }
         return optionsProto;
     }
 }
 
-export class TypeDBOptions extends Opts.Core {
+export class TypeDBOptions implements Opts.Core {
+
+    private _infer: boolean;
+    private _traceInference: boolean;
+    private _explain: boolean;
+    private _parallel: boolean;
+    private _prefetchSize: number;
+    private _prefetch: boolean;
+    private _sessionIdleTimeoutMillis: number;
+    private _schemaLockAcquireTimeoutMillis: number;
 
     constructor(obj: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
-        super();
         Object.assign(this, obj);
     }
 
-    public isCluster(): boolean {
+    isCluster(): boolean {
         return false;
     }
 
     proto(): Options {
         return Opts.proto(this);
     }
-}
 
-export class TypeDBClusterOptions extends Opts.Cluster {
-
-    constructor(obj: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
-        super();
-        Object.assign(this, obj);
+    get infer() {
+        return this._infer;
     }
 
-    public isCluster(): boolean {
+    set infer(value: boolean) {
+        this._infer = value;
+    }
+
+    get traceInference() {
+        return this._traceInference;
+    }
+
+    set traceInference(value: boolean) {
+        this._traceInference = value;
+    }
+
+    get explain() {
+        return this._explain;
+    }
+
+    set explain(value: boolean) {
+        this._explain = value;
+    }
+
+    get parallel() {
+        return this._parallel;
+    }
+
+    set parallel(value: boolean) {
+        this._parallel = value;
+    }
+
+    get prefetch() {
+        return this._prefetch;
+    }
+
+    set prefetch(value: boolean) {
+        this._prefetch = value;
+    }
+
+    get prefetchSize() {
+        return this._prefetchSize;
+    }
+
+    set prefetchSize(value: number) {
+        if (value < 1) {
+            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+        }
+        this._prefetchSize = value;
+    }
+
+    get sessionIdleTimeoutMillis() {
+        return this._sessionIdleTimeoutMillis;
+    }
+
+    set sessionIdleTimeoutMillis(value: number) {
+        if (value < 1) {
+            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+        }
+        this._sessionIdleTimeoutMillis = value;
+    }
+
+    get schemaLockAcquireTimeoutMillis() {
+        return this._schemaLockAcquireTimeoutMillis;
+    }
+
+    set schemaLockAcquireTimeoutMillis(value: number) {
+        if (value < 1) {
+            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+        }
+        this._schemaLockAcquireTimeoutMillis = value;
+    }
+}
+
+export class TypeDBClusterOptions extends TypeDBOptions implements Opts.Cluster {
+
+    private _readAnyReplica: boolean;
+
+    constructor(obj: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
+        super(obj);
+    }
+
+    isCluster(): boolean {
         return true;
     }
 
-    proto(): Options {
-        return Opts.proto(this);
+    get readAnyReplica() {
+        return this._readAnyReplica;
+    }
+
+    set readAnyReplica(value: boolean) {
+        this._readAnyReplica = value;
     }
 }
 

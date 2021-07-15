@@ -34,7 +34,6 @@ import { Type } from "./Type";
 export interface RelationType extends ThingType {
 
     asRemote(transaction: TypeDBTransaction): RelationType.Remote;
-
 }
 
 export namespace RelationType {

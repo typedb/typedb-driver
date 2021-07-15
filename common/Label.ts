@@ -20,28 +20,28 @@
  */
 
 export class Label {
-    private _scope: string;
-    private _name: string;
+    private readonly _scope: string;
+    private readonly _name: string;
 
     constructor(scope: string, label: string) {
         this._scope = scope;
         this._name = label;
     }
 
-    scope(): string {
+    get scope(): string {
         return this._scope;
     }
 
-    name(): string {
+    get name(): string {
         return this._name;
     }
 
-    scopedName(): string {
+    get scopedName(): string {
         return this._scope == null ? this._name : `${this._scope}:${this._name}`;
     }
 
     toString() {
-        return this.scopedName();
+        return this.scopedName;
     }
 
     equals(that: Label) {
@@ -58,5 +58,4 @@ export namespace Label {
     export function scoped(scope: string, name: string) {
         return new Label(scope, name);
     }
-
 }

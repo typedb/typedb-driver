@@ -28,20 +28,20 @@ import { tx } from "../../../connection/ConnectionStepsBase";
 import ValueType = AttributeType.ValueType;
 
 When("put attribute type: {type_label}, with value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {
-    await tx().concepts().putAttributeType(typeLabel, valueType);
+    await tx().concepts.putAttributeType(typeLabel, valueType);
 });
 
 Then("attribute\\({type_label}) get value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {
-    assert.strictEqual((await tx().concepts().getAttributeType(typeLabel)).getValueType(), valueType);
+    assert.strictEqual((await tx().concepts.getAttributeType(typeLabel)).valueType, valueType);
 });
 
 Then("attribute\\({type_label}) get supertype value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {
-    const supertype = await (await tx().concepts().getAttributeType(typeLabel)).asRemote(tx()).getSupertype();
-    assert.strictEqual((supertype as AttributeType).getValueType(), valueType);
+    const supertype = await (await tx().concepts.getAttributeType(typeLabel)).asRemote(tx()).getSupertype();
+    assert.strictEqual((supertype as AttributeType).valueType, valueType);
 });
 
 async function attributeTypeAsValueType(typeLabel: string, valueType: ValueType) {
-    const attributeType = await tx().concepts().getAttributeType(typeLabel);
+    const attributeType = await tx().concepts.getAttributeType(typeLabel);
     switch (valueType) {
         case ValueType.OBJECT:
             return attributeType;
@@ -63,14 +63,14 @@ async function attributeTypeAsValueType(typeLabel: string, valueType: ValueType)
 Then("attribute\\({type_label}) as\\({value_type}) get subtypes contain:", async (typeLabel: string, valueType: ValueType, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const attributeType = await attributeTypeAsValueType(typeLabel, valueType);
-    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel().scopedName()).collect();
+    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.label.scopedName).collect();
     await subLabels.every(sl => assert(actuals.includes(sl)));
 });
 
 Then("attribute\\({type_label}) as\\({value_type}) get subtypes do not contain:", async (typeLabel: string, valueType: ValueType, subLabelsTable: DataTable) => {
     const subLabels = parseList(subLabelsTable);
     const attributeType = await attributeTypeAsValueType(typeLabel, valueType);
-    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.getLabel().scopedName()).collect();
+    const actuals = await attributeType.asRemote(tx()).getSubtypes().map(tt => tt.label.scopedName).collect();
     await subLabels.every(sl => assert(!actuals.includes(sl)));
 });
 
@@ -100,28 +100,28 @@ Then("attribute\\({type_label}) as\\({value_type}) does not have any regex", asy
 
 Then("attribute\\({type_label}) get key owners contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
-    const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel().scopedName()).collect();
+    const attributeType = await tx().concepts.getAttributeType(typeLabel);
+    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get key owners do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
-    const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.getLabel().scopedName()).collect();
+    const attributeType = await tx().concepts.getAttributeType(typeLabel);
+    const actuals = await attributeType.asRemote(tx()).getOwners(true).map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get attribute owners contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
-    const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel().scopedName()).collect();
+    const attributeType = await tx().concepts.getAttributeType(typeLabel);
+    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(actuals.includes(ol)));
 });
 
 Then("attribute\\({type_label}) get attribute owners do not contain:", async (typeLabel: string, ownerLabelsTable: DataTable) => {
     const ownerLabels = parseList(ownerLabelsTable);
-    const attributeType = await tx().concepts().getAttributeType(typeLabel);
-    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.getLabel().scopedName()).collect();
+    const attributeType = await tx().concepts.getAttributeType(typeLabel);
+    const actuals = await attributeType.asRemote(tx()).getOwners(false).map(tt => tt.label.scopedName).collect();
     await ownerLabels.every(ol => assert(!actuals.includes(ol)));
 });

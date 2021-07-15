@@ -35,7 +35,7 @@ export interface Relation extends Thing {
 
     asRemote(transaction: TypeDBTransaction): Relation.Remote;
 
-    getType(): RelationType;
+    readonly type: RelationType;
 }
 
 export namespace Relation {
@@ -44,7 +44,7 @@ export namespace Relation {
 
         asRemote(transaction: TypeDBTransaction): Relation.Remote;
 
-        getType(): RelationType;
+        readonly type: RelationType;
 
         asType(): Type.Remote;
 

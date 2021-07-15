@@ -29,8 +29,8 @@ import { ThingImpl, TypeImpl } from "../../dependencies_internal";
 
 export class ConceptMapImpl implements ConceptMap {
 
-    private _concepts: Map<string, Concept>;
-    private _explainables: ConceptMap.Explainables;
+    private readonly _concepts: Map<string, Concept>;
+    private readonly _explainables: ConceptMap.Explainables;
 
     constructor(concepts: Map<string, Concept>, explainables: ConceptMap.Explainables) {
         this._concepts = concepts;
@@ -45,14 +45,13 @@ export class ConceptMapImpl implements ConceptMap {
         return this._concepts.get(variable);
     }
 
-    map(): Map<string, Concept> {
+    get map(): Map<string, Concept> {
         return this._concepts;
     }
 
-    explainables(): ConceptMap.Explainables {
+    get explainables(): ConceptMap.Explainables {
         return this._explainables;
     }
-
 }
 
 /* eslint no-inner-declarations: "off" */
@@ -97,9 +96,9 @@ export namespace ConceptMapImpl {
     }
 
     export class ExplainablesImpl implements ConceptMap.Explainables {
-        private _relations: Map<string, ConceptMap.Explainable>;
-        private _attributes: Map<string, ConceptMap.Explainable>;
-        private _ownerships: Map<[string, string], ConceptMap.Explainable>;
+        private readonly _relations: Map<string, ConceptMap.Explainable>;
+        private readonly _attributes: Map<string, ConceptMap.Explainable>;
+        private readonly _ownerships: Map<[string, string], ConceptMap.Explainable>;
 
         constructor(relations: Map<string, ConceptMap.Explainable>, attributes: Map<string, ConceptMap.Explainable>,
                     ownerships: Map<[string, string], ConceptMap.Explainable>) {
@@ -127,37 +126,34 @@ export namespace ConceptMapImpl {
             throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
         }
 
-        relations(): Map<string, ConceptMap.Explainable> {
+        get relations(): Map<string, ConceptMap.Explainable> {
             return this._relations;
         }
 
-        attributes(): Map<string, ConceptMap.Explainable> {
+        get attributes(): Map<string, ConceptMap.Explainable> {
             return this._attributes;
         }
 
-        ownerships(): Map<[string, string], ConceptMap.Explainable> {
+        get ownerships(): Map<[string, string], ConceptMap.Explainable> {
             return this._ownerships;
         }
-
     }
 
     export class ExplainableImpl implements ConceptMap.Explainable {
-        private _conjunction: string;
-        private _id: number;
+        private readonly _conjunction: string;
+        private readonly _id: number;
 
         constructor(conjunction: string, id: number) {
             this._conjunction = conjunction;
             this._id = id;
         }
 
-        conjunction(): string {
+        get conjunction(): string {
             return this._conjunction;
         }
 
-        id(): number {
+        get id(): number {
             return this._id;
         }
-
     }
-
 }

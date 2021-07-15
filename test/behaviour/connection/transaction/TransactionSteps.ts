@@ -114,7 +114,7 @@ Then('(for each )session(,) transaction(s) close(s)', async function () {
 Then('(for each )session(,) transaction(s)( in parallel) has/have type: {transaction_type}', function (type: TransactionType) {
     for (const session of sessions) {
         for (const transaction of sessionsToTransactions.get(session)) {
-            assert(transaction.type() === type);
+            assert(transaction.type === type);
         }
     }
 });
@@ -124,7 +124,7 @@ Then('(for each )session(,) transaction(s)( in parallel) has/have type(s):', fun
     for (const session of sessions) {
         const transactionArray = sessionsToTransactions.get(session)
         for (let i = 0; i < transactionArray.length; i++) {
-            assert(transactionArray[i].type() === typeArray[i]);
+            assert(transactionArray[i].type === typeArray[i]);
         }
     }
 });

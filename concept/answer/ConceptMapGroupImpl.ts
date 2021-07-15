@@ -36,14 +36,13 @@ export class ConceptMapGroupImpl implements ConceptMapGroup {
         this._conceptMaps = conceptMaps;
     }
 
-    owner(): Concept {
+    get owner(): Concept {
         return this._owner;
     }
 
-    conceptMaps(): ConceptMap[] {
+    get conceptMaps(): ConceptMap[] {
         return this._conceptMaps;
     }
-
 }
 
 export namespace ConceptMapGroupImpl {
@@ -55,5 +54,4 @@ export namespace ConceptMapGroupImpl {
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
             .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)) as ConceptMap[]);
     }
-
 }

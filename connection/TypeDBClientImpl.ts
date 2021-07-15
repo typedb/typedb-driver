@@ -60,7 +60,7 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
         throw new TypeDBClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
     }
 
-    databases(): TypeDBDatabaseManagerImpl {
+    get databases(): TypeDBDatabaseManagerImpl {
         return this._databases;
     }
 
@@ -68,8 +68,8 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
         if (!options) options = TypeDBOptions.core();
         const session = new TypeDBSessionImpl(database, type, options, this);
         await session.open();
-        if (this._sessions[session.sessionId()]) throw new TypeDBClientError(SESSION_ID_EXISTS.message(session.sessionId()));
-        this._sessions[session.sessionId()] = session;
+        if (this._sessions[session.id]) throw new TypeDBClientError(SESSION_ID_EXISTS.message(session.id));
+        this._sessions[session.id] = session;
         return session;
     }
 
@@ -83,7 +83,7 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
     }
 
     closedSession(session: TypeDBSessionImpl): void {
-        delete this._sessions[session.sessionId()];
+        delete this._sessions[session.id];
     }
 
     stub(): TypeDBStub {
@@ -93,5 +93,4 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
     transmitter(): RequestTransmitter {
         return this._requestTransmitter;
     }
-
 }

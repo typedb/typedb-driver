@@ -49,7 +49,7 @@ export class TypeDBClientError extends Error {
         }
     }
 
-    errorMessage(): ErrorMessage {
+    get errorMessage(): ErrorMessage {
         return this._errorMessage;
     }
 }

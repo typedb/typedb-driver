@@ -19,9 +19,7 @@
  * under the License.
  */
 
-const { TypeDB } = require("typedb-client/TypeDB");
-const { SessionType } = require("typedb-client/api/connection/TypeDBSession");
-const { TransactionType } = require("typedb-client/api/connection/TypeDBTransaction");
+const { TypeDB, SessionType, TransactionType } = require("typedb-client");
 
 jest.setTimeout(15000);
 
@@ -29,38 +27,37 @@ let client;
 
 beforeEach(async () => {
     client = TypeDB.coreClient();
-    await client.databases().create("thisisadatabase");
+    await client.databases.create("typedb");
 })
 
 afterEach(async () => {
-    const db = await client.databases().get("thisisadatabase");
+    const db = await client.databases.get("typedb");
     await db.delete();
     client.close();
 });
 
-
 describe("Basic TypeDBClient Tests", () => {
     test("define with concepts client", async () => {
-        let session = await client.session("thisisadatabase", SessionType.SCHEMA);
+        let session = await client.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.concepts().putEntityType("lion");
+        await tx.concepts.putEntityType("lion");
         await tx.commit();
-        await session.close();
+        return await session.close();
     });
 
     test("define by running query", async () => {
-        let session = await client.session("thisisadatabase", SessionType.SCHEMA);
+        let session = await client.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.query("define person sub entity, has name; name sub attribute, value string;");
+        await tx.query.match("define person sub entity, owns name; name sub attribute, value string;");
         await tx.commit();
-        await session.close();
+        return await session.close();
     });
 
     test("match", async () => {
-        let session = await client.session("thisisadatabase", SessionType.DATA);
+        let session = await client.session("typedb", SessionType.DATA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.query("match $x sub thing; get;");
+        await tx.query.match("match $x sub thing;");
         await tx.close();
-        await session.close();
+        return await session.close();
     });
 });

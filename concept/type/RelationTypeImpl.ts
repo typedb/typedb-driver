@@ -31,8 +31,8 @@ import { RelationImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_in
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    constructor(label: string, isRoot: boolean) {
-        super(label, isRoot);
+    constructor(label: string, root: boolean) {
+        super(label, root);
     }
 
     protected get className(): string {
@@ -40,7 +40,7 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
     }
 
     isRelationType(): boolean {
@@ -60,8 +60,8 @@ export namespace RelationTypeImpl {
 
     export class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-            super(transaction, label, isRoot);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+            super(transaction, label, root);
         }
 
         protected get className(): string {
@@ -69,7 +69,7 @@ export namespace RelationTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
         isRelationType(): boolean {
@@ -81,7 +81,7 @@ export namespace RelationTypeImpl {
         }
 
         async create(): Promise<Relation> {
-            const request = RequestBuilder.Type.RelationType.createReq(this.getLabel());
+            const request = RequestBuilder.Type.RelationType.createReq(this.label);
             return this.execute(request).then((res) => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
         }
 
@@ -101,11 +101,11 @@ export namespace RelationTypeImpl {
         getRelates(roleLabel: string): Promise<RoleType>;
         getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType> {
             if (roleLabel) {
-                const request = RequestBuilder.Type.RelationType.getRelatesByRoleReq(this.getLabel(), roleLabel);
+                const request = RequestBuilder.Type.RelationType.getRelatesByRoleReq(this.label, roleLabel);
                 return this.execute(request)
                     .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesForRoleLabelRes().getRoleType()));
             } else {
-                const request = RequestBuilder.Type.RelationType.getRelatesReq(this.getLabel());
+                const request = RequestBuilder.Type.RelationType.getRelatesReq(this.label);
                 return this.stream(request)
                     .flatMap((resPart) => {
                         return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList())
@@ -119,15 +119,15 @@ export namespace RelationTypeImpl {
         async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
             let request;
             if (overriddenLabel) {
-                request = RequestBuilder.Type.RelationType.setRelatesOverriddenReq(this.getLabel(), roleLabel, overriddenLabel);
+                request = RequestBuilder.Type.RelationType.setRelatesOverriddenReq(this.label, roleLabel, overriddenLabel);
             } else {
-                request = RequestBuilder.Type.RelationType.setRelatesReq(this.getLabel(), roleLabel);
+                request = RequestBuilder.Type.RelationType.setRelatesReq(this.label, roleLabel);
             }
             await this.execute(request);
         }
 
         async unsetRelates(roleLabel: string): Promise<void> {
-            const request = RequestBuilder.Type.RelationType.unsetRelatesReq(this.getLabel(), roleLabel);
+            const request = RequestBuilder.Type.RelationType.unsetRelatesReq(this.label, roleLabel);
             await this.execute(request);
         }
     }

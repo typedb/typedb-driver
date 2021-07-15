@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Database } from "../../api/connection/database/Database";
 import { TypeDBClient } from "../../api/connection/TypeDBClient";
 import { TypeDBCredential } from "../../api/connection/TypeDBCredential";
@@ -79,11 +78,11 @@ export class ClusterClient implements TypeDBClient.Cluster {
         }
     }
 
-    databases(): ClusterDatabaseManager {
+    get databases(): ClusterDatabaseManager {
         return this._databaseManagers;
     }
 
-    users(): ClusterUserManager {
+    get users(): ClusterUserManager {
         return this._userManager;
     }
 
@@ -149,7 +148,6 @@ export class ClusterClient implements TypeDBClient.Cluster {
         }
         throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._addresses.join(",")));
     }
-
 }
 
 class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {
@@ -163,7 +161,7 @@ class OpenSessionFailsafeTask extends FailsafeTask<ClusterSession> {
     }
 
     run(replica: Database.Replica): Promise<ClusterSession> {
-        const session = new ClusterSession(this.client, replica.address());
-        return session.open(replica.address(), this.database, this._type, this._options);
+        const session = new ClusterSession(this.client, replica.address);
+        return session.open(replica.address, this.database, this._type, this._options);
     }
 }

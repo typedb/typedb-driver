@@ -26,5 +26,4 @@ export interface Numeric {
     isNaN(): boolean;
 
     asNumber(): number;
-
 }

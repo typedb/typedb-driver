@@ -25,31 +25,31 @@ import { client } from "../ConnectionStepsBase";
 import assert = require("assert");
 
 Given("users contains: {word}", async (name: string) => {
-    const users = await getClient().users().all();
-    users.map((user: User) => user.name()).includes(name);
+    const users = await getClient().users.all();
+    users.map((user: User) => user.name).includes(name);
 });
 
 Then("users not contains: {word}", async (name: string) => {
-    const users = await getClient().users().all();
-    !users.map((user: User) => user.name()).includes(name);
+    const users = await getClient().users.all();
+    !users.map((user: User) => user.name).includes(name);
 });
 
 Then("users create: {word}, {word}", async (name: string, password: string) => {
-    await getClient().users().create(name, password);
+    await getClient().users.create(name, password);
 });
 
 Then("user password: {word}, {word}", async (name: string, password: string) => {
-    const user = await getClient().users().get(name);
+    const user = await getClient().users.get(name);
     await user.password(password);
 });
 
 Then("user connect: {word}, {word}", async (name: string, password: string) => {
     const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(name, password, process.env.ROOT_CA));
-    await client.databases().all()
+    await client.databases.all()
 })
 
 Then("user delete: {word}", async (name: string) => {
-    const user = await getClient().users().get(name);
+    const user = await getClient().users.get(name);
     await user.delete();
 });
 

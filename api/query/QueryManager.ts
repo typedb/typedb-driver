@@ -48,5 +48,4 @@ export interface QueryManager {
     undefine(query: string, options?: TypeDBOptions): Promise<void>;
 
     explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation>;
-
 }

@@ -40,7 +40,7 @@ export class ClusterUserManager implements UserManager {
 
     all(): Promise<User[]> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address()).usersAll(RequestBuilder.Cluster.UserManager.allReq())
+            return this._client.stub(replica.address).usersAll(RequestBuilder.Cluster.UserManager.allReq())
                 .then((res) => {
                     return res.getNamesList().map(name => new ClusterUser(this._client, name));
                 });
@@ -50,14 +50,14 @@ export class ClusterUserManager implements UserManager {
 
     contains(name: string): Promise<boolean> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address()).usersContains(RequestBuilder.Cluster.UserManager.containsReq(name))
+            return this._client.stub(replica.address).usersContains(RequestBuilder.Cluster.UserManager.containsReq(name))
         })
         return failsafeTask.runPrimaryReplica();
     }
 
     create(name: string, password: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address()).userCreate(RequestBuilder.Cluster.UserManager.createReq(name, password))
+            return this._client.stub(replica.address).userCreate(RequestBuilder.Cluster.UserManager.createReq(name, password))
         })
         return failsafeTask.runPrimaryReplica();
     }
@@ -66,7 +66,6 @@ export class ClusterUserManager implements UserManager {
         if (await this.contains(name)) return new ClusterUser(this._client, name);
         else throw new TypeDBClientError(CLUSTER_USER_DOES_NOT_EXIST.message(name));
     }
-
 }
 
 class UserManagerFailsafeTask<T> extends FailsafeTask<T> {
@@ -81,5 +80,4 @@ class UserManagerFailsafeTask<T> extends FailsafeTask<T> {
     run(replica: Database.Replica): Promise<T> {
         return this._task(replica);
     }
-
 }

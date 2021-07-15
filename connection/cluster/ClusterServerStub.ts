@@ -117,15 +117,15 @@ export namespace ClusterServerStub {
     export function create(address: string, credential: TypeDBCredential) {
         const metaCallback = (_params: any, callback: any) => {
             const meta = new Metadata();
-            meta.add('username', credential.username());
-            meta.add('password', credential.password());
+            meta.add('username', credential.username);
+            meta.add('password', credential.password);
             callback(null, meta);
         }
         const callCreds = CallCredentials.createFromMetadataGenerator(metaCallback);
 
         let stubCredentials;
-        if (credential.tlsRootCAPath() != null) {
-            const rootCert = fs.readFileSync(credential.tlsRootCAPath());
+        if (credential.tlsRootCAPath != null) {
+            const rootCert = fs.readFileSync(credential.tlsRootCAPath);
             stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
         } else {
             stubCredentials = credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);

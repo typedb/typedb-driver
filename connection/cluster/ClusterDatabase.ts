@@ -34,7 +34,7 @@ export class ClusterDatabase implements Database.Cluster {
 
     private constructor(client: ClusterClient, database: string) {
         this._databases = {};
-        const clusterDbMgr = client.databases();
+        const clusterDbMgr = client.databases;
         for (const address of Object.keys(clusterDbMgr.databaseManagers())) {
             const databaseManager = clusterDbMgr.databaseManagers()[address];
             this._databases[address] = new TypeDBDatabaseImpl(database, databaseManager.stub());
@@ -47,23 +47,22 @@ export class ClusterDatabase implements Database.Cluster {
     static of(protoDB: ClusterDatabaseProto, client: ClusterClient): ClusterDatabase {
         const database = protoDB.getName();
         const databaseClusterRPC = new ClusterDatabase(client, database);
-        databaseClusterRPC.replicas().push(...protoDB.getReplicasList().map(rep => DatabaseReplica.of(rep, databaseClusterRPC)));
+        databaseClusterRPC.replicas.push(...protoDB.getReplicasList().map(rep => DatabaseReplica.of(rep, databaseClusterRPC)));
         console.info(`Discovered database cluster: ${databaseClusterRPC}`);
         return databaseClusterRPC;
     }
 
-    primaryReplica(): DatabaseReplica {
-        const primaryReplicas = this._replicas.filter(rep => rep.isPrimary());
-        if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term() > current.term() ?
-            next : current);
+    get primaryReplica(): DatabaseReplica {
+        const primaryReplicas = this._replicas.filter(rep => rep.primary);
+        if (primaryReplicas.length) return primaryReplicas.reduce((current, next) => next.term > current.term ? next : current);
         else return null;
     }
 
-    preferredReplica(): DatabaseReplica {
-        return this._replicas.find(rep => rep.isPreferred()) || this._replicas[0];
+    get preferredReplica(): DatabaseReplica {
+        return this._replicas.find(rep => rep.preferred) || this._replicas[0];
     }
 
-    name(): string {
+    get name(): string {
         return this._name;
     }
 
@@ -76,7 +75,7 @@ export class ClusterDatabase implements Database.Cluster {
         return this._databases[Object.keys(this._databases)[0]].schema();
     }
 
-    replicas(): DatabaseReplica[] {
+    get replicas(): DatabaseReplica[] {
         return this._replicas;
     }
 
@@ -94,7 +93,7 @@ export class DatabaseReplica implements Database.Replica {
 
     private constructor(database: ClusterDatabase, address: string, term: number, isPrimary: boolean, isPreferred: boolean) {
         this._database = database;
-        this._id = new ReplicaId(address, database.name());
+        this._id = new ReplicaId(address, database.name);
         this._term = term;
         this._isPrimary = isPrimary;
         this._isPreferred = isPreferred;
@@ -104,35 +103,35 @@ export class DatabaseReplica implements Database.Replica {
         return new DatabaseReplica(database, replica.getAddress(), replica.getTerm(), replica.getPrimary(), replica.getPreferred());
     }
 
-    id(): ReplicaId {
+    get id(): ReplicaId {
         return this._id;
     }
 
-    database(): Database.Cluster {
+    get database(): Database.Cluster {
         return this._database;
     }
 
-    term(): number {
+    get term(): number {
         return this._term;
     }
 
-    isPrimary(): boolean {
+    get primary(): boolean {
         return this._isPrimary;
     }
 
-    isPreferred(): boolean {
+    get preferred(): boolean {
         return this._isPreferred;
     }
 
-    address(): string {
-        return this.id().address();
+    get address(): string {
+        return this.id.address;
     }
 
     async delete(): Promise<void> {
         await this._database.delete();
     }
 
-    name(): string {
+    get name(): string {
         return this.toString();
     }
 
@@ -154,7 +153,7 @@ class ReplicaId {
         this._databaseName = databaseName;
     }
 
-    address(): string {
+    get address(): string {
         return this._address;
     }
 
@@ -173,6 +172,6 @@ class DeleteDatabaseFailsafeTask extends FailsafeTask<void> {
     }
 
     async run(replica: Database.Replica): Promise<void> {
-        await this._databases[replica.address()].delete();
+        await this._databases[replica.address].delete();
     }
 }

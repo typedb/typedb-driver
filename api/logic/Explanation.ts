@@ -24,12 +24,11 @@ import { Rule } from "./Rule";
 
 export interface Explanation {
 
-    rule(): Rule;
+    readonly rule: Rule;
 
-    condition(): ConceptMap;
+    readonly condition: ConceptMap;
 
-    conclusion(): ConceptMap;
+    readonly conclusion: ConceptMap;
 
-    variableMapping(): Map<string, Set<string>>;
-
+    readonly variableMapping: Map<string, Set<string>>;
 }

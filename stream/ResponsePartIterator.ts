@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 import { Transaction } from "typedb-protocol/common/transaction_pb";
 import { ErrorMessage } from "../common/errors/ErrorMessage";
 import { TypeDBClientError } from "../common/errors/TypeDBClientError";
@@ -29,7 +28,6 @@ import { ResponseCollector } from "./ResponseCollector";
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
 import ResCase = Transaction.ResPart.ResCase;
-
 
 export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> {
 
@@ -71,5 +69,4 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
                 return res;
         }
     }
-
 }

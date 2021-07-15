@@ -28,5 +28,4 @@ export class ClusterServerClient extends TypeDBClientImpl {
     constructor(address: string, credential: TypeDBCredential) {
         super(address, new ClusterServerStubFactory(credential));
     }
-
 }

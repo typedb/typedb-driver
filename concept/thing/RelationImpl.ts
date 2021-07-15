@@ -34,8 +34,8 @@ export class RelationImpl extends ThingImpl implements Relation {
 
     private readonly _type: RelationType;
 
-    constructor(iid: string, isInferred: boolean, type: RelationType) {
-        super(iid, isInferred);
+    constructor(iid: string, inferred: boolean, type: RelationType) {
+        super(iid, inferred);
         this._type = type;
     }
 
@@ -44,10 +44,10 @@ export class RelationImpl extends ThingImpl implements Relation {
     }
 
     asRemote(transaction: TypeDBTransaction): Relation.Remote {
-        return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
+        return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.iid, this.inferred, this.type);
     }
 
-    getType(): RelationType {
+    get type(): RelationType {
         return this._type;
     }
 
@@ -72,8 +72,8 @@ export namespace RelationImpl {
 
         private _type: RelationType;
 
-        constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: RelationType) {
-            super(transaction, iid, isInferred);
+        constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: RelationType) {
+            super(transaction, iid, inferred);
             this._type = type;
         }
 
@@ -82,10 +82,10 @@ export namespace RelationImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Relation.Remote {
-            return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.getIID(), this.isInferred(), this.getType());
+            return new RelationImpl.Remote((transaction as TypeDBTransaction.Extended), this.iid, this.inferred, this.type);
         }
 
-        getType(): RelationType {
+        get type(): RelationType {
             return this._type;
         }
 
@@ -98,21 +98,21 @@ export namespace RelationImpl {
         }
 
         async addPlayer(roleType: RoleType, player: Thing): Promise<void> {
-            const request = RequestBuilder.Thing.Relation.addPlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
+            const request = RequestBuilder.Thing.Relation.addPlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
             await this.execute(request);
         }
 
         getPlayers(roleTypes?: RoleType[]): Stream<Thing> {
             if (!roleTypes) roleTypes = []
             const roleTypesProtos = roleTypes.map((roleType) => RoleType.proto(roleType));
-            const request = RequestBuilder.Thing.Relation.getPlayersReq(this.getIID(), roleTypesProtos);
+            const request = RequestBuilder.Thing.Relation.getPlayersReq(this.iid, roleTypesProtos);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersResPart().getThingsList()))
                 .map((thingProto) => ThingImpl.of(thingProto));
         }
 
         async getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>> {
-            const request = RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq(this.getIID());
+            const request = RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq(this.iid);
             const rolePlayersMap = new Map<RoleType, Thing[]>();
             await this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetPlayersByRoleTypeResPart().getRoleTypesWithPlayersList()))
@@ -130,12 +130,12 @@ export namespace RelationImpl {
         }
 
         async removePlayer(roleType: RoleType, player: Thing): Promise<void> {
-            const request = RequestBuilder.Thing.Relation.removePlayerReq(this.getIID(), RoleType.proto(roleType), Thing.proto(player));
+            const request = RequestBuilder.Thing.Relation.removePlayerReq(this.iid, RoleType.proto(roleType), Thing.proto(player));
             await this.execute(request);
         }
 
         getRelating(): Stream<RoleType> {
-            const request = RequestBuilder.Thing.Relation.getRelatingReq(this.getIID());
+            const request = RequestBuilder.Thing.Relation.getRelatingReq(this.iid);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRelationGetRelatingResPart().getRoleTypesList()))
                 .map((roleTypeProto) => RoleTypeImpl.of(roleTypeProto));
@@ -146,7 +146,7 @@ export namespace RelationImpl {
             let next = iter.next();
             while (!next.done) {
                 const roleType = next.value;
-                if (roleType.getLabel().scopedName() === role.getLabel().scopedName()) {
+                if (roleType.label.scopedName === role.label.scopedName) {
                     return roleType;
                 }
                 next = iter.next();

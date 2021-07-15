@@ -50,5 +50,4 @@ export interface ConceptManager {
     getAttributeType(label: string): Promise<AttributeType>;
 
     putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType>;
-
 }

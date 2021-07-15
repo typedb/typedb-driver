@@ -38,8 +38,8 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
 
     private readonly _type: AttributeType;
 
-    protected constructor(iid: string, isInferred: boolean, type: AttributeType) {
-        super(iid, isInferred);
+    protected constructor(iid: string, inferred: boolean, type: AttributeType) {
+        super(iid, inferred);
         this._type = type;
     }
 
@@ -49,11 +49,11 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return true;
     }
 
-    getType(): AttributeType {
+    get type(): AttributeType {
         return this._type;
     }
 
-    abstract getValue(): boolean | string | number | Date;
+    abstract get value(): boolean | string | number | Date;
 
     isBoolean(): boolean {
         return false;
@@ -106,18 +106,18 @@ export namespace AttributeImpl {
         if (!thingProto) return null;
         const attrType = AttributeTypeImpl.of(thingProto.getType());
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        const isInferred = thingProto.getInferred();
+        const inferred = thingProto.getInferred();
         switch (thingProto.getType().getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
-                return new AttributeImpl.Boolean(iid, isInferred, attrType.asBoolean(), thingProto.getValue().getBoolean());
+                return new AttributeImpl.Boolean(iid, inferred, attrType.asBoolean(), thingProto.getValue().getBoolean());
             case AttributeTypeProto.ValueType.LONG:
-                return new AttributeImpl.Long(iid, isInferred, attrType.asLong(), thingProto.getValue().getLong());
+                return new AttributeImpl.Long(iid, inferred, attrType.asLong(), thingProto.getValue().getLong());
             case AttributeTypeProto.ValueType.DOUBLE:
-                return new AttributeImpl.Double(iid, isInferred, attrType.asDouble(), thingProto.getValue().getDouble());
+                return new AttributeImpl.Double(iid, inferred, attrType.asDouble(), thingProto.getValue().getDouble());
             case AttributeTypeProto.ValueType.STRING:
-                return new AttributeImpl.String(iid, isInferred, attrType.asString(), thingProto.getValue().getString());
+                return new AttributeImpl.String(iid, inferred, attrType.asString(), thingProto.getValue().getString());
             case AttributeTypeProto.ValueType.DATETIME:
-                return new AttributeImpl.DateTime(iid, isInferred, attrType.asDateTime(), new Date(thingProto.getValue().getDateTime()));
+                return new AttributeImpl.DateTime(iid, inferred, attrType.asDateTime(), new Date(thingProto.getValue().getDateTime()));
             default:
                 throw new TypeDBClientError(BAD_VALUE_TYPE.message(thingProto.getType().getValueType()));
         }
@@ -127,25 +127,25 @@ export namespace AttributeImpl {
 
         private readonly _type: AttributeType;
 
-        protected constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType, ..._: any) {
-            super(transaction, iid, isInferred);
+        protected constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType, ..._: any) {
+            super(transaction, iid, inferred);
             this._type = type;
         }
 
         abstract asRemote(transaction: TypeDBTransaction): Attribute.Remote;
 
-        getType(): AttributeType {
+        get type(): AttributeType {
             return this._type;
         }
 
-        abstract getValue(): boolean | string | number | Date;
+        abstract get value(): boolean | string | number | Date;
 
         getOwners(ownerType?: ThingType): Stream<Thing> {
             let request;
             if (!ownerType) {
-                request = RequestBuilder.Thing.Attribute.getOwnersReq(this.getIID());
+                request = RequestBuilder.Thing.Attribute.getOwnersReq(this.iid);
             } else {
-                request = RequestBuilder.Thing.Attribute.getOwnersByTypeReq(this.getIID(), ThingType.proto(ownerType));
+                request = RequestBuilder.Thing.Attribute.getOwnersByTypeReq(this.iid, ThingType.proto(ownerType));
             }
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeGetOwnersResPart().getThingsList()))
@@ -204,8 +204,8 @@ export namespace AttributeImpl {
     export class Boolean extends AttributeImpl implements Attribute.Boolean {
         private readonly _value: boolean;
 
-        constructor(iid: string, isInferred: boolean, type: AttributeType.Boolean, value: boolean) {
-            super(iid, isInferred, type);
+        constructor(iid: string, inferred: boolean, type: AttributeType.Boolean, value: boolean) {
+            super(iid, inferred, type);
             this._value = value;
         }
 
@@ -214,14 +214,14 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote {
-            return new AttributeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+            return new AttributeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
         }
 
-        getType(): AttributeType.Boolean {
-            return super.getType().asBoolean();
+        get type(): AttributeType.Boolean {
+            return super.type.asBoolean();
         }
 
-        getValue(): boolean {
+        get value(): boolean {
             return this._value;
         }
 
@@ -240,8 +240,8 @@ export namespace AttributeImpl {
 
             private readonly _value: boolean;
 
-            constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Boolean, value: boolean) {
-                super(transaction, iid, isInferred, type);
+            constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType.Boolean, value: boolean) {
+                super(transaction, iid, inferred, type);
                 this._value = value;
             }
 
@@ -250,14 +250,14 @@ export namespace AttributeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): Attribute.Boolean.Remote {
-                return new AttributeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+                return new AttributeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
             }
 
-            getType(): AttributeType.Boolean {
-                return super.getType().asBoolean();
+            get type(): AttributeType.Boolean {
+                return super.type.asBoolean();
             }
 
-            getValue(): boolean {
+            get value(): boolean {
                 return this._value;
             }
 
@@ -274,8 +274,8 @@ export namespace AttributeImpl {
     export class Long extends AttributeImpl implements Attribute.Long {
         private readonly _value: number;
 
-        constructor(iid: string, isInferred: boolean, type: AttributeType.Long, value: number) {
-            super(iid, isInferred, type);
+        constructor(iid: string, inferred: boolean, type: AttributeType.Long, value: number) {
+            super(iid, inferred, type);
             this._value = value;
         }
 
@@ -284,14 +284,14 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote {
-            return new AttributeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+            return new AttributeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
         }
 
-        getType(): AttributeType.Long {
-            return super.getType().asLong();
+        get type(): AttributeType.Long {
+            return super.type.asLong();
         }
 
-        getValue(): number {
+        get value(): number {
             return this._value;
         }
 
@@ -309,8 +309,8 @@ export namespace AttributeImpl {
         export class Remote extends AttributeImpl.Remote implements Attribute.Long.Remote {
             private readonly _value: number;
 
-            constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Long, value: number) {
-                super(transaction, iid, isInferred, type);
+            constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType.Long, value: number) {
+                super(transaction, iid, inferred, type);
                 this._value = value;
             }
 
@@ -319,14 +319,14 @@ export namespace AttributeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): Attribute.Long.Remote {
-                return new AttributeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+                return new AttributeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
             }
 
-            getType(): AttributeType.Long {
-                return super.getType().asLong();
+            get type(): AttributeType.Long {
+                return super.type.asLong();
             }
 
-            getValue(): number {
+            get value(): number {
                 return this._value;
             }
 
@@ -343,8 +343,8 @@ export namespace AttributeImpl {
     export class Double extends AttributeImpl implements Attribute.Double {
         private readonly _value: number;
 
-        constructor(iid: string, isInferred: boolean, type: AttributeType.Double, value: number) {
-            super(iid, isInferred, type);
+        constructor(iid: string, inferred: boolean, type: AttributeType.Double, value: number) {
+            super(iid, inferred, type);
             this._value = value;
         }
 
@@ -353,14 +353,14 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote {
-            return new AttributeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+            return new AttributeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
         }
 
-        getType(): AttributeType.Double {
-            return super.getType().asDouble();
+        get type(): AttributeType.Double {
+            return super.type.asDouble();
         }
 
-        getValue(): number {
+        get value(): number {
             return this._value;
         }
 
@@ -378,8 +378,8 @@ export namespace AttributeImpl {
         export class Remote extends AttributeImpl.Remote implements Attribute.Double.Remote {
             private readonly _value: number;
 
-            constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.Double, value: number) {
-                super(transaction, iid, isInferred, type);
+            constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType.Double, value: number) {
+                super(transaction, iid, inferred, type);
                 this._value = value;
             }
 
@@ -388,14 +388,14 @@ export namespace AttributeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): Attribute.Double.Remote {
-                return new AttributeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+                return new AttributeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
             }
 
-            getType(): AttributeType.Double {
-                return super.getType().asDouble();
+            get type(): AttributeType.Double {
+                return super.type.asDouble();
             }
 
-            getValue(): number {
+            get value(): number {
                 return this._value;
             }
 
@@ -412,8 +412,8 @@ export namespace AttributeImpl {
     export class String extends AttributeImpl implements Attribute.String {
         private _value: string;
 
-        constructor(iid: string, isInferred: boolean, type: AttributeType.String, value: string) {
-            super(iid, isInferred, type);
+        constructor(iid: string, inferred: boolean, type: AttributeType.String, value: string) {
+            super(iid, inferred, type);
             this._value = value;
         }
 
@@ -422,14 +422,14 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Attribute.String.Remote {
-            return new AttributeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+            return new AttributeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
         }
 
-        getType(): AttributeType.String {
-            return super.getType().asString();
+        get type(): AttributeType.String {
+            return super.type.asString();
         }
 
-        getValue(): string {
+        get value(): string {
             return this._value;
         }
 
@@ -447,8 +447,8 @@ export namespace AttributeImpl {
         export class Remote extends AttributeImpl.Remote implements Attribute.String.Remote {
             private readonly _value: string;
 
-            constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.String, value: string) {
-                super(transaction, iid, isInferred, type);
+            constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType.String, value: string) {
+                super(transaction, iid, inferred, type);
                 this._value = value;
             }
 
@@ -457,14 +457,14 @@ export namespace AttributeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): Attribute.String.Remote {
-                return new AttributeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+                return new AttributeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
             }
 
-            getType(): AttributeType.String {
-                return super.getType().asString();
+            get type(): AttributeType.String {
+                return super.type.asString();
             }
 
-            getValue(): string {
+            get value(): string {
                 return this._value;
             }
 
@@ -481,8 +481,8 @@ export namespace AttributeImpl {
     export class DateTime extends AttributeImpl implements Attribute.DateTime {
         private readonly _value: Date;
 
-        constructor(iid: string, isInferred: boolean, type: AttributeType.DateTime, value: Date) {
-            super(iid, isInferred, type);
+        constructor(iid: string, inferred: boolean, type: AttributeType.DateTime, value: Date) {
+            super(iid, inferred, type);
             this._value = value;
         }
 
@@ -491,14 +491,14 @@ export namespace AttributeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote {
-            return new AttributeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+            return new AttributeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
         }
 
-        getType(): AttributeType.DateTime {
-            return super.getType().asDateTime();
+        get type(): AttributeType.DateTime {
+            return super.type.asDateTime();
         }
 
-        getValue(): Date {
+        get value(): Date {
             return this._value;
         }
 
@@ -516,8 +516,8 @@ export namespace AttributeImpl {
         export class Remote extends AttributeImpl.Remote implements Attribute.DateTime.Remote {
             private readonly _value: Date;
 
-            constructor(transaction: TypeDBTransaction.Extended, iid: string, isInferred: boolean, type: AttributeType.DateTime, value: Date) {
-                super(transaction, iid, isInferred, type);
+            constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: AttributeType.DateTime, value: Date) {
+                super(transaction, iid, inferred, type);
                 this._value = value;
             }
 
@@ -526,14 +526,14 @@ export namespace AttributeImpl {
             }
 
             asRemote(transaction: TypeDBTransaction): Attribute.DateTime.Remote {
-                return new AttributeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.getIID(), this.isInferred(), this.getType(), this.getValue());
+                return new AttributeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type, this.value);
             }
 
-            getType(): AttributeType.DateTime {
-                return super.getType().asDateTime();
+            get type(): AttributeType.DateTime {
+                return super.type.asDateTime();
             }
 
-            getValue(): Date {
+            get value(): Date {
                 return this._value;
             }
 

@@ -34,7 +34,7 @@ import { Type } from "./Type";
 
 export interface AttributeType extends ThingType {
 
-    getValueType(): AttributeType.ValueType;
+    readonly valueType: AttributeType.ValueType;
 
     isBoolean(): boolean;
 
@@ -57,7 +57,6 @@ export interface AttributeType extends ThingType {
     asDateTime(): AttributeType.DateTime;
 
     asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
-
 }
 
 /* eslint @typescript-eslint/ban-types: "off" */

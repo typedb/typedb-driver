@@ -19,23 +19,20 @@
  * under the License.
  */
 
-
 import { Concept } from "../concept/Concept";
 
 export interface ConceptMap {
 
-    map(): Map<string, Concept>;
+    readonly map: Map<string, Concept>;
 
     concepts(): IterableIterator<Concept>
 
-    get(variable: string): Concept
+    get(variable: string): Concept;
 
-    explainables(): ConceptMap.Explainables;
-
+    readonly explainables: ConceptMap.Explainables;
 }
 
 export namespace ConceptMap {
-
 
     export interface Explainables {
 
@@ -45,20 +42,17 @@ export namespace ConceptMap {
 
         ownership(owner: string, attribute: string): Explainable;
 
-        relations(): Map<string, Explainable>;
+        readonly relations: Map<string, Explainable>;
 
-        attributes(): Map<string, Explainable>;
+        readonly attributes: Map<string, Explainable>;
 
-        ownerships(): Map<[string, string], Explainable>;
-
+        readonly ownerships: Map<[string, string], Explainable>;
     }
 
     export interface Explainable {
 
-        conjunction(): string;
+        readonly conjunction: string;
 
-        id(): number;
-
+        readonly id: number;
     }
-
 }

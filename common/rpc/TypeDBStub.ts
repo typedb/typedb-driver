@@ -34,7 +34,7 @@ export abstract class TypeDBStub {
 
     private _stub: TypeDBClient;
 
-    constructor(stub: TypeDBClient) {
+    protected constructor(stub: TypeDBClient) {
         this._stub = stub;
     }
 
@@ -105,7 +105,7 @@ export abstract class TypeDBStub {
     }
 
     transaction() {
-        return this._stub.transaction()
+        return this._stub.transaction();
     }
 
     closeClient() {

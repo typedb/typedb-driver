@@ -69,5 +69,4 @@ export class LogicManagerImpl implements LogicManager {
     private stream(request: Transaction.Req) {
         return this._transaction.rpcStream(request).map((res) => res.getLogicManagerResPart());
     }
-
 }

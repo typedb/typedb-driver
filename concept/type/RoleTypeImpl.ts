@@ -31,8 +31,8 @@ import { RelationTypeImpl, ThingTypeImpl, TypeImpl } from "../../dependencies_in
 
 export class RoleTypeImpl extends TypeImpl implements RoleType {
 
-    constructor(scope: string, label: string, isRoot: boolean) {
-        super(Label.scoped(scope, label), isRoot);
+    constructor(scope: string, label: string, root: boolean) {
+        super(Label.scoped(scope, label), root);
     }
 
     protected get className(): string {
@@ -40,7 +40,7 @@ export class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     asRemote(transaction: TypeDBTransaction): RoleType.Remote {
-        return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+        return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
     }
 
     isRoleType(): boolean {
@@ -61,8 +61,8 @@ export namespace RoleTypeImpl {
 
     export class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, isRoot: boolean) {
-            super(transaction, label, isRoot);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+            super(transaction, label, root);
         }
 
         protected get className(): string {
@@ -70,7 +70,7 @@ export namespace RoleTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): RoleType.Remote {
-            return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.getLabel(), this.isRoot());
+            return new RoleTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
         }
 
         isRoleType(): boolean {
@@ -94,18 +94,18 @@ export namespace RoleTypeImpl {
         }
 
         getRelationType(): Promise<RelationType> {
-            return this.transaction.concepts().getRelationType(this.getLabel().scope());
+            return this.transaction.concepts.getRelationType(this.label.scope);
         }
 
         getRelationTypes(): Stream<RelationType> {
-            const request = RequestBuilder.Type.RoleType.getRelationTypesReq(this.getLabel());
+            const request = RequestBuilder.Type.RoleType.getRelationTypesReq(this.label);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetRelationTypesResPart().getRelationTypesList()))
                 .map((res) => RelationTypeImpl.of(res));
         }
 
         getPlayers(): Stream<ThingType> {
-            const request = RequestBuilder.Type.RoleType.getPlayersReq(this.getLabel());
+            const request = RequestBuilder.Type.RoleType.getPlayersReq(this.label);
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getRoleTypeGetPlayersResPart().getThingTypesList()))
                 .map((thing) => ThingTypeImpl.of(thing));
@@ -113,7 +113,7 @@ export namespace RoleTypeImpl {
 
         async isDeleted(): Promise<boolean> {
             const relationType = await this.getRelationType();
-            return !(relationType) || (!(await relationType.asRemote(this.transaction).getRelates(this.getLabel().name())));
+            return !(relationType) || (!(await relationType.asRemote(this.transaction).getRelates(this.label.name)));
         }
     }
 }

@@ -24,5 +24,4 @@ import { TypeDBStub } from "../common/rpc/TypeDBStub";
 export abstract class TypeDBStubFactory {
 
     abstract newTypeDBStub(address: string): TypeDBStub;
-
 }

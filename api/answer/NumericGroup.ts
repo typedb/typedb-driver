@@ -24,8 +24,7 @@ import { Numeric } from "./Numeric";
 
 export interface NumericGroup {
 
-    owner(): Concept;
+    readonly owner: Concept;
 
-    numeric(): Numeric;
-
+    readonly numeric: Numeric;
 }

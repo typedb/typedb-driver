@@ -39,18 +39,18 @@ export class RuleImpl implements Rule {
     }
 
     asRemote(transaction: TypeDBTransaction): RemoteRule {
-        return new RemoteRuleImpl((transaction as TypeDBTransaction.Extended), this._label, this._when, this._then);
+        return new RuleImpl.Remote((transaction as TypeDBTransaction.Extended), this._label, this._when, this._then);
     }
 
-    getLabel(): string {
+    get label(): string {
         return this._label;
     }
 
-    getWhen(): string {
+    get when(): string {
         return this._when;
     }
 
-    getThen(): string {
+    get then(): string {
         return this._then;
     }
 
@@ -61,44 +61,41 @@ export class RuleImpl implements Rule {
     toString() {
         return "Rule[" + this._label + "]";
     }
-
-}
-
-export class RemoteRuleImpl extends RuleImpl implements RemoteRule {
-    private _transaction: TypeDBTransaction.Extended;
-
-    constructor(transaction: TypeDBTransaction.Extended, label: string, when: string, then: string) {
-        super(label, when, then);
-        this._transaction = transaction;
-    }
-
-    async delete(): Promise<void> {
-        await this._transaction.rpcExecute(deleteReq(this._label));
-    }
-
-    async isDeleted(): Promise<boolean> {
-        return !(await this._transaction.logic().getRule(this._label));
-    }
-
-    async setLabel(label: string): Promise<void> {
-        await this._transaction.rpcExecute(setLabelReq(this._label, label));
-        this._label = label;
-    }
-
-    isRemote(): boolean {
-        return true;
-    }
-
-    toString() {
-        return "RemoteRule[" + this._label + "]";
-    }
-
 }
 
 export namespace RuleImpl {
 
+    export class Remote extends RuleImpl implements RemoteRule {
+        private _transaction: TypeDBTransaction.Extended;
+
+        constructor(transaction: TypeDBTransaction.Extended, label: string, when: string, then: string) {
+            super(label, when, then);
+            this._transaction = transaction;
+        }
+
+        async delete(): Promise<void> {
+            await this._transaction.rpcExecute(deleteReq(this._label));
+        }
+
+        async isDeleted(): Promise<boolean> {
+            return !(await this._transaction.logic.getRule(this._label));
+        }
+
+        async setLabel(label: string): Promise<void> {
+            await this._transaction.rpcExecute(setLabelReq(this._label, label));
+            this._label = label;
+        }
+
+        isRemote(): boolean {
+            return true;
+        }
+
+        toString() {
+            return "Rule[" + this._label + "]";
+        }
+    }
+
     export function of(ruleProto: RuleProto) {
         return new RuleImpl(ruleProto.getLabel(), ruleProto.getWhen(), ruleProto.getThen());
     }
-
 }

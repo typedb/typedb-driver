@@ -29,5 +29,4 @@ export interface LogicManager {
     getRules(): Stream<Rule>;
 
     putRule(label: string, when: string, then: string): Promise<Rule>;
-
 }

@@ -26,9 +26,9 @@ import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_C
 
 export class TypeDBCredential {
 
-    private _username: string;
-    private _password: string;
-    private _tlsRootCAPath: string;
+    private readonly _username: string;
+    private readonly _password: string;
+    private readonly _tlsRootCAPath: string;
 
     constructor(username: string, password: string, tlsRootCAPath?: string) {
         this._username = username;
@@ -40,16 +40,15 @@ export class TypeDBCredential {
         this._tlsRootCAPath = tlsRootCAPath;
     }
 
-    public username(): string {
+    get username(): string {
         return this._username;
     }
 
-    public password(): string {
+    get password(): string {
         return this._password;
     }
 
-    public tlsRootCAPath(): string {
+    get tlsRootCAPath(): string {
         return this._tlsRootCAPath;
     }
-
 }
