@@ -91,7 +91,7 @@ export class ClusterDatabaseManager implements DatabaseManager.Cluster {
         try {
             return await failsafeTask.runAnyReplica();
         } catch (e) {
-            if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.errorMessage) {
+            if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                 return await failsafeTask.runPrimaryReplica();
             } else throw e;
         }

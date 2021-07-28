@@ -29,27 +29,36 @@ function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");
 }
 
+function isServiceError(e: Error | ServiceError): e is ServiceError {
+    return "code" in e;
+}
+
 export class TypeDBClientError extends Error {
-    private readonly _errorMessage: ErrorMessage;
+    private readonly _messageTemplate: ErrorMessage;
 
     constructor(error: string | Error | ServiceError | ErrorMessage) {
         if (typeof error === "string") super(error);
+        else if (error instanceof ErrorMessage) {
+            super(error.toString());
+            this._messageTemplate = error;
+        }
+        // TODO: clean this up once we have our own error protocol
+        else if (isServiceError(error)) {
+            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
+                super(UNABLE_TO_CONNECT.message());
+                this._messageTemplate = UNABLE_TO_CONNECT;
+            } else if (isReplicaNotPrimaryError(error)) {
+                super(CLUSTER_REPLICA_NOT_PRIMARY.message());
+                this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
+            } else if (error.code === Status.INTERNAL) super(error.details)
+            else super(error.toString());
+        }
         else super(error.toString());
 
         this.name = "TypeDBClientError"; // Required to correctly report error type in default throw
-
-        if (error instanceof ErrorMessage) {
-            this._errorMessage = error;
-        } else if (error instanceof Error && "code" in error) {
-            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
-                this._errorMessage = UNABLE_TO_CONNECT;
-            } else if (isReplicaNotPrimaryError(error)) {
-                this._errorMessage = CLUSTER_REPLICA_NOT_PRIMARY;
-            }
-        }
     }
 
-    get errorMessage(): ErrorMessage {
-        return this._errorMessage;
+    get messageTemplate(): ErrorMessage {
+        return this._messageTemplate;
     }
 }

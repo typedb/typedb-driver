@@ -67,7 +67,7 @@ export abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof TypeDBClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.errorMessage)) {
+                if (e instanceof TypeDBClientError && [CLUSTER_REPLICA_NOT_PRIMARY, UNABLE_TO_CONNECT].includes(e.messageTemplate)) {
                     console.info("Unable to open a session or transaction, retrying in 2s...", e);
                     await this.waitForPrimaryReplicaSelection();
                     replica = await this.seekPrimaryReplica();
@@ -90,7 +90,7 @@ export abstract class FailsafeTask<TResult> {
             try {
                 return retries == 0 ? await this.run(replica) : await this.rerun(replica);
             } catch (e) {
-                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.errorMessage) {
+                if (e instanceof TypeDBClientError && UNABLE_TO_CONNECT === e.messageTemplate) {
                     console.info("Unable to open a session or transaction to " + replica + ". Attempting next replica.", e);
                 } else throw e;
             }
