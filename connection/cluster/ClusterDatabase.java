@@ -52,10 +52,10 @@ class ClusterDatabase implements Database.Cluster {
         this.databases = new HashMap<>();
         this.replicas = new HashSet<>();
 
-        ClusterDatabaseManager clusterDbMgr = client.databases();
-        for (String address : clusterDbMgr.databaseMgrs().keySet()) {
-            TypeDBDatabaseManagerImpl coreDatabaseMgr = clusterDbMgr.databaseMgrs().get(address);
-            databases.put(address, new TypeDBDatabaseImpl(coreDatabaseMgr, database));
+        ClusterDatabaseManager clusterDBMgr = client.databases();
+        for (String address : clusterDBMgr.databaseMgrs().keySet()) {
+            TypeDBDatabaseManagerImpl databaseMgr = clusterDBMgr.databaseMgrs().get(address);
+            databases.put(address, new TypeDBDatabaseImpl(databaseMgr, database));
         }
     }
 

@@ -59,21 +59,21 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     @Override
     public boolean contains(String name) {
-        return failsafeTask(name, (stub, coreDbMgr) -> coreDbMgr.contains(name));
+        return failsafeTask(name, (stub, dbMgr) -> dbMgr.contains(name));
     }
 
     @Override
     public void create(String name) {
-        failsafeTask(name, (stub, coreDbMgr) -> {
-            coreDbMgr.create(name);
+        failsafeTask(name, (stub, dbMgr) -> {
+            dbMgr.create(name);
             return null;
         });
     }
 
     @Override
     public Database.Cluster get(String name) {
-        return failsafeTask(name, (stub, coreDbMgr) -> {
-            if (contains(name)) {
+        return failsafeTask(name, (stub, dbMgr) -> {
+            if (dbMgr.contains(name)) {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), client);
             } else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
