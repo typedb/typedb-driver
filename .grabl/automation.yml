@@ -154,14 +154,14 @@ build:
         owner: vaticle
         branch: master
       image: vaticle-ubuntu-20.04
-#      dependencies: [
-#        build, test-integration,
-#        test-behaviour-connection-core, test-behaviour-connection-cluster,
-#        test-behaviour-concept-core, test-behaviour-concept-cluster,
-#        test-behaviour-match-core, test-behaviour-match-cluster,
-#        test-behaviour-writable-core, test-behaviour-writable-cluster,
-#        test-behaviour-definable-core, test-behaviour-definable-cluster
-#      ]
+      dependencies: [
+        build, test-integration,
+        test-behaviour-connection-core, test-behaviour-connection-cluster,
+        test-behaviour-concept-core, test-behaviour-concept-cluster,
+        test-behaviour-match-core, test-behaviour-match-cluster,
+        test-behaviour-writable-core, test-behaviour-writable-cluster,
+        test-behaviour-definable-core, test-behaviour-definable-cluster
+      ]
       command: |
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
