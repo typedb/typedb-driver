@@ -101,7 +101,10 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     private <RESULT> RESULT failsafeTask(String name, BiFunction<ClusterServerStub, TypeDBDatabaseManagerImpl, RESULT> task) {
         ClusterClient.FailsafeTask<RESULT> failsafeTask = client.createFailsafeTask(
                 name,
-                replica -> task.apply(client.stub(replica.address()), client.clusterServerClient(replica.address()).databases())
+                parameter -> task.apply(
+                        parameter.stub(),
+                        parameter.client().databases()
+                )
         );
 
         try {

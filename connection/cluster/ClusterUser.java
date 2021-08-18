@@ -46,8 +46,8 @@ public class ClusterUser implements User {
     public void password(String password) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                replica -> {
-                    client.stub(replica.address()).userPassword(passwordReq(name, password));
+                parameter -> {
+                    parameter.stub().userPassword(passwordReq(name, password));
                     return null;
                 }
         );
@@ -58,8 +58,8 @@ public class ClusterUser implements User {
     public void delete() {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                replica -> {
-                    client.stub(replica.address()).userDelete(deleteReq(name));
+                parameter -> {
+                    parameter.stub().userDelete(deleteReq(name));
                     return null;
                 }
         );

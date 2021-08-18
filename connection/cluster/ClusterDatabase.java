@@ -85,8 +85,8 @@ class ClusterDatabase implements Database.Cluster {
     public void delete() {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 name,
-                replica -> {
-                    databases.get(replica.address()).delete();
+                parameter -> {
+                    databases.get(parameter.replica().address()).delete();
                     return null;
                 }
         );

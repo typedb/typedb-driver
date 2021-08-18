@@ -140,14 +140,14 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private ClusterSession sessionPrimaryReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
         return createFailsafeTask(
                 database,
-                replica -> new ClusterSession(this, replica.address(), database, type, options)
+                parameter -> new ClusterSession(this, parameter.replica().address(), database, type, options)
         ).runPrimaryReplica();
     }
 
     private ClusterSession sessionAnyReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
         return createFailsafeTask(
                 database,
-                replica -> new ClusterSession(this, replica.address(), database, type, options)
+                parameter -> new ClusterSession(this, parameter.replica().address(), database, type, options)
         ).runAnyReplica();
     }
 
@@ -165,23 +165,23 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
-            Function<ClusterDatabase.Replica, RESULT> run) {
+            Function<FailsafeTaskParameter, RESULT> run) {
         return createFailsafeTask(database, run, run);
     }
 
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
-            Function<ClusterDatabase.Replica, RESULT> run,
-            Function<ClusterDatabase.Replica, RESULT> rerun
+            Function<FailsafeTaskParameter, RESULT> run,
+            Function<FailsafeTaskParameter, RESULT> rerun
     ) {
         return new FailsafeTask<RESULT>(database) {
             @Override
-            RESULT run(ClusterDatabase.Replica replica) {
+            RESULT run(FailsafeTaskParameter replica) {
                 return run.apply(replica);
             }
 
             @Override
-            RESULT rerun(ClusterDatabase.Replica replica) {
+            RESULT rerun(FailsafeTaskParameter replica) {
                 return rerun.apply(replica);
             }
         };
@@ -216,9 +216,9 @@ public class ClusterClient implements TypeDBClient.Cluster {
             this.database = database;
         }
 
-        abstract RESULT run(ClusterDatabase.Replica replica);
+        abstract RESULT run(FailsafeTaskParameter replica);
 
-        RESULT rerun(ClusterDatabase.Replica replica) {
+        RESULT rerun(FailsafeTaskParameter replica) {
             return run(replica);
         }
 
@@ -230,10 +230,13 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } else {
                 replica = database.primaryReplica().get();
             }
+            FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                    clusterServerClient(replica.address()), stub(replica.address()), replica
+            );
             int retries = 0;
             while (true) {
                 try {
-                    return retries == 0 ? run(replica) : rerun(replica);
+                    return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())
                             || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -260,7 +263,10 @@ public class ClusterClient implements TypeDBClient.Cluster {
             int retries = 0;
             for (ClusterDatabase.Replica replica : replicas) {
                 try {
-                    return retries == 0 ? run(replica) : rerun(replica);
+                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                            clusterServerClient(replica.address()), stub(replica.address()), replica
+                    );
+                    return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                         LOG.debug("Unable to open a session or transaction to " + replica.id() +
@@ -318,6 +324,31 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
         private TypeDBClientException clusterNotAvailableException() {
             return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", clusterServerClients.keySet()));
+        }
+    }
+
+    static class FailsafeTaskParameter {
+
+        private final ClusterServerClient client;
+        private final ClusterServerStub stub;
+        private final ClusterDatabase.Replica replica;
+
+        public FailsafeTaskParameter(ClusterServerClient client, ClusterServerStub stub, ClusterDatabase.Replica replica) {
+            this.client = client;
+            this.stub = stub;
+            this.replica = replica;
+        }
+
+        public ClusterServerClient client() {
+            return client;
+        }
+
+        public ClusterServerStub stub() {
+            return stub;
+        }
+
+        public ClusterDatabase.Replica replica() {
+            return replica;
         }
     }
 }
