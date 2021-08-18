@@ -32,6 +32,7 @@ import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -148,9 +149,13 @@ public class ClusterClient implements TypeDBClient.Cluster {
         };
     }
 
-    // TODO: this is not good - we should not pass an internal object to be modified outside of this class
-    ConcurrentMap<String, ClusterDatabase> databaseByName() {
-        return clusterDatabases;
+    @Nullable
+    ClusterDatabase databaseGet(String name) {
+        return clusterDatabases.get(name);
+    }
+
+    void databasePut(String name, ClusterDatabase database) {
+        clusterDatabases.put(name, database);
     }
 
     Map<String, ClusterServerClient> clusterServerClients() {

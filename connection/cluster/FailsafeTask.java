@@ -57,11 +57,13 @@ abstract class FailsafeTask<RESULT> {
     }
 
     RESULT runPrimaryReplica() {
-        if (!client.databaseByName().containsKey(database)
-                || !client.databaseByName().get(database).primaryReplica().isPresent()) {
-            seekPrimaryReplica();
+        ClusterDatabase database = client.databaseGet(this.database);
+        ClusterDatabase.Replica replica;
+        if (database == null || !database.primaryReplica().isPresent()) {
+            replica = seekPrimaryReplica();
+        } else {
+            replica = database.primaryReplica().get();
         }
-        ClusterDatabase.Replica replica = client.databaseByName().get(database).primaryReplica().get();
         int retries = 0;
         while (true) {
             try {
@@ -79,7 +81,7 @@ abstract class FailsafeTask<RESULT> {
     }
 
     RESULT runAnyReplica() {
-        ClusterDatabase clusterDatabase = client.databaseByName().get(database);
+        ClusterDatabase clusterDatabase = client.databaseGet(database);
         if (clusterDatabase == null) clusterDatabase = fetchDatabaseReplicas();
 
         // Try the preferred secondary replica first, then go through the others
@@ -126,7 +128,7 @@ abstract class FailsafeTask<RESULT> {
                 LOG.debug("Fetching replica info from {}", serverAddress);
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
                 ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client);
-                client.databaseByName().put(database, clusterDatabase);
+                client.databasePut(database, clusterDatabase);
                 return clusterDatabase;
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
