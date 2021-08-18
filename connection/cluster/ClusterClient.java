@@ -138,16 +138,17 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private ClusterSession sessionPrimaryReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
+        return createFailsafeTask(
+                database,
+                replica -> new ClusterSession(this, replica.address(), database, type, options)
+        ).runPrimaryReplica();
     }
 
     private ClusterSession sessionAnyReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runAnyReplica();
-    }
-
-    private FailsafeTask<ClusterSession> openSessionFailsafeTask(
-            String database, TypeDBSession.Type type, TypeDBOptions.Cluster options, ClusterClient client) {
-        return createFailsafeTask(database, replica -> new ClusterSession(client, replica.address(), database, type, options));
+        return createFailsafeTask(
+                database,
+                replica -> new ClusterSession(this, replica.address(), database, type, options)
+        ).runAnyReplica();
     }
 
     Map<String, ClusterServerClient> clusterServerClients() {
