@@ -68,22 +68,17 @@ public class ClusterSession implements TypeDBSession {
         return transactionFailsafeTask(type, options).runAnyReplica();
     }
 
-    private FailsafeTask<TypeDBTransaction> transactionFailsafeTask(TypeDBTransaction.Type type, TypeDBOptions options) {
-        return new FailsafeTask<TypeDBTransaction>(clusterClient, database().name()) {
-
-            @Override
-            TypeDBTransaction run(ClusterDatabase.Replica replica) {
-                return typeDBSession.transaction(type, options);
-            }
-
-            @Override
-            TypeDBTransaction rerun(ClusterDatabase.Replica replica) {
-                if (typeDBSession != null) typeDBSession.close();
-                clusterServerClient = clusterClient.clusterServerClient(replica.address());
-                typeDBSession = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
-                return typeDBSession.transaction(type, options);
-            }
-        };
+    private ClusterClient.FailsafeTask<TypeDBTransaction> transactionFailsafeTask(TypeDBTransaction.Type type, TypeDBOptions options) {
+        return clusterClient.createFailsafeTask(
+                database().name(),
+                (parameter) -> typeDBSession.transaction(type, options),
+                (parameter) -> {
+                    if (typeDBSession != null) typeDBSession.close();
+                    clusterServerClient = parameter.client();
+                    typeDBSession = clusterServerClient.session(database().name(), ClusterSession.this.type(), ClusterSession.this.options());
+                    return typeDBSession.transaction(type, options);
+                }
+        );
     }
 
     @Override

@@ -44,25 +44,26 @@ public class ClusterUser implements User {
 
     @Override
     public void password(String password) {
-        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
-            @Override
-            Void run(ClusterDatabase.Replica replica) {
-                client.stub(replica.address()).userPassword(passwordReq(name, password));
-                return null;
-            }
-        };
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                parameter -> {
+                    parameter.stub().userPassword(passwordReq(name, password));
+                    return null;
+                }
+        );
         failsafeTask.runPrimaryReplica();
     }
 
     @Override
     public void delete() {
-        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
-            @Override
-            Void run(ClusterDatabase.Replica replica) {
-                client.stub(replica.address()).userDelete(deleteReq(name));
-                return null;
-            }
-        };
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                parameter -> {
+                    parameter.stub().userDelete(deleteReq(name));
+                    return null;
+                }
+        );
+
         failsafeTask.runPrimaryReplica();
     }
 }

@@ -28,17 +28,24 @@ import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.api.connection.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
 import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
@@ -131,34 +138,21 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private ClusterSession sessionPrimaryReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runPrimaryReplica();
+        return createFailsafeTask(
+                database,
+                parameter -> new ClusterSession(this, parameter.replica().address(), database, type, options)
+        ).runPrimaryReplica();
     }
 
     private ClusterSession sessionAnyReplica(String database, TypeDBSession.Type type, TypeDBOptions.Cluster options) {
-        return openSessionFailsafeTask(database, type, options, this).runAnyReplica();
-    }
-
-    private FailsafeTask<ClusterSession> openSessionFailsafeTask(
-            String database, TypeDBSession.Type type, TypeDBOptions.Cluster options, ClusterClient client) {
-        return new FailsafeTask<ClusterSession>(this, database) {
-            @Override
-            ClusterSession run(ClusterDatabase.Replica replica) {
-                return new ClusterSession(client, replica.address(), database, type, options);
-            }
-        };
-    }
-
-    // TODO: this is not good - we should not pass an internal object to be modified outside of this class
-    ConcurrentMap<String, ClusterDatabase> databaseByName() {
-        return clusterDatabases;
+        return createFailsafeTask(
+                database,
+                parameter -> new ClusterSession(this, parameter.replica().address(), database, type, options)
+        ).runAnyReplica();
     }
 
     Map<String, ClusterServerClient> clusterServerClients() {
         return clusterServerClients;
-    }
-
-    Set<String> clusterServers() {
-        return clusterServerClients.keySet();
     }
 
     ClusterServerClient clusterServerClient(String address) {
@@ -167,6 +161,30 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     ClusterServerStub stub(String address) {
         return stubs.get(address);
+    }
+
+    <RESULT> FailsafeTask<RESULT> createFailsafeTask(
+            String database,
+            Function<FailsafeTaskParameter, RESULT> run) {
+        return createFailsafeTask(database, run, run);
+    }
+
+    <RESULT> FailsafeTask<RESULT> createFailsafeTask(
+            String database,
+            Function<FailsafeTaskParameter, RESULT> run,
+            Function<FailsafeTaskParameter, RESULT> rerun
+    ) {
+        return new FailsafeTask<RESULT>(database) {
+            @Override
+            RESULT run(FailsafeTaskParameter replica) {
+                return run.apply(replica);
+            }
+
+            @Override
+            RESULT rerun(FailsafeTaskParameter replica) {
+                return rerun.apply(replica);
+            }
+        };
     }
 
     @Override
@@ -183,5 +201,154 @@ public class ClusterClient implements TypeDBClient.Cluster {
     public void close() {
         clusterServerClients.values().forEach(ClusterServerClient::close);
         isOpen = false;
+    }
+
+    abstract class FailsafeTask<RESULT> {
+
+        private final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
+        private final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
+        private final int FETCH_REPLICAS_MAX_RETRIES = 10;
+        private final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
+
+        private final String database;
+
+        private FailsafeTask(String database) {
+            this.database = database;
+        }
+
+        abstract RESULT run(FailsafeTaskParameter replica);
+
+        RESULT rerun(FailsafeTaskParameter replica) {
+            return run(replica);
+        }
+
+        RESULT runPrimaryReplica() {
+            ClusterDatabase database = clusterDatabases.get(this.database);
+            ClusterDatabase.Replica replica;
+            if (database == null || !database.primaryReplica().isPresent()) {
+                replica = seekPrimaryReplica();
+            } else {
+                replica = database.primaryReplica().get();
+            }
+            FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                    clusterServerClient(replica.address()), stub(replica.address()), replica
+            );
+            int retries = 0;
+            while (true) {
+                try {
+                    return retries == 0 ? run(parameter) : rerun(parameter);
+                } catch (TypeDBClientException e) {
+                    if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())
+                            || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
+                        waitForPrimaryReplicaSelection();
+                        replica = seekPrimaryReplica();
+                    } else throw e;
+                }
+                if (++retries > PRIMARY_REPLICA_TASK_MAX_RETRIES) throw clusterNotAvailableException();
+            }
+        }
+
+        RESULT runAnyReplica() {
+            ClusterDatabase clusterDatabase = clusterDatabases.get(database);
+            if (clusterDatabase == null) clusterDatabase = fetchDatabaseReplicas();
+
+            // Try the preferred secondary replica first, then go through the others
+            List<ClusterDatabase.Replica> replicas = new ArrayList<>();
+            replicas.add(clusterDatabase.preferredReplica());
+            for (ClusterDatabase.Replica replica : clusterDatabase.replicas()) {
+                if (!replica.isPreferred()) replicas.add(replica);
+            }
+
+            int retries = 0;
+            for (ClusterDatabase.Replica replica : replicas) {
+                try {
+                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                            clusterServerClient(replica.address()), stub(replica.address()), replica
+                    );
+                    return retries == 0 ? run(parameter) : rerun(parameter);
+                } catch (TypeDBClientException e) {
+                    if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Unable to open a session or transaction to " + replica.id() +
+                                          ". Attempting next replica.", e);
+                    } else {
+                        throw e;
+                    }
+                }
+                retries++;
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private ClusterDatabase.Replica seekPrimaryReplica() {
+            int retries = 0;
+            while (retries < FETCH_REPLICAS_MAX_RETRIES) {
+                ClusterDatabase clusterDatabase = fetchDatabaseReplicas();
+                if (clusterDatabase.primaryReplica().isPresent()) {
+                    return clusterDatabase.primaryReplica().get();
+                } else {
+                    waitForPrimaryReplicaSelection();
+                    retries++;
+                }
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private ClusterDatabase fetchDatabaseReplicas() {
+            for (String serverAddress : clusterServerClients.keySet()) {
+                try {
+                    LOG.debug("Fetching replica info from {}", serverAddress);
+                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub(serverAddress).databasesGet(getReq(database));
+                    ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
+                    clusterDatabases.put(database, clusterDatabase);
+                    return clusterDatabase;
+                } catch (TypeDBClientException e) {
+                    if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
+                                          serverAddress + ". Attempting next server.", e);
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private void waitForPrimaryReplicaSelection() {
+            try {
+                Thread.sleep(WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS);
+            } catch (InterruptedException e) {
+                throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
+            }
+        }
+
+        private TypeDBClientException clusterNotAvailableException() {
+            return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", clusterServerClients.keySet()));
+        }
+    }
+
+    static class FailsafeTaskParameter {
+
+        private final ClusterServerClient client;
+        private final ClusterServerStub stub;
+        private final ClusterDatabase.Replica replica;
+
+        public FailsafeTaskParameter(ClusterServerClient client, ClusterServerStub stub, ClusterDatabase.Replica replica) {
+            this.client = client;
+            this.stub = stub;
+            this.replica = replica;
+        }
+
+        public ClusterServerClient client() {
+            return client;
+        }
+
+        public ClusterServerStub stub() {
+            return stub;
+        }
+
+        public ClusterDatabase.Replica replica() {
+            return replica;
+        }
     }
 }

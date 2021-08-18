@@ -45,7 +45,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClusterDatabaseManager.class);
 
     private final Map<String, TypeDBDatabaseManagerImpl> databaseMgrs;
     private final ClusterClient client;
@@ -99,18 +99,14 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
     }
 
     private <RESULT> RESULT failsafeTask(String name, BiFunction<ClusterServerStub, TypeDBDatabaseManagerImpl, RESULT> task) {
-        FailsafeTask<RESULT> failsafeTask = new FailsafeTask<RESULT>(client, name) {
+        ClusterClient.FailsafeTask<RESULT> failsafeTask = client.createFailsafeTask(
+                name,
+                parameter -> task.apply(
+                        parameter.stub(),
+                        parameter.client().databases()
+                )
+        );
 
-            @Override
-            RESULT run(ClusterDatabase.Replica replica) {
-                return task.apply(client.stub(replica.address()), client.clusterServerClient(replica.address()).databases());
-            }
-
-            @Override
-            RESULT rerun(ClusterDatabase.Replica replica) {
-                return run(replica);
-            }
-        };
         try {
             return failsafeTask.runAnyReplica();
         } catch (TypeDBClientException e) {
