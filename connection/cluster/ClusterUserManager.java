@@ -51,8 +51,7 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public boolean contains(String name) {
-        ClusterClient.FailsafeTask<Boolean> failsafeTask = ClusterClient.createFailsafeTask(
-                client,
+        ClusterClient.FailsafeTask<Boolean> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (replica) ->
                         client.stub(replica.address()).usersContains(containsReq(name)).getContains()
@@ -63,8 +62,7 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public void create(String name, String password) {
-        ClusterClient.FailsafeTask<Void> failsafeTask = ClusterClient.createFailsafeTask(
-                client,
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (replica) -> {
                     client.stub(replica.address())
@@ -78,8 +76,7 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public Set<User> all() {
-        ClusterClient.FailsafeTask<Set<User>> failsafeTask = ClusterClient.createFailsafeTask(
-                client,
+        ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (replica) ->
                     client.stub(replica.address())

@@ -33,14 +33,12 @@ import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
@@ -149,7 +147,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     private FailsafeTask<ClusterSession> openSessionFailsafeTask(
             String database, TypeDBSession.Type type, TypeDBOptions.Cluster options, ClusterClient client) {
-        return new FailsafeTask<ClusterSession>(this, database) {
+        return new FailsafeTask<ClusterSession>(database) {
             @Override
             ClusterSession run(ClusterDatabase.Replica replica) {
                 return new ClusterSession(client, replica.address(), database, type, options);
@@ -157,24 +155,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
         };
     }
 
-    // TODO: is it needed?
-    @Nullable
-    ClusterDatabase databaseGet(String name) {
-        return clusterDatabases.get(name);
-    }
-
-    // TODO: is it needed?
-    void databasePut(String name, ClusterDatabase database) {
-        clusterDatabases.put(name, database);
-    }
-
-    // TODO: is it needed?
     Map<String, ClusterServerClient> clusterServerClients() {
         return clusterServerClients;
-    }
-
-    Set<String> clusterServers() {
-        return clusterServerClients.keySet();
     }
 
     // TODO: is it needed?
@@ -203,20 +185,18 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = false;
     }
 
-    static <RESULT> FailsafeTask<RESULT> createFailsafeTask(
-            ClusterClient client,
+    <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
             Function<ClusterDatabase.Replica, RESULT> run) {
-        return createFailsafeTask(client, database, run, run);
+        return createFailsafeTask(database, run, run);
     }
 
-    static <RESULT> FailsafeTask<RESULT> createFailsafeTask(
-            ClusterClient client,
+    <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
             Function<ClusterDatabase.Replica, RESULT> run,
             Function<ClusterDatabase.Replica, RESULT> rerun
     ) {
-        return new FailsafeTask<RESULT>(client, database) {
+        return new FailsafeTask<RESULT>(database) {
             @Override
             RESULT run(ClusterDatabase.Replica replica) {
                 return run.apply(replica);
@@ -229,18 +209,16 @@ public class ClusterClient implements TypeDBClient.Cluster {
         };
     }
 
-    abstract static class FailsafeTask<RESULT> {
+    abstract class FailsafeTask<RESULT> {
 
-        private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
-        private static final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
-        private static final int FETCH_REPLICAS_MAX_RETRIES = 10;
-        private static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
+        private final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
+        private final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
+        private final int FETCH_REPLICAS_MAX_RETRIES = 10;
+        private final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
 
-        private final ClusterClient client;
         private final String database;
 
-        private FailsafeTask(ClusterClient client, String database) {
-            this.client = client;
+        private FailsafeTask(String database) {
             this.database = database;
         }
 
@@ -251,7 +229,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         }
 
         RESULT runPrimaryReplica() {
-            ClusterDatabase database = client.databaseGet(this.database);
+            ClusterDatabase database = clusterDatabases.get(this.database);
             ClusterDatabase.Replica replica;
             if (database == null || !database.primaryReplica().isPresent()) {
                 replica = seekPrimaryReplica();
@@ -275,7 +253,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         }
 
         RESULT runAnyReplica() {
-            ClusterDatabase clusterDatabase = client.databaseGet(database);
+            ClusterDatabase clusterDatabase = clusterDatabases.get(database);
             if (clusterDatabase == null) clusterDatabase = fetchDatabaseReplicas();
 
             // Try the preferred secondary replica first, then go through the others
@@ -317,12 +295,12 @@ public class ClusterClient implements TypeDBClient.Cluster {
         }
 
         private ClusterDatabase fetchDatabaseReplicas() {
-            for (String serverAddress : client.clusterServers()) {
+            for (String serverAddress : clusterServerClients.keySet()) {
                 try {
                     LOG.debug("Fetching replica info from {}", serverAddress);
-                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
-                    ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client);
-                    client.databasePut(database, clusterDatabase);
+                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub(serverAddress).databasesGet(getReq(database));
+                    ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
+                    clusterDatabases.put(database, clusterDatabase);
                     return clusterDatabase;
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -345,7 +323,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         }
 
         private TypeDBClientException clusterNotAvailableException() {
-            return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterServers()));
+            return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", clusterServerClients.keySet()));
         }
     }
 }

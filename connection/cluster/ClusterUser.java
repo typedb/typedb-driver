@@ -44,8 +44,7 @@ public class ClusterUser implements User {
 
     @Override
     public void password(String password) {
-        ClusterClient.FailsafeTask<Void> failsafeTask = ClusterClient.createFailsafeTask(
-                client,
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 replica -> {
                     client.stub(replica.address()).userPassword(passwordReq(name, password));
@@ -57,8 +56,7 @@ public class ClusterUser implements User {
 
     @Override
     public void delete() {
-        ClusterClient.FailsafeTask<Void> failsafeTask = ClusterClient.createFailsafeTask(
-                client,
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 replica -> {
                     client.stub(replica.address()).userDelete(deleteReq(name));

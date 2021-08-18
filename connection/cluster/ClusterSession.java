@@ -69,8 +69,7 @@ public class ClusterSession implements TypeDBSession {
     }
 
     private ClusterClient.FailsafeTask<TypeDBTransaction> transactionFailsafeTask(TypeDBTransaction.Type type, TypeDBOptions options) {
-        return ClusterClient.createFailsafeTask(
-                clusterClient,
+        return clusterClient.createFailsafeTask(
                 database().name(),
                 (replica) -> typeDBSession.transaction(type, options),
                 (replica) -> {
