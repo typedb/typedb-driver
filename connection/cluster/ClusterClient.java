@@ -176,13 +176,13 @@ public class ClusterClient implements TypeDBClient.Cluster {
     ) {
         return new FailsafeTask<RESULT>(database) {
             @Override
-            RESULT run(FailsafeTaskParameter replica) {
-                return run.apply(replica);
+            RESULT run(FailsafeTaskParameter parameter) {
+                return run.apply(parameter);
             }
 
             @Override
-            RESULT rerun(FailsafeTaskParameter replica) {
-                return rerun.apply(replica);
+            RESULT rerun(FailsafeTaskParameter parameter) {
+                return rerun.apply(parameter);
             }
         };
     }
@@ -230,12 +230,12 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } else {
                 replica = database.primaryReplica().get();
             }
-            FailsafeTaskParameter parameter = new FailsafeTaskParameter(
-                    clusterServerClient(replica.address()), stub(replica.address()), replica
-            );
             int retries = 0;
             while (true) {
                 try {
+                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                            clusterServerClient(replica.address()), stub(replica.address()), replica
+                    );
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())
