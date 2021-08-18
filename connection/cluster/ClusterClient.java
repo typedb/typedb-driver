@@ -159,12 +159,10 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterServerClients;
     }
 
-    // TODO: is it needed?
     ClusterServerClient clusterServerClient(String address) {
         return clusterServerClients.get(address);
     }
-
-    // TODO: is it needed?
+    
     ClusterServerStub stub(String address) {
         return stubs.get(address);
     }
