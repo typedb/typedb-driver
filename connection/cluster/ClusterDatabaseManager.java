@@ -45,7 +45,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.FailsafeTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClusterDatabaseManager.class);
 
     private final Map<String, TypeDBDatabaseManagerImpl> databaseMgrs;
     private final ClusterClient client;
