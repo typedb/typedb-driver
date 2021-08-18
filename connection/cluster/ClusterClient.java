@@ -147,12 +147,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     private FailsafeTask<ClusterSession> openSessionFailsafeTask(
             String database, TypeDBSession.Type type, TypeDBOptions.Cluster options, ClusterClient client) {
-        return new FailsafeTask<ClusterSession>(database) {
-            @Override
-            ClusterSession run(ClusterDatabase.Replica replica) {
-                return new ClusterSession(client, replica.address(), database, type, options);
-            }
-        };
+        return createFailsafeTask(database, replica -> new ClusterSession(client, replica.address(), database, type, options));
     }
 
     Map<String, ClusterServerClient> clusterServerClients() {
@@ -162,25 +157,9 @@ public class ClusterClient implements TypeDBClient.Cluster {
     ClusterServerClient clusterServerClient(String address) {
         return clusterServerClients.get(address);
     }
-    
+
     ClusterServerStub stub(String address) {
         return stubs.get(address);
-    }
-
-    @Override
-    public boolean isCluster() {
-        return true;
-    }
-
-    @Override
-    public Cluster asCluster() {
-        return this;
-    }
-
-    @Override
-    public void close() {
-        clusterServerClients.values().forEach(ClusterServerClient::close);
-        isOpen = false;
     }
 
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
@@ -205,6 +184,22 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 return rerun.apply(replica);
             }
         };
+    }
+
+    @Override
+    public boolean isCluster() {
+        return true;
+    }
+
+    @Override
+    public Cluster asCluster() {
+        return this;
+    }
+
+    @Override
+    public void close() {
+        clusterServerClients.values().forEach(ClusterServerClient::close);
+        isOpen = false;
     }
 
     abstract class FailsafeTask<RESULT> {
