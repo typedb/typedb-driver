@@ -51,57 +51,42 @@ public class ClusterUserManager implements UserManager {
 
     @Override
     public boolean contains(String name) {
-        FailsafeTask<Boolean> failsafeTask = new FailsafeTask<Boolean>(client, SYSTEM_DB) {
-            @Override
-            Boolean rerun(ClusterDatabase.Replica replica) {
-                return run(replica);
-            }
+        ClusterClient.FailsafeTask<Boolean> failsafeTask = ClusterClient.createFailsafeTask(
+                client,
+                SYSTEM_DB,
+                (replica) ->
+                        client.stub(replica.address()).usersContains(containsReq(name)).getContains()
+        );
 
-            @Override
-            Boolean run(ClusterDatabase.Replica replica) {
-                return client.stub(replica.address())
-                        .usersContains(containsReq(name))
-                        .getContains();
-            }
-        };
         return failsafeTask.runPrimaryReplica();
     }
 
     @Override
     public void create(String name, String password) {
-        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, SYSTEM_DB) {
-            @Override
-            Void rerun(ClusterDatabase.Replica replica) {
-                run(replica);
-                return null;
-            }
+        ClusterClient.FailsafeTask<Void> failsafeTask = ClusterClient.createFailsafeTask(
+                client,
+                SYSTEM_DB,
+                (replica) -> {
+                    client.stub(replica.address())
+                            .usersCreate(createReq(name, password));
+                    return null;
+                }
+        );
 
-            @Override
-            Void run(ClusterDatabase.Replica replica) {
-                client.stub(replica.address())
-                        .usersCreate(createReq(name, password));
-                return null;
-            }
-        };
         failsafeTask.runPrimaryReplica();
     }
 
     @Override
     public Set<User> all() {
-        FailsafeTask<Set<User>> failsafeTask = new FailsafeTask<Set<User>>(client, SYSTEM_DB) {
-            @Override
-            Set<User> rerun(ClusterDatabase.Replica replica) {
-                return run(replica);
-            }
-
-            @Override
-            Set<User> run(ClusterDatabase.Replica replica) {
-                return client.stub(replica.address())
-                        .usersAll(allReq()).getNamesList().stream()
-                        .map(name -> new ClusterUser(client, name))
-                        .collect(Collectors.toSet());
-            }
-        };
+        ClusterClient.FailsafeTask<Set<User>> failsafeTask = ClusterClient.createFailsafeTask(
+                client,
+                SYSTEM_DB,
+                (replica) ->
+                    client.stub(replica.address())
+                            .usersAll(allReq()).getNamesList().stream()
+                            .map(name -> new ClusterUser(client, name))
+                            .collect(Collectors.toSet())
+        );
         return failsafeTask.runPrimaryReplica();
     }
 }

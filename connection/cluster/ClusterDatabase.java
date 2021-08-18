@@ -83,19 +83,15 @@ class ClusterDatabase implements Database.Cluster {
 
     @Override
     public void delete() {
-        FailsafeTask<Void> failsafeTask = new FailsafeTask<Void>(client, name) {
-            @Override
-            Void run(Replica replica) {
-                databases.get(replica.address()).delete();
-                return null;
-            }
+        ClusterClient.FailsafeTask<Void> failsafeTask = ClusterClient.createFailsafeTask(
+                client,
+                name,
+                replica -> {
+                    databases.get(replica.address()).delete();
+                    return null;
+                }
+        );
 
-            @Override
-            Void rerun(Replica replica) {
-                run(replica);
-                return null;
-            }
-        };
         failsafeTask.runPrimaryReplica();
     }
 

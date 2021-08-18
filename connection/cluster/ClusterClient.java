@@ -28,18 +28,26 @@ import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.api.connection.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.common.collection.Pair;
+import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
 import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
@@ -149,15 +157,18 @@ public class ClusterClient implements TypeDBClient.Cluster {
         };
     }
 
+    // TODO: is it needed?
     @Nullable
     ClusterDatabase databaseGet(String name) {
         return clusterDatabases.get(name);
     }
 
+    // TODO: is it needed?
     void databasePut(String name, ClusterDatabase database) {
         clusterDatabases.put(name, database);
     }
 
+    // TODO: is it needed?
     Map<String, ClusterServerClient> clusterServerClients() {
         return clusterServerClients;
     }
@@ -166,10 +177,12 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterServerClients.keySet();
     }
 
+    // TODO: is it needed?
     ClusterServerClient clusterServerClient(String address) {
         return clusterServerClients.get(address);
     }
 
+    // TODO: is it needed?
     ClusterServerStub stub(String address) {
         return stubs.get(address);
     }
@@ -188,5 +201,151 @@ public class ClusterClient implements TypeDBClient.Cluster {
     public void close() {
         clusterServerClients.values().forEach(ClusterServerClient::close);
         isOpen = false;
+    }
+
+    static <RESULT> FailsafeTask<RESULT> createFailsafeTask(
+            ClusterClient client,
+            String database,
+            Function<ClusterDatabase.Replica, RESULT> run) {
+        return createFailsafeTask(client, database, run, run);
+    }
+
+    static <RESULT> FailsafeTask<RESULT> createFailsafeTask(
+            ClusterClient client,
+            String database,
+            Function<ClusterDatabase.Replica, RESULT> run,
+            Function<ClusterDatabase.Replica, RESULT> rerun
+    ) {
+        return new FailsafeTask<RESULT>(client, database) {
+            @Override
+            RESULT run(ClusterDatabase.Replica replica) {
+                return run.apply(replica);
+            }
+
+            @Override
+            RESULT rerun(ClusterDatabase.Replica replica) {
+                return rerun.apply(replica);
+            }
+        };
+    }
+
+    abstract static class FailsafeTask<RESULT> {
+
+        private static final Logger LOG = LoggerFactory.getLogger(FailsafeTask.class);
+        private static final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
+        private static final int FETCH_REPLICAS_MAX_RETRIES = 10;
+        private static final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
+
+        private final ClusterClient client;
+        private final String database;
+
+        private FailsafeTask(ClusterClient client, String database) {
+            this.client = client;
+            this.database = database;
+        }
+
+        abstract RESULT run(ClusterDatabase.Replica replica);
+
+        RESULT rerun(ClusterDatabase.Replica replica) {
+            return run(replica);
+        }
+
+        RESULT runPrimaryReplica() {
+            ClusterDatabase database = client.databaseGet(this.database);
+            ClusterDatabase.Replica replica;
+            if (database == null || !database.primaryReplica().isPresent()) {
+                replica = seekPrimaryReplica();
+            } else {
+                replica = database.primaryReplica().get();
+            }
+            int retries = 0;
+            while (true) {
+                try {
+                    return retries == 0 ? run(replica) : rerun(replica);
+                } catch (TypeDBClientException e) {
+                    if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())
+                            || UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
+                        waitForPrimaryReplicaSelection();
+                        replica = seekPrimaryReplica();
+                    } else throw e;
+                }
+                if (++retries > PRIMARY_REPLICA_TASK_MAX_RETRIES) throw clusterNotAvailableException();
+            }
+        }
+
+        RESULT runAnyReplica() {
+            ClusterDatabase clusterDatabase = client.databaseGet(database);
+            if (clusterDatabase == null) clusterDatabase = fetchDatabaseReplicas();
+
+            // Try the preferred secondary replica first, then go through the others
+            List<ClusterDatabase.Replica> replicas = new ArrayList<>();
+            replicas.add(clusterDatabase.preferredReplica());
+            for (ClusterDatabase.Replica replica : clusterDatabase.replicas()) {
+                if (!replica.isPreferred()) replicas.add(replica);
+            }
+
+            int retries = 0;
+            for (ClusterDatabase.Replica replica : replicas) {
+                try {
+                    return retries == 0 ? run(replica) : rerun(replica);
+                } catch (TypeDBClientException e) {
+                    if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Unable to open a session or transaction to " + replica.id() +
+                                          ". Attempting next replica.", e);
+                    } else {
+                        throw e;
+                    }
+                }
+                retries++;
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private ClusterDatabase.Replica seekPrimaryReplica() {
+            int retries = 0;
+            while (retries < FETCH_REPLICAS_MAX_RETRIES) {
+                ClusterDatabase clusterDatabase = fetchDatabaseReplicas();
+                if (clusterDatabase.primaryReplica().isPresent()) {
+                    return clusterDatabase.primaryReplica().get();
+                } else {
+                    waitForPrimaryReplicaSelection();
+                    retries++;
+                }
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private ClusterDatabase fetchDatabaseReplicas() {
+            for (String serverAddress : client.clusterServers()) {
+                try {
+                    LOG.debug("Fetching replica info from {}", serverAddress);
+                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = client.stub(serverAddress).databasesGet(getReq(database));
+                    ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), client);
+                    client.databasePut(database, clusterDatabase);
+                    return clusterDatabase;
+                } catch (TypeDBClientException e) {
+                    if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
+                        LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
+                                          serverAddress + ". Attempting next server.", e);
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+            throw clusterNotAvailableException();
+        }
+
+        private void waitForPrimaryReplicaSelection() {
+            try {
+                Thread.sleep(WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS);
+            } catch (InterruptedException e) {
+                throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
+            }
+        }
+
+        private TypeDBClientException clusterNotAvailableException() {
+            return new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", client.clusterServers()));
+        }
     }
 }
