@@ -60,7 +60,7 @@ class ClusterServerClient extends TypeDBClientImpl {
         if (!credential.tlsEnabled()) {
             return plainTextChannel(address);
         } else {
-            return TLSChannel(address, credential);
+            return tlsChannel(address, credential);
         }
     }
 
@@ -70,7 +70,7 @@ class ClusterServerClient extends TypeDBClientImpl {
                 .build();
     }
 
-    private ManagedChannel TLSChannel(String address, TypeDBCredential credential) {
+    private ManagedChannel tlsChannel(String address, TypeDBCredential credential) {
         try {
             SslContext sslContext;
             if (credential.tlsRootCA().isPresent()) {
