@@ -85,7 +85,8 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         StringBuilder errors = new StringBuilder();
         for (String address : databaseMgrs.keySet()) {
             try {
-                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.stub(address).databasesAll(allReq());
+                ClusterDatabaseProto.ClusterDatabaseManager.All.Res res = client.clusterServerClient(address)
+                        .clusterServerStub().databasesAll(allReq());
                 return res.getDatabasesList().stream().map(db -> ClusterDatabase.of(db, client)).collect(toList());
             } catch (TypeDBClientException e) {
                 errors.append("- ").append(address).append(": ").append(e).append("\n");
@@ -102,7 +103,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         ClusterClient.FailsafeTask<RESULT> failsafeTask = client.createFailsafeTask(
                 name,
                 parameter -> task.apply(
-                        parameter.stub(),
+                        parameter.client().clusterServerStub(),
                         parameter.client().databases()
                 )
         );
