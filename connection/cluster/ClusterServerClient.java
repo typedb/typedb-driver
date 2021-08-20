@@ -37,7 +37,6 @@ class ClusterServerClient extends TypeDBClientImpl {
         ClusterServerConnectionFactory typeDBConnectionFactory = new ClusterServerConnectionFactory(credential);
         channel = typeDBConnectionFactory.newManagedChannel(address);
         stub = typeDBConnectionFactory.newTypeDBStub(channel);
-
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {

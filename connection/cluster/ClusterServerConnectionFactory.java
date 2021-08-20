@@ -33,7 +33,7 @@ import javax.net.ssl.SSLException;
 
 public class ClusterServerConnectionFactory extends TypeDBConnectionFactory {
 
-    private TypeDBCredential credential;
+    private final TypeDBCredential credential;
 
     public ClusterServerConnectionFactory(TypeDBCredential credential) {
         this.credential = credential;
