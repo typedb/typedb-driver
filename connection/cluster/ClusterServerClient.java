@@ -22,10 +22,14 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
-import com.vaticle.typedb.client.connection.core.CoreConnectionFactory;
 import io.grpc.ManagedChannel;
+import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NettyChannelBuilder;
+import io.netty.handler.ssl.SslContext;
+
+import javax.net.ssl.SSLException;
 
 class ClusterServerClient extends TypeDBClientImpl {
 
@@ -34,9 +38,8 @@ class ClusterServerClient extends TypeDBClientImpl {
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
         super(parallelisation);
-        ClusterServerConnectionFactory typeDBConnectionFactory = new ClusterServerConnectionFactory(credential);
-        channel = typeDBConnectionFactory.newManagedChannel(address);
-        stub = typeDBConnectionFactory.newTypeDBStub(channel);
+        channel = newManagedChannel(address, credential);
+        stub = ClusterServerStub.create(credential.username(), credential.password(), channel);
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
@@ -51,5 +54,33 @@ class ClusterServerClient extends TypeDBClientImpl {
     @Override
     public ClusterServerStub stub() {
         return stub;
+    }
+
+    private ManagedChannel newManagedChannel(String address, TypeDBCredential credential) {
+        if (!credential.tlsEnabled()) {
+            return plainTextChannel(address);
+        } else {
+            return TLSChannel(address, credential);
+        }
+    }
+
+    private ManagedChannel plainTextChannel(String address) {
+        return NettyChannelBuilder.forTarget(address)
+                .usePlaintext()
+                .build();
+    }
+
+    private ManagedChannel TLSChannel(String address, TypeDBCredential credential) {
+        try {
+            SslContext sslContext;
+            if (credential.tlsRootCA().isPresent()) {
+                sslContext = GrpcSslContexts.forClient().trustManager(credential.tlsRootCA().get().toFile()).build();
+            } else {
+                sslContext = GrpcSslContexts.forClient().build();
+            }
+            return NettyChannelBuilder.forTarget(address).useTransportSecurity().sslContext(sslContext).build();
+        } catch (SSLException e) {
+            throw new TypeDBClientException(e.getMessage(), e);
+        }
     }
 }

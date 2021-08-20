@@ -23,8 +23,8 @@ package com.vaticle.typedb.client.connection.core;
 
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
-import com.vaticle.typedb.client.connection.TypeDBConnectionFactory;
 import io.grpc.ManagedChannel;
+import io.grpc.netty.NettyChannelBuilder;
 
 public class CoreClient extends TypeDBClientImpl {
 
@@ -33,9 +33,8 @@ public class CoreClient extends TypeDBClientImpl {
 
     public CoreClient(String address, int parallelisation) {
         super(parallelisation);
-        CoreConnectionFactory typeDBConnectionFactory = new CoreConnectionFactory();
-        channel = typeDBConnectionFactory.newManagedChannel(address);
-        stub = typeDBConnectionFactory.newTypeDBStub(channel);
+        channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
+        stub = CoreStub.create(channel);
     }
 
     public static CoreClient create(String address) {
