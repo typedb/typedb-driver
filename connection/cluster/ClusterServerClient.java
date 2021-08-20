@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
 
 class ClusterServerClient extends TypeDBClientImpl {
+
     private final ClusterServerStub clusterServerStub;
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {

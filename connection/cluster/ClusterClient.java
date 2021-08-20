@@ -157,23 +157,23 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
-            Function<FailsafeTaskParameter, RESULT> run) {
+            Function<FailsafeTaskParams, RESULT> run) {
         return createFailsafeTask(database, run, run);
     }
 
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
-            Function<FailsafeTaskParameter, RESULT> run,
-            Function<FailsafeTaskParameter, RESULT> rerun
+            Function<FailsafeTaskParams, RESULT> run,
+            Function<FailsafeTaskParams, RESULT> rerun
     ) {
         return new FailsafeTask<RESULT>(database) {
             @Override
-            RESULT run(FailsafeTaskParameter parameter) {
+            RESULT run(FailsafeTaskParams parameter) {
                 return run.apply(parameter);
             }
 
             @Override
-            RESULT rerun(FailsafeTaskParameter parameter) {
+            RESULT rerun(FailsafeTaskParams parameter) {
                 return rerun.apply(parameter);
             }
         };
@@ -208,9 +208,9 @@ public class ClusterClient implements TypeDBClient.Cluster {
             this.database = database;
         }
 
-        abstract RESULT run(FailsafeTaskParameter replica);
+        abstract RESULT run(FailsafeTaskParams replica);
 
-        RESULT rerun(FailsafeTaskParameter replica) {
+        RESULT rerun(FailsafeTaskParams replica) {
             return run(replica);
         }
 
@@ -225,7 +225,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             int retries = 0;
             while (true) {
                 try {
-                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(
+                    FailsafeTaskParams parameter = new FailsafeTaskParams(
                             clusterServerClient(replica.address()), replica
                     );
                     return retries == 0 ? run(parameter) : rerun(parameter);
@@ -255,7 +255,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             int retries = 0;
             for (ClusterDatabase.Replica replica : replicas) {
                 try {
-                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(clusterServerClient(replica.address()), replica);
+                    FailsafeTaskParams parameter = new FailsafeTaskParams(clusterServerClient(replica.address()), replica);
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -318,12 +318,12 @@ public class ClusterClient implements TypeDBClient.Cluster {
         }
     }
 
-    static class FailsafeTaskParameter {
+    static class FailsafeTaskParams {
 
         private final ClusterServerClient client;
         private final ClusterDatabase.Replica replica;
 
-        public FailsafeTaskParameter(ClusterServerClient client, ClusterDatabase.Replica replica) {
+        public FailsafeTaskParams(ClusterServerClient client, ClusterDatabase.Replica replica) {
             this.client = client;
             this.replica = replica;
         }
