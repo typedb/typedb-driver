@@ -21,13 +21,21 @@
 
 package com.vaticle.typedb.client.connection.core;
 
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
 import com.vaticle.typedb.client.connection.TypeDBConnectionFactory;
+import io.grpc.ManagedChannel;
 
 public class CoreClient extends TypeDBClientImpl {
 
+    private final ManagedChannel channel;
+    private final TypeDBStub stub;
+
     public CoreClient(String address, int parallelisation) {
-        super(address, new CoreConnectionFactory(), parallelisation);
+        super(parallelisation);
+        CoreConnectionFactory typeDBConnectionFactory = new CoreConnectionFactory();
+        channel = typeDBConnectionFactory.newManagedChannel(address);
+        stub = typeDBConnectionFactory.newTypeDBStub(channel);
     }
 
     public static CoreClient create(String address) {
@@ -36,5 +44,13 @@ public class CoreClient extends TypeDBClientImpl {
 
     public static CoreClient create(String address, int parallelisation) {
         return new CoreClient(address, parallelisation);
+    }
+
+    public ManagedChannel channel() {
+        return channel;
+    }
+
+    public TypeDBStub stub() {
+        return stub;
     }
 }

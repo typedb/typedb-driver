@@ -289,7 +289,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 try {
                     LOG.debug("Fetching replica info from {}", serverAddress);
                     ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = clusterServerClient(serverAddress)
-                            .clusterServerStub().databasesGet(getReq(database));
+                            .stub().databasesGet(getReq(database));
                     ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
                     clusterDatabases.put(database, clusterDatabase);
                     return clusterDatabase;

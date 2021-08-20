@@ -54,7 +54,7 @@ public class ClusterUserManager implements UserManager {
         ClusterClient.FailsafeTask<Boolean> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) ->
-                        parameter.client().clusterServerStub().usersContains(containsReq(name)).getContains()
+                        parameter.client().stub().usersContains(containsReq(name)).getContains()
         );
 
         return failsafeTask.runPrimaryReplica();
@@ -65,7 +65,7 @@ public class ClusterUserManager implements UserManager {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) -> {
-                    parameter.client().clusterServerStub().usersCreate(createReq(name, password));
+                    parameter.client().stub().usersCreate(createReq(name, password));
                     return null;
                 }
         );
@@ -78,7 +78,7 @@ public class ClusterUserManager implements UserManager {
         ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) ->
-                    parameter.client().clusterServerStub()
+                    parameter.client().stub()
                             .usersAll(allReq()).getNamesList().stream()
                             .map(name -> new ClusterUser(client, name))
                             .collect(Collectors.toSet())

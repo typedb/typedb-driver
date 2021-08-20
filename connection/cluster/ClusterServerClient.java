@@ -22,22 +22,35 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.client.connection.core.CoreConnectionFactory;
+import io.grpc.ManagedChannel;
 
 class ClusterServerClient extends TypeDBClientImpl {
 
-    private final ClusterServerStub clusterServerStub;
+    private final ManagedChannel channel;
+    private final ClusterServerStub stub;
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
-        super(address, new ClusterServerConnectionFactory(credential), parallelisation);
-        clusterServerStub = ClusterServerStub.create(credential.username(), credential.password(), channel());
+        super(parallelisation);
+        ClusterServerConnectionFactory typeDBConnectionFactory = new ClusterServerConnectionFactory(credential);
+        channel = typeDBConnectionFactory.newManagedChannel(address);
+        stub = typeDBConnectionFactory.newTypeDBStub(channel);
+
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
         return new ClusterServerClient(address, credential, parallelisation);
     }
 
-    ClusterServerStub clusterServerStub() {
-        return clusterServerStub;
+    @Override
+    public ManagedChannel channel() {
+        return channel;
+    }
+
+    @Override
+    public ClusterServerStub stub() {
+        return stub;
     }
 }
