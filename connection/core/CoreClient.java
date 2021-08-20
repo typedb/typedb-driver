@@ -46,10 +46,12 @@ public class CoreClient extends TypeDBClientImpl {
         return new CoreClient(address, parallelisation);
     }
 
+    @Override
     public ManagedChannel channel() {
         return channel;
     }
 
+    @Override
     public TypeDBStub stub() {
         return stub;
     }
