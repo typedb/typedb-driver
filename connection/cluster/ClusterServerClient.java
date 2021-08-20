@@ -39,7 +39,7 @@ class ClusterServerClient extends TypeDBClientImpl {
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
         super(parallelisation);
         channel = newManagedChannel(address, credential);
-        stub = ClusterServerStub.create(credential.username(), credential.password(), channel);
+        stub = ClusterServerStub.create(credential, channel);
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {

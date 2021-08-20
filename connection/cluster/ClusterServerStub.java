@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
+import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
@@ -45,8 +46,8 @@ public class ClusterServerStub extends TypeDBStub {
         this.clusterBlockingStub = clusterBlockingStub;
     }
 
-    public static ClusterServerStub create(String username, String password, ManagedChannel channel) {
-        CredentialEmbedder credentialEmbedder = new CredentialEmbedder(username, password);
+    public static ClusterServerStub create(TypeDBCredential credential, ManagedChannel channel) {
+        CredentialEmbedder credentialEmbedder = new CredentialEmbedder(credential);
         return new ClusterServerStub(channel,
                 TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder),
                 TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder),
@@ -89,20 +90,18 @@ public class ClusterServerStub extends TypeDBStub {
         private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
         private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
 
-        private final String username;
-        private final String password;
+        private final TypeDBCredential credential;
 
-        public CredentialEmbedder(String username, String password) {
-            this.username = username;
-            this.password = password;
+        public CredentialEmbedder(TypeDBCredential credential) {
+            this.credential = credential;
         }
 
         @Override
         public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
             appExecutor.execute(() -> {
                 Metadata headers = new Metadata();
-                headers.put(USERNAME_FIELD, username);
-                headers.put(PASSWORD_FIELD, password);
+                headers.put(USERNAME_FIELD, credential.username());
+                headers.put(PASSWORD_FIELD, credential.password());
                 applier.apply(headers);
             });
         }
