@@ -58,7 +58,6 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final TypeDBCredential credential;
     private final int parallelisation;
     private final Map<String, ClusterServerClient> clusterServerClients;
-    private final Map<String, ClusterServerStub> stubs;
     private final ClusterUserManager userMgr;
     private final ClusterDatabaseManager databaseMgr;
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
@@ -69,9 +68,6 @@ public class ClusterClient implements TypeDBClient.Cluster {
         this.parallelisation = parallelisation;
         clusterServerClients = fetchServerAddresses(addresses).stream()
                 .map(address -> pair(address, ClusterServerClient.create(address, credential, parallelisation)))
-                .collect(toMap(Pair::first, Pair::second));
-        stubs = clusterServerClients.entrySet().stream()
-                .map(client -> pair(client.getKey(), ClusterServerStub.create(credential.username(), credential.password(), client.getValue().channel())))
                 .collect(toMap(Pair::first, Pair::second));
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -159,10 +155,6 @@ public class ClusterClient implements TypeDBClient.Cluster {
         return clusterServerClients.get(address);
     }
 
-    ClusterServerStub stub(String address) {
-        return stubs.get(address);
-    }
-
     <RESULT> FailsafeTask<RESULT> createFailsafeTask(
             String database,
             Function<FailsafeTaskParameter, RESULT> run) {
@@ -234,7 +226,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             while (true) {
                 try {
                     FailsafeTaskParameter parameter = new FailsafeTaskParameter(
-                            clusterServerClient(replica.address()), stub(replica.address()), replica
+                            clusterServerClient(replica.address()), replica
                     );
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
@@ -263,9 +255,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             int retries = 0;
             for (ClusterDatabase.Replica replica : replicas) {
                 try {
-                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(
-                            clusterServerClient(replica.address()), stub(replica.address()), replica
-                    );
+                    FailsafeTaskParameter parameter = new FailsafeTaskParameter(clusterServerClient(replica.address()), replica);
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -298,7 +288,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
             for (String serverAddress : clusterServerClients.keySet()) {
                 try {
                     LOG.debug("Fetching replica info from {}", serverAddress);
-                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub(serverAddress).databasesGet(getReq(database));
+                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = clusterServerClient(serverAddress)
+                            .clusterServerStub().databasesGet(getReq(database));
                     ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
                     clusterDatabases.put(database, clusterDatabase);
                     return clusterDatabase;
@@ -330,21 +321,15 @@ public class ClusterClient implements TypeDBClient.Cluster {
     static class FailsafeTaskParameter {
 
         private final ClusterServerClient client;
-        private final ClusterServerStub stub;
         private final ClusterDatabase.Replica replica;
 
-        public FailsafeTaskParameter(ClusterServerClient client, ClusterServerStub stub, ClusterDatabase.Replica replica) {
+        public FailsafeTaskParameter(ClusterServerClient client, ClusterDatabase.Replica replica) {
             this.client = client;
-            this.stub = stub;
             this.replica = replica;
         }
 
         public ClusterServerClient client() {
             return client;
-        }
-
-        public ClusterServerStub stub() {
-            return stub;
         }
 
         public ClusterDatabase.Replica replica() {
