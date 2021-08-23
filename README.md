@@ -61,3 +61,25 @@ Further documentation: https://docs.vaticle.com/docs/client-api/java
    bazel-bin/com.vaticle.typedb:api.jar
    bazel-bin/pom.xml
    ```
+
+## FAQs
+
+**Q:** I see a large number of Netty and gRPC log messages. How can I disable them?
+
+**A:** Create a Logback configuration file and set the minimum log level to ERROR. You can do so with the following steps:
+1. Create a file in your `resources` path (`src/main/resources` by default in a Maven project) named `logback.xml`.
+2. Copy the following document into `logback.xml`:
+```xml
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="ERROR">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
+```
