@@ -66,7 +66,7 @@ Further documentation: https://docs.vaticle.com/docs/client-api/java
 
 **Q:** I see a large number of Netty and gRPC log messages. How can I disable them?
 
-**A:** 
+**A:** Create a Logback configuration file and set the minimum log level to ERROR. You can do so with the following steps:
 1. Create a file in your `resources` path (`src/main/resources` by default in a Maven project) named `logback.xml`.
 2. Copy the following document into `logback.xml`:
 ```xml
