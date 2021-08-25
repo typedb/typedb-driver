@@ -56,6 +56,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(13, "Attempted connecting to all cluster members, but the following errors occurred: \n%s.");
         public static final Client CLUSTER_USER_DOES_NOT_EXIST =
                 new Client(14, "The user '%s' does not exist.");
+        public static final ErrorMessage CLUSTER_TOKEN_CREDENTIAL_INVALID =
+                new Client(15, "Invalid token credential.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";

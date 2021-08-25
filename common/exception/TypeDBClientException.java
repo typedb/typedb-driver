@@ -28,6 +28,10 @@ import javax.annotation.Nullable;
 
 public class TypeDBClientException extends RuntimeException {
 
+    // TODO: propagate exception from the server side in a less-brittle way
+    private static final String CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE = "[RPL01]";
+    private static final String CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE = "[CLS08]";
+
     @Nullable
     private final ErrorMessage errorMessage;
 
@@ -43,15 +47,31 @@ public class TypeDBClientException extends RuntimeException {
     }
 
     public static TypeDBClientException of(StatusRuntimeException statusRuntimeException) {
-        // "Received Rst Stream" occurs if the server is in the process of shutting down.
-        if (statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE
-                || statusRuntimeException.getStatus().getCode() == Status.Code.UNKNOWN
-                || statusRuntimeException.getMessage().contains("Received Rst Stream")) {
+        Status.Code code = statusRuntimeException.getStatus().getCode();
+        String description = statusRuntimeException.getStatus().getDescription();
+
+        if (
+                code == Status.Code.UNAVAILABLE ||
+                code == Status.Code.UNKNOWN ||
+                statusRuntimeException.getMessage().contains("Received Rst Stream")
+        ) {
+            // "Received Rst Stream" occurs if the server is in the process of shutting down.
             return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
-        } else if (isReplicaNotPrimaryException(statusRuntimeException)) {
+        } else if (
+                code == Status.Code.INTERNAL &&
+                description != null &&
+                description.contains(CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE)
+        ) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
+        } else if (
+                code == Status.Code.UNAUTHENTICATED &&
+                description != null &&
+                description.contains(CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE)
+        ) {
+            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID);
         }
-        return new TypeDBClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
+
+        return new TypeDBClientException(description, statusRuntimeException);
     }
 
     public String getName() {
@@ -61,12 +81,5 @@ public class TypeDBClientException extends RuntimeException {
     @Nullable
     public ErrorMessage getErrorMessage() {
         return errorMessage;
-    }
-
-    // TODO: propagate exception from the server side in a less-brittle way
-    private static boolean isReplicaNotPrimaryException(StatusRuntimeException statusRuntimeException) {
-        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL
-                && statusRuntimeException.getStatus().getDescription() != null
-                && statusRuntimeException.getStatus().getDescription().contains("[RPL01]");
     }
 }

@@ -22,7 +22,10 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.common.exception.ErrorMessage;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.protocol.ClusterClientProto;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
@@ -31,27 +34,46 @@ import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.CallCredentials;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ClientManager.tokenReq;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
 
+    private final TypeDBCredential credential;
+    private String token;
+    private final ManagedChannel channel;
+    private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
+    private final TypeDBGrpc.TypeDBStub asyncStub;
     private final TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub;
 
-    private ClusterServerStub(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub,
-                              TypeDBClusterGrpc.TypeDBClusterBlockingStub clusterBlockingStub) {
-        super(channel, blockingStub, asyncStub);
-        this.clusterBlockingStub = clusterBlockingStub;
+    ClusterServerStub(ManagedChannel channel, TypeDBCredential credential) {
+        super();
+        this.credential = credential;
+        this.channel = channel;
+        CredentialEmbedder credentialEmbedder = new CredentialEmbedder();
+        this.blockingStub = TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
+        this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder);
+        this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
+        try {
+            ClusterClientProto.ClusterClient.Token.Res res = clusterBlockingStub.clientToken(tokenReq(this.credential.username()));
+            token = res.getToken();
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == Status.Code.UNAVAILABLE) {
+                // do nothing
+            } else {
+                throw e;
+            }
+        }
     }
 
     public static ClusterServerStub create(TypeDBCredential credential, ManagedChannel channel) {
-        CredentialEmbedder credentialEmbedder = new CredentialEmbedder(credential);
-        return new ClusterServerStub(channel,
-                TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder),
-                TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder),
-                TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder));
+        return new ClusterServerStub(channel, credential);
     }
 
     public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
@@ -86,22 +108,57 @@ public class ClusterServerStub extends TypeDBStub {
         return resilientCall(() -> clusterBlockingStub.databasesAll(request));
     }
 
-    public static class CredentialEmbedder extends CallCredentials {
-        private static final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-        private static final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+    @Override
+    protected ManagedChannel channel() {
+        return channel;
+    }
 
-        private final TypeDBCredential credential;
+    @Override
+    protected TypeDBGrpc.TypeDBBlockingStub blockingStub() {
+        return blockingStub;
+    }
 
-        public CredentialEmbedder(TypeDBCredential credential) {
-            this.credential = credential;
+    @Override
+    protected TypeDBGrpc.TypeDBStub asyncStub() {
+        return asyncStub;
+    }
+
+    @Override
+    protected <RES> RES resilientCall(Supplier<RES> function) {
+        try {
+            ensureConnected();
+            return function.get();
+        } catch (StatusRuntimeException e1) {
+            TypeDBClientException e2 = TypeDBClientException.of(e1);
+            if (e2.getErrorMessage() != null && e2.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
+                token = null;
+                ClusterClientProto.ClusterClient.Token.Res res = clusterBlockingStub.clientToken(tokenReq(credential.username()));
+                token = res.getToken();
+                try {
+                    return function.get();
+                } catch (StatusRuntimeException e3) {
+                    throw TypeDBClientException.of(e3);
+                }
+            } else throw e2;
         }
+    }
+
+    private class CredentialEmbedder extends CallCredentials {
+
+        private final Metadata.Key<String> TOKEN_FIELD = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
+        private final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+        private final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
 
         @Override
         public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
             appExecutor.execute(() -> {
                 Metadata headers = new Metadata();
                 headers.put(USERNAME_FIELD, credential.username());
-                headers.put(PASSWORD_FIELD, credential.password());
+                if (token != null) {
+                    headers.put(TOKEN_FIELD, token);
+                } else {
+                    headers.put(PASSWORD_FIELD, credential.password());
+                }
                 applier.apply(headers);
             });
         }
@@ -109,5 +166,4 @@ public class ClusterServerStub extends TypeDBStub {
         @Override
         public void thisUsesUnstableApi() { }
     }
-
 }

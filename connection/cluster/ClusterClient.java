@@ -87,7 +87,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         for (String address : addresses) {
             try (ClusterServerClient client = ClusterServerClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                ClusterServerStub stub = ClusterServerStub.create(credential, client.channel());
+                ClusterServerStub stub = new ClusterServerStub(client.channel(), credential);
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
@@ -235,7 +235,10 @@ public class ClusterClient implements TypeDBClient.Cluster {
                         LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
                         waitForPrimaryReplicaSelection();
                         replica = seekPrimaryReplica();
-                    } else throw e;
+                    } else {
+                        System.out.println("HEHEHEHEHEHHEHE");
+                        throw e;
+                    }
                 }
                 if (++retries > PRIMARY_REPLICA_TASK_MAX_RETRIES) throw clusterNotAvailableException();
             }
