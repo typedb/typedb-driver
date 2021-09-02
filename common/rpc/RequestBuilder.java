@@ -24,10 +24,10 @@ package com.vaticle.typedb.client.common.rpc;
 import com.google.protobuf.ByteString;
 import com.vaticle.factory.tracing.client.FactoryTracingThreadStatic;
 import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.protocol.ClusterClientProto;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
+import com.vaticle.typedb.protocol.ClusterUserTokenProto;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.LogicProto;
@@ -35,11 +35,6 @@ import com.vaticle.typedb.protocol.OptionsProto;
 import com.vaticle.typedb.protocol.QueryProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
-import com.vaticle.typeql.lang.query.TypeQLDefine;
-import com.vaticle.typeql.lang.query.TypeQLDelete;
-import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLMatch;
-import com.vaticle.typeql.lang.query.TypeQLUndefine;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -108,9 +103,9 @@ public class RequestBuilder {
 
     public static class Cluster {
 
-        public static class ClientManager {
-            public static ClusterClientProto.ClusterClient.Token.Req tokenReq(String name) {
-                return ClusterClientProto.ClusterClient.Token.Req.newBuilder().setUsername(name).build();
+        public static class ClusterUserToken {
+            public static ClusterUserTokenProto.ClusterUserToken.Renew.Req renewReq(String name) {
+                return ClusterUserTokenProto.ClusterUserToken.Renew.Req.newBuilder().setUsername(name).build();
             }
         }
 

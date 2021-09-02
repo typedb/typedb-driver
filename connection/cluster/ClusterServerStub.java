@@ -25,10 +25,10 @@ import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.client.common.exception.ErrorMessage;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.protocol.ClusterClientProto;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
+import com.vaticle.typedb.protocol.ClusterUserTokenProto;
 import com.vaticle.typedb.protocol.TypeDBClusterGrpc;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.CallCredentials;
@@ -40,7 +40,7 @@ import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ClientManager.tokenReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ClusterUserToken.renewReq;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
@@ -61,7 +61,7 @@ public class ClusterServerStub extends TypeDBStub {
         this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder);
         this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
         try {
-            ClusterClientProto.ClusterClient.Token.Res res = clusterBlockingStub.clientToken(tokenReq(this.credential.username()));
+            ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(this.credential.username()));
             token = res.getToken();
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == Status.Code.UNAVAILABLE) {
@@ -132,7 +132,7 @@ public class ClusterServerStub extends TypeDBStub {
             TypeDBClientException e2 = TypeDBClientException.of(e1);
             if (e2.getErrorMessage() != null && e2.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
                 token = null;
-                ClusterClientProto.ClusterClient.Token.Res res = clusterBlockingStub.clientToken(tokenReq(credential.username()));
+                ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(credential.username()));
                 token = res.getToken();
                 try {
                     return function.get();
