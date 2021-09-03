@@ -64,9 +64,8 @@ public class ClusterServerStub extends TypeDBStub {
             ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(this.credential.username()));
             token = res.getToken();
         } catch (StatusRuntimeException e) {
-            if (e.getStatus().getCode() == Status.Code.UNAVAILABLE) {
-                // do nothing
-            } else {
+            // ignore UNAVAILABLE exception
+            if (e.getStatus().getCode() != Status.Code.UNAVAILABLE) {
                 throw e;
             }
         }
