@@ -235,10 +235,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                         LOG.debug("Unable to open a session or transaction, retrying in 2s...", e);
                         waitForPrimaryReplicaSelection();
                         replica = seekPrimaryReplica();
-                    } else {
-                        System.out.println("HEHEHEHEHEHHEHE");
-                        throw e;
-                    }
+                    } else throw e;
                 }
                 if (++retries > PRIMARY_REPLICA_TASK_MAX_RETRIES) throw clusterNotAvailableException();
             }
