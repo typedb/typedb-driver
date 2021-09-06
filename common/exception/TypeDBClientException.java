@@ -47,31 +47,34 @@ public class TypeDBClientException extends RuntimeException {
     }
 
     public static TypeDBClientException of(StatusRuntimeException statusRuntimeException) {
-        Status.Code code = statusRuntimeException.getStatus().getCode();
-        String description = statusRuntimeException.getStatus().getDescription();
-
-        if (
-                code == Status.Code.UNAVAILABLE ||
-                code == Status.Code.UNKNOWN ||
-                statusRuntimeException.getMessage().contains("Received Rst Stream")
-        ) {
-            // "Received Rst Stream" occurs if the server is in the process of shutting down.
+        if (isRstStream(statusRuntimeException)) {
             return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
-        } else if (
-                code == Status.Code.INTERNAL &&
-                description != null &&
-                description.contains(CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE)
-        ) {
+        } else if (isReplicaNotPrimary(statusRuntimeException)) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
-        } else if (
-                code == Status.Code.UNAUTHENTICATED &&
-                description != null &&
-                description.contains(CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE)
-        ) {
+        } else if (isTokenCredentialInvalid(statusRuntimeException)) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID);
         }
 
-        return new TypeDBClientException(description, statusRuntimeException);
+        return new TypeDBClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
+    }
+
+    private static boolean isRstStream(StatusRuntimeException statusRuntimeException) {
+        // "Received Rst Stream" occurs if the server is in the process of shutting down.
+        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE ||
+                statusRuntimeException.getStatus().getCode() == Status.Code.UNKNOWN ||
+                statusRuntimeException.getMessage().contains("Received Rst Stream");
+    }
+
+    private static boolean isReplicaNotPrimary(StatusRuntimeException statusRuntimeException) {
+        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL &&
+                statusRuntimeException.getStatus().getDescription() != null &&
+                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE);
+    }
+
+    private static boolean isTokenCredentialInvalid(StatusRuntimeException statusRuntimeException) {
+        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAUTHENTICATED &&
+                statusRuntimeException.getStatus().getDescription() != null &&
+                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE);
     }
 
     public String getName() {
