@@ -56,10 +56,9 @@ public class ClusterServerStub extends TypeDBStub {
         super();
         this.credential = credential;
         this.channel = channel;
-        CredentialEmbedder credentialEmbedder = new CredentialEmbedder();
-        this.blockingStub = TypeDBGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
-        this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(credentialEmbedder);
-        this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(credentialEmbedder);
+        this.blockingStub = TypeDBGrpc.newBlockingStub(channel).withCallCredentials(createCallCredentials());
+        this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(createCallCredentials());
+        this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(createCallCredentials());
         try {
             ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(this.credential.username()));
             token = res.getToken();
@@ -142,27 +141,28 @@ public class ClusterServerStub extends TypeDBStub {
         }
     }
 
-    private class CredentialEmbedder extends CallCredentials {
+    private CallCredentials createCallCredentials() {
+        return new CallCredentials() {
+            private final Metadata.Key<String> TOKEN_FIELD = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
+            private final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+            private final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
 
-        private final Metadata.Key<String> TOKEN_FIELD = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
-        private final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-        private final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+            @Override
+            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                appExecutor.execute(() -> {
+                    Metadata headers = new Metadata();
+                    headers.put(USERNAME_FIELD, credential.username());
+                    if (token != null) {
+                        headers.put(TOKEN_FIELD, token);
+                    } else {
+                        headers.put(PASSWORD_FIELD, credential.password());
+                    }
+                    applier.apply(headers);
+                });
+            }
 
-        @Override
-        public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-            appExecutor.execute(() -> {
-                Metadata headers = new Metadata();
-                headers.put(USERNAME_FIELD, credential.username());
-                if (token != null) {
-                    headers.put(TOKEN_FIELD, token);
-                } else {
-                    headers.put(PASSWORD_FIELD, credential.password());
-                }
-                applier.apply(headers);
-            });
-        }
-
-        @Override
-        public void thisUsesUnstableApi() { }
+            @Override
+            public void thisUsesUnstableApi() { }
+        };
     }
 }
