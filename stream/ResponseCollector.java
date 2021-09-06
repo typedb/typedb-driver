@@ -32,6 +32,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
@@ -64,7 +65,8 @@ public class ResponseCollector<R> {
         private final BlockingQueue<Either<Response<R>, Done>> responseQueue;
 
         Queue() {
-            responseQueue = new LinkedBlockingQueue<>();
+            // TODO: We should be using LinkedBlockingQueue here, however there is a bug in Java 14-16: see #351
+            responseQueue = new LinkedTransferQueue<>();
         }
 
         public R take() {
