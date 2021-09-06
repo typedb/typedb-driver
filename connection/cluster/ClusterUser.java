@@ -30,16 +30,16 @@ import static com.vaticle.typedb.client.connection.cluster.ClusterUserManager.SY
 public class ClusterUser implements User {
 
     private final ClusterClient client;
-    private final String name;
+    private final String username;
 
-    public ClusterUser(ClusterClient client, String name) {
+    public ClusterUser(ClusterClient client, String username) {
         this.client = client;
-        this.name = name;
+        this.username = username;
     }
 
     @Override
-    public String name() {
-        return name;
+    public String username() {
+        return username;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ClusterUser implements User {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userPassword(passwordReq(name, password));
+                    parameter.client().stub().userPassword(passwordReq(username, password));
                     return null;
                 }
         );
@@ -59,7 +59,7 @@ public class ClusterUser implements User {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userDelete(deleteReq(name));
+                    parameter.client().stub().userDelete(deleteReq(username));
                     return null;
                 }
         );

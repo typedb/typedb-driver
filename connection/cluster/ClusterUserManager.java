@@ -44,28 +44,28 @@ public class ClusterUserManager implements UserManager {
     }
 
     @Override
-    public ClusterUser get(String name) {
-        if (contains(name)) return new ClusterUser(client, name);
-        else throw new TypeDBClientException(CLUSTER_USER_DOES_NOT_EXIST, name);
+    public ClusterUser get(String username) {
+        if (contains(username)) return new ClusterUser(client, username);
+        else throw new TypeDBClientException(CLUSTER_USER_DOES_NOT_EXIST, username);
     }
 
     @Override
-    public boolean contains(String name) {
+    public boolean contains(String username) {
         ClusterClient.FailsafeTask<Boolean> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) ->
-                        parameter.client().stub().usersContains(containsReq(name)).getContains()
+                        parameter.client().stub().usersContains(containsReq(username)).getContains()
         );
 
         return failsafeTask.runPrimaryReplica();
     }
 
     @Override
-    public void create(String name, String password) {
+    public void create(String username, String password) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) -> {
-                    parameter.client().stub().usersCreate(createReq(name, password));
+                    parameter.client().stub().usersCreate(createReq(username, password));
                     return null;
                 }
         );

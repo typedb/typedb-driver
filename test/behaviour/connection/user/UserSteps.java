@@ -47,38 +47,38 @@ public class UserSteps {
     }
 
     @Given("users contains: {word}")
-    public void users_contains(String name) {
-        Set<String> users = getClient().users().all().stream().map(User::name).collect(Collectors.toSet());
-        assertTrue(users.contains(name));
+    public void users_contains(String username) {
+        Set<String> users = getClient().users().all().stream().map(User::username).collect(Collectors.toSet());
+        assertTrue(users.contains(username));
     }
 
     @Then("users not contains: {word}")
-    public void not_users_contains(String name) {
-        Set<String> users = getClient().users().all().stream().map(User::name).collect(Collectors.toSet());
-        assertFalse(users.contains(name));
+    public void not_users_contains(String username) {
+        Set<String> users = getClient().users().all().stream().map(User::username).collect(Collectors.toSet());
+        assertFalse(users.contains(username));
     }
 
     @Then("users create: {word}, {word}")
-    public void users_create(String name, String password) {
-        getClient().users().create(name, password);
+    public void users_create(String username, String password) {
+        getClient().users().create(username, password);
     }
 
     @Then("user password: {word}, {word}")
-    public void user_password(String name, String password) {
-        getClient().users().get(name).password(password);
+    public void user_password(String username, String password) {
+        getClient().users().get(username).password(password);
     }
 
     @Then("user connect: {word}, {word}")
-    public void user_connect(String name, String password) {
+    public void user_connect(String username, String password) {
         String address = TypeDBSingleton.getTypeDBRunner().address();
-        TypeDBCredential credential = new TypeDBCredential(name, password, false);
+        TypeDBCredential credential = new TypeDBCredential(username, password, false);
         try (TypeDBClient.Cluster client = TypeDB.clusterClient(address, credential)) {
             List<Database.Cluster> ignored = client.databases().all();
         }
     }
 
     @Then("user delete: {word}")
-    public void user_delete(String name) {
-        getClient().users().get(name).delete();
+    public void user_delete(String username) {
+        getClient().users().get(username).delete();
     }
 }

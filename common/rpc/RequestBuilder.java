@@ -104,8 +104,8 @@ public class RequestBuilder {
     public static class Cluster {
 
         public static class ClusterUserToken {
-            public static ClusterUserTokenProto.ClusterUserToken.Renew.Req renewReq(String name) {
-                return ClusterUserTokenProto.ClusterUserToken.Renew.Req.newBuilder().setUsername(name).build();
+            public static ClusterUserTokenProto.ClusterUserToken.Renew.Req renewReq(String username) {
+                return ClusterUserTokenProto.ClusterUserToken.Renew.Req.newBuilder().setUsername(username).build();
             }
         }
 
@@ -117,12 +117,12 @@ public class RequestBuilder {
         }
 
         public static class UserManager {
-            public static ClusterUserProto.ClusterUserManager.Contains.Req containsReq(String name) {
-                return ClusterUserProto.ClusterUserManager.Contains.Req.newBuilder().setUsername(name).build();
+            public static ClusterUserProto.ClusterUserManager.Contains.Req containsReq(String username) {
+                return ClusterUserProto.ClusterUserManager.Contains.Req.newBuilder().setUsername(username).build();
             }
 
-            public static ClusterUserProto.ClusterUserManager.Create.Req createReq(String name, String password) {
-                return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setUsername(name).setPassword(password).build();
+            public static ClusterUserProto.ClusterUserManager.Create.Req createReq(String username, String password) {
+                return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
             public static ClusterUserProto.ClusterUserManager.All.Req allReq() {
@@ -131,12 +131,12 @@ public class RequestBuilder {
         }
 
         public static class User {
-            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String name, String password) {
-                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setUsername(name).setPassword(password).build();
+            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String username, String password) {
+                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
-            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String name) {
-                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setUsername(name).build();
+            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String username) {
+                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setUsername(username).build();
             }
         }
 
