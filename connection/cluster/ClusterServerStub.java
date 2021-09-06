@@ -40,7 +40,7 @@ import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ClusterUserToken.renewReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserToken.renewReq;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
