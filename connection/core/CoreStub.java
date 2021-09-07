@@ -21,18 +21,53 @@
 
 package com.vaticle.typedb.client.connection.core;
 
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ManagedChannel;
+import io.grpc.StatusRuntimeException;
+
+import java.util.function.Supplier;
 
 public class CoreStub extends TypeDBStub {
 
-    private CoreStub(ManagedChannel channel, TypeDBGrpc.TypeDBBlockingStub blockingStub, TypeDBGrpc.TypeDBStub asyncStub) {
-        super(channel, blockingStub, asyncStub);
+    private final ManagedChannel channel;
+    private final TypeDBGrpc.TypeDBBlockingStub blockingStub;
+    private final TypeDBGrpc.TypeDBStub asyncStub;
+
+    private CoreStub(ManagedChannel channel) {
+        super();
+        this.channel = channel;
+        this.blockingStub = TypeDBGrpc.newBlockingStub(channel);
+        this.asyncStub = TypeDBGrpc.newStub(channel);
     }
 
     public static CoreStub create(ManagedChannel channel) {
-        return new CoreStub(channel, TypeDBGrpc.newBlockingStub(channel), TypeDBGrpc.newStub(channel));
+        return new CoreStub(channel);
     }
 
+    @Override
+    protected ManagedChannel channel() {
+        return channel;
+    }
+
+    @Override
+    protected TypeDBGrpc.TypeDBBlockingStub blockingStub() {
+        return blockingStub;
+    }
+
+    @Override
+    protected TypeDBGrpc.TypeDBStub asyncStub() {
+        return asyncStub;
+    }
+
+    @Override
+    protected <RES> RES resilientCall(Supplier<RES> function) {
+        try {
+            ensureConnected();
+            return function.get();
+        } catch (StatusRuntimeException e) {
+            throw TypeDBClientException.of(e);
+        }
+    }
 }

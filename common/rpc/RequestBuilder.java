@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
+import com.vaticle.typedb.protocol.ClusterUserTokenProto;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.LogicProto;
@@ -34,11 +35,6 @@ import com.vaticle.typedb.protocol.OptionsProto;
 import com.vaticle.typedb.protocol.QueryProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
-import com.vaticle.typeql.lang.query.TypeQLDefine;
-import com.vaticle.typeql.lang.query.TypeQLDelete;
-import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLMatch;
-import com.vaticle.typeql.lang.query.TypeQLUndefine;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -116,12 +112,13 @@ public class RequestBuilder {
         }
 
         public static class UserManager {
-            public static ClusterUserProto.ClusterUserManager.Contains.Req containsReq(String name) {
-                return ClusterUserProto.ClusterUserManager.Contains.Req.newBuilder().setName(name).build();
+
+            public static ClusterUserProto.ClusterUserManager.Contains.Req containsReq(String username) {
+                return ClusterUserProto.ClusterUserManager.Contains.Req.newBuilder().setUsername(username).build();
             }
 
-            public static ClusterUserProto.ClusterUserManager.Create.Req createReq(String name, String password) {
-                return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setName(name).setPassword(password).build();
+            public static ClusterUserProto.ClusterUserManager.Create.Req createReq(String username, String password) {
+                return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
             public static ClusterUserProto.ClusterUserManager.All.Req allReq() {
@@ -130,12 +127,20 @@ public class RequestBuilder {
         }
 
         public static class User {
-            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String name, String password) {
-                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setName(name).setPassword(password).build();
+
+            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String username, String password) {
+                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
-            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String name) {
-                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setName(name).build();
+            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String username) {
+                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setUsername(username).build();
+            }
+        }
+
+        public static class UserToken {
+
+            public static ClusterUserTokenProto.ClusterUserToken.Renew.Req renewReq(String username) {
+                return ClusterUserTokenProto.ClusterUserToken.Renew.Req.newBuilder().setUsername(username).build();
             }
         }
 

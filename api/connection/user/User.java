@@ -26,7 +26,7 @@ import javax.annotation.CheckReturnValue;
 public interface User {
 
     @CheckReturnValue
-    String name();
+    String username();
 
     void password(String password);
 

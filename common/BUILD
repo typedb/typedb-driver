@@ -25,11 +25,16 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "common",
-    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
+    srcs = glob(
+        [
+            "*.java",
+            "*/*.java",
+        ],
+        exclude = ["test/**"],
+    ),
     deps = [
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql_lang_java//query",
         "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
         "@vaticle_factory_tracing//client",
 
@@ -45,7 +50,10 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "*/*"]),
-    license_type = "apache",
     size = "small",
+    include = glob([
+        "*",
+        "*/*",
+    ]),
+    license_type = "apache",
 )

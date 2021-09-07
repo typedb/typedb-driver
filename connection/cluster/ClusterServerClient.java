@@ -22,22 +22,65 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import io.grpc.ManagedChannel;
+import io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.NettyChannelBuilder;
+import io.netty.handler.ssl.SslContext;
+
+import javax.net.ssl.SSLException;
 
 class ClusterServerClient extends TypeDBClientImpl {
 
-    private final ClusterServerStub clusterServerStub;
+    private final ManagedChannel channel;
+    private final ClusterServerStub stub;
 
     private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
-        super(address, new ClusterServerConnectionFactory(credential), parallelisation);
-        clusterServerStub = ClusterServerStub.create(credential.username(), credential.password(), channel());
+        super(parallelisation);
+        channel = newManagedChannel(address, credential);
+        stub = new ClusterServerStub(channel, credential);
     }
 
     static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
         return new ClusterServerClient(address, credential, parallelisation);
     }
 
-    ClusterServerStub clusterServerStub() {
-        return clusterServerStub;
+    @Override
+    public ManagedChannel channel() {
+        return channel;
+    }
+
+    @Override
+    public ClusterServerStub stub() {
+        return stub;
+    }
+
+    private ManagedChannel newManagedChannel(String address, TypeDBCredential credential) {
+        if (!credential.tlsEnabled()) {
+            return plainTextChannel(address);
+        } else {
+            return tlsChannel(address, credential);
+        }
+    }
+
+    private ManagedChannel plainTextChannel(String address) {
+        return NettyChannelBuilder.forTarget(address)
+                .usePlaintext()
+                .build();
+    }
+
+    private ManagedChannel tlsChannel(String address, TypeDBCredential credential) {
+        try {
+            SslContext sslContext;
+            if (credential.tlsRootCA().isPresent()) {
+                sslContext = GrpcSslContexts.forClient().trustManager(credential.tlsRootCA().get().toFile()).build();
+            } else {
+                sslContext = GrpcSslContexts.forClient().build();
+            }
+            return NettyChannelBuilder.forTarget(address).useTransportSecurity().sslContext(sslContext).build();
+        } catch (SSLException e) {
+            throw new TypeDBClientException(e.getMessage(), e);
+        }
     }
 }
