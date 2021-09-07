@@ -31,7 +31,6 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
@@ -65,7 +64,7 @@ public class ResponseCollector<R> {
         private final BlockingQueue<Either<Response<R>, Done>> responseQueue;
 
         Queue() {
-            // TODO: We should be using LinkedBlockingQueue here, however there is a bug in Java 14-16: see #351
+            // TODO: switch LinkedTransferQueue to LinkedBlockingQueue once issue #351 is fixed
             responseQueue = new LinkedTransferQueue<>();
         }
 
