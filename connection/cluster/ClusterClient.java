@@ -87,7 +87,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         for (String address : addresses) {
             try (ClusterServerClient client = ClusterServerClient.create(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
-                ClusterServerStub stub = ClusterServerStub.create(credential.username(), credential.password(), client.channel());
+                ClusterServerStub stub = new ClusterServerStub(client.channel(), credential);
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
                 Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
                 LOG.debug("The cluster servers are {}", members);
@@ -289,7 +289,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 try {
                     LOG.debug("Fetching replica info from {}", serverAddress);
                     ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = clusterServerClient(serverAddress)
-                            .clusterServerStub().databasesGet(getReq(database));
+                            .stub().databasesGet(getReq(database));
                     ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
                     clusterDatabases.put(database, clusterDatabase);
                     return clusterDatabase;

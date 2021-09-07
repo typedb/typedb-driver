@@ -27,12 +27,12 @@ import java.util.Set;
 public interface UserManager {
 
     @CheckReturnValue
-    User get(String name);
+    User get(String username);
 
     @CheckReturnValue
-    boolean contains(String name);
+    boolean contains(String username);
 
-    void create(String name, String password);
+    void create(String username, String password);
 
     Set<User> all();
 }

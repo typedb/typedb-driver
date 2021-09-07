@@ -42,15 +42,11 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
-    private final ManagedChannel channel;
-    private final TypeDBStub stub;
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
 
-    protected TypeDBClientImpl(String address, TypeDBConnectionFactory typeDBConnectionFactory, int parallelisation) {
-        channel = typeDBConnectionFactory.newManagedChannel(address);
-        stub = typeDBConnectionFactory.newTypeDBStub(channel);
+    protected TypeDBClientImpl(int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new TypeDBDatabaseManagerImpl(this);
@@ -85,7 +81,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public boolean isOpen() {
-        return !channel.isShutdown();
+        return !channel().isShutdown();
     }
 
     @Override
@@ -98,13 +94,9 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         throw new TypeDBClientException(ILLEGAL_CAST, className(TypeDBClient.Cluster.class));
     }
 
-    public ManagedChannel channel() {
-        return channel;
-    }
+    public abstract ManagedChannel channel();
 
-    TypeDBStub stub() {
-        return stub;
-    }
+    public abstract TypeDBStub stub();
 
     RequestTransmitter transmitter() {
         return transmitter;
@@ -118,7 +110,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     public void close() {
         try {
             sessions.values().forEach(TypeDBSessionImpl::close);
-            channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+            channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
             transmitter.close();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
