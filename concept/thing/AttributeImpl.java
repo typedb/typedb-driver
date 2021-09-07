@@ -31,6 +31,7 @@ import com.vaticle.typedb.protocol.ConceptProto;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
@@ -488,7 +489,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         private static LocalDateTime toLocalDateTime(long rpcDatetime) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneId.of("Z"));
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneOffset.UTC);
         }
 
         public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {

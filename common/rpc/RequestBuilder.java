@@ -42,6 +42,7 @@ import com.vaticle.typeql.lang.query.TypeQLUndefine;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -716,7 +717,7 @@ public class RequestBuilder {
             }
 
             public static ConceptProto.Attribute.Value protoDateTimeAttributeValue(LocalDateTime value) {
-                long epochMillis = value.atZone(ZoneId.of("Z")).toInstant().toEpochMilli();
+                long epochMillis = value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                 return ConceptProto.Attribute.Value.newBuilder().setDateTime(epochMillis).build();
             }
         }
