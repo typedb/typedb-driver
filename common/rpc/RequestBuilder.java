@@ -24,6 +24,7 @@ package com.vaticle.typedb.client.common.rpc;
 import com.google.protobuf.ByteString;
 import com.vaticle.factory.tracing.client.FactoryTracingThreadStatic;
 import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.protocol.ClientProto;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
@@ -36,6 +37,7 @@ import com.vaticle.typedb.protocol.QueryProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
 
+import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -100,6 +102,26 @@ public class RequestBuilder {
                 return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
             }
         }
+
+    }
+
+    public static class Client {
+
+        public static ClientProto.Client.Open.Req openReq(@Nullable Integer idleTimeoutMillis) {
+            ClientProto.Client.Open.Req.Builder builder = ClientProto.Client.Open.Req.newBuilder();
+            if (idleTimeoutMillis != null) {
+                builder = builder.setIdleTimeoutMillis(idleTimeoutMillis);
+            }
+            return builder.build();
+        }
+
+        public static ClientProto.Client.Pulse.Req pulseReq(ByteString clientID) {
+            return ClientProto.Client.Pulse.Req.newBuilder().setClientId(clientID).build();
+        }
+
+        public static ClientProto.Client.Close.Req closeReq(ByteString clientID) {
+            return ClientProto.Client.Close.Req.newBuilder().setClientId(clientID).build();
+        }
     }
 
     public static class Cluster {
@@ -163,13 +185,10 @@ public class RequestBuilder {
     public static class Session {
 
         public static SessionProto.Session.Open.Req openReq(
-                String database, SessionProto.Session.Type type, OptionsProto.Options options) {
-            return SessionProto.Session.Open.Req.newBuilder().setDatabase(database)
+                ByteString clientID, String database, SessionProto.Session.Type type, OptionsProto.Options options) {
+            return SessionProto.Session.Open.Req.newBuilder()
+                    .setClientId(clientID).setDatabase(database)
                     .setType(type).setOptions(options).build();
-        }
-
-        public static SessionProto.Session.Pulse.Req pulseReq(ByteString sessionID) {
-            return SessionProto.Session.Pulse.Req.newBuilder().setSessionId(sessionID).build();
         }
 
         public static SessionProto.Session.Close.Req closeReq(ByteString sessionID) {
@@ -190,10 +209,10 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req.Builder openReq(
-                ByteString sessionID, TransactionProto.Transaction.Type type,
+                ByteString clientID, ByteString sessionID, TransactionProto.Transaction.Type type,
                 OptionsProto.Options options, int networkLatencyMillis) {
             return TransactionProto.Transaction.Req.newBuilder().setOpenReq(
-                    TransactionProto.Transaction.Open.Req.newBuilder().setSessionId(sessionID)
+                    TransactionProto.Transaction.Open.Req.newBuilder().setClientId(clientID).setSessionId(sessionID)
                             .setType(type).setOptions(options).setNetworkLatencyMillis(networkLatencyMillis)
             );
         }

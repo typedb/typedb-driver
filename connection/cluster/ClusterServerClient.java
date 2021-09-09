@@ -21,29 +21,39 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
+import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.connection.TypeDBCredential;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.protocol.ClientProto;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.SSLException;
+
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.openReq;
 
 class ClusterServerClient extends TypeDBClientImpl {
 
+    private final ByteString clientID;
     private final ManagedChannel channel;
     private final ClusterServerStub stub;
 
-    private ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
-        super(parallelisation);
+    ClusterServerClient(String address, TypeDBCredential credential, @Nullable Integer idleTimeoutMillis, int parallelisation) {
+        super(idleTimeoutMillis, parallelisation);
         channel = newManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
+        ClientProto.Client.Open.Res res = stub().clientOpen(openReq(idleTimeoutMillis));
+        clientID = res.getClientId();
+        pulseActivate();
     }
 
-    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
-        return new ClusterServerClient(address, credential, parallelisation);
+    @Override
+    public ByteString ID() {
+        return clientID;
     }
 
     @Override

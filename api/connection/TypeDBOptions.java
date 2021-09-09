@@ -162,7 +162,6 @@ public class TypeDBOptions {
         parallel().ifPresent(builder::setParallel);
         prefetchSize().ifPresent(builder::setPrefetchSize);
         prefetch().ifPresent(builder::setPrefetch);
-        sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
         schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
         if (isCluster()) asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
 

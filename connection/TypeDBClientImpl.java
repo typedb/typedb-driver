@@ -31,26 +31,40 @@ import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
 import io.grpc.ManagedChannel;
 
+import javax.annotation.Nullable;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.closeReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.pulseReq;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class TypeDBClientImpl implements TypeDBClient {
 
+    private static final int PULSE_INTERVAL_MILLIS = 5_000;
     private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
 
+    @Nullable
+    protected final Integer idleTimeoutMillis;
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
+    private final Timer pulse;
+    private final AtomicBoolean isOpen;
 
-    protected TypeDBClientImpl(int parallelisation) {
+    protected TypeDBClientImpl(@Nullable Integer idleTimeoutMillis, int parallelisation) {
+        this.idleTimeoutMillis = idleTimeoutMillis;
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new TypeDBDatabaseManagerImpl(this);
         sessions = new ConcurrentHashMap<>();
+        pulse = new Timer();
+        isOpen = new AtomicBoolean(true);
     }
 
     public static int calculateParallelisation() {
@@ -61,17 +75,8 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         else return (int) Math.ceil(cores / 4.0);
     }
 
-    @Override
-    public TypeDBSessionImpl session(String database, TypeDBSession.Type type) {
-        return session(database, type, TypeDBOptions.core());
-    }
-
-    @Override
-    public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
-        assert !sessions.containsKey(session.id());
-        sessions.put(session.id(), session);
-        return session;
+    protected void pulseActivate() {
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
 
     @Override
@@ -80,8 +85,35 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     }
 
     @Override
+    public TypeDBSessionImpl session(String database, TypeDBSession.Type type) {
+        return session(database, type, TypeDBOptions.core());
+    }
+
+    @Override
+    public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
+        TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
+        assert !sessions.containsKey(session.ID());
+        sessions.put(session.ID(), session);
+        return session;
+    }
+
+    void removeSession(TypeDBSessionImpl session) {
+        sessions.remove(session.ID());
+    }
+
+    public abstract ByteString ID();
+
+    @Override
     public boolean isOpen() {
         return !channel().isShutdown();
+    }
+
+    public abstract ManagedChannel channel();
+
+    public abstract TypeDBStub stub();
+
+    RequestTransmitter transmitter() {
+        return transmitter;
     }
 
     @Override
@@ -94,27 +126,37 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         throw new TypeDBClientException(ILLEGAL_CAST, className(TypeDBClient.Cluster.class));
     }
 
-    public abstract ManagedChannel channel();
-
-    public abstract TypeDBStub stub();
-
-    RequestTransmitter transmitter() {
-        return transmitter;
-    }
-
-    void removeSession(TypeDBSessionImpl session) {
-        sessions.remove(session.id());
-    }
-
     @Override
     public void close() {
         try {
-            sessions.values().forEach(TypeDBSessionImpl::close);
-            channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            transmitter.close();
+            if (isOpen.compareAndSet(true, false)) {
+                sessions.values().forEach(TypeDBSessionImpl::close);
+                pulse.cancel();
+                stub().clientClose(closeReq(ID()));
+                channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
+                transmitter.close();
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
 
+    private class PulseTask extends TimerTask {
+
+        @Override
+        public void run() {
+            if (!isOpen()) return;
+            boolean alive;
+            try {
+                alive = stub().clientPulse(pulseReq(ID())).getAlive();
+                System.out.println("client pulse - alive: " + alive);
+            } catch (TypeDBClientException exception) {
+                alive = false;
+            }
+            if (!alive) {
+                isOpen.set(false);
+                pulse.cancel();
+            }
+        }
+    }
 }

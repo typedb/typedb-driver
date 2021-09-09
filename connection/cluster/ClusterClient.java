@@ -33,6 +33,7 @@ import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
 
     private final TypeDBCredential credential;
+    @Nullable
+    private final Integer idleTimeoutMillis;
     private final int parallelisation;
     private final Map<String, ClusterServerClient> clusterServerClients;
     private final ClusterUserManager userMgr;
@@ -63,11 +66,20 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    private ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+    public ClusterClient(Set<String> addresses, TypeDBCredential credential) {
+        this(addresses, credential, null, ClusterServerClient.calculateParallelisation());
+    }
+
+    public ClusterClient(Set<String> addresses, TypeDBCredential credential, int idleTimeoutMillis) {
+        this(addresses, credential, idleTimeoutMillis, ClusterServerClient.calculateParallelisation());
+    }
+
+    private ClusterClient(Set<String> addresses, TypeDBCredential credential, @Nullable Integer idleTimeoutMillis, int parallelisation) {
         this.credential = credential;
+        this.idleTimeoutMillis = idleTimeoutMillis;
         this.parallelisation = parallelisation;
         clusterServerClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, ClusterServerClient.create(address, credential, parallelisation)))
+                .map(address -> pair(address, new ClusterServerClient(address, credential, idleTimeoutMillis, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -75,17 +87,9 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = true;
     }
 
-    public static Cluster create(Set<String> addresses, TypeDBCredential credential) {
-        return new ClusterClient(addresses, credential, ClusterServerClient.calculateParallelisation());
-    }
-
-    public static Cluster create(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
-        return new ClusterClient(addresses, credential, parallelisation);
-    }
-
     private Set<String> fetchServerAddresses(Set<String> addresses) {
         for (String address : addresses) {
-            try (ClusterServerClient client = ClusterServerClient.create(address, credential, parallelisation)) {
+            try (ClusterServerClient client = new ClusterServerClient(address, credential, idleTimeoutMillis, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 ClusterServerStub stub = new ClusterServerStub(client.channel(), credential);
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());

@@ -33,8 +33,6 @@ import com.vaticle.typedb.protocol.SessionProto;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
@@ -42,11 +40,8 @@ import java.util.concurrent.locks.StampedLock;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.closeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.openReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.pulseReq;
 
 public class TypeDBSessionImpl implements TypeDBSession {
-
-    private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
     private final TypeDBClientImpl client;
     private final TypeDBDatabaseImpl database;
@@ -54,7 +49,6 @@ public class TypeDBSessionImpl implements TypeDBSession {
     private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
     private final Type type;
     private final TypeDBOptions options;
-    private final Timer pulse;
     private final ReadWriteLock accessLock;
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
@@ -65,7 +59,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
         this.options = options;
         Instant startTime = Instant.now();
         SessionProto.Session.Open.Res res = client.stub().sessionOpen(
-                openReq(database, type.proto(), options.proto())
+                openReq(client.ID(), database, type.proto(), options.proto())
         );
         Instant endTime = Instant.now();
         this.database = new TypeDBDatabaseImpl(client.databases(), database);
@@ -74,21 +68,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
         transactions = new ConcurrentSet<>();
         accessLock = new StampedLock().asReadWriteLock();
         isOpen = new AtomicBoolean(true);
-        pulse = new Timer();
-        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
-
-    @Override
-    public boolean isOpen() { return isOpen.get(); }
-
-    @Override
-    public Type type() { return type; }
-
-    @Override
-    public TypeDBDatabaseImpl database() { return database; }
-
-    @Override
-    public TypeDBOptions options() { return options; }
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
@@ -100,7 +80,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
         try {
             accessLock.readLock().lock();
             if (!isOpen.get()) throw new TypeDBClientException(SESSION_CLOSED);
-            TypeDBTransaction.Extended transactionRPC = new TypeDBTransactionImpl(this, sessionID, type, options);
+            TypeDBTransaction.Extended transactionRPC = new TypeDBTransactionImpl(client.ID(), this, type, options);
             transactions.add(transactionRPC);
             return transactionRPC;
         } finally {
@@ -108,7 +88,19 @@ public class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
-    ByteString id() { return sessionID; }
+    ByteString ID() { return sessionID; }
+
+    @Override
+    public TypeDBDatabaseImpl database() { return database; }
+
+    @Override
+    public Type type() { return type; }
+
+    @Override
+    public TypeDBOptions options() { return options; }
+
+    @Override
+    public boolean isOpen() { return isOpen.get(); }
 
     TypeDBStub stub() {
         return client.stub();
@@ -127,7 +119,6 @@ public class TypeDBSessionImpl implements TypeDBSession {
             if (isOpen.compareAndSet(true, false)) {
                 transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
-                pulse.cancel();
                 try {
                     stub().sessionClose(closeReq(sessionID));
                 } catch (TypeDBClientException e) {
@@ -136,24 +127,6 @@ public class TypeDBSessionImpl implements TypeDBSession {
             }
         } finally {
             accessLock.writeLock().unlock();
-        }
-    }
-
-    private class PulseTask extends TimerTask {
-
-        @Override
-        public void run() {
-            if (!isOpen()) return;
-            boolean alive;
-            try {
-                alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (TypeDBClientException exception) {
-                alive = false;
-            }
-            if (!alive) {
-                isOpen.set(false);
-                pulse.cancel();
-            }
         }
     }
 }

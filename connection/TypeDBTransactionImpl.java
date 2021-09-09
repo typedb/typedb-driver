@@ -54,33 +54,15 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     private final BidirectionalStream bidirectionalStream;
 
-    TypeDBTransactionImpl(TypeDBSessionImpl session, ByteString sessionId, Type type, TypeDBOptions options) {
+    TypeDBTransactionImpl(ByteString clientID, TypeDBSessionImpl session, Type type, TypeDBOptions options) {
         this.type = type;
         this.options = options;
         conceptMgr = new ConceptManagerImpl(this);
         logicMgr = new LogicManagerImpl(this);
         queryMgr = new QueryManagerImpl(this);
         bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
-        execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
+        execute(openReq(clientID, session.ID(), type.proto(), options.proto(), session.networkLatencyMillis()), false);
     }
-
-    @Override
-    public Type type() { return type; }
-
-    @Override
-    public TypeDBOptions options() { return options; }
-
-    @Override
-    public boolean isOpen() { return bidirectionalStream.isOpen(); }
-
-    @Override
-    public ConceptManager concepts() { return conceptMgr; }
-
-    @Override
-    public LogicManager logic() { return logicMgr; }
-
-    @Override
-    public QueryManager query() { return queryMgr; }
 
     @Override
     public Res execute(Req.Builder request) {
@@ -107,6 +89,24 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         if (!isOpen()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         return bidirectionalStream.stream(request);
     }
+
+    @Override
+    public boolean isOpen() { return bidirectionalStream.isOpen(); }
+
+    @Override
+    public Type type() { return type; }
+
+    @Override
+    public TypeDBOptions options() { return options; }
+
+    @Override
+    public ConceptManager concepts() { return conceptMgr; }
+
+    @Override
+    public LogicManager logic() { return logicMgr; }
+
+    @Override
+    public QueryManager query() { return queryMgr; }
 
     @Override
     public void commit() {

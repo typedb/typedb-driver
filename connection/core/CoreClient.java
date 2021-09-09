@@ -21,28 +21,45 @@
 
 package com.vaticle.typedb.client.connection.core;
 
+import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.protocol.ClientProto;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
+import javax.annotation.Nullable;
+
+import java.util.Timer;
+
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.openReq;
+
 public class CoreClient extends TypeDBClientImpl {
 
+    private final ByteString clientID;
     private final ManagedChannel channel;
     private final TypeDBStub stub;
 
+    public CoreClient(String address) {
+        this(address, calculateParallelisation());
+    }
+
     public CoreClient(String address, int parallelisation) {
-        super(parallelisation);
+        this(address, null, parallelisation);
+    }
+
+    public CoreClient(String address, @Nullable Integer idleTimeoutMillis, int parallelisation) {
+        super(idleTimeoutMillis, parallelisation);
         channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
         stub = CoreStub.create(channel);
+        ClientProto.Client.Open.Res res = stub().clientOpen(openReq(idleTimeoutMillis));
+        clientID = res.getClientId();
+        pulseActivate();
     }
 
-    public static CoreClient create(String address) {
-        return new CoreClient(address, calculateParallelisation());
-    }
-
-    public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, parallelisation);
+    @Override
+    public ByteString ID() {
+        return clientID;
     }
 
     @Override

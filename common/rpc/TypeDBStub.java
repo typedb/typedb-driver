@@ -24,6 +24,7 @@ package com.vaticle.typedb.client.common.rpc;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
+import com.vaticle.typedb.protocol.ClientProto.Client;
 import com.vaticle.typedb.protocol.SessionProto.Session;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
@@ -35,6 +36,18 @@ import io.grpc.stub.StreamObserver;
 import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
+
+    public Client.Open.Res clientOpen(Client.Open.Req request) {
+        return resilientCall(() -> blockingStub().clientOpen(request));
+    }
+
+    public Client.Close.Res clientClose(Client.Close.Req request) {
+        return resilientCall(() -> blockingStub().clientClose(request));
+    }
+
+    public Client.Pulse.Res clientPulse(Client.Pulse.Req request) {
+        return resilientCall(() -> blockingStub().clientPulse(request));
+    }
 
     public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
         return resilientCall(() -> blockingStub().databasesContains(request));
@@ -62,10 +75,6 @@ public abstract class TypeDBStub {
 
     public Session.Close.Res sessionClose(Session.Close.Req request) {
         return resilientCall(() -> blockingStub().sessionClose(request));
-    }
-
-    public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
-        return resilientCall(() -> blockingStub().sessionPulse(request));
     }
 
     public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
