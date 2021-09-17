@@ -77,11 +77,11 @@ export namespace RequestBuilder {
 
         export namespace UserManager {
             export function containsReq(name: string): ClusterUserManagerProto.Contains.Req {
-                return new ClusterUserManagerProto.Contains.Req().setName(name);
+                return new ClusterUserManagerProto.Contains.Req().setUsername(name);
             }
 
             export function createReq(name: string, password: string): ClusterUserManagerProto.Create.Req {
-                return new ClusterUserManagerProto.Create.Req().setName(name).setPassword(password);
+                return new ClusterUserManagerProto.Create.Req().setUsername(name).setPassword(password);
             }
 
             export function allReq(): ClusterUserManagerProto.All.Req {
@@ -91,11 +91,11 @@ export namespace RequestBuilder {
 
         export namespace User {
             export function passwordReq(name: string, password: string): ClusterUserProto.Password.Req {
-                return new ClusterUserProto.Password.Req().setName(name).setPassword(password);
+                return new ClusterUserProto.Password.Req().setUsername(name).setPassword(password);
             }
 
             export function deleteReq(name: string): ClusterUserProto.Delete.Req {
-                return new ClusterUserProto.Delete.Req().setName(name);
+                return new ClusterUserProto.Delete.Req().setUsername(name);
             }
 
         }
