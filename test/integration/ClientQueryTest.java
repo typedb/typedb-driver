@@ -60,19 +60,6 @@ import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("Duplicates")
 
-class ClientQueryTest2 {
-    @Test
-    public void simple() {
-        TypeDBClient typedbClient = TypeDB.coreClient("127.0.0.1:1729");
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
-
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static TypeDBCoreRunner typedb;
