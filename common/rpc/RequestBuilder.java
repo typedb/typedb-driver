@@ -191,8 +191,8 @@ public class RequestBuilder {
                     .setType(type).setOptions(options).build();
         }
 
-        public static SessionProto.Session.Close.Req closeReq(ByteString sessionID) {
-            return SessionProto.Session.Close.Req.newBuilder().setSessionId(sessionID).build();
+        public static SessionProto.Session.Close.Req closeReq(ByteString clientID, ByteString sessionID) {
+            return SessionProto.Session.Close.Req.newBuilder().setClientId(clientID).setSessionId(sessionID).build();
         }
     }
 

@@ -120,7 +120,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
                 transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
                 try {
-                    stub().sessionClose(closeReq(sessionID));
+                    stub().sessionClose(closeReq(client.ID(), sessionID));
                 } catch (TypeDBClientException e) {
                     // Most likely the session is already closed or the server is no longer running.
                 }
