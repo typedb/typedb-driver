@@ -48,7 +48,7 @@ public class CoreClient extends TypeDBClientImpl {
         this(address, null, parallelisation);
     }
 
-    public CoreClient(String address, @Nullable Integer idleTimeoutMillis, int parallelisation) {
+    private CoreClient(String address, @Nullable Integer idleTimeoutMillis, int parallelisation) {
         super(idleTimeoutMillis, parallelisation);
         channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
         stub = CoreStub.create(channel);
