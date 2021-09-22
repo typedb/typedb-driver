@@ -30,8 +30,6 @@ import io.grpc.netty.NettyChannelBuilder;
 
 import javax.annotation.Nullable;
 
-import java.util.Timer;
-
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.openReq;
 
 public class CoreClient extends TypeDBClientImpl {
@@ -70,5 +68,11 @@ public class CoreClient extends TypeDBClientImpl {
     @Override
     public TypeDBStub stub() {
         return stub;
+    }
+
+    @Override
+    protected void closeResources() {
+        pulseDeactivate();
+        super.closeResources();
     }
 }

@@ -22,9 +22,9 @@
 package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
+import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.connection.TypeDBOptions;
 import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;

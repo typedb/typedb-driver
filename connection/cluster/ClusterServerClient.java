@@ -93,4 +93,10 @@ class ClusterServerClient extends TypeDBClientImpl {
             throw new TypeDBClientException(e.getMessage(), e);
         }
     }
+
+    @Override
+    protected void closeResources() {
+        pulseDeactivate();
+        super.closeResources();
+    }
 }

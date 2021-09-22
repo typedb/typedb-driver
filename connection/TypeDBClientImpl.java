@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.closeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Client.pulseReq;
 import static com.vaticle.typedb.common.util.Objects.className;
@@ -73,10 +74,6 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         else if (cores <= 9) return 3;
         else if (cores <= 16) return 4;
         else return (int) Math.ceil(cores / 4.0);
-    }
-
-    protected void pulseActivate() {
-        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
 
     @Override
@@ -116,6 +113,14 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         return transmitter;
     }
 
+    protected void pulseActivate() {
+        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
+    }
+
+    protected void pulseDeactivate() {
+        pulse.cancel();
+    }
+
     @Override
     public boolean isCluster() {
         return false;
@@ -128,17 +133,20 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public void close() {
-        try {
-            if (isOpen.compareAndSet(true, false)) {
-                sessions.values().forEach(TypeDBSessionImpl::close);
-                pulse.cancel();
-                stub().clientClose(closeReq(ID()));
-                channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
-                transmitter.close();
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (isOpen.compareAndSet(true, false)) {
+            closeResources();
         }
+    }
+
+    protected void closeResources() {
+        sessions.values().forEach(TypeDBSessionImpl::close);
+        stub().clientClose(closeReq(ID()));
+        try {
+            channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
+        }
+        transmitter.close();
     }
 
     private class PulseTask extends TimerTask {
@@ -154,8 +162,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
                 alive = false;
             }
             if (!alive) {
-                isOpen.set(false);
-                pulse.cancel();
+                close();
             }
         }
     }

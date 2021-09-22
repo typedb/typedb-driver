@@ -21,16 +21,14 @@
 
 package com.vaticle.typedb.client.common.rpc;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.protocol.ClientProto.Client;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
 import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
-import com.vaticle.typedb.protocol.ClientProto.Client;
 import com.vaticle.typedb.protocol.SessionProto.Session;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
-import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.function.Supplier;
