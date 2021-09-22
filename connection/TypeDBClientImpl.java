@@ -157,7 +157,6 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
             boolean alive;
             try {
                 alive = stub().clientPulse(pulseReq(ID())).getAlive();
-                System.out.println("client pulse - alive: " + alive);
             } catch (TypeDBClientException exception) {
                 alive = false;
             }
