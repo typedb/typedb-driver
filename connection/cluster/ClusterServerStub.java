@@ -75,35 +75,35 @@ public class ClusterServerStub extends TypeDBStub {
     }
 
     public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.serversAll(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.serversAll(request));
     }
 
     public ClusterUserProto.ClusterUserManager.Contains.Res usersContains(ClusterUserProto.ClusterUserManager.Contains.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersContains(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.usersContains(request));
     }
 
     public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserProto.ClusterUserManager.Create.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersCreate(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.usersCreate(request));
     }
 
     public ClusterUserProto.ClusterUserManager.All.Res usersAll(ClusterUserProto.ClusterUserManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersAll(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.usersAll(request));
     }
 
     public ClusterUserProto.ClusterUser.Password.Res userPassword(ClusterUserProto.ClusterUser.Password.Req request) {
-        return resilientCall(() -> clusterBlockingStub.userPassword(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.userPassword(request));
     }
 
     public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-        return resilientCall(() -> clusterBlockingStub.userDelete(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.userDelete(request));
     }
 
     public ClusterDatabaseProto.ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req request) {
-        return resilientCall(() -> clusterBlockingStub.databasesGet(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.databasesGet(request));
     }
 
     public ClusterDatabaseProto.ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseProto.ClusterDatabaseManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.databasesAll(request));
+        return resilientAuthenticatedCall(() -> clusterBlockingStub.databasesAll(request));
     }
 
     @Override
@@ -121,23 +121,20 @@ public class ClusterServerStub extends TypeDBStub {
         return asyncStub;
     }
 
-    @Override
-    protected <RES> RES resilientCall(Supplier<RES> function) {
+    private <RES> RES resilientAuthenticatedCall(Supplier<RES> function) {
         try {
-            ensureConnected();
-            return function.get();
-        } catch (StatusRuntimeException e1) {
-            TypeDBClientException e2 = TypeDBClientException.of(e1);
-            if (e2.getErrorMessage() != null && e2.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
+            return resilientCall(function);
+        } catch (TypeDBClientException e) {
+            if (e.getErrorMessage() != null && e.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
                 token = null;
                 ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(credential.username()));
                 token = res.getToken();
                 try {
-                    return function.get();
-                } catch (StatusRuntimeException e3) {
-                    throw TypeDBClientException.of(e3);
+                    return resilientCall(function);
+                } catch (StatusRuntimeException e2) {
+                    throw TypeDBClientException.of(e2);
                 }
-            } else throw e2;
+            } else throw e;
         }
     }
 
