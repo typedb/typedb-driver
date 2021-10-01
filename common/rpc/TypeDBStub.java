@@ -89,5 +89,12 @@ public abstract class TypeDBStub {
         }
     }
 
-    protected abstract <RES> RES resilientCall(Supplier<RES> function);
+    protected <RES> RES resilientCall(Supplier<RES> function) {
+        try {
+            ensureConnected();
+            return function.get();
+        } catch (StatusRuntimeException e) {
+            throw TypeDBClientException.of(e);
+        }
+    }
 }
