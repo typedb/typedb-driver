@@ -70,8 +70,29 @@ public class ClusterServerStub extends TypeDBStub {
         }
     }
 
-    public static ClusterServerStub create(TypeDBCredential credential, ManagedChannel channel) {
-        return new ClusterServerStub(channel, credential);
+    private CallCredentials createCallCredentials() {
+        return new CallCredentials() {
+            private final Metadata.Key<String> TOKEN_FIELD = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
+            private final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
+            private final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
+
+            @Override
+            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                appExecutor.execute(() -> {
+                    Metadata headers = new Metadata();
+                    headers.put(USERNAME_FIELD, credential.username());
+                    if (token != null) {
+                        headers.put(TOKEN_FIELD, token);
+                    } else {
+                        headers.put(PASSWORD_FIELD, credential.password());
+                    }
+                    applier.apply(headers);
+                });
+            }
+
+            @Override
+            public void thisUsesUnstableApi() { }
+        };
     }
 
     public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
@@ -136,30 +157,5 @@ public class ClusterServerStub extends TypeDBStub {
                 }
             } else throw e;
         }
-    }
-
-    private CallCredentials createCallCredentials() {
-        return new CallCredentials() {
-            private final Metadata.Key<String> TOKEN_FIELD = Metadata.Key.of("token", ASCII_STRING_MARSHALLER);
-            private final Metadata.Key<String> USERNAME_FIELD = Metadata.Key.of("username", ASCII_STRING_MARSHALLER);
-            private final Metadata.Key<String> PASSWORD_FIELD = Metadata.Key.of("password", ASCII_STRING_MARSHALLER);
-
-            @Override
-            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
-                appExecutor.execute(() -> {
-                    Metadata headers = new Metadata();
-                    headers.put(USERNAME_FIELD, credential.username());
-                    if (token != null) {
-                        headers.put(TOKEN_FIELD, token);
-                    } else {
-                        headers.put(PASSWORD_FIELD, credential.password());
-                    }
-                    applier.apply(headers);
-                });
-            }
-
-            @Override
-            public void thisUsesUnstableApi() { }
-        };
     }
 }

@@ -31,18 +31,14 @@ public class CoreClient extends TypeDBClientImpl {
     private final ManagedChannel channel;
     private final TypeDBStub stub;
 
+    public CoreClient(String address) {
+        this(address, calculateParallelisation());
+    }
+
     public CoreClient(String address, int parallelisation) {
         super(parallelisation);
         channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
         stub = CoreStub.create(channel);
-    }
-
-    public static CoreClient create(String address) {
-        return new CoreClient(address, calculateParallelisation());
-    }
-
-    public static CoreClient create(String address, int parallelisation) {
-        return new CoreClient(address, parallelisation);
     }
 
     @Override
