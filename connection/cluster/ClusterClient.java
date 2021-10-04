@@ -67,7 +67,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         this.credential = credential;
         this.parallelisation = parallelisation;
         clusterServerClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, ClusterServerClient.create(address, credential, parallelisation)))
+                .map(address -> pair(address, new ClusterServerClient(address, credential, parallelisation)))
                 .collect(toMap(Pair::first, Pair::second));
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -85,7 +85,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
     private Set<String> fetchServerAddresses(Set<String> addresses) {
         for (String address : addresses) {
-            try (ClusterServerClient client = ClusterServerClient.create(address, credential, parallelisation)) {
+            try (ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation)) {
                 LOG.debug("Fetching list of cluster servers from {}...", address);
                 ClusterServerStub stub = new ClusterServerStub(client.channel(), credential);
                 ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
