@@ -63,7 +63,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    private ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+    public ClusterClient(Set<String> addresses, TypeDBCredential credential) {
+        this(addresses, credential, ClusterServerClient.calculateParallelisation());
+    }
+
+    public ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
         this.credential = credential;
         this.parallelisation = parallelisation;
         clusterServerClients = fetchServerAddresses(addresses).stream()
@@ -73,14 +77,6 @@ public class ClusterClient implements TypeDBClient.Cluster {
         databaseMgr = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
-    }
-
-    public static Cluster create(Set<String> addresses, TypeDBCredential credential) {
-        return new ClusterClient(addresses, credential, ClusterServerClient.calculateParallelisation());
-    }
-
-    public static Cluster create(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
-        return new ClusterClient(addresses, credential, parallelisation);
     }
 
     private Set<String> fetchServerAddresses(Set<String> addresses) {
