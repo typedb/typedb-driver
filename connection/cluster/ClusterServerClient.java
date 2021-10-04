@@ -62,10 +62,6 @@ class ClusterServerClient extends TypeDBClientImpl {
         }
     }
 
-    static ClusterServerClient create(String address, TypeDBCredential credential, int parallelisation) {
-        return new ClusterServerClient(address, credential, parallelisation);
-    }
-
     @Override
     public ManagedChannel channel() {
         return channel;

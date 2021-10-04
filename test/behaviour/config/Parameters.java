@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.test.behaviour.config;
 
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.common.Label;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
