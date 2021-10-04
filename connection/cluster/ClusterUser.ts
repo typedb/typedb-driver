@@ -28,29 +28,29 @@ import { ClusterClient } from "./ClusterClient";
 export class ClusterUser implements User {
 
     private readonly _client: ClusterClient;
-    private readonly _name: string;
+    private readonly _username: string;
 
-    constructor(client: ClusterClient, name: string) {
+    constructor(client: ClusterClient, username: string) {
         this._client = client;
-        this._name = name;
+        this._username = username;
     }
 
     async password(password: string): Promise<void> {
         const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
-            return this._client.stub(replica.address).userPassword(RequestBuilder.Cluster.User.passwordReq(this.name, password));
+            return this._client.stub(replica.address).userPassword(RequestBuilder.Cluster.User.passwordReq(this.username, password));
         });
         await failsafeTask.runPrimaryReplica();
     }
 
     async delete(): Promise<void> {
         const failsafeTask = new ClusterUserFailsafeTask(this._client, (replica) => {
-            return this._client.stub(replica.address).userDelete(RequestBuilder.Cluster.User.deleteReq(this.name));
+            return this._client.stub(replica.address).userDelete(RequestBuilder.Cluster.User.deleteReq(this.username));
         });
         await failsafeTask.runPrimaryReplica();
     }
 
-    get name(): string {
-        return this._name;
+    get username(): string {
+        return this._username;
     }
 }
 

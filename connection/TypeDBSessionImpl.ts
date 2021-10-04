@@ -31,13 +31,14 @@ import { RequestTransmitter } from "../stream/RequestTransmitter";
 import { CoreClient } from "./core/CoreClient";
 import { TypeDBTransactionImpl } from "./TypeDBTransactionImpl";
 import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
+import {TypeDBClientImpl} from "./TypeDBClientImpl";
 
 export class TypeDBSessionImpl implements TypeDBSession {
 
     private readonly _databaseName: string;
     private readonly _type: SessionType;
     private readonly _options: TypeDBOptions;
-    private readonly _client: CoreClient;
+    private readonly _client: TypeDBClientImpl;
     private _id: string;
     private _database: Database;
     private _isOpen: boolean;
@@ -45,7 +46,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private _networkLatencyMillis: number;
     private _transactions: Set<TypeDBTransaction.Extended>;
 
-    constructor(database: string, type: SessionType, options: TypeDBOptions, client: CoreClient) {
+    constructor(database: string, type: SessionType, options: TypeDBOptions, client: TypeDBClientImpl) {
         this._databaseName = database;
         this._type = type;
         this._options = options;
@@ -70,7 +71,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         if (this._isOpen) {
             this._isOpen = false;
             this._transactions.forEach(tx => tx.close());
-            this._client.closedSession(this);
+            this._client.closeSession(this);
             clearTimeout(this._pulse);
             const req = RequestBuilder.Session.closeReq(this._id);
             await this._client.stub().sessionClose(req);

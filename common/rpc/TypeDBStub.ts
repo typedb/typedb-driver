@@ -32,15 +32,9 @@ TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
 
-    private _stub: TypeDBClient;
-
-    protected constructor(stub: TypeDBClient) {
-        this._stub = stub;
-    }
-
     databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._stub.databases_create(req, (err) => {
+            this.stub().databases_create(req, (err) => {
                 if (err) reject(new TypeDBClientError(err));
                 else resolve();
             })
@@ -49,7 +43,7 @@ export abstract class TypeDBStub {
 
     databasesContains(req: CoreDatabaseMgrProto.Contains.Req): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this._stub.databases_contains(req, (err, res) => {
+            this.stub().databases_contains(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
                 else resolve(res.getContains());
             });
@@ -58,7 +52,7 @@ export abstract class TypeDBStub {
 
     databasesAll(req: CoreDatabaseMgrProto.All.Req): Promise<TypeDBDatabaseImpl[]> {
         return new Promise((resolve, reject) => {
-            this._stub.databases_all(req, (err, res) => {
+            this.stub().databases_all(req, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
                 else resolve(res.getNamesList().map(name => new TypeDBDatabaseImpl(name, this)));
             })
@@ -67,7 +61,7 @@ export abstract class TypeDBStub {
 
     databaseDelete(req: CoreDatabaseProto.Delete.Req): Promise<void> {
         return new Promise((resolve, reject) => {
-            this._stub.database_delete(req, (err) => {
+            this.stub().database_delete(req, (err) => {
                 if (err) reject(err);
                 else resolve();
             });
@@ -76,7 +70,7 @@ export abstract class TypeDBStub {
 
     databaseSchema(req: CoreDatabaseProto.Schema.Req): Promise<string> {
         return new Promise((resolve, reject) => {
-            return this._stub.database_schema(req, (err, res) => {
+            return this.stub().database_schema(req, (err, res) => {
                 if (err) reject(err);
                 else resolve(res.getSchema());
             });
@@ -85,7 +79,7 @@ export abstract class TypeDBStub {
 
     sessionOpen(openReq: Session.Open.Req): Promise<Session.Open.Res> {
         return new Promise<Session.Open.Res>((resolve, reject) => {
-            this._stub.session_open(openReq, (err, res) => {
+            this.stub().session_open(openReq, (err, res) => {
                 if (err) reject(new TypeDBClientError(err));
                 else resolve(res);
             });
@@ -94,21 +88,21 @@ export abstract class TypeDBStub {
 
     sessionClose(req: Session.Close.Req): Promise<void> {
         return new Promise<void>(resolve => {
-            this._stub.session_close(req, () => {
+            this.stub().session_close(req, () => {
                 resolve();
             });
         });
     }
 
     sessionPulse(pulse: Session.Pulse.Req, callback: (err: ServiceError, res: Session.Pulse.Res) => void) {
-        this._stub.session_pulse(pulse, callback);
+        this.stub().session_pulse(pulse, callback);
     }
 
     transaction() {
-        return this._stub.transaction();
+        return this.stub().transaction();
     }
 
-    closeClient() {
-        this._stub.close();
-    }
+    abstract stub(): TypeDBClient;
+
+    abstract closeClient(): void;
 }

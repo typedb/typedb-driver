@@ -48,23 +48,23 @@ export class ClusterUserManager implements UserManager {
         return failsafeTask.runPrimaryReplica();
     }
 
-    contains(name: string): Promise<boolean> {
+    contains(username: string): Promise<boolean> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).usersContains(RequestBuilder.Cluster.UserManager.containsReq(name))
+            return this._client.stub(replica.address).usersContains(RequestBuilder.Cluster.UserManager.containsReq(username))
         })
         return failsafeTask.runPrimaryReplica();
     }
 
-    create(name: string, password: string): Promise<void> {
+    create(username: string, password: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userCreate(RequestBuilder.Cluster.UserManager.createReq(name, password))
+            return this._client.stub(replica.address).userCreate(RequestBuilder.Cluster.UserManager.createReq(username, password))
         })
         return failsafeTask.runPrimaryReplica();
     }
 
-    async get(name: string): Promise<User> {
-        if (await this.contains(name)) return new ClusterUser(this._client, name);
-        else throw new TypeDBClientError(CLUSTER_USER_DOES_NOT_EXIST.message(name));
+    async get(username: string): Promise<User> {
+        if (await this.contains(username)) return new ClusterUser(this._client, username);
+        else throw new TypeDBClientError(CLUSTER_USER_DOES_NOT_EXIST.message(username));
     }
 }
 

@@ -20,11 +20,31 @@
  */
 
 import { TypeDBClientImpl } from "../TypeDBClientImpl";
-import { CoreStubFactory } from "./CoreStubFactory";
+import {TypeDBStub} from "../../common/rpc/TypeDBStub";
+import {CoreStub} from "./CoreStub";
+import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 
 export class CoreClient extends TypeDBClientImpl {
 
+    private readonly _stub: TypeDBStub;
+    private readonly _databases: TypeDBDatabaseManagerImpl;
+
     constructor(address: string) {
-        super(address, new CoreStubFactory());
+        super();
+        this._stub = new CoreStub(address);
+        this._databases = new TypeDBDatabaseManagerImpl(this._stub);
+    }
+
+    stub(): TypeDBStub {
+        return this._stub;
+    }
+
+    get databases(): TypeDBDatabaseManagerImpl {
+        return this._databases;
+    }
+
+    close() {
+        super.close();
+        this._stub.closeClient();
     }
 }

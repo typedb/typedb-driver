@@ -60,7 +60,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
         });
         this._clusterStubs = {};
         serverAddresses.forEach((addr) => {
-            this._clusterStubs[addr] = ClusterServerStub.create(addr, this._credential);
+            this._clusterStubs[addr] = new ClusterServerStub(addr, this._credential);
         });
 
         this._userManager = new ClusterUserManager(this);
@@ -137,7 +137,7 @@ export class ClusterClient implements TypeDBClient.Cluster {
         for (const address of this._addresses) {
             try {
                 console.info(`Fetching list of cluster servers from ${address}...`);
-                const clusterStub = ClusterServerStub.create(address, this._credential);
+                const clusterStub = new ClusterServerStub(address, this._credential);
                 const res = await clusterStub.serversAll(RequestBuilder.Cluster.ServerManager.allReq());
                 const members = res.getServersList().map(x => x.getAddress());
                 console.info(`The cluster servers are ${members}`);

@@ -25,16 +25,18 @@ import { TypeDBStub } from "../../common/rpc/TypeDBStub";
 
 export class CoreStub extends TypeDBStub {
 
-    constructor(stub: TypeDBClient) {
-        super(stub);
+    private readonly _stub: TypeDBClient;
+
+    constructor(address: string) {
+        super();
+        this._stub = new TypeDBClient(address, ChannelCredentials.createInsecure());
     }
-}
 
-export namespace CoreStub {
+    stub(): TypeDBClient {
+        return this._stub;
+    }
 
-    export function create(address: string) {
-        return new CoreStub(
-            new TypeDBClient(address, ChannelCredentials.createInsecure()),
-        );
+    closeClient(): void {
+        this._stub.close();
     }
 }

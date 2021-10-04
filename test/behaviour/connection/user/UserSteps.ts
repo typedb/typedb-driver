@@ -24,32 +24,32 @@ import { TypeDB, TypeDBClient, TypeDBCredential, User } from "../../../../dist"
 import { client } from "../ConnectionStepsBase";
 import assert = require("assert");
 
-Given("users contains: {word}", async (name: string) => {
+Given("users contains: {word}", async (username: string) => {
     const users = await getClient().users.all();
-    users.map((user: User) => user.name).includes(name);
+    users.map((user: User) => user.username).includes(username);
 });
 
-Then("users not contains: {word}", async (name: string) => {
+Then("users not contains: {word}", async (username: string) => {
     const users = await getClient().users.all();
-    !users.map((user: User) => user.name).includes(name);
+    !users.map((user: User) => user.username).includes(username);
 });
 
-Then("users create: {word}, {word}", async (name: string, password: string) => {
-    await getClient().users.create(name, password);
+Then("users create: {word}, {word}", async (username: string, password: string) => {
+    await getClient().users.create(username, password);
 });
 
-Then("user password: {word}, {word}", async (name: string, password: string) => {
-    const user = await getClient().users.get(name);
+Then("user password: {word}, {word}", async (username: string, password: string) => {
+    const user = await getClient().users.get(username);
     await user.password(password);
 });
 
-Then("user connect: {word}, {word}", async (name: string, password: string) => {
-    const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(name, password, process.env.ROOT_CA));
+Then("user connect: {word}, {word}", async (username: string, password: string) => {
+    const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(username, password, process.env.ROOT_CA));
     await client.databases.all()
 })
 
-Then("user delete: {word}", async (name: string) => {
-    const user = await getClient().users.get(name);
+Then("user delete: {word}", async (username: string) => {
+    const user = await getClient().users.get(username);
     await user.delete();
 });
 

@@ -28,21 +28,16 @@ import { TypeDBStub } from "../common/rpc/TypeDBStub";
 import { RequestTransmitter } from "../stream/RequestTransmitter";
 import { TypeDBDatabaseManagerImpl } from "./TypeDBDatabaseManagerImpl";
 import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
-import { TypeDBStubFactory } from "./TypeDBStubFactory";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 
 export abstract class TypeDBClientImpl implements TypeDBClient {
 
-    private readonly _stub: TypeDBStub;
     private readonly _requestTransmitter: RequestTransmitter;
-    private readonly _databases: TypeDBDatabaseManagerImpl;
     private readonly _sessions: { [id: string]: TypeDBSessionImpl };
     private _isOpen: boolean;
 
-    constructor(address: string, stubFactory: TypeDBStubFactory) {
-        this._stub = stubFactory.newTypeDBStub(address);
-        this._databases = new TypeDBDatabaseManagerImpl(this._stub);
+    protected constructor() {
         this._requestTransmitter = new RequestTransmitter();
         this._sessions = {};
         this._isOpen = true;
@@ -50,18 +45,6 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
 
     isOpen(): boolean {
         return this._isOpen;
-    }
-
-    isCluster(): boolean {
-        return false;
-    }
-
-    asCluster(): TypeDBClient.Cluster {
-        throw new TypeDBClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
-    }
-
-    get databases(): TypeDBDatabaseManagerImpl {
-        return this._databases;
     }
 
     async session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
@@ -73,24 +56,31 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
         return session;
     }
 
+    abstract get databases(): TypeDBDatabaseManagerImpl;
+
+    abstract stub(): TypeDBStub;
+
+    transmitter(): RequestTransmitter {
+        return this._requestTransmitter;
+    }
+
+    isCluster(): boolean {
+        return false;
+    }
+
+    asCluster(): TypeDBClient.Cluster {
+        throw new TypeDBClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
+    }
+
     close(): void {
         if (this._isOpen) {
             this._isOpen = false;
             Object.values(this._sessions).forEach(s => s.close());
             this._requestTransmitter.close();
-            this._stub.closeClient();
         }
     }
 
-    closedSession(session: TypeDBSessionImpl): void {
+    closeSession(session: TypeDBSessionImpl): void {
         delete this._sessions[session.id];
-    }
-
-    stub(): TypeDBStub {
-        return this._stub;
-    }
-
-    transmitter(): RequestTransmitter {
-        return this._requestTransmitter;
     }
 }
