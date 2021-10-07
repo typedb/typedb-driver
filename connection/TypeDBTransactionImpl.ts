@@ -41,22 +41,23 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private readonly _type: TransactionType;
     private readonly _options: TypeDBOptions;
     private _bidirectionalStream: BidirectionalStream;
-    private readonly _conceptManager: ConceptManager;
-    private readonly _logicManager: LogicManager;
-    private readonly _queryManager: QueryManager;
+    private _conceptManager: ConceptManager;
+    private _logicManager: LogicManager;
+    private _queryManager: QueryManager;
 
     constructor(session: TypeDBSessionImpl, type: TransactionType, options: TypeDBOptions) {
         this._session = session;
         this._type = type;
         this._options = options;
-        const rpcClient = this._session.stub;
-        this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
-        this._conceptManager = new ConceptManagerImpl(this);
-        this._logicManager = new LogicManagerImpl(this);
-        this._queryManager = new QueryManagerImpl(this);
     }
 
     public async open(): Promise<void> {
+        const rpcClient = this._session.stub;
+        this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
+        await this._bidirectionalStream.open();
+        this._conceptManager = new ConceptManagerImpl(this);
+        this._logicManager = new LogicManagerImpl(this);
+        this._queryManager = new QueryManagerImpl(this);
         const openReq = RequestBuilder.Transaction.openReq(this._session.id, this._type.proto(), this._options.proto(), this._session.networkLatency);
         await this.rpcExecute(openReq, false);
     }

@@ -21,12 +21,17 @@
 
 import { ServiceError } from "@grpc/grpc-js";
 import { Status } from "@grpc/grpc-js/build/src/constants";
-import { ErrorMessage } from "./ErrorMessage";
+import {ErrorMessage} from "./ErrorMessage";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");
+}
+
+function isTokenCredentialInvalidError(e: ServiceError): boolean {
+    return e.message.includes("[CLS08]");
 }
 
 function isServiceError(e: Error | ServiceError): e is ServiceError {
@@ -50,6 +55,9 @@ export class TypeDBClientError extends Error {
             } else if (isReplicaNotPrimaryError(error)) {
                 super(CLUSTER_REPLICA_NOT_PRIMARY.message());
                 this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
+            } else if (isTokenCredentialInvalidError(error)) {
+                super(CLUSTER_TOKEN_CREDENTIAL_INVALID.message());
+                this._messageTemplate = CLUSTER_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
         }

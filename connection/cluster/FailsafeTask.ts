@@ -114,7 +114,7 @@ export abstract class FailsafeTask<TResult> {
     }
 
     private async fetchDatabaseReplicas(): Promise<ClusterDatabase> {
-        for (const serverAddress of this._client.clusterMembers()) {
+        for (const serverAddress of this._client.clusterServerAddresses()) {
             try {
                 console.info(`Fetching replica info from ${serverAddress}`);
                 const res = await this._client.stub(serverAddress).databasesClusterGet(RequestBuilder.Cluster.DatabaseManager.getReq(this._database));
@@ -133,7 +133,7 @@ export abstract class FailsafeTask<TResult> {
     }
 
     private clusterNotAvailableError(): TypeDBClientError {
-        const addresses = this._client.clusterMembers().join(",");
+        const addresses = this._client.clusterServerAddresses().join(",");
         return new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(addresses));
     }
 }

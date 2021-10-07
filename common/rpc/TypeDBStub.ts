@@ -20,12 +20,13 @@
  */
 
 
-import { ServiceError } from "@grpc/grpc-js";
+import {ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
 import { Session } from "typedb-protocol/common/session_pb";
 import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseMgrProto } from "typedb-protocol/core/core_database_pb";
 import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
 import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
-import { TypeDBClientError } from "../errors/TypeDBClientError";
+import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
+import {TypeDBClientError} from "../errors/TypeDBClientError";
 
 /*
 TODO implement ResilientCall
@@ -87,22 +88,37 @@ export abstract class TypeDBStub {
     }
 
     sessionClose(req: Session.Close.Req): Promise<void> {
-        return new Promise<void>(resolve => {
-            this.stub().session_close(req, () => {
+        return new Promise<void>((resolve, reject) => {
+            this.stub().session_close(req, (err, res) => {
+                if (err) {
+                    console.warn("An error has occurred when issuing session close request: %o", err)
+                }
                 resolve();
             });
         });
     }
 
-    sessionPulse(pulse: Session.Pulse.Req, callback: (err: ServiceError, res: Session.Pulse.Res) => void) {
-        this.stub().session_pulse(pulse, callback);
+    sessionPulse(pulse: Session.Pulse.Req): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.stub().session_pulse(pulse, (err, res) => {
+                if (err) reject(err);
+                else {
+                    resolve(res.getAlive());
+                }
+            });
+        });
     }
 
-    transaction() {
-        return this.stub().transaction();
+    transaction(): Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>> {
+        return new Promise<ClientDuplexStream<common_transaction_pb.Transaction.Client, common_transaction_pb.Transaction.Server>>(
+            (resolve, reject) => {
+                try {
+                    resolve(this.stub().transaction());
+                } catch (e) {
+                    reject(e);
+                }
+            });
     }
 
     abstract stub(): TypeDBClient;
-
-    abstract closeClient(): void;
 }

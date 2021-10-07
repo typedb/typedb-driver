@@ -19,9 +19,17 @@
  * under the License.
  */
 
-import { ChannelCredentials } from "@grpc/grpc-js";
+import {ChannelCredentials, ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
 import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
 import { TypeDBStub } from "../../common/rpc/TypeDBStub";
+import {
+    CoreDatabase as CoreDatabaseProto,
+    CoreDatabaseManager as CoreDatabaseMgrProto
+} from "typedb-protocol/core/core_database_pb";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
+import {Session} from "typedb-protocol/common/session_pb";
+import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 
 export class CoreStub extends TypeDBStub {
 
@@ -36,7 +44,7 @@ export class CoreStub extends TypeDBStub {
         return this._stub;
     }
 
-    closeClient(): void {
+    close(): void {
         this._stub.close();
     }
 }

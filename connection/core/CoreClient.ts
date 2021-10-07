@@ -26,7 +26,7 @@ import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
 
 export class CoreClient extends TypeDBClientImpl {
 
-    private readonly _stub: TypeDBStub;
+    private readonly _stub: CoreStub;
     private readonly _databases: TypeDBDatabaseManagerImpl;
 
     constructor(address: string) {
@@ -35,16 +35,16 @@ export class CoreClient extends TypeDBClientImpl {
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
     }
 
-    stub(): TypeDBStub {
-        return this._stub;
-    }
-
     get databases(): TypeDBDatabaseManagerImpl {
         return this._databases;
     }
 
+    stub(): TypeDBStub {
+        return this._stub;
+    }
+
     close() {
         super.close();
-        this._stub.closeClient();
+        this._stub.close();
     }
 }

@@ -119,12 +119,15 @@ export class TypeDBSessionImpl implements TypeDBSession {
         return this._networkLatencyMillis;
     }
 
-    private pulse(): void {
+    private async pulse(): Promise<void> {
         if (!this._isOpen) return;
         const pulse = RequestBuilder.Session.pulseReq(this._id);
-        this._client.stub().sessionPulse(pulse, (err, res) => {
-            if (err || !res.getAlive()) this._isOpen = false;
+        try {
+            const isAlive = await this._client.stub().sessionPulse(pulse);
+            if (!isAlive) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
-        });
+        } catch (e) {
+            this._isOpen = false;
+        }
     }
 }

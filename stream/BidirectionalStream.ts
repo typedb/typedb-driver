@@ -36,18 +36,23 @@ import ResponseQueue = ResponseCollector.ResponseQueue;
 export class BidirectionalStream {
 
     private readonly _requestTransmitter: RequestTransmitter;
-    private readonly _dispatcher: BatchDispatcher;
+    private _dispatcher: BatchDispatcher;
     private readonly _responseCollector: ResponseCollector<Transaction.Res>;
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
+    private _stub: TypeDBStub;
     private _isOpen: boolean;
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
         this._responsePartCollector = new ResponseCollector();
-        const transactionStream = stub.transaction();
+        this._stub = stub;
+    }
+
+    async open() {
+        const transactionStream = await this._stub.transaction();
         this.registerObserver(transactionStream);
-        this._dispatcher = requestTransmitter.dispatcher(transactionStream);
+        this._dispatcher = this._requestTransmitter.dispatcher(transactionStream);
         this._isOpen = true;
     }
 

@@ -88,8 +88,9 @@ export namespace ErrorMessage {
         export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(13, () => `The replica is not the primary replica.`);
         export const CLUSTER_ALL_NODES_FAILED = new Client(14, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
         export const CLUSTER_USER_DOES_NOT_EXIST = new Client(15, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
-        export const CLUSTER_INVALID_ROOT_CA_PATH = new Client(16, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
-        export const UNRECOGNISED_SESSION_TYPE = new Client(17, (args: Stringable[]) => `Session type '${args[0]}' was not recognised.`);
+        export const CLUSTER_TOKEN_CREDENTIAL_INVALID = new Client(16, (args: Stringable[]) => `Invalid token credential.`);
+        export const CLUSTER_INVALID_ROOT_CA_PATH = new Client(17, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
+        export const UNRECOGNISED_SESSION_TYPE = new Client(18, (args: Stringable[]) => `Session type '${args[0]}' was not recognised.`);
     }
 
     export class Concept extends ErrorMessage {
