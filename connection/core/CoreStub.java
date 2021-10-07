@@ -21,13 +21,13 @@
 
 package com.vaticle.typedb.client.connection.core;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.protocol.CoreDatabaseProto;
+import com.vaticle.typedb.protocol.SessionProto;
+import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ManagedChannel;
-import io.grpc.StatusRuntimeException;
-
-import java.util.function.Supplier;
+import io.grpc.stub.StreamObserver;
 
 public class CoreStub extends TypeDBStub {
 
@@ -47,6 +47,51 @@ public class CoreStub extends TypeDBStub {
     }
 
     @Override
+    public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
+        return resilientCall(() -> blockingStub().databasesContains(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseProto.CoreDatabaseManager.Create.Req request) {
+        return resilientCall(() -> blockingStub().databasesCreate(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabaseManager.All.Res databasesAll(CoreDatabaseProto.CoreDatabaseManager.All.Req request) {
+        return resilientCall(() -> blockingStub().databasesAll(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabase.Schema.Res databaseSchema(CoreDatabaseProto.CoreDatabase.Schema.Req request) {
+        return resilientCall(() -> blockingStub().databaseSchema(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabase.Delete.Res databaseDelete(CoreDatabaseProto.CoreDatabase.Delete.Req request) {
+        return resilientCall(() -> blockingStub().databaseDelete(request));
+    }
+
+    @Override
+    public SessionProto.Session.Open.Res sessionOpen(SessionProto.Session.Open.Req request) {
+        return resilientCall(() -> blockingStub().sessionOpen(request));
+    }
+
+    @Override
+    public SessionProto.Session.Close.Res sessionClose(SessionProto.Session.Close.Req request) {
+        return resilientCall(() -> blockingStub().sessionClose(request));
+    }
+
+    @Override
+    public SessionProto.Session.Pulse.Res sessionPulse(SessionProto.Session.Pulse.Req request) {
+        return resilientCall(() -> blockingStub().sessionPulse(request));
+    }
+
+    @Override
+    public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
+        return resilientCall(() -> asyncStub().transaction(responseObserver));
+    }
+
+    @Override
     protected ManagedChannel channel() {
         return channel;
     }
@@ -59,15 +104,5 @@ public class CoreStub extends TypeDBStub {
     @Override
     protected TypeDBGrpc.TypeDBStub asyncStub() {
         return asyncStub;
-    }
-
-    @Override
-    protected <RES> RES resilientCall(Supplier<RES> function) {
-        try {
-            ensureConnected();
-            return function.get();
-        } catch (StatusRuntimeException e) {
-            throw TypeDBClientException.of(e);
-        }
     }
 }

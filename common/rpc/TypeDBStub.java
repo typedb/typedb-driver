@@ -36,41 +36,23 @@ import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
 
-    public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
-        return resilientCall(() -> blockingStub().databasesContains(request));
-    }
+    abstract public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request);
 
-    public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
-        return resilientCall(() -> blockingStub().databasesCreate(request));
-    }
+    abstract public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request);
 
-    public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
-        return resilientCall(() -> blockingStub().databasesAll(request));
-    }
+    abstract public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request);
 
-    public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
-        return resilientCall(() -> blockingStub().databaseSchema(request));
-    }
+    abstract public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request);
 
-    public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
-        return resilientCall(() -> blockingStub().databaseDelete(request));
-    }
+    abstract public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request);
 
-    public Session.Open.Res sessionOpen(Session.Open.Req request) {
-        return resilientCall(() -> blockingStub().sessionOpen(request));
-    }
+    abstract public Session.Open.Res sessionOpen(Session.Open.Req request);
 
-    public Session.Close.Res sessionClose(Session.Close.Req request) {
-        return resilientCall(() -> blockingStub().sessionClose(request));
-    }
+    abstract public Session.Close.Res sessionClose(Session.Close.Req request);
 
-    public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
-        return resilientCall(() -> blockingStub().sessionPulse(request));
-    }
+    abstract public Session.Pulse.Res sessionPulse(Session.Pulse.Req request);
 
-    public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
-        return resilientCall(() -> asyncStub().transaction(responseObserver));
-    }
+    abstract public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver);
 
     protected abstract ManagedChannel channel();
 
@@ -78,7 +60,16 @@ public abstract class TypeDBStub {
 
     protected abstract TypeDBGrpc.TypeDBStub asyncStub();
 
-    protected void ensureConnected() {
+    protected <RES> RES resilientCall(Supplier<RES> function) {
+        try {
+            ensureConnected();
+            return function.get();
+        } catch (StatusRuntimeException e) {
+            throw TypeDBClientException.of(e);
+        }
+    }
+
+    private void ensureConnected() {
         // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
         // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an
@@ -86,15 +77,6 @@ public abstract class TypeDBStub {
         // open a TypeDB session), it tries to reconnect immediately instead of just failing without trying.
         if (channel().getState(true).equals(ConnectivityState.TRANSIENT_FAILURE)) {
             channel().resetConnectBackoff();
-        }
-    }
-
-    protected <RES> RES resilientCall(Supplier<RES> function) {
-        try {
-            ensureConnected();
-            return function.get();
-        } catch (StatusRuntimeException e) {
-            throw TypeDBClientException.of(e);
         }
     }
 }
