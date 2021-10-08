@@ -22,9 +22,8 @@
 package com.vaticle.typedb.client.common.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
-import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
-import com.vaticle.typedb.protocol.SessionProto.Session;
+import com.vaticle.typedb.protocol.CoreDatabaseProto;
+import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ConnectivityState;
@@ -36,23 +35,41 @@ import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
 
-    abstract public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request);
+    public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
+        return resilientCall(() -> blockingStub().databasesContains(request));
+    }
 
-    abstract public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request);
+    public CoreDatabaseProto.CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseProto.CoreDatabaseManager.Create.Req request) {
+        return resilientCall(() -> blockingStub().databasesCreate(request));
+    }
 
-    abstract public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request);
+    public CoreDatabaseProto.CoreDatabaseManager.All.Res databasesAll(CoreDatabaseProto.CoreDatabaseManager.All.Req request) {
+        return resilientCall(() -> blockingStub().databasesAll(request));
+    }
 
-    abstract public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request);
+    public CoreDatabaseProto.CoreDatabase.Schema.Res databaseSchema(CoreDatabaseProto.CoreDatabase.Schema.Req request) {
+        return resilientCall(() -> blockingStub().databaseSchema(request));
+    }
 
-    abstract public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request);
+    public CoreDatabaseProto.CoreDatabase.Delete.Res databaseDelete(CoreDatabaseProto.CoreDatabase.Delete.Req request) {
+        return resilientCall(() -> blockingStub().databaseDelete(request));
+    }
 
-    abstract public Session.Open.Res sessionOpen(Session.Open.Req request);
+    public SessionProto.Session.Open.Res sessionOpen(SessionProto.Session.Open.Req request) {
+        return resilientCall(() -> blockingStub().sessionOpen(request));
+    }
 
-    abstract public Session.Close.Res sessionClose(Session.Close.Req request);
+    public SessionProto.Session.Close.Res sessionClose(SessionProto.Session.Close.Req request) {
+        return resilientCall(() -> blockingStub().sessionClose(request));
+    }
 
-    abstract public Session.Pulse.Res sessionPulse(Session.Pulse.Req request);
+    public SessionProto.Session.Pulse.Res sessionPulse(SessionProto.Session.Pulse.Req request) {
+        return resilientCall(() -> blockingStub().sessionPulse(request));
+    }
 
-    abstract public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver);
+    public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
+        return resilientCall(() -> asyncStub().transaction(responseObserver));
+    }
 
     protected abstract ManagedChannel channel();
 
