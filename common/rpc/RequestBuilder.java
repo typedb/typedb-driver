@@ -27,7 +27,6 @@ import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
-import com.vaticle.typedb.protocol.ClusterUserTokenProto;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.LogicProto;
@@ -131,15 +130,12 @@ public class RequestBuilder {
                 return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
+            public static ClusterUserProto.ClusterUser.Token.Req tokenReq(String username) {
+                return ClusterUserProto.ClusterUser.Token.Req.newBuilder().setUsername(username).build();
+            }
+
             public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String username) {
                 return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setUsername(username).build();
-            }
-        }
-
-        public static class UserToken {
-
-            public static ClusterUserTokenProto.ClusterUserToken.Renew.Req renewReq(String username) {
-                return ClusterUserTokenProto.ClusterUserToken.Renew.Req.newBuilder().setUsername(username).build();
             }
         }
 

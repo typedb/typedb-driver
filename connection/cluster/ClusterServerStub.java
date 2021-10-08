@@ -28,7 +28,6 @@ import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
-import com.vaticle.typedb.protocol.ClusterUserTokenProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
@@ -44,7 +43,7 @@ import io.grpc.stub.StreamObserver;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserToken.renewReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.tokenReq;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
@@ -64,7 +63,7 @@ public class ClusterServerStub extends TypeDBStub {
         this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(createCallCredentials());
         this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(createCallCredentials());
         try {
-            ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(this.credential.username()));
+            ClusterUserProto.ClusterUser.Token.Res res = clusterBlockingStub.userToken(tokenReq(this.credential.username()));
             token = res.getToken();
         } catch (StatusRuntimeException e) {
             // ignore UNAVAILABLE exception
@@ -197,7 +196,7 @@ public class ClusterServerStub extends TypeDBStub {
         } catch (TypeDBClientException e) {
             if (e.getErrorMessage() != null && e.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
                 token = null;
-                ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(credential.username()));
+                ClusterUserProto.ClusterUser.Token.Res res = clusterBlockingStub.userToken(tokenReq(credential.username()));
                 token = res.getToken();
                 try {
                     return resilientCall(function);
