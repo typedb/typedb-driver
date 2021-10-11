@@ -22,7 +22,6 @@
 import { ClusterDatabaseManager } from "typedb-protocol/cluster/cluster_database_pb";
 import { ServerManager as ServerManagerProto } from "typedb-protocol/cluster/cluster_server_pb";
 import { ClusterUser as ClusterUserProto, ClusterUserManager as ClusterUserManagerProto } from "typedb-protocol/cluster/cluster_user_pb";
-import { ClusterUserToken as ClusterUserTokenProto }  from "typedb-protocol/cluster/cluster_user_token_pb";
 import { Attribute as AttributeProto, AttributeType as AttributeTypeProto, ConceptManager as ConceptMgrProto, EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
 import { LogicManager as LogicProto, Rule as RuleProto } from "typedb-protocol/common/logic_pb";
 import { Options } from "typedb-protocol/common/options_pb";
@@ -95,16 +94,14 @@ export namespace RequestBuilder {
                 return new ClusterUserProto.Password.Req().setUsername(name).setPassword(password);
             }
 
+            export function tokenReq(username: string) {
+                return new ClusterUserProto.Token.Req().setUsername(username);
+            }
+
             export function deleteReq(name: string): ClusterUserProto.Delete.Req {
                 return new ClusterUserProto.Delete.Req().setUsername(name);
             }
 
-        }
-
-        export namespace UserToken {
-            export function renewReq(username: string) {
-                return new ClusterUserTokenProto.Renew.Req().setUsername(username);
-            }
         }
 
         export namespace DatabaseManager {

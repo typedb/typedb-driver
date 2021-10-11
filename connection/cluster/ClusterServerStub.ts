@@ -37,7 +37,6 @@ import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
-import {ClusterUserToken} from "typedb-protocol/cluster/cluster_user_token_pb";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import {
@@ -71,8 +70,8 @@ export class ClusterServerStub extends TypeDBStub {
     public async open(): Promise<void> {
         try {
             console.log(`token '${this._token}' expired. renewing...`);
-            const req = RequestBuilder.Cluster.UserToken.renewReq(this._credential.username);
-            this._token = await this.userTokenRenew(req);
+            const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
+            this._token = await this.userToken(req);
             console.log(`token renewed to '${this._token}'`);
         } catch (e) {
             if (!isServiceError(e)) throw e;
@@ -234,8 +233,8 @@ export class ClusterServerStub extends TypeDBStub {
             if (e instanceof TypeDBClientError && CLUSTER_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
                 console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
-                const req = RequestBuilder.Cluster.UserToken.renewReq(this._credential.username);
-                this._token = await this.userTokenRenew(req);
+                const req = RequestBuilder.Cluster.User.tokenReq(this._credential.username);
+                this._token = await this.userToken(req);
                 console.log(`token renewed to '${this._token}'`);
                 try {
                     return await fn();
@@ -248,9 +247,9 @@ export class ClusterServerStub extends TypeDBStub {
         }
     }
 
-    private async userTokenRenew(req: ClusterUserToken.Renew.Req): Promise<string> {
+    private async userToken(req: ClusterUser.Token.Req): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            return this._clusterStub.user_token_renew(req, (err, res) => {
+            return this._clusterStub.user_token(req, (err, res) => {
                 if (err) reject(err);
                 else resolve(res.getToken());
             });
