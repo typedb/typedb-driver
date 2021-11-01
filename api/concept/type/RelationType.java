@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.api.concept.type;
 
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;

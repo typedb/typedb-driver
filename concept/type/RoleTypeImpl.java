@@ -21,9 +21,9 @@
 
 package com.vaticle.typedb.client.concept.type;
 
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.protocol.ConceptProto;

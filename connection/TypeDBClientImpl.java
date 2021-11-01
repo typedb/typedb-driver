@@ -62,6 +62,11 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     }
 
     @Override
+    public boolean isOpen() {
+        return !channel().isShutdown();
+    }
+
+    @Override
     public TypeDBSessionImpl session(String database, TypeDBSession.Type type) {
         return session(database, type, TypeDBOptions.core());
     }
@@ -77,11 +82,6 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     @Override
     public TypeDBDatabaseManagerImpl databases() {
         return databaseMgr;
-    }
-
-    @Override
-    public boolean isOpen() {
-        return !channel().isShutdown();
     }
 
     @Override

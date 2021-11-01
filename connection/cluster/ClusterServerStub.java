@@ -28,7 +28,9 @@ import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
-import com.vaticle.typedb.protocol.ClusterUserTokenProto;
+import com.vaticle.typedb.protocol.CoreDatabaseProto;
+import com.vaticle.typedb.protocol.SessionProto;
+import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBClusterGrpc;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.CallCredentials;
@@ -36,11 +38,12 @@ import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserToken.renewReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.tokenReq;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
@@ -60,84 +63,13 @@ public class ClusterServerStub extends TypeDBStub {
         this.asyncStub = TypeDBGrpc.newStub(channel).withCallCredentials(createCallCredentials());
         this.clusterBlockingStub = TypeDBClusterGrpc.newBlockingStub(channel).withCallCredentials(createCallCredentials());
         try {
-            ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(this.credential.username()));
+            ClusterUserProto.ClusterUser.Token.Res res = clusterBlockingStub.userToken(tokenReq(this.credential.username()));
             token = res.getToken();
         } catch (StatusRuntimeException e) {
             // ignore UNAVAILABLE exception
             if (e.getStatus().getCode() != Status.Code.UNAVAILABLE) {
                 throw e;
             }
-        }
-    }
-
-    public static ClusterServerStub create(TypeDBCredential credential, ManagedChannel channel) {
-        return new ClusterServerStub(channel, credential);
-    }
-
-    public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.serversAll(request));
-    }
-
-    public ClusterUserProto.ClusterUserManager.Contains.Res usersContains(ClusterUserProto.ClusterUserManager.Contains.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersContains(request));
-    }
-
-    public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserProto.ClusterUserManager.Create.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersCreate(request));
-    }
-
-    public ClusterUserProto.ClusterUserManager.All.Res usersAll(ClusterUserProto.ClusterUserManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.usersAll(request));
-    }
-
-    public ClusterUserProto.ClusterUser.Password.Res userPassword(ClusterUserProto.ClusterUser.Password.Req request) {
-        return resilientCall(() -> clusterBlockingStub.userPassword(request));
-    }
-
-    public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-        return resilientCall(() -> clusterBlockingStub.userDelete(request));
-    }
-
-    public ClusterDatabaseProto.ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req request) {
-        return resilientCall(() -> clusterBlockingStub.databasesGet(request));
-    }
-
-    public ClusterDatabaseProto.ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseProto.ClusterDatabaseManager.All.Req request) {
-        return resilientCall(() -> clusterBlockingStub.databasesAll(request));
-    }
-
-    @Override
-    protected ManagedChannel channel() {
-        return channel;
-    }
-
-    @Override
-    protected TypeDBGrpc.TypeDBBlockingStub blockingStub() {
-        return blockingStub;
-    }
-
-    @Override
-    protected TypeDBGrpc.TypeDBStub asyncStub() {
-        return asyncStub;
-    }
-
-    @Override
-    protected <RES> RES resilientCall(Supplier<RES> function) {
-        try {
-            ensureConnected();
-            return function.get();
-        } catch (StatusRuntimeException e1) {
-            TypeDBClientException e2 = TypeDBClientException.of(e1);
-            if (e2.getErrorMessage() != null && e2.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
-                token = null;
-                ClusterUserTokenProto.ClusterUserToken.Renew.Res res = clusterBlockingStub.userTokenRenew(renewReq(credential.username()));
-                token = res.getToken();
-                try {
-                    return function.get();
-                } catch (StatusRuntimeException e3) {
-                    throw TypeDBClientException.of(e3);
-                }
-            } else throw e2;
         }
     }
 
@@ -164,5 +96,114 @@ public class ClusterServerStub extends TypeDBStub {
             @Override
             public void thisUsesUnstableApi() { }
         };
+    }
+
+    public ClusterServerProto.ServerManager.All.Res serversAll(ClusterServerProto.ServerManager.All.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.serversAll(request));
+    }
+
+    public ClusterUserProto.ClusterUserManager.Contains.Res usersContains(ClusterUserProto.ClusterUserManager.Contains.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersContains(request));
+    }
+
+    public ClusterUserProto.ClusterUserManager.Create.Res usersCreate(ClusterUserProto.ClusterUserManager.Create.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersCreate(request));
+    }
+
+    public ClusterUserProto.ClusterUserManager.All.Res usersAll(ClusterUserProto.ClusterUserManager.All.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersAll(request));
+    }
+
+    public ClusterUserProto.ClusterUser.Password.Res userPassword(ClusterUserProto.ClusterUser.Password.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.userPassword(request));
+    }
+
+    public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.userDelete(request));
+    }
+
+    public ClusterDatabaseProto.ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.databasesGet(request));
+    }
+
+    public ClusterDatabaseProto.ClusterDatabaseManager.All.Res databasesAll(ClusterDatabaseProto.ClusterDatabaseManager.All.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.databasesAll(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
+        return mayRenewToken(() -> blockingStub().databasesContains(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseProto.CoreDatabaseManager.Create.Req request) {
+        return mayRenewToken(() -> blockingStub().databasesCreate(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabaseManager.All.Res databasesAll(CoreDatabaseProto.CoreDatabaseManager.All.Req request) {
+        return mayRenewToken(() -> blockingStub().databasesAll(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabase.Schema.Res databaseSchema(CoreDatabaseProto.CoreDatabase.Schema.Req request) {
+        return mayRenewToken(() -> blockingStub().databaseSchema(request));
+    }
+
+    @Override
+    public CoreDatabaseProto.CoreDatabase.Delete.Res databaseDelete(CoreDatabaseProto.CoreDatabase.Delete.Req request) {
+        return mayRenewToken(() -> blockingStub().databaseDelete(request));
+    }
+
+    @Override
+    public SessionProto.Session.Open.Res sessionOpen(SessionProto.Session.Open.Req request) {
+        return mayRenewToken(() -> blockingStub().sessionOpen(request));
+    }
+
+    @Override
+    public SessionProto.Session.Close.Res sessionClose(SessionProto.Session.Close.Req request) {
+        return mayRenewToken(() -> blockingStub().sessionClose(request));
+    }
+
+    @Override
+    public SessionProto.Session.Pulse.Res sessionPulse(SessionProto.Session.Pulse.Req request) {
+        return mayRenewToken(() -> blockingStub().sessionPulse(request));
+    }
+
+    @Override
+    public StreamObserver<TransactionProto.Transaction.Client> transaction(StreamObserver<TransactionProto.Transaction.Server> responseObserver) {
+        return mayRenewToken(() -> asyncStub().transaction(responseObserver));
+    }
+
+    @Override
+    protected ManagedChannel channel() {
+        return channel;
+    }
+
+    @Override
+    protected TypeDBGrpc.TypeDBBlockingStub blockingStub() {
+        return blockingStub;
+    }
+
+    @Override
+    protected TypeDBGrpc.TypeDBStub asyncStub() {
+        return asyncStub;
+    }
+
+    private <RES> RES mayRenewToken(Supplier<RES> function) {
+        try {
+            return resilientCall(function);
+        } catch (TypeDBClientException e) {
+            if (e.getErrorMessage() != null && e.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
+                token = null;
+                ClusterUserProto.ClusterUser.Token.Res res = clusterBlockingStub.userToken(tokenReq(credential.username()));
+                token = res.getToken();
+                try {
+                    return resilientCall(function);
+                } catch (StatusRuntimeException e2) {
+                    throw TypeDBClientException.of(e2);
+                }
+            } else throw e;
+        }
     }
 }

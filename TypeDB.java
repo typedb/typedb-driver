@@ -35,27 +35,27 @@ public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
     public static TypeDBClient coreClient(String address) {
-        return CoreClient.create(address);
+        return new CoreClient(address);
     }
 
     public static TypeDBClient coreClient(String address, int parallelisation) {
-        return CoreClient.create(address, parallelisation);
+        return new CoreClient(address, parallelisation);
     }
 
     public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential) {
-        return ClusterClient.create(set(address), credential);
+        return new ClusterClient(set(address), credential);
     }
 
     public static TypeDBClient.Cluster clusterClient(String address, TypeDBCredential credential, int parallelisation) {
-        return ClusterClient.create(set(address), credential, parallelisation);
+        return new ClusterClient(set(address), credential, parallelisation);
     }
 
     public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential) {
-        return ClusterClient.create(addresses, credential);
+        return new ClusterClient(addresses, credential);
     }
 
     public static TypeDBClient.Cluster clusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
-        return ClusterClient.create(addresses, credential, parallelisation);
+        return new ClusterClient(addresses, credential, parallelisation);
     }
 
 }

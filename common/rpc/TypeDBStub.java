@@ -22,9 +22,8 @@
 package com.vaticle.typedb.client.common.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabase;
-import com.vaticle.typedb.protocol.CoreDatabaseProto.CoreDatabaseManager;
-import com.vaticle.typedb.protocol.SessionProto.Session;
+import com.vaticle.typedb.protocol.CoreDatabaseProto;
+import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ConnectivityState;
@@ -36,35 +35,35 @@ import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
 
-    public CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseManager.Contains.Req request) {
+    public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
         return resilientCall(() -> blockingStub().databasesContains(request));
     }
 
-    public CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseManager.Create.Req request) {
+    public CoreDatabaseProto.CoreDatabaseManager.Create.Res databasesCreate(CoreDatabaseProto.CoreDatabaseManager.Create.Req request) {
         return resilientCall(() -> blockingStub().databasesCreate(request));
     }
 
-    public CoreDatabaseManager.All.Res databasesAll(CoreDatabaseManager.All.Req request) {
+    public CoreDatabaseProto.CoreDatabaseManager.All.Res databasesAll(CoreDatabaseProto.CoreDatabaseManager.All.Req request) {
         return resilientCall(() -> blockingStub().databasesAll(request));
     }
 
-    public CoreDatabase.Schema.Res databaseSchema(CoreDatabase.Schema.Req request) {
+    public CoreDatabaseProto.CoreDatabase.Schema.Res databaseSchema(CoreDatabaseProto.CoreDatabase.Schema.Req request) {
         return resilientCall(() -> blockingStub().databaseSchema(request));
     }
 
-    public CoreDatabase.Delete.Res databaseDelete(CoreDatabase.Delete.Req request) {
+    public CoreDatabaseProto.CoreDatabase.Delete.Res databaseDelete(CoreDatabaseProto.CoreDatabase.Delete.Req request) {
         return resilientCall(() -> blockingStub().databaseDelete(request));
     }
 
-    public Session.Open.Res sessionOpen(Session.Open.Req request) {
+    public SessionProto.Session.Open.Res sessionOpen(SessionProto.Session.Open.Req request) {
         return resilientCall(() -> blockingStub().sessionOpen(request));
     }
 
-    public Session.Close.Res sessionClose(Session.Close.Req request) {
+    public SessionProto.Session.Close.Res sessionClose(SessionProto.Session.Close.Req request) {
         return resilientCall(() -> blockingStub().sessionClose(request));
     }
 
-    public Session.Pulse.Res sessionPulse(Session.Pulse.Req request) {
+    public SessionProto.Session.Pulse.Res sessionPulse(SessionProto.Session.Pulse.Req request) {
         return resilientCall(() -> blockingStub().sessionPulse(request));
     }
 
@@ -78,7 +77,16 @@ public abstract class TypeDBStub {
 
     protected abstract TypeDBGrpc.TypeDBStub asyncStub();
 
-    protected void ensureConnected() {
+    protected <RES> RES resilientCall(Supplier<RES> function) {
+        try {
+            ensureConnected();
+            return function.get();
+        } catch (StatusRuntimeException e) {
+            throw TypeDBClientException.of(e);
+        }
+    }
+
+    private void ensureConnected() {
         // The Channel is a persistent HTTP connection. If it gets interrupted (say, by the server going down) then
         // gRPC's recovery logic will kick in, marking the Channel as being in a transient failure state and rejecting
         // all RPC calls while in this state. It will attempt to reconnect periodically in the background, using an
@@ -88,6 +96,4 @@ public abstract class TypeDBStub {
             channel().resetConnectBackoff();
         }
     }
-
-    protected abstract <RES> RES resilientCall(Supplier<RES> function);
 }

@@ -21,13 +21,9 @@
 
 package com.vaticle.typedb.client.connection.core;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.protocol.TypeDBGrpc;
 import io.grpc.ManagedChannel;
-import io.grpc.StatusRuntimeException;
-
-import java.util.function.Supplier;
 
 public class CoreStub extends TypeDBStub {
 
@@ -59,15 +55,5 @@ public class CoreStub extends TypeDBStub {
     @Override
     protected TypeDBGrpc.TypeDBStub asyncStub() {
         return asyncStub;
-    }
-
-    @Override
-    protected <RES> RES resilientCall(Supplier<RES> function) {
-        try {
-            ensureConnected();
-            return function.get();
-        } catch (StatusRuntimeException e) {
-            throw TypeDBClientException.of(e);
-        }
     }
 }

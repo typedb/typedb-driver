@@ -22,11 +22,11 @@
 package com.vaticle.typedb.client.test.integration;
 
 import com.vaticle.typedb.client.TypeDB;
+import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.connection.TypeDBClient;
 import com.vaticle.typedb.client.api.connection.TypeDBOptions;
 import com.vaticle.typedb.client.api.connection.TypeDBSession;
 import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
-import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
