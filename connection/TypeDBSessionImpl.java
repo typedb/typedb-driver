@@ -22,9 +22,9 @@
 package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
@@ -79,16 +79,24 @@ public class TypeDBSessionImpl implements TypeDBSession {
     }
 
     @Override
-    public boolean isOpen() { return isOpen.get(); }
+    public boolean isOpen() {
+        return isOpen.get();
+    }
 
     @Override
-    public Type type() { return type; }
+    public Type type() {
+        return type;
+    }
 
     @Override
-    public TypeDBDatabaseImpl database() { return database; }
+    public TypeDBDatabaseImpl database() {
+        return database;
+    }
 
     @Override
-    public TypeDBOptions options() { return options; }
+    public TypeDBOptions options() {
+        return options;
+    }
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
@@ -108,7 +116,9 @@ public class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
-    ByteString id() { return sessionID; }
+    ByteString id() {
+        return sessionID;
+    }
 
     TypeDBStub stub() {
         return client.stub();
@@ -118,7 +128,9 @@ public class TypeDBSessionImpl implements TypeDBSession {
         return client.transmitter();
     }
 
-    int networkLatencyMillis() { return networkLatencyMillis; }
+    int networkLatencyMillis() {
+        return networkLatencyMillis;
+    }
 
     @Override
     public void close() {

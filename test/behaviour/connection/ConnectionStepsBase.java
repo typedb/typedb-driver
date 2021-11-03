@@ -21,10 +21,10 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection;
 
-import com.vaticle.typedb.client.api.connection.TypeDBClient;
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
-import com.vaticle.typedb.client.api.connection.database.Database;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 
 import java.util.ArrayList;

@@ -19,42 +19,49 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection;
-
-import com.vaticle.typedb.client.api.connection.database.DatabaseManager;
-import com.vaticle.typedb.client.api.connection.user.UserManager;
+package com.vaticle.typedb.client.api.database;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
+import java.util.Set;
 
-public interface TypeDBClient extends AutoCloseable {
-
-    @CheckReturnValue
-    boolean isOpen();
-
-    @CheckReturnValue
-    DatabaseManager databases();
+public interface Database {
 
     @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type);
+    String name();
 
     @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
+    String schema();
 
-    @CheckReturnValue
-    boolean isCluster();
+    void delete();
 
-    @CheckReturnValue
-    TypeDBClient.Cluster asCluster();
-
-    void close();
-
-    interface Cluster extends TypeDBClient {
+    interface Cluster extends Database {
 
         @CheckReturnValue
-        UserManager users();
+        Set<? extends Replica> replicas();
 
-        @Override
         @CheckReturnValue
-        DatabaseManager.Cluster databases();
+        Optional<? extends Replica> primaryReplica();
+
+        @CheckReturnValue
+        Replica preferredReplica();
+    }
+
+    interface Replica {
+
+        @CheckReturnValue
+        Cluster database();
+
+        @CheckReturnValue
+        String address();
+
+        @CheckReturnValue
+        boolean isPrimary();
+
+        @CheckReturnValue
+        boolean isPreferred();
+
+        @CheckReturnValue
+        long term();
     }
 }

@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 
 import javax.annotation.CheckReturnValue;
 
@@ -42,5 +42,6 @@ public interface Entity extends Thing {
     @CheckReturnValue
     Entity.Remote asRemote(TypeDBTransaction transaction);
 
-    interface Remote extends Thing.Remote, Entity {}
+    interface Remote extends Thing.Remote, Entity {
+    }
 }

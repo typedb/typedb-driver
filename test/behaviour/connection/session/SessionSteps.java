@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.session;
 
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBSession;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.api.connection.TypeDBSession.Type.DATA;
-import static com.vaticle.typedb.client.api.connection.TypeDBSession.Type.SCHEMA;
+import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.client.api.TypeDBSession.Type.SCHEMA;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection;
+package com.vaticle.typedb.client.api;
 
 import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
@@ -79,9 +79,13 @@ public interface TypeDBTransaction extends AutoCloseable {
             return id;
         }
 
-        public boolean isRead() { return !isWrite; }
+        public boolean isRead() {
+            return !isWrite;
+        }
 
-        public boolean isWrite() { return isWrite; }
+        public boolean isWrite() {
+            return isWrite;
+        }
 
         public TransactionProto.Transaction.Type proto() {
             return TransactionProto.Transaction.Type.forNumber(id);

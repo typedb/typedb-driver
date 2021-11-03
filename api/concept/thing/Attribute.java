@@ -21,9 +21,9 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 
 import javax.annotation.CheckReturnValue;
 import java.time.LocalDateTime;
@@ -137,7 +137,8 @@ public interface Attribute<VALUE> extends Thing {
         @CheckReturnValue
         Attribute.Boolean.Remote asRemote(TypeDBTransaction transaction);
 
-        interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {}
+        interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
+        }
     }
 
     interface Long extends Attribute<java.lang.Long> {
@@ -156,7 +157,8 @@ public interface Attribute<VALUE> extends Thing {
         @CheckReturnValue
         Attribute.Long.Remote asRemote(TypeDBTransaction transaction);
 
-        interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {}
+        interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
+        }
     }
 
     interface Double extends Attribute<java.lang.Double> {
@@ -175,7 +177,8 @@ public interface Attribute<VALUE> extends Thing {
         @CheckReturnValue
         Attribute.Double.Remote asRemote(TypeDBTransaction transaction);
 
-        interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {}
+        interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
+        }
     }
 
     interface String extends Attribute<java.lang.String> {
@@ -194,7 +197,8 @@ public interface Attribute<VALUE> extends Thing {
         @CheckReturnValue
         Attribute.String.Remote asRemote(TypeDBTransaction transaction);
 
-        interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {}
+        interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
+        }
     }
 
     interface DateTime extends Attribute<LocalDateTime> {
@@ -213,6 +217,7 @@ public interface Attribute<VALUE> extends Thing {
         @CheckReturnValue
         Attribute.DateTime.Remote asRemote(TypeDBTransaction transaction);
 
-        interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {}
+        interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
+        }
     }
 }

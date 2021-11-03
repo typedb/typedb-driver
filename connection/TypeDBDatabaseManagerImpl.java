@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.vaticle.typedb.client.api.connection.database.Database;
-import com.vaticle.typedb.client.api.connection.database.DatabaseManager;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.database.DatabaseManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 

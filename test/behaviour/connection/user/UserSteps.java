@@ -22,10 +22,10 @@
 package com.vaticle.typedb.client.test.behaviour.connection.user;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.connection.TypeDBClient;
-import com.vaticle.typedb.client.api.connection.TypeDBCredential;
-import com.vaticle.typedb.client.api.connection.database.Database;
-import com.vaticle.typedb.client.api.connection.user.User;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

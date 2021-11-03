@@ -21,9 +21,9 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.transaction;
 
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typeql.lang.TypeQL;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

@@ -19,49 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection.database;
+package com.vaticle.typedb.client.api.user;
 
 import javax.annotation.CheckReturnValue;
-import java.util.Optional;
 import java.util.Set;
 
-public interface Database {
+public interface UserManager {
 
     @CheckReturnValue
-    String name();
+    User get(String username);
 
     @CheckReturnValue
-    String schema();
+    boolean contains(String username);
 
-    void delete();
+    void create(String username, String password);
 
-    interface Cluster extends Database {
-
-        @CheckReturnValue
-        Set<? extends Replica> replicas();
-
-        @CheckReturnValue
-        Optional<? extends Replica> primaryReplica();
-
-        @CheckReturnValue
-        Replica preferredReplica();
-    }
-
-    interface Replica {
-
-        @CheckReturnValue
-        Cluster database();
-
-        @CheckReturnValue
-        String address();
-
-        @CheckReturnValue
-        boolean isPrimary();
-
-        @CheckReturnValue
-        boolean isPreferred();
-
-        @CheckReturnValue
-        long term();
-    }
+    Set<User> all();
 }

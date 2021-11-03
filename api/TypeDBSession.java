@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection;
+package com.vaticle.typedb.client.api;
 
-import com.vaticle.typedb.client.api.connection.database.Database;
+import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.protocol.SessionProto;
 
 import javax.annotation.CheckReturnValue;
@@ -71,9 +71,13 @@ public interface TypeDBSession extends AutoCloseable {
             return id;
         }
 
-        public boolean isData() { return !isSchema; }
+        public boolean isData() {
+            return !isSchema;
+        }
 
-        public boolean isSchema() { return isSchema; }
+        public boolean isSchema() {
+            return isSchema;
+        }
 
         public SessionProto.Session.Type proto() {
             return SessionProto.Session.Type.forNumber(id);

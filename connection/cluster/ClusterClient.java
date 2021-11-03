@@ -21,11 +21,11 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.connection.TypeDBClient;
-import com.vaticle.typedb.client.api.connection.TypeDBCredential;
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
-import com.vaticle.typedb.client.api.connection.user.UserManager;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
@@ -256,7 +256,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                         LOG.debug("Unable to open a session or transaction to " + replica.id() +
-                                          ". Attempting next replica.", e);
+                                ". Attempting next replica.", e);
                     } else {
                         throw e;
                     }
@@ -292,7 +292,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                         LOG.debug("Failed to fetch replica info for database '" + database + "' from " +
-                                          serverAddress + ". Attempting next server.", e);
+                                serverAddress + ". Attempting next server.", e);
                     } else {
                         throw e;
                     }

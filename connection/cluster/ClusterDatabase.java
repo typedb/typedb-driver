@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.connection.database.Database;
+import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.connection.TypeDBDatabaseImpl;
 import com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
@@ -135,7 +135,7 @@ class ClusterDatabase implements Database.Cluster {
 
         public static Replica of(ClusterDatabaseProto.ClusterDatabase.Replica replica, ClusterDatabase database) {
             return new Replica(database, replica.getAddress(), replica.getPrimary(),
-                               replica.getPreferred(), replica.getTerm());
+                    replica.getPreferred(), replica.getTerm());
         }
 
         public ID id() {

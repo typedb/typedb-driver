@@ -22,9 +22,9 @@
 package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;
@@ -65,22 +65,34 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     @Override
-    public Type type() { return type; }
+    public Type type() {
+        return type;
+    }
 
     @Override
-    public TypeDBOptions options() { return options; }
+    public TypeDBOptions options() {
+        return options;
+    }
 
     @Override
-    public boolean isOpen() { return bidirectionalStream.isOpen(); }
+    public boolean isOpen() {
+        return bidirectionalStream.isOpen();
+    }
 
     @Override
-    public ConceptManager concepts() { return conceptMgr; }
+    public ConceptManager concepts() {
+        return conceptMgr;
+    }
 
     @Override
-    public LogicManager logic() { return logicMgr; }
+    public LogicManager logic() {
+        return logicMgr;
+    }
 
     @Override
-    public QueryManager query() { return queryMgr; }
+    public QueryManager query() {
+        return queryMgr;
+    }
 
     @Override
     public Res execute(Req.Builder request) {

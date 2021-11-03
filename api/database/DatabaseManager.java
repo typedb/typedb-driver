@@ -19,20 +19,33 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection.user;
+package com.vaticle.typedb.client.api.database;
 
 import javax.annotation.CheckReturnValue;
-import java.util.Set;
+import java.util.List;
 
-public interface UserManager {
-
-    @CheckReturnValue
-    User get(String username);
+public interface DatabaseManager {
 
     @CheckReturnValue
-    boolean contains(String username);
+    Database get(String name);
 
-    void create(String username, String password);
+    @CheckReturnValue
+    boolean contains(String name);
+    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
 
-    Set<User> all();
+    void create(String name);
+
+    @CheckReturnValue
+    List<? extends Database> all();
+
+    interface Cluster extends DatabaseManager {
+
+        @Override
+        @CheckReturnValue
+        Database.Cluster get(String name);
+
+        @Override
+        @CheckReturnValue
+        List<Database.Cluster> all();
+    }
 }

@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.api.concept.type;
 
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 
 import java.util.stream.Stream;
 

@@ -21,8 +21,8 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.connection.user.User;
-import com.vaticle.typedb.client.api.connection.user.UserManager;
+import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.Set;
@@ -78,10 +78,10 @@ public class ClusterUserManager implements UserManager {
         ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) ->
-                    parameter.client().stub()
-                            .usersAll(allReq()).getNamesList().stream()
-                            .map(name -> new ClusterUser(client, name))
-                            .collect(Collectors.toSet())
+                        parameter.client().stub()
+                                .usersAll(allReq()).getNamesList().stream()
+                                .map(name -> new ClusterUser(client, name))
+                                .collect(Collectors.toSet())
         );
         return failsafeTask.runPrimaryReplica();
     }

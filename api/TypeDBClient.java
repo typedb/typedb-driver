@@ -19,33 +19,42 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection.database;
+package com.vaticle.typedb.client.api;
+
+import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.api.user.UserManager;
 
 import javax.annotation.CheckReturnValue;
-import java.util.List;
 
-public interface DatabaseManager {
-
-    @CheckReturnValue
-    Database get(String name);
+public interface TypeDBClient extends AutoCloseable {
 
     @CheckReturnValue
-    boolean contains(String name);
-    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
-
-    void create(String name);
+    boolean isOpen();
 
     @CheckReturnValue
-    List<? extends Database> all();
+    DatabaseManager databases();
 
-    interface Cluster extends DatabaseManager {
+    @CheckReturnValue
+    TypeDBSession session(String database, TypeDBSession.Type type);
+
+    @CheckReturnValue
+    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
+
+    @CheckReturnValue
+    boolean isCluster();
+
+    @CheckReturnValue
+    TypeDBClient.Cluster asCluster();
+
+    void close();
+
+    interface Cluster extends TypeDBClient {
+
+        @CheckReturnValue
+        UserManager users();
 
         @Override
         @CheckReturnValue
-        Database.Cluster get(String name);
-
-        @Override
-        @CheckReturnValue
-        List<Database.Cluster> all();
+        DatabaseManager.Cluster databases();
     }
 }

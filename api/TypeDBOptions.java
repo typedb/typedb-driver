@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.connection;
+package com.vaticle.typedb.client.api;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.OptionsProto;
@@ -42,7 +42,8 @@ public class TypeDBOptions {
     private Integer sessionIdleTimeoutMillis = null;
     private Integer schemaLockAcquireTimeoutMillis = null;
 
-    private TypeDBOptions() {}
+    private TypeDBOptions() {
+    }
 
     @CheckReturnValue
     public static TypeDBOptions core() {

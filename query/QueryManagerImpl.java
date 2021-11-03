@@ -21,12 +21,12 @@
 
 package com.vaticle.typedb.client.query;
 
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.api.answer.NumericGroup;
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;

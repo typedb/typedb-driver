@@ -21,10 +21,10 @@
 
 package com.vaticle.typedb.client.concept.thing;
 
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.TypeImpl;
@@ -59,8 +59,8 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     public static RelationImpl of(ConceptProto.Thing protoThing) {
         return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()),
-                                protoThing.getInferred(),
-                                RelationTypeImpl.of(protoThing.getType()));
+                protoThing.getInferred(),
+                RelationTypeImpl.of(protoThing.getType()));
     }
 
     @Override

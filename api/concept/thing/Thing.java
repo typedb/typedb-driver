@@ -21,11 +21,11 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.api.connection.TypeDBTransaction;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;

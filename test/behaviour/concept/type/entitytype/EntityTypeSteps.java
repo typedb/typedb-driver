@@ -21,4 +21,5 @@
 
 package com.vaticle.typedb.client.test.behaviour.concept.type.entitytype;
 
-public class EntityTypeSteps {}
+public class EntityTypeSteps {
+}

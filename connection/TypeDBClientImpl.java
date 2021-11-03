@@ -22,9 +22,9 @@
 package com.vaticle.typedb.client.connection;
 
 import com.google.protobuf.ByteString;
-import com.vaticle.typedb.client.api.connection.TypeDBClient;
-import com.vaticle.typedb.client.api.connection.TypeDBOptions;
-import com.vaticle.typedb.client.api.connection.TypeDBSession;
+import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;

@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.connection.cluster;
 
-import com.vaticle.typedb.client.api.connection.TypeDBCredential;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.common.exception.ErrorMessage;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
@@ -94,7 +94,8 @@ public class ClusterServerStub extends TypeDBStub {
             }
 
             @Override
-            public void thisUsesUnstableApi() { }
+            public void thisUsesUnstableApi() {
+            }
         };
     }
 

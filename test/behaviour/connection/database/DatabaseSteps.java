@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.database;
 
-import com.vaticle.typedb.client.api.connection.database.Database;
+import com.vaticle.typedb.client.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
