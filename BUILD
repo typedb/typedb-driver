@@ -218,6 +218,6 @@ filegroup(
     data = [
         "@vaticle_dependencies//tool/bazelrun:rbe",
         "@vaticle_dependencies//distribution/artifact:create-netrc",
-        "@vaticle_dependencies//tool/release:create-notes",
+        "@vaticle_dependencies//tool/release/createnotes:bin",
     ],
 )
