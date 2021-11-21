@@ -46,16 +46,16 @@ public class TypeDBClientException extends RuntimeException {
         this.errorMessage = null;
     }
 
-    public static TypeDBClientException of(StatusRuntimeException statusRuntimeException) {
-        if (isRstStream(statusRuntimeException)) {
+    public static TypeDBClientException of(StatusRuntimeException sre) {
+        if (isRstStream(sre)) {
             return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
-        } else if (isReplicaNotPrimary(statusRuntimeException)) {
+        } else if (isReplicaNotPrimary(sre)) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
-        } else if (isTokenCredentialInvalid(statusRuntimeException)) {
+        } else if (isTokenCredentialInvalid(sre)) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID);
+        } else {
+            return new TypeDBClientException(sre.getStatus().getDescription(), sre);
         }
-
-        return new TypeDBClientException(statusRuntimeException.getStatus().getDescription(), statusRuntimeException);
     }
 
     private static boolean isRstStream(StatusRuntimeException statusRuntimeException) {

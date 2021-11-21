@@ -40,6 +40,7 @@ class ClusterServerClient extends TypeDBClientImpl {
         super(parallelisation);
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
+        validateConnectionOrThrow();
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {
