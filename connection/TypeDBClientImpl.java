@@ -68,8 +68,9 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
             //       established. But we should replace this code to perform the check in a more meaningful way. This method
             //       should naturally be replaced once we implement a new client pulse architecture.
             databaseMgr.all();
-        } finally {
+        } catch (Exception e){
             close();
+            throw e;
         }
     }
 
