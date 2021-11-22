@@ -41,17 +41,16 @@ public class TypeDBCredential {
         this(username, password, tlsEnabled, null);
     }
 
-    public TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
+    private TypeDBCredential(String username, String password, Path tlsRootCA) {
+        this(username, password, true, tlsRootCA);
+    }
+
+    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
         this.username = username;
         this.password = password;
-        if (!tlsEnabled && tlsRootCA != null) {
-            throw new TypeDBClientException(
-                    ILLEGAL_ARGUMENT_COMBINATION, "tlsEnabled: '" + tlsEnabled + "', tlsRootCA: '" + tlsRootCA + "'"
-            );
-        }
-
         this.tlsEnabled = tlsEnabled;
         this.tlsRootCA = tlsRootCA;
+        assert tlsEnabled || tlsRootCA == null;
     }
 
     public String username() {
