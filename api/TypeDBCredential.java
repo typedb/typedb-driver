@@ -41,7 +41,7 @@ public class TypeDBCredential {
         this(username, password, tlsEnabled, null);
     }
 
-    private TypeDBCredential(String username, String password, Path tlsRootCA) {
+    public TypeDBCredential(String username, String password, Path tlsRootCA) {
         this(username, password, true, tlsRootCA);
     }
 
