@@ -40,6 +40,7 @@ public class TypeDBOptions {
     private Boolean prefetch = null;
     private Integer prefetchSize = null;
     private Integer sessionIdleTimeoutMillis = null;
+    private Integer transactionTimeoutMillis = null;
     private Integer schemaLockAcquireTimeoutMillis = null;
 
     private TypeDBOptions() {
@@ -141,6 +142,18 @@ public class TypeDBOptions {
         return Optional.ofNullable(schemaLockAcquireTimeoutMillis);
     }
 
+    public TypeDBOptions transactionTimeoutMillis(int transactionTimeoutMillis) {
+        if (transactionTimeoutMillis < 1) {
+            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, transactionTimeoutMillis);
+        }
+        this.transactionTimeoutMillis = transactionTimeoutMillis;
+        return this;
+    }
+
+    public Optional<Integer> transactionTimeoutMillis() {
+        return Optional.ofNullable(transactionTimeoutMillis);
+    }
+
     public TypeDBOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
         if (schemaLockAcquireTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
@@ -164,6 +177,7 @@ public class TypeDBOptions {
         prefetchSize().ifPresent(builder::setPrefetchSize);
         prefetch().ifPresent(builder::setPrefetch);
         sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
+        transactionTimeoutMillis().ifPresent(builder::setTransactionTimeoutMillis);
         schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
         if (isCluster()) asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
 

@@ -26,6 +26,8 @@ import com.vaticle.typedb.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
@@ -33,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedTransferQueue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class ResponseCollector<R> {
@@ -56,7 +58,17 @@ public class ResponseCollector<R> {
 
     public synchronized void close(@Nullable StatusRuntimeException error) {
         collectors.values().forEach(collector -> collector.close(error));
-        collectors.clear();
+    }
+
+    public boolean hasErrors() {
+        return collectors.values().stream().anyMatch(collector -> collector.responseQueue.stream()
+                .anyMatch(msg -> msg.isSecond() && msg.second().error().isPresent()));
+    }
+
+    public List<StatusRuntimeException> errors() {
+        List<StatusRuntimeException> errors = new ArrayList<>();
+        collectors.values().forEach(collectors -> errors.addAll(collectors.drainErrors()));
+        return errors;
     }
 
     public static class Queue<R> {
@@ -72,11 +84,23 @@ public class ResponseCollector<R> {
             try {
                 Either<Response<R>, Done> response = responseQueue.take();
                 if (response.isFirst()) return response.first().message();
-                else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+                else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS);
                 else throw TypeDBClientException.of(response.second().error().get());
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
+        }
+
+        public List<StatusRuntimeException> drainErrors() {
+            List<Either<Response<R>, Done>> messages = new ArrayList<>();
+            responseQueue.drainTo(messages);
+            List<StatusRuntimeException> errors = new ArrayList<>();
+            messages.forEach(msg -> {
+                if (msg.isSecond() && msg.second().error().isPresent()) {
+                    errors.add(msg.second().error().get());
+                }
+            });
+            return errors;
         }
 
         public void put(R response) {

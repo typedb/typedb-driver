@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.test.behaviour.connection.session;
 
 import com.vaticle.typedb.client.api.TypeDBSession;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -34,9 +35,12 @@ import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
 import static com.vaticle.typedb.client.api.TypeDBSession.Type.SCHEMA;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.optionSetters;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionOptions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -57,14 +61,14 @@ public class SessionSteps {
     @When("connection open schema session(s) for database(s):")
     public void connection_open_schema_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, SCHEMA));
+            sessions.add(client.session(name, SCHEMA, sessionOptions));
         }
     }
 
     @When("connection open (data )session(s) for database(s):")
     public void connection_open_data_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, DATA));
+            sessions.add(client.session(name, DATA, sessionOptions));
         }
     }
 
@@ -73,7 +77,7 @@ public class SessionSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
-            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name, DATA), threadPool));
+            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name, DATA, sessionOptions), threadPool));
         }
     }
 
@@ -151,5 +155,18 @@ public class SessionSteps {
         }
 
         CompletableFuture.allOf(assertions).join();
+    }
+
+    @Given("set session option {word} to: {int}")
+    public void set_option_to(String option, int value) {
+        if (!optionSetters.containsKey(option)) {
+            throw new RuntimeException("Unrecognised option: " + option);
+        }
+        optionSetters.get(option).accept(sessionOptions, value);
+    }
+
+    @Then("wait {int} seconds")
+    public void wait_seconds(int seconds) throws InterruptedException {
+        Thread.sleep(seconds * 1000L);
     }
 }

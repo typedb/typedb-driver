@@ -40,7 +40,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 
 public class RequestTransmitter implements AutoCloseable {
 
@@ -164,7 +164,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatch(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS);
                 requestQueue.add(requestProto);
                 executor.mayStartRunning();
             } finally {
@@ -175,7 +175,7 @@ public class RequestTransmitter implements AutoCloseable {
         public void dispatchNow(TransactionProto.Transaction.Req requestProto) {
             try {
                 accessLock.readLock().lock();
-                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+                if (!isOpen.get()) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS);
                 requestQueue.add(requestProto);
                 sendBatchedRequests();
             } finally {

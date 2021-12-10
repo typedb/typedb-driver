@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;
@@ -37,13 +38,14 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @Override
     void beforeAll() {
-        try {
-            server = new TypeDBCoreRunner();
-        } catch (InterruptedException | TimeoutException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        server.start();
-        TypeDBSingleton.setTypeDBRunner(server);
+//        try {
+//            server = new TypeDBCoreRunner();
+//        } catch (InterruptedException | TimeoutException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        server.start();
+//        TypeDBSingleton.setTypeDBRunner(server);
+        ConnectionStepsBase.isBeforeAllRan = true;
     }
 
     @Before
@@ -59,6 +61,11 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     TypeDBClient createTypeDBClient(String address) {
         return TypeDB.coreClient(address);
+    }
+
+    @Override
+    TypeDBOptions createOptions() {
+        return TypeDBOptions.core();
     }
 
     @Given("connection has been opened")

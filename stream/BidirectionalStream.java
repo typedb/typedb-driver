@@ -32,6 +32,8 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -114,6 +116,16 @@ public class BidirectionalStream implements AutoCloseable {
                 throw TypeDBClientException.of(e);
             }
         }
+    }
+
+    public boolean hasErrors() {
+        return resCollector.hasErrors() || resPartCollector.hasErrors();
+    }
+
+    public List<StatusRuntimeException> drainErrors() {
+        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.errors());
+        errors.addAll(resPartCollector.errors());
+        return errors;
     }
 
     public static class Single<T> {

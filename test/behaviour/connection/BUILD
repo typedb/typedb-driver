@@ -29,6 +29,7 @@ java_library(
         # Package dependencies
         "//api:api",
         "@vaticle_typedb_common//test:typedb-runner",
+        "@vaticle_typedb_common//:common",
 
         # External dependencies from Maven
         "@maven//:junit_junit",

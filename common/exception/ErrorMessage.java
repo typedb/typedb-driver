@@ -34,30 +34,32 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(2, "The session has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED =
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
+        public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
+                new Client(4, "The transaction has been closed and no further operation is allowed because of error(s): '%s'.");
         public static final Client UNABLE_TO_CONNECT =
-                new Client(4, "Unable to connect to TypeDB server.");
+                new Client(5, "Unable to connect to TypeDB server.");
         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
-                new Client(5, "Value cannot be less than 1, was: '%d'.");
+                new Client(6, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
-                new Client(6, "Database name cannot be null.");
+                new Client(7, "Database name cannot be null.");
         public static final Client DB_DOES_NOT_EXIST =
-                new Client(7, "The database '%s' does not exist.");
+                new Client(8, "The database '%s' does not exist.");
         public static final Client MISSING_RESPONSE =
-                new Client(8, "Unexpected empty response for request ID '%s'.");
+                new Client(9, "Unexpected empty response for request ID '%s'.");
         public static final Client UNKNOWN_REQUEST_ID =
-                new Client(9, "Received a response with unknown request id '%s'.");
+                new Client(10, "Received a response with unknown request id '%s'.");
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
-                new Client(10, "No replica has been marked as the primary replica for latest known term '%d'.");
+                new Client(11, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
-                new Client(11, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
+                new Client(12, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
-                new Client(12, "The replica is not the primary replica.");
+                new Client(13, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
-                new Client(13, "Attempted connecting to all cluster members, but the following errors occurred: \n%s.");
+                new Client(14, "Attempted connecting to all cluster members, but the following errors occurred: \n%s.");
         public static final Client CLUSTER_USER_DOES_NOT_EXIST =
-                new Client(14, "The user '%s' does not exist.");
+                new Client(15, "The user '%s' does not exist.");
         public static final ErrorMessage CLUSTER_TOKEN_CREDENTIAL_INVALID =
-                new Client(15, "Invalid token credential.");
+                new Client(16, "Invalid token credential.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";
