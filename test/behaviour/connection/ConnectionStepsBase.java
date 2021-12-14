@@ -80,7 +80,7 @@ public abstract class ConnectionStepsBase {
             }
         }
         assertNull(client);
-        String address = "localhost:1729" ;//TypeDBSingleton.getTypeDBRunner().address();
+        String address = TypeDBSingleton.getTypeDBRunner().address();
         assertNotNull(address);
         client = createTypeDBClient(address);
         client.databases().all().forEach(Database::delete);

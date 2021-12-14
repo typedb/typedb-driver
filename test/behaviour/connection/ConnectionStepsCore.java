@@ -38,13 +38,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @Override
     void beforeAll() {
-//        try {
-//            server = new TypeDBCoreRunner();
-//        } catch (InterruptedException | TimeoutException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        server.start();
-//        TypeDBSingleton.setTypeDBRunner(server);
+        try {
+            server = new TypeDBCoreRunner();
+        } catch (InterruptedException | TimeoutException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        server.start();
+        TypeDBSingleton.setTypeDBRunner(server);
         ConnectionStepsBase.isBeforeAllRan = true;
     }
 
