@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.sl.In;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,5 +130,9 @@ public abstract class ConnectionStepsBase {
     void connection_does_not_have_any_database() {
         assertNotNull(client);
         assertTrue(client.isOpen());
+    }
+
+    void wait_seconds(int seconds) throws InterruptedException {
+        Thread.sleep(seconds * 1000L);
     }
 }

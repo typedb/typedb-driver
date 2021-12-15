@@ -29,6 +29,7 @@ import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -78,4 +79,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         super.connection_does_not_have_any_database();
     }
 
+    @Then("wait {int} seconds")
+    public void wait_seconds(int seconds) throws InterruptedException {
+        super.wait_seconds(seconds);
+    }
 }

@@ -35,7 +35,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Client TRANSACTION_CLOSED =
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
-                new Client(4, "The transaction has been closed and no further operation is allowed because of error(s): '%s'.");
+                new Client(4, "The transaction has been closed with error(s): \n%s.");
         public static final Client UNABLE_TO_CONNECT =
                 new Client(5, "Unable to connect to TypeDB server.");
         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =

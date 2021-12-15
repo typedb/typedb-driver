@@ -40,7 +40,6 @@ import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStep
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -158,15 +157,10 @@ public class SessionSteps {
     }
 
     @Given("set session option {word} to: {int}")
-    public void set_option_to(String option, int value) {
+    public void set_session_option_to(String option, int value) {
         if (!optionSetters.containsKey(option)) {
             throw new RuntimeException("Unrecognised option: " + option);
         }
         optionSetters.get(option).accept(sessionOptions, value);
-    }
-
-    @Then("wait {int} seconds")
-    public void wait_seconds(int seconds) throws InterruptedException {
-        Thread.sleep(seconds * 1000L);
     }
 }
