@@ -25,7 +25,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "util",
-    srcs = glob(["**/*.java"]),
+    srcs = ["Util.java"],
     visibility = ["//visibility:public"],
     deps = [
 
@@ -34,6 +34,20 @@ java_library(
 
         # External Maven Dependencies
         "@maven//:junit_junit",
+    ],
+)
+
+java_library(
+    name = "steps",
+    srcs = ["UtilSteps.java"],
+    deps = [
+
+        # Internal Repository Dependencies
+        # "@vaticle_typedb_common//:common",
+
+        # External Maven Dependencies
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 

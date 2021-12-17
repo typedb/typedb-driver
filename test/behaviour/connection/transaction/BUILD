@@ -69,6 +69,7 @@ typedb_behaviour_java_test(
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/typeql:steps",
+        "//test/behaviour/util:steps",
     ],
     deps = [
         # Internal Package Dependencies

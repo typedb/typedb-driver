@@ -46,7 +46,6 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         }
         server.start();
         TypeDBSingleton.setTypeDBRunner(server);
-        ConnectionStepsBase.isBeforeAllRan = true;
     }
 
     @Before
@@ -79,8 +78,4 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         super.connection_does_not_have_any_database();
     }
 
-    @Then("wait {int} seconds")
-    public void wait_seconds(int seconds) throws InterruptedException {
-        super.wait_seconds(seconds);
-    }
 }

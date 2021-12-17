@@ -132,7 +132,4 @@ public abstract class ConnectionStepsBase {
         assertTrue(client.isOpen());
     }
 
-    void wait_seconds(int seconds) throws InterruptedException {
-        Thread.sleep(seconds * 1000L);
-    }
 }
