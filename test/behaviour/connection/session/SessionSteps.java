@@ -156,8 +156,8 @@ public class SessionSteps {
         CompletableFuture.allOf(assertions).join();
     }
 
-    @Given("set session option {word} to: {int}")
-    public void set_session_option_to(String option, int value) {
+    @Given("set session option {word} to: {word}")
+    public void set_session_option_to(String option, String value) {
         if (!optionSetters.containsKey(option)) {
             throw new RuntimeException("Unrecognised option: " + option);
         }

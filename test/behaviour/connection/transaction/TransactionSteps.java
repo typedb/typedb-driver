@@ -266,8 +266,8 @@ public class TransactionSteps {
     // transaction configuration          //
     // ===================================//
 
-    @Given("set transaction option {word} to: {int}")
-    public void set_transaction_option_to(String option, int value) {
+    @Given("set transaction option {word} to: {word}")
+    public void set_transaction_option_to(String option, String value) {
         if (!optionSetters.containsKey(option)) {
             throw new RuntimeException("Unrecognised option: " + option);
         }

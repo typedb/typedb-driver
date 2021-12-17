@@ -27,8 +27,6 @@ import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.server.TypeDBSingleton;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.sl.In;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,9 +59,9 @@ public abstract class ConnectionStepsBase {
     public static TypeDBOptions transactionOptions;
     static boolean isBeforeAllRan = false;
 
-    public static final Map<String, BiConsumer<TypeDBOptions, Integer>> optionSetters = map(
-            pair("session-idle-timeout-millis", TypeDBOptions::sessionIdleTimeoutMillis),
-            pair("transaction-timeout-millis", TypeDBOptions::transactionTimeoutMillis)
+    public static final Map<String, BiConsumer<TypeDBOptions, String>> optionSetters = map(
+            pair("session-idle-timeout-millis", (option, val) -> option.sessionIdleTimeoutMillis(Integer.parseInt(val))),
+            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
     );
 
     public static TypeDBTransaction tx() {
