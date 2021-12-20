@@ -60,11 +60,6 @@ public class ResponseCollector<R> {
         collectors.values().forEach(collector -> collector.close(error));
     }
 
-    public boolean hasErrors() {
-        return collectors.values().stream().anyMatch(collector -> collector.responseQueue.stream()
-                .anyMatch(msg -> msg.isSecond() && msg.second().error().isPresent()));
-    }
-
     public List<StatusRuntimeException> errors() {
         List<StatusRuntimeException> errors = new ArrayList<>();
         collectors.values().forEach(collectors -> errors.addAll(collectors.drainErrors()));
