@@ -150,5 +150,7 @@
 @maven//:org_slf4j_slf4j_api_1_7_32
 @maven//:org_slf4j_slf4j_simple
 @maven//:org_slf4j_slf4j_simple_1_7_32
+@maven//:org_yaml_snakeyaml
+@maven//:org_yaml_snakeyaml_1_25
 @maven//:org_zeroturnaround_zt_exec
 @maven//:org_zeroturnaround_zt_exec_1_10

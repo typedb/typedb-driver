@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
@@ -34,8 +35,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.common.collection.Collections.map;
+import static com.vaticle.typedb.common.collection.Collections.pair;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -51,7 +55,14 @@ public abstract class ConnectionStepsBase {
     public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
     public static Map<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
     public static Map<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
-    private static boolean isBeforeAllRan = false;
+    public static TypeDBOptions sessionOptions;
+    public static TypeDBOptions transactionOptions;
+    static boolean isBeforeAllRan = false;
+
+    public static final Map<String, BiConsumer<TypeDBOptions, String>> optionSetters = map(
+            pair("session-idle-timeout-millis", (option, val) -> option.sessionIdleTimeoutMillis(Integer.parseInt(val))),
+            pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
+    );
 
     public static TypeDBTransaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
@@ -72,6 +83,8 @@ public abstract class ConnectionStepsBase {
         assertNotNull(address);
         client = createTypeDBClient(address);
         client.databases().all().forEach(Database::delete);
+        sessionOptions = createOptions().infer(true);
+        transactionOptions = createOptions().infer(true);
         System.out.println("ConnectionSteps.before");
     }
 
@@ -105,6 +118,8 @@ public abstract class ConnectionStepsBase {
 
     abstract TypeDBClient createTypeDBClient(String address);
 
+    abstract TypeDBOptions createOptions();
+
     void connection_has_been_opened() {
         assertNotNull(client);
         assertTrue(client.isOpen());
@@ -114,4 +129,5 @@ public abstract class ConnectionStepsBase {
         assertNotNull(client);
         assertTrue(client.isOpen());
     }
+
 }

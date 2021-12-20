@@ -26,6 +26,8 @@ import com.vaticle.typedb.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
@@ -56,7 +58,12 @@ public class ResponseCollector<R> {
 
     public synchronized void close(@Nullable StatusRuntimeException error) {
         collectors.values().forEach(collector -> collector.close(error));
-        collectors.clear();
+    }
+
+    public List<StatusRuntimeException> errors() {
+        List<StatusRuntimeException> errors = new ArrayList<>();
+        collectors.values().forEach(collectors -> errors.addAll(collectors.drainErrors()));
+        return errors;
     }
 
     public static class Queue<R> {
@@ -77,6 +84,18 @@ public class ResponseCollector<R> {
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
+        }
+
+        public List<StatusRuntimeException> drainErrors() {
+            List<Either<Response<R>, Done>> messages = new ArrayList<>();
+            responseQueue.drainTo(messages);
+            List<StatusRuntimeException> errors = new ArrayList<>();
+            messages.forEach(msg -> {
+                if (msg.isSecond() && msg.second().error().isPresent()) {
+                    errors.add(msg.second().error().get());
+                }
+            });
+            return errors;
         }
 
         public void put(R response) {

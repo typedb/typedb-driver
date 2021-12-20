@@ -36,10 +36,13 @@ import com.vaticle.typedb.client.stream.BidirectionalStream;
 import com.vaticle.typedb.protocol.TransactionProto.Transaction.Req;
 import com.vaticle.typedb.protocol.TransactionProto.Transaction.Res;
 import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
+import io.grpc.StatusRuntimeException;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.commitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.openReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.rollbackReq;
@@ -109,15 +112,21 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     private QueryFuture<Res> query(Req.Builder request, boolean batch) {
-        if (!isOpen()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!isOpen()) throwTransactionClosed();
         BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch);
         return single::get;
     }
 
     @Override
     public Stream<ResPart> stream(Req.Builder request) {
-        if (!isOpen()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!isOpen()) throwTransactionClosed();
         return bidirectionalStream.stream(request);
+    }
+
+    private void throwTransactionClosed() {
+        List<StatusRuntimeException> errors = bidirectionalStream.drainErrors();
+        if (errors.isEmpty()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        else throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, errors);
     }
 
     @Override

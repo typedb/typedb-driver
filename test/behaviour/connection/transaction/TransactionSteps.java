@@ -21,10 +21,10 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.transaction;
 
-import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typeql.lang.TypeQL;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.hamcrest.Matchers;
@@ -36,13 +36,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.optionSetters;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.list;
@@ -69,8 +70,7 @@ public class TransactionSteps {
         for (TypeDBSession session : sessions) {
             List<TypeDBTransaction> transactions = new ArrayList<>();
             for (TypeDBTransaction.Type type : types) {
-                TypeDBOptions options = !client.isCluster() ? TypeDBOptions.core() : TypeDBOptions.cluster();
-                TypeDBTransaction transaction = session.transaction(type, options.infer(true));
+                TypeDBTransaction transaction = session.transaction(type, transactionOptions);
                 transactions.add(transaction);
             }
             sessionsToTransactions.put(session, transactions);
@@ -262,6 +262,17 @@ public class TransactionSteps {
         CompletableFuture.allOf(assertions.toArray(new CompletableFuture[0])).join();
     }
 
+    // ===================================//
+    // transaction configuration          //
+    // ===================================//
+
+    @Given("set transaction option {word} to: {word}")
+    public void set_transaction_option_to(String option, String value) {
+        if (!optionSetters.containsKey(option)) {
+            throw new RuntimeException("Unrecognised option: " + option);
+        }
+        optionSetters.get(option).accept(transactionOptions, value);
+    }
 
     // ===================================//
     // transaction behaviour with queries //
