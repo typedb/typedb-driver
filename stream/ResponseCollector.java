@@ -60,7 +60,7 @@ public class ResponseCollector<R> {
         collectors.values().forEach(collector -> collector.close(error));
     }
 
-    public List<StatusRuntimeException> errors() {
+    public List<StatusRuntimeException> drainErrors() {
         List<StatusRuntimeException> errors = new ArrayList<>();
         collectors.values().forEach(collectors -> errors.addAll(collectors.drainErrors()));
         return errors;
