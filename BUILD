@@ -26,7 +26,7 @@ exports_files(
     visibility = ["//visibility:public"],
 )
 
-load("@vaticle_dependencies//tool/release:rules.bzl", "release_validate_deps")
+load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
 load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
@@ -113,7 +113,7 @@ filegroup(
     name = "ci",
     data = [
         "@vaticle_dependencies//tool/checkstyle:test-coverage",
-        "@vaticle_dependencies//tool/release/createnotes:bin",
+        "@vaticle_dependencies//tool/release/notes:create",
         "@vaticle_dependencies//tool/sonarcloud:code-analysis",
         "@vaticle_dependencies//tool/unuseddeps:unused-deps",
     ],
