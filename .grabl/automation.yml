@@ -156,9 +156,9 @@ build:
       image: vaticle-ubuntu-21.04
       dependencies: [
         build, test-integration,
-        test-behaviour-connection-core, test-behaviour-connection-cluster,
+        test-behaviour-connection-core, #test-behaviour-connection-cluster,
         test-behaviour-concept-core, test-behaviour-concept-cluster,
-        test-behaviour-match-core, test-behaviour-match-cluster,
+        test-behaviour-match-core, #test-behaviour-match-cluster,
         test-behaviour-writable-core, test-behaviour-writable-cluster,
         test-behaviour-definable-core, test-behaviour-definable-cluster
       ]
