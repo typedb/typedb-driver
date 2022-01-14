@@ -36,7 +36,7 @@ async function run() {
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -48,7 +48,7 @@ async function run() {
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -60,7 +60,7 @@ async function run() {
         console.log("define attributes query - SUCCESS");
     } catch (err) {
         console.error(`define attributes query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -69,7 +69,7 @@ async function run() {
         console.log("commit schema write tx - SUCCESS");
     } catch (err) {
         console.error(`commit schema write tx - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -78,7 +78,7 @@ async function run() {
         console.log("close data write tx - SUCCESS");
     } catch (err) {
         console.error(`close data write tx - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -90,7 +90,7 @@ async function run() {
         console.log("define relationship query - SUCCESS");
     } catch (err) {
         console.error(`define relationship query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -102,7 +102,7 @@ async function run() {
         console.log("define entity query - SUCCESS");
     } catch (err) {
         console.error(`define entity query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -114,7 +114,7 @@ async function run() {
         console.log("define rule query - SUCCESS");
     } catch (err) {
         console.error(`define rule query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -127,7 +127,7 @@ async function run() {
         console.log("define/undefine entity query - SUCCESS");
     } catch (err) {
         console.error(`define/undefine entity query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -136,7 +136,7 @@ async function run() {
         console.log("close schema session - SUCCESS");
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
     try {
@@ -146,7 +146,7 @@ async function run() {
         console.log("open data session - SUCCESS");
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -155,7 +155,7 @@ async function run() {
         console.log("open data transaction - SUCCESS");
     } catch (err) {
         console.error(`open data write transaction - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -186,7 +186,7 @@ async function run() {
         console.log("insert entity query - SUCCESS");
     } catch (err) {
         console.error(`insert entity query - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -195,7 +195,7 @@ async function run() {
         console.log("commit data write transaction - SUCCESS");
     } catch (err) {
         console.error(`commit data write transaction - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -211,7 +211,7 @@ async function run() {
         console.log("open data read transaction - SUCCESS");
     } catch (err) {
         console.error(`open data read transaction - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -220,7 +220,7 @@ async function run() {
         console.log("close data write transaction - SUCCESS");
     } catch (err) {
         console.error(`close data write transaction - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -229,12 +229,12 @@ async function run() {
         console.log("close data session - SUCCESS");
     } catch (err) {
         console.error(`close data session - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
     try {
-        client.close();
+        await client.close();
         console.log("client.close - SUCCESS");
     } catch (err) {
         console.error(`client.close - ERROR: ${err.stack || err}`);

@@ -90,11 +90,11 @@ async function run() {
             if (spawned === undefined) throw new Error("Failed to spawn/wait for start of server at port: " + `${idx}1729`);
         }
         console.info("SUCCESS - completed 10 iterations");
-        client.close();
+        await client.close();
         process.exit(0);
     } catch (err) {
         console.error(`ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 }

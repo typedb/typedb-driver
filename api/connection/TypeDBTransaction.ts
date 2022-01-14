@@ -44,7 +44,7 @@ export interface TypeDBTransaction {
 
     rollback(): void;
 
-    close(): void;
+    close(): Promise<void>;
 }
 
 export interface TransactionType {

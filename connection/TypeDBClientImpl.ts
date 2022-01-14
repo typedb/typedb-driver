@@ -72,10 +72,12 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
         throw new TypeDBClientError(ILLEGAL_CAST.message(this.constructor.toString(), "ClusterClient"));
     }
 
-    close(): void {
+    async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
-            Object.values(this._sessions).forEach(s => s.close());
+            for (const session of Object.values(Object.values(this._sessions))) {
+                await session.close();
+            }
             this._requestTransmitter.close();
         }
     }

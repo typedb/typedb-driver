@@ -47,8 +47,8 @@ export class ClusterServerClient extends TypeDBClientImpl {
         return this._databases;
     }
 
-    close() {
-        super.close();
+    async close(): Promise<void> {
+        await super.close();
         this._stub.close();
     }
 }

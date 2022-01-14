@@ -124,10 +124,12 @@ export class ClusterClient implements TypeDBClient.Cluster {
         return this;
     }
 
-    close(): void {
+    async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
-            Object.values(this._serverClients).forEach(client => client.close());
+            for (const serverClient of Object.values(this._serverClients)) {
+                await serverClient.close();
+            }
         }
     }
 

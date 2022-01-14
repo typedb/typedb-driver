@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import { Then } from "@cucumber/cucumber";
+import {Given, Then} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TransactionType, TypeDBOptions, TypeDBSession, TypeDBTransaction } from "../../../../dist";
+import { TransactionType, TypeDBSession, TypeDBTransaction } from "../../../../dist";
 import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
-import { sessions, sessionsToTransactions } from "../ConnectionStepsBase";
+import {optionSetters, sessions, sessionsToTransactions, transactionOptions} from "../ConnectionStepsBase";
 import assert = require("assert");
 
 async function forEachSessionOpenTransactionsOfType(transactionTypes: TransactionType[]) {
     for (const session of sessions) {
         const transactions: TypeDBTransaction[] = []
         for (const transactionType of transactionTypes) {
-            const transaction = await session.transaction(transactionType, TypeDBOptions.core({ infer: true }));
+            const transaction = await session.transaction(transactionType, transactionOptions);
             transactions.push(transaction);
         }
         sessionsToTransactions.set(session, transactions);
@@ -145,6 +145,16 @@ Then('(for each )session(,) open transaction(s) in parallel of type:', async fun
         sessionsToTransactions.get(sessionList[i]).push(newTransactions[i]);
     }
 });
+
+
+Given('set transaction option {word} to: {word}', async function (option: string, value: string) {
+    if (!(option in optionSetters)) {
+        throw ("Unrecognised option: " + option);
+    } else {
+        optionSetters[option](transactionOptions, value);
+    }
+});
+
 
 function dataTableToTransactionTypes(transactionTypeTable: DataTable): TransactionType[] {
     const typeArray: TransactionType[] = [];

@@ -21,17 +21,17 @@
 
 import { Given, Then, When } from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import * as assert from "assert";
 import { assertThrows } from "../../util/Util";
 import { client, THREAD_POOL_SIZE } from "../ConnectionStepsBase";
+import * as assert from "assert";
 
 When("connection create database: {word}", async (name: string) => {
-    await client.databases.create(name)
+    await client.databases.create(name);
 });
 
 When("connection create database(s):", async (names: DataTable) => {
     for (const name of names.raw()) {
-        await client.databases.create(name[0])
+        await client.databases.create(name[0]);
     }
 });
 

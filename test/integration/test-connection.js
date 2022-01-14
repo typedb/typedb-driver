@@ -36,7 +36,7 @@ async function run() {
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -46,7 +46,7 @@ async function run() {
         console.log("open schema session - SUCCESS");
     } catch (err) {
         console.error(`open schema session - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -57,7 +57,7 @@ async function run() {
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -67,7 +67,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
@@ -76,12 +76,12 @@ async function run() {
         console.log("close schema session - SUCCESS");
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
-        client.close();
+        await client.close();
         process.exit(1);
     }
 
     try {
-        client.close();
+        await client.close();
         console.log("client.close - SUCCESS");
     } catch (err) {
         console.error(`client.close - ERROR: ${err.stack || err}`);

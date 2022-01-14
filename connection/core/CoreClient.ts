@@ -43,8 +43,8 @@ export class CoreClient extends TypeDBClientImpl {
         return this._stub;
     }
 
-    close() {
-        super.close();
+    async close(): Promise<void> {
+        await super.close();
         this._stub.close();
     }
 }

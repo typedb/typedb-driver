@@ -19,9 +19,9 @@
 # under the License.
 #
 
-exports_files(["Util.ts"])
-
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+exports_files(["Util.ts", "UtilSteps.ts"])
 
 checkstyle_test(
     name = "checkstyle",

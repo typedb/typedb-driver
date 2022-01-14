@@ -33,7 +33,7 @@ beforeEach(async () => {
 afterEach(async () => {
     const db = await client.databases.get("typedb");
     await db.delete();
-    client.close();
+    await client.close();
 });
 
 describe("Basic TypeDBClient Tests", () => {

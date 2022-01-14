@@ -19,19 +19,18 @@
  * under the License.
  */
 
-import { Database } from "../api/connection/database/Database";
-import { TypeDBOptions } from "../api/connection/TypeDBOptions";
-import { SessionType, TypeDBSession } from "../api/connection/TypeDBSession";
-import { TransactionType, TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
-import { RequestTransmitter } from "../stream/RequestTransmitter";
-import { CoreClient } from "./core/CoreClient";
-import { TypeDBTransactionImpl } from "./TypeDBTransactionImpl";
-import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
+import {Database} from "../api/connection/database/Database";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {SessionType, TypeDBSession} from "../api/connection/TypeDBSession";
+import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
+import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
 import {TypeDBClientImpl} from "./TypeDBClientImpl";
+import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
 
 export class TypeDBSessionImpl implements TypeDBSession {
 
@@ -70,7 +69,9 @@ export class TypeDBSessionImpl implements TypeDBSession {
     async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
-            this._transactions.forEach(tx => tx.close());
+            for (const tx of this._transactions) {
+                await tx.close();
+            }
             this._client.closeSession(this);
             clearTimeout(this._pulse);
             const req = RequestBuilder.Session.closeReq(this._id);

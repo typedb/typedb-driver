@@ -79,6 +79,7 @@ behaviour_steps_common = [
     "//test/behaviour/connection/session:SessionSteps.ts",
     "//test/behaviour/connection/transaction:TransactionSteps.ts",
     "//test/behaviour/typeql:TypeQLSteps.ts",
+    "//test/behaviour/util:UtilSteps.ts",
     "//test/behaviour/util:Util.ts",
     "//test:tsconfig.json"
 ] + glob(["node_modules/**"])

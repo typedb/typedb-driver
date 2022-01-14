@@ -20,11 +20,14 @@
  */
 
 
-import {ClientDuplexStream, ServiceError} from "@grpc/grpc-js";
-import { Session } from "typedb-protocol/common/session_pb";
-import { CoreDatabase as CoreDatabaseProto, CoreDatabaseManager as CoreDatabaseMgrProto } from "typedb-protocol/core/core_database_pb";
-import { TypeDBClient } from "typedb-protocol/core/core_service_grpc_pb";
-import { TypeDBDatabaseImpl } from "../../connection/TypeDBDatabaseImpl";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {Session} from "typedb-protocol/common/session_pb";
+import {
+    CoreDatabase as CoreDatabaseProto,
+    CoreDatabaseManager as CoreDatabaseMgrProto
+} from "typedb-protocol/core/core_database_pb";
+import {TypeDBClient} from "typedb-protocol/core/core_service_grpc_pb";
+import {TypeDBDatabaseImpl} from "../../connection/TypeDBDatabaseImpl";
 import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 

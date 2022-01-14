@@ -36,7 +36,7 @@ export interface TypeDBClient {
 
     asCluster(): TypeDBClient.Cluster;
 
-    close(): void;
+    close(): Promise<void>;
 }
 
 export namespace TypeDBClient {

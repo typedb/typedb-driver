@@ -48,7 +48,7 @@ echo Successfully unarchived TypeDB $PRODUCT distribution.
 echo Starting TypeDB $PRODUCT Server
 mkdir ./typedb-distribution/"$DIRECTORY"/typedb_test
 if [[ $PRODUCT == "Core" ]]; then
-  ./typedb-distribution/"$DIRECTORY"/typedb server --data typedb_test &
+  ./typedb-distribution/"$DIRECTORY"/typedb server --storage.data typedb_test &
 else
   ./typedb-distribution/"$DIRECTORY"/typedb cluster --address "127.0.0.1:1729:1730:1731" --encryption-enabled=true &
   ROOT_CA=`realpath ./typedb-distribution/"$DIRECTORY"/server/conf/encryption/rpc-root-ca.pem`

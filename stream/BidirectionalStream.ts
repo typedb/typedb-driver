@@ -127,4 +127,8 @@ export class BidirectionalStream {
         if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
+
+    getErrors(): (Error|string)[] {
+        return (this._responseCollector.getErrors()).concat(this._responsePartCollector.getErrors());
+    }
 }

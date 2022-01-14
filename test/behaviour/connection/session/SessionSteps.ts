@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
+import {Given, Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { SessionType, TypeDBSession } from "../../../../dist";
-import { client, sessions } from "../ConnectionStepsBase";
+import {SessionType, TypeDBSession} from "../../../../dist";
+import {client, optionSetters, sessionOptions, sessions} from "../ConnectionStepsBase";
 import assert = require("assert");
 
 When("connection open(s) schema session for database: {word}", async (name: string) => {
@@ -68,7 +68,6 @@ Then("session(s)( in parallel) is/are null: {bool}", function (isNull: boolean) 
     for (const session of sessions) {
         assert.ok(!session === isNull);
     }
-
 });
 
 Then('session(s)( in parallel) is/are open: {bool}', function (isOpen: boolean) {
@@ -88,3 +87,12 @@ When("sessions( in parallel) have/has databases:", (names: DataTable) => {
         assert.ok(sessions[i].database.name === names.raw()[i][0]);
     }
 });
+
+Given('set session option {word} to: {word}', async function (option: string, value: string) {
+    if (!(option in optionSetters)) {
+        throw ("Unrecognised option: " + option);
+    } else {
+        optionSetters[option](sessionOptions, value);
+    }
+});
+

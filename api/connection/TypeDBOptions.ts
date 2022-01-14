@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { Options } from "typedb-protocol/common/options_pb";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import {Options} from "typedb-protocol/common/options_pb";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
 
 namespace Opts {
@@ -33,6 +33,7 @@ namespace Opts {
         prefetchSize?: number;
         prefetch?: boolean;
         sessionIdleTimeoutMillis?: number;
+        transactionTimeoutMillis?: number;
         schemaLockAcquireTimeoutMillis?: number;
     }
 
@@ -50,6 +51,7 @@ namespace Opts {
             if (options.prefetchSize != null) optionsProto.setPrefetchSize(options.prefetchSize);
             if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
             if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
+            if (options.transactionTimeoutMillis != null) optionsProto.setTransactionTimeoutMillis(options.transactionTimeoutMillis);
             if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);
             if (options.isCluster()) {
                 const clusterOptions = options as Opts.Cluster;
@@ -69,6 +71,7 @@ export class TypeDBOptions implements Opts.Core {
     private _prefetchSize: number;
     private _prefetch: boolean;
     private _sessionIdleTimeoutMillis: number;
+    private _transactionTimeoutMillis: number;
     private _schemaLockAcquireTimeoutMillis: number;
 
     constructor(obj: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
@@ -138,11 +141,22 @@ export class TypeDBOptions implements Opts.Core {
         return this._sessionIdleTimeoutMillis;
     }
 
-    set sessionIdleTimeoutMillis(value: number) {
-        if (value < 1) {
-            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+    set sessionIdleTimeoutMillis(millis: number) {
+        if (millis < 1) {
+            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
         }
-        this._sessionIdleTimeoutMillis = value;
+        this._sessionIdleTimeoutMillis = millis;
+    }
+
+    get transactionTimeoutMillis() {
+        return this._transactionTimeoutMillis;
+    }
+
+    set transactionTimeoutMillis(millis: number) {
+        if (millis < 1) {
+            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
+        }
+        this._transactionTimeoutMillis = millis;
     }
 
     get schemaLockAcquireTimeoutMillis() {
