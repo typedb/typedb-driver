@@ -133,6 +133,13 @@ public class ThingTypeSteps {
         }
     }
 
+    @When("{root_label}\\( ?{type_label} ?) set abstract: {bool}; throws exception")
+    public void thing_type_set_abstract_throws(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
+        ThingType thingType = get_thing_type(rootLabel, typeLabel);
+        if (isAbstract) assertThrows(() -> thingType.asRemote(tx()).setAbstract());
+        else assertThrows(() -> thingType.asRemote(tx()).unsetAbstract());
+    }
+
     @Then("{root_label}\\( ?{type_label} ?) is abstract: {bool}")
     public void thing_type_is_abstract(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
         assertEquals(isAbstract, get_thing_type(rootLabel, typeLabel).asRemote(tx()).isAbstract());
