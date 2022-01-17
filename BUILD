@@ -32,7 +32,7 @@ load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//tool/release:rules.bzl", "release_validate_nodejs_deps")
+load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_nodejs_deps")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
@@ -219,6 +219,6 @@ filegroup(
     data = [
         "@vaticle_dependencies//tool/bazelrun:rbe",
         "@vaticle_dependencies//distribution/artifact:create-netrc",
-        "@vaticle_dependencies//tool/release/createnotes:bin",
+        "@vaticle_dependencies//tool/release/notes:create",
     ],
 )
