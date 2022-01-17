@@ -167,7 +167,7 @@ build:
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
-        export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+        export DEPLOY_NPM_TOKEN=REPO_VATICLE_NPM_TOKEN
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
     test-deployment-npm:
       filter:
@@ -204,7 +204,7 @@ release:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         export CREATE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run @vaticle_dependencies//tool/release/createnotes:bin -- $GRABL_OWNER $GRABL_REPO $GRABL_COMMIT $(cat VERSION) ./RELEASE_TEMPLATE.md
+        bazel run @vaticle_dependencies//tool/release/notes:create -- $GRABL_OWNER $GRABL_REPO $GRABL_COMMIT $(cat VERSION) ./RELEASE_TEMPLATE.md
         export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
         bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
     deploy-npm-release:
