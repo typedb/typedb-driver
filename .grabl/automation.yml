@@ -167,10 +167,8 @@ build:
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
-        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
-        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
-        export DEPLOY_NPM_EMAIL=$REPO_VATICLE_EMAIL
-        bazel run --define version=$(git rev-parse HEAD) --spawn_strategy=local //:deploy-npm -- snapshot
+        export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+        bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
     test-deployment-npm:
       filter:
         owner: vaticle
@@ -212,15 +210,10 @@ release:
     deploy-npm-release:
       image: vaticle-ubuntu-21.04
       command: |
-        export DEPLOY_NPM_USERNAME=$REPO_NPM_USERNAME
-        export DEPLOY_NPM_PASSWORD=$REPO_NPM_PASSWORD
-        export DEPLOY_NPM_EMAIL=$REPO_VATICLE_EMAIL
         curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
-        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
         bazel run --define version=$(cat VERSION) //:deploy-npm -- release
       dependencies: [deploy-github]
