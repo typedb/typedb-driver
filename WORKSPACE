@@ -62,11 +62,8 @@ checkstyle_deps()
 # Load npm modules #
 ####################
 
-
 # Load package.json
-node_repositories(
-    package_json = ["//:package.json"]
-)
+node_repositories(package_json = ["//:package.json"])
 yarn_install(
     name = "npm",
     package_json = "//:package.json",
