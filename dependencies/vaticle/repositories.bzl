@@ -25,7 +25,7 @@ def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
         remote = "https://github.com/vaticle/dependencies",
-        commit = "ab43efd5ea2385cbfeb28c03d8000525b8cd5e70", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        commit = "aa6eb2eab10b032c0ead898b0a5eead1bea057c0", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
 #TODO: MOVE NATIVE_TYPEDB_ARTIFACT INTO DEPENDENCIES, THEN REMOVE THIS DEPENDENCY

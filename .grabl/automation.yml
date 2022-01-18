@@ -167,7 +167,7 @@ build:
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
-        export DEPLOY_NPM_TOKEN=REPO_VATICLE_NPM_TOKEN
+        export DEPLOY_NPM_TOKEN=$REPO_VATICLE_NPM_TOKEN
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
     test-deployment-npm:
       filter:
