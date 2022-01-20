@@ -124,7 +124,7 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     private void throwTransactionClosed() {
-        List<StatusRuntimeException> errors = bidirectionalStream.drainErrors();
+        List<StatusRuntimeException> errors = bidirectionalStream.getErrors();
         if (errors.isEmpty()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         else throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, errors);
     }

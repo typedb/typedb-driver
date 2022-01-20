@@ -126,9 +126,9 @@ public class BidirectionalStream implements AutoCloseable {
         resPartCollector.remove(requestID);
     }
 
-    public List<StatusRuntimeException> drainErrors() {
-        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.drainErrors());
-        errors.addAll(resPartCollector.drainErrors());
+    public List<StatusRuntimeException> getErrors() {
+        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.getErrors());
+        errors.addAll(resPartCollector.getErrors());
         return errors;
     }
 
