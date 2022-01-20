@@ -46,17 +46,21 @@ public class ResponseCollector<R> {
         collectors = new ConcurrentHashMap<>();
     }
 
-    public synchronized Queue<R> queue(UUID requestId) {
+    synchronized Queue<R> queue(UUID requestId) {
         Queue<R> collector = new Queue<>();
         collectors.put(requestId, collector);
         return collector;
     }
 
-    public Queue<R> get(UUID requestId) {
+    Queue<R> get(UUID requestId) {
         return collectors.get(requestId);
     }
 
-    public synchronized void close(@Nullable StatusRuntimeException error) {
+    void remove(UUID requestID) {
+        this.collectors.remove(requestID);
+    }
+
+    synchronized void close(@Nullable StatusRuntimeException error) {
         collectors.values().forEach(collector -> collector.close(error));
     }
 
