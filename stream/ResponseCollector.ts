@@ -25,32 +25,32 @@ import {BlockingQueue} from "../common/util/BlockingQueue";
 
 export class ResponseCollector<T> {
 
-    private readonly _collectors: { [requestId: string]: ResponseCollector.ResponseQueue<T> };
+    private readonly _response_queues: { [requestId: string]: ResponseCollector.ResponseQueue<T> };
 
     constructor() {
-        this._collectors = {};
+        this._response_queues = {};
     }
 
     queue(uuid: string): ResponseCollector.ResponseQueue<T> {
         const queue = new ResponseCollector.ResponseQueue<T>();
-        this._collectors[uuid] = queue;
+        this._response_queues[uuid] = queue;
         return queue;
     }
 
     get(uuid: string) {
-        return this._collectors[uuid];
+        return this._response_queues[uuid];
     }
 
     close(error?: Error | string) {
-        Object.values(this._collectors).forEach(collector => collector.close(error));
+        Object.values(this._response_queues).forEach(collector => collector.close(error));
     }
 
     getErrors(): (Error | string)[] {
         const errors: (Error | string)[] = [];
-        for (const requestId in this._collectors) {
-            const error = this._collectors[requestId].getError();
+        for (const requestId in this._response_queues) {
+            const error = this._response_queues[requestId].getError();
             if (error) errors.push(error);
-            delete this._collectors[requestId];
+            delete this._response_queues[requestId];
         }
         return errors;
     }
@@ -72,14 +72,14 @@ export namespace ResponseCollector {
 
         async take(): Promise<T> {
             const element = await this._queue.take();
-            if (element.isResponse()) return (element as Response<T>).value;
+            if (element.isValue()) return (element as Value<T>).value;
             else if (element.isDone() && !this._error) throw new TypeDBClientError(TRANSACTION_CLOSED);
             else if (element.isDone() && this._error) throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(this._error));
             else throw new TypeDBClientError(ILLEGAL_STATE);
         }
 
         put(element: T): void {
-            this._queue.add(new Response(element));
+            this._queue.add(new Value(element));
         }
 
         close(error?: Error | string): void {
@@ -94,7 +94,7 @@ export namespace ResponseCollector {
 
     class QueueElement {
 
-        isResponse(): boolean {
+        isValue(): boolean {
             return false;
         }
 
@@ -104,7 +104,7 @@ export namespace ResponseCollector {
 
     }
 
-    class Response<R> extends QueueElement {
+    class Value<R> extends QueueElement {
 
         private readonly _value: R;
 
@@ -117,7 +117,7 @@ export namespace ResponseCollector {
             return this._value;
         }
 
-        isResponse(): boolean {
+        isValue(): boolean {
             return true;
         }
     }
