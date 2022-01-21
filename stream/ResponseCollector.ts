@@ -41,18 +41,12 @@ export class ResponseCollector<T> {
         return this._response_queues[uuid];
     }
 
-    close(error?: Error | string) {
-        Object.values(this._response_queues).forEach(collector => collector.close(error));
+    remove(requestId: string) {
+        delete this._response_queues[requestId];
     }
 
-    getErrors(): (Error | string)[] {
-        const errors: (Error | string)[] = [];
-        for (const requestId in this._response_queues) {
-            const error = this._response_queues[requestId].getError();
-            if (error) errors.push(error);
-            delete this._response_queues[requestId];
-        }
-        return errors;
+    close(error?: Error | string) {
+        Object.values(this._response_queues).forEach(collector => collector.close(error));
     }
 }
 
@@ -85,10 +79,6 @@ export namespace ResponseCollector {
         close(error?: Error | string): void {
             this._error = error;
             this._queue.add(new Done());
-        }
-
-        getError(): string | Error {
-            return this._error;
         }
     }
 

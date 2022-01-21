@@ -19,16 +19,16 @@
  * under the License.
  */
 
-import { ClientDuplexStream } from "@grpc/grpc-js";
-import { Transaction } from "typedb-protocol/common/transaction_pb";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {Transaction} from "typedb-protocol/common/transaction_pb";
 import * as uuid from "uuid";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
-import { Stream } from "../common/util/Stream";
-import { BatchDispatcher, RequestTransmitter } from "./RequestTransmitter";
-import { ResponseCollector } from "./ResponseCollector";
-import { ResponsePartIterator } from "./ResponsePartIterator";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {Stream} from "../common/util/Stream";
+import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
+import {ResponseCollector} from "./ResponseCollector";
+import {ResponsePartIterator} from "./ResponsePartIterator";
 import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
@@ -41,6 +41,7 @@ export class BidirectionalStream {
     private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
     private _stub: TypeDBStub;
     private _isOpen: boolean;
+    private _error: Error | string;
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
@@ -62,16 +63,24 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        return (await responseQueue.take() as Transaction.Res);
+        try {
+            return await responseQueue.take() as Transaction.Res;
+        } finally {    
+            this._responseCollector.remove(requestId);
+        }
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
         const requestId = uuid.v4();
         request.setReqId(uuid.parse(requestId) as Uint8Array);
         const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
-        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
+        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
+    }
+
+    iteratorDone(requestId: string) {
+        this._responsePartCollector.remove(requestId);
     }
 
     isOpen(): boolean {
@@ -80,6 +89,7 @@ export class BidirectionalStream {
 
     async close(error?: Error | string): Promise<void> {
         this._isOpen = false;
+        this._error = error;
         this._responseCollector.close(error);
         this._responsePartCollector.close(error);
         this._dispatcher.close();
@@ -128,7 +138,11 @@ export class BidirectionalStream {
         queue.put(res);
     }
 
-    getErrors(): (Error|string)[] {
-        return (this._responseCollector.getErrors()).concat(this._responsePartCollector.getErrors());
+    dispatcher(): BatchDispatcher {
+        return this._dispatcher;
+    }
+
+    getError(): Error | string {
+        return this._error;
     }
 }
