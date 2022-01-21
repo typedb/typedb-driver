@@ -92,8 +92,11 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
 
     @Override
     public TransactionProto.Transaction.ResPart next() {
-        if (!hasNext()) throw new NoSuchElementException();
-        state = State.EMPTY;
-        return next;
+        if (stream.getError().isPresent()) throw TypeDBClientException.of(stream.getError().get());
+        else if (!hasNext()) throw new NoSuchElementException();
+        else {
+            state = State.EMPTY;
+            return next;
+        }
     }
 }
