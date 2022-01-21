@@ -34,6 +34,7 @@ import io.grpc.stub.StreamObserver;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -53,6 +54,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final ResponseCollector<ResPart> resPartCollector;
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
+    private StatusRuntimeException error;
 
     public BidirectionalStream(TypeDBStub stub, RequestTransmitter transmitter) {
         resPartCollector = new ResponseCollector<>();
@@ -60,6 +62,7 @@ public class BidirectionalStream implements AutoCloseable {
         isOpen = new AtomicBoolean(false);
         dispatcher = transmitter.dispatcher(stub.transaction(new ResponseObserver()));
         isOpen.set(true);
+        error = null;
     }
 
     public Single<Res> single(Req.Builder request, boolean batch) {
@@ -108,6 +111,7 @@ public class BidirectionalStream implements AutoCloseable {
 
     private void close(@Nullable StatusRuntimeException error) {
         if (isOpen.compareAndSet(true, false)) {
+            this.error = error;
             resCollector.close(error);
             resPartCollector.close(error);
             try {
@@ -126,10 +130,8 @@ public class BidirectionalStream implements AutoCloseable {
         resPartCollector.remove(requestID);
     }
 
-    public List<StatusRuntimeException> getErrors() {
-        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.getErrors());
-        errors.addAll(resPartCollector.getErrors());
-        return errors;
+    public Optional<StatusRuntimeException> getError() {
+        return Optional.ofNullable(error);
     }
 
     RequestTransmitter.Dispatcher dispatcher() {

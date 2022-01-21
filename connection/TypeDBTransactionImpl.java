@@ -39,6 +39,7 @@ import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
 import io.grpc.StatusRuntimeException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
@@ -124,9 +125,9 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     private void throwTransactionClosed() {
-        List<StatusRuntimeException> errors = bidirectionalStream.getErrors();
-        if (errors.isEmpty()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        else throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, errors);
+        Optional<StatusRuntimeException> error = bidirectionalStream.getError();
+        if (error.isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, error.get());
+        else throw new TypeDBClientException(TRANSACTION_CLOSED);
     }
 
     @Override

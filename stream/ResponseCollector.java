@@ -65,12 +65,6 @@ public class ResponseCollector<R> {
         collectors.values().forEach(collector -> collector.close(error));
     }
 
-    List<StatusRuntimeException> getErrors() {
-        List<StatusRuntimeException> errors = new ArrayList<>();
-        collectors.values().forEach(collector -> collector.getError().ifPresent(errors::add));
-        return errors;
-    }
-
     public static class Queue<R> {
 
         private final BlockingQueue<Either<Response<R>, Done>> responseQueue;
@@ -91,10 +85,6 @@ public class ResponseCollector<R> {
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
-        }
-
-        public Optional<StatusRuntimeException> getError() {
-            return Optional.ofNullable(error);
         }
 
         public void put(R response) {
