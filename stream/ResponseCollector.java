@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedTransferQueue;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class ResponseCollector<R> {
@@ -46,56 +47,54 @@ public class ResponseCollector<R> {
         collectors = new ConcurrentHashMap<>();
     }
 
-    public synchronized Queue<R> queue(UUID requestId) {
+    synchronized Queue<R> queue(UUID requestId) {
         Queue<R> collector = new Queue<>();
         collectors.put(requestId, collector);
         return collector;
     }
 
-    public Queue<R> get(UUID requestId) {
+    Queue<R> get(UUID requestId) {
         return collectors.get(requestId);
     }
 
-    public synchronized void close(@Nullable StatusRuntimeException error) {
+    void remove(UUID requestID) {
+        this.collectors.remove(requestID);
+    }
+
+    synchronized void close(@Nullable StatusRuntimeException error) {
         collectors.values().forEach(collector -> collector.close(error));
     }
 
-    public List<StatusRuntimeException> drainErrors() {
+    List<StatusRuntimeException> getErrors() {
         List<StatusRuntimeException> errors = new ArrayList<>();
-        collectors.values().forEach(collectors -> errors.addAll(collectors.drainErrors()));
+        collectors.values().forEach(collector -> collector.getError().ifPresent(errors::add));
         return errors;
     }
 
     public static class Queue<R> {
 
         private final BlockingQueue<Either<Response<R>, Done>> responseQueue;
+        private StatusRuntimeException error;
 
         Queue() {
             // TODO: switch LinkedTransferQueue to LinkedBlockingQueue once issue #351 is fixed
             responseQueue = new LinkedTransferQueue<>();
+            error = null;
         }
 
         public R take() {
             try {
                 Either<Response<R>, Done> response = responseQueue.take();
                 if (response.isFirst()) return response.first().message();
-                else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-                else throw TypeDBClientException.of(response.second().error().get());
+                else if (this.error != null) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, error);
+                else throw new TypeDBClientException(TRANSACTION_CLOSED);
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
         }
 
-        public List<StatusRuntimeException> drainErrors() {
-            List<Either<Response<R>, Done>> messages = new ArrayList<>();
-            responseQueue.drainTo(messages);
-            List<StatusRuntimeException> errors = new ArrayList<>();
-            messages.forEach(msg -> {
-                if (msg.isSecond() && msg.second().error().isPresent()) {
-                    errors.add(msg.second().error().get());
-                }
-            });
-            return errors;
+        public Optional<StatusRuntimeException> getError() {
+            return Optional.ofNullable(error);
         }
 
         public void put(R response) {
@@ -103,7 +102,8 @@ public class ResponseCollector<R> {
         }
 
         public void close(@Nullable StatusRuntimeException error) {
-            responseQueue.add(Either.second(new Done(error)));
+            this.error = error;
+            responseQueue.add(Either.second(new Done()));
         }
 
         private static class Response<R> {
@@ -122,15 +122,7 @@ public class ResponseCollector<R> {
         }
 
         private static class Done {
-            @Nullable
-            private final StatusRuntimeException error;
-
-            private Done(StatusRuntimeException error) {
-                this.error = error;
-            }
-
-            private Optional<StatusRuntimeException> error() {
-                return Optional.ofNullable(error);
+            private Done() {
             }
         }
     }

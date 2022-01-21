@@ -68,14 +68,14 @@ public class BidirectionalStream implements AutoCloseable {
         ResponseCollector.Queue<Res> queue = resCollector.queue(requestID);
         if (batch) dispatcher.dispatch(req);
         else dispatcher.dispatchNow(req);
-        return new Single<>(queue);
+        return new Single<>(requestID, queue, this);
     }
 
     public Stream<ResPart> stream(Req.Builder request) {
         UUID requestID = UUID.randomUUID();
         ResponseCollector.Queue<ResPart> collector = resPartCollector.queue(requestID);
         dispatcher.dispatch(request.setReqId(UUIDAsByteString(requestID)).build());
-        ResponsePartIterator iterator = new ResponsePartIterator(requestID, collector, dispatcher);
+        ResponsePartIterator iterator = new ResponsePartIterator(requestID, collector, this);
         return StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED | IMMUTABLE), false);
     }
 
@@ -118,22 +118,40 @@ public class BidirectionalStream implements AutoCloseable {
         }
     }
 
-    public List<StatusRuntimeException> drainErrors() {
-        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.drainErrors());
-        errors.addAll(resPartCollector.drainErrors());
+    void singleDone(UUID requestID) {
+        resCollector.remove(requestID);
+    }
+
+    void iteratorDone(UUID requestID) {
+        resPartCollector.remove(requestID);
+    }
+
+    public List<StatusRuntimeException> getErrors() {
+        List<StatusRuntimeException> errors = new ArrayList<>(resCollector.getErrors());
+        errors.addAll(resPartCollector.getErrors());
         return errors;
+    }
+
+    RequestTransmitter.Dispatcher dispatcher() {
+        return dispatcher;
     }
 
     public static class Single<T> {
 
+        private final UUID requestID;
+        private final BidirectionalStream stream;
         private final ResponseCollector.Queue<T> queue;
 
-        public Single(ResponseCollector.Queue<T> queue) {
+        public Single(UUID requestID, ResponseCollector.Queue<T> queue, BidirectionalStream stream) {
+            this.requestID = requestID;
             this.queue = queue;
+            this.stream = stream;
         }
 
         public T get() {
-            return queue.take();
+            T value = queue.take();
+            stream.singleDone(requestID);
+            return value;
         }
     }
 

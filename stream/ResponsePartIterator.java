@@ -36,7 +36,7 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.I
 public class ResponsePartIterator implements Iterator<TransactionProto.Transaction.ResPart> {
 
     private final UUID requestID;
-    private final RequestTransmitter.Dispatcher dispatcher;
+    private final BidirectionalStream stream;
     private final ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseCollector;
     private TransactionProto.Transaction.ResPart next;
     private State state;
@@ -44,9 +44,9 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
     enum State {EMPTY, FETCHED, DONE}
 
     public ResponsePartIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
-                                RequestTransmitter.Dispatcher requestDispatcher) {
+                                BidirectionalStream stream) {
         this.requestID = requestID;
-        this.dispatcher = requestDispatcher;
+        this.stream = stream;
         this.responseCollector = responseQueue;
         state = State.EMPTY;
         next = null;
@@ -60,10 +60,11 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
             case STREAM_RES_PART:
                 switch (resPart.getStreamResPart().getState()) {
                     case DONE:
+                        stream.iteratorDone(requestID);
                         state = State.DONE;
                         return false;
                     case CONTINUE:
-                        dispatcher.dispatch(RequestBuilder.Transaction.streamReq(requestID));
+                        stream.dispatcher().dispatch(RequestBuilder.Transaction.streamReq(requestID));
                         return fetchAndCheck();
                     default:
                         throw new TypeDBClientException(ILLEGAL_ARGUMENT);
