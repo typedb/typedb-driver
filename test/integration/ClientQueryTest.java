@@ -27,6 +27,8 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
@@ -42,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -516,6 +519,23 @@ public class ClientQueryTest {
             List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().relations().values().iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
         }, READ, TypeDBOptions.core().infer(true).explain(true));
+    }
+
+    @Test
+    public void testStreaming() {
+        localhostTypeDBTX(tx -> {
+            for (int i = 0; i < 51; i++) {
+                tx.query().define(String.format("define person sub entity, owns name%d; name%d sub attribute, value string;", i, i));
+            }
+            tx.commit();
+        }, TypeDBSession.Type.SCHEMA);
+        localhostTypeDBTX(tx -> {
+            for (int i = 0; i < 50; i++) {
+                EntityType.Remote concept = tx.concepts().getEntityType("person").asRemote(tx);
+                List<? extends AttributeType> attributeTypes = concept.getOwns(false).collect(toList());
+                Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
+            }
+        }, READ, TypeDBOptions.core().prefetch(true).prefetchSize(50));
     }
 
     private String[] lionNames() {

@@ -26,9 +26,6 @@ import com.vaticle.typedb.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,10 +52,6 @@ public class ResponseCollector<R> {
 
     Queue<R> get(UUID requestId) {
         return collectors.get(requestId);
-    }
-
-    void remove(UUID requestID) {
-        this.collectors.remove(requestID);
     }
 
     synchronized void close(@Nullable StatusRuntimeException error) {

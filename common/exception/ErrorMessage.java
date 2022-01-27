@@ -47,7 +47,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final Client MISSING_RESPONSE =
                 new Client(9, "Unexpected empty response for request ID '%s'.");
         public static final Client UNKNOWN_REQUEST_ID =
-                new Client(10, "Received a response with unknown request id '%s'.");
+                new Client(10, "Received a response with unknown request id '%s':\n%s");
         public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
                 new Client(11, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
