@@ -40,9 +40,9 @@ export interface TypeDBTransaction {
 
     readonly query: QueryManager;
 
-    commit(): void;
+    commit(): Promise<void>;
 
-    rollback(): void;
+    rollback(): Promise<void>;
 
     close(): Promise<void>;
 }

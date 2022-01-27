@@ -63,11 +63,7 @@ export class BidirectionalStream {
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
-        try {
-            return await responseQueue.take() as Transaction.Res;
-        } finally {    
-            this._responseCollector.remove(requestId);
-        }
+        return await responseQueue.take();
     }
 
     stream(request: Transaction.Req): Stream<Transaction.ResPart> {
@@ -77,10 +73,6 @@ export class BidirectionalStream {
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
-    }
-
-    iteratorDone(requestId: string) {
-        this._responsePartCollector.remove(requestId);
     }
 
     isOpen(): boolean {

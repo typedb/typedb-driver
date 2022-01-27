@@ -60,7 +60,6 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
             case ResCase.STREAM_RES_PART :
                 switch (res.getStreamResPart().getState()) {
                     case Transaction.Stream.State.DONE:
-                        this._stream.iteratorDone(this._requestId);
                         return null;
                     case Transaction.Stream.State.CONTINUE:
                         this._stream.dispatcher().dispatch(RequestBuilder.Transaction.streamReq(this._requestId))

@@ -19,6 +19,7 @@
     "test-connection": "node test/integration/test-connection.js",
     "test-query": "node test/integration/test-query.js",
     "test-cluster-failover": "npm run build && node test/integration/test-cluster-failover.js",
+    "test-stream": "node test/integration/test-stream.js",
     "lint": "eslint . --ext .ts",
     "compile-tests": "tsc --build test/tsconfig.json"
   },
