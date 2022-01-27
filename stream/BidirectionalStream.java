@@ -32,8 +32,6 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -71,7 +69,7 @@ public class BidirectionalStream implements AutoCloseable {
         ResponseCollector.Queue<Res> queue = resCollector.queue(requestID);
         if (batch) dispatcher.dispatch(req);
         else dispatcher.dispatchNow(req);
-        return new Single<>(requestID, queue, this);
+        return new Single<>(queue);
     }
 
     public Stream<ResPart> stream(Req.Builder request) {
@@ -90,14 +88,14 @@ public class BidirectionalStream implements AutoCloseable {
         UUID requestID = byteStringAsUUID(res.getReqId());
         ResponseCollector.Queue<Res> collector = resCollector.get(requestID);
         if (collector != null) collector.put(res);
-        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID);
+        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID, res);
     }
 
     private void collect(ResPart resPart) {
         UUID requestID = byteStringAsUUID(resPart.getReqId());
         ResponseCollector.Queue<ResPart> collector = resPartCollector.get(requestID);
         if (collector != null) collector.put(resPart);
-        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID);
+        else throw new TypeDBClientException(UNKNOWN_REQUEST_ID, requestID, resPart);
     }
 
     private static UUID byteStringAsUUID(ByteString byteString) {
@@ -122,14 +120,6 @@ public class BidirectionalStream implements AutoCloseable {
         }
     }
 
-    void singleDone(UUID requestID) {
-        resCollector.remove(requestID);
-    }
-
-    void iteratorDone(UUID requestID) {
-        resPartCollector.remove(requestID);
-    }
-
     public Optional<StatusRuntimeException> getError() {
         return Optional.ofNullable(error);
     }
@@ -140,20 +130,14 @@ public class BidirectionalStream implements AutoCloseable {
 
     public static class Single<T> {
 
-        private final UUID requestID;
-        private final BidirectionalStream stream;
         private final ResponseCollector.Queue<T> queue;
 
-        public Single(UUID requestID, ResponseCollector.Queue<T> queue, BidirectionalStream stream) {
-            this.requestID = requestID;
+        public Single(ResponseCollector.Queue<T> queue) {
             this.queue = queue;
-            this.stream = stream;
         }
 
         public T get() {
-            T value = queue.take();
-            stream.singleDone(requestID);
-            return value;
+            return queue.take();
         }
     }
 

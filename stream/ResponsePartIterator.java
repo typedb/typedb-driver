@@ -60,7 +60,6 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
             case STREAM_RES_PART:
                 switch (resPart.getStreamResPart().getState()) {
                     case DONE:
-                        stream.iteratorDone(requestID);
                         state = State.DONE;
                         return false;
                     case CONTINUE:
