@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,31 +64,25 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    public ClusterClient(Set<String> addresses, TypeDBCredential credential) {
-        this(addresses, credential, ClusterServerClient.calculateParallelisation());
+    public ClusterClient(Set<String> initialAddr, TypeDBCredential credential) {
+        this(initialAddr, credential, ClusterServerClient.calculateParallelisation());
     }
 
-    public ClusterClient(Set<String> addresses, TypeDBCredential credential, int parallelisation) {
+    public ClusterClient(Set<String> initialAddr, TypeDBCredential credential, int parallelisation) {
         this.credential = credential;
         this.parallelisation = parallelisation;
-        clusterServerClients = fetchServerAddresses(addresses).stream()
-                .map(address -> pair(address, new ClusterServerClient(address, credential, parallelisation)))
-                .collect(toMap(Pair::first, Pair::second));
+        Set<String> addresses = fetchAllAddresses(initialAddr);
+        clusterServerClients = createClients(credential, parallelisation, addresses);
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
     }
 
-    private Set<String> fetchServerAddresses(Set<String> addresses) {
+    private Set<String> fetchAllAddresses(Set<String> addresses) {
         for (String address : addresses) {
             try (ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation)) {
-                LOG.debug("Fetching list of cluster servers from {}...", address);
-                ClusterServerStub stub = new ClusterServerStub(client.channel(), credential);
-                ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
-                Set<String> members = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
-                LOG.debug("The cluster servers are {}", members);
-                return members;
+                return client.addresses();
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.error("Fetching cluster servers from {} failed.", address);
@@ -97,6 +92,24 @@ public class ClusterClient implements TypeDBClient.Cluster {
             }
         }
         throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
+    }
+
+    private Map<String, ClusterServerClient> createClients(TypeDBCredential credential, int parallelisation, Set<String> addresses) {
+        Map<String, ClusterServerClient> clients = new HashMap<>();
+        boolean available = false;
+        for (String address : addresses) {
+            ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
+            try {
+                client.validateConnectionOrThrow();
+                available = true;
+            } catch (TypeDBClientException e) {
+                // do nothing
+            }
+            clients.put(address, client);
+        }
+        if (!available) throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
+
+        return clients;
     }
 
     @Override

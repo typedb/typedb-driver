@@ -24,23 +24,38 @@ package com.vaticle.typedb.client.connection.cluster;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.protocol.ClusterServerProto;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLException;
+import java.util.Set;
+
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
+import static java.util.stream.Collectors.toSet;
 
 class ClusterServerClient extends TypeDBClientImpl {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ClusterClient.class);
+
+    private final String address;
     private final ManagedChannel channel;
     private final ClusterServerStub stub;
 
     ClusterServerClient(String address, TypeDBCredential credential, int parallelisation) {
         super(parallelisation);
+        this.address = address;
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
-        validateConnectionOrThrow();
+    }
+
+    @Override
+    public void validateConnectionOrThrow() throws TypeDBClientException {
+        super.validateConnectionOrThrow();
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {
@@ -71,5 +86,13 @@ class ClusterServerClient extends TypeDBClientImpl {
     @Override
     public ClusterServerStub stub() {
         return stub;
+    }
+
+    public Set<String> addresses() {
+        LOG.debug("Fetching list of all servers from server {}...", address);
+        ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
+        Set<String> addresses = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
+        LOG.debug("The list of all servers fetched: {}", addresses);
+        return addresses;
     }
 }
