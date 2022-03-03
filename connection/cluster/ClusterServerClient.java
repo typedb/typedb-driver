@@ -88,7 +88,7 @@ class ClusterServerClient extends TypeDBClientImpl {
         return stub;
     }
 
-    public Set<String> addresses() {
+    public Set<String> servers() {
         LOG.debug("Fetching list of all servers from server {}...", address);
         ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
         Set<String> addresses = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());

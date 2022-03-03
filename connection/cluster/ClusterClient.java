@@ -27,9 +27,7 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
-import com.vaticle.typedb.protocol.ClusterServerProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,10 +45,7 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLU
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
-import static com.vaticle.typedb.common.collection.Collections.pair;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 public class ClusterClient implements TypeDBClient.Cluster {
 
@@ -71,27 +66,27 @@ public class ClusterClient implements TypeDBClient.Cluster {
     public ClusterClient(Set<String> initAddresses, TypeDBCredential credential, int parallelisation) {
         this.credential = credential;
         this.parallelisation = parallelisation;
-        Set<String> addresses = fetchAllAddresses(initAddresses);
-        clusterServerClients = createClients(credential, parallelisation, addresses);
+        Set<String> currAddresses = fetchCurrentAddresses(initAddresses);
+        clusterServerClients = createClients(credential, parallelisation, currAddresses);
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
         clusterDatabases = new ConcurrentHashMap<>();
         isOpen = true;
     }
 
-    private Set<String> fetchAllAddresses(Set<String> initAddresses) {
-        for (String address : initAddresses) {
-            try (ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation)) {
-                return client.addresses();
+    private Set<String> fetchCurrentAddresses(Set<String> servers) {
+        for (String server : servers) {
+            try (ClusterServerClient client = new ClusterServerClient(server, credential, parallelisation)) {
+                return client.servers();
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                    LOG.error("Fetching cluster servers from {} failed.", address);
+                    LOG.warn("Unable to fetching list of all servers from server {}.", server);
                 } else {
                     throw e;
                 }
             }
         }
-        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", initAddresses));
+        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", servers));
     }
 
     private Map<String, ClusterServerClient> createClients(TypeDBCredential credential, int parallelisation, Set<String> addresses) {
