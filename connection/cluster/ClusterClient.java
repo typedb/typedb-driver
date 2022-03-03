@@ -64,14 +64,14 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private final ConcurrentMap<String, ClusterDatabase> clusterDatabases;
     private boolean isOpen;
 
-    public ClusterClient(Set<String> initialAddr, TypeDBCredential credential) {
-        this(initialAddr, credential, ClusterServerClient.calculateParallelisation());
+    public ClusterClient(Set<String> initAddresses, TypeDBCredential credential) {
+        this(initAddresses, credential, ClusterServerClient.calculateParallelisation());
     }
 
-    public ClusterClient(Set<String> initialAddr, TypeDBCredential credential, int parallelisation) {
+    public ClusterClient(Set<String> initAddresses, TypeDBCredential credential, int parallelisation) {
         this.credential = credential;
         this.parallelisation = parallelisation;
-        Set<String> addresses = fetchAllAddresses(initialAddr);
+        Set<String> addresses = fetchAllAddresses(initAddresses);
         clusterServerClients = createClients(credential, parallelisation, addresses);
         userMgr = new ClusterUserManager(this);
         databaseMgr = new ClusterDatabaseManager(this);
@@ -79,8 +79,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
         isOpen = true;
     }
 
-    private Set<String> fetchAllAddresses(Set<String> addresses) {
-        for (String address : addresses) {
+    private Set<String> fetchAllAddresses(Set<String> initAddresses) {
+        for (String address : initAddresses) {
             try (ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation)) {
                 return client.addresses();
             } catch (TypeDBClientException e) {
@@ -91,7 +91,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 }
             }
         }
-        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
+        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", initAddresses));
     }
 
     private Map<String, ClusterServerClient> createClients(TypeDBCredential credential, int parallelisation, Set<String> addresses) {
