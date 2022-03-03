@@ -21,13 +21,9 @@
 
 package com.vaticle.typedb.client.api;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.Optional;
-
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT_COMBINATION;
 
 public class TypeDBCredential {
 

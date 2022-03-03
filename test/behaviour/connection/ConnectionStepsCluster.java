@@ -30,8 +30,6 @@ import com.vaticle.typedb.common.test.server.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import org.junit.BeforeClass;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;

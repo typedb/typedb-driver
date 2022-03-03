@@ -45,7 +45,6 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLU
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
-import static java.util.stream.Collectors.toMap;
 
 public class ClusterClient implements TypeDBClient.Cluster {
 

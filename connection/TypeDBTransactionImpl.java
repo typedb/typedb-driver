@@ -38,7 +38,6 @@ import com.vaticle.typedb.protocol.TransactionProto.Transaction.Res;
 import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
 import io.grpc.StatusRuntimeException;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
