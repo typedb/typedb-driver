@@ -40,7 +40,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     void beforeAll() {
         TypeDBClusterRunner server;
         try {
-            server = new TypeDBClusterRunner();
+            server = TypeDBClusterRunner.create();
         } catch (InterruptedException | TimeoutException | IOException e) {
             throw new RuntimeException(e);
         }
