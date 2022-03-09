@@ -19,5 +19,4 @@
  * under the License.
  */
 
-pub mod typedb_client;
-pub mod typedb_database_manager;
+pub mod database_manager;

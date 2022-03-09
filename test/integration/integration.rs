@@ -21,8 +21,10 @@
 
 extern crate typedb_client;
 
+use typedb_client::CoreClient;
+
 #[test]
 fn test_integration() {
-    let client = typedb_client::core_client();
+    let client = CoreClient::new();
     client.databases.create("grakn");
 }

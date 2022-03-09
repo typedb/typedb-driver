@@ -25,13 +25,15 @@ extern crate protocol;
 use grpc::{ClientStubExt, RequestOptions, SingleResponse};
 use protocol::TypeDB;
 
-pub struct TypeDBDatabaseManager {}
+use crate::{DEFAULT_HOST, DEFAULT_PORT};
 
-impl TypeDBDatabaseManager {
+pub struct DatabaseManager {}
+
+impl DatabaseManager {
     pub fn create(&self, name: &str) -> () {
-        let client = protocol::TypeDBClient::new_plain("0.0.0.0", 1729, grpc::ClientConf::new()).unwrap();
+        let client = protocol::TypeDBClient::new_plain(DEFAULT_HOST, DEFAULT_PORT, grpc::ClientConf::new()).unwrap();
         let mut req = protocol::CoreDatabaseManager_Create_Req::new();
-        req.set_name(name.to_string());
+        req.set_name(String::from(name));
         let res: SingleResponse<protocol::CoreDatabaseManager_Create_Res> = client.databases_create(RequestOptions::new(), req);
         println!("{:?}", res.wait());
     }

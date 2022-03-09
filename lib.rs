@@ -22,12 +22,29 @@
 extern crate grpc;
 extern crate protocol;
 
-pub mod connection;
+mod connection;
 
-use connection::typedb_client::TypeDBClient;
+use connection::database_manager::DatabaseManager;
 
-pub const DEFAULT_ADDRESS: &str = "localhost:1729";
+pub const DEFAULT_HOST: &str = "0.0.0.0";
+pub const DEFAULT_PORT: u16 = 1729;
 
-pub fn core_client() -> TypeDBClient {
-    TypeDBClient::new()
+pub struct CoreClient {
+    pub databases: DatabaseManager,
+}
+
+impl CoreClient {
+    pub fn new() -> CoreClient {
+        CoreClient { databases: DatabaseManager {} }
+    }
+
+    fn close(&self) -> () {
+        todo!()
+    }
+}
+
+impl Drop for CoreClient {
+    fn drop(&mut self) {
+        self.close()
+    }
 }
