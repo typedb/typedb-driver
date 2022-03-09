@@ -24,5 +24,9 @@ load("@rules_rust//rust:defs.bzl", "rust_test")
 rust_test(
     name = "integration",
     srcs = ["integration.rs"],
-    deps = ["//:typedb_client"],
+    deps = [
+        "//:typedb_client",
+
+        "@vaticle_dependencies//library/crates:grpc",
+    ],
 )

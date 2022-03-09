@@ -19,39 +19,4 @@
  * under the License.
  */
 
-extern crate grpc;
-extern crate protocol;
-
-mod common;
-mod database_manager;
-mod rpc;
-mod session;
-
-use crate::database_manager::DatabaseManager;
-use crate::rpc::client::RpcClient;
-
-pub const DEFAULT_HOST: &str = "0.0.0.banana";
-pub const DEFAULT_PORT: u16 = 1729;
-
-pub struct CoreClient {
-    pub databases: DatabaseManager,
-}
-
-impl CoreClient {
-    pub fn new() -> Result<Self> {
-        let rpc_client = RpcClient::new(DEFAULT_HOST, DEFAULT_PORT)?;
-        Ok(CoreClient {
-            databases: DatabaseManager::new(rpc_client),
-        })
-    }
-
-    fn close(&self) -> () {
-        todo!()
-    }
-}
-
-impl Drop for CoreClient {
-    fn drop(&mut self) {
-        self.close()
-    }
-}
+pub mod client;

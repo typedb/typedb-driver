@@ -27,7 +27,8 @@ rust_library(
     name = "typedb_client",
     srcs = glob([
         "*.rs",
-        "connection/**/*.rs",
+        "common/**/*.rs",
+        "rpc/**/*.rs",
     ]),
     deps = [
         "//protocol",

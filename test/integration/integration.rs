@@ -19,6 +19,7 @@
  * under the License.
  */
 
+extern crate grpc;
 extern crate typedb_client;
 
 use typedb_client::CoreClient;
@@ -26,5 +27,8 @@ use typedb_client::CoreClient;
 #[test]
 fn test_integration() {
     let client = CoreClient::new();
-    client.databases.create("grakn");
+    match client {
+        Ok(client) => client.databases.create("grakn"),
+        Err(err) => println!("{}", err)
+    }
 }

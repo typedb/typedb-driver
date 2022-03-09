@@ -19,4 +19,19 @@
  * under the License.
  */
 
-pub mod database_manager;
+extern crate grpc;
+extern crate protocol;
+
+use grpc::ClientStubExt;
+
+pub struct RpcClient {
+    pub(crate) typedb: protocol::TypeDBClient
+}
+
+impl RpcClient {
+    pub fn new(host: &str, port: u16) -> Result<RpcClient, grpc::Error> {
+        Ok(RpcClient {
+            typedb: protocol::TypeDBClient::new_plain(host, port, grpc::ClientConf::new())?
+        })
+    }
+}
