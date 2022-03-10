@@ -27,10 +27,11 @@ mod database_manager;
 mod rpc;
 mod session;
 
+use crate::common::Result;
 use crate::database_manager::DatabaseManager;
 use crate::rpc::client::RpcClient;
 
-pub const DEFAULT_HOST: &str = "0.0.0.banana";
+pub const DEFAULT_HOST: &str = "0.0.0.0";
 pub const DEFAULT_PORT: u16 = 1729;
 
 pub struct CoreClient {
@@ -38,15 +39,12 @@ pub struct CoreClient {
 }
 
 impl CoreClient {
-    pub fn new() -> Result<Self> {
-        let rpc_client = RpcClient::new(DEFAULT_HOST, DEFAULT_PORT)?;
-        Ok(CoreClient {
-            databases: DatabaseManager::new(rpc_client),
-        })
+    pub fn new(host: &str, port: u16) -> Result<CoreClient> {
+        Ok(CoreClient { databases: DatabaseManager::new(RpcClient::new(host, port)?) })
     }
 
     fn close(&self) -> () {
-        todo!()
+        // TODO: close all sessions? or would they be dropped automatically?
     }
 }
 

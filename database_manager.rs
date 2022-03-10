@@ -27,11 +27,11 @@ use protocol::TypeDB;
 use crate::RpcClient;
 
 pub struct DatabaseManager {
-    rpc_client: RpcClient
+    pub(crate) rpc_client: RpcClient
 }
 
 impl DatabaseManager {
-    pub fn new(rpc_client: RpcClient) -> DatabaseManager {
+    pub(crate) fn new(rpc_client: RpcClient) -> DatabaseManager {
         DatabaseManager {
             rpc_client
         }

@@ -22,16 +22,28 @@
 extern crate grpc;
 extern crate protocol;
 
-use grpc::ClientStubExt;
+use grpc::{ClientStubExt, RequestOptions};
+use protocol::{CoreDatabaseManager_All_Req, TypeDB};
 
-pub struct RpcClient {
+use crate::common::error::message::client::UNABLE_TO_CONNECT;
+use crate::common::error::Error;
+use crate::common::Result;
+
+pub(crate) struct RpcClient {
     pub(crate) typedb: protocol::TypeDBClient
 }
 
 impl RpcClient {
-    pub fn new(host: &str, port: u16) -> Result<RpcClient, grpc::Error> {
-        Ok(RpcClient {
-            typedb: protocol::TypeDBClient::new_plain(host, port, grpc::ClientConf::new())?
-        })
+    // TODO: temporary hack to validate connection until we have client pulse
+    fn check_connection(client: &protocol::TypeDBClient) -> grpc::Result<()> {
+        client.databases_all(RequestOptions::new(), CoreDatabaseManager_All_Req::new()).wait().map(|_| ())
+    }
+
+    #[allow(unused_must_use)]
+    pub(crate) fn new(host: &str, port: u16) -> Result<RpcClient> {
+        protocol::TypeDBClient::new_plain(host, port, grpc::ClientConf::new())
+            .map(|client| { RpcClient::check_connection(&client); client })
+            .and_then(|client| Ok(RpcClient { typedb: client }))
+            .map_err(|err| Error::from_grpc(UNABLE_TO_CONNECT, err))
     }
 }

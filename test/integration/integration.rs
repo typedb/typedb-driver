@@ -26,9 +26,8 @@ use typedb_client::CoreClient;
 
 #[test]
 fn test_integration() {
-    let client = CoreClient::new();
-    match client {
+    match CoreClient::new("0.0.0.0", 1729) {
         Ok(client) => client.databases.create("grakn"),
-        Err(err) => println!("{}", err)
+        Err(err) => panic!("An error occurred trying to create the TypeDB Client: {}", err)
     }
 }
