@@ -36,7 +36,7 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.I
 public class ResponsePartIterator implements Iterator<TransactionProto.Transaction.ResPart> {
 
     private final UUID requestID;
-    private final BidirectionalStream stream;
+    private final RequestTransmitter.Dispatcher dispatcher;
     private final ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseCollector;
     private TransactionProto.Transaction.ResPart next;
     private State state;
@@ -44,10 +44,10 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
     enum State {EMPTY, FETCHED, DONE}
 
     public ResponsePartIterator(UUID requestID, ResponseCollector.Queue<TransactionProto.Transaction.ResPart> responseQueue,
-                                BidirectionalStream stream) {
+                                RequestTransmitter.Dispatcher dispatcher) {
         this.requestID = requestID;
-        this.stream = stream;
         this.responseCollector = responseQueue;
+        this.dispatcher = dispatcher;
         state = State.EMPTY;
         next = null;
     }
@@ -63,7 +63,7 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
                         state = State.DONE;
                         return false;
                     case CONTINUE:
-                        stream.dispatcher().dispatch(RequestBuilder.Transaction.streamReq(requestID));
+                        dispatcher.dispatch(RequestBuilder.Transaction.streamReq(requestID));
                         return fetchAndCheck();
                     default:
                         throw new TypeDBClientException(ILLEGAL_ARGUMENT);
@@ -91,8 +91,7 @@ public class ResponsePartIterator implements Iterator<TransactionProto.Transacti
 
     @Override
     public TransactionProto.Transaction.ResPart next() {
-        if (stream.getError().isPresent()) throw TypeDBClientException.of(stream.getError().get());
-        else if (!hasNext()) throw new NoSuchElementException();
+        if (!hasNext()) throw new NoSuchElementException();
         else {
             state = State.EMPTY;
             return next;
