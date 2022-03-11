@@ -52,18 +52,18 @@ impl StdError for Error {
     }
 }
 
-impl From<Message<'_>> for Error {
-    fn from(msg: Message) -> Self {
-        Error::new(msg)
-    }
-}
+// impl From<Message<'_>> for Error {
+//     fn from(msg: Message) -> Self {
+//         Error::new(msg)
+//     }
+// }
 
 impl Error {
-    pub fn new(msg: Message) -> Error {
+    pub fn new(msg: &str) -> Error {
         Error::Other(String::from(msg))
     }
 
-    pub fn from_grpc(msg: Message, source: GrpcError) -> Error {
-        Error::GrpcError(String::from(msg), source)
+    pub fn from_grpc(msg: String, source: GrpcError) -> Error {
+        Error::GrpcError(msg, source)
     }
 }

@@ -25,7 +25,8 @@ extern crate protocol;
 use grpc::{ClientStubExt, RequestOptions};
 use protocol::{CoreDatabaseManager_All_Req, TypeDB};
 
-use crate::common::error::message::client::UNABLE_TO_CONNECT;
+use crate::common::error::message::ERRORS;
+// use crate::common::error::message::client::UNABLE_TO_CONNECT;
 use crate::common::error::Error;
 use crate::common::Result;
 
@@ -44,6 +45,6 @@ impl RpcClient {
         protocol::TypeDBClient::new_plain(host, port, grpc::ClientConf::new())
             .map(|client| { RpcClient::check_connection(&client); client })
             .and_then(|client| Ok(RpcClient { typedb: client }))
-            .map_err(|err| Error::from_grpc(UNABLE_TO_CONNECT, err))
+            .map_err(|err| Error::from_grpc(ERRORS.unable_to_connect.message(vec![]), err))
     }
 }
