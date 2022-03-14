@@ -56,7 +56,6 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     private final QueryManager queryMgr;
 
     private final BidirectionalStream bidirectionalStream;
-
     TypeDBTransactionImpl(TypeDBSessionImpl session, ByteString sessionId, Type type, TypeDBOptions options) {
         this.type = type;
         this.options = options;

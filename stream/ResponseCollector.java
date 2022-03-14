@@ -26,6 +26,7 @@ import com.vaticle.typedb.common.collection.Either;
 import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +34,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedTransferQueue;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 
 public class ResponseCollector<R> {
@@ -61,20 +61,18 @@ public class ResponseCollector<R> {
     public static class Queue<R> {
 
         private final BlockingQueue<Either<Response<R>, Done>> responseQueue;
-        private StatusRuntimeException error;
 
         Queue() {
             // TODO: switch LinkedTransferQueue to LinkedBlockingQueue once issue #351 is fixed
             responseQueue = new LinkedTransferQueue<>();
-            error = null;
         }
 
         public R take() {
             try {
                 Either<Response<R>, Done> response = responseQueue.take();
                 if (response.isFirst()) return response.first().message();
-                else if (this.error != null) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, error);
-                else throw new TypeDBClientException(TRANSACTION_CLOSED);
+                else if (!response.second().error().isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+                else throw TypeDBClientException.of(response.second().error().get());
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
@@ -85,8 +83,7 @@ public class ResponseCollector<R> {
         }
 
         public void close(@Nullable StatusRuntimeException error) {
-            this.error = error;
-            responseQueue.add(Either.second(new Done()));
+            responseQueue.add(Either.second(new Done(error)));
         }
 
         private static class Response<R> {
@@ -105,7 +102,14 @@ public class ResponseCollector<R> {
         }
 
         private static class Done {
-            private Done() {
+            private final StatusRuntimeException error;
+
+            private Done(@Nullable StatusRuntimeException error) {
+                this.error = error;
+            }
+
+            private Optional<StatusRuntimeException> error() {
+                return Optional.ofNullable(error);
             }
         }
     }
