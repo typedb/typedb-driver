@@ -23,12 +23,12 @@ extern crate grpc;
 extern crate protocol;
 
 mod common;
-mod database_manager;
+mod database;
 mod rpc;
 mod session;
 
 use crate::common::Result;
-use crate::database_manager::DatabaseManager;
+use crate::database::DatabaseManager;
 use crate::rpc::client::RpcClient;
 
 pub const DEFAULT_HOST: &str = "0.0.0.0";

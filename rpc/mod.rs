@@ -19,4 +19,5 @@
  * under the License.
  */
 
-pub mod client;
+pub(crate) mod client;
+pub(crate) mod request_builder;

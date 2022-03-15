@@ -22,9 +22,10 @@
 extern crate grpc;
 extern crate protocol;
 
-use grpc::{RequestOptions, SingleResponse};
-use protocol::TypeDB;
-use crate::RpcClient;
+use crate::common::error::Error;
+use crate::common::Result;
+use crate::rpc::client::RpcClient;
+use crate::rpc::request_builder::core::database_manager::{contains_req, create_req};
 
 pub struct DatabaseManager {
     pub(crate) rpc_client: RpcClient
@@ -37,10 +38,15 @@ impl DatabaseManager {
         }
     }
 
-    pub fn create(&self, name: &str) -> () {
-        let mut req = protocol::CoreDatabaseManager_Create_Req::new();
-        req.set_name(String::from(name));
-        let res: SingleResponse<protocol::CoreDatabaseManager_Create_Res> = self.rpc_client.typedb.databases_create(RequestOptions::new(), req);
-        println!("{:?}", res.wait());
+    pub fn contains(&self, name: &str) -> Result<bool> {
+        self.rpc_client.databases_contains(contains_req(name)).map(|res| res.contains)
     }
+
+    pub fn create(&self, name: &str) -> Result<()> {
+        self.rpc_client.databases_create(create_req(name)).map(|_| ())
+    }
+}
+
+pub struct Database {
+    pub(crate) name: String
 }
