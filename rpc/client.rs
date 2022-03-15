@@ -22,6 +22,7 @@
 extern crate grpc;
 extern crate protocol;
 
+use std::sync::Arc;
 use grpc::{ClientStubExt, RequestOptions, SingleResponse, StreamingRequest, StreamingResponse};
 use protocol::{CoreDatabase_Delete_Req, CoreDatabase_Delete_Res, CoreDatabase_Schema_Req, CoreDatabase_Schema_Res, CoreDatabaseManager_All_Req, CoreDatabaseManager_All_Res, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Contains_Res, CoreDatabaseManager_Create_Req, CoreDatabaseManager_Create_Res, Session_Close_Req, Session_Close_Res, Session_Open_Req, Session_Open_Res, Transaction_Client, Transaction_Server, TypeDB};
 
@@ -29,7 +30,7 @@ use crate::common::error::Error;
 use crate::common::Result;
 
 pub(crate) struct RpcClient {
-    typedb: protocol::TypeDBClient
+    typedb: Arc<protocol::TypeDBClient>
 }
 
 impl RpcClient {
@@ -38,7 +39,7 @@ impl RpcClient {
             Ok(client) => {
                 // TODO: temporary hack to validate connection until we have client pulse
                 match RpcClient::check_connection(&client) {
-                    Ok(_) => Ok(RpcClient { typedb: client }),
+                    Ok(_) => Ok(RpcClient { typedb: Arc::new(client) }),
                     Err(err) => Err(Error::from_grpc(err)),
                 }
             }

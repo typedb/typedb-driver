@@ -43,15 +43,15 @@ pub(crate) mod core {
     pub(crate) mod database {
         use protocol::{CoreDatabase_Delete_Req, CoreDatabase_Schema_Req};
 
-        pub(crate) fn schema_req(name: &str) -> CoreDatabase_Schema_Req {
+        pub(crate) fn schema_req(name: String) -> CoreDatabase_Schema_Req {
             let mut req = CoreDatabase_Schema_Req::new();
-            req.name = String::from(name);
+            req.name = name;
             req
         }
 
-        pub(crate) fn delete_req(name: &str) -> CoreDatabase_Delete_Req {
+        pub(crate) fn delete_req(name: String) -> CoreDatabase_Delete_Req {
             let mut req = CoreDatabase_Delete_Req::new();
-            req.name = String::from(name);
+            req.name = name;
             req
         }
     }

@@ -22,31 +22,50 @@
 extern crate grpc;
 extern crate protocol;
 
-use crate::common::error::Error;
+use std::sync::Arc;
 use crate::common::Result;
 use crate::rpc::client::RpcClient;
-use crate::rpc::request_builder::core::database_manager::{contains_req, create_req};
+use crate::rpc::builder::core::database::{delete_req, schema_req};
+use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_req};
 
 pub struct DatabaseManager {
-    pub(crate) rpc_client: RpcClient
+    pub(crate) rpc_client: Arc<RpcClient>
 }
 
 impl DatabaseManager {
-    pub(crate) fn new(rpc_client: RpcClient) -> DatabaseManager {
-        DatabaseManager {
-            rpc_client
-        }
+    pub(crate) fn new(rpc_client: Arc<RpcClient>) -> DatabaseManager {
+        DatabaseManager { rpc_client }
     }
 
     pub fn contains(&self, name: &str) -> Result<bool> {
         self.rpc_client.databases_contains(contains_req(name)).map(|res| res.contains)
     }
 
-    pub fn create(&self, name: &str) -> Result<()> {
+    pub fn create(&self, name: &str) -> Result {
         self.rpc_client.databases_create(create_req(name)).map(|_| ())
+    }
+
+    pub fn all(&self) -> Result<Vec<Database>> {
+        self.rpc_client.databases_all(all_req()).map(|res| res.names.iter()
+            .map(|name| Database::new(String::from(name), Arc::clone(&self.rpc_client))).collect())
     }
 }
 
 pub struct Database {
-    pub(crate) name: String
+    pub name: String,
+    rpc_client: Arc<RpcClient>
+}
+
+impl Database {
+    pub(crate) fn new(name: String, rpc_client: Arc<RpcClient>) -> Database {
+        Database { name, rpc_client }
+    }
+
+    pub fn schema(&self) -> Result<String> {
+        self.rpc_client.database_schema(schema_req(self.name.clone())).map(|res| res.schema)
+    }
+
+    pub fn delete(&self) -> Result {
+        self.rpc_client.database_delete(delete_req(self.name.clone())).map(|_| ())
+    }
 }

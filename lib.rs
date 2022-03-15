@@ -27,6 +27,7 @@ mod database;
 mod rpc;
 mod session;
 
+use std::sync::Arc;
 use crate::common::Result;
 use crate::database::DatabaseManager;
 use crate::rpc::client::RpcClient;
@@ -35,12 +36,17 @@ pub const DEFAULT_HOST: &str = "0.0.0.0";
 pub const DEFAULT_PORT: u16 = 1729;
 
 pub struct CoreClient {
+    pub(crate) rpc_client: Arc<RpcClient>,
     pub databases: DatabaseManager,
 }
 
 impl CoreClient {
     pub fn new(host: &str, port: u16) -> Result<CoreClient> {
-        Ok(CoreClient { databases: DatabaseManager::new(RpcClient::new(host, port)?) })
+        let rpc_client = Arc::new(RpcClient::new(host, port)?);
+        Ok(CoreClient {
+            rpc_client: Arc::clone(&rpc_client),
+            databases: DatabaseManager::new(Arc::clone(&rpc_client))
+        })
     }
 
     fn close(&self) -> () {

@@ -20,4 +20,4 @@
  */
 
 pub(crate) mod client;
-pub(crate) mod request_builder;
+pub(crate) mod builder;
