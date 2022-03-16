@@ -155,7 +155,7 @@ impl StdError for Error {
 }
 
 impl Error {
-    pub(crate) fn new(msg: Message) -> Error {
+    pub(crate) fn new(msg: Message) -> Self {
         Error::Other(String::from(msg))
     }
 

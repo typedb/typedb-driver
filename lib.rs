@@ -22,15 +22,19 @@
 extern crate grpc;
 extern crate protocol;
 
-mod common;
-mod database;
+pub mod common;
+pub mod database;
 mod rpc;
-mod session;
+pub mod session;
+pub mod transaction;
+// mod test;
 
 use std::sync::Arc;
+
 use crate::common::Result;
 use crate::database::DatabaseManager;
 use crate::rpc::client::RpcClient;
+use crate::session::Session;
 
 pub const DEFAULT_HOST: &str = "0.0.0.0";
 pub const DEFAULT_PORT: u16 = 1729;
@@ -41,7 +45,7 @@ pub struct CoreClient {
 }
 
 impl CoreClient {
-    pub fn new(host: &str, port: u16) -> Result<CoreClient> {
+    pub fn new(host: &str, port: u16) -> Result<Self> {
         let rpc_client = Arc::new(RpcClient::new(host, port)?);
         Ok(CoreClient {
             rpc_client: Arc::clone(&rpc_client),
@@ -49,13 +53,8 @@ impl CoreClient {
         })
     }
 
-    fn close(&self) -> () {
-        // TODO: close all sessions? or would they be dropped automatically?
-    }
-}
-
-impl Drop for CoreClient {
-    fn drop(&mut self) {
-        self.close()
+    #[must_use]
+    pub fn session(&self, database: &str, session_type: session::Type) -> Result<Session> {
+        Session::new(database, session_type, Arc::clone(&self.rpc_client))
     }
 }

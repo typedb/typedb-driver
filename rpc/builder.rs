@@ -67,7 +67,7 @@ pub(crate) mod cluster {
     }
 
     pub(crate) mod user_manager {
-        use protocol::{ClusterUserManager_Contains_Req, ClusterUserManager_Create_Req};
+        use protocol::{ClusterUserManager_All_Req, ClusterUserManager_Contains_Req, ClusterUserManager_Create_Req};
 
         pub(crate) fn contains_req(username: &str) -> ClusterUserManager_Contains_Req {
             let mut req = ClusterUserManager_Contains_Req::new();
@@ -81,5 +81,64 @@ pub(crate) mod cluster {
             req.password = String::from(password);
             req
         }
+
+        pub(crate) fn all_req() -> ClusterUserManager_All_Req {
+            ClusterUserManager_All_Req::new()
+        }
+    }
+
+    pub(crate) mod user {
+        use protocol::{ClusterUser_Delete_Req, ClusterUser_Password_Req, ClusterUser_Token_Req};
+
+        pub(crate) fn password_req(username: &str, password: &str) -> ClusterUser_Password_Req {
+            let mut req = ClusterUser_Password_Req::new();
+            req.username = String::from(username);
+            req.password = String::from(password);
+            req
+        }
+
+        pub(crate) fn token_req(username: &str) -> ClusterUser_Token_Req {
+            let mut req = ClusterUser_Token_Req::new();
+            req.username = String::from(username);
+            req
+        }
+
+        pub(crate) fn delete_req(username: &str) -> ClusterUser_Delete_Req {
+            let mut req = ClusterUser_Delete_Req::new();
+            req.username = String::from(username);
+            req
+        }
+    }
+
+    pub(crate) mod database_manager {
+        use protocol::{ClusterDatabaseManager_All_Req, ClusterDatabaseManager_Get_Req};
+
+        pub(crate) fn get_req(name: &str) -> ClusterDatabaseManager_Get_Req {
+            let mut req = ClusterDatabaseManager_Get_Req::new();
+            req.name = String::from(name);
+            req
+        }
+
+        pub(crate) fn all_req() -> ClusterDatabaseManager_All_Req {
+            ClusterDatabaseManager_All_Req::new()
+        }
+    }
+}
+
+pub(crate) mod session {
+    use protocol::{Options, Session_Close_Req, Session_Open_Req, Session_Type};
+
+    pub(crate) fn open_req(database: &str, session_type: Session_Type, options: Options) -> Session_Open_Req {
+        let mut req = Session_Open_Req::new();
+        req.database = String::from(database);
+        req.field_type = session_type;
+        req.set_options(options);
+        req
+    }
+
+    pub(crate) fn close_req(session_id: Vec<u8>) -> Session_Close_Req {
+        let mut req = Session_Close_Req::new();
+        req.session_id = session_id;
+        req
     }
 }

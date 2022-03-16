@@ -33,7 +33,7 @@ pub struct DatabaseManager {
 }
 
 impl DatabaseManager {
-    pub(crate) fn new(rpc_client: Arc<RpcClient>) -> DatabaseManager {
+    pub(crate) fn new(rpc_client: Arc<RpcClient>) -> Self {
         DatabaseManager { rpc_client }
     }
 
@@ -57,7 +57,7 @@ pub struct Database {
 }
 
 impl Database {
-    pub(crate) fn new(name: String, rpc_client: Arc<RpcClient>) -> Database {
+    pub(crate) fn new(name: String, rpc_client: Arc<RpcClient>) -> Self {
         Database { name, rpc_client }
     }
 

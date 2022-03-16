@@ -22,16 +22,19 @@
 extern crate grpc;
 extern crate typedb_client;
 
-use typedb_client::CoreClient;
+use typedb_client::{CoreClient, session};
+// use ::{CoreClient, session};
 
 #[test]
 fn test_integration() {
-    match CoreClient::new("0.0.0.0", 1729) {
-        Ok(client) => {
-            if let Err(err) = client.databases.create("grakn") {
-                panic!("An error occurred creating database 'grakn': {}", err)
-            }
-        },
-        Err(err) => panic!("An error occurred connecting to TypeDB Server: {}", err)
-    };
+    const GRAKN: &str = "grakn";
+    let client = CoreClient::new("0.0.0.0", 1729).unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
+
+    match client.databases.contains(GRAKN) {
+        Ok(true) => (),
+        Ok(false) => { client.databases.create(GRAKN).unwrap_or_else(|err| panic!("An error occurred creating database '{}': {}", GRAKN, err)); }
+        Err(err) => { panic!("An error occurred checking if the database '{}' exists: {}", GRAKN, err) }
+    }
+
+    client.session(GRAKN, session::Type::Schema).unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
 }

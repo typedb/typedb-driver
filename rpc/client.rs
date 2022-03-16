@@ -34,7 +34,7 @@ pub(crate) struct RpcClient {
 }
 
 impl RpcClient {
-    pub(crate) fn new(host: &str, port: u16) -> Result<RpcClient> {
+    pub(crate) fn new(host: &str, port: u16) -> Result<Self> {
         match protocol::TypeDBClient::new_plain(host, port, grpc::ClientConf::new()) {
             Ok(client) => {
                 // TODO: temporary hack to validate connection until we have client pulse
