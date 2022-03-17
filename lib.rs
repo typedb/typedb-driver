@@ -19,6 +19,7 @@
  * under the License.
  */
 
+extern crate futures;
 extern crate grpc;
 extern crate protobuf;
 extern crate typedb_protocol;

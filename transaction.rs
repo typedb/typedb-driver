@@ -19,15 +19,17 @@
  * under the License.
  */
 
-use std::future::Future;
 use std::sync::Arc;
-use grpc::GrpcStream;
-use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Server, Transaction_Type};
+use futures::StreamExt;
+use grpc::{ClientRequestSink, GrpcStream, StreamingResponse};
+use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_Server, Transaction_Type};
+use uuid::Uuid;
 
+use crate::common::error::ERRORS;
+use crate::common::error::Error;
 use crate::common::Result;
-use crate::rpc::builder::transaction::{client_msg, open_req};
+use crate::rpc::builder::transaction::{client_msg, open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
-use crate::session::Session;
 
 #[derive(Copy, Clone)]
 pub enum Type {
@@ -44,22 +46,51 @@ impl From<Type> for Transaction_Type {
     }
 }
 
-pub struct Transaction<'a> {
+pub struct Transaction {
     pub transaction_type: Type,
-    req_stream: &'a GrpcStream<Transaction_Client>,
+    req_sink: ClientRequestSink<Transaction_Client>,
     res_stream: GrpcStream<Transaction_Server>
 }
 
-impl Transaction<'_> {
-    // pub(crate) fn new(session_id: Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: Arc<RpcClient>) -> Self {
-    //     let open_req = client_msg(vec![open_req(session_id, Transaction_Type::from(transaction_type), network_latency_millis)]);
-    //     let req_stream_wrapper = grpc::StreamingRequest::single(open_req);
-    //     let req_stream = &req_stream_wrapper.0;
-    //     let res_stream = rpc_client.transaction(req_stream_wrapper);
-    //     Transaction { transaction_type, req_stream, res_stream }
-    // }
+impl Transaction {
+    // TODO: check if these borrows hamper ability to open transactions in parallel
+    pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
+        let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
+        let (mut req_sink, streaming_res): (ClientRequestSink<Transaction_Client>, StreamingResponse<Transaction_Server>) = rpc_client.transaction().await?;
+        let mut res_stream = streaming_res.drop_metadata();
+        Transaction::send_and_receive_in_stream(&mut req_sink, &mut res_stream, open_req).await?;
+        Ok(Transaction { transaction_type, req_sink, res_stream })
+    }
 
-    pub(crate) async fn execute(req: Transaction_Req) {
+    pub(crate) async fn send_and_receive_in_stream(req_sink: &mut ClientRequestSink<Transaction_Client>, res_stream: &mut GrpcStream<Transaction_Server>, mut req: Transaction_Req) -> Result<Transaction_Res> {
+        req.req_id = Uuid::new_v4().as_bytes().to_vec();
+        req_sink.send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
+        match res_stream.next().await {
+            Some(Ok(message)) => { println!("{:?}", message.clone()); Ok((message as Transaction_Server).get_res().clone()) },
+            Some(Err(err)) => { println!("{:?}", err); Err(Error::from_grpc(err)) },
+            None => { println!("Response stream is empty"); Err(Error::new(ERRORS.client.transaction_closed)) }
+        }
+    }
 
+    pub(crate) async fn send_and_receive(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
+        Transaction::send_and_receive_in_stream(&mut self.req_sink, &mut self.res_stream, req).await
+    }
+
+    pub async fn commit(&mut self) -> Result<Transaction_Res> {
+        self.send_and_receive(commit_req()).await
+    }
+
+    pub async fn rollback(&mut self) -> Result<Transaction_Res> {
+        self.send_and_receive(rollback_req()).await
+    }
+
+    pub async fn query_match(&mut self, query: &str) {
+        // TODO
+    }
+}
+
+impl Drop for Transaction {
+    fn drop(&mut self) {
+        self.req_sink.finish().unwrap()
     }
 }

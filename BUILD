@@ -32,6 +32,7 @@ rust_library(
     ]),
     deps = [
         "//typedb_protocol",
+        "@vaticle_dependencies//library/crates:futures",
         "@vaticle_dependencies//library/crates:grpc",
         "@vaticle_dependencies//library/crates:protobuf",
         "@vaticle_dependencies//library/crates:uuid",

@@ -22,8 +22,8 @@
 extern crate grpc;
 extern crate typedb_client;
 
-use typedb_client::{CoreClient, session};
-// use ::{CoreClient, session};
+use typedb_client::{CoreClient, session, transaction};
+// use ::{CoreClient, session, transaction};
 
 #[tokio::test]
 async fn test_integration() {
@@ -36,5 +36,6 @@ async fn test_integration() {
         Err(err) => { panic!("An error occurred checking if the database '{}' exists: {}", GRAKN, err) }
     }
 
-    client.session(GRAKN, session::Type::Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
+    let session = client.session(GRAKN, session::Type::Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
+    let tx = session.transaction(transaction::Type::Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
 }

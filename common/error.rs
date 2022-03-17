@@ -96,6 +96,7 @@ impl MessageTemplates<'_> {
 const TEMPLATES: MessageTemplates = MessageTemplates::new();
 
 pub struct ClientMessages<'a> {
+    pub transaction_closed: Message<'a>,
     pub transaction_closed_with_errors: Message<'a>,
     pub unable_to_connect: Message<'a>,
     pub cluster_replica_not_primary: Message<'a>,
@@ -115,6 +116,7 @@ impl Messages<'_> {
     const fn new() -> Messages<'static> {
         Messages {
             client: ClientMessages {
+                transaction_closed: Message::new(TEMPLATES.client, 3, "The transaction has been closed and no further operation is allowed."),
                 transaction_closed_with_errors: Message::new(TEMPLATES.client, 4, "The transaction has been closed with error(s): \n{}"),
                 unable_to_connect: Message::new(TEMPLATES.client, 5, "Unable to connect to TypeDB server."),
                 cluster_replica_not_primary: Message::new(TEMPLATES.client, 13, "The replica is not the primary replica."),

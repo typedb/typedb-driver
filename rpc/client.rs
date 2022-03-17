@@ -22,7 +22,7 @@
 extern crate grpc;
 
 use std::sync::Arc;
-use grpc::{ClientStubExt, GrpcStream, RequestOptions, SingleResponse, StreamingRequest, StreamingResponse};
+use grpc::{ClientRequestSink, ClientStubExt, GrpcStream, RequestOptions, SingleResponse, StreamingRequest, StreamingResponse};
 use typedb_protocol::core_database::{CoreDatabase_Delete_Req, CoreDatabase_Delete_Res, CoreDatabase_Schema_Req, CoreDatabase_Schema_Res, CoreDatabaseManager_All_Req, CoreDatabaseManager_All_Res, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Contains_Res, CoreDatabaseManager_Create_Req, CoreDatabaseManager_Create_Res};
 use typedb_protocol::core_service_grpc;
 use typedb_protocol::session::{Session_Close_Req, Session_Close_Res, Session_Open_Req, Session_Open_Res};
@@ -54,39 +54,44 @@ impl RpcClient {
     }
 
     pub(crate) async fn databases_contains(&self, req: CoreDatabaseManager_Contains_Req) -> Result<CoreDatabaseManager_Contains_Res> {
-        RpcClient::map_response(self.typedb.databases_contains(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.databases_contains(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn databases_create(&self, req: CoreDatabaseManager_Create_Req) -> Result<CoreDatabaseManager_Create_Res> {
-        RpcClient::map_response(self.typedb.databases_create(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.databases_create(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn databases_all(&self, req: CoreDatabaseManager_All_Req) -> Result<CoreDatabaseManager_All_Res> {
-        RpcClient::map_response(self.typedb.databases_all(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.databases_all(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn database_schema(&self, req: CoreDatabase_Schema_Req) -> Result<CoreDatabase_Schema_Res> {
-        RpcClient::map_response(self.typedb.database_schema(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.database_schema(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn database_delete(&self, req: CoreDatabase_Delete_Req) -> Result<CoreDatabase_Delete_Res> {
-        RpcClient::map_response(self.typedb.database_delete(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.database_delete(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn session_open(&self, req: Session_Open_Req) -> Result<Session_Open_Res> {
-        RpcClient::map_response(self.typedb.session_open(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.session_open(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn session_close(&self, req: Session_Close_Req) -> Result<Session_Close_Res> {
-        RpcClient::map_response(self.typedb.session_close(RequestOptions::new(), req)).await
+        RpcClient::map_single(self.typedb.session_close(RequestOptions::new(), req)).await
     }
 
-    // pub(crate) fn transaction(&self, req: StreamingRequest<Transaction_Client>) -> GrpcStream<Transaction_Server> {
-    //     self.typedb.transaction(RequestOptions::new())
-    // }
+    pub(crate) async fn transaction(&self) -> Result<(ClientRequestSink<Transaction_Client>, StreamingResponse<Transaction_Server>)> {
+        RpcClient::map_bidi_stream(self.typedb.transaction(RequestOptions::new()).await)
+    }
 
-    async fn map_response<T: Send>(res: SingleResponse<T>) -> Result<T> {
+    async fn map_single<T: Send>(res: SingleResponse<T>) -> Result<T> {
         // TODO: check if we need ensureConnected() from client-java
         res.drop_metadata().await.map_err(|err| Error::from_grpc(err))
+    }
+
+    fn map_bidi_stream<T: Send, U: Send>(res: grpc::Result<(ClientRequestSink<T>, StreamingResponse<U>)>) -> Result<(ClientRequestSink<T>, StreamingResponse<U>)> {
+        // TODO: this mapping should be exposed as a "Result::from"-like function
+        res.map_err(|err| Error::from_grpc(err))
     }
 }

@@ -19,6 +19,7 @@
  * under the License.
  */
 
+use futures::executor;
 use std::sync::Arc;
 use std::time::Instant;
 use typedb_protocol::options::Options;
@@ -28,6 +29,8 @@ use crate::common::Result;
 use crate::database::Database;
 use crate::rpc::builder::session::{close_req, open_req};
 use crate::rpc::client::RpcClient;
+use crate::transaction;
+use crate::transaction::Transaction;
 
 #[derive(Copy, Clone)]
 pub enum Type {
@@ -66,6 +69,10 @@ impl Session {
         })
     }
 
+    pub async fn transaction(&self, transaction_type: transaction::Type) -> Result<Transaction> {
+        Transaction::new(&self.session_id, transaction_type, self.network_latency_millis, &self.rpc_client).await
+    }
+
     fn compute_network_latency(start_time: Instant, server_duration_millis: u32) -> u32 {
         ((Instant::now() - start_time).as_millis() as u32) - server_duration_millis
     }
@@ -74,6 +81,6 @@ impl Session {
 impl Drop for Session {
     #[allow(unused_must_use)] /* we can safely ignore the result of the session_close request */
     fn drop(&mut self) {
-        self.rpc_client.session_close(close_req(self.session_id.clone()));
+        executor::block_on(self.rpc_client.session_close(close_req(self.session_id.clone())));
     }
 }
