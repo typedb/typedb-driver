@@ -20,7 +20,6 @@
  */
 
 extern crate grpc;
-extern crate protocol;
 
 use std::sync::Arc;
 use crate::common::Result;
@@ -37,16 +36,16 @@ impl DatabaseManager {
         DatabaseManager { rpc_client }
     }
 
-    pub fn contains(&self, name: &str) -> Result<bool> {
-        self.rpc_client.databases_contains(contains_req(name)).map(|res| res.contains)
+    pub async fn contains(&self, name: &str) -> Result<bool> {
+        self.rpc_client.databases_contains(contains_req(name)).await.map(|res| res.contains)
     }
 
-    pub fn create(&self, name: &str) -> Result {
-        self.rpc_client.databases_create(create_req(name)).map(|_| ())
+    pub async fn create(&self, name: &str) -> Result {
+        self.rpc_client.databases_create(create_req(name)).await.map(|_| ())
     }
 
-    pub fn all(&self) -> Result<Vec<Database>> {
-        self.rpc_client.databases_all(all_req()).map(|res| res.names.iter()
+    pub async fn all(&self) -> Result<Vec<Database>> {
+        self.rpc_client.databases_all(all_req()).await.map(|res| res.names.iter()
             .map(|name| Database::new(String::from(name), Arc::clone(&self.rpc_client))).collect())
     }
 }
@@ -61,11 +60,11 @@ impl Database {
         Database { name, rpc_client }
     }
 
-    pub fn schema(&self) -> Result<String> {
-        self.rpc_client.database_schema(schema_req(self.name.clone())).map(|res| res.schema)
+    pub async fn schema(&self) -> Result<String> {
+        self.rpc_client.database_schema(schema_req(self.name.clone())).await.map(|res| res.schema)
     }
 
-    pub fn delete(&self) -> Result {
-        self.rpc_client.database_delete(delete_req(self.name.clone())).map(|_| ())
+    pub async fn delete(&self) -> Result {
+        self.rpc_client.database_delete(delete_req(self.name.clone())).await.map(|_| ())
     }
 }

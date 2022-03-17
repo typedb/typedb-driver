@@ -28,5 +28,6 @@ rust_test(
         "//:typedb_client",
 
         "@vaticle_dependencies//library/crates:grpc",
+        "@vaticle_dependencies//library/crates:tokio",
     ],
 )

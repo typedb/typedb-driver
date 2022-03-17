@@ -20,7 +20,9 @@
  */
 
 extern crate grpc;
-extern crate protocol;
+extern crate protobuf;
+extern crate typedb_protocol;
+extern crate uuid;
 
 pub mod common;
 pub mod database;
@@ -45,8 +47,8 @@ pub struct CoreClient {
 }
 
 impl CoreClient {
-    pub fn new(host: &str, port: u16) -> Result<Self> {
-        let rpc_client = Arc::new(RpcClient::new(host, port)?);
+    pub async fn new(host: &str, port: u16) -> Result<Self> {
+        let rpc_client = Arc::new(RpcClient::new(host, port).await?);
         Ok(CoreClient {
             rpc_client: Arc::clone(&rpc_client),
             databases: DatabaseManager::new(Arc::clone(&rpc_client))
@@ -54,7 +56,7 @@ impl CoreClient {
     }
 
     #[must_use]
-    pub fn session(&self, database: &str, session_type: session::Type) -> Result<Session> {
-        Session::new(database, session_type, Arc::clone(&self.rpc_client))
+    pub async fn session(&self, database: &str, session_type: session::Type) -> Result<Session> {
+        Session::new(database, session_type, Arc::clone(&self.rpc_client)).await
     }
 }

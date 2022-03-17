@@ -21,6 +21,8 @@
 
 use std::sync::Arc;
 use std::time::Instant;
+use typedb_protocol::options::Options;
+use typedb_protocol::session::Session_Type;
 
 use crate::common::Result;
 use crate::database::Database;
@@ -33,11 +35,11 @@ pub enum Type {
     Schema = 1
 }
 
-impl From<Type> for protocol::Session_Type {
+impl From<Type> for Session_Type {
     fn from(session_type: Type) -> Self {
         match session_type {
-            Type::Data => protocol::Session_Type::DATA,
-            Type::Schema => protocol::Session_Type::SCHEMA
+            Type::Data => Session_Type::DATA,
+            Type::Schema => Session_Type::SCHEMA
         }
     }
 }
@@ -51,20 +53,20 @@ pub struct Session {
 }
 
 impl Session {
-    pub(crate) fn new(database: &str, session_type: Type, rpc_client: Arc<RpcClient>) -> Result<Self> {
+    pub(crate) async fn new(database: &str, session_type: Type, rpc_client: Arc<RpcClient>) -> Result<Self> {
         let start_time = Instant::now();
-        let open_req = open_req(database, protocol::Session_Type::from(session_type), protocol::Options::new());
-        let res = rpc_client.session_open(open_req)?;
+        let open_req = open_req(database, Session_Type::from(session_type), Options::new());
+        let res = rpc_client.session_open(open_req).await?;
         Ok(Session {
             database: Database::new(String::from(database), Arc::clone(&rpc_client)),
             session_type,
-            network_latency_millis: Session::measure_network_latency(start_time, res.server_duration_millis as u32),
+            network_latency_millis: Session::compute_network_latency(start_time, res.server_duration_millis as u32),
             session_id: res.session_id,
             rpc_client
         })
     }
 
-    fn measure_network_latency(start_time: Instant, server_duration_millis: u32) -> u32 {
+    fn compute_network_latency(start_time: Instant, server_duration_millis: u32) -> u32 {
         ((Instant::now() - start_time).as_millis() as u32) - server_duration_millis
     }
 }
