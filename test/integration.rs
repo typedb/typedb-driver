@@ -23,7 +23,9 @@ extern crate grpc;
 extern crate typedb_client;
 
 use typedb_client::{CoreClient, session, transaction};
+use typedb_client::transaction::Transaction;
 // use ::{CoreClient, session, transaction};
+// use ::transaction::Transaction;
 
 #[tokio::test]
 async fn test_integration() {
@@ -37,5 +39,7 @@ async fn test_integration() {
     }
 
     let session = client.session(GRAKN, session::Type::Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
-    let tx = session.transaction(transaction::Type::Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
+    let mut tx: Transaction = session.transaction(transaction::Type::Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
+    let concept_maps = tx.query_match("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
+    println!("{:#?}", concept_maps);
 }
