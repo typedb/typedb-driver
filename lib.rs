@@ -27,6 +27,7 @@ extern crate uuid;
 
 pub mod common;
 pub mod database;
+pub mod query;
 mod rpc;
 pub mod session;
 pub mod transaction;

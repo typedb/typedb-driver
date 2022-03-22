@@ -183,3 +183,94 @@ pub(crate) mod transaction {
         req
     }
 }
+
+pub(crate) mod query_manager {
+    use typedb_protocol::query::{QueryManager_Define_Req, QueryManager_Delete_Req, QueryManager_Explain_Req, QueryManager_Insert_Req, QueryManager_Match_Req, QueryManager_MatchAggregate_Req, QueryManager_MatchGroup_Req, QueryManager_MatchGroupAggregate_Req, QueryManager_Req, QueryManager_Undefine_Req, QueryManager_Update_Req};
+    use typedb_protocol::transaction::Transaction_Req;
+
+    pub(crate) fn query_manager_req(req: QueryManager_Req) -> Transaction_Req {
+        let mut tx_req = Transaction_Req::new();
+        tx_req.set_query_manager_req(req);
+        tx_req
+    }
+
+    pub(crate) fn define_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut define_req = QueryManager_Define_Req::new();
+        define_req.query = String::from(query);
+        req.set_define_req(define_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn undefine_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut undefine_req = QueryManager_Undefine_Req::new();
+        undefine_req.query = String::from(query);
+        req.set_undefine_req(undefine_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn match_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut match_req = QueryManager_Match_Req::new();
+        match_req.query = String::from(query);
+        req.set_match_req(match_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn match_aggregate_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut match_aggregate_req = QueryManager_MatchAggregate_Req::new();
+        match_aggregate_req.query = String::from(query);
+        req.set_match_aggregate_req(match_aggregate_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn match_group_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut match_group_req = QueryManager_MatchGroup_Req::new();
+        match_group_req.query = String::from(query);
+        req.set_match_group_req(match_group_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn match_group_aggregate_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut match_group_aggregate_req = QueryManager_MatchGroupAggregate_Req::new();
+        match_group_aggregate_req.query = String::from(query);
+        req.set_match_group_aggregate_req(match_group_aggregate_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn insert_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut insert_req = QueryManager_Insert_Req::new();
+        insert_req.query = String::from(query);
+        req.set_insert_req(insert_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn delete_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut delete_req = QueryManager_Delete_Req::new();
+        delete_req.query = String::from(query);
+        req.set_delete_req(delete_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn update_req(query: &str) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut update_req = QueryManager_Update_Req::new();
+        update_req.query = String::from(query);
+        req.set_update_req(update_req);
+        query_manager_req(req)
+    }
+
+    pub(crate) fn explain_req(id: i64) -> Transaction_Req {
+        let mut req = QueryManager_Req::new();
+        let mut explain_req = QueryManager_Explain_Req::new();
+        explain_req.explainable_id = id;
+        req.set_explain_req(explain_req);
+        query_manager_req(req)
+    }
+}

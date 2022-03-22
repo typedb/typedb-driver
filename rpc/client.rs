@@ -22,7 +22,7 @@
 extern crate grpc;
 
 use std::sync::Arc;
-use grpc::{ClientRequestSink, ClientStubExt, GrpcStream, RequestOptions, SingleResponse, StreamingRequest, StreamingResponse};
+use grpc::{ClientRequestSink, ClientStubExt, RequestOptions, SingleResponse, StreamingResponse};
 use typedb_protocol::core_database::{CoreDatabase_Delete_Req, CoreDatabase_Delete_Res, CoreDatabase_Schema_Req, CoreDatabase_Schema_Res, CoreDatabaseManager_All_Req, CoreDatabaseManager_All_Res, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Contains_Res, CoreDatabaseManager_Create_Req, CoreDatabaseManager_Create_Res};
 use typedb_protocol::core_service_grpc;
 use typedb_protocol::session::{Session_Close_Req, Session_Close_Res, Session_Open_Req, Session_Open_Res};

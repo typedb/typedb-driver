@@ -54,10 +54,14 @@ impl Message<'_> {
         }
     }
 
-    pub(crate) fn format(&self, args: Vec<&str>) -> String {
+    fn format(&self, args: Vec<&str>) -> String {
         let expected_arg_count = self.msg_body.matches("{}").count();
         assert_eq!(expected_arg_count, args.len());
         format!("[{}{:0>2}] {}: {}", self.code_prefix, self.code_number, self.msg_prefix, self.expand_msg(args))
+    }
+
+    pub(crate) fn to_err(&self, args: Vec<&str>) -> Error {
+        Error::new(self.format(args))
     }
 
     fn expand_msg(&self, args: Vec<&str>) -> String {
@@ -100,7 +104,6 @@ pub struct ClientMessages<'a> {
     pub transaction_closed_with_errors: Message<'a>,
     pub unable_to_connect: Message<'a>,
     pub missing_response_field: Message<'a>,
-    pub unexpected_response: Message<'a>,
     pub cluster_replica_not_primary: Message<'a>,
     pub cluster_token_credential_invalid: Message<'a>,
 }
@@ -121,8 +124,7 @@ impl Messages<'_> {
                 transaction_closed: Message::new(TEMPLATES.client, 3, "The transaction has been closed and no further operation is allowed."),
                 transaction_closed_with_errors: Message::new(TEMPLATES.client, 4, "The transaction has been closed with error(s): \n{}"),
                 unable_to_connect: Message::new(TEMPLATES.client, 5, "Unable to connect to TypeDB server."),
-                missing_response_field: Message::new(TEMPLATES.client, 9, "Unexpected missing field '{}' in response:\n{}"),
-                unexpected_response: Message::new(TEMPLATES.client, 10, "Unexpected response of type '{}' for request of type '{}'."),
+                missing_response_field: Message::new(TEMPLATES.client, 9, "Missing field in message received from server: '{}'."),
                 cluster_replica_not_primary: Message::new(TEMPLATES.client, 13, "The replica is not the primary replica."),
                 cluster_token_credential_invalid: Message::new(TEMPLATES.client, 16, "Invalid token credential."),
             },
@@ -161,27 +163,23 @@ impl StdError for Error {
 }
 
 impl Error {
-    pub(crate) fn new(msg: Message) -> Self {
-        Error::Other(String::from(msg))
+    pub(crate) fn new(msg: String) -> Self {
+        Error::Other(msg)
     }
 
-    pub(crate) fn format(msg: Message, args: Vec<&str>) -> Error {
-        Error::Other(msg.format(args))
-    }
-
-    pub(crate) fn from_grpc(source: GrpcError) -> Error {
+    pub(crate) fn from_grpc(source: GrpcError) -> Self {
         match source {
             GrpcError::Http(_) => Error::GrpcError(String::from(ERRORS.client.unable_to_connect), source),
             GrpcError::GrpcMessage(ref err) => {
-                if Error::is_replica_not_primary(err) { Error::new(ERRORS.client.cluster_replica_not_primary) }
-                else if Error::is_token_credential_invalid(err) { Error::new(ERRORS.client.cluster_token_credential_invalid) }
+                // TODO: this is awkward because we use gRPC errors to represent some user errors too
+                if Error::is_replica_not_primary(err) { Error::new(ERRORS.client.cluster_replica_not_primary.format(vec![])) }
+                else if Error::is_token_credential_invalid(err) { Error::new(ERRORS.client.cluster_token_credential_invalid.format(vec![])) }
                 else { Error::GrpcError(source.to_string().replacen("grpc message error: ", "", 1), source) }
             },
             _ => Error::GrpcError(source.to_string(), source)
         }
     }
 
-    // TODO: propagate exception from the server in a less brittle way
     fn is_replica_not_primary(err: &GrpcMessageError) -> bool {
         err.grpc_status == GrpcStatus::Internal as i32 && err.grpc_message.contains("[RPL01]")
     }

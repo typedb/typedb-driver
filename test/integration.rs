@@ -40,6 +40,6 @@ async fn test_integration() {
 
     let session = client.session(GRAKN, session::Type::Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
     let mut tx: Transaction = session.transaction(transaction::Type::Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-    let concept_maps = tx.query_match("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
+    let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
     println!("{:#?}", concept_maps);
 }

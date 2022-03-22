@@ -28,6 +28,7 @@ rust_library(
     srcs = glob([
         "*.rs",
         "common/**/*.rs",
+        "query/**/*.rs",
         "rpc/**/*.rs",
     ]),
     deps = [

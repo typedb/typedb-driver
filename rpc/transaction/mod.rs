@@ -19,6 +19,6 @@
  * under the License.
  */
 
-pub(crate) mod builder;
-pub(crate) mod client;
-pub(crate) mod transaction;
+pub(crate) mod bidi_stream;
+
+pub(crate) use crate::rpc::transaction::bidi_stream::BidiStream;
