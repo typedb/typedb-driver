@@ -54,11 +54,9 @@ export namespace ResponseCollector {
 
     import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
     import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
-    import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
 
     export class ResponseQueue<T> {
         private readonly _queue: BlockingQueue<QueueElement>;
-        private _error: string | Error = null;
 
         constructor() {
             this._queue = new BlockingQueue<QueueElement>()
@@ -67,9 +65,13 @@ export namespace ResponseCollector {
         async take(): Promise<T> {
             const element = await this._queue.take();
             if (element.isValue()) return (element as Value<T>).value;
-            else if (element.isDone() && !this._error) throw new TypeDBClientError(TRANSACTION_CLOSED);
-            else if (element.isDone() && this._error) throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(this._error));
-            else throw new TypeDBClientError(ILLEGAL_STATE);
+            else if (element.isDone()) {
+                if ((element as Done).hasError()) {
+                    throw new TypeDBClientError((element as Done).error);
+                } else {
+                    throw new TypeDBClientError(TRANSACTION_CLOSED);
+                }
+            } else throw new TypeDBClientError(ILLEGAL_STATE);
         }
 
         put(element: T): void {
@@ -77,8 +79,7 @@ export namespace ResponseCollector {
         }
 
         close(error?: Error | string): void {
-            this._error = error;
-            this._queue.add(new Done());
+            this._queue.add(new Done(error));
         }
     }
 
@@ -113,14 +114,23 @@ export namespace ResponseCollector {
     }
 
     class Done extends QueueElement {
+        private readonly _error?: Error | string;
 
-        constructor() {
+        constructor(error?: Error | string) {
             super();
+            this._error = error;
+        }
+
+        hasError(): boolean {
+            return this._error != null;
+        }
+
+        get error(): Error | string {
+            return this._error;
         }
 
         isDone(): boolean {
             return true;
         }
     }
-
 }

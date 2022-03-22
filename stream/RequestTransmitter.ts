@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import { ClientDuplexStream } from "@grpc/grpc-js";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
+import {ClientDuplexStream} from "@grpc/grpc-js";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {
 

@@ -70,7 +70,7 @@ export class BidirectionalStream {
         const requestId = uuid.v4();
         request.setReqId(uuid.parse(requestId) as Uint8Array);
         const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
-        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this);
+        const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
     }
