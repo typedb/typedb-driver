@@ -23,4 +23,4 @@ build --incompatible_strict_action_env --java_language_version=11 --javacopt='--
 run --incompatible_strict_action_env
 test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no
 
-try-import /opt/credentials/bazel-remote-cache.rc
+# try-import /opt/credentials/bazel-remote-cache.rc
