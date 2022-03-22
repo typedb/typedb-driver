@@ -28,6 +28,8 @@ rust_library(
     srcs = glob([
         "*.rs",
         "common/**/*.rs",
+        "concept/**/*.rs",
+        "concept2/**/*.rs",
         "query/**/*.rs",
         "rpc/**/*.rs",
     ]),

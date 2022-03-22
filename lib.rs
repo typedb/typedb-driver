@@ -26,6 +26,8 @@ extern crate typedb_protocol;
 extern crate uuid;
 
 pub mod common;
+pub mod concept;
+pub mod concept2;
 pub mod database;
 pub mod query;
 mod rpc;
