@@ -33,7 +33,6 @@ pub mod query;
 mod rpc;
 pub mod session;
 pub mod transaction;
-// mod test;
 
 use std::sync::Arc;
 

@@ -19,15 +19,16 @@
 # under the License.
 #
 
-load("@rules_rust//rust:defs.bzl", "rust_test")
+package(default_visibility = ["//visibility:public"])
 
-rust_test(
+load("@rules_rust//rust:defs.bzl", "rust_test_suite")
+
+rust_test_suite(
     name = "integration",
-    srcs = ["integration.rs"],
+    srcs = glob(["**/*.rs"]),
     deps = [
         "//:typedb_client",
 
-        "@vaticle_dependencies//library/crates:grpc",
         "@vaticle_dependencies//library/crates:tokio",
     ],
 )

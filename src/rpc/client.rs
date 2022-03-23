@@ -32,7 +32,7 @@ use crate::common::error::Error;
 use crate::common::Result;
 
 pub(crate) struct RpcClient {
-    typedb: Arc<core_service_grpc::TypeDBClient>
+    typedb: core_service_grpc::TypeDBClient
 }
 
 impl RpcClient {
@@ -41,7 +41,7 @@ impl RpcClient {
             Ok(client) => {
                 // TODO: temporary hack to validate connection until we have client pulse
                 match RpcClient::check_connection(&client).await {
-                    Ok(_) => Ok(RpcClient { typedb: Arc::new(client) }),
+                    Ok(_) => Ok(RpcClient { typedb: client }),
                     Err(err) => Err(Error::from_grpc(err)),
                 }
             }
@@ -54,7 +54,7 @@ impl RpcClient {
     }
 
     pub(crate) async fn databases_contains(&self, req: CoreDatabaseManager_Contains_Req) -> Result<CoreDatabaseManager_Contains_Res> {
-        RpcClient::map_single(self.typedb.databases_contains(RequestOptions::new(), req)).await
+        Self::map_single(self.typedb.databases_contains(RequestOptions::new(), req)).await
     }
 
     pub(crate) async fn databases_create(&self, req: CoreDatabaseManager_Create_Req) -> Result<CoreDatabaseManager_Create_Res> {

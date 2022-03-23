@@ -48,7 +48,7 @@ impl BidiStream {
         self.req_sink.lock().unwrap().send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
         // TODO: use of unwrap()
         match self.res_stream.lock().unwrap().next().await {
-            Some(Ok(message)) => { println!("{:?}", message.clone()); Ok((message as Transaction_Server).take_res()) },
+            Some(Ok(message)) => { println!("{:?}", message.clone()); Ok(message.clone().take_res()) },
             Some(Err(err)) => { println!("{:?}", err); Err(Error::from_grpc(err)) },
             None => { println!("Response stream is empty"); Err(ERRORS.client.transaction_closed.to_err(vec![])) }
         }
@@ -63,7 +63,7 @@ impl BidiStream {
             match res {
                 Some(Ok(message)) => {
                     println!("{:?}", message.clone());
-                    let server = (message as Transaction_Server).server
+                    let server = message.server
                         .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["server"]))?;
                     match server {
                         Transaction_Server_oneof_server::res_part(mut res_part) => {

@@ -25,16 +25,10 @@ load("@rules_rust//rust:defs.bzl", "rust_library")
 
 rust_library(
     name = "typedb_client",
-    srcs = glob([
-        "*.rs",
-        "common/**/*.rs",
-        "concept/**/*.rs",
-        "concept2/**/*.rs",
-        "query/**/*.rs",
-        "rpc/**/*.rs",
-    ]),
+    srcs = glob(["src/**/*.rs"], exclude = glob(["src/typedb_protocol/**/*.rs"])),
     deps = [
         "//typedb_protocol",
+
         "@vaticle_dependencies//library/crates:futures",
         "@vaticle_dependencies//library/crates:grpc",
         "@vaticle_dependencies//library/crates:protobuf",

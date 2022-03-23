@@ -55,7 +55,7 @@ impl QueryManager {
     }
 
     async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
-        let tx_res_parts = self.bidi_stream.lock().unwrap().streaming_rpc(req).await? as Vec<Transaction_ResPart>;
+        let tx_res_parts = self.bidi_stream.lock().unwrap().streaming_rpc(req).await?;
         let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
         for tx_res_part in tx_res_parts {
             let res_part = tx_res_part.res
