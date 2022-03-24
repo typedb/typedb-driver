@@ -42,4 +42,8 @@ public interface Numeric {
 
     @CheckReturnValue
     Number asNumber();
+
+    @Override
+    @CheckReturnValue
+    String toString();
 }

@@ -100,4 +100,11 @@ public class NumericImpl implements Numeric {
         else if (isDouble()) return doubleValue;
         else throw new TypeDBClientException(ILLEGAL_CAST, Number.class);
     }
+
+    @Override
+    public String toString() {
+        if (isLong()) return longValue.toString();
+        else if (isDouble()) return doubleValue.toString();
+        else return "NaN";
+    }
 }
