@@ -44,6 +44,7 @@ use crate::session::Session;
 pub const DEFAULT_HOST: &str = "0.0.0.0";
 pub const DEFAULT_PORT: u16 = 1729;
 
+#[derive(Clone)]
 pub struct CoreClient {
     pub(crate) rpc_client: Arc<RpcClient>,
     pub databases: DatabaseManager,

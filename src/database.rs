@@ -21,12 +21,14 @@
 
 extern crate grpc;
 
+use std::fmt::{Display, Formatter};
 use std::sync::Arc;
 use crate::common::Result;
 use crate::rpc::client::RpcClient;
 use crate::rpc::builder::core::database::{delete_req, schema_req};
 use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_req};
 
+#[derive(Clone)]
 pub struct DatabaseManager {
     pub(crate) rpc_client: Arc<RpcClient>
 }
@@ -50,6 +52,7 @@ impl DatabaseManager {
     }
 }
 
+#[derive(Debug)]
 pub struct Database {
     pub name: String,
     rpc_client: Arc<RpcClient>
@@ -66,5 +69,11 @@ impl Database {
 
     pub async fn delete(&self) -> Result {
         self.rpc_client.database_delete(delete_req(self.name.clone())).await.map(|_| ())
+    }
+}
+
+impl Display for Database {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
     }
 }
