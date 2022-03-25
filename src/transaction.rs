@@ -28,7 +28,7 @@ use crate::common::Result;
 use crate::rpc;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
-use crate::query2::QueryManager;
+use crate::query::QueryManager;
 
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
