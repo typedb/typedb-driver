@@ -19,8 +19,10 @@
  * under the License.
  */
 
-use std::sync::{Arc, Mutex};
-use futures::StreamExt;
+use std::sync::Arc;
+// TODO: Maybe we should standardise and use 'tokio' everywhere instead of 'futures'?
+use futures::lock::Mutex;
+use futures::{executor, StreamExt};
 use grpc::{ClientRequestSink, GrpcStream, StreamingResponse};
 use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Server, Transaction_Server_oneof_server, Transaction_Stream_State};
 use typedb_protocol::transaction::Transaction_Stream_State::{CONTINUE, DONE};
@@ -45,10 +47,9 @@ impl BidiStream {
 
     pub(crate) async fn single_rpc(&self, mut req: Transaction_Req) -> Result<Transaction_Res> {
         req.req_id = Uuid::new_v4().as_bytes().to_vec();
-        self.req_sink.lock().unwrap().send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
-        // TODO: use of unwrap()
-        match self.res_stream.lock().unwrap().next().await {
-            Some(Ok(message)) => { println!("{:?}", message.clone()); Ok(message.clone().take_res()) },
+        self.req_sink.lock().await.send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
+        match self.res_stream.lock().await.next().await {
+            Some(Ok(message)) => { /*println!("{:?}", message.clone());*/ Ok(message.clone().take_res()) },
             Some(Err(err)) => { println!("{:?}", err); Err(Error::from_grpc(err)) },
             None => { println!("Response stream is empty"); Err(ERRORS.client.transaction_closed.to_err(vec![])) }
         }
@@ -57,12 +58,12 @@ impl BidiStream {
     pub(crate) async fn streaming_rpc(&mut self, mut req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
         let req_id = Uuid::new_v4().as_bytes().to_vec();
         req.req_id = req_id.clone();
-        self.req_sink.lock().unwrap().send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
+        self.req_sink.lock().await.send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
         let mut res_parts: Vec<Transaction_ResPart> = vec![];
-        while let res = self.res_stream.lock().unwrap().next().await {
+        while let res = self.res_stream.lock().await.next().await {
             match res {
                 Some(Ok(message)) => {
-                    println!("{:?}", message.clone());
+                    // println!("{:?}", message.clone());
                     let server = message.server
                         .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["server"]))?;
                     match server {
@@ -70,7 +71,7 @@ impl BidiStream {
                             if res_part.has_stream_res_part() {
                                 match res_part.take_stream_res_part().state {
                                     CONTINUE => {
-                                        self.req_sink.lock().unwrap().send_data(client_msg(vec![stream_req(req_id.clone())]));
+                                        self.req_sink.lock().await.send_data(client_msg(vec![stream_req(req_id.clone())]));
                                     }
                                     DONE => { break }
                                 }
@@ -93,6 +94,6 @@ impl BidiStream {
 
 impl Drop for BidiStream {
     fn drop(&mut self) {
-        self.req_sink.lock().unwrap().finish().unwrap()
+        executor::block_on(self.req_sink.lock()).finish().unwrap()
     }
 }

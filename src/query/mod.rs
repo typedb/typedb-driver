@@ -19,7 +19,8 @@
  * under the License.
  */
 
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use futures::lock::Mutex;
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_Res, QueryManager_ResPart};
 use typedb_protocol::query::QueryManager_ResPart_oneof_res::match_res_part;
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_Res_oneof_res, Transaction_ResPart, Transaction_ResPart_oneof_res};
@@ -31,6 +32,7 @@ use crate::common::Result;
 use crate::rpc::builder::query_manager::{match_req, query_manager_req};
 use crate::rpc::transaction::bidi_stream::BidiStream;
 
+#[derive(Clone)]
 pub struct QueryManager {
     bidi_stream: Arc<Mutex<BidiStream>>
 }
@@ -55,7 +57,7 @@ impl QueryManager {
     }
 
     async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
-        let tx_res_parts = self.bidi_stream.lock().unwrap().streaming_rpc(req).await?;
+        let tx_res_parts = self.bidi_stream.lock().await.streaming_rpc(req).await?;
         let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
         for tx_res_part in tx_res_parts {
             let res_part = tx_res_part.res

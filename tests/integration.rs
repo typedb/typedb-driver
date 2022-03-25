@@ -31,7 +31,6 @@ mod queries {
     use typedb_client::{CoreClient, session, transaction};
     use typedb_client::common::error::{Error, ERRORS};
     use typedb_client::database::Database;
-    use typedb_client::query::match_query;
     use typedb_client::session::Type::{Data, Schema};
     use typedb_client::transaction::Transaction;
     use typedb_client::transaction::Type::Write;
@@ -39,23 +38,22 @@ mod queries {
     const GRAKN: &str = "grakn";
 
     #[tokio::test]
+    #[ignore]
     async fn basic() {
         let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
-
         match client.databases.contains(GRAKN).await {
             Ok(true) => (),
             Ok(false) => { client.databases.create(GRAKN).await.unwrap_or_else(|err| panic!("An error occurred creating database '{}': {}", GRAKN, err)); }
             Err(err) => { panic!("An error occurred checking if the database '{}' exists: {}", GRAKN, err) }
         }
-
         let session = client.session(GRAKN, Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
         let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-        // let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
-        let concept_maps = match_query(tx, "match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
+        let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
         println!("{:#?}", concept_maps);
     }
 
     #[tokio::test]
+    #[ignore]
     async fn concurrent_db_ops() {
         let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
         let (sender, receiver) = mpsc::channel();
@@ -93,25 +91,28 @@ mod queries {
     async fn concurrent_queries() {
         let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
         let (sender, receiver) = mpsc::channel();
+        let sender2 = sender.clone();
         let session = client.session(GRAKN, Data).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
         let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-        let handle2 = tokio::spawn(async move {
+        let mut tx2 = tx.clone();
+        let handle = tokio::spawn(async move {
             for _ in 0..5 {
-                match match_query(tx.clone(), "match $x sub entity;").await {
-                    Ok(res) => { sender.send(Ok(format!("got answers {:?} from thread 2", res))); }
+                match tx.query.match_query("match $x sub entity;").await {
+                    Ok(res) => { sender.send(Ok(format!("got answers {:?} from thread 1", res))); }
                     Err(err) => { sender.send(Err(err)); return; }
                 }
             }
         });
+        let handle2 = tokio::spawn(async move {
+            for _ in 0..5 {
+                match tx2.query.match_query("match $x sub entity;").await {
+                    Ok(res) => { sender2.send(Ok(format!("got answers {:?} from thread 2", res))); }
+                    Err(err) => { sender2.send(Err(err)); return; }
+                }
+            }
+        });
         handle2.await;
-        // ::std::thread::spawn(move || {
-        //     async {
-        //         tx.query.match_query("match $x sub thing").await;
-        //     };
-        // });
-        // tokio::spawn(async move {
-        //     match_query(tx, "match $x sub thing").await;
-        // });
+        handle.await;
         for received in receiver {
             match received {
                 Ok(msg) => { println!("{}", msg); }

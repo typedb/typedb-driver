@@ -19,7 +19,8 @@
  * under the License.
  */
 
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use futures::lock::Mutex;
 use typedb_protocol::query::{QueryManager_Match_Req, QueryManager_Match_ResPart, QueryManager_Req, QueryManager_ResPart_oneof_res};
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_ResPart_oneof_res, Transaction_Server, Transaction_Stream_State, Transaction_Type};
 
@@ -46,6 +47,7 @@ impl From<Type> for Transaction_Type {
     }
 }
 
+#[derive(Clone)]
 pub struct Transaction {
     pub transaction_type: Type,
     bidi_stream: Arc<Mutex<rpc::transaction::BidiStream>>,
@@ -57,7 +59,7 @@ impl Transaction {
     pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
         let bidi_stream: Arc<Mutex<rpc::transaction::BidiStream>> = Arc::new(Mutex::new(rpc::transaction::BidiStream::new(rpc_client).await?));
-        Arc::clone(&bidi_stream).lock().unwrap().single_rpc(open_req).await?;
+        Arc::clone(&bidi_stream).lock().await.single_rpc(open_req).await?;
         Ok(Transaction {
             transaction_type,
             bidi_stream: Arc::clone(&bidi_stream),
@@ -74,10 +76,10 @@ impl Transaction {
     }
 
     pub(crate) async fn single_rpc(&mut self, mut req: Transaction_Req) -> Result<Transaction_Res> {
-        self.bidi_stream.lock().unwrap().single_rpc(req).await
+        self.bidi_stream.lock().await.single_rpc(req).await
     }
 
     pub(crate) async fn streaming_rpc(&mut self, mut req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
-        self.bidi_stream.lock().unwrap().streaming_rpc(req).await
+        self.bidi_stream.lock().await.streaming_rpc(req).await
     }
 }
