@@ -19,64 +19,86 @@
  * under the License.
  */
 
-// enum Concept {
-//     Type(Type),
-//     Thing(Thing),
-// }
-//
-// enum Type {
-//     ThingType(ThingType),
-//     RoleType(RoleType),
-// }
-//
-// enum Thing {
-//     Entity(Entity),
-//     Relation(Relation),
-//     Attribute(Attribute),
-// }
-//
-// impl Thing {
-//     fn get_iid(&self) {
-//         match self {
-//             other => other.0.iid
-//         }
-//     }
-// }
-//
-// struct Entity {
-//     iid: String
-// }
-//
-// struct Relation {
-//     iid: String
-// }
-//
-// struct Attribute {
-//     iid: String,
-//     value: AttributeValue
-// }
-//
-// enum AttributeValue {
-//     Boolean(bool),
-//     Long(i64),
-//     Double(f64),
-//     String(String),
-//     DateTime(Instant)
-// }
-//
-// struct ThingType {
-//     label: String
-// }
-//
-// struct RoleType {
-//     label: ScopedLabel,
-// }
-//
-// struct ScopedLabel {
-//     scope: String,
-//     name: String
-// }
+use std::time::Instant;
+
+enum Concept {
+    Type(Type),
+    Thing(Thing),
+}
+
+enum Type {
+    ThingType(ThingType),
+    RoleType(RoleType),
+}
+
+enum ThingType {
+    EntityType(EntityType),
+    RelationType(RelationType),
+    AttributeType(AttributeType)
+}
+
+struct EntityType {
+    label: String
+}
+
+struct RelationType {
+    label: String
+}
+
+struct AttributeType {
+    label: String
+}
 
 pub trait ConceptApi {
     fn is_deleted(&self) -> bool;
+}
+
+impl ConceptApi for Concept {
+    fn is_deleted(&self) -> bool {
+        todo!()
+    }
+}
+
+enum Thing {
+    Entity(Entity),
+    Relation(Relation),
+    Attribute(Attribute),
+}
+
+impl Thing {
+    fn get_iid(&self) {
+        match self {
+            other => todo!() /*other.0.iid*/
+        }
+    }
+}
+
+struct Entity {
+    iid: String
+}
+
+struct Relation {
+    iid: String
+}
+
+struct Attribute {
+    iid: String,
+    value: AttributeValue
+}
+
+enum AttributeValue {
+    Boolean(bool),
+    Long(i64),
+    Double(f64),
+    String(String),
+    DateTime(Instant)
+}
+
+struct RoleType {
+    label: ScopedLabel,
+}
+
+struct ScopedLabel {
+    scope: String,
+    name: String
 }

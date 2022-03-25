@@ -28,6 +28,7 @@ use typedb_protocol::transaction::Transaction_ResPart_oneof_res::query_manager_r
 
 use crate::common::error::ERRORS;
 use crate::common::Result;
+use crate::concept2::Concept;
 use crate::rpc::builder::query_manager::match_req;
 use crate::rpc::transaction::bidi_stream::BidiStream;
 
@@ -41,18 +42,22 @@ impl QueryManager {
         QueryManager { bidi_stream }
     }
 
-    pub async fn match_query(&mut self, query: &str) -> Result<Vec<QueryManager_Match_ResPart>> {
+    pub async fn match_query(&mut self, query: &str) -> Result<Vec<Box<dyn Concept>>> {
         let res_parts: Vec<QueryManager_ResPart> = self.streaming_rpc(match_req(query)).await?;
-        let mut match_res_parts: Vec<QueryManager_Match_ResPart> = vec![];
+        let mut concepts: Vec<Box<dyn Concept>> = vec![];
         for res_part in res_parts {
             let res = res_part.res
                 .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.res"]))?;
             match res {
-                match_res_part(x) => { match_res_parts.push(x) }
+                match_res_part(x) => {
+                    for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
+                        concepts.push(<dyn Concept>::from_proto(concept.clone())?);
+                    }
+                }
                 _ => { return Err(ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
             }
         };
-        Ok(match_res_parts)
+        Ok(concepts)
     }
 
     async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {

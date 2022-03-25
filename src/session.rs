@@ -32,7 +32,7 @@ use crate::rpc::client::RpcClient;
 use crate::transaction;
 use crate::transaction::Transaction;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Type {
     Data = 0,
     Schema = 1

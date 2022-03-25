@@ -22,7 +22,6 @@
 extern crate grpc;
 
 use std::fmt::{Debug, Formatter};
-use std::sync::Arc;
 use grpc::{ClientRequestSink, ClientStubExt, RequestOptions, SingleResponse, StreamingResponse};
 use typedb_protocol::core_database::{CoreDatabase_Delete_Req, CoreDatabase_Delete_Res, CoreDatabase_Schema_Req, CoreDatabase_Schema_Res, CoreDatabaseManager_All_Req, CoreDatabaseManager_All_Res, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Contains_Res, CoreDatabaseManager_Create_Req, CoreDatabaseManager_Create_Res};
 use typedb_protocol::core_service_grpc;

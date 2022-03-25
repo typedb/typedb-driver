@@ -19,6 +19,9 @@
  * under the License.
  */
 
+// #![feature(trait_upcasting)]
+// #![allow(incomplete_features)]
+
 extern crate futures;
 extern crate grpc;
 extern crate protobuf;
@@ -30,6 +33,7 @@ pub mod concept;
 pub mod concept2;
 pub mod database;
 pub mod query;
+pub mod query2;
 mod rpc;
 pub mod session;
 pub mod transaction;

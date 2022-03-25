@@ -24,7 +24,7 @@ use std::sync::Arc;
 use futures::lock::Mutex;
 use futures::{executor, StreamExt};
 use grpc::{ClientRequestSink, GrpcStream, StreamingResponse};
-use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Server, Transaction_Server_oneof_server, Transaction_Stream_State};
+use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Server, Transaction_Server_oneof_server};
 use typedb_protocol::transaction::Transaction_Stream_State::{CONTINUE, DONE};
 use uuid::Uuid;
 
