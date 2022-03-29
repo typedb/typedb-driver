@@ -30,14 +30,13 @@ import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
 import com.vaticle.typedb.protocol.TransactionProto.Transaction.Server;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
+import javax.annotation.Nullable;
 import static com.vaticle.typedb.client.common.collection.Bytes.bytesToUUID;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNKNOWN_REQUEST_ID;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_ARGUMENT;
@@ -52,6 +51,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final ResponseCollector<ResPart> resPartCollector;
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
+    private Consumer<Throwable> onClose;
     private StatusRuntimeException error;
 
     public BidirectionalStream(TypeDBStub stub, RequestTransmitter transmitter) {
@@ -102,6 +102,10 @@ public class BidirectionalStream implements AutoCloseable {
         return bytesToUUID(byteString.toByteArray());
     }
 
+    public void onClose(Consumer<Throwable> function) {
+        onClose = function;
+    }
+
     @Override
     public void close() {
         close(null);
@@ -110,6 +114,7 @@ public class BidirectionalStream implements AutoCloseable {
     private void close(@Nullable StatusRuntimeException error) {
         if (isOpen.compareAndSet(true, false)) {
             this.error = error;
+            onClose.accept(error);
             resCollector.close(error);
             resPartCollector.close(error);
             try {

@@ -39,6 +39,7 @@ import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
 import io.grpc.StatusRuntimeException;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
@@ -94,6 +95,11 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     @Override
     public QueryManager query() {
         return queryMgr;
+    }
+
+    @Override
+    public void onClose(Consumer<Throwable> function) {
+        bidirectionalStream.onClose(function);
     }
 
     @Override

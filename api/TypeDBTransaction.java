@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;
 import com.vaticle.typedb.protocol.TransactionProto;
 
+import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
@@ -49,6 +50,8 @@ public interface TypeDBTransaction extends AutoCloseable {
 
     @CheckReturnValue
     QueryManager query();
+
+    void onClose(Consumer<Throwable> function);
 
     void commit();
 
