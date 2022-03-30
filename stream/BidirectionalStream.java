@@ -114,7 +114,7 @@ public class BidirectionalStream implements AutoCloseable {
     private void close(@Nullable StatusRuntimeException error) {
         if (isOpen.compareAndSet(true, false)) {
             this.error = error;
-            onClose.accept(error);
+            if (onClose != null) onClose.accept(error);
             resCollector.close(error);
             resPartCollector.close(error);
             try {
