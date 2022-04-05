@@ -140,21 +140,19 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     @Override
     public void close() {
-        try {
-            accessLock.writeLock().lock();
-            if (isOpen.compareAndSet(true, false)) {
+        if (isOpen.compareAndSet(true, false)) {
+            try {
+                accessLock.writeLock().lock();
                 if (onClose != null) onClose.run();
                 transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
                 pulse.cancel();
-                try {
-                    stub().sessionClose(closeReq(sessionID));
-                } catch (TypeDBClientException e) {
-                    // Most likely the session is already closed or the server is no longer running.
-                }
+                stub().sessionClose(closeReq(sessionID));
+            } catch (TypeDBClientException e) {
+                // Most likely the session is already closed or the server is no longer running.
+            } finally {
+                accessLock.writeLock().unlock();
             }
-        } finally {
-            accessLock.writeLock().unlock();
         }
     }
 
@@ -163,14 +161,11 @@ public class TypeDBSessionImpl implements TypeDBSession {
         @Override
         public void run() {
             if (!isOpen()) return;
-            boolean alive;
+            boolean alive = false;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (TypeDBClientException exception) {
-                alive = false;
-            }
-            if (!alive) {
-                close();
+            } finally {
+                if (!alive) close();
             }
         }
     }
