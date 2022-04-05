@@ -170,8 +170,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
                 alive = false;
             }
             if (!alive) {
-                isOpen.set(false);
-                pulse.cancel();
+                close();
             }
         }
     }
