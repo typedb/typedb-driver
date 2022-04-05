@@ -97,6 +97,11 @@ public class ClusterSession implements TypeDBSession {
     }
 
     @Override
+    public void onClose(Runnable function) {
+        typeDBSession.onClose(function);
+    }
+
+    @Override
     public void close() {
         typeDBSession.close();
     }

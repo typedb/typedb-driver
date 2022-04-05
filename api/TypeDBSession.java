@@ -46,6 +46,8 @@ public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
     TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options);
 
+    void onClose(Runnable function);
+
     void close();
 
     enum Type {

@@ -58,6 +58,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
     private final ReadWriteLock accessLock;
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
+    private Runnable onClose;
 
     public TypeDBSessionImpl(TypeDBClientImpl client, String database, Type type, TypeDBOptions options) {
         this.client = client;
@@ -133,10 +134,16 @@ public class TypeDBSessionImpl implements TypeDBSession {
     }
 
     @Override
+    public void onClose(Runnable function) {
+        onClose = function;
+    }
+
+    @Override
     public void close() {
         try {
             accessLock.writeLock().lock();
             if (isOpen.compareAndSet(true, false)) {
+                if (onClose != null) onClose.run();
                 transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
                 pulse.cancel();
