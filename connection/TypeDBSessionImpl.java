@@ -164,6 +164,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
             boolean alive = false;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
+            } catch (TypeDBClientException ignored) {
             } finally {
                 if (!alive) close();
             }
