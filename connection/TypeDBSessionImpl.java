@@ -30,6 +30,8 @@ import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.collection.ConcurrentSet;
 import com.vaticle.typedb.protocol.SessionProto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -48,6 +50,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
+    private static final Logger LOG = LoggerFactory.getLogger(TypeDBSessionImpl.class);
     private final TypeDBClientImpl client;
     private final TypeDBDatabaseImpl database;
     private final ByteString sessionID;
@@ -165,6 +168,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
             } catch (TypeDBClientException ignored) {
+                LOG.trace("An exception has occurred", ignored);
             } finally {
                 if (!alive) close();
             }
