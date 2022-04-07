@@ -544,7 +544,7 @@ public class TypeQLSteps {
         }
     }
 
-    @Then("each answer does not satisfy")
+    @Then("templated typeql match; throws exception")
     public void each_answer_does_not_satisfy(String templatedTypeQLQuery) {
         String templatedQuery = String.join("\n", templatedTypeQLQuery);
         for (ConceptMap answer : answers) {
