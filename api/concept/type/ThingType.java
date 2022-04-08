@@ -53,6 +53,10 @@ public interface ThingType extends Type {
         @CheckReturnValue
         Stream<? extends ThingType> getSubtypes();
 
+        @Override
+        @CheckReturnValue
+        Stream<? extends ThingType> getSubtypesExplicit();
+
         @CheckReturnValue
         Stream<? extends Thing> getInstances();
 
