@@ -165,7 +165,15 @@ public interface AttributeType extends ThingType {
 
         @Override
         @CheckReturnValue
+        Stream<? extends AttributeType> getSubtypesExplicit();
+
+        @Override
+        @CheckReturnValue
         Stream<? extends Attribute<?>> getInstances();
+
+        @Override
+        @CheckReturnValue
+        Stream<? extends Attribute<?>> getInstancesExplicit();
 
         @CheckReturnValue
         Stream<? extends ThingType> getOwners();
@@ -230,7 +238,15 @@ public interface AttributeType extends ThingType {
 
             @Override
             @CheckReturnValue
+            Stream<? extends Attribute.Boolean> getInstancesExplicit();
+
+            @Override
+            @CheckReturnValue
             Stream<? extends AttributeType.Boolean> getSubtypes();
+
+            @Override
+            @CheckReturnValue
+            Stream<? extends AttributeType.Boolean> getSubtypesExplicit();
 
             void setSupertype(AttributeType.Boolean booleanAttributeType);
         }
@@ -268,7 +284,15 @@ public interface AttributeType extends ThingType {
 
             @Override
             @CheckReturnValue
+            Stream<? extends Attribute.Long> getInstancesExplicit();
+
+            @Override
+            @CheckReturnValue
             Stream<? extends AttributeType.Long> getSubtypes();
+
+            @Override
+            @CheckReturnValue
+            Stream<? extends AttributeType.Long> getSubtypesExplicit();
 
             void setSupertype(AttributeType.Long longAttributeType);
         }
@@ -306,7 +330,15 @@ public interface AttributeType extends ThingType {
 
             @Override
             @CheckReturnValue
+            Stream<? extends Attribute.Double> getInstancesExplicit();
+
+            @Override
+            @CheckReturnValue
             Stream<? extends AttributeType.Double> getSubtypes();
+
+            @Override
+            @CheckReturnValue
+            Stream<? extends AttributeType.Double> getSubtypesExplicit();
 
             void setSupertype(AttributeType.Double doubleAttributeType);
         }
@@ -342,6 +374,10 @@ public interface AttributeType extends ThingType {
             @CheckReturnValue
             Stream<? extends Attribute.String> getInstances();
 
+            @Override
+            @CheckReturnValue
+            Stream<? extends Attribute.String> getInstancesExplicit();
+
             @Nullable
             @CheckReturnValue
             java.lang.String getRegex();
@@ -351,6 +387,10 @@ public interface AttributeType extends ThingType {
             @Override
             @CheckReturnValue
             Stream<? extends AttributeType.String> getSubtypes();
+
+            @Override
+            @CheckReturnValue
+            Stream<? extends AttributeType.String> getSubtypesExplicit();
 
             void setSupertype(AttributeType.String stringAttributeType);
         }
@@ -388,7 +428,15 @@ public interface AttributeType extends ThingType {
 
             @Override
             @CheckReturnValue
+            Stream<? extends Attribute.DateTime> getInstancesExplicit();
+
+            @Override
+            @CheckReturnValue
             Stream<? extends AttributeType.DateTime> getSubtypes();
+
+            @Override
+            @CheckReturnValue
+            Stream<? extends AttributeType.DateTime> getSubtypesExplicit();
 
             void setSupertype(AttributeType.DateTime dateTimeAttributeType);
         }

@@ -27,10 +27,8 @@ import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.protocol.ConceptProto;
-
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
-
+import javax.annotation.Nullable;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayersReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
@@ -79,6 +77,11 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         @Override
         public final Stream<RoleTypeImpl> getSubtypes() {
             return super.getSubtypes().map(TypeImpl::asRoleType);
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getSubtypesExplicit() {
+            return super.getSubtypesExplicit().map(TypeImpl::asRoleType);
         }
 
         @Override

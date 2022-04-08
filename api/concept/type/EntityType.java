@@ -50,7 +50,15 @@ public interface EntityType extends ThingType {
 
         @Override
         @CheckReturnValue
+        Stream<? extends Entity> getInstancesExplicit();
+
+        @Override
+        @CheckReturnValue
         Stream<? extends EntityType> getSubtypes();
+
+        @Override
+        @CheckReturnValue
+        Stream<? extends EntityType> getSubtypesExplicit();
 
         void setSupertype(EntityType superEntityType);
     }

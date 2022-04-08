@@ -47,6 +47,10 @@ public interface RelationType extends ThingType {
         @CheckReturnValue
         Stream<? extends Relation> getInstances();
 
+        @Override
+        @CheckReturnValue
+        Stream<? extends Relation> getInstancesExplicit();
+
         @CheckReturnValue
         Stream<? extends RoleType> getRelates();
 
@@ -63,6 +67,10 @@ public interface RelationType extends ThingType {
         @Override
         @CheckReturnValue
         Stream<? extends RelationType> getSubtypes();
+
+        @Override
+        @CheckReturnValue
+        Stream<? extends RelationType> getSubtypesExplicit();
 
         void setSupertype(RelationType superRelationType);
     }

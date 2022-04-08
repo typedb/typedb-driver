@@ -31,10 +31,9 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
-
 import java.util.stream.Stream;
-
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
@@ -112,9 +111,21 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
+        public Stream<? extends ThingTypeImpl> getSubtypesExplicit() {
+            return super.getSubtypesExplicit().map(TypeImpl::asThingType);
+        }
+
+        @Override
         public Stream<? extends ThingImpl> getInstances() {
             return stream(getInstancesReq(getLabel()))
                     .flatMap(rp -> rp.getThingTypeGetInstancesResPart().getThingsList().stream())
+                    .map(ThingImpl::of);
+        }
+
+        @Override
+        public Stream<? extends ThingImpl> getInstancesExplicit() {
+            return stream(getInstancesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getThingTypeGetInstancesExplicitResPart().getThingsList().stream())
                     .map(ThingImpl::of);
         }
 

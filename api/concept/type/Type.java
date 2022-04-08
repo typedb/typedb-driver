@@ -61,5 +61,8 @@ public interface Type extends Concept {
 
         @CheckReturnValue
         Stream<? extends Type> getSubtypes();
+
+        @CheckReturnValue
+        Stream<? extends Type> getSubtypesExplicit();
     }
 }

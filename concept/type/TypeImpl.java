@@ -53,6 +53,7 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.IN
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
@@ -256,6 +257,13 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         public Stream<? extends TypeImpl> getSubtypes() {
             return stream(getSubtypesReq(getLabel()))
                     .flatMap(rp -> rp.getTypeGetSubtypesResPart().getTypesList().stream())
+                    .map(TypeImpl::of);
+        }
+
+        @Override
+        public Stream<? extends TypeImpl> getSubtypesExplicit() {
+            return stream(getSubtypesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getTypeGetSubtypesExplicitResPart().getTypesList().stream())
                     .map(TypeImpl::of);
         }
 

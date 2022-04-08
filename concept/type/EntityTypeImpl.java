@@ -27,9 +27,7 @@ import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
-
 import java.util.stream.Stream;
-
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
@@ -79,8 +77,18 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         }
 
         @Override
+        public final Stream<EntityTypeImpl> getSubtypesExplicit() {
+            return super.getSubtypesExplicit().map(ThingTypeImpl::asEntityType);
+        }
+
+        @Override
         public final Stream<EntityImpl> getInstances() {
             return super.getInstances().map(ThingImpl::asEntity);
+        }
+
+        @Override
+        public final Stream<EntityImpl> getInstancesExplicit() {
+            return super.getInstancesExplicit().map(ThingImpl::asEntity);
         }
 
         @Override

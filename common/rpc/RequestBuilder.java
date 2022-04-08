@@ -34,14 +34,12 @@ import com.vaticle.typedb.protocol.OptionsProto;
 import com.vaticle.typedb.protocol.QueryProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import static com.google.protobuf.ByteString.copyFrom;
 import static com.vaticle.factory.tracing.client.FactoryTracingThreadStatic.currentThreadTrace;
 import static com.vaticle.factory.tracing.client.FactoryTracingThreadStatic.isTracingEnabled;
@@ -378,6 +376,12 @@ public class RequestBuilder {
             ));
         }
 
+        public static TransactionProto.Transaction.Req.Builder getSubtypesExplicitReq(Label label) {
+            return typeReq(newReqBuilder(label).setTypeGetSubtypesExplicitReq(
+                    ConceptProto.Type.GetSubtypesExplicit.Req.getDefaultInstance()
+            ));
+        }
+
         public static TransactionProto.Transaction.Req.Builder getSupertypeReq(Label label) {
             return typeReq(newReqBuilder(label).setTypeGetSupertypeReq(
                     ConceptProto.Type.GetSupertype.Req.getDefaultInstance()
@@ -504,6 +508,12 @@ public class RequestBuilder {
             public static TransactionProto.Transaction.Req.Builder getInstancesReq(Label label) {
                 return typeReq(newReqBuilder(label).setThingTypeGetInstancesReq(
                         ConceptProto.ThingType.GetInstances.Req.getDefaultInstance()
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getInstancesExplicitReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetInstancesExplicitReq(
+                        ConceptProto.ThingType.GetInstancesExplicit.Req.getDefaultInstance()
                 ));
             }
         }

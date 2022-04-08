@@ -147,7 +147,16 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<? extends AttributeTypeImpl> getSubtypes() {
-            Stream<AttributeTypeImpl> stream = super.getSubtypes().map(TypeImpl::asAttributeType);
+            return getSubTypesBase(super.getSubtypes());
+        }
+
+        @Override
+        public Stream<? extends AttributeTypeImpl> getSubtypesExplicit() {
+            return getSubTypesBase(super.getSubtypesExplicit());
+        }
+
+        private Stream<? extends AttributeTypeImpl> getSubTypesBase(Stream<? extends ThingTypeImpl> subtypes) {
+            Stream<AttributeTypeImpl> stream = subtypes.map(TypeImpl::asAttributeType);
 
             if (isRoot() && getValueType() != ValueType.OBJECT) {
                 // Get all attribute types of this value type
@@ -160,6 +169,11 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         @Override
         public Stream<? extends AttributeImpl<?>> getInstances() {
             return super.getInstances().map(ThingImpl::asAttribute);
+        }
+
+        @Override
+        public Stream<? extends AttributeImpl<?>> getInstancesExplicit() {
+            return super.getInstancesExplicit().map(ThingImpl::asAttribute);
         }
 
         @Override
@@ -277,8 +291,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
+            public final Stream<AttributeTypeImpl.Boolean> getSubtypesExplicit() {
+                return super.getSubtypesExplicit().map(AttributeTypeImpl::asBoolean);
+            }
+
+            @Override
             public final Stream<AttributeImpl.Boolean> getInstances() {
                 return super.getInstances().map(AttributeImpl::asBoolean);
+            }
+
+            @Override
+            public final Stream<AttributeImpl.Boolean> getInstancesExplicit() {
+                return super.getInstancesExplicit().map(AttributeImpl::asBoolean);
             }
 
             @Override
@@ -342,8 +366,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
+            public final Stream<AttributeTypeImpl.Long> getSubtypesExplicit() {
+                return super.getSubtypesExplicit().map(AttributeTypeImpl::asLong);
+            }
+
+            @Override
             public final Stream<AttributeImpl.Long> getInstances() {
                 return super.getInstances().map(AttributeImpl::asLong);
+            }
+
+            @Override
+            public final Stream<AttributeImpl.Long> getInstancesExplicit() {
+                return super.getInstancesExplicit().map(AttributeImpl::asLong);
             }
 
             @Override
@@ -407,8 +441,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
+            public final Stream<AttributeTypeImpl.Double> getSubtypesExplicit() {
+                return super.getSubtypesExplicit().map(AttributeTypeImpl::asDouble);
+            }
+
+            @Override
             public final Stream<AttributeImpl.Double> getInstances() {
                 return super.getInstances().map(AttributeImpl::asDouble);
+            }
+
+            @Override
+            public final Stream<AttributeImpl.Double> getInstancesExplicit() {
+                return super.getInstancesExplicit().map(AttributeImpl::asDouble);
             }
 
             @Override
@@ -472,8 +516,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
+            public final Stream<AttributeTypeImpl.String> getSubtypesExplicit() {
+                return super.getSubtypesExplicit().map(AttributeTypeImpl::asString);
+            }
+
+            @Override
             public final Stream<AttributeImpl.String> getInstances() {
                 return super.getInstances().map(AttributeImpl::asString);
+            }
+
+            @Override
+            public final Stream<AttributeImpl.String> getInstancesExplicit() {
+                return super.getInstancesExplicit().map(AttributeImpl::asString);
             }
 
             @Override
@@ -551,8 +605,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
             }
 
             @Override
+            public final Stream<AttributeTypeImpl.DateTime> getSubtypesExplicit() {
+                return super.getSubtypesExplicit().map(AttributeTypeImpl::asDateTime);
+            }
+
+            @Override
             public final Stream<AttributeImpl.DateTime> getInstances() {
                 return super.getInstances().map(AttributeImpl::asDateTime);
+            }
+
+            @Override
+            public final Stream<AttributeImpl.DateTime> getInstancesExplicit() {
+                return super.getInstancesExplicit().map(AttributeImpl::asDateTime);
             }
 
             @Override

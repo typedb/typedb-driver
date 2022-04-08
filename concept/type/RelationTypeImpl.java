@@ -27,9 +27,7 @@ import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
-
 import java.util.stream.Stream;
-
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
@@ -113,8 +111,18 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
+        public final Stream<RelationTypeImpl> getSubtypesExplicit() {
+            return super.getSubtypesExplicit().map(ThingTypeImpl::asRelationType);
+        }
+
+        @Override
         public final Stream<RelationImpl> getInstances() {
             return super.getInstances().map(ThingImpl::asRelation);
+        }
+
+        @Override
+        public final Stream<RelationImpl> getInstancesExplicit() {
+            return super.getInstancesExplicit().map(ThingImpl::asRelation);
         }
 
         @Override

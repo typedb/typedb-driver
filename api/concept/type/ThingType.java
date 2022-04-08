@@ -56,6 +56,9 @@ public interface ThingType extends Type {
         @CheckReturnValue
         Stream<? extends Thing> getInstances();
 
+        @CheckReturnValue
+        Stream<? extends Thing> getInstancesExplicit();
+
         void setAbstract();
 
         void unsetAbstract();
