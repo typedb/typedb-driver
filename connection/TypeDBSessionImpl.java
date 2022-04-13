@@ -168,7 +168,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
             } catch (TypeDBClientException e) {
-                LOG.trace("Unable to send session pulse", e);
+                LOG.debug("Unable to send session pulse", e);
             } finally {
                 if (!alive) close();
             }
