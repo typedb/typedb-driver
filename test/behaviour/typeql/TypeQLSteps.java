@@ -545,13 +545,14 @@ public class TypeQLSteps {
     }
 
     @Then("templated typeql match; throws exception")
-    public void each_answer_does_not_satisfy(String templatedTypeQLQuery) {
+    public void templated_typeql_match_throws_exception(String templatedTypeQLQuery) {
         String templatedQuery = String.join("\n", templatedTypeQLQuery);
         for (ConceptMap answer : answers) {
             String queryString = applyQueryTemplate(templatedQuery, answer);
-            TypeQLMatch query = TypeQL.parseQuery(queryString).asMatch();
-            long answerSize = tx().query().match(query).count();
-            assertEquals(0, answerSize);
+            assertThrows(() -> {
+                TypeQLMatch query = TypeQL.parseQuery(queryString).asMatch();
+                long ignored = tx().query().match(query).count();
+            });
         }
     }
 
