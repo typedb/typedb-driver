@@ -33,6 +33,12 @@ public interface Database {
     @CheckReturnValue
     String schema();
 
+    @CheckReturnValue
+    String typeSchema();
+
+    @CheckReturnValue
+    String ruleSchema();
+
     void delete();
 
     interface Cluster extends Database {

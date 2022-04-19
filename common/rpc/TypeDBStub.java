@@ -51,6 +51,14 @@ public abstract class TypeDBStub {
         return resilientCall(() -> blockingStub().databaseSchema(request));
     }
 
+    public CoreDatabaseProto.CoreDatabase.TypeSchema.Res databaseTypeSchema(CoreDatabaseProto.CoreDatabase.TypeSchema.Req request) {
+        return resilientCall(() -> blockingStub().databaseTypeSchema(request));
+    }
+
+    public CoreDatabaseProto.CoreDatabase.RuleSchema.Res databaseRuleSchema(CoreDatabaseProto.CoreDatabase.RuleSchema.Req request) {
+        return resilientCall(() -> blockingStub().databaseRuleSchema(request));
+    }
+
     public CoreDatabaseProto.CoreDatabase.Delete.Res databaseDelete(CoreDatabaseProto.CoreDatabase.Delete.Req request) {
         return resilientCall(() -> blockingStub().databaseDelete(request));
     }

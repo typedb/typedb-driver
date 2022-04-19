@@ -25,7 +25,9 @@ import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.ruleSchemaReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.typeSchemaReq;
 import static com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl.nonNull;
 
 public class TypeDBDatabaseImpl implements Database {
@@ -50,6 +52,16 @@ public class TypeDBDatabaseImpl implements Database {
     @Override
     public String schema() {
         return stub().databaseSchema(schemaReq(name)).getSchema();
+    }
+
+    @Override
+    public String typeSchema() {
+        return stub().databaseTypeSchema(typeSchemaReq(name)).getSchema();
+    }
+
+    @Override
+    public String ruleSchema() {
+        return stub().databaseRuleSchema(ruleSchemaReq(name)).getSchema();
     }
 
     @Override
