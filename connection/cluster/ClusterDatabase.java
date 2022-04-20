@@ -82,6 +82,18 @@ class ClusterDatabase implements Database.Cluster {
     }
 
     @Override
+    public String typeSchema() {
+        // TODO: select the leader database
+        return databases.values().iterator().next().typeSchema();
+    }
+
+    @Override
+    public String ruleSchema() {
+        // TODO: select the leader database
+        return databases.values().iterator().next().ruleSchema();
+    }
+
+    @Override
     public void delete() {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 name,

@@ -92,6 +92,14 @@ public class RequestBuilder {
                 return CoreDatabaseProto.CoreDatabase.Schema.Req.newBuilder().setName(name).build();
             }
 
+            public static CoreDatabaseProto.CoreDatabase.TypeSchema.Req typeSchemaReq(String name) {
+                return CoreDatabaseProto.CoreDatabase.TypeSchema.Req.newBuilder().setName(name).build();
+            }
+
+            public static CoreDatabaseProto.CoreDatabase.RuleSchema.Req ruleSchemaReq(String name) {
+                return CoreDatabaseProto.CoreDatabase.RuleSchema.Req.newBuilder().setName(name).build();
+            }
+
             public static CoreDatabaseProto.CoreDatabase.Delete.Req deleteReq(String name) {
                 return CoreDatabaseProto.CoreDatabase.Delete.Req.newBuilder().setName(name).build();
             }
