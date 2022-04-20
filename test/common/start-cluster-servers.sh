@@ -22,17 +22,35 @@
 
 set -e
 
+function server_start() {
+  ./${1}/typedb cluster \
+    --storage.data=server/data \
+    --server.address=127.0.0.1:${1}1729 \
+    --server.internal-address.zeromq=127.0.0.1:${1}1730 \
+    --server.internal-address.grpc=127.0.0.1:${1}1731 \
+    --server.peers.peer-1.address=127.0.0.1:11729 \
+    --server.peers.peer-1.internal-address.zeromq=127.0.0.1:11730 \
+    --server.peers.peer-1.internal-address.grpc=127.0.0.1:11731 \
+    --server.peers.peer-2.address=127.0.0.1:21729 \
+    --server.peers.peer-2.internal-address.zeromq=127.0.0.1:21730 \
+    --server.peers.peer-2.internal-address.grpc=127.0.0.1:21731 \
+    --server.peers.peer-3.address=127.0.0.1:31729 \
+    --server.peers.peer-3.internal-address.zeromq=127.0.0.1:31730 \
+    --server.peers.peer-3.internal-address.grpc=127.0.0.1:31731 \
+    --server.encryption.enable=true
+}
+
 rm -rf 1 2 3 typedb-cluster-all
 
 bazel run //test:typedb-cluster-extractor -- typedb-cluster-all
 echo Successfully unarchived TypeDB distribution. Creating 3 copies.
 cp -r typedb-cluster-all/$TYPEDB/ 1 && cp -r typedb-cluster-all/$TYPEDB/ 2 && cp -r typedb-cluster-all/$TYPEDB/ 3
-echo Starting 3 TypeDB servers.
-./1/typedb cluster --data server/data --address 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
-./2/typedb cluster --data server/data --address 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
-./3/typedb cluster --data server/data --address 127.0.0.1:31729:31730:31731 --peer 127.0.0.1:11729:11730:11731 --peer 127.0.0.1:21729:21730:21731 --peer 127.0.0.1:31729:31730:31731 --encryption-enabled=true &
+echo Starting a cluster consisting of 3 servers...
+server_start 1 &
+server_start 2 &
+server_start 3 &
 
-ROOT_CA=`realpath typedb-cluster-all/$TYPEDB/server/conf/encryption/rpc-root-ca.pem`
+ROOT_CA=`realpath typedb-cluster-all/$TYPEDB/server/conf/encryption/ext-root-ca.pem`
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5

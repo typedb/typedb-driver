@@ -44,6 +44,25 @@ function getServerPID(port) {
     else throw new Error("Found multiple PIDs: '" + serverPID + " for port: '" + port + "'");
 }
 
+function serverStart(idx) {
+    spawn(`./${idx}/typedb`, ["cluster",
+        "--storage.data", "server/data",
+        "--server.address", `127.0.0.1:${idx}1729`,
+        "--server.internal-address.zeromq", `127.0.0.1:${idx}1730`,
+        "--server.internal-address.grpc", `127.0.0.1:${idx}1731`,
+        "--server.peers.peer-1.address", "127.0.0.1:11729",
+        "--server.peers.peer-1.internal-address.zeromq", "127.0.0.1:11730",
+        "--server.peers.peer-1.internal-address.grpc", "127.0.0.1:11731",
+        "--server.peers.peer-2.address", "127.0.0.1:21729",
+        "--server.peers.peer-2.internal-address.zeromq", "127.0.0.1:21730",
+        "--server.peers.peer-2.internal-address.grpc", "127.0.0.1:21731",
+        "--server.peers.peer-3.address", "127.0.0.1:31729",
+        "--server.peers.peer-3.internal-address.zeromq", "127.0.0.1:31730",
+        "--server.peers.peer-3.internal-address.grpc", "127.0.0.1:31731",
+        "--server.encryption.enable", "true"
+    ]);
+}
+
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
     const client = await TypeDB.clusterClient(
@@ -83,8 +102,7 @@ async function run() {
             console.info(`Retrieved entity type with label '${person.label.scopedName}' from new primary replica`);
             assert(person.label.scopedName === "person");
             const idx = primaryReplica.address[10];
-            spawn(`./${idx}/typedb`, ["cluster", "--data", "server/data", "--address", `127.0.0.1:${idx}1729:${idx}1730:${idx}1731`,
-                "--peer", "127.0.0.1:11729:11730:11731", "--peer", "127.0.0.1:21729:21730:21731", "--peer", "127.0.0.1:31729:31730:31731", "--encryption-enabled=true"]);
+            serverStart(idx);
             await new Promise(resolve => setTimeout(resolve, 20000));
             const spawned = getServerPID(`${idx}1729`);
             if (spawned === undefined) throw new Error("Failed to spawn/wait for start of server at port: " + `${idx}1729`);
