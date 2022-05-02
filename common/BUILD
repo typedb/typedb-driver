@@ -32,6 +32,7 @@ java_library(
         ],
         exclude = ["test/**"],
     ),
+    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client-common:{pom_version}"],
     deps = [
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",

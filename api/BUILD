@@ -26,6 +26,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 java_library(
     name = "api",
     srcs = glob(["*.java", "*/*.java", "*/*/*.java"], exclude=["test/**"]),
+    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client-api:{pom_version}"],
     deps = [
         # Internal dependencies
         "//common:common",
