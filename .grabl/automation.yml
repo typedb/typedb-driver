@@ -171,7 +171,8 @@ build:
         branch: test-deployment-maven
       command: |
         bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
-        nohup ./dist/typedb-all-linux/typedb server &
+        ./dist/typedb-all-linux/typedb server &
+        disown
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
