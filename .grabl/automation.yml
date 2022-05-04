@@ -171,8 +171,14 @@ build:
         owner: vaticle
         branch: master
       command: |
-        bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
-        ./dist/typedb-all-linux/typedb server &
+        export REPO_DIR="/home/grabl/$GRABL_REPO/"
+        export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
+        bazel run //test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
+        export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
+        bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_SVC_PATH}typedb server"
+        sudo systemctl daemon-reload
+        sudo systemctl start typedb
+
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
