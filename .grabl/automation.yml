@@ -172,7 +172,7 @@ build:
         branch: master
       command: |
         bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
-        ./dist/typedb-all-linux/typedb server &
+        nohup ./dist/typedb-all-linux/typedb server &
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
