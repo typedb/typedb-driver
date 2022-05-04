@@ -166,17 +166,15 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
     test-deployment-maven:
       image: vaticle-ubuntu-21.04
-      dependencies: [deploy-maven-snapshot]
       filter:
-        owner: vaticle
-        branch: master
+        owner: lolski
+        branch: test-deployment-maven
       command: |
         bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
         ./dist/typedb-all-linux/typedb server &
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
-        cd test/deployment && mvn test
-
+        sleep 3600
 release:
   filter:
     owner: vaticle
