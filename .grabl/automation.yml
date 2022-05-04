@@ -172,7 +172,7 @@ build:
       command: |
         export TYPEDB_DIST="/home/grabl/$GRABL_REPO/dist/typedb-all-linux/"
         bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_DIST//\//\\/}typedb server"
-        bazel run //test:typedb-extractor-linux -- TYPEDB_DIST
+        bazel run //test:typedb-extractor-linux -- $TYPEDB_DIST
 
         sudo systemctl daemon-reload
         sudo systemctl start typedb
