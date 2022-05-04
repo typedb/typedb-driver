@@ -170,8 +170,9 @@ build:
         owner: lolski
         branch: test-deployment-maven
       command: |
-        bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "/home/grabl/$GRABL_REPO/dist/typedb-all-linux/typedb server"
-        bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
+        export TYPEDB_DIST="/home/grabl/$GRABL_REPO/dist/typedb-all-linux/"
+        bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_DIST//\//\\/}typedb server"
+        bazel run //test:typedb-extractor-linux -- TYPEDB_DIST
 
         sudo systemctl daemon-reload
         sudo systemctl start typedb
