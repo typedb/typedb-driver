@@ -166,10 +166,9 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
     test-deployment-maven:
       image: vaticle-ubuntu-21.04
-      dependencies: [deploy-maven-snapshot]
       filter:
-        owner: vaticle
-        branch: master
+        owner: lolski
+        branch: test-deployment-maven
       command: |
         bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
         nohup ./dist/typedb-all-linux/typedb server &
