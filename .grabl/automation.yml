@@ -149,23 +149,16 @@ build:
         .grabl/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
     deploy-maven-snapshot:
       image: vaticle-ubuntu-21.04
-      dependencies: [
-        build, build-dependency,
-        test-behaviour-connection-core, #test-behaviour-connection-cluster,
-        test-behaviour-concept-core, #test-behaviour-concept-cluster,
-        test-behaviour-match-core, #test-behaviour-match-cluster,
-        test-behaviour-writable-core, test-behaviour-writable-cluster,
-        test-behaviour-definable-core, test-behaviour-definable-cluster
-      ]
       filter:
-        owner: vaticle
-        branch: master
+        owner: lolski
+        branch: test-deployment-maven
       command: |
         export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //:deploy-maven -- snapshot
     test-deployment-maven:
       image: vaticle-ubuntu-21.04
+      dependencies: [deploy-maven-snapshot]
       filter:
         owner: lolski
         branch: test-deployment-maven
