@@ -26,7 +26,6 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 java_library(
     name = "logic",
     srcs = glob(["*.java"], exclude=["test/**"]),
-    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client-logic:{pom_version}"],
     deps = [
         # Internal dependencies
         "//api:api",
