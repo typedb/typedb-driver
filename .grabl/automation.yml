@@ -170,9 +170,12 @@ build:
         owner: lolski
         branch: test-deployment-maven
       command: |
+        bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "\/home\/grabl\/$GRABL_REPO\/dist\/typedb-all-linux\/typedb server"
         bazel run //test:typedb-extractor-linux -- dist/typedb-all-linux
-        ./dist/typedb-all-linux/typedb server &
-        disown
+
+        sudo systemctl daemon-reload
+        sudo systemctl start typedb
+
         sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
