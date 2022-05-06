@@ -487,6 +487,27 @@ public class RequestBuilder {
                 ));
             }
 
+            public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(Label label, boolean keysOnly) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().setKeysOnly(keysOnly)
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(
+                    Label label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().setKeysOnly(keysOnly)
+                                .setValueType(valueType)
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getOwnsOverriddenReq(
+                    Label label, ConceptProto.Type attributeType) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
+                        ConceptProto.ThingType.GetOwnsOverridden.Req.newBuilder().setAttributeType(attributeType)
+                ));
+            }
+
             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
                     Label label, ConceptProto.Type attributeType, boolean isKey) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(

@@ -35,6 +35,8 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
@@ -44,6 +46,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -198,6 +201,44 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             return stream(getOwnsReq(getLabel(), valueType.proto(), keysOnly))
                     .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
+        }
+
+        @Override
+        public Stream<? extends AttributeType> getOwnsExplicit() {
+            return getOwnsExplicit(false);
+        }
+
+        @Override
+        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType) {
+            return getOwnsExplicit(valueType, false);
+        }
+
+        @Override
+        public Stream<? extends AttributeType> getOwnsExplicit(boolean keysOnly) {
+            return stream(getOwnsExplicitReq(getLabel(), keysOnly))
+                    .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
+                    .map(AttributeTypeImpl::of);
+        }
+
+        @Override
+        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, boolean keysOnly) {
+            return stream(getOwnsExplicitReq(getLabel(), valueType.proto(), keysOnly))
+                    .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
+                    .map(AttributeTypeImpl::of);
+        }
+
+        @Override
+        public AttributeTypeImpl getOwnsOverridden(AttributeType attributeType) {
+            ConceptProto.ThingType.GetOwnsOverridden.Res res = execute(
+                    getOwnsOverriddenReq(getLabel(), protoThingType(attributeType))
+            ).getThingTypeGetOwnsOverriddenRes();
+            switch (res.getResCase()) {
+                case TYPE:
+                    return AttributeTypeImpl.of(res.getType());
+                default:
+                case RES_NOT_SET:
+                    return null;
+            }
         }
 
         @Override

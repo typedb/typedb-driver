@@ -24,9 +24,8 @@ package com.vaticle.typedb.client.api.concept.type;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
-
-import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
+import javax.annotation.CheckReturnValue;
 
 public interface ThingType extends Type {
 
@@ -93,6 +92,21 @@ public interface ThingType extends Type {
 
         @CheckReturnValue
         Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
+
+        @CheckReturnValue
+        Stream<? extends AttributeType> getOwnsExplicit();
+
+        @CheckReturnValue
+        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType);
+
+        @CheckReturnValue
+        Stream<? extends AttributeType> getOwnsExplicit(boolean keysOnly);
+
+        @CheckReturnValue
+        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, boolean keysOnly);
+
+        @CheckReturnValue
+        AttributeType getOwnsOverridden(AttributeType attributeType);
 
         void unsetPlays(RoleType roleType);
 
