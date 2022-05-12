@@ -181,6 +181,12 @@ public interface AttributeType extends ThingType {
         @CheckReturnValue
         Stream<? extends ThingType> getOwners(boolean onlyKey);
 
+        @CheckReturnValue
+        Stream<? extends ThingType> getOwnersExplicit();
+
+        @CheckReturnValue
+        Stream<? extends ThingType> getOwnersExplicit(boolean onlyKey);
+
         @Override
         @CheckReturnValue
         AttributeType.Remote asAttributeType();

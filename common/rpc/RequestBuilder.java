@@ -605,6 +605,12 @@ public class RequestBuilder {
                 ));
             }
 
+            public static TransactionProto.Transaction.Req.Builder getOwnersExplicitReq(Label label, boolean onlyKey) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
+                        ConceptProto.AttributeType.GetOwnersExplicit.Req.newBuilder().setOnlyKey(onlyKey)
+                ));
+            }
+
             public static TransactionProto.Transaction.Req.Builder putReq(Label label, ConceptProto.Attribute.Value value) {
                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
                         ConceptProto.AttributeType.Put.Req.newBuilder().setValue(value)

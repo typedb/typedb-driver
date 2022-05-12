@@ -40,6 +40,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribut
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoDoubleAttributeValue;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoLongAttributeValue;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoStringAttributeValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getRegexReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getReq;
@@ -185,6 +186,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         public Stream<ThingTypeImpl> getOwners(boolean onlyKey) {
             return stream(getOwnersReq(getLabel(), onlyKey))
                     .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getOwnersList().stream())
+                    .map(ThingTypeImpl::of);
+        }
+
+        @Override
+        public Stream<ThingTypeImpl> getOwnersExplicit() {
+            return getOwnersExplicit(false);
+        }
+
+        @Override
+        public Stream<ThingTypeImpl> getOwnersExplicit(boolean onlyKey) {
+            return stream(getOwnersExplicitReq(getLabel(), onlyKey))
+                    .flatMap(rp -> rp.getAttributeTypeGetOwnersExplicitResPart().getOwnersList().stream())
                     .map(ThingTypeImpl::of);
         }
 
