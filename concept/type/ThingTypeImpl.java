@@ -31,7 +31,9 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
+
 import java.util.stream.Stream;
+
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
@@ -39,6 +41,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
@@ -47,7 +50,6 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -185,6 +187,20 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
             return stream(getPlaysExplicitReq(getLabel()))
                     .flatMap(rp -> rp.getThingTypeGetPlaysExplicitResPart().getRolesList().stream())
                     .map(RoleTypeImpl::of);
+        }
+
+        @Override
+        public RoleTypeImpl getPlaysOverridden(RoleType roleType) {
+            ConceptProto.ThingType.GetPlaysOverridden.Res res = execute(
+                    getPlaysOverriddenReq(getLabel(), protoRoleType(roleType))
+            ).getThingTypeGetPlaysOverriddenRes();
+            switch (res.getResCase()) {
+                case ROLE_TYPE:
+                    return RoleTypeImpl.of(res.getRoleType());
+                default:
+                case RES_NOT_SET:
+                    return null;
+            }
         }
 
         @Override
