@@ -38,6 +38,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
@@ -176,6 +177,13 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         public final Stream<RoleTypeImpl> getPlays() {
             return stream(getPlaysReq(getLabel()))
                     .flatMap(rp -> rp.getThingTypeGetPlaysResPart().getRolesList().stream())
+                    .map(RoleTypeImpl::of);
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getPlaysExplicit() {
+            return stream(getPlaysExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getThingTypeGetPlaysExplicitResPart().getRolesList().stream())
                     .map(RoleTypeImpl::of);
         }
 

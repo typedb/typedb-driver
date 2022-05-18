@@ -453,6 +453,12 @@ public class RequestBuilder {
                 ));
             }
 
+            public static TransactionProto.Transaction.Req.Builder getPlaysExplicitReq(Label label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetPlaysExplicitReq(
+                        ConceptProto.ThingType.GetPlaysExplicit.Req.getDefaultInstance()
+                ));
+            }
+
             public static TransactionProto.Transaction.Req.Builder setPlaysReq(Label label, ConceptProto.Type roleType) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
                         ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)

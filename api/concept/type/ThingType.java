@@ -82,6 +82,9 @@ public interface ThingType extends Type {
         Stream<? extends RoleType> getPlays();
 
         @CheckReturnValue
+        Stream<? extends RoleType> getPlaysExplicit();
+
+        @CheckReturnValue
         Stream<? extends AttributeType> getOwns();
 
         @CheckReturnValue
