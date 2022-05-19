@@ -86,7 +86,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         @Override
         public final Stream<RoleTypeImpl> getRelates() {
             return stream(getRelatesReq(getLabel()))
-                    .flatMap(rp -> rp.getRelationTypeGetRelatesResPart().getRolesList().stream())
+                    .flatMap(rp -> rp.getRelationTypeGetRelatesResPart().getRoleTypesList().stream())
                     .map(RoleTypeImpl::of);
         }
 

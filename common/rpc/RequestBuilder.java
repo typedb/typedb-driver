@@ -468,21 +468,21 @@ public class RequestBuilder {
 
             public static TransactionProto.Transaction.Req.Builder setPlaysReq(Label label, ConceptProto.Type roleType) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                        ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
+                        ConceptProto.ThingType.SetPlays.Req.newBuilder().setRoleType(roleType)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder setPlaysReq(
                     Label label, ConceptProto.Type roleType, ConceptProto.Type overriddenRoleType) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                        ConceptProto.ThingType.SetPlays.Req.newBuilder().setRole(roleType)
-                                .setOverriddenRole(overriddenRoleType)
+                        ConceptProto.ThingType.SetPlays.Req.newBuilder().setRoleType(roleType)
+                                .setOverriddenType(overriddenRoleType)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder unsetPlaysReq(Label label, ConceptProto.Type roleType) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-                        ConceptProto.ThingType.UnsetPlays.Req.newBuilder().setRole(roleType)
+                        ConceptProto.ThingType.UnsetPlays.Req.newBuilder().setRoleType(roleType)
                 ));
             }
 

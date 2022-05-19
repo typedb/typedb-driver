@@ -178,14 +178,14 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public final Stream<RoleTypeImpl> getPlays() {
             return stream(getPlaysReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetPlaysResPart().getRolesList().stream())
+                    .flatMap(rp -> rp.getThingTypeGetPlaysResPart().getRoleTypesList().stream())
                     .map(RoleTypeImpl::of);
         }
 
         @Override
         public final Stream<RoleTypeImpl> getPlaysExplicit() {
             return stream(getPlaysExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetPlaysExplicitResPart().getRolesList().stream())
+                    .flatMap(rp -> rp.getThingTypeGetPlaysExplicitResPart().getRoleTypesList().stream())
                     .map(RoleTypeImpl::of);
         }
 
@@ -257,8 +257,8 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
                     getOwnsOverriddenReq(getLabel(), protoThingType(attributeType))
             ).getThingTypeGetOwnsOverriddenRes();
             switch (res.getResCase()) {
-                case TYPE:
-                    return AttributeTypeImpl.of(res.getType());
+                case ATTRIBUTE_TYPE:
+                    return AttributeTypeImpl.of(res.getAttributeType());
                 default:
                 case RES_NOT_SET:
                     return null;

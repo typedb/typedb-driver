@@ -185,7 +185,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         @Override
         public Stream<ThingTypeImpl> getOwners(boolean onlyKey) {
             return stream(getOwnersReq(getLabel(), onlyKey))
-                    .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getOwnersList().stream())
+                    .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }
 
@@ -197,7 +197,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         @Override
         public Stream<ThingTypeImpl> getOwnersExplicit(boolean onlyKey) {
             return stream(getOwnersExplicitReq(getLabel(), onlyKey))
-                    .flatMap(rp -> rp.getAttributeTypeGetOwnersExplicitResPart().getOwnersList().stream())
+                    .flatMap(rp -> rp.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }
 
