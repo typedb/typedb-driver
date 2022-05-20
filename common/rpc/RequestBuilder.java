@@ -583,9 +583,21 @@ public class RequestBuilder {
                 ));
             }
 
+            public static TransactionProto.Transaction.Req.Builder getRelatesExplicitReq(Label label) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesExplicitReq(
+                        ConceptProto.RelationType.GetRelatesExplicit.Req.getDefaultInstance()
+                ));
+            }
+
             public static TransactionProto.Transaction.Req.Builder getRelatesReq(Label label, String roleLabel) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
                         ConceptProto.RelationType.GetRelatesForRoleLabel.Req.newBuilder().setLabel(roleLabel)
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getRelatesOverriddenReq(Label label, String roleLabel) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesOverriddenReq(
+                        ConceptProto.RelationType.GetRelatesOverridden.Req.newBuilder().setLabel(roleLabel)
                 ));
             }
 

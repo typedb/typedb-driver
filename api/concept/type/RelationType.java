@@ -54,9 +54,16 @@ public interface RelationType extends ThingType {
         @CheckReturnValue
         Stream<? extends RoleType> getRelates();
 
+        @CheckReturnValue
+        Stream<? extends RoleType> getRelatesExplicit();
+
         @Nullable
         @CheckReturnValue
         RoleType getRelates(String roleLabel);
+
+        @Nullable
+        @CheckReturnValue
+        RoleType getRelatesOverridden(String roleLabel);
 
         void setRelates(String roleLabel);
 

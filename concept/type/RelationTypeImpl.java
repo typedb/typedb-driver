@@ -29,6 +29,8 @@ import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import java.util.stream.Stream;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.setRelatesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.unsetRelatesReq;
@@ -76,6 +78,20 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
+        public final Stream<RoleTypeImpl> getRelates() {
+            return stream(getRelatesReq(getLabel()))
+                    .flatMap(rp -> rp.getRelationTypeGetRelatesResPart().getRoleTypesList().stream())
+                    .map(RoleTypeImpl::of);
+        }
+
+        @Override
+        public final Stream<RoleTypeImpl> getRelatesExplicit() {
+            return stream(getRelatesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getRelationTypeGetRelatesExplicitResPart().getRoleTypesList().stream())
+                    .map(RoleTypeImpl::of);
+        }
+
+        @Override
         public final RoleTypeImpl getRelates(String roleLabel) {
             ConceptProto.RelationType.GetRelatesForRoleLabel.Res res =
                     execute(getRelatesReq(getLabel(), roleLabel)).getRelationTypeGetRelatesForRoleLabelRes();
@@ -84,10 +100,11 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public final Stream<RoleTypeImpl> getRelates() {
-            return stream(getRelatesReq(getLabel()))
-                    .flatMap(rp -> rp.getRelationTypeGetRelatesResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
+        public final RoleTypeImpl getRelatesOverridden(String roleLabel) {
+            ConceptProto.RelationType.GetRelatesOverridden.Res res =
+                    execute(getRelatesOverriddenReq(getLabel(), roleLabel)).getRelationTypeGetRelatesOverriddenRes();
+            if (res.hasRoleType()) return RoleTypeImpl.of(res.getRoleType());
+            else return null;
         }
 
         @Override
