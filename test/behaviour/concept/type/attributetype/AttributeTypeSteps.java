@@ -123,14 +123,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get key owners contain:")
-    public void attribute_type_get_owners_as_key_contains(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_key_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get key owners do not contain:")
-    public void attribute_type_get_owners_as_key_do_not_contains(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_key_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.asRemote(tx()).getOwners(true).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
@@ -138,17 +138,49 @@ public class AttributeTypeSteps {
         }
     }
 
+    @Then("attribute\\( ?{type_label} ?) get key owners explicit contain:")
+    public void attribute_type_get_owners_explicit_as_key_contain(String typeLabel, List<String> ownerLabels) {
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(ownerLabels));
+    }
+
+    @Then("attribute\\( ?{type_label} ?) get key owners explicit do not contain:")
+    public void attribute_type_get_owners_explicit_as_key_do_not_contain(String typeLabel, List<String> ownerLabels) {
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
+        for (String ownerLabel : ownerLabels) {
+            assertFalse(actuals.contains(ownerLabel));
+        }
+    }
+
     @Then("attribute\\( ?{type_label} ?) get attribute owners contain:")
-    public void attribute_type_get_owners_as_attribute_contains(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get attribute owners do not contain:")
-    public void attribute_type_get_owners_as_attribute_do_not_contains(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.asRemote(tx()).getOwners(false).map(t -> t.getLabel().name()).collect(toSet());
+        for (String ownerLabel : ownerLabels) {
+            assertFalse(actuals.contains(ownerLabel));
+        }
+    }
+
+    @Then("attribute\\( ?{type_label} ?) get attribute owners explicit contain:")
+    public void attribute_type_get_owners_explicit_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(false).map(t -> t.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(ownerLabels));
+    }
+
+    @Then("attribute\\( ?{type_label} ?) get attribute owners explicit do not contain:")
+    public void attribute_type_get_owners_explicit_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(false).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
