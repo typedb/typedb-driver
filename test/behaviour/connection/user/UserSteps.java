@@ -26,7 +26,7 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.common.test.server.TypeDBSingleton;
+import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
