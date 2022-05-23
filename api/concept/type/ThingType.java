@@ -117,5 +117,8 @@ public interface ThingType extends Type {
         void unsetPlays(RoleType roleType);
 
         void unsetOwns(AttributeType attributeType);
+
+        @CheckReturnValue
+        String getSyntax();
     }
 }

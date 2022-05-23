@@ -43,6 +43,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysOverriddenReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getSyntaxReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setPlaysReq;
@@ -288,6 +289,11 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public final boolean isDeleted() {
             return transactionExt.concepts().getThingType(getLabel().name()) == null;
+        }
+
+        @Override
+        public final String getSyntax() {
+            return execute(getSyntaxReq(getLabel())).getThingTypeGetSyntaxRes().getSyntax();
         }
     }
 }
