@@ -90,9 +90,14 @@ public class RelationTypeSteps {
         tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).asRemote(tx()).setLabel(newLabel);
     }
 
-    @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
+    @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")
     public void relation_type_get_role_type_get_label(String relationLabel, String roleLabel, String getLabel) {
         assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelates(roleLabel).getLabel().name());
+    }
+
+    @Then("relation\\( ?{type_label} ?) get overridden role\\( ?{type_label} ?) get label: {type_label}")
+    public void relation_type_get_overridden_role_type_get_label(String relationLabel, String roleLabel, String getLabel) {
+        assertEquals(getLabel, tx().concepts().getRelationType(relationLabel).asRemote(tx()).getRelatesOverridden(roleLabel).getLabel().name());
     }
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")
@@ -129,7 +134,9 @@ public class RelationTypeSteps {
     @Then("relation\\( ?{type_label} ?) get related explicit roles do not contain:")
     public void relation_type_get_related_explicit_roles_do_not_contain(String relationLabel, List<Label> roleLabels) {
         Set<Label> actuals = relation_type_get_related_explicit_roles_actuals(relationLabel);
-        for (Label label : roleLabels) assertFalse(actuals.contains(label));
+        for (Label label : roleLabels) {
+            assertFalse(actuals.contains(label));
+        }
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertype: {scoped_label}")
