@@ -22,11 +22,14 @@
 package com.vaticle.typedb.client.logic;
 
 import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 import com.vaticle.typedb.protocol.LogicProto;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,10 +40,10 @@ public class ExplanationImpl implements Explanation {
 
     private final Rule rule;
     private final Map<String, Set<String>> variableMapping;
-    private final ConceptMap conclusion;
+    private final ConclusionAnswer conclusion;
     private final ConceptMap condition;
 
-    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConceptMap conclusion, ConceptMap condition) {
+    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConclusionAnswer conclusion, ConceptMap condition) {
         this.rule = rule;
         this.variableMapping = variableMapping;
         this.conclusion = conclusion;
@@ -51,7 +54,7 @@ public class ExplanationImpl implements Explanation {
         return new ExplanationImpl(
                 RuleImpl.of(explanation.getRule()),
                 of(explanation.getVarMappingMap()),
-                ConceptMapImpl.of(explanation.getConclusion()),
+                ConclusionAnswerImpl.of(explanation.getConclusion()),
                 ConceptMapImpl.of(explanation.getCondition())
         );
     }
@@ -73,7 +76,7 @@ public class ExplanationImpl implements Explanation {
     }
 
     @Override
-    public ConceptMap conclusion() {
+    public ConclusionAnswer conclusion() {
         return conclusion;
     }
 
@@ -94,5 +97,25 @@ public class ExplanationImpl implements Explanation {
     @Override
     public int hashCode() {
         return Objects.hash(rule, variableMapping, conclusion, condition);
+    }
+
+    public static class ConclusionAnswerImpl implements ConclusionAnswer {
+
+        private final Map<String, Concept> concepts;
+
+        private ConclusionAnswerImpl(Map<String, Concept> concepts) {
+            this.concepts = concepts;
+        }
+
+        static ConclusionAnswer of(LogicProto.Explanation.ConclusionAnswer res) {
+            Map<String, Concept> variableMap = new HashMap<>();
+            res.getMapMap().forEach((resVar, resConcept) -> variableMap.put(resVar, ConceptImpl.of(resConcept)));
+            return new ConclusionAnswerImpl(Collections.unmodifiableMap(variableMap));
+        }
+
+        @Override
+        public Map<String, Concept> concepts() {
+            return concepts;
+        }
     }
 }
