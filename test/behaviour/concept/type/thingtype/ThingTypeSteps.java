@@ -250,14 +250,28 @@ public class ThingTypeSteps {
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types contain:")
-    public void thing_type_get_has_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+    public void thing_type_get_owns_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns key types do not contain:")
-    public void thing_type_get_has_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+    public void thing_type_get_owns_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
+        for (String attributeLabel : attributeLabels) {
+            assertFalse(actuals.contains(attributeLabel));
+        }
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit key types contain:")
+    public void thing_type_get_owns_explicit_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(attributeLabels));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit key types do not contain:")
+    public void thing_type_get_owns_explicit_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
         for (String attributeLabel : attributeLabels) {
             assertFalse(actuals.contains(attributeLabel));
         }
@@ -300,16 +314,42 @@ public class ThingTypeSteps {
         assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
+    @Then("{root_label}\\( ?{type_label} ?) get owns overridden attribute\\( ?{type_label} ?) is null: {bool}")
+    public void thing_type_get_owns_overridden_attribute_is_null(RootLabel rootLabel, String typeLabel, String attributeLabel, boolean isNull) {
+        AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
+        assertEquals(isNull, isNull(get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsOverridden(attributeType)));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns overridden attribute\\( ?{type_label} ?) get label: {type_label}")
+    public void thing_type_get_owns_overridden_attribute_get_label(RootLabel rootLabel, String typeLabel, String attributeLabel, String getLabel) {
+        AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
+        assertEquals(getLabel, get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsOverridden(attributeType).getLabel().name());
+    }
+
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types contain:")
-    public void thing_type_get_has_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+    public void thing_type_get_owns_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(at -> at.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types do not contain:")
-    public void thing_type_get_has_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+    public void thing_type_get_owns_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns().map(at -> at.getLabel().name()).collect(toSet());
         for (String attributeLabel : attributeLabels) assertFalse(actuals.contains(attributeLabel));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types contain:")
+    public void thing_type_get_owns_explicit_attribute_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit().map(at -> at.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(attributeLabels));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types do not contain:")
+    public void thing_type_get_owns_explicit_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit().map(at -> at.getLabel().name()).collect(toSet());
+        for (String attributeLabel : attributeLabels) {
+            assertFalse(actuals.contains(attributeLabel));
+        }
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")
@@ -358,6 +398,20 @@ public class ThingTypeSteps {
     @Then("{root_label}\\( ?{type_label} ?) get playing roles do not contain:")
     public void thing_type_get_playing_roles_do_not_contain(RootLabel rootLabel, String typeLabel, List<Label> roleLabels) {
         Set<Label> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlays().map(Type::getLabel).collect(toSet());
+        for (Label roleLabel : roleLabels) {
+            assertFalse(actuals.contains(roleLabel));
+        }
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get playing roles explicit contain:")
+    public void thing_type_get_playing_roles_explicit_contain(RootLabel rootLabel, String typeLabel, List<Label> roleLabels) {
+        Set<Label> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlaysExplicit().map(Type::getLabel).collect(toSet());
+        assertTrue(actuals.containsAll(roleLabels));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get playing roles explicit do not contain:")
+    public void thing_type_get_playing_roles_explicit_do_not_contain(RootLabel rootLabel, String typeLabel, List<Label> roleLabels) {
+        Set<Label> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getPlaysExplicit().map(Type::getLabel).collect(toSet());
         for (Label roleLabel : roleLabels) {
             assertFalse(actuals.contains(roleLabel));
         }
