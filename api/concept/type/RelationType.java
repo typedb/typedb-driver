@@ -63,11 +63,19 @@ public interface RelationType extends ThingType {
 
         @Nullable
         @CheckReturnValue
+        RoleType getRelatesOverridden(RoleType roleType);
+
+        @Nullable
+        @CheckReturnValue
         RoleType getRelatesOverridden(String roleLabel);
 
         void setRelates(String roleLabel);
 
+        void setRelates(String roleLabel, RoleType overridden);
+
         void setRelates(String roleLabel, String overriddenLabel);
+
+        void unsetRelates(RoleType roleType);
 
         void unsetRelates(String roleLabel);
 

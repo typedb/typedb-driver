@@ -23,10 +23,13 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
+
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesExplicitReq;
@@ -99,6 +102,12 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
             else return null;
         }
 
+        @Nullable
+        @Override
+        public RoleType getRelatesOverridden(RoleType roleType) {
+            return getRelatesOverridden(roleType.getLabel().name());
+        }
+
         @Override
         public final RoleTypeImpl getRelatesOverridden(String roleLabel) {
             ConceptProto.RelationType.GetRelatesOverridden.Res res =
@@ -113,8 +122,18 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
+        public void setRelates(String roleLabel, RoleType overridden) {
+            setRelates(roleLabel, overridden.getLabel().name());
+        }
+
+        @Override
         public final void setRelates(String roleLabel, String overriddenLabel) {
             execute(setRelatesReq(getLabel(), roleLabel, overriddenLabel));
+        }
+
+        @Override
+        public void unsetRelates(RoleType roleType) {
+            unsetRelates(roleType.getLabel().name());
         }
 
         @Override
