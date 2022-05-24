@@ -76,6 +76,10 @@ export namespace RelationType {
 
         getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType>;
 
+        getRelatesExplicit(): Stream<RoleType>;
+
+        getRelatesOverridden(roleLabel: string): Promise<RoleType>;
+
         setRelates(roleLabel: string, overriddenLabel?: string): Promise<void>;
 
         unsetRelates(roleLabel: string): Promise<void>;

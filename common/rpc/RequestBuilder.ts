@@ -408,22 +408,34 @@ export namespace RequestBuilder {
                 ));
             }
 
+            export function getPlaysExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetPlaysExplicitReq(
+                    new ThingTypeProto.GetPlaysExplicit.Req()
+                ));
+            }
+
+            export function getPlaysOverriddenReq(label: Label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetPlaysOverriddenReq(
+                    new ThingTypeProto.GetPlaysOverridden.Req()
+                ));
+            }
+
             export function setPlaysReq(label: Label, roleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRole(roleType)
+                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
                 ));
             }
 
             export function setPlaysOverriddenReq(label: Label, roleType: TypeProto, overriddenRoleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeSetPlaysReq(
-                    new ThingTypeProto.SetPlays.Req().setRole(roleType)
-                        .setOverriddenRole(overriddenRoleType)
+                    new ThingTypeProto.SetPlays.Req().setRoleType(roleType)
+                        .setOverriddenType(overriddenRoleType)
                 ));
             }
 
             export function unsetPlaysReq(label: Label, roleType: TypeProto) {
                 return typeReq(newReqBuilder(label).setThingTypeUnsetPlaysReq(
-                    new ThingTypeProto.UnsetPlays.Req().setRole(roleType)
+                    new ThingTypeProto.UnsetPlays.Req().setRoleType(roleType)
                 ));
             }
 
@@ -436,6 +448,19 @@ export namespace RequestBuilder {
             export function getOwnsByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, keysOnly: boolean) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
                     new ThingTypeProto.GetOwns.Req().setKeysOnly(keysOnly)
+                        .setValueType(valueType)
+                ));
+            }
+
+            export function getOwnsExplicitReq(label: Label, keysOnly: boolean) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
+                ));
+            }
+
+            export function getOwnsExplicitByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, keysOnly: boolean) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
+                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
                         .setValueType(valueType)
                 ));
             }
@@ -468,6 +493,12 @@ export namespace RequestBuilder {
                     new ThingTypeProto.GetInstances.Req()
                 ));
             }
+
+            export function getOwnsOverriddenReq(label: Label, attributeType: TypeProto) {
+                return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
+                    new ThingTypeProto.GetOwnsOverridden.Req().setAttributeType(attributeType)
+                ));
+            }
         }
 
         export namespace EntityType {
@@ -493,9 +524,21 @@ export namespace RequestBuilder {
                 ));
             }
 
+            export function getRelatesExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesExplicitReq(
+                    new RelationTypeProto.GetRelatesExplicit.Req()
+                ));
+            }
+
             export function getRelatesByRoleReq(label: Label, roleLabel: string) {
                 return typeReq(newReqBuilder(label).setRelationTypeGetRelatesForRoleLabelReq(
                     new RelationTypeProto.GetRelatesForRoleLabel.Req().setLabel(roleLabel)
+                ));
+            }
+
+            export function getRelatesOverridden(label: Label, roleLabel: string) {
+                return typeReq(newReqBuilder(label).setRelationTypeGetRelatesOverriddenReq(
+                    new RelationTypeProto.GetRelatesOverridden.Req().setLabel(roleLabel)
                 ));
             }
 
@@ -524,6 +567,11 @@ export namespace RequestBuilder {
             export function getOwnersReq(label: Label, onlyKey: boolean) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
                     new AttributeTypeProto.GetOwners.Req().setOnlyKey(onlyKey)));
+            }
+
+            export function getOwnersExplicitReq(label: Label, onlyKey: boolean) {
+                return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
+                    new AttributeTypeProto.GetOwnersExplicit.Req().setOnlyKey(onlyKey)));
             }
 
             export function putReq(label: Label, value: AttributeProto.Value) {

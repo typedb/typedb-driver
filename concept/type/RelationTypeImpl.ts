@@ -108,12 +108,29 @@ export namespace RelationTypeImpl {
                 const request = RequestBuilder.Type.RelationType.getRelatesReq(this.label);
                 return this.stream(request)
                     .flatMap((resPart) => {
-                        return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRolesList())
+                        return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRoleTypesList())
                     })
                     .map((roleProto) => {
                         return RoleTypeImpl.of(roleProto)
                     });
             }
+        }
+
+        getRelatesExplicit(): Stream<RoleType> {
+            const request = RequestBuilder.Type.RelationType.getRelatesExplicitReq(this.label);
+            return this.stream(request)
+                .flatMap((resPart) => {
+                    return Stream.array(resPart.getRelationTypeGetRelatesExplicitResPart().getRoleTypesList())
+                })
+                .map((roleProto) => {
+                    return RoleTypeImpl.of(roleProto)
+                });
+        }
+
+        async getRelatesOverridden(roleLabel: string): Promise<RoleType> {
+            const request = RequestBuilder.Type.RelationType.getRelatesOverridden(this.label, roleLabel);
+            return this.execute(request)
+                .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesOverriddenRes().getRoleType()));
         }
 
         async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {

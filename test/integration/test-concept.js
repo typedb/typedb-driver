@@ -207,6 +207,8 @@ async function run() {
         age = await tx.concepts.putAttributeType("age", AttributeType.ValueType.LONG);
         await person.asRemote(tx).setAbstract();
         await person.asRemote(tx).setOwns(email, true);
+        man = await tx.concepts.getEntityType("man");
+        await man.asRemote(tx).setSupertype(await tx.concepts.getRootEntityType());
         await person.asRemote(tx).setOwns(age, false);
         await lion.asRemote(tx).setOwns(age);
         customer = await tx.concepts.putEntityType("customer");

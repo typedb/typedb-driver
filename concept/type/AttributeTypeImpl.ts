@@ -233,7 +233,14 @@ export namespace AttributeTypeImpl {
         getOwners(onlyKey?: boolean): Stream<ThingType> {
             const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.label, !!onlyKey);
             return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getOwnersList()))
+                .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getThingTypesList()))
+                .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
+        }
+
+        getOwnersExplicit(onlyKey?: boolean): Stream<ThingType> {
+            const request = RequestBuilder.Type.AttributeType.getOwnersExplicitReq(this.label, !!onlyKey);
+            return this.stream(request)
+                .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 

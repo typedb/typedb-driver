@@ -74,6 +74,10 @@ export namespace AttributeType {
 
         getOwners(onlyKey: boolean): Stream<ThingType>;
 
+        getOwnersExplicit(): Stream<ThingType>;
+
+        getOwnersExplicit(onlyKey: boolean): Stream<ThingType>;
+
         asType(): Type.Remote;
 
         asThingType(): ThingType.Remote;
