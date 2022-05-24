@@ -55,6 +55,7 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 export namespace RelationTypeImpl {
 
     export function of(relationTypeProto: TypeProto) {
+        if (!relationTypeProto) return null;
         return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
     }
 

@@ -74,6 +74,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
 export namespace TypeImpl {
     export function of(typeProto: TypeProto) {
+        if (!typeProto) return null;
         switch (typeProto.getEncoding()) {
             case TypeProto.Encoding.ROLE_TYPE:
                 return RoleTypeImpl.of(typeProto);

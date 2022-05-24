@@ -223,6 +223,18 @@ Then("{root_label}\\({type_label}) get owns key types do not contain:", async (r
     attributeLabels.every(al => assert(!actuals.includes(al)));
 });
 
+Then("{root_label}\\({type_label}) get owns explicit key types contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
+    const attributeLabels = parseList(attributeLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(true).map(tt => tt.label.scopedName).collect();
+    attributeLabels.every(al => assert(actuals.includes(al)));
+});
+
+Then("{root_label}\\({type_label}) get owns explicit key types do not contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
+    const attributeLabels = parseList(attributeLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit(true).map(tt => tt.label.scopedName).collect();
+    attributeLabels.every(al => assert(!actuals.includes(al)));
+});
+
 When("{root_label}\\({type_label}) set owns attribute type: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string) => {
     const attributeType = await tx().concepts.getAttributeType(attributeLabel);
     await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setOwns(attributeType);
@@ -267,6 +279,28 @@ Then("{root_label}\\({type_label}) get owns attribute types do not contain:", as
     attributeLabels.every(al => assert(!actuals.includes(al)));
 });
 
+Then("{root_label}\\({type_label}) get owns overridden attribute\\({type_label}) is null: {bool}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string, isNull: boolean) => {
+    const attributeType = await tx().concepts.getAttributeType(attributeLabel);
+    assert.strictEqual(null === await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsOverridden(attributeType), isNull);
+});
+
+Then("{root_label}\\({type_label}) get owns overridden attribute\\({type_label}) get label: {type_label}", async (rootLabel: RootLabel, typeLabel: string, attributeLabel: string, getLabel: string) => {
+    const attributeType = await tx().concepts.getAttributeType(attributeLabel);
+    assert.strictEqual((await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsOverridden(attributeType)).label.name, getLabel);
+});
+
+Then("{root_label}\\({type_label}) get owns explicit attribute types contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
+    const attributeLabels = parseList(attributeLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit().map(tt => tt.label.scopedName).collect();
+    attributeLabels.every(al => assert(actuals.includes(al)));
+});
+
+Then("{root_label}\\({type_label}) get owns explicit attribute types do not contain:", async (rootLabel: RootLabel, typeLabel: string, attributeLabelsTable: DataTable) => {
+    const attributeLabels = parseList(attributeLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getOwnsExplicit().map(tt => tt.label.scopedName).collect();
+    attributeLabels.every(al => assert(!actuals.includes(al)));
+});
+
 When("{root_label}\\({type_label}) set plays role: {scoped_label}", async (rootLabel: RootLabel, typeLabel: string, roleLabel: ScopedLabel) => {
     const roleType = await (await tx().concepts.getRelationType(roleLabel.scope)).asRemote(tx()).getRelates(roleLabel.role);
     await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).setPlays(roleType);
@@ -308,5 +342,17 @@ Then("{root_label}\\({type_label}) get playing roles contain:", async (rootLabel
 Then("{root_label}\\({type_label}) get playing roles do not contain:", async (rootLabel: RootLabel, typeLabel: string, roleLabelsTable: DataTable) => {
     const roleLabels = parseList(roleLabelsTable);
     const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlays().map(r => r.label.scopedName).collect();
+    roleLabels.every(rl => assert(!actuals.includes(rl)));
+});
+
+Then("{root_label}\\({type_label}) get playing roles explicit contain:", async (rootLabel: RootLabel, typeLabel: string, roleLabelsTable: DataTable) => {
+    const roleLabels = parseList(roleLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlaysExplicit().map(r => r.label.scopedName).collect();
+    roleLabels.every(rl => assert(actuals.includes(rl)));
+});
+
+Then("{root_label}\\({type_label}) get playing roles explicit do not contain:", async (rootLabel: RootLabel, typeLabel: string, roleLabelsTable: DataTable) => {
+    const roleLabels = parseList(roleLabelsTable);
+    const actuals = await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).getPlaysExplicit().map(r => r.label.scopedName).collect();
     roleLabels.every(rl => assert(!actuals.includes(rl)));
 });

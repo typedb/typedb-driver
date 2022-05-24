@@ -119,6 +119,7 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 export namespace AttributeTypeImpl {
 
     export function of(attributeTypeProto: TypeProto): AttributeType {
+        if (!attributeTypeProto) return null;
         switch (attributeTypeProto.getValueType()) {
             case AttributeTypeProto.ValueType.BOOLEAN:
                 return new AttributeTypeImpl.Boolean(attributeTypeProto.getLabel(), attributeTypeProto.getRoot());
