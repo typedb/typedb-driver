@@ -71,7 +71,7 @@ public interface RelationType extends ThingType {
 
         void setRelates(String roleLabel);
 
-        void setRelates(String roleLabel, RoleType overridden);
+        void setRelates(String roleLabel, RoleType overriddenType);
 
         void setRelates(String roleLabel, String overriddenLabel);
 

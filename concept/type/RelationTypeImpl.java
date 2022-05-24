@@ -122,8 +122,8 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         }
 
         @Override
-        public void setRelates(String roleLabel, RoleType overridden) {
-            setRelates(roleLabel, overridden.getLabel().name());
+        public void setRelates(String roleLabel, RoleType overriddenType) {
+            setRelates(roleLabel, overriddenType.getLabel().name());
         }
 
         @Override
