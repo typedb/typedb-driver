@@ -31,16 +31,10 @@ public interface Explanation {
 
     Rule rule();
 
-    ConclusionAnswer conclusion();
+    Map<String, Concept> conclusion();
 
     ConceptMap condition();
 
     Map<String, Set<String>> variableMapping();
-
-    interface ConclusionAnswer {
-
-        Map<String, Concept> concepts();
-
-    }
 
 }

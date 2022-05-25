@@ -27,9 +27,9 @@ import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
+import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.LogicProto;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,10 +40,10 @@ public class ExplanationImpl implements Explanation {
 
     private final Rule rule;
     private final Map<String, Set<String>> variableMapping;
-    private final ConclusionAnswer conclusion;
+    private final Map<String, Concept> conclusion;
     private final ConceptMap condition;
 
-    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConclusionAnswer conclusion, ConceptMap condition) {
+    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, Map<String, Concept> conclusion, ConceptMap condition) {
         this.rule = rule;
         this.variableMapping = variableMapping;
         this.conclusion = conclusion;
@@ -53,16 +53,22 @@ public class ExplanationImpl implements Explanation {
     public static Explanation of(LogicProto.Explanation explanation) {
         return new ExplanationImpl(
                 RuleImpl.of(explanation.getRule()),
-                of(explanation.getVarMappingMap()),
-                ConclusionAnswerImpl.of(explanation.getConclusion()),
+                variableMappingOf(explanation.getVarMappingMap()),
+                conclusionOf(explanation.getConclusionMap()),
                 ConceptMapImpl.of(explanation.getCondition())
         );
     }
 
-    private static Map<String, Set<String>> of(Map<String, LogicProto.Explanation.VarList> varMapping) {
+    private static Map<String, Set<String>> variableMappingOf(Map<String, LogicProto.Explanation.VarList> varMapping) {
         Map<String, Set<String>> mapping = new HashMap<>();
         varMapping.forEach((from, tos) -> mapping.put(from, new HashSet<>(tos.getVarsList())));
         return mapping;
+    }
+
+    private static Map<String, Concept> conclusionOf(Map<String, ConceptProto.Concept> conclusionMap) {
+        Map<String, Concept> conclusion = new HashMap<>();
+        conclusionMap.forEach((var, concept) -> conclusion.put(var, ConceptImpl.of(concept)));
+        return conclusion;
     }
 
     @Override
@@ -76,7 +82,7 @@ public class ExplanationImpl implements Explanation {
     }
 
     @Override
-    public ConclusionAnswer conclusion() {
+    public Map<String, Concept> conclusion() {
         return conclusion;
     }
 
@@ -97,25 +103,5 @@ public class ExplanationImpl implements Explanation {
     @Override
     public int hashCode() {
         return Objects.hash(rule, variableMapping, conclusion, condition);
-    }
-
-    public static class ConclusionAnswerImpl implements ConclusionAnswer {
-
-        private final Map<String, Concept> concepts;
-
-        private ConclusionAnswerImpl(Map<String, Concept> concepts) {
-            this.concepts = concepts;
-        }
-
-        static ConclusionAnswer of(LogicProto.Explanation.ConclusionAnswer res) {
-            Map<String, Concept> variableMap = new HashMap<>();
-            res.getMapMap().forEach((resVar, resConcept) -> variableMap.put(resVar, ConceptImpl.of(resConcept)));
-            return new ConclusionAnswerImpl(Collections.unmodifiableMap(variableMap));
-        }
-
-        @Override
-        public Map<String, Concept> concepts() {
-            return concepts;
-        }
     }
 }
