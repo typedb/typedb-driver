@@ -30,7 +30,7 @@ import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.logic.Explanation;
-import com.vaticle.typedb.common.test.server.TypeDBCoreRunner;
+import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.TypeQLArg;
 import com.vaticle.typeql.lang.query.TypeQLDefine;

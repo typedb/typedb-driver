@@ -25,27 +25,23 @@ import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.common.test.server.TypeDBClusterRunner;
-import com.vaticle.typedb.common.test.server.TypeDBSingleton;
+import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
+import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeoutException;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
     void beforeAll() {
-        TypeDBClusterRunner server;
-        try {
-            server = TypeDBClusterRunner.create();
-        } catch (InterruptedException | TimeoutException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        server.start();
-        TypeDBSingleton.setTypeDBRunner(server);
+        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
+        cluster.start();
+        TypeDBSingleton.setTypeDBRunner(cluster);
     }
 
     @Before
