@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Vaticle
+ * Copyright (C) 2021 Vaticle
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,8 +30,6 @@ import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 import com.vaticle.typedb.client.stream.RequestTransmitter;
 import com.vaticle.typedb.common.collection.ConcurrentSet;
 import com.vaticle.typedb.protocol.SessionProto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -50,7 +48,6 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     private static final int PULSE_INTERVAL_MILLIS = 5_000;
 
-    private static final Logger LOG = LoggerFactory.getLogger(TypeDBSessionImpl.class);
     private final TypeDBClientImpl client;
     private final TypeDBDatabaseImpl database;
     private final ByteString sessionID;
@@ -61,7 +58,6 @@ public class TypeDBSessionImpl implements TypeDBSession {
     private final ReadWriteLock accessLock;
     private final AtomicBoolean isOpen;
     private final int networkLatencyMillis;
-    private Runnable onClose;
 
     public TypeDBSessionImpl(TypeDBClientImpl client, String database, Type type, TypeDBOptions options) {
         this.client = client;
@@ -73,7 +69,9 @@ public class TypeDBSessionImpl implements TypeDBSession {
         );
         Instant endTime = Instant.now();
         this.database = new TypeDBDatabaseImpl(client.databases(), database);
-        networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
+        networkLatencyMillis = Math.max(
+                (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis()), 1
+        );
         sessionID = res.getSessionId();
         transactions = new ConcurrentSet<>();
         accessLock = new StampedLock().asReadWriteLock();
@@ -137,25 +135,21 @@ public class TypeDBSessionImpl implements TypeDBSession {
     }
 
     @Override
-    public void onClose(Runnable function) {
-        onClose = function;
-    }
-
-    @Override
     public void close() {
-        if (isOpen.compareAndSet(true, false)) {
-            try {
-                accessLock.writeLock().lock();
-                if (onClose != null) onClose.run();
+        try {
+            accessLock.writeLock().lock();
+            if (isOpen.compareAndSet(true, false)) {
                 transactions.forEach(TypeDBTransaction.Extended::close);
                 client.removeSession(this);
                 pulse.cancel();
-                stub().sessionClose(closeReq(sessionID));
-            } catch (TypeDBClientException e) {
-                // Most likely the session is already closed or the server is no longer running.
-            } finally {
-                accessLock.writeLock().unlock();
+                try {
+                    stub().sessionClose(closeReq(sessionID));
+                } catch (TypeDBClientException e) {
+                    // Most likely the session is already closed or the server is no longer running.
+                }
             }
+        } finally {
+            accessLock.writeLock().unlock();
         }
     }
 
@@ -164,13 +158,15 @@ public class TypeDBSessionImpl implements TypeDBSession {
         @Override
         public void run() {
             if (!isOpen()) return;
-            boolean alive = false;
+            boolean alive;
             try {
                 alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (TypeDBClientException e) {
-                LOG.debug("Unable to send session pulse", e);
-            } finally {
-                if (!alive) close();
+            } catch (TypeDBClientException exception) {
+                alive = false;
+            }
+            if (!alive) {
+                isOpen.set(false);
+                pulse.cancel();
             }
         }
     }
