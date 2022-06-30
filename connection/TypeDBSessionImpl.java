@@ -73,9 +73,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
         );
         Instant endTime = Instant.now();
         this.database = new TypeDBDatabaseImpl(client.databases(), database);
-        networkLatencyMillis = Math.max(
-                (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis()), 1
-        );
+        networkLatencyMillis = (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis());
         sessionID = res.getSessionId();
         transactions = new ConcurrentSet<>();
         accessLock = new StampedLock().asReadWriteLock();
