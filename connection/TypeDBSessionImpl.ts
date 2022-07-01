@@ -59,9 +59,9 @@ export class TypeDBSessionImpl implements TypeDBSession {
         this._database = await this._client.databases.get(this._databaseName);
         const start = (new Date()).getMilliseconds();
         const res = await this._client.stub().sessionOpen(openReq);
-        const end = (new Date()).getMilliseconds(); // TODO will this work?
+        const end = (new Date()).getMilliseconds();
         this._id = res.getSessionId_asB64();
-        this._networkLatencyMillis = (end - start) - res.getServerDurationMillis();
+        this._networkLatencyMillis = Math.max((end - start) - res.getServerDurationMillis(), 1);
         this._isOpen = true;
         this._pulse = setTimeout(() => this.pulse(), 5000);
     }
