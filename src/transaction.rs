@@ -21,6 +21,8 @@
 
 use std::fmt::{Debug, Formatter};
 use std::sync::Arc;
+use std::thread::sleep;
+use std::time::Duration;
 use futures::lock::Mutex;
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Type};
 
@@ -48,7 +50,7 @@ impl From<Type> for Transaction_Type {
 #[derive(Clone)]
 pub struct Transaction {
     pub transaction_type: Type,
-    bidi_stream: Arc<Mutex<rpc::transaction::BidiStream>>,
+    rpc: Arc<Mutex<rpc::transaction::TransactionRpc>>,
     pub query: QueryManager,
 }
 
@@ -56,30 +58,43 @@ impl Transaction {
     // TODO: check if these borrows hamper ability to open transactions in parallel
     pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
-        let bidi_stream: Arc<Mutex<rpc::transaction::BidiStream>> = Arc::new(Mutex::new(rpc::transaction::BidiStream::new(rpc_client).await?));
-        Arc::clone(&bidi_stream).lock().await.single_rpc(open_req).await?;
+        let rpc: Arc<Mutex<rpc::transaction::TransactionRpc>> = Arc::new(Mutex::new(rpc::transaction::TransactionRpc::new(rpc_client).await?));
+        Arc::clone(&rpc).lock().await.single(open_req).await;
+        sleep(Duration::from_millis(5)); // TODO: remove once single().await actually waits
         Ok(Transaction {
             transaction_type,
-            bidi_stream: Arc::clone(&bidi_stream),
-            query: QueryManager::new(Arc::clone(&bidi_stream))
+            rpc: Arc::clone(&rpc),
+            query: QueryManager::new(Arc::clone(&rpc))
         })
     }
 
-    pub async fn commit(&mut self) -> Result<Transaction_Res> {
+    pub async fn commit(&mut self) {
         self.single_rpc(commit_req()).await
     }
 
-    pub async fn rollback(&mut self) -> Result<Transaction_Res> {
+    pub async fn rollback(&mut self) {
         self.single_rpc(rollback_req()).await
     }
 
-    pub(crate) async fn single_rpc(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
-        self.bidi_stream.lock().await.single_rpc(req).await
+    pub async fn single_rpc(&mut self, req: Transaction_Req) {
+        self.rpc.lock().await.single(req).await
     }
 
-    pub(crate) async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
-        self.bidi_stream.lock().await.streaming_rpc(req).await
-    }
+    // pub async fn commit(&mut self) -> Result<Transaction_Res> {
+    //     self.single_rpc(commit_req()).await
+    // }
+    //
+    // pub async fn rollback(&mut self) -> Result<Transaction_Res> {
+    //     self.single_rpc(rollback_req()).await
+    // }
+    //
+    // pub(crate) async fn single_rpc(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
+    //     self.rpc.lock().await.single_rpc(req).await
+    // }
+
+    // pub(crate) async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
+    //     self.rpc.lock().await.streaming_rpc(req).await
+    // }
 }
 
 impl Debug for Transaction {

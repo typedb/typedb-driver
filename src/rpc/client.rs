@@ -22,7 +22,9 @@
 extern crate grpc;
 
 use std::fmt::{Debug, Formatter};
+use std::sync::Arc;
 use grpc::{ClientRequestSink, ClientStubExt, RequestOptions, SingleResponse, StreamingResponse};
+use threadpool::ThreadPool;
 use typedb_protocol::core_database::{CoreDatabase_Delete_Req, CoreDatabase_Delete_Res, CoreDatabase_Schema_Req, CoreDatabase_Schema_Res, CoreDatabaseManager_All_Req, CoreDatabaseManager_All_Res, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Contains_Res, CoreDatabaseManager_Create_Req, CoreDatabaseManager_Create_Res};
 use typedb_protocol::core_service_grpc;
 use typedb_protocol::session::{Session_Close_Req, Session_Close_Res, Session_Open_Req, Session_Open_Res};
@@ -32,7 +34,8 @@ use crate::common::error::Error;
 use crate::common::Result;
 
 pub(crate) struct RpcClient {
-    typedb: core_service_grpc::TypeDBClient
+    typedb: core_service_grpc::TypeDBClient,
+    pub(super) executor: Arc<ThreadPool>,
 }
 
 impl RpcClient {
@@ -41,7 +44,10 @@ impl RpcClient {
             Ok(client) => {
                 // TODO: temporary hack to validate connection until we have client pulse
                 match RpcClient::check_connection(&client).await {
-                    Ok(_) => Ok(RpcClient { typedb: client }),
+                    Ok(_) => Ok(RpcClient {
+                        typedb: client,
+                        executor: Arc::new(ThreadPool::default())
+                    }),
                     Err(err) => Err(Error::from_grpc(err)),
                 }
             }

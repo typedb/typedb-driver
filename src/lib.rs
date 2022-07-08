@@ -22,12 +22,6 @@
 // #![feature(trait_upcasting)]
 // #![allow(incomplete_features)]
 
-extern crate futures;
-extern crate grpc;
-extern crate protobuf;
-extern crate typedb_protocol;
-extern crate uuid;
-
 pub mod common;
 pub mod concept;
 pub mod concept2;
