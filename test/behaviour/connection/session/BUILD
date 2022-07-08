@@ -83,5 +83,5 @@ typedb_behaviour_java_test(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
 )

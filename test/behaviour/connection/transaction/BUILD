@@ -38,7 +38,7 @@ java_library(
 
         # Internal Repository Dependencies
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql_lang_java//:typeql-lang",
+        "@vaticle_typeql//java:typeql-lang",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
@@ -88,5 +88,5 @@ typedb_behaviour_java_test(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
 )

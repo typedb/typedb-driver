@@ -33,7 +33,7 @@ java_library(
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql_lang_java//common",
+        "@vaticle_typeql//java/common",
         "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
@@ -44,6 +44,6 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "*/*"]),
-    license_type = "apache",
+    license_type = "apache-header",
     size = "small",
 )

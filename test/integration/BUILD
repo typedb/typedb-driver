@@ -35,9 +35,9 @@ typedb_java_test(
         "//api:api",
 
         # External dependencies from @vaticle
-        "@vaticle_typeql_lang_java//:typeql-lang",
-        "@vaticle_typeql_lang_java//common",
-        "@vaticle_typeql_lang_java//query",
+        "@vaticle_typeql//java:typeql-lang",
+        "@vaticle_typeql//java/common",
+        "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
         "@maven//:org_hamcrest_hamcrest_library",
@@ -48,5 +48,5 @@ typedb_java_test(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
 )

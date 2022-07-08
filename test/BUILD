@@ -48,7 +48,7 @@ checkstyle_test(
         "deployment/pom.xml",
         "deployment/src/test/**/*",
     ]),
-    license_type = "apache",
+    license_type = "apache-header",
 )
 
 artifact_extractor(

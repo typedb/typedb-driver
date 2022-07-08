@@ -32,7 +32,7 @@ java_library(
     runtime_deps = [
         "//test/behaviour/connection/database:steps",
         "//test/behaviour/connection/transaction:steps",
-        "@vaticle_typeql_lang_java//pattern",
+        "@vaticle_typeql//java/pattern",
     ],
     deps = [
         # Package dependencies
@@ -42,9 +42,9 @@ java_library(
         "//test/behaviour/util:util",
 
         # Vaticle dependencies
-        "@vaticle_typeql_lang_java//:typeql-lang",
-        "@vaticle_typeql_lang_java//common:common",
-        "@vaticle_typeql_lang_java//query:query",
+        "@vaticle_typeql//java:typeql-lang",
+        "@vaticle_typeql//java/common:common",
+        "@vaticle_typeql//java/query:query",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
@@ -56,5 +56,5 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
 )
