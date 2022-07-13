@@ -19,9 +19,9 @@
  * under the License.
  */
 
-use futures::executor;
 use std::sync::Arc;
 use std::time::Instant;
+use futures::executor;
 use typedb_protocol::options::Options;
 use typedb_protocol::session::Session_Type;
 
@@ -79,7 +79,6 @@ impl Session {
 }
 
 impl Drop for Session {
-    #[allow(unused_must_use)] /* we can safely ignore the result of the session_close request */
     fn drop(&mut self) {
         executor::block_on(self.rpc_client.session_close(close_req(self.session_id.clone())));
     }

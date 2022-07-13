@@ -44,9 +44,10 @@ mod queries {
         }
         let session = client.session(GRAKN, Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
         let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-        let concept_maps = tx.query.match_query("match $x sub thing;").await;
+        tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err));
+        // let concept_maps = tx.query.match_query("match $x sub thing;").await;
         // let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
-        println!("{:#?}", concept_maps);
+        // println!("{:#?}", concept_maps);
     }
 
     // #[tokio::test]

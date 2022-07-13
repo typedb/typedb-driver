@@ -19,22 +19,22 @@
  * under the License.
  */
 
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::{mem, sync};
-use std::sync::{Arc, Condvar, Mutex};
+use std::sync::{Arc, mpsc, Mutex};
 use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU8, Ordering};
 use std::thread::sleep;
 use std::time::Duration;
-// TODO: Maybe we should standardise and use 'tokio' everywhere instead of 'futures'?
-use futures::{executor, StreamExt};
+use futures::StreamExt;
+use futures::task::Spawn;
 use grpc::{ClientRequestSink, GrpcStream, StreamingResponse};
-use threadpool::ThreadPool;
+use tokio::sync::oneshot;
 use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Server, Transaction_Server_oneof_server};
 use typedb_protocol::transaction::Transaction_Stream_State::{CONTINUE, DONE};
 use uuid::Uuid;
 
 use crate::common::error::{Error, ERRORS};
-use crate::common::Result;
+use crate::common::{Executor, Result};
 use crate::rpc::builder::transaction::{client_msg, stream_req};
 use crate::rpc::client::RpcClient;
 
@@ -51,14 +51,17 @@ impl TransactionRpc {
         Ok(
             TransactionRpc {
                 sender: Sender::new(req_sink, Arc::clone(&rpc_client.executor)),
-                receiver: Receiver::new(streaming_res.drop_metadata()).await,
+                receiver: Receiver::new(streaming_res.drop_metadata(), &rpc_client.executor).await,
             }
         )
     }
 
-    pub(crate) async fn single(&mut self, mut req: Transaction_Req) {
+    pub(crate) async fn single(&mut self, mut req: Transaction_Req) -> Result<Transaction_Res> {
         req.req_id = Uuid::new_v4().as_bytes().to_vec();
-        self.sender.add_to_batch(req);
+        let (res_sink, res_receiver) = oneshot::channel::<Transaction_Res>();
+        self.receiver.single(req.req_id.clone(), res_sink);
+        self.sender.push_message(req);
+        res_receiver.await.map_err(|err| Error::new(err.to_string()))
     }
 
     // TODO: move receiver code from these commented methods to Receiver
@@ -110,7 +113,7 @@ impl TransactionRpc {
 
 struct Sender {
     state: Arc<SenderState>,
-    executor: Arc<ThreadPool>
+    executor: Arc<Executor>
 }
 
 struct SenderState {
@@ -120,8 +123,10 @@ struct SenderState {
     dispatcher_count: AtomicU8,
 }
 
+type ReqId = Vec<u8>;
+
 impl Sender {
-    pub(super) fn new(req_sink: ClientRequestSink<Transaction_Client>, executor: Arc<ThreadPool>) -> Sender {
+    pub(super) fn new(req_sink: ClientRequestSink<Transaction_Client>, executor: Arc<Executor>) -> Sender {
         Sender {
             state: Arc::new(
                 SenderState {
@@ -135,18 +140,22 @@ impl Sender {
         }
     }
 
-    fn add_to_batch(&mut self, req: Transaction_Req) {
+    fn push_message(&mut self, req: Transaction_Req) {
         let state = Arc::clone(&self.state);
-        state.queued_messages.lock().unwrap().push(req);
+        state.queued_messages.lock().unwrap().push(req.clone());
+        println!("Pushed request message: {:?}", req);
         match state.dispatch_is_scheduled.compare_exchange(
             false, true, Ordering::Acquire, Ordering::Relaxed
         ) {
-            Ok(true) => { self.executor.execute(|| Self::schedule_dispatch(state)); }
+            Ok(false) => {
+                println!("Spawning dispatch scheduler...");
+                self.executor.spawn_ok(async { Self::schedule_dispatch(state); })
+            }
             _ => {}
         }
     }
 
-    fn send_current_batch(state: Arc<SenderState>) {
+    fn dispatch_messages(state: Arc<SenderState>) {
         state.dispatcher_count.fetch_add(1, Ordering::Relaxed);
         state.dispatch_is_scheduled.store(false, Ordering::Relaxed);
         let msgs = mem::take(&mut *state.queued_messages.lock().unwrap());
@@ -155,14 +164,15 @@ impl Sender {
     }
 
     fn schedule_dispatch(state: Arc<SenderState>) {
+        println!("Scheduling dispatch...");
         sleep(Duration::from_millis(3));
-        Self::send_current_batch(state);
+        Self::dispatch_messages(state);
     }
 }
 
 impl Drop for Sender {
     fn drop(&mut self) {
-        Self::send_current_batch(Arc::clone(&self.state));
+        Self::dispatch_messages(Arc::clone(&self.state));
         // TODO: refactor to non-busy wait
         // TODO: this loop should have a timeout
         loop {
@@ -175,20 +185,42 @@ impl Drop for Sender {
 }
 
 struct Receiver {
-    res_stream: Arc<Mutex<GrpcStream<Transaction_Server>>>, // TODO: less heavy-handed structure than Arc?
+    res_collectors: Arc<Mutex<HashMap<ReqId, oneshot::Sender<Transaction_Res>>>>
 }
 
 impl Receiver {
-    async fn new(res_stream: GrpcStream<Transaction_Server>) -> Receiver {
-        Receiver { res_stream: Arc::new(Mutex::new(res_stream)) }
+    async fn new(res_stream: GrpcStream<Transaction_Server>, executor: &Executor) -> Receiver {
+        let res_collectors = Arc::new(Mutex::new(HashMap::new()));
+        let receiver = Receiver {
+            res_collectors: Arc::clone(&res_collectors)
+        };
+        executor.spawn_ok(async move { Self::listen(res_stream, Arc::clone(&res_collectors)).await; });
+        receiver
     }
 
-    async fn listen(&self) {
-        while let res = self.res_stream.lock().unwrap().next().await {
-            match res {
-                Some(Ok(message)) => {
-                    println!("{:?}", message);
-                }
+    fn single(&mut self, req_id: ReqId, res_sink: oneshot::Sender<Transaction_Res>) {
+        self.res_collectors.lock().unwrap().insert(req_id.clone(), res_sink);
+        println!("Created single receiver for req_id {:?}", req_id);
+    }
+
+    fn collect_res(res: Transaction_Res, res_collectors: Arc<Mutex<HashMap<ReqId, oneshot::Sender<Transaction_Res>>>>) {
+        match res_collectors.lock().unwrap().remove(res.get_req_id()) {
+            Some(collector) => {
+                println!("Sending {:?} to the SINGLE collector for req ID {:?}", res.clone(), res.get_req_id());
+                collector.send(res).unwrap()
+            }
+            None => {
+                println!("{}", ERRORS.client.unknown_request_id.to_err(
+                    vec![std::str::from_utf8(res.get_req_id()).unwrap()])
+                )
+            }
+        }
+    }
+
+    async fn listen(mut grpc_stream: GrpcStream<Transaction_Server>, res_collectors: Arc<Mutex<HashMap<ReqId, oneshot::Sender<Transaction_Res>>>>) {
+        while let result = grpc_stream.next().await {
+            match result {
+                Some(Ok(message)) => { Self::on_receive(message, Arc::clone(&res_collectors)) }
                 Some(Err(err)) => {
                     println!("{:?}", err);
                     // TODO: shutdown TransactionRpc
@@ -202,4 +234,22 @@ impl Receiver {
             }
         }
     }
+
+    fn on_receive(message: Transaction_Server, res_collectors: Arc<Mutex<HashMap<ReqId, oneshot::Sender<Transaction_Res>>>>) {
+        match message.server {
+            Some(server) => {
+                match server {
+                    Transaction_Server_oneof_server::res(res) => { Self::collect_res(res, res_collectors) }
+                    Transaction_Server_oneof_server::res_part(res_part) => {
+                        println!("{:?}", res_part)
+                    }
+                }
+            }
+            None => { println!("{}", ERRORS.client.missing_response_field.to_err(vec!["server"]).to_string()) }
+        }
+    }
+
+    // fn on_error(&self, err: grpc::Error) -> Result {
+    //
+    // }
 }

@@ -20,10 +20,9 @@
  */
 
 use std::fmt::{Debug, Formatter};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::Duration;
-use futures::lock::Mutex;
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Type};
 
 use crate::common::Result;
@@ -59,8 +58,7 @@ impl Transaction {
     pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
         let rpc: Arc<Mutex<rpc::transaction::TransactionRpc>> = Arc::new(Mutex::new(rpc::transaction::TransactionRpc::new(rpc_client).await?));
-        Arc::clone(&rpc).lock().await.single(open_req).await;
-        sleep(Duration::from_millis(5)); // TODO: remove once single().await actually waits
+        Arc::clone(&rpc).lock().unwrap().single(open_req).await;
         Ok(Transaction {
             transaction_type,
             rpc: Arc::clone(&rpc),
@@ -68,16 +66,16 @@ impl Transaction {
         })
     }
 
-    pub async fn commit(&mut self) {
-        self.single_rpc(commit_req()).await
+    pub async fn commit(&mut self) -> Result {
+        self.single_rpc(commit_req()).await.map(|_| ())
     }
 
-    pub async fn rollback(&mut self) {
-        self.single_rpc(rollback_req()).await
+    pub async fn rollback(&mut self) -> Result {
+        self.single_rpc(rollback_req()).await.map(|_| ())
     }
 
-    pub async fn single_rpc(&mut self, req: Transaction_Req) {
-        self.rpc.lock().await.single(req).await
+    pub(crate) async fn single_rpc(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
+        self.rpc.lock().unwrap().single(req).await
     }
 
     // pub async fn commit(&mut self) -> Result<Transaction_Res> {

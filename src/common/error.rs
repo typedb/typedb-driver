@@ -104,6 +104,7 @@ pub struct ClientMessages<'a> {
     pub transaction_closed_with_errors: Message<'a>,
     pub unable_to_connect: Message<'a>,
     pub missing_response_field: Message<'a>,
+    pub unknown_request_id: Message<'a>,
     pub cluster_replica_not_primary: Message<'a>,
     pub cluster_token_credential_invalid: Message<'a>,
 }
@@ -125,6 +126,7 @@ impl Messages<'_> {
                 transaction_closed_with_errors: Message::new(TEMPLATES.client, 4, "The transaction has been closed with error(s): \n{}"),
                 unable_to_connect: Message::new(TEMPLATES.client, 5, "Unable to connect to TypeDB server."),
                 missing_response_field: Message::new(TEMPLATES.client, 9, "Missing field in message received from server: '{}'."),
+                unknown_request_id: Message::new(TEMPLATES.client, 10, "Received a response with unknown request id '{}': \n{}"),
                 cluster_replica_not_primary: Message::new(TEMPLATES.client, 13, "The replica is not the primary replica."),
                 cluster_token_credential_invalid: Message::new(TEMPLATES.client, 16, "Invalid token credential."),
             },

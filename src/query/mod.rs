@@ -19,11 +19,10 @@
  * under the License.
  */
 
-use std::sync::Arc;
-use futures::lock::Mutex;
+use std::sync::{Arc, Mutex};
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_ResPart};
 use typedb_protocol::query::QueryManager_ResPart_oneof_res::match_res_part;
-use typedb_protocol::transaction::Transaction_Req;
+use typedb_protocol::transaction::{Transaction_Req, Transaction_Res};
 use typedb_protocol::transaction::Transaction_ResPart_oneof_res::query_manager_res_part;
 
 use crate::common::error::ERRORS;
@@ -42,8 +41,8 @@ impl QueryManager {
         QueryManager { tx }
     }
 
-    pub async fn match_query(&mut self, query: &str) {
-        self.tx.lock().await.single(match_req(query)).await
+    pub async fn match_query(&mut self, query: &str) -> Result<Transaction_Res> {
+        self.tx.lock().unwrap().single(match_req(query)).await
     }
 
     // pub async fn match_query(&mut self, query: &str) -> Result<Vec<Concept>> {
