@@ -20,6 +20,7 @@
  */
 
 use std::sync::{Arc, Mutex};
+use futures::StreamExt;
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_ResPart};
 use typedb_protocol::query::QueryManager_ResPart_oneof_res::match_res_part;
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res};
@@ -41,39 +42,47 @@ impl QueryManager {
         QueryManager { tx }
     }
 
-    pub async fn match_query(&mut self, query: &str) -> Result<Transaction_Res> {
-        self.tx.lock().unwrap().single(match_req(query)).await
+    // pub async fn match_query(&mut self, query: &str) -> Result<Transaction_Res> {
+    //     self.tx.lock().unwrap().single(match_req(query)).await
+    // }
+
+    pub async fn match_query(&mut self, query: &str) -> Result<Vec<Concept>> {
+        let res_parts: Vec<QueryManager_ResPart> = self.streaming_rpc(match_req(query)).await?;
+        let mut concepts: Vec<Concept> = vec![];
+        for res_part in res_parts {
+            let res = res_part.res
+                .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.res"]))?;
+            match res {
+                match_res_part(x) => {
+                    for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
+                        concepts.push(Concept::from_proto(concept.clone())?);
+                    }
+                }
+                _ => { return Err(ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
+            }
+        };
+        Ok(concepts)
     }
 
-    // pub async fn match_query(&mut self, query: &str) -> Result<Vec<Concept>> {
-    //     let res_parts: Vec<QueryManager_ResPart> = self.streaming_rpc(match_req(query)).await?;
-    //     let mut concepts: Vec<Concept> = vec![];
-    //     for res_part in res_parts {
-    //         let res = res_part.res
-    //             .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.res"]))?;
-    //         match res {
-    //             match_res_part(x) => {
-    //                 for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
-    //                     concepts.push(Concept::from_proto(concept.clone())?);
-    //                 }
-    //             }
-    //             _ => { return Err(ERRORS.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
-    //         }
-    //     };
-    //     Ok(concepts)
-    // }
-    //
-    // async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
-    //     let tx_res_parts = self.bidi_stream.lock().await.streaming_rpc(req).await?;
-    //     let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
-    //     for tx_res_part in tx_res_parts {
-    //         let res_part = tx_res_part.res
-    //             .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["res_part.res"]))?;
-    //         match res_part {
-    //             query_manager_res_part(x) => { query_mgr_res_parts.push(x) },
-    //             _ => { return Err(ERRORS.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"])) }
-    //         }
-    //     }
-    //     Ok(query_mgr_res_parts)
-    // }
+    async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
+        let mut tx_res_parts = self.tx.lock().unwrap().stream(req);
+        let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
+        loop {
+            match tx_res_parts.next().await {
+                Some(Ok(tx_res_part)) => {
+                    let res_part = tx_res_part.res
+                        .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["res_part.res"])) ?;
+                    match res_part {
+                        query_manager_res_part(x) => { query_mgr_res_parts.push(x) },
+                        _ => { return Err(ERRORS.client.missing_response_field.to_err(vec ! ["res_part.query_manager_res_part"])) }
+                    }
+                }
+                Some(Err(err)) => {
+                    return Err(err);
+                }
+                None => { break; }
+            }
+        }
+        Ok(query_mgr_res_parts)
+    }
 }

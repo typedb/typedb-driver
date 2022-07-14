@@ -44,27 +44,13 @@ mod queries {
         }
         let session = client.session(GRAKN, Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
         let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
+        let concept_maps = tx.query.match_query("match $x sub thing; { $x type thing; } or { $x type entity; }").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
+        println!("{:#?}", concept_maps);
+        let concept_maps = tx.query.match_query("match $x sub thing; { $x type thing; } or { $x type entity; };").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
+        println!("{:#?}", concept_maps);
         tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err));
-        // let concept_maps = tx.query.match_query("match $x sub thing;").await;
-        // let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
-        // println!("{:#?}", concept_maps);
     }
 
-    // #[tokio::test]
-    // #[ignore]
-    // async fn basic() {
-    //     let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
-    //     match client.databases.contains(GRAKN).await {
-    //         Ok(true) => (),
-    //         Ok(false) => { client.databases.create(GRAKN).await.unwrap_or_else(|err| panic!("An error occurred creating database '{}': {}", GRAKN, err)); }
-    //         Err(err) => { panic!("An error occurred checking if the database '{}' exists: {}", GRAKN, err) }
-    //     }
-    //     let session = client.session(GRAKN, Schema).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
-    //     let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-    //     let concept_maps = tx.query.match_query("match $x sub thing;").await.unwrap_or_else(|err| panic!("An error occurred running a Match query: {}", err));
-    //     println!("{:#?}", concept_maps);
-    // }
-    //
     // #[tokio::test]
     // #[ignore]
     // async fn concurrent_db_ops() {
@@ -101,6 +87,7 @@ mod queries {
     // }
     //
     // #[tokio::test]
+    // #[ignore]
     // async fn concurrent_queries() {
     //     let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
     //     let (sender, receiver) = mpsc::channel();
@@ -110,7 +97,7 @@ mod queries {
     //     let mut tx2 = tx.clone();
     //     let handle = tokio::spawn(async move {
     //         for _ in 0..5 {
-    //             match tx.query.match_query("match $x sub entity;").await {
+    //             match tx.query.match_query("match $x sub thing; { $x type thing; } or { $x type entity; };").await {
     //                 Ok(res) => { sender.send(Ok(format!("got answers {:?} from thread 1", res))); }
     //                 Err(err) => { sender.send(Err(err)); return; }
     //             }
@@ -118,7 +105,7 @@ mod queries {
     //     });
     //     let handle2 = tokio::spawn(async move {
     //         for _ in 0..5 {
-    //             match tx2.query.match_query("match $x sub entity;").await {
+    //             match tx2.query.match_query("match $x sub thing; { $x type thing; } or { $x type entity; };").await {
     //                 Ok(res) => { sender2.send(Ok(format!("got answers {:?} from thread 2", res))); }
     //                 Err(err) => { sender2.send(Err(err)); return; }
     //             }

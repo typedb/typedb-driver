@@ -58,7 +58,7 @@ impl Transaction {
     pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
         let rpc: Arc<Mutex<rpc::transaction::TransactionRpc>> = Arc::new(Mutex::new(rpc::transaction::TransactionRpc::new(rpc_client).await?));
-        Arc::clone(&rpc).lock().unwrap().single(open_req).await;
+        Arc::clone(&rpc).lock().unwrap().single(open_req).await.unwrap();
         Ok(Transaction {
             transaction_type,
             rpc: Arc::clone(&rpc),
