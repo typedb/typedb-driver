@@ -161,7 +161,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
-    public void closed(TypeDBTransaction.Extended typeDBTransaction) {
+    void closed(TypeDBTransaction.Extended typeDBTransaction) {
         transactions.remove(typeDBTransaction);
     }
 
