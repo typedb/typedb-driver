@@ -66,6 +66,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     public async close(): Promise<void> {
         await this._bidirectionalStream.close();
+        this._session.closed(this);
     }
 
     public async commit(): Promise<void> {
