@@ -161,6 +161,10 @@ public class TypeDBSessionImpl implements TypeDBSession {
         }
     }
 
+    public void closed(TypeDBTransaction.Extended typeDBTransaction) {
+        transactions.remove(typeDBTransaction);
+    }
+
     private class PulseTask extends TimerTask {
 
         @Override
