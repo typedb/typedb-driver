@@ -50,6 +50,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.ro
 
 public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
+    private final TypeDBSessionImpl session;
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
     private final ConceptManager conceptMgr;
@@ -58,6 +59,7 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     private final BidirectionalStream bidirectionalStream;
     TypeDBTransactionImpl(TypeDBSessionImpl session, ByteString sessionId, Type type, TypeDBOptions options) {
+        this.session = session;
         this.type = type;
         this.options = options;
         conceptMgr = new ConceptManagerImpl(this);
@@ -151,5 +153,6 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     @Override
     public void close() {
         bidirectionalStream.close();
+        session.closed(this);
     }
 }
