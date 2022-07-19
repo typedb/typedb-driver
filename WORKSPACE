@@ -110,15 +110,12 @@ pip_deps()
 ################################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql_lang_java", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
 vaticle_typedb_common()
-vaticle_typeql_lang_java()
+vaticle_typeql()
 vaticle_typedb_behaviour()
 vaticle_factory_tracing()
 vaticle_typedb_protocol()
-
-load("@vaticle_typeql_lang_java//dependencies/vaticle:repositories.bzl", "vaticle_typeql")
-vaticle_typeql()
 
 # Load artifacts
 load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
@@ -127,7 +124,7 @@ vaticle_typedb_cluster_artifact()
 
 # Load maven
 load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_artifacts = "artifacts")
-load("@vaticle_typeql_lang_java//dependencies/maven:artifacts.bzl", vaticle_typeql_lang_java_artifacts = "artifacts")
+load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_artifacts = "artifacts")
 load("@vaticle_factory_tracing//dependencies/maven:artifacts.bzl", vaticle_factory_tracing_artifacts = "artifacts")
 load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_artifacts = "artifacts", vaticle_typedb_client_java_overrides = "overrides")
 
@@ -139,7 +136,7 @@ load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
     vaticle_factory_tracing_artifacts +
     vaticle_typedb_common_artifacts +
-    vaticle_typeql_lang_java_artifacts +
+    vaticle_typeql_artifacts +
     vaticle_dependencies_tool_maven_artifacts +
     vaticle_typedb_client_java_artifacts +
     vaticle_bazel_distribution_maven_artifacts,

@@ -64,8 +64,21 @@ checkstyle_test(
         "*",
         ".grabl/*",
     ]),
-    exclude = glob(["docs/*"]),
-    license_type = "apache",
+    exclude = glob([
+        "*.md",
+        ".bazelversion",
+        "LICENSE",
+        "VERSION",
+        "docs/*",
+    ]),
+    license_type = "apache-header",
+)
+
+checkstyle_test(
+    name = "checkstyle-license",
+    size = "small",
+    include = ["LICENSE"],
+    license_type = "apache-fulltext",
 )
 
 assemble_maven(

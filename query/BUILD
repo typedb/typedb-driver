@@ -34,7 +34,7 @@ java_library(
         "//logic:logic",
 
         # External dependencies from @vaticle
-        "@vaticle_typeql_lang_java//query",
+        "@vaticle_typeql//java/query",
         "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
@@ -44,6 +44,6 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
     size = "small",
 )
