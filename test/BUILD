@@ -38,10 +38,11 @@ checkstyle_test(
         "common/*"
     ]),
     exclude = glob([
-        "tsconfig.json",
+        "**/*.md",
         "deployment/package.json",
+        "tsconfig.json",
     ]),
-    license_type = "apache",
+    license_type = "apache-header",
 )
 
 native_typedb_artifact(

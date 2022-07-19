@@ -27,7 +27,7 @@ exports_files(["SessionSteps.ts"])
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    license_type = "apache-header",
 )
 
 typedb_behaviour_node_test(

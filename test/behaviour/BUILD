@@ -52,5 +52,6 @@ genrule(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    license_type = "apache",
+    exclude = ["README.md"],
+    license_type = "apache-header",
 )

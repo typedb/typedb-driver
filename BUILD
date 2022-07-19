@@ -193,24 +193,31 @@ checkstyle_test(
     name = "checkstyle",
     include = glob([
         "*",
-        "*.ts",
+        ".grabl/*",
         "api/**/*.ts",
         "common/**/*.ts",
-        "connection/**/*.ts",
         "concept/**/*.ts",
+        "connection/**/*.ts",
         "logic/**/*.ts",
         "query/**/*.ts",
         "stream/**/*.ts",
-        "tsconfig.json",
-        ".grabl/*",
     ]),
     exclude = glob([
-        "dist/**/*.*",
         "*.json",
-        "yarn.lock",
+        "*.md",
+        ".bazelversion",
         ".eslintrc",
+        "LICENSE",
+        "VERSION",
+        "dist/**/*.*",
+        "yarn.lock",
     ]),
-    license_type = "apache",
+    license_type = "apache-header",
+)
+checkstyle_test(
+    name = "checkstyle-license",
+    include = ["LICENSE"],
+    license_type = "apache-fulltext",
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally
