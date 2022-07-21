@@ -32,7 +32,7 @@ use crate::concept::Concept;
 use crate::rpc::builder::query_manager::match_req;
 use crate::rpc::transaction::TransactionRpc;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct QueryManager {
     tx: Arc<Mutex<TransactionRpc>>
 }

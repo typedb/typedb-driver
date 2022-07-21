@@ -78,8 +78,8 @@ impl Session {
 
     pub async fn transaction(&self, transaction_type: transaction::Type) -> Result<Transaction> {
         match self.is_open() {
-            true => Transaction::new(&self.id, transaction_type, self.network_latency, &self.rpc_client).await
-            false => MESSAGES.client.session_is_closed.to_err(vec![])
+            true => Transaction::new(&self.id, transaction_type, self.network_latency, &self.rpc_client).await,
+            false => Err(MESSAGES.client.session_is_closed.to_err(vec![]))
         }
     }
 
@@ -87,24 +87,20 @@ impl Session {
         self.is_open_atomic.load(Ordering::Relaxed)
     }
 
-    fn db_name(&self) -> Database {
-        Database::new(db_name, Arc::clone(&self.rpc_client))
-    }
-
     #[allow(unused_must_use)]
     pub fn close(&mut self) {
-        if self.is_open_atomic.compare_exchange(true, false, Ordering::Acquire, Ordering::Relaxed) {
+        if let Ok(true) = self.is_open_atomic.compare_exchange(true, false, Ordering::Acquire, Ordering::Relaxed) {
             let res = executor::block_on(
                 self.rpc_client.session_close(close_req(self.id.clone()))
             );
             // TODO: the request errors harmlessly if the session is already closed. Protocol should
             //       expose the cause of the error and we can use that to decide whether to warn here.
-            if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err()) }
+            if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err(vec![])) }
         }
     }
 
     fn compute_network_latency(start_time: Instant, server_duration_millis: i32) -> Duration {
-        Duration::from_millis((Instant::now() - start_time).as_millis() as u64 - server_duration_millis)
+        Duration::from_millis((Instant::now() - start_time).as_millis() as u64 - server_duration_millis as u64)
     }
 }
 

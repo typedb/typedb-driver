@@ -56,7 +56,7 @@ impl DatabaseManager {
     pub async fn get(&self, name: &str) -> Result<Database> {
         match self.contains(name).await? {
             true => { Ok(Database::new(name, Arc::clone(&self.rpc_client))) }
-            false => { MESSAGES.client.db_does_not_exist.to_err(vec![name]) }
+            false => { Err(MESSAGES.client.db_does_not_exist.to_err(vec![name])) }
         }
     }
 

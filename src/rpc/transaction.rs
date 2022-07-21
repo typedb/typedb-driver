@@ -19,6 +19,7 @@
  * under the License.
  */
 
+use derivative::Derivative;
 use std::collections::{HashMap, VecDeque};
 use std::{mem, sync};
 use std::future::Future;
@@ -43,6 +44,7 @@ use crate::common::{Executor, Result};
 use crate::rpc::builder::transaction::{client_msg, stream_req};
 use crate::rpc::client::RpcClient;
 
+#[derive(Debug)]
 pub(crate) struct TransactionRpc {
     sender: Sender,
     receiver: Receiver,
@@ -90,21 +92,21 @@ impl TransactionRpc {
         self.sender.state.is_open.load(Ordering::Relaxed)
     }
 
-    fn err_transaction_is_closed(&self) -> Result::Err {
-
-    }
-
     fn new_req_id() -> ReqId {
         Uuid::new_v4().as_bytes().to_vec()
     }
 }
 
+#[derive(Debug)]
 struct Sender {
     state: Arc<SenderState>,
     executor: Arc<Executor>
 }
 
+#[derive(Derivative)]
+#[derivative(Debug)]
 struct SenderState {
+    #[derivative(Debug="ignore")]
     req_sink: Mutex<ClientRequestSink<Transaction_Client>>,
     queued_messages: Mutex<Vec<Transaction_Req>>,
     dispatch_is_scheduled: AtomicBool,
@@ -208,10 +210,12 @@ impl Drop for Sender {
     }
 }
 
+#[derive(Debug)]
 struct Receiver {
     state: Arc<ReceiverState>,
 }
 
+#[derive(Debug)]
 struct ReceiverState {
     res_collectors: Mutex<HashMap<ReqId, ResCollector>>,
     res_part_collectors: Mutex<HashMap<ReqId, ResPartCollector>>
@@ -332,6 +336,7 @@ type ResPartCollector = mpsc::Sender<Result<Transaction_ResPart>>;
 type CloseSignalSink = oneshot::Sender<Option<Error>>;
 type CloseSignalReceiver = oneshot::Receiver<Option<Error>>;
 
+#[derive(Debug)]
 struct ResPartStream {
     source: mpsc::Receiver<Result<Transaction_ResPart>>,
     stream_req_sink: std::sync::mpsc::Sender<Transaction_Req>,

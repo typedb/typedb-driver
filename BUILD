@@ -35,5 +35,8 @@ rust_library(
         "@vaticle_dependencies//library/crates:protobuf",
         "@vaticle_dependencies//library/crates:tokio",
         "@vaticle_dependencies//library/crates:uuid",
-    ]
+    ],
+    proc_macro_deps = [
+        "@vaticle_dependencies//library/crates:derivative",
+    ],
 )

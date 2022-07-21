@@ -49,7 +49,8 @@ impl Type {
     }
 }
 
-#[derive(Debug)]
+// TODO: Cloning a Transaction doesn't feel quite right
+#[derive(Clone, Debug)]
 pub struct Transaction {
     pub transaction_type: Type,
     pub query: QueryManager,
