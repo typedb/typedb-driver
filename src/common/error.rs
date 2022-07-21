@@ -23,6 +23,7 @@ use grpc::{Error as GrpcError, GrpcMessageError, GrpcStatus};
 use std::error::Error as StdError;
 use std::fmt::{Debug, Display, Formatter};
 
+// TODO: try refactoring out the lifetime by storing String instead of &str
 struct MessageTemplate<'a> {
     code_prefix: &'a str,
     msg_prefix: &'a str,
@@ -37,6 +38,7 @@ impl MessageTemplate<'_> {
     }
 }
 
+// TODO: try introducing generic type parameter representing the template variable list
 pub struct Message<'a> {
     code_prefix: &'a str,
     code_number: u8,
@@ -100,13 +102,16 @@ impl MessageTemplates<'_> {
 const TEMPLATES: MessageTemplates = MessageTemplates::new();
 
 pub struct ClientMessages<'a> {
-    pub transaction_closed: Message<'a>,
-    pub transaction_closed_with_errors: Message<'a>,
+    pub session_is_closed: Message<'a>,
+    pub transaction_is_closed: Message<'a>,
+    pub transaction_is_closed_with_errors: Message<'a>,
     pub unable_to_connect: Message<'a>,
+    pub db_does_not_exist: Message<'a>,
     pub missing_response_field: Message<'a>,
     pub unknown_request_id: Message<'a>,
     pub cluster_replica_not_primary: Message<'a>,
     pub cluster_token_credential_invalid: Message<'a>,
+    pub session_close_failed: Message<'a>,
 }
 
 pub struct ConceptMessages<'a> {
@@ -122,22 +127,25 @@ impl Messages<'_> {
     const fn new() -> Messages<'static> {
         Messages {
             client: ClientMessages {
-                transaction_closed: Message::new(TEMPLATES.client, 3, "The transaction has been closed and no further operation is allowed."),
-                transaction_closed_with_errors: Message::new(TEMPLATES.client, 4, "The transaction has been closed with error(s): \n{}"),
+                session_is_closed: Message::new(TEMPLATES.client, 2, "The session is closed and no further operation is allowed."),
+                transaction_is_closed: Message::new(TEMPLATES.client, 3, "The transaction is closed and no further operation is allowed."),
+                transaction_is_closed_with_errors: Message::new(TEMPLATES.client, 4, "The transaction is closed because of the error(s):\n{}"),
                 unable_to_connect: Message::new(TEMPLATES.client, 5, "Unable to connect to TypeDB server."),
+                db_does_not_exist: Message::new(TEMPLATES.client, 8, "The database '{}' does not exist."),
                 missing_response_field: Message::new(TEMPLATES.client, 9, "Missing field in message received from server: '{}'."),
-                unknown_request_id: Message::new(TEMPLATES.client, 10, "Received a response with unknown request id '{}': \n{}"),
+                unknown_request_id: Message::new(TEMPLATES.client, 10, "Received a response with unknown request id '{}':\n{}"),
                 cluster_replica_not_primary: Message::new(TEMPLATES.client, 13, "The replica is not the primary replica."),
                 cluster_token_credential_invalid: Message::new(TEMPLATES.client, 16, "Invalid token credential."),
+                session_close_failed: Message::new(TEMPLATES.client, 17, "Failed to close session. It may still be open on the server, or it may already have been closed previously.")
             },
             concept: ConceptMessages {
                 invalid_concept_casting: Message::new(TEMPLATES.concept, 1, "Invalid concept conversion from '{}' to '{}'"),
-            }
+            },
         }
     }
 }
 
-pub const ERRORS: Messages = Messages::new();
+pub const MESSAGES: Messages = Messages::new();
 
 #[derive(Debug)]
 pub enum Error {
@@ -171,11 +179,11 @@ impl Error {
 
     pub(crate) fn from_grpc(source: GrpcError) -> Self {
         match source {
-            GrpcError::Http(_) => Error::GrpcError(String::from(ERRORS.client.unable_to_connect), source),
+            GrpcError::Http(_) => Error::GrpcError(String::from(MESSAGES.client.unable_to_connect), source),
             GrpcError::GrpcMessage(ref err) => {
                 // TODO: this is awkward because we use gRPC errors to represent some user errors too
-                if Error::is_replica_not_primary(err) { Error::new(ERRORS.client.cluster_replica_not_primary.format(vec![])) }
-                else if Error::is_token_credential_invalid(err) { Error::new(ERRORS.client.cluster_token_credential_invalid.format(vec![])) }
+                if Error::is_replica_not_primary(err) { Error::new(MESSAGES.client.cluster_replica_not_primary.format(vec![])) }
+                else if Error::is_token_credential_invalid(err) { Error::new(MESSAGES.client.cluster_token_credential_invalid.format(vec![])) }
                 else { Error::GrpcError(source.to_string().replacen("grpc message error: ", "", 1), source) }
             },
             _ => Error::GrpcError(source.to_string(), source)

@@ -19,6 +19,7 @@
  * under the License.
  */
 
+#[allow(dead_code)]
 pub(crate) mod core {
     pub(crate) mod database_manager {
         use typedb_protocol::core_database::{CoreDatabaseManager_All_Req, CoreDatabaseManager_Contains_Req, CoreDatabaseManager_Create_Req};
@@ -57,6 +58,7 @@ pub(crate) mod core {
     }
 }
 
+#[allow(dead_code)]
 pub(crate) mod cluster {
     pub(crate) mod server_manager {
         use typedb_protocol::cluster_server::ServerManager_All_Req;
@@ -125,6 +127,7 @@ pub(crate) mod cluster {
     }
 }
 
+#[allow(dead_code)]
 pub(crate) mod session {
     use typedb_protocol::options::Options;
     use typedb_protocol::session::{Session_Close_Req, Session_Open_Req, Session_Type};
@@ -144,6 +147,7 @@ pub(crate) mod session {
     }
 }
 
+#[allow(dead_code)]
 pub(crate) mod transaction {
     use protobuf::RepeatedField;
     use typedb_protocol::transaction::{Transaction_Client, Transaction_Commit_Req, Transaction_Open_Req, Transaction_Req, Transaction_Rollback_Req, Transaction_Stream_Req, Transaction_Type};
@@ -184,6 +188,7 @@ pub(crate) mod transaction {
     }
 }
 
+#[allow(dead_code)]
 pub(crate) mod query_manager {
     use typedb_protocol::query::{QueryManager_Define_Req, QueryManager_Delete_Req, QueryManager_Explain_Req, QueryManager_Insert_Req, QueryManager_Match_Req, QueryManager_MatchAggregate_Req, QueryManager_MatchGroup_Req, QueryManager_MatchGroupAggregate_Req, QueryManager_Req, QueryManager_Undefine_Req, QueryManager_Update_Req};
     use typedb_protocol::transaction::Transaction_Req;

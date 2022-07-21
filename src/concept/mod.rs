@@ -19,10 +19,13 @@
  * under the License.
  */
 
-use std::fmt::{Debug, Formatter, Pointer};
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
+use std::fmt::{Debug, Formatter};
 use std::time::Instant;
 use typedb_protocol::concept::{Concept_oneof_concept, Type_Encoding};
-use crate::common::error::ERRORS;
+use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::transaction::Transaction;
 
@@ -70,7 +73,7 @@ pub enum Concept {
 
 impl Concept {
     pub(crate) fn from_proto(proto: typedb_protocol::concept::Concept) -> Result<Concept> {
-        let concept = proto.concept.ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["concept"]))?;
+        let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
             Concept_oneof_concept::thing(_) => { todo!() }
             Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(type_concept)?))

@@ -31,6 +31,7 @@ rust_library(
 
         "@vaticle_dependencies//library/crates:futures",
         "@vaticle_dependencies//library/crates:grpc",
+        "@vaticle_dependencies//library/crates:log",
         "@vaticle_dependencies//library/crates:protobuf",
         "@vaticle_dependencies//library/crates:tokio",
         "@vaticle_dependencies//library/crates:uuid",

@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#![allow(dead_code)]
+
 use std::sync::Arc;
 use futures::lock::Mutex;
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_ResPart};
@@ -26,7 +28,7 @@ use typedb_protocol::query::QueryManager_ResPart_oneof_res::match_res_part;
 use typedb_protocol::transaction::Transaction_Req;
 use typedb_protocol::transaction::Transaction_ResPart_oneof_res::query_manager_res_part;
 
-use crate::common::error::ERRORS;
+use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::concept2::Concept;
 use crate::rpc::builder::query_manager::match_req;

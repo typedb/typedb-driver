@@ -20,10 +20,12 @@
  */
 
 use std::sync::Arc;
-use std::time::Instant;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::time::{Duration, Instant};
 use futures::executor;
+use log::warn;
 use typedb_protocol::options::Options;
-use typedb_protocol::session::Session_Type;
+use crate::common::error::MESSAGES;
 
 use crate::common::Result;
 use crate::database::Database;
@@ -32,54 +34,82 @@ use crate::rpc::client::RpcClient;
 use crate::transaction;
 use crate::transaction::Transaction;
 
+type TypeProto = typedb_protocol::session::Session_Type;
+
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
     Data = 0,
     Schema = 1
 }
 
-impl From<Type> for Session_Type {
-    fn from(session_type: Type) -> Self {
-        match session_type {
-            Type::Data => Session_Type::DATA,
-            Type::Schema => Session_Type::SCHEMA
+impl Type {
+    fn to_proto(&self) -> TypeProto {
+        match self {
+            Type::Data => TypeProto::DATA,
+            Type::Schema => TypeProto::SCHEMA
         }
     }
 }
 
+#[derive(Debug)]
 pub struct Session {
-    pub database: Database,
+    pub db_name: String,
     pub session_type: Type,
-    pub network_latency_millis: u32,
-    pub(crate) session_id: Vec<u8>,
-    pub(crate) rpc_client: Arc<RpcClient>
+    pub(crate) id: Vec<u8>,
+    pub(crate) rpc_client: Arc<RpcClient>,
+    is_open_atomic: AtomicBool,
+    network_latency: Duration,
 }
 
 impl Session {
-    pub(crate) async fn new(database: &str, session_type: Type, rpc_client: Arc<RpcClient>) -> Result<Self> {
+    pub(crate) async fn new(db_name: &str, session_type: Type, rpc_client: Arc<RpcClient>) -> Result<Self> {
         let start_time = Instant::now();
-        let open_req = open_req(database, Session_Type::from(session_type), Options::new());
+        let open_req = open_req(db_name, session_type.to_proto(), Options::new());
         let res = rpc_client.session_open(open_req).await?;
         Ok(Session {
-            database: Database::new(String::from(database), Arc::clone(&rpc_client)),
+            db_name: String::from(db_name),
             session_type,
-            network_latency_millis: Session::compute_network_latency(start_time, res.server_duration_millis as u32),
-            session_id: res.session_id,
-            rpc_client
+            network_latency: Self::compute_network_latency(start_time, res.server_duration_millis),
+            id: res.session_id,
+            rpc_client,
+            is_open_atomic: AtomicBool::new(true)
         })
     }
 
     pub async fn transaction(&self, transaction_type: transaction::Type) -> Result<Transaction> {
-        Transaction::new(&self.session_id, transaction_type, self.network_latency_millis, &self.rpc_client).await
+        match self.is_open() {
+            true => Transaction::new(&self.id, transaction_type, self.network_latency, &self.rpc_client).await
+            false => MESSAGES.client.session_is_closed.to_err(vec![])
+        }
     }
 
-    fn compute_network_latency(start_time: Instant, server_duration_millis: u32) -> u32 {
-        ((Instant::now() - start_time).as_millis() as u32) - server_duration_millis
+    fn is_open(&self) -> bool {
+        self.is_open_atomic.load(Ordering::Relaxed)
+    }
+
+    fn db_name(&self) -> Database {
+        Database::new(db_name, Arc::clone(&self.rpc_client))
+    }
+
+    #[allow(unused_must_use)]
+    pub fn close(&mut self) {
+        if self.is_open_atomic.compare_exchange(true, false, Ordering::Acquire, Ordering::Relaxed) {
+            let res = executor::block_on(
+                self.rpc_client.session_close(close_req(self.id.clone()))
+            );
+            // TODO: the request errors harmlessly if the session is already closed. Protocol should
+            //       expose the cause of the error and we can use that to decide whether to warn here.
+            if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err()) }
+        }
+    }
+
+    fn compute_network_latency(start_time: Instant, server_duration_millis: i32) -> Duration {
+        Duration::from_millis((Instant::now() - start_time).as_millis() as u64 - server_duration_millis)
     }
 }
 
 impl Drop for Session {
     fn drop(&mut self) {
-        executor::block_on(self.rpc_client.session_close(close_req(self.session_id.clone())));
+        self.close()
     }
 }

@@ -19,9 +19,12 @@
  * under the License.
  */
 
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 use std::fmt::{Debug, Formatter};
 use typedb_protocol::concept::{Concept_oneof_concept, Type_Encoding};
-use crate::common::error::ERRORS;
+use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::transaction::Transaction;
 
@@ -53,7 +56,7 @@ pub trait AsConcept {
 
 impl dyn Concept {
     pub(crate) fn from_proto(proto: typedb_protocol::concept::Concept) -> Result<Box<dyn Concept>> {
-        let concept = proto.concept.ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["concept"]))?;
+        let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
             Concept_oneof_concept::thing(_) => { todo!() }
             // TODO: throws "trait upcasting is experimental"; see #![feature(trait_upcasting)

@@ -38,7 +38,7 @@ use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transact
 use typedb_protocol::transaction::Transaction_Stream_State::{CONTINUE, DONE};
 use uuid::Uuid;
 
-use crate::common::error::{Error, ERRORS};
+use crate::common::error::{Error, MESSAGES};
 use crate::common::{Executor, Result};
 use crate::rpc::builder::transaction::{client_msg, stream_req};
 use crate::rpc::client::RpcClient;
@@ -63,6 +63,7 @@ impl TransactionRpc {
     }
 
     pub(crate) async fn single(&mut self, mut req: Transaction_Req) -> Result<Transaction_Res> {
+        if !self.is_open() {  }
         req.req_id = Self::new_req_id();
         let (res_sink, res_receiver) = oneshot::channel::<Result<Transaction_Res>>();
         self.receiver.add_single(&req.req_id, res_sink);
@@ -78,62 +79,24 @@ impl TransactionRpc {
         req.req_id = req_id.clone();
         const BUFFER_SIZE: usize = 256;
         let (res_part_sink, res_part_receiver) = mpsc::channel::<Result<Transaction_ResPart>>(BUFFER_SIZE);
-        let (stream_req_sink, stream_req_receiver) = mpsc::channel::<Transaction_Req>(1);
+        let (stream_req_sink, stream_req_receiver) = std::sync::mpsc::channel::<Transaction_Req>();
         self.receiver.add_stream(&req_id, res_part_sink);
         Sender::add_message_provider(stream_req_receiver, Arc::clone(&self.sender.executor), Arc::clone(&self.sender.state));
         Sender::submit_message(req, Arc::clone(&self.sender.state));
         ResPartStream::new(res_part_receiver, stream_req_sink, req_id)
     }
 
+    pub(crate) fn is_open(&self) -> bool {
+        self.sender.state.is_open.load(Ordering::Relaxed)
+    }
+
+    fn err_transaction_is_closed(&self) -> Result::Err {
+
+    }
+
     fn new_req_id() -> ReqId {
         Uuid::new_v4().as_bytes().to_vec()
     }
-
-    // TODO: move receiver code from these commented methods to Receiver
-    // pub(crate) async fn single_rpc(&self, mut req: Transaction_Req) -> Result<Transaction_Res> {
-    //     self.req_sink.lock().await.send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
-    //     match self.res_stream.lock().await.next().await {
-    //         Some(Ok(message)) => { /*println!("{:?}", message.clone());*/ Ok(message.clone().take_res()) },
-    //         Some(Err(err)) => { println!("{:?}", err); Err(Error::from_grpc(err)) },
-    //         None => { println!("Response stream is empty"); Err(ERRORS.client.transaction_closed.to_err(vec![])) }
-    //     }
-    // }
-
-    // pub(crate) async fn streaming_rpc(&mut self, mut req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
-    //     let req_id = Uuid::new_v4().as_bytes().to_vec();
-    //     req.req_id = req_id.clone();
-    //     self.req_sink.lock().await.send_data(client_msg(vec![req])).map_err(|err| Error::from_grpc(err))?;
-    //     let mut res_parts: Vec<Transaction_ResPart> = vec![];
-    //     while let res = self.res_stream.lock().await.next().await {
-    //         match res {
-    //             Some(Ok(message)) => {
-    //                 // println!("{:?}", message.clone());
-    //                 let server = message.server
-    //                     .ok_or_else(|| ERRORS.client.missing_response_field.to_err(vec!["server"]))?;
-    //                 match server {
-    //                     Transaction_Server_oneof_server::res_part(mut res_part) => {
-    //                         if res_part.has_stream_res_part() {
-    //                             match res_part.take_stream_res_part().state {
-    //                                 CONTINUE => {
-    //                                     self.req_sink.lock().await.send_data(client_msg(vec![stream_req(req_id.clone())]));
-    //                                 }
-    //                                 DONE => { break }
-    //                             }
-    //                         }
-    //                         res_parts.push(res_part);
-    //                     }
-    //                     _ => {
-    //                         return Err(ERRORS.client.missing_response_field.to_err(vec!["server.res_part"]))
-    //                     }
-    //                 }
-    //             }
-    //             Some(Err(err)) => { println!("{:?}", err); return Err(Error::from_grpc(err)); }
-    //             // TODO: this probably occurs when the server closes the stream - test this
-    //             None => { println!("Response stream is empty"); return Err(ERRORS.client.transaction_closed.to_err(vec![])); }
-    //         }
-    //     };
-    //     Ok(res_parts)
-    // }
 }
 
 struct Sender {
@@ -183,9 +146,10 @@ impl Sender {
         println!("Submitted request message: {:?}", req);
     }
 
-    fn add_message_provider(mut provider: mpsc::Receiver<Transaction_Req>, executor: Arc<Executor>, state: Arc<SenderState>) {
+    fn add_message_provider(provider: std::sync::mpsc::Receiver<Transaction_Req>, executor: Arc<Executor>, state: Arc<SenderState>) {
         executor.spawn_ok(async move {
-            while let Some(req) = provider.next().await {
+            let mut msg_iterator = provider.iter();
+            while let Some(req) = msg_iterator.next() {
                 Self::submit_message(req, Arc::clone(&state));
             }
         });
@@ -220,7 +184,7 @@ impl Sender {
     }
 
     fn close(state: Arc<SenderState>, error: Option<Error>) {
-        if let Ok(true) = Arc::clone(&state).is_open.compare_exchange(
+        if let Ok(true) = state.is_open.compare_exchange(
             true, false, Ordering::Acquire, Ordering::Relaxed
         ) {
             if let None = error {
@@ -285,7 +249,7 @@ impl Receiver {
                 collector.send(Ok(res)).unwrap()
             }
             None => {
-                println!("{}", ERRORS.client.unknown_request_id.to_err(
+                println!("{}", MESSAGES.client.unknown_request_id.to_err(
                     vec![std::str::from_utf8(res.get_req_id()).unwrap()])
                 )
             }
@@ -301,7 +265,7 @@ impl Receiver {
                 state.res_part_collectors.lock().unwrap().insert(req_id, collector);
             }
             None => {
-                println!("{}", ERRORS.client.unknown_request_id.to_err(
+                println!("{}", MESSAGES.client.unknown_request_id.to_err(
                     vec![std::str::from_utf8(res_part.get_req_id()).unwrap()])
                 )
             }
@@ -332,7 +296,7 @@ impl Receiver {
             Some(Transaction_Server_oneof_server::res_part(res_part)) => {
                 Self::collect_res_part(res_part, state).await;
             }
-            None => { println!("{}", ERRORS.client.missing_response_field.to_err(vec!["server"]).to_string()) }
+            None => { println!("{}", MESSAGES.client.missing_response_field.to_err(vec!["server"]).to_string()) }
         }
     }
 
@@ -350,15 +314,15 @@ impl Receiver {
             res_part_collectors.push(res_part_collector)
         }
         for mut collector in res_part_collectors {
-            collector.send(Err(Self::close_reason(&error_str))).await;
+            collector.send(Err(Self::close_reason(&error_str))).await.unwrap();
         }
-        close_signal_sink.send(Some(Self::close_reason(&error_str)));
+        close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
     }
 
     fn close_reason(error_str: &Option<String>) -> Error {
         match error_str {
-            None => { ERRORS.client.transaction_closed.to_err(vec![]) }
-            Some(value) => { ERRORS.client.transaction_closed_with_errors.to_err(vec![value.as_str()]) }
+            None => { MESSAGES.client.transaction_is_closed.to_err(vec![]) }
+            Some(value) => { MESSAGES.client.transaction_is_closed_with_errors.to_err(vec![value.as_str()]) }
         }
     }
 }
@@ -370,12 +334,12 @@ type CloseSignalReceiver = oneshot::Receiver<Option<Error>>;
 
 struct ResPartStream {
     source: mpsc::Receiver<Result<Transaction_ResPart>>,
-    stream_req_sink: mpsc::Sender<Transaction_Req>,
+    stream_req_sink: std::sync::mpsc::Sender<Transaction_Req>,
     req_id: ReqId,
 }
 
 impl ResPartStream {
-    fn new(source: mpsc::Receiver<Result<Transaction_ResPart>>, stream_req_sink: mpsc::Sender<Transaction_Req>, req_id: ReqId) -> Self {
+    fn new(source: mpsc::Receiver<Result<Transaction_ResPart>>, stream_req_sink: std::sync::mpsc::Sender<Transaction_Req>, req_id: ReqId) -> Self {
         ResPartStream { source, stream_req_sink, req_id }
     }
 }
@@ -393,14 +357,14 @@ impl Stream for ResPartStream {
                             DONE => Poll::Ready(None),
                             CONTINUE => {
                                 let req_id = self.req_id.clone();
-                                Pin::new(&mut self.stream_req_sink.send(stream_req(req_id))).poll(ctx);
+                                self.stream_req_sink.send(stream_req(req_id)).unwrap();
                                 Poll::Pending
                             }
                         }
                     }
                     Some(_other) => { poll }
                     None => {
-                        panic!("{}", ERRORS.client.missing_response_field.to_err(vec!["res_part.res"]).to_string())
+                        panic!("{}", MESSAGES.client.missing_response_field.to_err(vec!["res_part.res"]).to_string())
                     }
                 }
             }

@@ -39,26 +39,24 @@ use crate::database::DatabaseManager;
 use crate::rpc::client::RpcClient;
 use crate::session::Session;
 
-pub const DEFAULT_HOST: &str = "0.0.0.0";
-pub const DEFAULT_PORT: u16 = 1729;
-
 #[derive(Clone)]
-pub struct CoreClient {
-    pub(crate) rpc_client: Arc<RpcClient>,
+pub struct TypeDBClient {
     pub databases: DatabaseManager,
+    pub(crate) rpc_client: Arc<RpcClient>,
 }
 
-impl CoreClient {
+impl TypeDBClient {
+    #[must_use]
     pub async fn new(host: &str, port: u16) -> Result<Self> {
         let rpc_client = Arc::new(RpcClient::new(host, port).await?);
-        Ok(CoreClient {
-            rpc_client: Arc::clone(&rpc_client),
-            databases: DatabaseManager::new(Arc::clone(&rpc_client))
+        Ok(TypeDBClient {
+            databases: DatabaseManager::new(Arc::clone(&rpc_client)),
+            rpc_client,
         })
     }
 
     #[must_use]
-    pub async fn session(&self, database: &str, session_type: session::Type) -> Result<Session> {
-        Session::new(database, session_type, Arc::clone(&self.rpc_client)).await
+    pub async fn session(&self, db_name: &str, session_type: session::Type) -> Result<Session> {
+        Session::new(db_name, session_type, Arc::clone(&self.rpc_client)).await
     }
 }

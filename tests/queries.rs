@@ -21,7 +21,7 @@
 
 mod queries {
     use std::sync::mpsc;
-    use typedb_client::CoreClient;
+    use typedb_client::TypeDBClient;
     use typedb_client::session::Type::{Data, Schema};
     use typedb_client::transaction::Transaction;
     use typedb_client::transaction::Type::Write;
@@ -30,7 +30,7 @@ mod queries {
 
     #[tokio::test]
     async fn basic() {
-        let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
+        let client = TypeDBClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
         match client.databases.contains(GRAKN).await {
             Ok(true) => (),
             Ok(false) => { client.databases.create(GRAKN).await.unwrap_or_else(|err| panic!("An error occurred creating database '{}': {}", GRAKN, err)); }
@@ -48,7 +48,7 @@ mod queries {
     #[tokio::test]
     #[ignore]
     async fn concurrent_db_ops() {
-        let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
+        let client = TypeDBClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
         let (sender, receiver) = mpsc::channel();
         // This example shows that our counted refs to our gRPC client must be atomic (Arc)
         // Replacing Arc with Rc results in the error: 'Rc<...> cannot be sent between threads safely'
@@ -83,7 +83,7 @@ mod queries {
     #[tokio::test]
     #[ignore]
     async fn concurrent_queries() {
-        let client = CoreClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
+        let client = TypeDBClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
         let (sender, receiver) = mpsc::channel();
         let sender2 = sender.clone();
         let session = client.session(GRAKN, Data).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));

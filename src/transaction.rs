@@ -23,13 +23,16 @@ use std::fmt::{Debug, Formatter};
 use std::sync::{Arc, Mutex};
 use std::thread::sleep;
 use std::time::Duration;
-use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_Type};
+use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart};
 
 use crate::common::Result;
 use crate::rpc;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
 use crate::query::QueryManager;
+use crate::rpc::transaction::TransactionRpc;
+
+type TypeProto = typedb_protocol::transaction::Transaction_Type;
 
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
@@ -37,32 +40,36 @@ pub enum Type {
     Write = 1
 }
 
-impl From<Type> for Transaction_Type {
-    fn from(transaction_type: Type) -> Self {
-        match transaction_type {
-            Type::Read => Transaction_Type::READ,
-            Type::Write => Transaction_Type::WRITE
+impl Type {
+    fn to_proto(&self) -> TypeProto {
+        match self {
+            Type::Read => TypeProto::READ,
+            Type::Write => TypeProto::WRITE
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug)]
 pub struct Transaction {
     pub transaction_type: Type,
-    rpc: Arc<Mutex<rpc::transaction::TransactionRpc>>,
     pub query: QueryManager,
+    rpc: Arc<Mutex<TransactionRpc>>,
 }
 
 impl Transaction {
     // TODO: check if these borrows hamper ability to open transactions in parallel
-    pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency_millis: u32, rpc_client: &RpcClient) -> Result<Self> {
-        let open_req = open_req(session_id.clone(), Transaction_Type::from(transaction_type), network_latency_millis);
-        let rpc: Arc<Mutex<rpc::transaction::TransactionRpc>> = Arc::new(Mutex::new(rpc::transaction::TransactionRpc::new(rpc_client).await?));
+    pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency: Duration, rpc_client: &RpcClient) -> Result<Self> {
+        let open_req = open_req(
+            session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as u32
+        );
+        let rpc: Arc<Mutex<TransactionRpc>> = Arc::new(
+            Mutex::new(TransactionRpc::new(rpc_client).await?)
+        );
         Arc::clone(&rpc).lock().unwrap().single(open_req).await.unwrap();
         Ok(Transaction {
             transaction_type,
             rpc: Arc::clone(&rpc),
-            query: QueryManager::new(Arc::clone(&rpc))
+            query: QueryManager::new(rpc)
         })
     }
 
@@ -78,25 +85,7 @@ impl Transaction {
         self.rpc.lock().unwrap().single(req).await
     }
 
-    // pub async fn commit(&mut self) -> Result<Transaction_Res> {
-    //     self.single_rpc(commit_req()).await
-    // }
-    //
-    // pub async fn rollback(&mut self) -> Result<Transaction_Res> {
-    //     self.single_rpc(rollback_req()).await
-    // }
-    //
-    // pub(crate) async fn single_rpc(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
-    //     self.rpc.lock().await.single_rpc(req).await
-    // }
-
     // pub(crate) async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
     //     self.rpc.lock().await.streaming_rpc(req).await
     // }
-}
-
-impl Debug for Transaction {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Transaction(type = {:?})", self.transaction_type)
-    }
 }
