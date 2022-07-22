@@ -20,22 +20,18 @@
  */
 
 use derivative::Derivative;
-use std::collections::{HashMap, VecDeque};
-use std::{mem, sync};
-use std::future::Future;
+use std::collections::HashMap;
+use std::mem;
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU8, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 use std::task::{Context, Poll};
 use std::thread::sleep;
-use std::time::{Duration, Instant, SystemTime};
-use futures::{SinkExt, Stream, StreamExt, TryStreamExt};
+use std::time::Duration;
+use futures::{SinkExt, Stream, StreamExt};
 use futures::channel::{mpsc, oneshot};
-use futures::channel::oneshot::Canceled;
-use futures::future::err;
-use futures::task::Spawn;
 use grpc::{ClientRequestSink, GrpcStream, StreamingResponse};
-use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_ResPart_oneof_res, Transaction_Server, Transaction_Server_oneof_server, Transaction_Stream_State};
+use typedb_protocol::transaction::{Transaction_Client, Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_ResPart_oneof_res, Transaction_Server, Transaction_Server_oneof_server};
 use typedb_protocol::transaction::Transaction_Stream_State::{CONTINUE, DONE};
 use uuid::Uuid;
 
@@ -311,14 +307,14 @@ impl Receiver {
     async fn close(state: Arc<ReceiverState>, error: Option<Error>, close_signal_sink: CloseSignalSink) {
         let error_str = error.map(|err| err.to_string());
         for (_, collector) in state.res_collectors.lock().unwrap().drain() {
-            collector.send(Err(Self::close_reason(&error_str))).unwrap();
+            collector.send(Err(Self::close_reason(&error_str))).ok();
         }
         let mut res_part_collectors: Vec<ResPartCollector> = vec![];
         for (_, res_part_collector) in state.res_part_collectors.lock().unwrap().drain() {
             res_part_collectors.push(res_part_collector)
         }
         for mut collector in res_part_collectors {
-            collector.send(Err(Self::close_reason(&error_str))).await.unwrap();
+            collector.send(Err(Self::close_reason(&error_str))).await.ok();
         }
         close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
     }

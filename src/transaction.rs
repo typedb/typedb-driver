@@ -19,14 +19,11 @@
  * under the License.
  */
 
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 use std::sync::{Arc, Mutex};
-use std::thread::sleep;
 use std::time::Duration;
-use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart};
 
 use crate::common::Result;
-use crate::rpc;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
 use crate::query::QueryManager;
@@ -49,12 +46,26 @@ impl Type {
     }
 }
 
-// TODO: Cloning a Transaction doesn't feel quite right
 #[derive(Clone, Debug)]
 pub struct Transaction {
+    state: Arc<TransactionState>
+}
+
+#[derive(Debug)]
+struct TransactionState {
     pub transaction_type: Type,
     pub query: QueryManager,
     rpc: Arc<Mutex<TransactionRpc>>,
+}
+
+impl TransactionState {
+    fn new(transaction_type: Type, rpc: Arc<Mutex<TransactionRpc>>) -> TransactionState {
+        TransactionState {
+            transaction_type,
+            rpc: Arc::clone(&rpc),
+            query: QueryManager::new(rpc)
+        }
+    }
 }
 
 impl Transaction {
@@ -63,30 +74,24 @@ impl Transaction {
         let open_req = open_req(
             session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as u32
         );
-        let rpc: Arc<Mutex<TransactionRpc>> = Arc::new(
-            Mutex::new(TransactionRpc::new(rpc_client).await?)
-        );
-        Arc::clone(&rpc).lock().unwrap().single(open_req).await.unwrap();
-        Ok(Transaction {
-            transaction_type,
-            rpc: Arc::clone(&rpc),
-            query: QueryManager::new(rpc)
-        })
+        let rpc: Arc<Mutex<TransactionRpc>> = Arc::new(Mutex::new(TransactionRpc::new(rpc_client).await?));
+        rpc.lock().unwrap().single(open_req).await.unwrap();
+        Ok(Transaction { state: Arc::new(TransactionState::new(transaction_type, rpc)) })
     }
 
-    pub async fn commit(&mut self) -> Result {
-        self.single_rpc(commit_req()).await.map(|_| ())
+    pub fn get_type(&self) -> Type {
+        self.state.transaction_type
     }
 
-    pub async fn rollback(&mut self) -> Result {
-        self.single_rpc(rollback_req()).await.map(|_| ())
+    pub fn query(&self) -> &QueryManager {
+        &self.state.query
     }
 
-    pub(crate) async fn single_rpc(&mut self, req: Transaction_Req) -> Result<Transaction_Res> {
-        self.rpc.lock().unwrap().single(req).await
+    pub async fn commit(&self) -> Result {
+        self.state.rpc.lock().unwrap().single(commit_req()).await.map(|_| ())
     }
 
-    // pub(crate) async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<Transaction_ResPart>> {
-    //     self.rpc.lock().await.streaming_rpc(req).await
-    // }
+    pub async fn rollback(&self) -> Result {
+        self.state.rpc.lock().unwrap().single(rollback_req()).await.map(|_| ())
+    }
 }

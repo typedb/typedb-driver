@@ -20,7 +20,7 @@
  */
 
 #![allow(dead_code)]
-#![allow(unused_variables)]
+#![allow(unused)]
 
 use std::fmt::{Debug, Formatter};
 use std::time::Instant;

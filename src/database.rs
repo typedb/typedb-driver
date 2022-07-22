@@ -19,11 +19,7 @@
  * under the License.
  */
 
-extern crate grpc;
-
 use std::fmt::{Display, Formatter};
-use std::future::Future;
-use std::ops::Index;
 use std::sync::Arc;
 use crate::common::error::MESSAGES;
 use crate::common::Result;

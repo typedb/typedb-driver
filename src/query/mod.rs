@@ -46,7 +46,7 @@ impl QueryManager {
     //     self.tx.lock().unwrap().single(match_req(query)).await
     // }
 
-    pub async fn match_query(&mut self, query: &str) -> Result<Vec<Concept>> {
+    pub async fn match_query(&self, query: &str) -> Result<Vec<Concept>> {
         let res_parts: Vec<QueryManager_ResPart> = self.streaming_rpc(match_req(query)).await?;
         let mut concepts: Vec<Concept> = vec![];
         for res_part in res_parts {
@@ -64,7 +64,7 @@ impl QueryManager {
         Ok(concepts)
     }
 
-    async fn streaming_rpc(&mut self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
+    async fn streaming_rpc(&self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
         let mut tx_res_parts = self.tx.lock().unwrap().stream(req);
         let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
         loop {

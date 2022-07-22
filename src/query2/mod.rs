@@ -20,6 +20,7 @@
  */
 
 #![allow(dead_code)]
+#![allow(unused_imports)]
 
 use std::sync::Arc;
 use futures::lock::Mutex;

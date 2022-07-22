@@ -28,7 +28,6 @@ use typedb_protocol::options::Options;
 use crate::common::error::MESSAGES;
 
 use crate::common::Result;
-use crate::database::Database;
 use crate::rpc::builder::session::{close_req, open_req};
 use crate::rpc::client::RpcClient;
 use crate::transaction;
@@ -54,11 +53,11 @@ impl Type {
 #[derive(Debug)]
 pub struct Session {
     pub db_name: String,
-    pub session_type: Type,
     pub(crate) id: Vec<u8>,
     pub(crate) rpc_client: Arc<RpcClient>,
     is_open_atomic: AtomicBool,
     network_latency: Duration,
+    session_type: Type,
 }
 
 impl Session {
@@ -81,6 +80,10 @@ impl Session {
             true => Transaction::new(&self.id, transaction_type, self.network_latency, &self.rpc_client).await,
             false => Err(MESSAGES.client.session_is_closed.to_err(vec![]))
         }
+    }
+
+    pub fn get_type(&self) -> Type {
+        self.session_type
     }
 
     fn is_open(&self) -> bool {

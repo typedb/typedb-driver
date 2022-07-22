@@ -20,7 +20,7 @@
  */
 
 #![allow(dead_code)]
-#![allow(unused_variables)]
+#![allow(unused)]
 
 use std::fmt::{Debug, Formatter};
 use typedb_protocol::concept::{Concept_oneof_concept, Type_Encoding};
