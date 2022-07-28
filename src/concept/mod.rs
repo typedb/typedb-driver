@@ -24,7 +24,9 @@
 
 use std::fmt::{Debug, Formatter};
 use std::time::Instant;
-use typedb_protocol::concept::{Concept_oneof_concept, Type_Encoding};
+use protobuf::SingularPtrField;
+use typedb_protocol::concept::{Attribute_Value, AttributeType_ValueType, Concept_oneof_concept, Type_Encoding};
+use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::transaction::Transaction;
@@ -64,6 +66,12 @@ mod api {
 
         fn get_instances(&self) -> Result<Vec<concept::Relation>>;
     }
+
+    pub trait Thing: Concept {
+        fn is_thing(&self) -> bool {
+            true
+        }
+    }
 }
 
 pub enum Concept {
@@ -72,11 +80,54 @@ pub enum Concept {
 }
 
 impl Concept {
-    pub(crate) fn from_proto(proto: typedb_protocol::concept::Concept) -> Result<Concept> {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Concept) -> Result<Concept> {
         let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
-            Concept_oneof_concept::thing(_) => { todo!() }
-            Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(type_concept)?))
+            Concept_oneof_concept::thing(thing) => { Ok(Self::Thing(Thing::from_proto(thing)?)) }
+            Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(&type_concept)?))
+        }
+    }
+
+    pub fn as_type(&self) -> Result<&Type> {
+        match self {
+            Concept::Type(type_) => { Ok(type_) }
+            _ => { todo!() }
+        }
+    }
+
+    pub fn as_thing(&self) -> Result<&Thing> {
+        match self {
+            Concept::Thing(thing) => { Ok(thing) }
+            _ => { todo!() }
+        }
+    }
+
+    pub fn as_entity(&self) -> Result<&Entity> {
+        match self {
+            Concept::Thing(Thing::Entity(entity)) => Ok(entity),
+            _ => { todo!() }
+        }
+    }
+
+    pub fn as_attribute(&self) -> Result<&Attribute> {
+        match self {
+            Concept::Thing(Thing::Attribute(attr)) => Ok(attr),
+            _ => { todo!() }
+        }
+    }
+
+    pub fn is_entity(&self) -> bool {
+        if let Concept::Thing(Thing::Entity(entity)) = self { true } else { false }
+    }
+
+    pub fn is_attribute(&self) -> bool {
+        if let Concept::Thing(Thing::Attribute(attribute)) = self { true } else { false }
+    }
+
+    pub fn is_thing(&self) -> bool {
+        match self {
+            Concept::Thing(thing) => true,
+            Concept::Type(type_) => false,
         }
     }
 }
@@ -101,10 +152,11 @@ pub enum Type {
 }
 
 impl Type {
-    pub(crate) fn from_proto(proto: typedb_protocol::concept::Type) -> Result<Type> {
+    // TODO: split into From<proto::Type> and From<&proto::Type>
+    pub(crate) fn from_proto(proto: &typedb_protocol::concept::Type) -> Result<Type> {
         match proto.encoding {
-            Type_Encoding::THING_TYPE => Ok(Self::ThingType(ThingType::Root(RootThingType { label: proto.label }))),
-            Type_Encoding::ENTITY_TYPE => Ok(Self::ThingType(ThingType::EntityType(EntityType { label: proto.label }))),
+            Type_Encoding::THING_TYPE => Ok(Self::ThingType(ThingType::Root(RootThingType { label: proto.label.clone() }))),
+            Type_Encoding::ENTITY_TYPE => Ok(Self::ThingType(ThingType::EntityType(EntityType::from_proto(proto)))),
             Type_Encoding::RELATION_TYPE => { todo!() }
             Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
             Type_Encoding::ROLE_TYPE => { todo!() }
@@ -153,7 +205,24 @@ pub enum RemoteThingType {
 pub enum Thing {
     Entity(Entity),
     Relation(Relation),
-    // Attribute(Attribute),
+    Attribute(Attribute),
+}
+
+impl Thing {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Thing> {
+        match proto.get_field_type().encoding {
+            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity { iid: Thing::iid_from_bytes(proto.get_iid()), type_: EntityType::from_proto(proto.get_field_type()) })),
+            Type_Encoding::RELATION_TYPE => { todo!() }
+            Type_Encoding::ATTRIBUTE_TYPE => Ok(Self::Attribute(Attribute::from_proto(proto)?)),
+            _ => { todo!() }
+        }
+    }
+
+    fn iid_from_bytes(bytes: &[u8]) -> String {
+        format!("{:02x?}", bytes)
+        // String::from(std::str::from_utf8(bytes).unwrap())
+        // Uuid::from_slice(bytes).unwrap().to_string()
+    }
 }
 
 pub enum RemoteThing {
@@ -189,6 +258,12 @@ pub struct EntityType {
     pub label: String
 }
 
+impl EntityType {
+    fn from_proto(proto: &typedb_protocol::concept::Type) -> EntityType {
+        EntityType { label: proto.label.clone() }
+    }
+}
+
 pub struct RemoteEntityType {
     pub label: String,
     tx: Transaction
@@ -210,7 +285,8 @@ pub struct RemoteRelationType {
 
 #[derive(Debug)]
 pub struct Entity {
-    pub iid: String
+    pub iid: String,
+    pub type_: EntityType
 }
 
 pub struct RemoteEntity {
@@ -228,18 +304,61 @@ pub struct RemoteRelation {
     tx: Transaction
 }
 
-// struct Attribute {
-//     iid: String,
-//     value: AttributeValue
-// }
-//
-// enum AttributeValue {
-//     Boolean(bool),
-//     Long(i64),
-//     Double(f64),
-//     String(String),
-//     DateTime(Instant)
-// }
+#[derive(Debug)]
+pub enum Attribute {
+    // Boolean(BooleanAttribute),
+    Long(LongAttribute),
+    // Double(DoubleAttribute),
+    String(StringAttribute),
+    // DateTime(DateTimeAttribute)
+}
+
+impl Attribute {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Attribute> {
+        match proto.get_field_type().get_value_type() {
+            AttributeType_ValueType::BOOLEAN => { todo!() }
+            AttributeType_ValueType::LONG => { Ok(Self::Long(LongAttribute { iid: Thing::iid_from_bytes(proto.get_iid()), value: proto.get_value().get_long() })) }
+            AttributeType_ValueType::DOUBLE => { todo!() }
+            AttributeType_ValueType::STRING => { Ok(Self::String(StringAttribute { iid: Thing::iid_from_bytes(proto.get_iid()), value: proto.take_value().take_string() }))}
+            AttributeType_ValueType::DATETIME => { todo!() }
+            _ => { todo!() }
+        }
+    }
+
+    pub fn as_long(&self) -> Result<&LongAttribute> {
+        match self {
+            Attribute::Long(long_attr) => Ok(long_attr),
+            _ => { todo!() }
+        }
+    }
+
+    pub fn as_string(&self) -> Result<&StringAttribute> {
+        match self {
+            Attribute::String(string_attr) => Ok(string_attr),
+            _ => { todo!() }
+        }
+    }
+
+    pub fn is_long(&self) -> bool {
+        if let Attribute::Long(long_attr) = self { true } else { false }
+    }
+
+    pub fn is_string(&self) -> bool {
+        if let Attribute::String(string_attr) = self { true } else { false }
+    }
+}
+
+#[derive(Debug)]
+pub struct LongAttribute {
+    pub iid: String,
+    pub value: i64
+}
+
+#[derive(Debug)]
+pub struct StringAttribute {
+    pub iid: String,
+    pub value: String
+}
 
 // struct RoleType {
 //     label: ScopedLabel,

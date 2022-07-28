@@ -24,7 +24,8 @@ use std::collections::HashMap;
 use std::mem;
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8};
+use std::sync::atomic::Ordering::{Acquire, Relaxed};
 use std::task::{Context, Poll};
 use std::thread::sleep;
 use std::time::Duration;
@@ -40,6 +41,7 @@ use crate::common::{Executor, Result};
 use crate::rpc::builder::transaction::{client_msg, stream_req};
 use crate::rpc::client::RpcClient;
 
+// TODO: This structure has become pretty messy - review
 #[derive(Debug)]
 pub(crate) struct TransactionRpc {
     sender: Sender,
@@ -85,7 +87,7 @@ impl TransactionRpc {
     }
 
     pub(crate) fn is_open(&self) -> bool {
-        self.sender.state.is_open.load(Ordering::Relaxed)
+        self.sender.state.is_open.load(Relaxed)
     }
 
     fn new_req_id() -> ReqId {
@@ -132,6 +134,7 @@ impl Sender {
             executor: Arc::clone(&executor)
         };
         let state2 = Arc::clone(&state);
+        // TODO: clarify lifetimes of these threads
         executor.spawn_ok(async move {
             Self::await_close_signal(close_signal_receiver, state2).await;
         });
@@ -154,7 +157,7 @@ impl Sender {
     }
 
     fn dispatch_loop(state: Arc<SenderState>) {
-        while state.is_open.load(Ordering::Relaxed) {
+        while state.is_open.load(Relaxed) {
             const DISPATCH_INTERVAL: Duration = Duration::from_millis(3);
             sleep(DISPATCH_INTERVAL);
             Self::dispatch_messages(Arc::clone(&state));
@@ -163,15 +166,15 @@ impl Sender {
     }
 
     fn dispatch_messages(state: Arc<SenderState>) {
-        state.ongoing_task_count.fetch_add(1, Ordering::Relaxed);
-        state.dispatch_is_scheduled.store(false, Ordering::Relaxed);
+        state.ongoing_task_count.fetch_add(1, Relaxed);
+        state.dispatch_is_scheduled.store(false, Relaxed);
         let msgs = mem::take(&mut *state.queued_messages.lock().unwrap());
         if !msgs.is_empty() {
             let len = msgs.len();
             state.req_sink.lock().unwrap().send_data(client_msg(msgs)).unwrap();
             println!("Dispatched {} message(s)", len);
         }
-        state.ongoing_task_count.fetch_sub(1, Ordering::Relaxed);
+        state.ongoing_task_count.fetch_sub(1, Relaxed);
     }
 
     async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, state: Arc<SenderState>) {
@@ -182,16 +185,14 @@ impl Sender {
     }
 
     fn close(state: Arc<SenderState>, error: Option<Error>) {
-        if let Ok(true) = state.is_open.compare_exchange(
-            true, false, Ordering::Acquire, Ordering::Relaxed
-        ) {
+        if let Ok(true) = state.is_open.compare_exchange(true, false, Acquire, Relaxed) {
             if let None = error {
                 Self::dispatch_messages(Arc::clone(&state));
             }
             // TODO: refactor to non-busy wait?
             // TODO: this loop should have a timeout
             loop {
-                if state.ongoing_task_count.load(Ordering::Relaxed) == 0 {
+                if state.ongoing_task_count.load(Relaxed) == 0 {
                     state.req_sink.lock().unwrap().finish().unwrap();
                     break;
                 }
@@ -214,14 +215,16 @@ struct Receiver {
 #[derive(Debug)]
 struct ReceiverState {
     res_collectors: Mutex<HashMap<ReqId, ResCollector>>,
-    res_part_collectors: Mutex<HashMap<ReqId, ResPartCollector>>
+    res_part_collectors: Mutex<HashMap<ReqId, ResPartCollector>>,
+    is_open: AtomicBool
 }
 
 impl ReceiverState {
     fn new() -> Self {
         ReceiverState {
             res_collectors: Mutex::new(HashMap::new()),
-            res_part_collectors: Mutex::new(HashMap::new())
+            res_part_collectors: Mutex::new(HashMap::new()),
+            is_open: AtomicBool::new(true)
         }
     }
 }
@@ -261,13 +264,18 @@ impl Receiver {
         match value {
             Some(mut collector) => {
                 let req_id = res_part.req_id.clone();
-                collector.send(Ok(res_part)).await.unwrap();
-                state.res_part_collectors.lock().unwrap().insert(req_id, collector);
+                if let Ok(_) = collector.send(Ok(res_part)).await {
+                    state.res_part_collectors.lock().unwrap().insert(req_id, collector);
+                }
             }
             None => {
-                println!("{}", MESSAGES.client.unknown_request_id.to_err(
-                    vec![std::str::from_utf8(res_part.get_req_id()).unwrap()])
-                )
+                // TODO: why does str::from_utf8 always fail here?
+                // println!("{}", MESSAGES.client.unknown_request_id.to_err(
+                //     vec![std::str::from_utf8(res_part.get_req_id()).unwrap()])
+                // )
+                let req_id_str = format!("{:?}", res_part.get_req_id());
+                let res_part_str = format!("{:?}", res_part);
+                println!("{}", MESSAGES.client.unknown_request_id.to_err(vec![req_id_str.as_str(), res_part_str.as_str()]))
             }
         }
     }
@@ -305,18 +313,20 @@ impl Receiver {
     // }
 
     async fn close(state: Arc<ReceiverState>, error: Option<Error>, close_signal_sink: CloseSignalSink) {
-        let error_str = error.map(|err| err.to_string());
-        for (_, collector) in state.res_collectors.lock().unwrap().drain() {
-            collector.send(Err(Self::close_reason(&error_str))).ok();
+        if let Ok(true) = state.is_open.compare_exchange(true, false, Acquire, Relaxed) {
+            let error_str = error.map(|err| err.to_string());
+            for (_, collector) in state.res_collectors.lock().unwrap().drain() {
+                collector.send(Err(Self::close_reason(&error_str))).ok();
+            }
+            let mut res_part_collectors: Vec<ResPartCollector> = vec![];
+            for (_, res_part_collector) in state.res_part_collectors.lock().unwrap().drain() {
+                res_part_collectors.push(res_part_collector)
+            }
+            for mut collector in res_part_collectors {
+                collector.send(Err(Self::close_reason(&error_str))).await.ok();
+            }
+            close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
         }
-        let mut res_part_collectors: Vec<ResPartCollector> = vec![];
-        for (_, res_part_collector) in state.res_part_collectors.lock().unwrap().drain() {
-            res_part_collectors.push(res_part_collector)
-        }
-        for mut collector in res_part_collectors {
-            collector.send(Err(Self::close_reason(&error_str))).await.ok();
-        }
-        close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
     }
 
     fn close_reason(error_str: &Option<String>) -> Error {

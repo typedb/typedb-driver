@@ -20,16 +20,17 @@
  */
 
 use std::sync::{Arc, Mutex};
-use futures::StreamExt;
-use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_ResPart};
-use typedb_protocol::query::QueryManager_ResPart_oneof_res::match_res_part;
-use typedb_protocol::transaction::{Transaction_Req, Transaction_Res};
-use typedb_protocol::transaction::Transaction_ResPart_oneof_res::query_manager_res_part;
+use futures::{Stream, StreamExt};
+use QueryManager_ResPart_oneof_res::{explain_res_part, insert_res_part, match_group_aggregate_res_part, match_group_res_part, match_res_part, update_res_part};
+use Transaction_ResPart_oneof_res::query_manager_res_part;
+use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_Res_oneof_res, QueryManager_ResPart, QueryManager_ResPart_oneof_res};
+use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_ResPart_oneof_res};
+use typedb_protocol::transaction::Transaction_Res_oneof_res::query_manager_res;
 
 use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::concept::Concept;
-use crate::rpc::builder::query_manager::match_req;
+use crate::rpc::builder::query_manager::{define_req, insert_req, match_req};
 use crate::rpc::transaction::TransactionRpc;
 
 #[derive(Clone, Debug)]
@@ -42,47 +43,73 @@ impl QueryManager {
         QueryManager { tx }
     }
 
-    // pub async fn match_query(&mut self, query: &str) -> Result<Transaction_Res> {
-    //     self.tx.lock().unwrap().single(match_req(query)).await
-    // }
-
-    pub async fn match_query(&self, query: &str) -> Result<Vec<Concept>> {
-        let res_parts: Vec<QueryManager_ResPart> = self.streaming_rpc(match_req(query)).await?;
-        let mut concepts: Vec<Concept> = vec![];
-        for res_part in res_parts {
-            let res = res_part.res
-                .ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.res"]))?;
-            match res {
-                match_res_part(x) => {
-                    for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
-                        concepts.push(Concept::from_proto(concept.clone())?);
-                    }
-                }
-                _ => { return Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
-            }
-        };
-        Ok(concepts)
+    pub async fn define(&self, query: &str) -> Result {
+        self.single_rpc(define_req(query)).await.map(|_| ())
     }
 
-    async fn streaming_rpc(&self, req: Transaction_Req) -> Result<Vec<QueryManager_ResPart>> {
-        let mut tx_res_parts = self.tx.lock().unwrap().stream(req);
-        let mut query_mgr_res_parts: Vec<QueryManager_ResPart> = vec![];
-        loop {
-            match tx_res_parts.next().await {
-                Some(Ok(tx_res_part)) => {
-                    let res_part = tx_res_part.res
-                        .ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.res"])) ?;
+    pub fn insert(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
+        self.streaming_rpc(insert_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+            match result {
+                Ok(res_part) => {
                     match res_part {
-                        query_manager_res_part(x) => { query_mgr_res_parts.push(x) },
-                        _ => { return Err(MESSAGES.client.missing_response_field.to_err(vec ! ["res_part.query_manager_res_part"])) }
+                        insert_res_part(x) => {
+                            let mut concepts: Vec<Concept> = vec![];
+                            for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
+                                concepts.push(Concept::from_proto(concept.clone())?);
+                            }
+                            Ok(concepts)
+                        }
+                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.insert_res_part"])) }
                     }
                 }
-                Some(Err(err)) => {
-                    return Err(err);
-                }
-                None => { break; }
+                Err(err) => { Err(err) }
             }
+        })
+    }
+
+    pub fn match_(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
+        self.streaming_rpc(match_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+            match result {
+                Ok(res_part) => {
+                    match res_part {
+                        match_res_part(x) => {
+                            let mut concepts: Vec<Concept> = vec![];
+                            for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
+                                concepts.push(Concept::from_proto(concept.clone())?);
+                            }
+                            Ok(concepts)
+                        }
+                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
+                    }
+                }
+                Err(err) => { Err(err) }
+            }
+        })
+    }
+
+    async fn single_rpc(&self, req: Transaction_Req) -> Result<QueryManager_Res_oneof_res> {
+        match self.tx.lock().unwrap().single(req).await?.res {
+            Some(query_manager_res(res)) => {
+                res.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"]))
+            }
+            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])) }
         }
-        Ok(query_mgr_res_parts)
+    }
+
+    // TODO: Returns wrong answers - each tx_res_part contains multiple answers but we're flattening them!
+    fn streaming_rpc(&self, req: Transaction_Req) -> impl Stream<Item = Result<QueryManager_ResPart_oneof_res>> {
+        self.tx.lock().unwrap().stream(req).map(|result: Result<Transaction_ResPart>| {
+            match result {
+                Ok(tx_res_part) => {
+                    match tx_res_part.res {
+                        Some(query_manager_res_part(res_part)) => {
+                            res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"]))
+                        }
+                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"])) }
+                    }
+                }
+                Err(err) => { Err(err) }
+            }
+        })
     }
 }

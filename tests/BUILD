@@ -21,14 +21,15 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_test_suite")
+load("@rules_rust//rust:defs.bzl", "rust_test")
 
-rust_test_suite(
-    name = "integration",
-    srcs = glob(["**/*.rs"]),
+rust_test(
+    name = "queries",
+    srcs = ["queries.rs"],
     deps = [
         "//:typedb_client",
 
+        "@vaticle_dependencies//library/crates:futures",
         "@vaticle_dependencies//library/crates:tokio",
     ],
 )

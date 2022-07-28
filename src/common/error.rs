@@ -58,7 +58,11 @@ impl Message<'_> {
 
     fn format(&self, args: Vec<&str>) -> String {
         let expected_arg_count = self.msg_body.matches("{}").count();
-        assert_eq!(expected_arg_count, args.len());
+        assert_eq!(
+            expected_arg_count, args.len(),
+            "Message template `{}` takes `{}` args but `{}` were provided",
+            self.msg_body, expected_arg_count, args.len()
+        );
         format!("[{}{:0>2}] {}: {}", self.code_prefix, self.code_number, self.msg_prefix, self.expand_msg(args))
     }
 

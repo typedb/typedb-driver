@@ -32,12 +32,15 @@ mod rpc;
 pub mod session;
 pub mod transaction;
 
+pub use crate::common::Result;
+pub use crate::database::DatabaseManager;
+pub use crate::database::Database;
+pub use crate::session::Session;
+pub use crate::transaction::Transaction;
+
 use std::sync::Arc;
 
-use crate::common::Result;
-use crate::database::DatabaseManager;
 use crate::rpc::client::RpcClient;
-use crate::session::Session;
 
 #[derive(Clone)]
 pub struct TypeDBClient {
