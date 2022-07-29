@@ -25,7 +25,8 @@ mod queries {
     use futures::StreamExt;
     use std::sync::mpsc;
     use typedb_client::{session, Session, transaction, TypeDBClient};
-    use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
+    // use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
+    use typedb_client::concept2::{Concept, Entity, Thing, ThingType, Type};
     use typedb_client::session::Type::{Data, Schema};
     use typedb_client::transaction::Transaction;
     use typedb_client::transaction::Type::{Read, Write};
@@ -110,18 +111,19 @@ mod queries {
                     // naive print
                     // println!("test:concept_api: got answer: {:#?}", concept_map);
                     for concept in concept_map {
-                        // safest approach but ugly!
-                        match &concept {
-                            Concept::Thing(Thing::Entity(entity)) => { describe_entity(entity).await; }
-                            Concept::Thing(Thing::Attribute(attr)) => {
-                                match &attr {
-                                    Attribute::Long(long_attr) => { describe_long_attr(long_attr).await; }
-                                    Attribute::String(str_attr) => { describe_str_attr(str_attr).await; }
-                                }
-                            }
-                            _ => {}
-                        }
-                        // prettier, but unsafe
+                        // enum(1) branching: safest approach but ugly!
+                        // match &concept {
+                        //     Concept::Thing(Thing::Entity(entity)) => { describe_entity(entity).await; }
+                        //     Concept::Thing(Thing::Attribute(attr)) => {
+                        //         match &attr {
+                        //             Attribute::Long(long_attr) => { describe_long_attr(long_attr).await; }
+                        //             Attribute::String(str_attr) => { describe_str_attr(str_attr).await; }
+                        //         }
+                        //     }
+                        //     _ => {}
+                        // }
+
+                        // enum(2) match guard then convert: prettier, but unsafe
                         // match &concept {
                         //     x if x.is_entity() => { describe_entity(x.as_entity().unwrap()).await; }
                         //     x if x.is_attribute() => {
@@ -134,7 +136,8 @@ mod queries {
                         //     }
                         //     _ => panic!()
                         // }
-                        // prettiest approach and mostly safe, but requires nightly Rust build
+
+                        // enum(3) try-convert in match guard: prettiest approach and mostly safe, but requires nightly Rust build
                         // match &concept {
                         //     entity if let Ok(entity) = concept.as_entity() => { describe_entity(entity).await; }
                         //     attr if let Ok(attr) = concept.as_attribute() => {
@@ -146,6 +149,12 @@ mod queries {
                         //     }
                         //     _ => panic!()
                         // }
+
+                        // trait-object(1) match guard then convert
+                        match concept {
+                            x if x.is_entity() => { describe_entity(x.as_entity()).await; }
+                            _ => { todo!() }
+                        }
                     }
                 }
                 Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
@@ -153,17 +162,24 @@ mod queries {
         }
     }
 
-    async fn describe_entity(entity: &Entity) {
-        println!("answer is an ENTITY of type {}", entity.type_.label.as_str());
+    // enum
+    // async fn describe_entity(entity: &Entity) {
+    //     println!("answer is an ENTITY of type {}", entity.type_.label.as_str());
+    // }
+    //
+    // async fn describe_long_attr(long_attr: &LongAttribute) {
+    //     println!("answer is a LONG ATTRIBUTE with value {}", long_attr.value);
+    // }
+    //
+    // async fn describe_str_attr(str_attr: &StringAttribute) {
+    //     println!("answer is a STRING ATTRIBUTE with value {}", str_attr.value);
+    // }
+
+    // trait-object
+    async fn describe_entity(entity: Box<dyn Entity>) {
+        println!("answer is an ENTITY of type {}", entity.get_type().label.as_str());
     }
 
-    async fn describe_long_attr(long_attr: &LongAttribute) {
-        println!("answer is a LONG ATTRIBUTE with value {}", long_attr.value);
-    }
-
-    async fn describe_str_attr(str_attr: &StringAttribute) {
-        println!("answer is a STRING ATTRIBUTE with value {}", str_attr.value);
-    }
     //
     // #[tokio::test]
     // #[ignore]

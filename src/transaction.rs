@@ -26,7 +26,7 @@ use std::time::Duration;
 use crate::common::Result;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
-use crate::query::QueryManager;
+use crate::query2::QueryManager;
 use crate::rpc::transaction::TransactionRpc;
 
 type TypeProto = typedb_protocol::transaction::Transaction_Type;

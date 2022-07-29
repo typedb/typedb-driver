@@ -173,22 +173,16 @@ impl Debug for Type {
     }
 }
 
-// impl From<Concept> for Type {
-//     fn from(value: Concept) -> Self {
-//         Type::try_from(value).unwrap()
-//     }
-// }
+impl TryFrom<Concept> for Type {
+    type Error = Error;
 
-// impl TryFrom<Concept> for Type {
-//     type Error = Error;
-//
-//     fn try_from(value: Concept) -> std::result::Result<Self, Self::Error> {
-//         match value {
-//             Concept::Type(x) => { Ok(x) }
-//             _ => { todo!() }
-//         }
-//     }
-// }
+    fn try_from(value: Concept) -> std::result::Result<Self, Self::Error> {
+        match value {
+            Concept::Type(x) => { Ok(x) }
+            _ => { todo!() }
+        }
+    }
+}
 
 pub enum RemoteType {
     ThingType(RemoteThingType),
