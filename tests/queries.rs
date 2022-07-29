@@ -22,7 +22,6 @@
 // #![feature(if_let_guard)] // only available on nightly Rust builds
 
 mod queries {
-    use std::convert::TryFrom;
     use futures::StreamExt;
     use std::sync::mpsc;
     use typedb_client::{session, Session, transaction, TypeDBClient};
@@ -61,6 +60,15 @@ mod queries {
         tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err))
     }
 
+    async fn run_define_query(tx: &Transaction, query: &str) {
+        tx.query().define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
+    }
+
+    #[allow(unused_must_use)]
+    fn run_insert_query(tx: &Transaction, query: &str) {
+        tx.query().insert(query);
+    }
+
     // #[tokio::test]
     // async fn basic() {
     //     let client = new_typedb_client().await;
@@ -84,13 +92,13 @@ mod queries {
         {
             let session = new_session(&client, Schema).await;
             let tx = new_tx(&session, Write).await;
-            tx.query().define("define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
+            run_define_query(&tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
             commit_tx(&tx).await;
         }
         {
             let session = new_session(&client, Data).await;
             let tx = new_tx(&session, Write).await;
-            tx.query().insert("insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
+            run_insert_query(&tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
             commit_tx(&tx).await;
         }
         let session = new_session(&client, Data).await;
@@ -102,19 +110,18 @@ mod queries {
                     // naive print
                     // println!("test:concept_api: got answer: {:#?}", concept_map);
                     for concept in concept_map {
-                        // safe but ugly!
+                        // safest approach but ugly!
                         match &concept {
                             Concept::Thing(Thing::Entity(entity)) => { describe_entity(entity).await; }
-                            Concept::Thing(Thing::Attribute(attribute)) => {
+                            Concept::Thing(Thing::Attribute(attr)) => {
                                 match &attr {
                                     Attribute::Long(long_attr) => { describe_long_attr(long_attr).await; }
                                     Attribute::String(str_attr) => { describe_str_attr(str_attr).await; }
-                                    _ => panic!()
                                 }
                             }
                             _ => {}
                         }
-                        // prettier, but less safe
+                        // prettier, but unsafe
                         // match &concept {
                         //     x if x.is_entity() => { describe_entity(x.as_entity().unwrap()).await; }
                         //     x if x.is_attribute() => {
@@ -127,7 +134,7 @@ mod queries {
                         //     }
                         //     _ => panic!()
                         // }
-                        // pretty and safe, but requires nightly Rust build
+                        // prettiest approach and mostly safe, but requires nightly Rust build
                         // match &concept {
                         //     entity if let Ok(entity) = concept.as_entity() => { describe_entity(entity).await; }
                         //     attr if let Ok(attr) = concept.as_attribute() => {

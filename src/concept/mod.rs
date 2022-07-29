@@ -22,13 +22,14 @@
 #![allow(dead_code)]
 #![allow(unused)]
 
+use std::convert::TryFrom;
 use std::fmt::{Debug, Formatter};
 use std::time::Instant;
 use protobuf::SingularPtrField;
 use typedb_protocol::concept::{Attribute_Value, AttributeType_ValueType, Concept_oneof_concept, Type_Encoding};
 use uuid::Uuid;
 use crate::common::error::MESSAGES;
-use crate::common::Result;
+use crate::common::{Error, Result};
 use crate::transaction::Transaction;
 
 mod api {
@@ -90,7 +91,7 @@ impl Concept {
 
     pub fn as_type(&self) -> Result<&Type> {
         match self {
-            Concept::Type(type_) => { Ok(type_) }
+            Concept::Type(x) => { Ok(x) }
             _ => { todo!() }
         }
     }
@@ -147,16 +148,16 @@ pub enum RemoteConcept {
 }
 
 pub enum Type {
-    ThingType(ThingType),
-    // RoleType(RoleType),
+    Thing(ThingType),
+    // Role(RoleType),
 }
 
 impl Type {
     // TODO: split into From<proto::Type> and From<&proto::Type>
     pub(crate) fn from_proto(proto: &typedb_protocol::concept::Type) -> Result<Type> {
         match proto.encoding {
-            Type_Encoding::THING_TYPE => Ok(Self::ThingType(ThingType::Root(RootThingType { label: proto.label.clone() }))),
-            Type_Encoding::ENTITY_TYPE => Ok(Self::ThingType(ThingType::EntityType(EntityType::from_proto(proto)))),
+            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType { label: proto.label.clone() }))),
+            Type_Encoding::ENTITY_TYPE => Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))),
             Type_Encoding::RELATION_TYPE => { todo!() }
             Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
             Type_Encoding::ROLE_TYPE => { todo!() }
@@ -167,10 +168,27 @@ impl Type {
 impl Debug for Type {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Type::ThingType(thing_type) => thing_type.fmt(f)
+            Type::Thing(thing_type) => thing_type.fmt(f)
         }
     }
 }
+
+// impl From<Concept> for Type {
+//     fn from(value: Concept) -> Self {
+//         Type::try_from(value).unwrap()
+//     }
+// }
+
+// impl TryFrom<Concept> for Type {
+//     type Error = Error;
+//
+//     fn try_from(value: Concept) -> std::result::Result<Self, Self::Error> {
+//         match value {
+//             Concept::Type(x) => { Ok(x) }
+//             _ => { todo!() }
+//         }
+//     }
+// }
 
 pub enum RemoteType {
     ThingType(RemoteThingType),
@@ -179,17 +197,17 @@ pub enum RemoteType {
 
 pub enum ThingType {
     Root(RootThingType),
-    EntityType(EntityType),
-    RelationType(RelationType),
-    // AttributeType(AttributeType)
+    Entity(EntityType),
+    Relation(RelationType),
+    // Attribute(AttributeType)
 }
 
 impl Debug for ThingType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             ThingType::Root(x) => x.fmt(f),
-            ThingType::EntityType(x) => x.fmt(f),
-            ThingType::RelationType(x) => x.fmt(f),
+            ThingType::Entity(x) => x.fmt(f),
+            ThingType::Relation(x) => x.fmt(f),
         }
     }
 }
