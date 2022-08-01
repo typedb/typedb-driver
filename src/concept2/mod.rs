@@ -23,46 +23,56 @@
 #![allow(unused)]
 
 use std::fmt::{Debug, Formatter};
-use typedb_protocol::concept::{Concept_oneof_concept, Type_Encoding};
+use typedb_protocol::concept::{Attribute_Value_oneof_value, Concept_oneof_concept, Type_Encoding};
 use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::transaction::Transaction;
 
-pub trait AsConcept {
+pub trait CastConcept {
+    // not applicable: the size for values of type `Self` cannot be known at compilation time
+    // fn as_concept(self: Box<Self>) -> Box<dyn Concept> { self }
     fn as_concept(self: Box<Self>) -> Box<dyn Concept>;
+
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>>;
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>>;
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>>;
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>>;
 }
 
-pub trait AsType {
-    fn as_type(self: Box<Self>) -> Box<dyn Type>;
+pub trait CastAttribute {
+    fn as_long(self: Box<Self>) -> Result<Box<dyn LongAttribute>>;
+
+    fn as_string(self: Box<Self>) -> Result<Box<dyn StringAttribute>>;
 }
 
-pub trait AsThing: AsConcept {
-    fn as_thing(self: Box<Self>) -> Box<dyn Thing>;
-}
+pub trait Concept: CastConcept + Debug {
+    // fn is_entity_type(&self) -> bool;
 
-pub trait AsEntity: AsThing {
-    fn as_entity(self: Box<Self>) -> Box<dyn Entity>;
-}
+    // fn is_relation_type(&self) -> bool;
 
-pub trait Concept: AsEntity + Debug {
-    fn as_thing_type(&self) -> Result<Box<dyn ThingType>> { todo!() }
+    // fn is_thing_type(&self) -> bool;
 
-    fn as_entity_type(&self) -> Result<Box<dyn EntityType>> { todo!() }
+    // can't write this, because it ends up being used by every implementation of Concept (including EntityImpl)
+    // fn is_entity(&self) -> bool {
+    //     println!("called Concept.is_entity on {:?}", self);
+    //     false
+    // }
 
-    fn is_entity_type(&self) -> bool { false }
+    fn is_thing(&self) -> bool;
 
-    fn is_relation_type(&self) -> bool { false }
+    fn is_entity(&self) -> bool;
 
-    fn is_thing_type(&self) -> bool { false }
-
-    fn is_entity(&self) -> bool { false }
+    fn is_attribute(&self) -> bool;
 }
 
 impl dyn Concept {
     pub(crate) fn from_proto(proto: typedb_protocol::concept::Concept) -> Result<Box<dyn Concept>> {
         let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
-            Concept_oneof_concept::thing(thing) => { Ok(<dyn Thing>::from_proto(thing).as_concept()) }
+            Concept_oneof_concept::thing(thing) => { <dyn Thing>::from_proto(thing).map(|thing| thing.as_concept()) }
             // TODO: throws "trait upcasting is experimental"; see #![feature(trait_upcasting)
             // Concept_oneof_concept::field_type(type_concept) => { Ok(<dyn Type>::from_proto(type_concept)) }
             Concept_oneof_concept::field_type(type_concept) => { Ok(<dyn Type>::from_proto(type_concept).as_concept()) }
@@ -70,16 +80,13 @@ impl dyn Concept {
     }
 }
 
-// pub trait RemoteConcept: Concept {
-//     fn transaction(&self) -> &Transaction;
-//
-//     fn is_deleted(&self) -> Result<bool> {
-//         todo!()
-//     }
-// }
-
 pub trait Type: Concept {
     fn label(&self) -> &Label;
+
+    // this is not useful to write - we still need to implement is_thing from Concept in all enums
+    // fn is_thing(&self) -> bool { false }
+
+    fn is_entity(&self) -> bool { false }
 }
 
 impl dyn Type {
@@ -94,16 +101,10 @@ impl dyn Type {
     }
 }
 
-// pub trait RemoteType: Type + RemoteConcept {
-//     fn get_supertype(&self) -> Result<Option<Box<dyn Type>>> {
-//         todo!()
-//     }
-// }
-
 pub trait ThingType: Type {
-    fn is_thing_type(&self) -> bool {
-        true
-    }
+    // fn is_thing_type(&self) -> bool {
+    //     true
+    // }
 
     fn get_instances(&self) -> Result<Vec<Box<dyn Thing>>> {
         todo!()
@@ -124,9 +125,9 @@ pub trait ThingType: Type {
 // }
 
 pub trait EntityType: ThingType {
-    fn is_entity_type(&self) -> bool {
-        true
-    }
+    // fn is_entity_type(&self) -> bool {
+    //     true
+    // }
 }
 
 impl dyn EntityType {
@@ -149,24 +150,14 @@ impl dyn EntityType {
 // }
 
 pub trait RelationType: ThingType {
-    fn is_relation_type(&self) -> bool {
-        true
-    }
+    // fn is_relation_type(&self) -> bool {
+    //     true
+    // }
 
     fn get_instances(&self) -> Result<Vec<Box<dyn Relation>>>;
 }
 
-// pub trait RemoteRelationType: RelationType + RemoteThingType {
-//     fn get_supertype(&self) -> Result<Option<Box<dyn RelationType>>>;
-//
-//     fn get_relates(&self) -> Result<Vec<Box<dyn RoleType>>> {
-//         todo!()
-//     }
-// }
-
 pub trait RoleType: Type {}
-
-// pub trait RemoteRoleType: RoleType + RemoteType {}
 
 pub trait Thing: Concept {
     fn iid(&self) -> String {
@@ -174,14 +165,21 @@ pub trait Thing: Concept {
     }
 
     fn get_type(&self) -> Box<dyn ThingType>;
+
+    fn is_thing(&self) -> bool { true }
 }
 
 impl dyn Thing {
-    pub(crate) fn from_proto(proto: typedb_protocol::concept::Thing) -> Box<dyn Thing> {
+    pub(crate) fn from_proto(proto: typedb_protocol::concept::Thing) -> Result<Box<dyn Thing>> {
         match proto.get_field_type().encoding {
-            Type_Encoding::ENTITY_TYPE => Box::new(EntityImpl { iid: iid_from_bytes(proto.get_iid()), type_: *<dyn EntityType>::from_proto(proto.get_field_type().clone()) }),
+            Type_Encoding::ENTITY_TYPE => Ok(Box::new(EntityImpl { iid: iid_from_bytes(proto.get_iid()), type_: *<dyn EntityType>::from_proto(proto.get_field_type().clone()) })),
             Type_Encoding::RELATION_TYPE => { todo!() }
-            Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
+            Type_Encoding::ATTRIBUTE_TYPE => {
+                match <dyn Attribute>::from_proto(proto) {
+                    Ok(attr) => { attr.as_thing() }
+                    Err(err) => { Err(err) }
+                }
+            }
             _ => { todo!() }
         }
     }
@@ -193,45 +191,53 @@ fn iid_from_bytes(bytes: &[u8]) -> String {
     // Uuid::from_slice(bytes).unwrap().to_string()
 }
 
-// pub trait RemoteThing: Thing + RemoteConcept {
-//     fn get_playing(&self) -> Result<Vec<Box<dyn RoleType>>> {
-//         todo!()
-//     }
-// }
-
 pub trait Entity: Thing {
     fn get_type(&self) -> Box<dyn EntityType>;
+
+    // it's useless to write this, because EntityImpl still needs to implement Concept, which itself mandates is_entity
+    // fn is_entity(&self) -> bool { true }
 }
 
-// pub trait RemoteEntity: Entity + RemoteThing {}
-
 pub trait Relation: Thing {
-    fn get_type(&self) -> Box<dyn RelationType> {
-        todo!()
+    fn get_type(&self) -> Box<dyn RelationType>;
+}
+
+pub trait Attribute: Thing + CastAttribute {
+    // fn get_type(&self) -> Box<dyn AttributeType>;
+
+    fn is_long(&self) -> bool;
+
+    fn is_string(&self) -> bool;
+}
+
+impl dyn Attribute {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Box<dyn Attribute>> {
+        let value = proto.take_value().value.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
+        match value {
+            Attribute_Value_oneof_value::string(str_value) => { Ok(Box::new(StringAttributeImpl { iid: iid_from_bytes(proto.get_iid()), value: str_value })) }
+            Attribute_Value_oneof_value::long(long_value) => { Ok(Box::new(LongAttributeImpl { iid: iid_from_bytes(proto.get_iid()), value: long_value })) }
+            _ => { todo!() }
+        }
     }
 }
 
-// pub trait RemoteRelation: Relation + RemoteThing {
-//     fn add_player(&self, role_type: Box<dyn RoleType>, player: Box<dyn Thing>) -> Result {
-//         todo!()
-//     }
-// }
+pub trait LongAttribute: Attribute {
+    fn get_value(&self) -> i64;
+}
+
+pub trait StringAttribute: Attribute {
+    fn get_value(&self) -> &str;
+}
 
 #[derive(Clone, Debug)]
 pub struct Label {
-    scope: Option<String>,
-    name: String
+    pub scope: Option<String>,
+    pub name: String
 }
 
 #[derive(Debug)]
 pub struct ThingTypeImpl {
     label: Label
-}
-
-impl AsType for ThingTypeImpl {
-    fn as_type(self: Box<Self>) -> Box<dyn Type> {
-        self
-    }
 }
 
 impl Type for ThingTypeImpl {
@@ -240,75 +246,43 @@ impl Type for ThingTypeImpl {
     }
 }
 
-impl AsEntity for ThingTypeImpl {
-    fn as_entity(self: Box<Self>) -> Box<dyn Entity> {
-        todo!()
-    }
-}
-
-impl AsThing for ThingTypeImpl {
-    fn as_thing(self: Box<Self>) -> Box<dyn Thing> {
-        todo!()
-    }
-}
-
-impl AsConcept for ThingTypeImpl {
+impl CastConcept for ThingTypeImpl {
     fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
         self
     }
+
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>> {
+        Ok(self)
+    }
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>> {
+        todo!()
+    }
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> {
+        todo!()
+    }
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>> {
+        todo!()
+    }
 }
 
-impl Concept for ThingTypeImpl {}
+impl Concept for ThingTypeImpl {
+    fn is_thing(&self) -> bool {
+        false
+    }
+
+    fn is_entity(&self) -> bool {
+        false
+    }
+
+    fn is_attribute(&self) -> bool {
+        false
+    }
+}
 
 impl ThingType for ThingTypeImpl {}
-
-// #[derive(Debug)]
-// pub struct RemoteThingTypeImpl {
-//     label: Label,
-//     tx: Transaction
-// }
-//
-// impl ThingType for RemoteThingTypeImpl {}
-//
-// impl AsType for RemoteThingTypeImpl {
-//     fn as_type(self: Box<Self>) -> Box<dyn Type> {
-//         self
-//     }
-// }
-//
-// impl Type for RemoteThingTypeImpl {
-//     fn label(&self) -> &Label {
-//         &self.label
-//     }
-// }
-//
-// impl AsConcept for RemoteThingTypeImpl {
-//     fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
-//         self
-//     }
-// }
-//
-// impl AsEntity for RemoteThingTypeImpl {
-//     fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> { Ok(self) }
-// }
-//
-// impl AsThing for RemoteThingTypeImpl {
-//     fn as_thing(self: Box<Self>) -> Box<dyn Thing> {
-//         todo!()
-//     }
-// }
-//
-// impl Concept for RemoteThingTypeImpl {}
-//
-// impl RemoteType for RemoteThingTypeImpl {}
-//
-// impl RemoteConcept for RemoteThingTypeImpl {
-//     fn transaction(&self) -> &Transaction {
-//         &self.tx
-//     }
-// }
-//
-// impl RemoteThingType for RemoteThingTypeImpl {}
 
 #[derive(Clone, Debug)]
 pub struct EntityTypeImpl {
@@ -317,81 +291,49 @@ pub struct EntityTypeImpl {
 
 impl ThingType for EntityTypeImpl {}
 
-impl AsType for EntityTypeImpl {
-    fn as_type(self: Box<Self>) -> Box<dyn Type> {
-        self
-    }
-}
-
 impl Type for EntityTypeImpl {
     fn label(&self) -> &Label {
         &self.label
     }
 }
 
-impl AsConcept for EntityTypeImpl {
+impl CastConcept for EntityTypeImpl {
     fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
         self
     }
-}
 
-impl AsEntity for EntityTypeImpl {
-    fn as_entity(self: Box<Self>) -> Box<dyn Entity> {
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>> {
+        Ok(self)
+    }
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>> {
+        todo!()
+    }
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> {
+        todo!()
+    }
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>> {
         todo!()
     }
 }
 
-impl AsThing for EntityTypeImpl {
-    fn as_thing(self: Box<Self>) -> Box<dyn Thing> {
-        todo!()
+impl Concept for EntityTypeImpl {
+    fn is_thing(&self) -> bool {
+        false
+    }
+
+    fn is_entity(&self) -> bool {
+        false
+    }
+
+    fn is_attribute(&self) -> bool {
+        false
     }
 }
-
-impl Concept for EntityTypeImpl {}
 
 impl EntityType for EntityTypeImpl {}
-
-// #[derive(Debug)]
-// pub struct RemoteEntityTypeImpl {
-//     label: Label,
-//     tx: Transaction
-// }
-//
-// impl EntityType for RemoteEntityTypeImpl {}
-//
-// impl ThingType for RemoteEntityTypeImpl {}
-//
-// impl AsType for RemoteEntityTypeImpl {
-//     fn as_type(self: Box<Self>) -> Box<dyn Type> {
-//         self
-//     }
-// }
-//
-// impl Type for RemoteEntityTypeImpl {
-//     fn label(&self) -> &Label {
-//         &self.label
-//     }
-// }
-//
-// impl AsConcept for RemoteEntityTypeImpl {
-//     fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
-//         self
-//     }
-// }
-//
-// impl Concept for RemoteEntityTypeImpl {}
-//
-// impl RemoteThingType for RemoteEntityTypeImpl {}
-//
-// impl RemoteType for RemoteEntityTypeImpl {}
-//
-// impl RemoteConcept for RemoteEntityTypeImpl {
-//     fn transaction(&self) -> &Transaction {
-//         &self.tx
-//     }
-// }
-//
-// impl RemoteEntityType for RemoteEntityTypeImpl {}
 
 #[derive(Debug)]
 pub struct EntityImpl {
@@ -405,28 +347,188 @@ impl Thing for EntityImpl {
     }
 }
 
-impl AsEntity for EntityImpl {
-    fn as_entity(self: Box<Self>) -> Box<dyn Entity> {
-        self
-    }
-}
-
-impl AsThing for EntityImpl {
-    fn as_thing(self: Box<Self>) -> Box<dyn Thing> {
-        self
-    }
-}
-
-impl AsConcept for EntityImpl {
+impl CastConcept for EntityImpl {
     fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
         self
     }
+
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>> {
+        todo!()
+    }
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>> {
+        Ok(self)
+    }
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> {
+        Ok(self)
+    }
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>> {
+        todo!()
+    }
 }
 
-impl Concept for EntityImpl {}
+impl Concept for EntityImpl {
+    fn is_thing(&self) -> bool { true }
+
+    fn is_entity(&self) -> bool { true }
+
+    fn is_attribute(&self) -> bool { false }
+}
 
 impl Entity for EntityImpl {
     fn get_type(&self) -> Box<dyn EntityType> {
         Box::new(self.type_.clone())
+    }
+}
+
+#[derive(Debug)]
+pub struct LongAttributeImpl {
+    pub iid: String,
+    pub value: i64,
+    // type_: LongAttributeTypeImpl
+}
+
+impl Attribute for LongAttributeImpl {
+    fn is_long(&self) -> bool {
+        true
+    }
+
+    fn is_string(&self) -> bool {
+        false
+    }
+}
+
+impl Thing for LongAttributeImpl {
+    fn get_type(&self) -> Box<dyn ThingType> {
+        todo!()
+    }
+}
+
+impl Concept for LongAttributeImpl {
+    fn is_thing(&self) -> bool {
+        true
+    }
+
+    fn is_entity(&self) -> bool {
+        false
+    }
+
+    fn is_attribute(&self) -> bool {
+        true
+    }
+}
+
+impl CastConcept for LongAttributeImpl {
+    fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
+        self
+    }
+
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>> {
+        todo!()
+    }
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>> {
+        Ok(self)
+    }
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> {
+        todo!()
+    }
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>> {
+        Ok(self)
+    }
+}
+
+impl CastAttribute for LongAttributeImpl {
+    fn as_long(self: Box<Self>) -> Result<Box<dyn LongAttribute>> {
+        Ok(self)
+    }
+
+    fn as_string(self: Box<Self>) -> Result<Box<dyn StringAttribute>> {
+        todo!()
+    }
+}
+
+impl LongAttribute for LongAttributeImpl {
+    fn get_value(&self) -> i64 {
+        self.value
+    }
+}
+
+#[derive(Debug)]
+pub struct StringAttributeImpl {
+    iid: String,
+    value: String,
+    // type_: StringAttributeTypeImpl
+}
+
+impl Attribute for StringAttributeImpl {
+    fn is_long(&self) -> bool {
+        false
+    }
+
+    fn is_string(&self) -> bool {
+        true
+    }
+}
+
+impl Thing for StringAttributeImpl {
+    fn get_type(&self) -> Box<dyn ThingType> {
+        todo!()
+    }
+}
+
+impl Concept for StringAttributeImpl {
+    fn is_thing(&self) -> bool {
+        true
+    }
+
+    fn is_entity(&self) -> bool {
+        false
+    }
+
+    fn is_attribute(&self) -> bool {
+        true
+    }
+}
+
+impl CastConcept for StringAttributeImpl {
+    fn as_concept(self: Box<Self>) -> Box<dyn Concept> {
+        self
+    }
+
+    fn as_type(self: Box<Self>) -> Result<Box<dyn Type>> {
+        todo!()
+    }
+
+    fn as_thing(self: Box<Self>) -> Result<Box<dyn Thing>> {
+        Ok(self)
+    }
+
+    fn as_entity(self: Box<Self>) -> Result<Box<dyn Entity>> {
+        todo!()
+    }
+
+    fn as_attribute(self: Box<Self>) -> Result<Box<dyn Attribute>> {
+        Ok(self)
+    }
+}
+
+impl CastAttribute for StringAttributeImpl {
+    fn as_long(self: Box<Self>) -> Result<Box<dyn LongAttribute>> {
+        todo!()
+    }
+
+    fn as_string(self: Box<Self>) -> Result<Box<dyn StringAttribute>> {
+        Ok(self)
+    }
+}
+
+impl StringAttribute for StringAttributeImpl {
+    fn get_value(&self) -> &str {
+        self.value.as_str()
     }
 }

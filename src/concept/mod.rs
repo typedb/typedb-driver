@@ -34,44 +34,26 @@ use crate::transaction::Transaction;
 
 mod api {
     use crate::common::Result;
-    use crate::concept;
+    use crate::{concept, Transaction};
 
     pub trait Concept {}
-
-    pub trait RemoteConcept: Concept {
-        fn is_deleted(&self) -> bool;
-    }
 
     pub trait Type: Concept {
         fn scoped_label(&self) -> &concept::ScopedLabel;
     }
 
-    pub trait RemoteType: Type + RemoteConcept {}
-
     pub trait ThingType: Type {}
 
-    pub trait RemoteThingType: ThingType + RemoteType {}
+    pub trait EntityType: ThingType {
+        fn get_supertype(&self, tx: &Transaction) -> Result<concept::EntityOrThingType>;
 
-    pub trait EntityType: ThingType {}
-
-    pub trait RemoteEntityType: EntityType + RemoteThingType {
-        fn get_supertype(&self) -> Result<concept::EntityOrThingType>;
-
-        fn get_instances(&self) -> Result<Vec<concept::Entity>>;
+        fn get_instances(&self, tx: &Transaction) -> Result<Vec<concept::Entity>>;
     }
 
-    pub trait RelationType: ThingType {}
+    pub trait RelationType: ThingType {
+        fn get_supertype(&self, tx: &Transaction) -> Result<concept::RelationOrThingType>;
 
-    pub trait RemoteRelationType: RelationType + RemoteThingType {
-        fn get_supertype(&self) -> Result<concept::RelationOrThingType>;
-
-        fn get_instances(&self) -> Result<Vec<concept::Relation>>;
-    }
-
-    pub trait Thing: Concept {
-        fn is_thing(&self) -> bool {
-            true
-        }
+        fn get_instances(&self, tx: &Transaction) -> Result<Vec<concept::Relation>>;
     }
 }
 
@@ -142,11 +124,6 @@ impl Debug for Concept {
     }
 }
 
-pub enum RemoteConcept {
-    Type(RemoteType),
-    Thing(RemoteThing),
-}
-
 pub enum Type {
     Thing(ThingType),
     // Role(RoleType),
@@ -184,11 +161,6 @@ impl TryFrom<Concept> for Type {
     }
 }
 
-pub enum RemoteType {
-    ThingType(RemoteThingType),
-    // RoleType(RemoteRoleType),
-}
-
 pub enum ThingType {
     Root(RootThingType),
     Entity(EntityType),
@@ -204,13 +176,6 @@ impl Debug for ThingType {
             ThingType::Relation(x) => x.fmt(f),
         }
     }
-}
-
-pub enum RemoteThingType {
-    Root(RemoteRootThingType),
-    EntityType(RemoteEntityType),
-    RelationType(RemoteRelationType),
-    // AttributeType(RemoteAttributeType),
 }
 
 #[derive(Debug)]
@@ -237,12 +202,6 @@ impl Thing {
     }
 }
 
-pub enum RemoteThing {
-    Entity(RemoteEntity),
-    Relation(RemoteRelation),
-    // Attribute(RemoteAttribute),
-}
-
 #[derive(Debug)]
 pub enum EntityOrThingType {
     EntityType(EntityType),
@@ -260,11 +219,6 @@ pub struct RootThingType {
     pub label: String
 }
 
-pub struct RemoteRootThingType {
-    pub label: String,
-    tx: Transaction
-}
-
 #[derive(Debug)]
 pub struct EntityType {
     pub label: String
@@ -276,19 +230,9 @@ impl EntityType {
     }
 }
 
-pub struct RemoteEntityType {
-    pub label: String,
-    tx: Transaction
-}
-
 #[derive(Debug)]
 pub struct RelationType {
     pub label: String
-}
-
-pub struct RemoteRelationType {
-    pub label: String,
-    tx: Transaction
 }
 
 // struct AttributeType {
@@ -301,19 +245,9 @@ pub struct Entity {
     pub type_: EntityType
 }
 
-pub struct RemoteEntity {
-    pub iid: String,
-    tx: Transaction
-}
-
 #[derive(Debug)]
 pub struct Relation {
     pub iid: String
-}
-
-pub struct RemoteRelation {
-    pub iid: String,
-    tx: Transaction
 }
 
 #[derive(Debug)]
@@ -383,14 +317,6 @@ pub struct ScopedLabel {
 }
 
 impl api::Concept for Concept {}
-
-impl api::Concept for RemoteConcept {}
-
-impl api::RemoteConcept for RemoteConcept {
-    fn is_deleted(&self) -> bool {
-        todo!()
-    }
-}
 
 impl Thing {
     fn get_iid(&self) {

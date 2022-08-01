@@ -24,9 +24,10 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::common::Result;
+use crate::query2;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
 use crate::rpc::client::RpcClient;
-use crate::query2::QueryManager;
+use crate::query::QueryManager;
 use crate::rpc::transaction::TransactionRpc;
 
 type TypeProto = typedb_protocol::transaction::Transaction_Type;
@@ -55,6 +56,7 @@ pub struct Transaction {
 struct TransactionState {
     pub transaction_type: Type,
     pub query: QueryManager,
+    pub query2: query2::QueryManager,
     rpc: Arc<Mutex<TransactionRpc>>,
 }
 
@@ -63,7 +65,8 @@ impl TransactionState {
         TransactionState {
             transaction_type,
             rpc: Arc::clone(&rpc),
-            query: QueryManager::new(rpc)
+            query: QueryManager::new(Arc::clone(&rpc)),
+            query2: query2::QueryManager::new(rpc),
         }
     }
 }
@@ -85,6 +88,10 @@ impl Transaction {
 
     pub fn query(&self) -> &QueryManager {
         &self.state.query
+    }
+
+    pub fn query2(&self) -> &query2::QueryManager {
+        &self.state.query2
     }
 
     pub async fn commit(&self) -> Result {

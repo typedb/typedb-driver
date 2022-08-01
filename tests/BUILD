@@ -33,3 +33,14 @@ rust_test(
         "@vaticle_dependencies//library/crates:tokio",
     ],
 )
+
+rust_test(
+    name = "concept_models",
+    srcs = ["concept_models.rs"],
+    deps = [
+        "//:typedb_client",
+
+        "@vaticle_dependencies//library/crates:futures",
+        "@vaticle_dependencies//library/crates:tokio",
+    ],
+)
