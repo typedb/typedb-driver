@@ -58,13 +58,19 @@ mod api {
         fn get_supertype(&self, tx: &Transaction) -> Result<concept::RelationOrThingType>;
     }
 
-    pub trait Thing: Concept {}
+    pub trait Thing: Concept {
+        fn get_iid(&self) -> &Vec<u8>;
+    }
 
     pub trait Entity: Thing {}
 
     pub trait Relation: Thing {}
 
     pub trait Attribute: Thing {}
+
+    pub trait LongAttribute: Attribute {}
+
+    pub trait StringAttribute: Attribute {}
 }
 
 fn stream_things(tx: &Transaction, req: Transaction_Req) -> impl Stream<Item = Result<Thing_ResPart_oneof_res>> {
@@ -199,6 +205,18 @@ impl Thing {
     }
 }
 
+impl api::Concept for Thing {}
+
+impl api::Thing for Thing {
+    fn get_iid(&self) -> &Vec<u8> {
+        match self {
+            Thing::Entity(x) => { x.get_iid() }
+            Thing::Relation(x) => { x.get_iid() }
+            Thing::Attribute(x) => { x.get_iid() }
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum EntityOrThingType {
     EntityType(EntityType),
@@ -277,10 +295,30 @@ pub struct Entity {
     pub type_: EntityType
 }
 
+impl api::Thing for Entity {
+    fn get_iid(&self) -> &Vec<u8> {
+        &self.iid
+    }
+}
+
+impl api::Concept for Entity {}
+
+impl api::Entity for Entity {}
+
 #[derive(Debug)]
 pub struct Relation {
     pub iid: Vec<u8>
 }
+
+impl api::Thing for Relation {
+    fn get_iid(&self) -> &Vec<u8> {
+        &self.iid
+    }
+}
+
+impl api::Concept for Relation {}
+
+impl api::Relation for Relation {}
 
 #[derive(Debug)]
 pub enum Attribute {
@@ -353,6 +391,19 @@ impl Attribute {
     }
 }
 
+impl api::Thing for Attribute {
+    fn get_iid(&self) -> &Vec<u8> {
+        match self {
+            Attribute::Long(x) => { x.get_iid() }
+            Attribute::String(x) => { x.get_iid() }
+        }
+    }
+}
+
+impl api::Concept for Attribute {}
+
+impl api::Attribute for Attribute {}
+
 #[derive(Debug)]
 pub struct LongAttribute {
     pub iid: Vec<u8>,
@@ -365,6 +416,18 @@ impl LongAttribute {
     }
 }
 
+impl api::Attribute for LongAttribute {}
+
+impl api::Thing for LongAttribute {
+    fn get_iid(&self) -> &Vec<u8> {
+        &self.iid
+    }
+}
+
+impl api::Concept for LongAttribute {}
+
+impl api::LongAttribute for LongAttribute {}
+
 #[derive(Debug)]
 pub struct StringAttribute {
     pub iid: Vec<u8>,
@@ -376,6 +439,18 @@ impl StringAttribute {
         Attribute::get_owners_impl(&self.iid, &tx)
     }
 }
+
+impl api::Attribute for StringAttribute {}
+
+impl api::Thing for StringAttribute {
+    fn get_iid(&self) -> &Vec<u8> {
+        &self.iid
+    }
+}
+
+impl api::Concept for StringAttribute {}
+
+impl api::StringAttribute for StringAttribute {}
 
 // struct RoleType {
 //     label: ScopedLabel,
@@ -391,12 +466,4 @@ pub enum Label {
 pub struct ScopedLabel {
     pub scope: String,
     pub name: String
-}
-
-impl Thing {
-    fn get_iid(&self) {
-        match self {
-            other => todo!() /*other.0.iid*/
-        }
-    }
 }

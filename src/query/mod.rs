@@ -19,8 +19,9 @@
  * under the License.
  */
 
+use std::iter::once;
 use std::sync::{Arc, Mutex};
-use futures::{Stream, StreamExt};
+use futures::{Stream, stream, StreamExt};
 use QueryManager_ResPart_oneof_res::{explain_res_part, insert_res_part, match_group_aggregate_res_part, match_group_res_part, match_res_part, update_res_part};
 use Transaction_ResPart_oneof_res::query_manager_res_part;
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_Res_oneof_res, QueryManager_ResPart, QueryManager_ResPart_oneof_res};
@@ -53,36 +54,36 @@ impl QueryManager {
                 Ok(res_part) => {
                     match res_part {
                         insert_res_part(x) => {
-                            let mut concepts: Vec<Concept> = vec![];
-                            for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
-                                concepts.push(Concept::from_proto(concept.clone())?);
-                            }
-                            Ok(concepts)
+                            stream::iter(x.answers.into_iter().map(|answer| {
+                                let mut concepts = vec![];
+                                for concept in answer.map.values() { concepts.push(Concept::from_proto(concept.clone())?) }
+                                Ok(concepts)
+                            })).left_stream()
                         }
-                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.insert_res_part"])) }
+                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
                     }
                 }
-                Err(err) => { Err(err) }
+                Err(err) => { stream::iter(once(Err(err))).right_stream() }
             }
         })
     }
 
     pub fn match_(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
-        self.stream_answers(match_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+        self.stream_answers(match_req(query)).flat_map(|result: Result<QueryManager_ResPart_oneof_res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
                         match_res_part(x) => {
-                            let mut concepts: Vec<Concept> = vec![];
-                            for concept in x.answers.iter().flat_map(|answer| answer.map.values()) {
-                                concepts.push(Concept::from_proto(concept.clone())?);
-                            }
-                            Ok(concepts)
+                            stream::iter(x.answers.into_iter().map(|answer| {
+                                let mut concepts = vec![];
+                                for concept in answer.map.values() { concepts.push(Concept::from_proto(concept.clone())?) }
+                                Ok(concepts)
+                            })).left_stream()
                         }
-                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])) }
+                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
                     }
                 }
-                Err(err) => { Err(err) }
+                Err(err) => { stream::iter(once(Err(err))).right_stream() }
             }
         })
     }
@@ -96,7 +97,6 @@ impl QueryManager {
         }
     }
 
-    // TODO: Returns wrong answers - each tx_res_part contains multiple answers but we're flattening them!
     fn stream_answers(&self, req: Transaction_Req) -> impl Stream<Item = Result<QueryManager_ResPart_oneof_res>> {
         self.tx.lock().unwrap().stream(req).map(|result: Result<Transaction_ResPart>| {
             match result {

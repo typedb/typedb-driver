@@ -68,21 +68,21 @@ mod queries {
         tx.query().insert(query);
     }
 
-    // #[tokio::test]
-    // async fn basic() {
-    //     let client = new_typedb_client().await;
-    //     create_db_grakn(&client).await;
-    //     let session = new_session(&client, Data).await;
-    //     let tx = new_tx(&session, Write).await;
-    //     let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
-    //     while let Some(result) = answer_stream.next().await {
-    //         match result {
-    //             Ok(concept_map) => { println!("{:#?}", concept_map) }
-    //             Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-    //         }
-    //     }
-    //     commit_tx(&tx).await;
-    // }
+    #[tokio::test]
+    async fn basic() {
+        let client = new_typedb_client().await;
+        create_db_grakn(&client).await;
+        let session = new_session(&client, Data).await;
+        let tx = new_tx(&session, Write).await;
+        let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+        while let Some(result) = answer_stream.next().await {
+            match result {
+                Ok(concept_map) => { println!("{:#?}", concept_map) }
+                Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+            }
+        }
+        commit_tx(&tx).await;
+    }
 
     // #[tokio::test]
     // #[ignore]
@@ -155,6 +155,7 @@ mod queries {
     // }
 
     #[tokio::test]
+    #[ignore]
     async fn concept_api() {
         let client = new_typedb_client().await;
         create_db_grakn(&client).await;
