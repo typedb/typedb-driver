@@ -24,7 +24,7 @@
 mod queries {
     use futures::StreamExt;
     use typedb_client::{session, Session, transaction, TypeDBClient};
-    use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing};
+    use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
     use typedb_client::session::Type::{Data, Schema};
     use typedb_client::transaction::Transaction;
     use typedb_client::transaction::Type::{Read, Write};
@@ -170,39 +170,71 @@ mod queries {
             run_insert_query(&tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
             commit_tx(&tx).await;
         }
-        let session = new_session(&client, Data).await;
-        let tx = new_tx(&session, Read).await;
-        let mut answer_stream = tx.query().match_("match $x isa thing;");
-        while let Some(result) = answer_stream.next().await {
-            match result {
-                Ok(concept_map) => {
-                    for concept in concept_map {
-                        match &concept {
-                            Concept::Thing(Thing::Entity(entity)) => { describe_entity(entity).await; }
-                            Concept::Thing(Thing::Attribute(attr)) => {
-                                match &attr {
-                                    Attribute::Long(long_attr) => { describe_long_attr(long_attr).await; }
-                                    Attribute::String(str_attr) => { describe_str_attr(str_attr).await; }
-                                }
+        {
+            let session = new_session(&client, Data).await;
+            let tx = new_tx(&session, Read).await;
+            let mut answer_stream = tx.query().match_("match $x isa thing;");
+            let mut str_attrs = vec![];
+            while let Some(result) = answer_stream.next().await {
+                match result {
+                    Ok(concept_map) => {
+                        for concept in concept_map {
+                            describe_concept(&concept).await;
+                            if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
+                                str_attrs.push(str_attr)
                             }
-                            _ => {}
                         }
                     }
+                    Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
                 }
-                Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+            }
+            let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
+            println!("Getting owners of {:?}", str_attr);
+            let mut owners_stream = str_attr.get_owners(&tx);
+            while let Some(result) = owners_stream.next().await {
+                match result {
+                    Ok(thing) => {
+                        println!("Found {:?}", thing)
+                    }
+                    Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
+                }
             }
         }
     }
 
-    async fn describe_entity(entity: &Entity) {
-        println!("answer is an ENTITY of type {}", entity.type_.label.as_str());
+    async fn describe_concept(concept: &Concept) {
+        match concept {
+            Concept::Type(x) => { describe_type(x).await; }
+            Concept::Thing(x) => { describe_thing(x).await; }
+        }
     }
 
-    async fn describe_long_attr(long_attr: &LongAttribute) {
-        println!("answer is a LONG ATTRIBUTE with value {}", long_attr.value);
+    async fn describe_type(type_: &Type) {
+        match type_ {
+            Type::Thing(x) => { describe_thing_type(x).await; }
+        }
     }
 
-    async fn describe_str_attr(str_attr: &StringAttribute) {
-        println!("answer is a STRING ATTRIBUTE with value {}", str_attr.value);
+    async fn describe_thing_type(thing_type: &ThingType) {
+        match thing_type {
+            ThingType::Root(_) => { println!("got the ROOT THING TYPE 'thing'"); }
+            ThingType::Entity(x) => { println!("got the ENTITY TYPE '{}'", x.label); }
+            ThingType::Relation(x) => { println!("got the RELATION TYPE '{}'", x.label); }
+        }
+    }
+
+    async fn describe_thing(thing: &Thing) {
+        match thing {
+            Thing::Entity(x) => { println!("got an ENTITY of type {}", x.type_.label.as_str()); }
+            Thing::Relation(x) => { todo!() /* println!("answer is a RELATION of type {}", x.type_.label.as_str()); */ }
+            Thing::Attribute(x) => { describe_attr(x).await; }
+        }
+    }
+
+    async fn describe_attr(attr: &Attribute) {
+        match attr {
+            Attribute::Long(x) => { println!("got a LONG ATTRIBUTE with value {}", x.value); }
+            Attribute::String(x) => { println!("got a STRING ATTRIBUTE with value {}", x.value); }
+        }
     }
 }

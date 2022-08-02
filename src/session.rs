@@ -65,6 +65,7 @@ impl Session {
         let start_time = Instant::now();
         let open_req = open_req(db_name, session_type.to_proto(), Options::new());
         let res = rpc_client.session_open(open_req).await?;
+        // TODO: pulse task
         Ok(Session {
             db_name: String::from(db_name),
             session_type,

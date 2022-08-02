@@ -44,11 +44,11 @@ impl QueryManager {
     }
 
     pub async fn define(&self, query: &str) -> Result {
-        self.single_rpc(define_req(query)).await.map(|_| ())
+        self.single_call(define_req(query)).await.map(|_| ())
     }
 
     pub fn insert(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
-        self.streaming_rpc(insert_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+        self.stream_answers(insert_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
@@ -68,7 +68,7 @@ impl QueryManager {
     }
 
     pub fn match_(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
-        self.streaming_rpc(match_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+        self.stream_answers(match_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
@@ -87,7 +87,7 @@ impl QueryManager {
         })
     }
 
-    async fn single_rpc(&self, req: Transaction_Req) -> Result<QueryManager_Res_oneof_res> {
+    async fn single_call(&self, req: Transaction_Req) -> Result<QueryManager_Res_oneof_res> {
         match self.tx.lock().unwrap().single(req).await?.res {
             Some(query_manager_res(res)) => {
                 res.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"]))
@@ -97,7 +97,7 @@ impl QueryManager {
     }
 
     // TODO: Returns wrong answers - each tx_res_part contains multiple answers but we're flattening them!
-    fn streaming_rpc(&self, req: Transaction_Req) -> impl Stream<Item = Result<QueryManager_ResPart_oneof_res>> {
+    fn stream_answers(&self, req: Transaction_Req) -> impl Stream<Item = Result<QueryManager_ResPart_oneof_res>> {
         self.tx.lock().unwrap().stream(req).map(|result: Result<Transaction_ResPart>| {
             match result {
                 Ok(tx_res_part) => {

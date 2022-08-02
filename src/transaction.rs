@@ -22,6 +22,8 @@
 use std::fmt::Debug;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use futures::Stream;
+use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart};
 
 use crate::common::Result;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
@@ -88,10 +90,18 @@ impl Transaction {
     }
 
     pub async fn commit(&self) -> Result {
-        self.state.rpc.lock().unwrap().single(commit_req()).await.map(|_| ())
+        self.single_rpc(commit_req()).await.map(|_| ())
     }
 
     pub async fn rollback(&self) -> Result {
-        self.state.rpc.lock().unwrap().single(rollback_req()).await.map(|_| ())
+        self.single_rpc(rollback_req()).await.map(|_| ())
+    }
+
+    pub(crate) async fn single_rpc(&self, req: Transaction_Req) -> Result<Transaction_Res> {
+        self.state.rpc.lock().unwrap().single(req).await
+    }
+
+    pub(crate) fn streaming_rpc(&self, req: Transaction_Req) -> impl Stream<Item = Result<Transaction_ResPart>> {
+        self.state.rpc.lock().unwrap().stream(req)
     }
 }

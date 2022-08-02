@@ -24,39 +24,66 @@
 
 use std::convert::TryFrom;
 use std::fmt::{Debug, Formatter};
+use std::iter::once;
 use std::time::Instant;
+use futures::{FutureExt, Stream, stream, StreamExt};
+use futures::stream::FuturesUnordered;
 use protobuf::SingularPtrField;
-use typedb_protocol::concept::{Attribute_Value, AttributeType_ValueType, Concept_oneof_concept, Type_Encoding};
+use typedb_protocol::concept::{Attribute_Value, AttributeType_ValueType, Concept_oneof_concept, Thing_ResPart_oneof_res, Type_Encoding};
+use typedb_protocol::concept::Thing_ResPart_oneof_res::attribute_get_owners_res_part;
+use typedb_protocol::transaction::{Transaction_Req, Transaction_ResPart};
+use typedb_protocol::transaction::Transaction_ResPart_oneof_res::thing_res_part;
 use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::{Error, Result};
+use crate::rpc::builder::thing::attribute_get_owners_req;
 use crate::transaction::Transaction;
 
 mod api {
+    use futures::Stream;
     use crate::common::Result;
     use crate::{concept, Transaction};
 
     pub trait Concept {}
 
-    pub trait Type: Concept {
-        fn scoped_label(&self) -> &concept::ScopedLabel;
-    }
+    pub trait Type: Concept {}
 
     pub trait ThingType: Type {}
 
     pub trait EntityType: ThingType {
         fn get_supertype(&self, tx: &Transaction) -> Result<concept::EntityOrThingType>;
-
-        fn get_instances(&self, tx: &Transaction) -> Result<Vec<concept::Entity>>;
     }
 
     pub trait RelationType: ThingType {
         fn get_supertype(&self, tx: &Transaction) -> Result<concept::RelationOrThingType>;
-
-        fn get_instances(&self, tx: &Transaction) -> Result<Vec<concept::Relation>>;
     }
+
+    pub trait Thing: Concept {}
+
+    pub trait Entity: Thing {}
+
+    pub trait Relation: Thing {}
+
+    pub trait Attribute: Thing {}
 }
 
+fn stream_things(tx: &Transaction, req: Transaction_Req) -> impl Stream<Item = Result<Thing_ResPart_oneof_res>> {
+    tx.streaming_rpc(req).map(|result: Result<Transaction_ResPart>| {
+        match result {
+            Ok(tx_res_part) => {
+                match tx_res_part.res {
+                    Some(thing_res_part(res_part)) => {
+                        res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"]))
+                    }
+                    _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"])) }
+                }
+            }
+            Err(err) => { Err(err) }
+        }
+    })
+}
+
+#[derive(Debug)]
 pub enum Concept {
     Type(Type),
     Thing(Thing),
@@ -67,7 +94,7 @@ impl Concept {
         let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
             Concept_oneof_concept::thing(thing) => { Ok(Self::Thing(Thing::from_proto(thing)?)) }
-            Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(&type_concept)?))
+            Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(type_concept)?))
         }
     }
 
@@ -115,15 +142,9 @@ impl Concept {
     }
 }
 
-impl Debug for Concept {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Concept::Type(type_concept) => type_concept.fmt(f),
-            Concept::Thing(thing) => thing.fmt(f)
-        }
-    }
-}
+impl api::Concept for Concept {}
 
+#[derive(Debug)]
 pub enum Type {
     Thing(ThingType),
     // Role(RoleType),
@@ -131,9 +152,9 @@ pub enum Type {
 
 impl Type {
     // TODO: split into From<proto::Type> and From<&proto::Type>
-    pub(crate) fn from_proto(proto: &typedb_protocol::concept::Type) -> Result<Type> {
+    pub(crate) fn from_proto(proto: typedb_protocol::concept::Type) -> Result<Type> {
         match proto.encoding {
-            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType { label: proto.label.clone() }))),
+            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType { label: proto.label }))),
             Type_Encoding::ENTITY_TYPE => Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))),
             Type_Encoding::RELATION_TYPE => { todo!() }
             Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
@@ -142,25 +163,11 @@ impl Type {
     }
 }
 
-impl Debug for Type {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Type::Thing(thing_type) => thing_type.fmt(f)
-        }
-    }
-}
+impl api::Concept for Type {}
 
-impl TryFrom<Concept> for Type {
-    type Error = Error;
+impl api::Type for Type {}
 
-    fn try_from(value: Concept) -> std::result::Result<Self, Self::Error> {
-        match value {
-            Concept::Type(x) => { Ok(x) }
-            _ => { todo!() }
-        }
-    }
-}
-
+#[derive(Debug)]
 pub enum ThingType {
     Root(RootThingType),
     Entity(EntityType),
@@ -168,15 +175,11 @@ pub enum ThingType {
     // Attribute(AttributeType)
 }
 
-impl Debug for ThingType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ThingType::Root(x) => x.fmt(f),
-            ThingType::Entity(x) => x.fmt(f),
-            ThingType::Relation(x) => x.fmt(f),
-        }
-    }
-}
+impl api::Type for ThingType {}
+
+impl api::Concept for ThingType {}
+
+impl api::ThingType for ThingType {}
 
 #[derive(Debug)]
 pub enum Thing {
@@ -188,17 +191,11 @@ pub enum Thing {
 impl Thing {
     pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Thing> {
         match proto.get_field_type().encoding {
-            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity { iid: Thing::iid_from_bytes(proto.get_iid()), type_: EntityType::from_proto(proto.get_field_type()) })),
+            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity { type_: EntityType::from_proto(proto.take_field_type()), iid: proto.iid })),
             Type_Encoding::RELATION_TYPE => { todo!() }
             Type_Encoding::ATTRIBUTE_TYPE => Ok(Self::Attribute(Attribute::from_proto(proto)?)),
             _ => { todo!() }
         }
-    }
-
-    fn iid_from_bytes(bytes: &[u8]) -> String {
-        format!("{:02x?}", bytes)
-        // String::from(std::str::from_utf8(bytes).unwrap())
-        // Uuid::from_slice(bytes).unwrap().to_string()
     }
 }
 
@@ -208,16 +205,34 @@ pub enum EntityOrThingType {
     RootThingType(RootThingType)
 }
 
+impl api::Type for EntityOrThingType {}
+
+impl api::Concept for EntityOrThingType {}
+
+impl api::ThingType for EntityOrThingType {}
+
 #[derive(Debug)]
 pub enum RelationOrThingType {
     RelationType(RelationType),
     RootThingType(RootThingType)
 }
 
+impl api::Type for RelationOrThingType {}
+
+impl api::Concept for RelationOrThingType {}
+
+impl api::ThingType for RelationOrThingType {}
+
 #[derive(Debug)]
 pub struct RootThingType {
     pub label: String
 }
+
+impl api::Type for RootThingType {}
+
+impl api::Concept for RootThingType {}
+
+impl api::ThingType for RootThingType {}
 
 #[derive(Debug)]
 pub struct EntityType {
@@ -225,8 +240,25 @@ pub struct EntityType {
 }
 
 impl EntityType {
-    fn from_proto(proto: &typedb_protocol::concept::Type) -> EntityType {
-        EntityType { label: proto.label.clone() }
+    fn from_proto(proto: typedb_protocol::concept::Type) -> EntityType {
+        EntityType { label: proto.label }
+    }
+
+    // Ideally we define this in api::EntityType, but can't return impl Stream in a trait method
+    // fn get_instances(&self, tx: &Transaction) -> impl Stream<Item = Entity> {
+    //     todo!()
+    // }
+}
+
+impl api::ThingType for EntityType {}
+
+impl api::Type for EntityType {}
+
+impl api::Concept for EntityType {}
+
+impl api::EntityType for EntityType {
+    fn get_supertype(&self, tx: &Transaction) -> Result<EntityOrThingType> {
+        todo!()
     }
 }
 
@@ -241,13 +273,13 @@ pub struct RelationType {
 
 #[derive(Debug)]
 pub struct Entity {
-    pub iid: String,
+    pub iid: Vec<u8>,
     pub type_: EntityType
 }
 
 #[derive(Debug)]
 pub struct Relation {
-    pub iid: String
+    pub iid: Vec<u8>
 }
 
 #[derive(Debug)]
@@ -263,9 +295,9 @@ impl Attribute {
     pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Attribute> {
         match proto.get_field_type().get_value_type() {
             AttributeType_ValueType::BOOLEAN => { todo!() }
-            AttributeType_ValueType::LONG => { Ok(Self::Long(LongAttribute { iid: Thing::iid_from_bytes(proto.get_iid()), value: proto.get_value().get_long() })) }
+            AttributeType_ValueType::LONG => { Ok(Self::Long(LongAttribute { value: proto.take_value().get_long(), iid: proto.iid })) }
             AttributeType_ValueType::DOUBLE => { todo!() }
-            AttributeType_ValueType::STRING => { Ok(Self::String(StringAttribute { iid: Thing::iid_from_bytes(proto.get_iid()), value: proto.take_value().take_string() }))}
+            AttributeType_ValueType::STRING => { Ok(Self::String(StringAttribute { value: proto.take_value().take_string(), iid: proto.iid }))}
             AttributeType_ValueType::DATETIME => { todo!() }
             _ => { todo!() }
         }
@@ -292,18 +324,57 @@ impl Attribute {
     pub fn is_string(&self) -> bool {
         if let Attribute::String(string_attr) = self { true } else { false }
     }
+
+    pub fn get_iid(&self) -> &Vec<u8> {
+        match self {
+            Attribute::Long(x) => { &x.iid }
+            Attribute::String(x) => { &x.iid }
+        }
+    }
+
+    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+        Self::get_owners_impl(self.get_iid(), tx)
+    }
+
+    fn get_owners_impl(iid: &Vec<u8>, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+        stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<Thing_ResPart_oneof_res>| {
+            match result {
+                Ok(res_part) => {
+                    match res_part {
+                        attribute_get_owners_res_part(x) => {
+                            stream::iter(x.things.into_iter().map(|thing| Thing::from_proto(thing))).left_stream()
+                        }
+                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
+                    }
+                }
+                Err(err) => { stream::iter(once(Err(err))).right_stream() }
+            }
+        })
+    }
 }
 
 #[derive(Debug)]
 pub struct LongAttribute {
-    pub iid: String,
+    pub iid: Vec<u8>,
     pub value: i64
+}
+
+impl LongAttribute {
+    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+        Attribute::get_owners_impl(&self.iid, &tx)
+    }
 }
 
 #[derive(Debug)]
 pub struct StringAttribute {
-    pub iid: String,
+    pub iid: Vec<u8>,
     pub value: String
+}
+
+impl StringAttribute {
+    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+        Attribute::get_owners_impl(&self.iid, &tx)
+    }
 }
 
 // struct RoleType {
@@ -311,12 +382,16 @@ pub struct StringAttribute {
 // }
 
 #[derive(Debug)]
-pub struct ScopedLabel {
-    pub scope: Option<String>,
-    pub name: String
+pub enum Label {
+    Scoped(ScopedLabel),
+    Unscoped(String),
 }
 
-impl api::Concept for Concept {}
+#[derive(Debug)]
+pub struct ScopedLabel {
+    pub scope: String,
+    pub name: String
+}
 
 impl Thing {
     fn get_iid(&self) {
