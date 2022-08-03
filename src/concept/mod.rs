@@ -329,6 +329,7 @@ impl Entity {
 }
 
 impl api::Thing for Entity {
+    // TODO: use enum_dispatch macro to avoid manually writing the duplicates of this method
     fn get_iid(&self) -> &Vec<u8> {
         &self.iid
     }
