@@ -89,7 +89,7 @@ fn stream_things(tx: &Transaction, req: Transaction_Req) -> impl Stream<Item = R
     })
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Concept {
     Type(Type),
     Thing(Thing),
@@ -150,19 +150,18 @@ impl Concept {
 
 impl api::Concept for Concept {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Type {
     Thing(ThingType),
     // Role(RoleType),
 }
 
 impl Type {
-    // TODO: split into From<proto::Type> and From<&proto::Type>
     pub(crate) fn from_proto(proto: typedb_protocol::concept::Type) -> Result<Type> {
         match proto.encoding {
-            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType { label: proto.label }))),
+            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType::default()))),
             Type_Encoding::ENTITY_TYPE => Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))),
-            Type_Encoding::RELATION_TYPE => { todo!() }
+            Type_Encoding::RELATION_TYPE => Ok(Self::Thing(ThingType::Relation(RelationType::from_proto(proto)))),
             Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
             Type_Encoding::ROLE_TYPE => { todo!() }
         }
@@ -173,7 +172,7 @@ impl api::Concept for Type {}
 
 impl api::Type for Type {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum ThingType {
     Root(RootThingType),
     Entity(EntityType),
@@ -186,36 +185,6 @@ impl api::Type for ThingType {}
 impl api::Concept for ThingType {}
 
 impl api::ThingType for ThingType {}
-
-#[derive(Debug)]
-pub enum Thing {
-    Entity(Entity),
-    Relation(Relation),
-    Attribute(Attribute),
-}
-
-impl Thing {
-    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Thing> {
-        match proto.get_field_type().encoding {
-            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity { type_: EntityType::from_proto(proto.take_field_type()), iid: proto.iid })),
-            Type_Encoding::RELATION_TYPE => { todo!() }
-            Type_Encoding::ATTRIBUTE_TYPE => Ok(Self::Attribute(Attribute::from_proto(proto)?)),
-            _ => { todo!() }
-        }
-    }
-}
-
-impl api::Concept for Thing {}
-
-impl api::Thing for Thing {
-    fn get_iid(&self) -> &Vec<u8> {
-        match self {
-            Thing::Entity(x) => { x.get_iid() }
-            Thing::Relation(x) => { x.get_iid() }
-            Thing::Attribute(x) => { x.get_iid() }
-        }
-    }
-}
 
 #[derive(Debug)]
 pub enum EntityOrThingType {
@@ -241,9 +210,23 @@ impl api::Concept for RelationOrThingType {}
 
 impl api::ThingType for RelationOrThingType {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct RootThingType {
     pub label: String
+}
+
+impl RootThingType {
+    const LABEL: &'static str = "thing";
+
+    pub fn new() -> Self {
+        Self { label: String::from(Self::LABEL) }
+    }
+}
+
+impl Default for RootThingType {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl api::Type for RootThingType {}
@@ -252,14 +235,18 @@ impl api::Concept for RootThingType {}
 
 impl api::ThingType for RootThingType {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct EntityType {
     pub label: String
 }
 
 impl EntityType {
-    fn from_proto(proto: typedb_protocol::concept::Type) -> EntityType {
-        EntityType { label: proto.label }
+    pub fn new(label: String) -> Self {
+        Self { label }
+    }
+
+    fn from_proto(proto: typedb_protocol::concept::Type) -> Self {
+        Self::new(proto.label)
     }
 
     // Ideally we define this in api::EntityType, but can't return impl Stream in a trait method
@@ -280,19 +267,65 @@ impl api::EntityType for EntityType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct RelationType {
     pub label: String
+}
+
+impl RelationType {
+    pub fn new(label: String) -> Self {
+        Self { label }
+    }
+
+    fn from_proto(proto: typedb_protocol::concept::Type) -> Self {
+        Self::new(proto.label)
+    }
 }
 
 // struct AttributeType {
 //     label: String
 // }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
+pub enum Thing {
+    Entity(Entity),
+    Relation(Relation),
+    Attribute(Attribute),
+}
+
+impl Thing {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Thing> {
+        match proto.get_field_type().encoding {
+            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity::from_proto(proto))),
+            Type_Encoding::RELATION_TYPE => { todo!() }
+            Type_Encoding::ATTRIBUTE_TYPE => Ok(Self::Attribute(Attribute::from_proto(proto)?)),
+            _ => { todo!() }
+        }
+    }
+}
+
+impl api::Concept for Thing {}
+
+impl api::Thing for Thing {
+    fn get_iid(&self) -> &Vec<u8> {
+        match self {
+            Thing::Entity(x) => { x.get_iid() }
+            Thing::Relation(x) => { x.get_iid() }
+            Thing::Attribute(x) => { x.get_iid() }
+        }
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct Entity {
     pub iid: Vec<u8>,
     pub type_: EntityType
+}
+
+impl Entity {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Entity {
+        Self { type_: EntityType::from_proto(proto.take_field_type()), iid: proto.iid }
+    }
 }
 
 impl api::Thing for Entity {
@@ -305,7 +338,7 @@ impl api::Concept for Entity {}
 
 impl api::Entity for Entity {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Relation {
     pub iid: Vec<u8>
 }
@@ -320,7 +353,7 @@ impl api::Concept for Relation {}
 
 impl api::Relation for Relation {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Attribute {
     // Boolean(BooleanAttribute),
     Long(LongAttribute),
@@ -404,7 +437,7 @@ impl api::Concept for Attribute {}
 
 impl api::Attribute for Attribute {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct LongAttribute {
     pub iid: Vec<u8>,
     pub value: i64
@@ -428,7 +461,7 @@ impl api::Concept for LongAttribute {}
 
 impl api::LongAttribute for LongAttribute {}
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct StringAttribute {
     pub iid: Vec<u8>,
     pub value: String
@@ -456,13 +489,13 @@ impl api::StringAttribute for StringAttribute {}
 //     label: ScopedLabel,
 // }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Label {
     Scoped(ScopedLabel),
     Unscoped(String),
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ScopedLabel {
     pub scope: String,
     pub name: String

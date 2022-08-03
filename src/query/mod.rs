@@ -27,10 +27,10 @@ use Transaction_ResPart_oneof_res::query_manager_res_part;
 use typedb_protocol::query::{QueryManager_Match_ResPart, QueryManager_Res_oneof_res, QueryManager_ResPart, QueryManager_ResPart_oneof_res};
 use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart, Transaction_ResPart_oneof_res};
 use typedb_protocol::transaction::Transaction_Res_oneof_res::query_manager_res;
+use crate::answer::ConceptMap;
 
 use crate::common::error::MESSAGES;
 use crate::common::Result;
-use crate::concept::Concept;
 use crate::rpc::builder::query_manager::{define_req, insert_req, match_req};
 use crate::rpc::transaction::TransactionRpc;
 
@@ -48,19 +48,21 @@ impl QueryManager {
         self.single_call(define_req(query)).await.map(|_| ())
     }
 
-    pub fn insert(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
-        self.stream_answers(insert_req(query)).map(|result: Result<QueryManager_ResPart_oneof_res>| {
+    pub fn insert(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
+        self.stream_answers(insert_req(query)).flat_map(|result: Result<QueryManager_ResPart_oneof_res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
                         insert_res_part(x) => {
-                            stream::iter(x.answers.into_iter().map(|answer| {
-                                let mut concepts = vec![];
-                                for concept in answer.map.values() { concepts.push(Concept::from_proto(concept.clone())?) }
-                                Ok(concepts)
-                            })).left_stream()
+                            stream::iter(x.answers.into_iter()
+                                .map(|cm| { ConceptMap::from_proto(cm) })
+                            ).left_stream()
                         }
-                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
+                        _ => {
+                            stream::iter(once(Err(MESSAGES.client.missing_response_field
+                                .to_err(vec!["query_manager_res_part.insert_res_part"])
+                            ))).right_stream()
+                        }
                     }
                 }
                 Err(err) => { stream::iter(once(Err(err))).right_stream() }
@@ -68,19 +70,21 @@ impl QueryManager {
         })
     }
 
-    pub fn match_(&self, query: &str) -> impl Stream<Item = Result<Vec<Concept>>> {
+    pub fn match_(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         self.stream_answers(match_req(query)).flat_map(|result: Result<QueryManager_ResPart_oneof_res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
                         match_res_part(x) => {
-                            stream::iter(x.answers.into_iter().map(|answer| {
-                                let mut concepts = vec![];
-                                for concept in answer.map.values() { concepts.push(Concept::from_proto(concept.clone())?) }
-                                Ok(concepts)
-                            })).left_stream()
+                            stream::iter(x.answers.into_iter()
+                                .map(|cm| { ConceptMap::from_proto(cm) })
+                            ).left_stream()
                         }
-                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
+                        _ => {
+                            stream::iter(once(Err(MESSAGES.client.missing_response_field
+                                .to_err(vec!["query_manager_res_part.match_res_part"])
+                            ))).right_stream()
+                        }
                     }
                 }
                 Err(err) => { stream::iter(once(Err(err))).right_stream() }

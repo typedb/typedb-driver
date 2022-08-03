@@ -179,7 +179,7 @@ mod queries {
             while let Some(result) = answer_stream.next().await {
                 match result {
                     Ok(concept_map) => {
-                        for concept in concept_map {
+                        for (_, concept) in concept_map {
                             describe_concept(&concept).await;
                             if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
                                 str_attrs.push(str_attr)
