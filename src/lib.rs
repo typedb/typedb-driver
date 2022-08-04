@@ -19,16 +19,11 @@
  * under the License.
  */
 
-// #![feature(trait_upcasting)]
-// #![allow(incomplete_features)]
-
 pub mod answer;
 pub mod common;
 pub mod concept;
-pub mod concept2;
 pub mod database;
 pub mod query;
-pub mod query2;
 mod rpc;
 pub mod session;
 pub mod transaction;
@@ -36,6 +31,7 @@ pub mod transaction;
 pub use crate::common::Result;
 pub use crate::database::DatabaseManager;
 pub use crate::database::Database;
+pub use crate::rpc::transaction::Stream;
 pub use crate::session::Session;
 pub use crate::transaction::Transaction;
 
