@@ -144,7 +144,7 @@ impl Sender {
 
     fn submit_message(req: Transaction_Req, state: Arc<SenderState>) {
         state.queued_messages.lock().unwrap().push(req.clone());
-        println!("Submitted request message: {:?}", req);
+        // println!("Submitted request message: {:?}", req);
     }
 
     fn add_message_provider(provider: std::sync::mpsc::Receiver<Transaction_Req>, executor: Arc<Executor>, state: Arc<SenderState>) {
@@ -162,7 +162,7 @@ impl Sender {
             sleep(DISPATCH_INTERVAL);
             Self::dispatch_messages(Arc::clone(&state));
         }
-        println!("Transaction rpc was closed; message dispatch loop has been shut down")
+        // println!("Transaction rpc was closed; message dispatch loop has been shut down")
     }
 
     fn dispatch_messages(state: Arc<SenderState>) {
@@ -172,7 +172,7 @@ impl Sender {
         if !msgs.is_empty() {
             let len = msgs.len();
             state.req_sink.lock().unwrap().send_data(client_msg(msgs)).unwrap();
-            println!("Dispatched {} message(s)", len);
+            // println!("Dispatched {} message(s)", len);
         }
         state.ongoing_task_count.fetch_sub(1, Relaxed);
     }
@@ -248,7 +248,7 @@ impl Receiver {
     fn collect_res(res: Transaction_Res, state: Arc<ReceiverState>) {
         match state.res_collectors.lock().unwrap().remove(res.get_req_id()) {
             Some(collector) => {
-                println!("Received '{:?}': posting to the SINGLE collector for req ID {:?}", res.clone(), res.get_req_id());
+                // println!("Received '{:?}': posting to the SINGLE collector for req ID {:?}", res.clone(), res.get_req_id());
                 collector.send(Ok(res)).unwrap()
             }
             None => {

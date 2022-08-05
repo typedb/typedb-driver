@@ -31,7 +31,6 @@ pub mod transaction;
 pub use crate::common::Result;
 pub use crate::database::DatabaseManager;
 pub use crate::database::Database;
-pub use crate::rpc::transaction::Stream;
 pub use crate::session::Session;
 pub use crate::transaction::Transaction;
 
@@ -53,6 +52,10 @@ impl TypeDBClient {
             databases: DatabaseManager::new(Arc::clone(&rpc_client)),
             rpc_client,
         })
+    }
+
+    pub async fn with_default_address() -> Result<Self> {
+        Self::new("0.0.0.0", 1729).await
     }
 
     #[must_use]

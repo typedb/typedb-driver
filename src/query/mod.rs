@@ -79,6 +79,7 @@ impl QueryManager {
         stream_concept_maps!(self, req, insert_res_part, "insert")
     }
 
+    // TODO: investigate performance impact of using BoxStream
     pub fn match_(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = match_req(query);
         stream_concept_maps!(self, req, match_res_part, "match")
