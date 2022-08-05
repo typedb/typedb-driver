@@ -65,8 +65,7 @@ load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()
 
 # Load //tool/common
-load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip",
-    vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
+load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
 vaticle_dependencies_ci_pip()
 
 # Load //tool/checkstyle
@@ -98,9 +97,6 @@ rules_pkg_dependencies()
 load("@vaticle_bazel_distribution//github:deps.bzl", github_deps = "deps")
 github_deps()
 
-# Load //maven
-load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
-
 # Load //pip
 load("@vaticle_bazel_distribution//pip:deps.bzl", pip_deps = "deps")
 pip_deps()
@@ -122,25 +118,27 @@ load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle
 vaticle_typedb_artifact()
 vaticle_typedb_cluster_artifact()
 
-# Load maven
-load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_artifacts = "artifacts")
-load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_artifacts = "artifacts")
-load("@vaticle_factory_tracing//dependencies/maven:artifacts.bzl", vaticle_factory_tracing_artifacts = "artifacts")
-load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_artifacts = "artifacts", vaticle_typedb_client_java_overrides = "overrides")
-
 ###############
 # Load @maven #
 ###############
 
+# Load maven artifacts
+load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
+load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
+load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
+load("@vaticle_factory_tracing//dependencies/maven:artifacts.bzl", vaticle_factory_tracing_maven_artifacts = "artifacts")
+load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_maven_artifacts = "artifacts", vaticle_typedb_client_java_maven_overrides = "overrides")
+load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
+
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
-    vaticle_factory_tracing_artifacts +
-    vaticle_typedb_common_artifacts +
-    vaticle_typeql_artifacts +
+    vaticle_factory_tracing_maven_artifacts +
+    vaticle_typedb_common_maven_artifacts +
+    vaticle_typeql_maven_artifacts +
     vaticle_dependencies_tool_maven_artifacts +
-    vaticle_typedb_client_java_artifacts +
+    vaticle_typedb_client_java_maven_artifacts +
     vaticle_bazel_distribution_maven_artifacts,
-    vaticle_typedb_client_java_overrides
+    vaticle_typedb_client_java_maven_overrides
 )
 
 ############################################
