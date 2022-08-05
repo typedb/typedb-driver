@@ -22,6 +22,17 @@
 load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 vaticle_dependencies()
 
+# Load //builder/java
+load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
+java_deps()
+
+# Load //builder/kotlin
+load("@vaticle_dependencies//builder/kotlin:deps.bzl", kotlin_deps = "deps")
+kotlin_deps()
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
+
 # Load //builder/rust
 load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
 rust_deps()
@@ -31,3 +42,28 @@ rust_repositories(version = "1.57.0", include_rustc_srcs = True)
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "raze_fetch_remote_crates")
 raze_fetch_remote_crates()
+
+# Load //builder/python
+load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
+python_deps()
+
+# Load //tool/common
+load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
+vaticle_dependencies_ci_pip()
+
+######################################
+# Load @vaticle_bazel_distribution #
+######################################
+
+load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
+vaticle_bazel_distribution()
+
+############################
+# Load @maven dependencies #
+############################
+
+load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
+load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
+
+load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
+maven(vaticle_dependencies_tool_maven_artifacts + vaticle_bazel_distribution_maven_artifacts)

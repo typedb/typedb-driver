@@ -22,6 +22,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate")
 
 rust_library(
     name = "typedb_client",
@@ -38,4 +39,13 @@ rust_library(
     proc_macro_deps = [
         "@vaticle_dependencies//library/crates:derivative",
     ],
+)
+
+assemble_crate(
+    name = "assemble",
+    target = "typedb_client",
+    description = "TypeDB Client API for Rust",
+    homepage = "https://github.com/vaticle/typedb-client-rust",
+    license = "apache",
+    repository = "https://github.com/vaticle/typedb-client-rust",
 )
