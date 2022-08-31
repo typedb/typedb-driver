@@ -37,8 +37,9 @@ kt_register_toolchains()
 load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
 rust_deps()
 
-load("@rules_rust//rust:repositories.bzl", "rust_repositories")
-rust_repositories(version = "1.57.0", include_rustc_srcs = True)
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+rules_rust_dependencies()
+rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "raze_fetch_remote_crates")
 raze_fetch_remote_crates()
