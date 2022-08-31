@@ -39,6 +39,10 @@ rust_library(
     proc_macro_deps = [
         "@vaticle_dependencies//library/crates:derivative",
     ],
+    tags = [
+        "crate-name=typedb-client",
+    ],
+    version = "0.0.1",
 )
 
 assemble_crate(

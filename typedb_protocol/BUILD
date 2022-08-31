@@ -28,7 +28,10 @@ rust_library(
         "@vaticle_dependencies//library/crates:grpc",
         "@vaticle_dependencies//library/crates:grpc_protobuf",
         "@vaticle_dependencies//library/crates:protobuf",
-#        "@vaticle_dependencies//library/crates:tls_api",
     ],
+    tags = [
+        "crate-name=typedb-protocol",
+    ],
+    version = "0.0.1",
     visibility = ["//visibility:public"]
 )
