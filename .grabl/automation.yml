@@ -21,7 +21,7 @@
 config:
   version-candidate: VERSION
   dependencies:
-    typeql-lang-java: [build, release]
+    typeql: [build, release]
     typedb-common: [build, release]
     dependencies: [build]
     typedb-protocol: [build, release]
