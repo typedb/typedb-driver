@@ -32,6 +32,7 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -51,7 +52,7 @@ public class BidirectionalStream implements AutoCloseable {
     private final ResponseCollector<ResPart> resPartCollector;
     private final RequestTransmitter.Dispatcher dispatcher;
     private final AtomicBoolean isOpen;
-    private Consumer<Throwable> onClose;
+    private final LinkedBlockingQueue<Consumer<Throwable>> onClose;
     private StatusRuntimeException error;
 
     public BidirectionalStream(TypeDBStub stub, RequestTransmitter transmitter) {
@@ -60,6 +61,7 @@ public class BidirectionalStream implements AutoCloseable {
         isOpen = new AtomicBoolean(false);
         dispatcher = transmitter.dispatcher(stub.transaction(new ResponseObserver()));
         isOpen.set(true);
+        onClose = new LinkedBlockingQueue<>();
         error = null;
     }
 
@@ -103,7 +105,7 @@ public class BidirectionalStream implements AutoCloseable {
     }
 
     public void onClose(Consumer<Throwable> function) {
-        onClose = function;
+        onClose.offer(function);
     }
 
     @Override
@@ -114,7 +116,7 @@ public class BidirectionalStream implements AutoCloseable {
     private void close(@Nullable StatusRuntimeException error) {
         if (isOpen.compareAndSet(true, false)) {
             this.error = error;
-            if (onClose != null) onClose.accept(error);
+            if (onClose != null) onClose.forEach(fn -> fn.accept(error));
             resCollector.close(error);
             resPartCollector.close(error);
             try {
