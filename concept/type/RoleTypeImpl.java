@@ -26,10 +26,13 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayersReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
@@ -104,10 +107,24 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         }
 
         @Override
-        public final Stream<ThingTypeImpl> getPlayers() {
-            return stream(getPlayersReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetPlayersResPart().getThingTypesList().stream())
+        public final Stream<ThingTypeImpl> getPlayerTypes() {
+            return stream(getPlayerTypesReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetPlayerTypesResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
+        }
+
+        @Override
+        public final Stream<ThingImpl> getPlayerInstances() {
+            return stream(getPlayerInstancesReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetPlayerInstancesResPart().getThingsList().stream())
+                    .map(ThingImpl::of);
+        }
+
+        @Override
+        public final Stream<ThingImpl> getPlayerInstancesExplicit() {
+            return stream(getPlayerInstancesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetPlayerInstancesExplicitResPart().getThingsList().stream())
+                    .map(ThingImpl::of);
         }
 
         @Override

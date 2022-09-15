@@ -418,9 +418,21 @@ public class RequestBuilder {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getPlayersReq(Label label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayersReq(
-                        ConceptProto.RoleType.GetPlayers.Req.getDefaultInstance()
+            public static TransactionProto.Transaction.Req.Builder getPlayerTypesReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesReq(
+                        ConceptProto.RoleType.GetPlayerTypes.Req.getDefaultInstance()
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getPlayerInstancesReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesReq(
+                        ConceptProto.RoleType.GetPlayerInstances.Req.getDefaultInstance()
+                ));
+            }
+
+            public static TransactionProto.Transaction.Req.Builder getPlayerInstancesExplicitReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesExplicitReq(
+                        ConceptProto.RoleType.GetPlayerInstancesExplicit.Req.getDefaultInstance()
                 ));
             }
         }

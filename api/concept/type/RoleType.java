@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 
+import com.vaticle.typedb.client.api.concept.thing.Thing;
 import java.util.stream.Stream;
 
 public interface RoleType extends Type {
@@ -53,6 +54,10 @@ public interface RoleType extends Type {
 
         Stream<? extends RelationType> getRelationTypes();
 
-        Stream<? extends ThingType> getPlayers();
+        Stream<? extends ThingType> getPlayerTypes();
+
+        Stream<? extends Thing> getPlayerInstances();
+
+        Stream<? extends Thing> getPlayerInstancesExplicit();
     }
 }
