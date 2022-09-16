@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import java.util.stream.Stream;
@@ -33,6 +34,8 @@ import javax.annotation.Nullable;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
@@ -111,6 +114,20 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
             return stream(getPlayerTypesReq(getLabel()))
                     .flatMap(rp -> rp.getRoleTypeGetPlayerTypesResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
+        }
+
+        @Override
+        public final Stream<RelationImpl> getRelationInstances() {
+            return stream(getRelationInstancesReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetRelationInstancesResPart().getRelationsList().stream())
+                    .map(RelationImpl::of);
+        }
+
+        @Override
+        public final Stream<RelationImpl> getRelationInstancesExplicit() {
+            return stream(getRelationInstancesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetRelationInstancesExplicitResPart().getRelationsList().stream())
+                    .map(RelationImpl::of);
         }
 
         @Override
