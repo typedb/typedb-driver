@@ -29,14 +29,11 @@ import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
-import java.util.stream.Stream;
+
 import javax.annotation.Nullable;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
+import java.util.stream.Stream;
+
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.*;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
@@ -113,6 +110,13 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         public final Stream<ThingTypeImpl> getPlayerTypes() {
             return stream(getPlayerTypesReq(getLabel()))
                     .flatMap(rp -> rp.getRoleTypeGetPlayerTypesResPart().getThingTypesList().stream())
+                    .map(ThingTypeImpl::of);
+        }
+
+        @Override
+        public final Stream<ThingTypeImpl> getPlayerTypesExplicit() {
+            return stream(getPlayerTypesExplicitReq(getLabel()))
+                    .flatMap(rp -> rp.getRoleTypeGetPlayerTypesExplicitResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }
 

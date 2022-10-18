@@ -424,6 +424,12 @@ public class RequestBuilder {
                 ));
             }
 
+            public static TransactionProto.Transaction.Req.Builder getPlayerTypesExplicitReq(Label label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesExplicitReq(
+                        ConceptProto.RoleType.GetPlayerTypesExplicit.Req.getDefaultInstance()
+                ));
+            }
+
             public static TransactionProto.Transaction.Req.Builder getRelationInstancesReq(Label label) {
                 return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesReq(
                         ConceptProto.RoleType.GetRelationInstances.Req.getDefaultInstance()

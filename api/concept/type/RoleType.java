@@ -57,6 +57,8 @@ public interface RoleType extends Type {
 
         Stream<? extends ThingType> getPlayerTypes();
 
+        Stream<? extends ThingType> getPlayerTypesExplicit();
+
         Stream<? extends Relation> getRelationInstances();
 
         Stream<? extends Relation> getRelationInstancesExplicit();
