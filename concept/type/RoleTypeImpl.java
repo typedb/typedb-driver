@@ -33,7 +33,13 @@ import com.vaticle.typedb.protocol.ConceptProto;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.*;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesExplicitReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
