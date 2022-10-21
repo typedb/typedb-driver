@@ -67,12 +67,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> match(TypeQLMatch query) {
-        return match(query.toString());
+        return match(query.toString(false));
     }
 
     @Override
     public Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options) {
-        return match(query.toString(), options);
+        return match(query.toString(false), options);
     }
 
     @Override
@@ -89,12 +89,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query) {
-        return matchAggregate(query.toString());
+        return matchAggregate(query.toString(false));
     }
 
     @Override
     public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options) {
-        return matchAggregate(query.toString(), options);
+        return matchAggregate(query.toString(false), options);
     }
 
     @Override
@@ -111,12 +111,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMapGroup> match(TypeQLMatch.Group query) {
-        return matchGroup(query.toString());
+        return matchGroup(query.toString(false));
     }
 
     @Override
     public Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options) {
-        return matchGroup(query.toString(), options);
+        return matchGroup(query.toString(false), options);
     }
 
     @Override
@@ -133,12 +133,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query) {
-        return matchGroupAggregate(query.toString());
+        return matchGroupAggregate(query.toString(false));
     }
 
     @Override
     public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options) {
-        return matchGroupAggregate(query.toString(), options);
+        return matchGroupAggregate(query.toString(false), options);
     }
 
     @Override
@@ -155,12 +155,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> insert(TypeQLInsert query) {
-        return insert(query.toString());
+        return insert(query.toString(false));
     }
 
     @Override
     public Stream<ConceptMap> insert(TypeQLInsert query, TypeDBOptions options) {
-        return insert(query.toString(), options);
+        return insert(query.toString(false), options);
     }
 
     @Override
@@ -177,12 +177,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> delete(TypeQLDelete query) {
-        return delete(query.toString());
+        return delete(query.toString(false));
     }
 
     @Override
     public QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options) {
-        return delete(query.toString(), options);
+        return delete(query.toString(false), options);
     }
 
     @Override
@@ -197,12 +197,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> update(TypeQLUpdate query) {
-        return update(query.toString());
+        return update(query.toString(false));
     }
 
     @Override
     public Stream<ConceptMap> update(TypeQLUpdate query, TypeDBOptions options) {
-        return update(query.toString(), options);
+        return update(query.toString(false), options);
     }
 
     @Override
@@ -219,12 +219,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> define(TypeQLDefine query) {
-        return define(query.toString());
+        return define(query.toString(false));
     }
 
     @Override
     public QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options) {
-        return define(query.toString(), options);
+        return define(query.toString(false), options);
     }
 
     @Override
@@ -239,12 +239,12 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public QueryFuture<Void> undefine(TypeQLUndefine query) {
-        return undefine(query.toString());
+        return undefine(query.toString(false));
     }
 
     @Override
     public QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options) {
-        return define(query.toString(), options);
+        return define(query.toString(false), options);
     }
 
     @Override
