@@ -69,9 +69,9 @@ public class ClientQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-//        typedb = new TypeDBCoreRunner();
-//        typedb.start();
-        typedbClient = TypeDB.coreClient("localhost:1729");
+        typedb = new TypeDBCoreRunner();
+        typedb.start();
+        typedbClient = TypeDB.coreClient(typedb.address());
         if (typedbClient.databases().contains("typedb")) typedbClient.databases().get("typedb").delete();
         typedbClient.databases().create("typedb");
     }
@@ -79,46 +79,7 @@ public class ClientQueryTest {
     @AfterClass
     public static void closeSession() {
         typedbClient.close();
-//        typedb.stop();
-    }
-
-    @Test
-    public void test() {
-        try (TypeDBClient typedbClient = TypeDB.coreClient("localhost:1729")) {
-            java.lang.String valWrite = "a\na";
-            System.out.println("--- to be inserted");
-            System.out.println(valWrite);
-            System.out.println("--- to be inserted");
-            if (typedbClient.databases().contains("typedb")) {
-                typedbClient.databases().get("typedb").delete();
-            }
-            typedbClient.databases().create("typedb");
-            try (TypeDBSession session = typedbClient.session("typedb", TypeDBSession.Type.SCHEMA)) {
-                try (TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE)) {
-                    tx.query().define("define person sub entity, owns name, owns user-ssh-private-key; name sub attribute, value string; user-ssh-private-key sub attribute, value string;");
-                    tx.commit();
-                }
-            }
-
-            try (TypeDBSession session = typedbClient.session("typedb", TypeDBSession.Type.DATA)) {
-                try (TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE)) {
-                    TypeQLInsert query = TypeQL.insert(var("u").isa("person").has("name", "lolski").has("user-ssh-private-key", valWrite));
-                    System.out.println(query);
-                    tx.query().insert(query);
-                    tx.commit();
-                }
-            }
-
-            try (TypeDBSession session = typedbClient.session("typedb", TypeDBSession.Type.DATA)) {
-                try (TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE)) {
-                    List<ConceptMap> answers = tx.query().match(TypeQL.match(var("u").isa("person").has("user-ssh-private-key", var("k")))).collect(Collectors.toList());
-                    String valRead = answers.get(0).get("k").asAttribute().asString().getValue();
-                    System.out.println("--- read");
-                    System.out.println(valRead);
-                    System.out.println("--- read");
-                }
-            }
-        }
+        typedb.stop();
     }
 
     @Test
