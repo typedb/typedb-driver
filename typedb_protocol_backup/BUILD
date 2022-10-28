@@ -21,17 +21,16 @@
 
 load("@rules_rust//rust:defs.bzl", "rust_library")
 
-rust_library(
-    name = "typedb_protocol",
-    srcs = glob(["*.rs"]),
-    deps = [
-        "@vaticle_dependencies//library/crates:grpc",
-        "@vaticle_dependencies//library/crates:grpc_protobuf",
-        "@vaticle_dependencies//library/crates:protobuf",
-    ],
-    tags = [
-        "crate-name=typedb-protocol",
-    ],
-    version = "0.0.1",
-    visibility = ["//visibility:public"]
-)
+#rust_library(
+#    name = "typedb_protocol",
+#    srcs = glob(["*.rs"]),
+#    deps = [
+#        "@vaticle_dependencies//library/crates:tonic",
+#        "@vaticle_dependencies//library/crates:prost",
+#    ],
+#    tags = [
+#        "crate-name=typedb-protocol",
+#    ],
+#    version = "0.0.1",
+#    visibility = ["//visibility:public"]
+#)

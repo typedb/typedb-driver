@@ -22,11 +22,11 @@
 use std::iter::once;
 use std::sync::{Arc, Mutex};
 use futures::{Stream, stream, StreamExt};
-use QueryManager_ResPart_oneof_res::{explain_res_part, insert_res_part, match_group_aggregate_res_part, match_group_res_part, match_res_part, update_res_part};
-use Transaction_ResPart_oneof_res::query_manager_res_part;
-use typedb_protocol::query::{QueryManager_Res_oneof_res, QueryManager_ResPart_oneof_res};
-use typedb_protocol::transaction::{Transaction_Req, Transaction_ResPart, Transaction_ResPart_oneof_res};
-use typedb_protocol::transaction::Transaction_Res_oneof_res::query_manager_res;
+// use QueryManager_ResPart_oneof_res::{explain_res_part, insert_res_part, match_group_aggregate_res_part, match_group_res_part, match_res_part, update_res_part};
+// use Transaction_ResPart_oneof_res::query_manager_res_part;
+// use typedb_protocol_backup::query::{QueryManager_Res_oneof_res, QueryManager_ResPart_oneof_res};
+// use typedb_protocol_backup::transaction::{Transaction_Req, Transaction_ResPart, Transaction_ResPart_oneof_res};
+// use typedb_protocol_backup::transaction::Transaction_Res_oneof_res::query_manager_res;
 use crate::answer::ConceptMap;
 
 use crate::common::error::MESSAGES;

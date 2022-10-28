@@ -19,11 +19,11 @@
  * under the License.
  */
 
-pub mod answer;
+// pub mod answer;
 pub mod common;
-pub mod concept;
+// pub mod concept;
 pub mod database;
-pub mod query;
+// pub mod query;
 mod rpc;
 pub mod session;
 pub mod transaction;
@@ -32,34 +32,47 @@ pub use crate::common::Result;
 pub use crate::database::DatabaseManager;
 pub use crate::database::Database;
 pub use crate::session::Session;
-pub use crate::transaction::Transaction;
+// pub use crate::transaction::Transaction;
 
 use std::sync::Arc;
 
 use crate::rpc::client::RpcClient;
 
-#[derive(Clone)]
 pub struct TypeDBClient {
     pub databases: DatabaseManager,
-    pub(crate) rpc_client: Arc<RpcClient>,
+    pub(crate) rpc_client: RpcClient,
 }
 
 impl TypeDBClient {
-    #[must_use]
-    pub async fn new(host: &str, port: u16) -> Result<Self> {
-        let rpc_client = Arc::new(RpcClient::new(host, port).await?);
+    pub async fn new(address: &str) -> Result<Self> {
+        let rpc_client = RpcClient::new(address).await?;
         Ok(TypeDBClient {
-            databases: DatabaseManager::new(Arc::clone(&rpc_client)),
+            databases: DatabaseManager::new(&rpc_client),
             rpc_client,
         })
     }
 
     pub async fn with_default_address() -> Result<Self> {
-        Self::new("0.0.0.0", 1729).await
+        Self::new("http://0.0.0.0:1729").await
     }
 
-    #[must_use]
-    pub async fn session(&self, db_name: &str, session_type: session::Type) -> Result<Session> {
-        Session::new(db_name, session_type, Arc::clone(&self.rpc_client)).await
+    pub async fn session(&mut self, db_name: &str, session_type: session::Type) -> Result<Session> {
+        Session::new(db_name, session_type, &self.rpc_client).await
     }
+}
+
+#[macro_export]
+macro_rules! session {
+    ($client:tt, $db_name:tt, $session_type:tt, $body:expr) => {
+        async {
+            match $client.session($db_name, $session_type).await {
+                Ok(mut session) => {
+                    $body;
+                    session.close().await;
+                    Ok(())
+                }
+                Err(err) => Err(err)
+            }
+        }.await
+    };
 }
