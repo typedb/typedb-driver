@@ -62,7 +62,7 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
-        ".grabl/*",
+        ".factory/*",
     ]),
     exclude = glob([
         "*.md",

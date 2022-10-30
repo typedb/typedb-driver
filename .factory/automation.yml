@@ -39,7 +39,7 @@ build:
         SONARCLOUD_CODE_ANALYSIS_CREDENTIAL=$SONARCLOUD_CREDENTIAL \
           bazel run @vaticle_dependencies//tool/sonarcloud:code-analysis -- \
           --project-key=vaticle_typedb_client_java \
-          --branch=$GRABL_BRANCH --commit-id=$GRABL_COMMIT
+          --branch=$FACTORY_BRANCH --commit-id=$FACTORY_COMMIT
     dependency-analysis:
       image: vaticle-ubuntu-21.04
       command: |
@@ -73,7 +73,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+        .factory/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
     # TODO: delete --jobs=1 if we fix the issue with excess memory usage
 #    test-behaviour-connection-cluster:
 #      image: vaticle-ubuntu-21.04
@@ -81,7 +81,7 @@ build:
 #        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+#        .factory/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
     # TODO: delete --jobs=1 if we fix the issue with excess memory usage
     test-behaviour-concept-core:
       image: vaticle-ubuntu-21.04
@@ -89,64 +89,64 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/concept/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/concept/... --test_output=errors
 #    test-behaviour-concept-cluster:
 #      image: vaticle-ubuntu-21.04
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/concept/... --test_output=errors
+#        .factory/test-cluster.sh //test/behaviour/concept/... --test_output=errors
     test-behaviour-match-core:
       image: vaticle-ubuntu-21.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors
-        .grabl/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors
 #    test-behaviour-match-cluster:
 #      image: vaticle-ubuntu-21.04
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors
-#        .grabl/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors
+#        .factory/test-cluster.sh //test/behaviour/typeql/language/match/... --test_output=errors
+#        .factory/test-cluster.sh //test/behaviour/typeql/language/get/... --test_output=errors
     test-behaviour-writable-core:
       image: vaticle-ubuntu-21.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors
-        .grabl/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors
-        .grabl/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors
     test-behaviour-writable-cluster:
       image: vaticle-ubuntu-21.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors
-        .grabl/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors
-        .grabl/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors
     test-behaviour-definable-core:
       image: vaticle-ubuntu-21.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors
-        .grabl/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
     test-behaviour-definable-cluster:
       image: vaticle-ubuntu-21.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .grabl/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors
-        .grabl/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
     deploy-maven-snapshot:
       image: vaticle-ubuntu-21.04
       dependencies: [
@@ -171,7 +171,7 @@ build:
         owner: vaticle
         branch: master
       command: |
-        export REPO_DIR="/home/grabl/$GRABL_REPO/"
+        export REPO_DIR="/home/factory/$FACTORY_REPO/"
         export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
         bazel run //test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
         export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
@@ -179,7 +179,7 @@ build:
         sudo systemctl daemon-reload
         sudo systemctl start typedb
 
-        sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$GRABL_COMMIT/g" test/deployment/pom.xml
+        sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" test/deployment/pom.xml
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
 
@@ -199,9 +199,9 @@ release:
         pyenv global 3.6.10 system
         pip3 install certifi
         export NOTES_CREATE_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run @vaticle_dependencies//tool/release/notes:create -- $GRABL_OWNER $GRABL_REPO $GRABL_COMMIT $(cat VERSION) ./RELEASE_TEMPLATE.md
+        bazel run @vaticle_dependencies//tool/release/notes:create -- $FACTORY_OWNER $FACTORY_REPO $FACTORY_COMMIT $(cat VERSION) ./RELEASE_TEMPLATE.md
         export DEPLOY_GITHUB_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run --define version=$(cat VERSION) //:deploy-github -- $GRABL_COMMIT
+        bazel run --define version=$(cat VERSION) //:deploy-github -- $FACTORY_COMMIT
     deploy-maven-release:
       image: vaticle-ubuntu-21.04
       dependencies: [deploy-github]
