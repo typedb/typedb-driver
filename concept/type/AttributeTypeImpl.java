@@ -29,9 +29,9 @@ import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 
-import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
@@ -52,34 +52,37 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     private static final Label ROOT_LABEL = Label.of("attribute");
 
-    AttributeTypeImpl(Label label, boolean isRoot) {
-        super(label, isRoot);
+    AttributeTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
+        super(label, isRoot, isAbstract);
     }
 
-    public static AttributeTypeImpl of(ConceptProto.Type type) {
-        switch (type.getValueType()) {
+    public static AttributeTypeImpl of(ConceptProto.Type proto) {
+        Label label = Label.of(proto.getLabel());
+        boolean isRoot = proto.getIsRoot();
+        boolean isAbstract = proto.getIsAbstract();
+        switch (proto.getValueType()) {
             case BOOLEAN:
-                return new AttributeTypeImpl.Boolean(Label.of(type.getLabel()), type.getRoot());
+                return new AttributeTypeImpl.Boolean(label, isRoot, isAbstract);
             case LONG:
-                return new AttributeTypeImpl.Long(Label.of(type.getLabel()), type.getRoot());
+                return new AttributeTypeImpl.Long(label, isRoot, isAbstract);
             case DOUBLE:
-                return new AttributeTypeImpl.Double(Label.of(type.getLabel()), type.getRoot());
+                return new AttributeTypeImpl.Double(label, isRoot, isAbstract);
             case STRING:
-                return new AttributeTypeImpl.String(Label.of(type.getLabel()), type.getRoot());
+                return new AttributeTypeImpl.String(label, isRoot, isAbstract);
             case DATETIME:
-                return new AttributeTypeImpl.DateTime(Label.of(type.getLabel()), type.getRoot());
+                return new AttributeTypeImpl.DateTime(label, isRoot, isAbstract);
             case OBJECT:
-                assert type.getRoot();
-                return new AttributeTypeImpl(Label.of(type.getLabel()), type.getRoot());
+                assert isRoot;
+                return new AttributeTypeImpl(label, isRoot, isAbstract);
             case UNRECOGNIZED:
             default:
-                throw new TypeDBClientException(BAD_VALUE_TYPE, type.getValueType());
+                throw new TypeDBClientException(BAD_VALUE_TYPE, proto.getValueType());
         }
     }
 
     @Override
     public AttributeTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
+        return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
     }
 
     @Override
@@ -89,31 +92,31 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public AttributeTypeImpl.Boolean asBoolean() {
-        if (isRoot()) return new Boolean(ROOT_LABEL, true);
+        if (isRoot()) return new Boolean(ROOT_LABEL, true, isAbstract());
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
     }
 
     @Override
     public AttributeTypeImpl.Long asLong() {
-        if (isRoot()) return new Long(ROOT_LABEL, true);
+        if (isRoot()) return new Long(ROOT_LABEL, true, isAbstract());
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
     }
 
     @Override
     public AttributeTypeImpl.Double asDouble() {
-        if (isRoot()) return new Double(ROOT_LABEL, true);
+        if (isRoot()) return new Double(ROOT_LABEL, true, isAbstract());
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
     }
 
     @Override
     public AttributeTypeImpl.String asString() {
-        if (isRoot()) return new String(ROOT_LABEL, true);
+        if (isRoot()) return new String(ROOT_LABEL, true, isAbstract());
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
     }
 
     @Override
     public AttributeTypeImpl.DateTime asDateTime() {
-        if (isRoot()) return new DateTime(ROOT_LABEL, true);
+        if (isRoot()) return new DateTime(ROOT_LABEL, true, isAbstract());
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
     }
 
@@ -132,13 +135,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-            super(transaction, label, isRoot);
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+            super(transaction, label, isRoot, isAbstract);
         }
 
         @Override
         public AttributeTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -225,31 +228,31 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public AttributeTypeImpl.Boolean.Remote asBoolean() {
-            if (isRoot()) return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true);
+            if (isRoot()) return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true, isAbstract());
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
         }
 
         @Override
         public AttributeTypeImpl.Long.Remote asLong() {
-            if (isRoot()) return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true);
+            if (isRoot()) return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true, isAbstract());
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
         }
 
         @Override
         public AttributeTypeImpl.Double.Remote asDouble() {
-            if (isRoot()) return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true);
+            if (isRoot()) return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true, isAbstract());
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
         }
 
         @Override
         public AttributeTypeImpl.String.Remote asString() {
-            if (isRoot()) return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true);
+            if (isRoot()) return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true, isAbstract());
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
         }
 
         @Override
         public AttributeTypeImpl.DateTime.Remote asDateTime() {
-            if (isRoot()) return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true);
+            if (isRoot()) return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true, isAbstract());
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
         }
 
@@ -269,17 +272,17 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Boolean extends AttributeTypeImpl implements AttributeType.Boolean {
 
-        Boolean(Label label, boolean isRoot) {
-            super(label, isRoot);
+        Boolean(Label label, boolean isRoot, boolean isAbstract) {
+            super(label, isRoot, isAbstract);
         }
 
-        public static AttributeTypeImpl.Boolean of(ConceptProto.Type typeProto) {
-            return new AttributeTypeImpl.Boolean(Label.of(typeProto.getLabel()), typeProto.getRoot());
+        public static AttributeTypeImpl.Boolean of(ConceptProto.Type proto) {
+            return new AttributeTypeImpl.Boolean(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
         }
 
         @Override
         public AttributeTypeImpl.Boolean.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -289,13 +292,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-                super(transaction, label, isRoot);
+            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+                super(transaction, label, isRoot, isAbstract);
             }
 
             @Override
             public AttributeTypeImpl.Boolean.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot(), isAbstract());
             }
 
             @Override
@@ -344,17 +347,17 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Long extends AttributeTypeImpl implements AttributeType.Long {
 
-        Long(Label label, boolean isRoot) {
-            super(label, isRoot);
+        Long(Label label, boolean isRoot, boolean isAbstract) {
+            super(label, isRoot, isAbstract);
         }
 
-        public static AttributeTypeImpl.Long of(ConceptProto.Type typeProto) {
-            return new AttributeTypeImpl.Long(Label.of(typeProto.getLabel()), typeProto.getRoot());
+        public static AttributeTypeImpl.Long of(ConceptProto.Type proto) {
+            return new AttributeTypeImpl.Long(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
         }
 
         @Override
         public AttributeTypeImpl.Long.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -364,13 +367,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-                super(transaction, label, isRoot);
+            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+                super(transaction, label, isRoot, isAbstract);
             }
 
             @Override
             public AttributeTypeImpl.Long.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot(), isAbstract());
             }
 
             @Override
@@ -419,17 +422,17 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class Double extends AttributeTypeImpl implements AttributeType.Double {
 
-        Double(Label label, boolean isRoot) {
-            super(label, isRoot);
+        Double(Label label, boolean isRoot, boolean isAbstract) {
+            super(label, isRoot, isAbstract);
         }
 
-        public static AttributeTypeImpl.Double of(ConceptProto.Type typeProto) {
-            return new AttributeTypeImpl.Double(Label.of(typeProto.getLabel()), typeProto.getRoot());
+        public static AttributeTypeImpl.Double of(ConceptProto.Type proto) {
+            return new AttributeTypeImpl.Double(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
         }
 
         @Override
         public AttributeTypeImpl.Double.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -439,13 +442,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-                super(transaction, label, isRoot);
+            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+                super(transaction, label, isRoot, isAbstract);
             }
 
             @Override
             public AttributeTypeImpl.Double.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot(), isAbstract());
             }
 
             @Override
@@ -494,17 +497,17 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class String extends AttributeTypeImpl implements AttributeType.String {
 
-        String(Label label, boolean isRoot) {
-            super(label, isRoot);
+        String(Label label, boolean isRoot, boolean isAbstract) {
+            super(label, isRoot, isAbstract);
         }
 
-        public static AttributeTypeImpl.String of(ConceptProto.Type typeProto) {
-            return new AttributeTypeImpl.String(Label.of(typeProto.getLabel()), typeProto.getRoot());
+        public static AttributeTypeImpl.String of(ConceptProto.Type proto) {
+            return new AttributeTypeImpl.String(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
         }
 
         @Override
         public AttributeTypeImpl.String.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -514,13 +517,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-                super(transaction, label, isRoot);
+            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+                super(transaction, label, isRoot, isAbstract);
             }
 
             @Override
             public AttributeTypeImpl.String.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot(), isAbstract());
             }
 
             @Override
@@ -583,17 +586,17 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     public static class DateTime extends AttributeTypeImpl implements AttributeType.DateTime {
 
-        DateTime(Label label, boolean isRoot) {
-            super(label, isRoot);
+        DateTime(Label label, boolean isRoot, boolean isAbstract) {
+            super(label, isRoot, isAbstract);
         }
 
-        public static AttributeTypeImpl.DateTime of(ConceptProto.Type typeProto) {
-            return new AttributeTypeImpl.DateTime(Label.of(typeProto.getLabel()), typeProto.getRoot());
+        public static AttributeTypeImpl.DateTime of(ConceptProto.Type proto) {
+            return new AttributeTypeImpl.DateTime(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
         }
 
         @Override
         public AttributeTypeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
+            return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
@@ -603,13 +606,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-                super(transaction, label, isRoot);
+            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+                super(transaction, label, isRoot, isAbstract);
             }
 
             @Override
             public AttributeTypeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot());
+                return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot(), isAbstract());
             }
 
             @Override

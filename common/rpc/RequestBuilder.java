@@ -362,12 +362,6 @@ public class RequestBuilder {
             return builder;
         }
 
-        public static TransactionProto.Transaction.Req.Builder isAbstractReq(Label label) {
-            return typeReq(newReqBuilder(label).setTypeIsAbstractReq(
-                    ConceptProto.Type.IsAbstract.Req.getDefaultInstance()
-            ));
-        }
-
         public static TransactionProto.Transaction.Req.Builder setLabelReq(Label label, String newLabel) {
             return typeReq(newReqBuilder(label).setTypeSetLabelReq(
                     ConceptProto.Type.SetLabel.Req.newBuilder().setLabel(newLabel)

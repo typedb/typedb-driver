@@ -55,24 +55,24 @@ import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
-    ThingTypeImpl(Label label, boolean isRoot) {
-        super(label, isRoot);
+    ThingTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
+        super(label, isRoot, isAbstract);
     }
 
-    public static ThingTypeImpl of(ConceptProto.Type typeProto) {
-        switch (typeProto.getEncoding()) {
+    public static ThingTypeImpl of(ConceptProto.Type proto) {
+        switch (proto.getEncoding()) {
             case ENTITY_TYPE:
-                return EntityTypeImpl.of(typeProto);
+                return EntityTypeImpl.of(proto);
             case RELATION_TYPE:
-                return RelationTypeImpl.of(typeProto);
+                return RelationTypeImpl.of(proto);
             case ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(typeProto);
+                return AttributeTypeImpl.of(proto);
             case THING_TYPE:
-                assert typeProto.getRoot();
-                return new ThingTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
+                assert proto.getIsRoot();
+                return new ThingTypeImpl(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
             case UNRECOGNIZED:
             default:
-                throw new TypeDBClientException(BAD_ENCODING, typeProto.getEncoding());
+                throw new TypeDBClientException(BAD_ENCODING, proto.getEncoding());
         }
     }
 
@@ -82,7 +82,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
+        return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
     }
 
     @Override
@@ -92,8 +92,8 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
     public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-            super(transaction, label, isRoot);
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+            super(transaction, label, isRoot, isAbstract);
         }
 
         void setSupertype(ThingType thingType) {
@@ -278,7 +278,7 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override

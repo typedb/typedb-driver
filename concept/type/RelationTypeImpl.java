@@ -29,8 +29,9 @@ import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
+
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.createReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationType.getRelatesOverriddenReq;
@@ -40,17 +41,17 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RelationT
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    RelationTypeImpl(Label label, boolean isRoot) {
-        super(label, isRoot);
+    RelationTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
+        super(label, isRoot, isAbstract);
     }
 
-    public static RelationTypeImpl of(ConceptProto.Type typeProto) {
-        return new RelationTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
+    public static RelationTypeImpl of(ConceptProto.Type proto) {
+        return new RelationTypeImpl(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
     }
 
     @Override
     public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
+        return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
     }
 
     @Override
@@ -60,13 +61,13 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     public static class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-            super(transaction, label, isRoot);
+        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+            super(transaction, label, isRoot, isAbstract);
         }
 
         @Override
         public RelationTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new RelationTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override

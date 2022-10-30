@@ -42,11 +42,11 @@ import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.TransactionProto;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
@@ -57,7 +57,6 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtyp
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSupertypesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.isAbstractReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.setLabelReq;
 import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
 import static com.vaticle.typedb.client.concept.type.ThingTypeImpl.protoThingType;
@@ -68,12 +67,14 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     private final Label label;
     private final boolean isRoot;
+    private final boolean isAbstract;
     private final int hash;
 
-    TypeImpl(Label label, boolean isRoot) {
+    TypeImpl(Label label, boolean isRoot, boolean isAbstract) {
         if (label == null) throw new TypeDBClientException(MISSING_LABEL);
         this.label = label;
         this.isRoot = isRoot;
+        this.isAbstract = isAbstract;
         this.hash = Objects.hash(this.label);
     }
 
@@ -122,6 +123,11 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     }
 
     @Override
+    public final boolean isAbstract() {
+        return isAbstract;
+    }
+
+    @Override
     public TypeImpl asType() {
         return this;
     }
@@ -150,14 +156,16 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         final TypeDBTransaction.Extended transactionExt;
         private Label label;
         private final boolean isRoot;
+        private final boolean isAbstract;
         private int hash;
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
             if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
             if (label == null) throw new TypeDBClientException(MISSING_LABEL);
             this.transactionExt = (TypeDBTransaction.Extended) transaction;
             this.label = label;
             this.isRoot = isRoot;
+            this.isAbstract = isAbstract;
             this.hash = Objects.hash(this.transactionExt, label);
         }
 
@@ -172,15 +180,15 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         }
 
         @Override
+        public final boolean isAbstract() {
+            return isAbstract;
+        }
+
+        @Override
         public final void setLabel(String newLabel) {
             execute(setLabelReq(getLabel(), newLabel));
             this.label = Label.of(label.scope().orElse(null), newLabel);
             this.hash = Objects.hash(transactionExt, this.label);
-        }
-
-        @Override
-        public final boolean isAbstract() {
-            return execute(isAbstractReq(getLabel())).getTypeIsAbstractRes().getAbstract();
         }
 
         @Override

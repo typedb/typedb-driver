@@ -25,9 +25,9 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.Label;
 
+import java.util.stream.Stream;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 public interface Type extends Concept {
 
@@ -36,6 +36,9 @@ public interface Type extends Concept {
 
     @CheckReturnValue
     boolean isRoot();
+
+    @CheckReturnValue
+    boolean isAbstract();
 
     @Override
     default boolean isType() {
@@ -48,9 +51,6 @@ public interface Type extends Concept {
     interface Remote extends Type, Concept.Remote {
 
         void setLabel(String label);
-
-        @CheckReturnValue
-        boolean isAbstract();
 
         @Nullable
         @CheckReturnValue

@@ -43,12 +43,16 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
 
-    RoleTypeImpl(Label label, boolean root) {
-        super(label, root);
+    RoleTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
+        super(label, isRoot, isAbstract);
     }
 
-    public static RoleTypeImpl of(ConceptProto.Type typeProto) {
-        return new RoleTypeImpl(Label.of(typeProto.getScope(), typeProto.getLabel()), typeProto.getRoot());
+    public static RoleTypeImpl of(ConceptProto.Type proto) {
+        return new RoleTypeImpl(
+                Label.of(proto.getScope(), proto.getLabel()),
+                proto.getIsRoot(),
+                proto.getIsAbstract()
+        );
     }
 
     public static ConceptProto.Type protoRoleType(RoleType roleType) {
@@ -57,7 +61,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
     @Override
     public RoleTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
+        return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
     }
 
     @Override
@@ -67,8 +71,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
     public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
 
-        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-            super(transaction, label, isRoot);
+        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+            super(transaction, label, isRoot, isAbstract);
         }
 
         @Nullable
@@ -95,7 +99,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
         @Override
         public RoleType.Remote asRemote(TypeDBTransaction transaction) {
-            return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Nullable

@@ -27,22 +27,24 @@ import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
+
 import java.util.stream.Stream;
+
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    EntityTypeImpl(Label label, boolean isRoot) {
-        super(label, isRoot);
+    EntityTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
+        super(label, isRoot, isAbstract);
     }
 
-    public static EntityTypeImpl of(ConceptProto.Type typeProto) {
-        return new EntityTypeImpl(Label.of(typeProto.getLabel()), typeProto.getRoot());
+    public static EntityTypeImpl of(ConceptProto.Type proto) {
+        return new EntityTypeImpl(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
     }
 
     @Override
     public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+        return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
     }
 
     @Override
@@ -52,13 +54,13 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot) {
-            super(transaction, label, isRoot);
+        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
+            super(transaction, label, isRoot, isAbstract);
         }
 
         @Override
         public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot());
+            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
         }
 
         @Override
