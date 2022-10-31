@@ -28,15 +28,15 @@ use std::iter::once;
 use std::time::Instant;
 use futures::{FutureExt, Stream, stream, StreamExt};
 use futures::stream::FuturesUnordered;
+use typedb_protocol::{attribute as attribute_proto, attribute_type as attribute_type_proto, concept as concept_proto, r#type as type_proto};
+use typedb_protocol::attribute_type::ValueType;
+use typedb_protocol::r#type::Encoding;
+use typedb_protocol::transaction;
 use protobuf::SingularPtrField;
-// use typedb_protocol_backup::concept::{AttributeType_ValueType, Concept_oneof_concept, Thing_ResPart_oneof_res, Type_Encoding};
-// use typedb_protocol_backup::concept::Thing_ResPart_oneof_res::attribute_get_owners_res_part;
-// use typedb_protocol_backup::transaction::{Transaction_Req, Transaction_ResPart};
-// use typedb_protocol_backup::transaction::Transaction_ResPart_oneof_res::thing_res_part;
 use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::{Error, Result};
-use crate::rpc::builder::thing::attribute_get_owners_req;
+// use crate::rpc::builder::thing::attribute_get_owners_req;
 use crate::transaction::Transaction;
 
 mod api {
@@ -73,21 +73,21 @@ mod api {
     pub trait StringAttribute: Attribute {}
 }
 
-fn stream_things(tx: &Transaction, req: Transaction_Req) -> impl Stream<Item = Result<Thing_ResPart_oneof_res>> {
-    tx.streaming_rpc(req).map(|result: Result<Transaction_ResPart>| {
-        match result {
-            Ok(tx_res_part) => {
-                match tx_res_part.res {
-                    Some(thing_res_part(res_part)) => {
-                        res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"]))
-                    }
-                    _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"])) }
-                }
-            }
-            Err(err) => { Err(err) }
-        }
-    })
-}
+// fn stream_things(tx: &Transaction, req: transaction::Req) -> impl Stream<Item = Result<Thing_ResPart_oneof_res>> {
+//     tx.streaming_rpc(req).map(|result: Result<Transaction_ResPart>| {
+//         match result {
+//             Ok(tx_res_part) => {
+//                 match tx_res_part.res {
+//                     Some(thing_res_part(res_part)) => {
+//                         res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"]))
+//                     }
+//                     _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"])) }
+//                 }
+//             }
+//             Err(err) => { Err(err) }
+//         }
+//     })
+// }
 
 #[derive(Clone, Debug)]
 pub enum Concept {
@@ -96,11 +96,11 @@ pub enum Concept {
 }
 
 impl Concept {
-    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Concept) -> Result<Concept> {
+    pub(crate) fn from_proto(mut proto: typedb_protocol::Concept) -> Result<Concept> {
         let concept = proto.concept.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
         match concept {
-            Concept_oneof_concept::thing(thing) => { Ok(Self::Thing(Thing::from_proto(thing)?)) }
-            Concept_oneof_concept::field_type(type_concept) => Ok(Self::Type(Type::from_proto(type_concept)?))
+            concept_proto::Concept::Thing(thing) => { Ok(Self::Thing(Thing::from_proto(thing)?)) }
+            concept_proto::Concept::Type(type_) => { Ok(Self::Type(Type::from_proto(type_)?)) }
         }
     }
 
@@ -157,13 +157,13 @@ pub enum Type {
 }
 
 impl Type {
-    pub(crate) fn from_proto(proto: typedb_protocol::concept::Type) -> Result<Type> {
-        match proto.encoding {
-            Type_Encoding::THING_TYPE => Ok(Self::Thing(ThingType::Root(RootThingType::default()))),
-            Type_Encoding::ENTITY_TYPE => Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))),
-            Type_Encoding::RELATION_TYPE => Ok(Self::Thing(ThingType::Relation(RelationType::from_proto(proto)))),
-            Type_Encoding::ATTRIBUTE_TYPE => { todo!() }
-            Type_Encoding::ROLE_TYPE => { todo!() }
+    pub(crate) fn from_proto(proto: typedb_protocol::Type) -> Result<Type> {
+        match type_proto::Encoding::try_from(proto.encoding).unwrap() {
+            Encoding::ThingType => { Ok(Self::Thing(ThingType::Root(RootThingType::default()))) },
+            Encoding::EntityType => { Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))) },
+            Encoding::RelationType => { Ok(Self::Thing(ThingType::Relation(RelationType::from_proto(proto)))) },
+            Encoding::AttributeType => { todo!() }
+            Encoding::RoleType => { todo!() }
         }
     }
 }
@@ -245,7 +245,7 @@ impl EntityType {
         Self { label }
     }
 
-    fn from_proto(proto: typedb_protocol::concept::Type) -> Self {
+    fn from_proto(proto: typedb_protocol::Type) -> Self {
         Self::new(proto.label)
     }
 
@@ -277,7 +277,7 @@ impl RelationType {
         Self { label }
     }
 
-    fn from_proto(proto: typedb_protocol::concept::Type) -> Self {
+    fn from_proto(proto: typedb_protocol::Type) -> Self {
         Self::new(proto.label)
     }
 }
@@ -294,12 +294,13 @@ pub enum Thing {
 }
 
 impl Thing {
-    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Thing> {
-        match proto.get_field_type().encoding {
-            Type_Encoding::ENTITY_TYPE => Ok(Self::Entity(Entity::from_proto(proto))),
-            Type_Encoding::RELATION_TYPE => { todo!() }
-            Type_Encoding::ATTRIBUTE_TYPE => Ok(Self::Attribute(Attribute::from_proto(proto)?)),
-            _ => { todo!() }
+    pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Thing> {
+        match typedb_protocol::r#type::Encoding::try_from(proto.r#type?.encoding)? {
+            type_proto::Encoding::ThingType => { todo!() }
+            type_proto::Encoding::EntityType => { Ok(Self::Entity(Entity::from_proto(proto)?)) },
+            type_proto::Encoding::RelationType => { todo!() }
+            type_proto::Encoding::AttributeType => { Ok(Self::Attribute(Attribute::from_proto(proto)?)) },
+            type_proto::Encoding::RoleType => { todo!() }
         }
     }
 }
@@ -323,8 +324,8 @@ pub struct Entity {
 }
 
 impl Entity {
-    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Entity {
-        Self { type_: EntityType::from_proto(proto.take_field_type()), iid: proto.iid }
+    pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Entity> {
+        Ok(Self { type_: EntityType::from_proto(proto.r#type?), iid: proto.iid })
     }
 }
 
@@ -364,14 +365,24 @@ pub enum Attribute {
 }
 
 impl Attribute {
-    pub(crate) fn from_proto(mut proto: typedb_protocol::concept::Thing) -> Result<Attribute> {
-        match proto.get_field_type().get_value_type() {
-            AttributeType_ValueType::BOOLEAN => { todo!() }
-            AttributeType_ValueType::LONG => { Ok(Self::Long(LongAttribute { value: proto.take_value().get_long(), iid: proto.iid })) }
-            AttributeType_ValueType::DOUBLE => { todo!() }
-            AttributeType_ValueType::STRING => { Ok(Self::String(StringAttribute { value: proto.take_value().take_string(), iid: proto.iid }))}
-            AttributeType_ValueType::DATETIME => { todo!() }
-            _ => { todo!() }
+    pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Attribute> {
+        match attribute_type_proto::ValueType::try_from(proto.r#type?.value_type)? {
+            ValueType::Object => { todo!() }
+            ValueType::Boolean => { todo!() }
+            ValueType::Long => {
+                Ok(Self::Long(LongAttribute {
+                    value: if let attribute_proto::value::Value::Long(value) = proto.value?.value? { value } else { todo!() },
+                    iid: proto.iid
+                }))
+            }
+            ValueType::Double => { todo!() }
+            ValueType::String => {
+                Ok(Self::String(StringAttribute {
+                    value: if let attribute_proto::value::Value::String(value) = proto.value?.value? { value } else { todo!() },
+                    iid: proto.iid
+                }))
+            }
+            ValueType::Datetime => { todo!() }
         }
     }
 
@@ -409,19 +420,20 @@ impl Attribute {
     }
 
     fn get_owners_impl(iid: &Vec<u8>, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-        stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<Thing_ResPart_oneof_res>| {
-            match result {
-                Ok(res_part) => {
-                    match res_part {
-                        attribute_get_owners_res_part(x) => {
-                            stream::iter(x.things.into_iter().map(|thing| Thing::from_proto(thing))).left_stream()
-                        }
-                        _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
-                    }
-                }
-                Err(err) => { stream::iter(once(Err(err))).right_stream() }
-            }
-        })
+        todo!()
+        // stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<Thing_ResPart_oneof_res>| {
+        //     match result {
+        //         Ok(res_part) => {
+        //             match res_part {
+        //                 attribute_get_owners_res_part(x) => {
+        //                     stream::iter(x.things.into_iter().map(|thing| Thing::from_proto(thing))).left_stream()
+        //                 }
+        //                 _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
+        //             }
+        //         }
+        //         Err(err) => { stream::iter(once(Err(err))).right_stream() }
+        //     }
+        // })
     }
 }
 

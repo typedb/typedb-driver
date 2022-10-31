@@ -21,18 +21,18 @@
 
 use std::fmt::{Debug, Formatter};
 use std::future::Future;
-use std::sync::{Arc};
+use std::sync::Arc;
 use futures::channel::mpsc;
 use futures::{SinkExt, Stream};
 use tokio_stream::wrappers::ReceiverStream;
-use tonic::{IntoStreamingRequest, Response, Status, Streaming};
+use tonic::{Response, Status, Streaming};
 use tonic::transport::Channel;
 use typedb_protocol::{core_database, core_database_manager, session, transaction};
 
 use crate::common::error::Error;
 use crate::common::{Executor, Result};
 use crate::rpc::builder::core;
-use crate::rpc::builder::transaction::{client_msg, commit_req, open_req};
+use crate::rpc::builder::transaction::client_msg;
 
 #[derive(Clone, Debug)]
 pub(crate) struct RpcClient {
@@ -51,10 +51,10 @@ impl RpcClient {
                         typedb: client,
                         executor: Arc::new(futures::executor::ThreadPool::new().expect("Failed to create ThreadPool"))
                     }),
-                    Err(err) => Err(Error::new(err.to_string())),
-                    // Err(err) => Err(Error::from_grpc(err)),
+                    Err(err) => Err(err)
                 }
             }
+            // TODO: better error message than 'transport error'
             Err(err) => Err(Error::new(err.to_string())),
             // Err(err) => Err(Error::from_grpc(err)),
         }
@@ -102,20 +102,7 @@ impl RpcClient {
 
     pub(crate) async fn transaction(&mut self, open_req: transaction::Req) -> Result<(mpsc::Sender<transaction::Client>, Streaming<transaction::Server>)> {
         let (mut sender, receiver) = mpsc::channel::<transaction::Client>(256);
-        // let (sender, receiver) = tokio::sync::mpsc::channel::<transaction::Client>(1024);
-        // let stream = ReceiverStream::new(receiver);
-        // let req = tonic::Request::new(stream);
-        // sender.flush().await.unwrap();
-        // let req = receiver.into_streaming_request();
-        // println!("opening bidi stream");
         sender.send(client_msg(vec![open_req])).await.unwrap();
-        // let mut response = self.typedb.transaction(req).await.unwrap().into_inner();
-        // println!("opened bidi stream");
-        // sender.send(client_msg(vec![commit_req()])).await.unwrap();
-        // println!("sent OPEN REQ");
-        // while let Some(msg) = response.message().await.unwrap() {
-        //     dbg!(msg);
-        // }
         Self::bidi_stream(sender, self.typedb.transaction(receiver)).await
     }
 

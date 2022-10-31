@@ -29,6 +29,7 @@ use typedb_protocol::transaction::res::Res;
 use typedb_protocol::transaction::Server;
 
 use crate::common::{Error, Result};
+use crate::query::QueryManager;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req, client_msg};
 use crate::rpc::client::RpcClient;
 // use crate::query::QueryManager;
@@ -49,11 +50,10 @@ impl Type {
     }
 }
 
-// #[derive(Clone, Debug)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Transaction {
     pub transaction_type: Type,
-    // pub query: QueryManager,
+    pub query: QueryManager,
     rpc: TransactionRpc,
 }
 
@@ -64,40 +64,20 @@ impl Transaction {
             session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as i32
         );
         let rpc = TransactionRpc::new(rpc_client, open_req).await?;
-        // rpc_client.clone().transaction(session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as i32).await;
-        // rpc.req_sink.send(client_msg(vec![open_req])).await.map_err(|err| Error::from(err))?;
-        // rpc.req_sink.send(client_msg(vec![commit_req()])).await.map_err(|err| Error::from(err))?;
-        // while let Some(result) = rpc.streaming_res.next().await {
-        //     match result {
-        //         Ok(srv) => {
-        //             match srv.server.unwrap() {
-        //                 transaction_proto::server::Server::Res(res) => {
-        //                     match res.res.unwrap() {
-        //                         Res::OpenRes(_) => { println!("got open res") }
-        //                         Res::CommitRes(_) => {
-        //                             println!("got commit res");
-        //                             rpc.req_sink.close().await.map_err(|err| Error::from(err))?;
-        //                         }
-        //                         _ => { panic!() }
-        //                     }
-        //                 }
-        //                 transaction_proto::server::Server::ResPart(_) => { panic!() }
-        //             }
-        //         }
-        //         Err(_) => { rpc.req_sink.close().await.map_err(|err| Error::from(err))?; }
-        //     }
-        // }
-        // rpc.single(open_req).await.unwrap();
-        Ok(Transaction { transaction_type, rpc })
+        Ok(Transaction {
+            transaction_type,
+            query: QueryManager::new(&rpc),
+            rpc
+        })
     }
 
     pub fn get_type(&self) -> Type {
         self.transaction_type
     }
 
-    // pub fn query(&self) -> &QueryManager {
-    //     &self.state.query
-    // }
+    pub fn query(&self) -> &QueryManager {
+        &self.query
+    }
 
     pub async fn commit(&mut self) -> Result {
         self.single_rpc(commit_req()).await.map(|_| ())
@@ -111,9 +91,9 @@ impl Transaction {
         self.rpc.single(req).await
     }
 
-    // pub(crate) fn streaming_rpc(&self, req: transaction_proto::Req) -> impl Stream<Item = Result<transaction_proto::ResPart>> {
-    //     self.state.rpc.lock().unwrap().stream(req)
-    // }
+    pub(crate) fn streaming_rpc(&mut self, req: transaction_proto::Req) -> impl Stream<Item = Result<transaction_proto::ResPart>> {
+        self.rpc.stream(req)
+    }
 
     // TODO: refactor to delegate work to a background process so we can implement Drop
     pub async fn close(&self) {

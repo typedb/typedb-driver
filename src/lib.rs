@@ -19,11 +19,11 @@
  * under the License.
  */
 
-// pub mod answer;
+pub mod answer;
 pub mod common;
-// pub mod concept;
+pub mod concept;
 pub mod database;
-// pub mod query;
+pub mod query;
 mod rpc;
 pub mod session;
 pub mod transaction;
@@ -32,7 +32,7 @@ pub use crate::common::Result;
 pub use crate::database::DatabaseManager;
 pub use crate::database::Database;
 pub use crate::session::Session;
-// pub use crate::transaction::Transaction;
+pub use crate::transaction::Transaction;
 
 use std::sync::Arc;
 

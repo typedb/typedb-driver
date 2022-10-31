@@ -45,10 +45,10 @@ async fn very_basic() {
         .iter().fold(String::new(), |acc, db| acc + db.name.as_str() + ",")
     );
     let mut session = new_session(&mut client, Data).await;
-    let tx = new_tx(&session, Write).await;
-    // tx.close().await;
+    let mut tx = new_tx(&session, Write).await;
+    commit_tx(&mut tx).await;
+    tx.close().await;
     session.close().await;
-    // new_session(&mut client, Data).await;
 }
 
 async fn create_db_grakn(client: &mut TypeDBClient) {
@@ -71,10 +71,10 @@ async fn new_tx(session: &Session, tx_type: transaction::Type) -> Transaction {
     session.transaction(tx_type).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err))
 }
 
-// async fn commit_tx(tx: &Transaction) {
-//     tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err))
-// }
-//
+async fn commit_tx(tx: &mut Transaction) {
+    tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err))
+}
+
 // async fn run_define_query(tx: &Transaction, query: &str) {
 //     tx.query().define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
 // }
