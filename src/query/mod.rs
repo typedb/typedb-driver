@@ -23,6 +23,7 @@ use std::iter::once;
 use std::sync::{Arc, Mutex};
 use futures::{Stream, stream, StreamExt};
 use typedb_protocol::{query_manager, transaction};
+use typedb_protocol::query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart};
 use crate::answer::ConceptMap;
 
 use crate::common::error::MESSAGES;
@@ -72,13 +73,13 @@ impl QueryManager {
 
     pub fn insert(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = insert_req(query);
-        stream_concept_maps!(self, req, query_manager::res_part::Res::InsertResPart, "insert")
+        stream_concept_maps!(self, req, InsertResPart, "insert")
     }
 
     // TODO: investigate performance impact of using BoxStream
     pub fn match_(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = match_req(query);
-        stream_concept_maps!(self, req, query_manager::res_part::Res::MatchResPart, "match")
+        stream_concept_maps!(self, req, MatchResPart, "match")
     }
 
     pub async fn undefine(&mut self, query: &str) -> Result {
@@ -87,7 +88,7 @@ impl QueryManager {
 
     pub fn update(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = update_req(query);
-        stream_concept_maps!(self, req, query_manager::res_part::Res::UpdateResPart, "update")
+        stream_concept_maps!(self, req, UpdateResPart, "update")
     }
 
     async fn single_call(&mut self, req: transaction::Req) -> Result<query_manager::res::Res> {

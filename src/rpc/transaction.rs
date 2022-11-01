@@ -171,7 +171,10 @@ impl Sender {
 
     async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, sender: Sender) {
         match close_signal_receiver.await {
-            Ok(close_signal) => { Self::close(sender, close_signal).await; }
+            Ok(close_signal) => {
+                println!("Sender received close signal, and will now close");
+                Self::close(sender, close_signal).await;
+            }
             Err(err) => { Self::close(sender, Some(Error::new(err.to_string()))).await; }
         }
     }
@@ -189,6 +192,7 @@ impl Sender {
                     break;
                 }
             }
+            println!("Sender closed");
         }
     }
 }
@@ -259,41 +263,43 @@ impl Receiver {
         }
     }
 
-    // async fn collect_res_part(res_part: Transaction_ResPart, state: Arc<ReceiverState>) {
-    //     let value = state.res_part_collectors.lock().unwrap().remove(res_part.get_req_id());
-    //     match value {
-    //         Some(mut collector) => {
-    //             let req_id = res_part.req_id.clone();
-    //             if let Ok(_) = collector.send(Ok(res_part)).await {
-    //                 state.res_part_collectors.lock().unwrap().insert(req_id, collector);
-    //             }
-    //         }
-    //         None => {
-    //             // TODO: why does str::from_utf8 always fail here?
-    //             // println!("{}", MESSAGES.client.unknown_request_id.to_err(
-    //             //     vec![std::str::from_utf8(res_part.get_req_id()).unwrap()])
-    //             // )
-    //             let req_id_str = format!("{:?}", res_part.get_req_id());
-    //             let res_part_str = format!("{:?}", res_part);
-    //             println!("{}", MESSAGES.client.unknown_request_id.to_err(vec![req_id_str.as_str(), res_part_str.as_str()]))
-    //         }
-    //     }
-    // }
+    async fn collect_res_part(res_part: transaction::ResPart, state: Arc<ReceiverState>) {
+        let value = state.res_part_collectors.lock().unwrap().remove(&res_part.req_id);
+        match value {
+            Some(mut collector) => {
+                let req_id = res_part.req_id.clone();
+                if let Ok(_) = collector.send(Ok(res_part)).await {
+                    state.res_part_collectors.lock().unwrap().insert(req_id, collector);
+                }
+            }
+            None => {
+                // TODO: why does str::from_utf8 always fail here?
+                // println!("{}", MESSAGES.client.unknown_request_id.to_err(
+                //     vec![std::str::from_utf8(res_part.get_req_id()).unwrap()])
+                // )
+                let req_id_str = format!("{:?}", res_part.req_id);
+                println!("{}", MESSAGES.client.unknown_request_id.to_err(vec![req_id_str.as_str()]))
+            }
+        }
+    }
 
     async fn listen(mut grpc_stream: Streaming<transaction::Server>, state: Arc<ReceiverState>, close_signal_sink: CloseSignalSink) {
         loop {
             match grpc_stream.next().await {
                 Some(Ok(message)) => { Self::on_receive(message, Arc::clone(&state)).await; }
                 Some(Err(err)) => {
+                    println!("Received error, closing receiver");
                     Self::close(state, Some(err.into()), close_signal_sink).await;
                     break;
                 }
                 None => {
+                    println!("End of stream, closing receiver");
                     Self::close(state, None, close_signal_sink).await;
                     break;
                 }
             }
         }
+        println!("Receiver listener closed");
     }
 
     async fn on_receive(message: transaction::Server, state: Arc<ReceiverState>) {
@@ -302,8 +308,7 @@ impl Receiver {
                 Self::collect_res(res, state)
             }
             Some(Server::ResPart(res_part)) => {
-                todo!()
-                // Self::collect_res_part(res_part, state).await;
+                Self::collect_res_part(res_part, state).await;
             }
             None => {
                 println!("{}", MESSAGES.client.missing_response_field.to_err(vec!["server"]).to_string())
@@ -321,14 +326,15 @@ impl Receiver {
             for (_, collector) in state.res_collectors.lock().unwrap().drain() {
                 collector.send(Err(Self::close_reason(&error_str))).ok();
             }
-            // let mut res_part_collectors: Vec<ResPartCollector> = vec![];
-            // for (_, res_part_collector) in state.res_part_collectors.lock().unwrap().drain() {
-            //     res_part_collectors.push(res_part_collector)
-            // }
-            // for mut collector in res_part_collectors {
-            //     collector.send(Err(Self::close_reason(&error_str))).await.ok();
-            // }
+            let mut res_part_collectors: Vec<ResPartCollector> = vec![];
+            for (_, res_part_collector) in state.res_part_collectors.lock().unwrap().drain() {
+                res_part_collectors.push(res_part_collector)
+            }
+            for mut collector in res_part_collectors {
+                collector.send(Err(Self::close_reason(&error_str))).await.ok();
+            }
             close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
+            println!("Receiver closed");
         }
     }
 
@@ -368,7 +374,7 @@ impl Stream for ResPartStream {
                 match &res_part.res {
                     Some(res_part::Res::StreamResPart(stream_res_part)) => {
                         // TODO: unwrap -> expect(enum_out_of_range)
-                        match State::try_from(stream_res_part.state).unwrap() {
+                        match State::from_i32(stream_res_part.state).unwrap() {
                             State::Done => Poll::Ready(None),
                             State::Continue => {
                                 let req_id = self.req_id.clone();

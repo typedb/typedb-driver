@@ -23,9 +23,9 @@
 
 use futures::TryFutureExt;
 // use std::time::Instant;
-// use futures::StreamExt;
+use futures::StreamExt;
 use typedb_client::{session, Session, transaction, TypeDBClient};
-// use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
+use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
 use typedb_client::session::Type::{Data, Schema};
 use typedb_client::transaction::Transaction;
 use typedb_client::transaction::Type::{Read, Write};
@@ -34,21 +34,6 @@ const GRAKN: &str = "grakn";
 
 async fn new_typedb_client() -> TypeDBClient {
     TypeDBClient::with_default_address().await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err))
-}
-
-#[tokio::test]
-async fn very_basic() {
-    let mut client = new_typedb_client().await;
-    create_db_grakn(&mut client).await;
-    println!("{}", client.databases.all().await
-        .unwrap_or_else(|err| panic!("An error occurred listing databases: {}", err))
-        .iter().fold(String::new(), |acc, db| acc + db.name.as_str() + ",")
-    );
-    let mut session = new_session(&mut client, Data).await;
-    let mut tx = new_tx(&session, Write).await;
-    commit_tx(&mut tx).await;
-    tx.close().await;
-    session.close().await;
 }
 
 async fn create_db_grakn(client: &mut TypeDBClient) {
@@ -83,23 +68,28 @@ async fn commit_tx(tx: &mut Transaction) {
 // fn run_insert_query(tx: &Transaction, query: &str) {
 //     tx.query().insert(query);
 // }
-//
-// #[tokio::test]
-// #[ignore]
-// async fn basic() {
-//     let client = new_typedb_client().await;
-//     create_db_grakn(&client).await;
-//     let session = new_session(&client, Data).await;
-//     let tx = new_tx(&session, Write).await;
-//     let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
-//     while let Some(result) = answer_stream.next().await {
-//         match result {
-//             Ok(concept_map) => { println!("{:#?}", concept_map) }
-//             Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-//         }
-//     }
-//     commit_tx(&tx).await;
-// }
+
+#[tokio::test]
+async fn basic() {
+    let mut client = new_typedb_client().await;
+    create_db_grakn(&mut client).await;
+    println!("{}", client.databases.all().await
+        .unwrap_or_else(|err| panic!("An error occurred listing databases: {}", err))
+        .iter().fold(String::new(), |acc, db| acc + db.name.as_str() + ",")
+    );
+    let mut session = new_session(&mut client, Data).await;
+    let mut tx = new_tx(&session, Write).await;
+    let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+    while let Some(result) = answer_stream.next().await {
+        match result {
+            Ok(concept_map) => { println!("{:#?}", concept_map) }
+            Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+        }
+    }
+    commit_tx(&mut tx).await;
+    tx.close().await;
+    session.close().await;
+}
 
 // #[tokio::test]
 // #[ignore]

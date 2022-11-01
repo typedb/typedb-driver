@@ -32,7 +32,6 @@ use typedb_protocol::{attribute as attribute_proto, attribute_type as attribute_
 use typedb_protocol::attribute_type::ValueType;
 use typedb_protocol::r#type::Encoding;
 use typedb_protocol::transaction;
-use protobuf::SingularPtrField;
 use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::{Error, Result};
@@ -158,7 +157,8 @@ pub enum Type {
 
 impl Type {
     pub(crate) fn from_proto(proto: typedb_protocol::Type) -> Result<Type> {
-        match type_proto::Encoding::try_from(proto.encoding).unwrap() {
+        // TODO: replace unwrap() with ok_or(custom_error) throughout the module
+        match type_proto::Encoding::from_i32(proto.encoding).unwrap() {
             Encoding::ThingType => { Ok(Self::Thing(ThingType::Root(RootThingType::default()))) },
             Encoding::EntityType => { Ok(Self::Thing(ThingType::Entity(EntityType::from_proto(proto)))) },
             Encoding::RelationType => { Ok(Self::Thing(ThingType::Relation(RelationType::from_proto(proto)))) },
@@ -295,7 +295,7 @@ pub enum Thing {
 
 impl Thing {
     pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Thing> {
-        match typedb_protocol::r#type::Encoding::try_from(proto.r#type?.encoding)? {
+        match typedb_protocol::r#type::Encoding::from_i32(proto.r#type.clone().unwrap().encoding).unwrap() {
             type_proto::Encoding::ThingType => { todo!() }
             type_proto::Encoding::EntityType => { Ok(Self::Entity(Entity::from_proto(proto)?)) },
             type_proto::Encoding::RelationType => { todo!() }
@@ -325,7 +325,7 @@ pub struct Entity {
 
 impl Entity {
     pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Entity> {
-        Ok(Self { type_: EntityType::from_proto(proto.r#type?), iid: proto.iid })
+        Ok(Self { type_: EntityType::from_proto(proto.r#type.unwrap()), iid: proto.iid })
     }
 }
 
@@ -366,19 +366,19 @@ pub enum Attribute {
 
 impl Attribute {
     pub(crate) fn from_proto(mut proto: typedb_protocol::Thing) -> Result<Attribute> {
-        match attribute_type_proto::ValueType::try_from(proto.r#type?.value_type)? {
+        match attribute_type_proto::ValueType::from_i32(proto.r#type.unwrap().value_type).unwrap() {
             ValueType::Object => { todo!() }
             ValueType::Boolean => { todo!() }
             ValueType::Long => {
                 Ok(Self::Long(LongAttribute {
-                    value: if let attribute_proto::value::Value::Long(value) = proto.value?.value? { value } else { todo!() },
+                    value: if let attribute_proto::value::Value::Long(value) = proto.value.unwrap().value.unwrap() { value } else { todo!() },
                     iid: proto.iid
                 }))
             }
             ValueType::Double => { todo!() }
             ValueType::String => {
                 Ok(Self::String(StringAttribute {
-                    value: if let attribute_proto::value::Value::String(value) = proto.value?.value? { value } else { todo!() },
+                    value: if let attribute_proto::value::Value::String(value) = proto.value.unwrap().value.unwrap() { value } else { todo!() },
                     iid: proto.iid
                 }))
             }
@@ -415,12 +415,12 @@ impl Attribute {
         }
     }
 
-    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-        Self::get_owners_impl(self.get_iid(), tx)
-    }
+    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+    //     Self::get_owners_impl(self.get_iid(), tx)
+    // }
 
-    fn get_owners_impl(iid: &Vec<u8>, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-        todo!()
+    // fn get_owners_impl(iid: &Vec<u8>, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+    //     todo!()
         // stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<Thing_ResPart_oneof_res>| {
         //     match result {
         //         Ok(res_part) => {
@@ -434,7 +434,7 @@ impl Attribute {
         //         Err(err) => { stream::iter(once(Err(err))).right_stream() }
         //     }
         // })
-    }
+    // }
 }
 
 impl api::Thing for Attribute {
@@ -457,9 +457,9 @@ pub struct LongAttribute {
 }
 
 impl LongAttribute {
-    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-        Attribute::get_owners_impl(&self.iid, &tx)
-    }
+    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+    //     Attribute::get_owners_impl(&self.iid, &tx)
+    // }
 }
 
 impl api::Attribute for LongAttribute {}
@@ -481,9 +481,9 @@ pub struct StringAttribute {
 }
 
 impl StringAttribute {
-    pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-        Attribute::get_owners_impl(&self.iid, &tx)
-    }
+    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
+    //     Attribute::get_owners_impl(&self.iid, &tx)
+    // }
 }
 
 impl api::Attribute for StringAttribute {}

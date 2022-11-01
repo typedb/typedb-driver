@@ -75,8 +75,8 @@ impl Transaction {
         self.transaction_type
     }
 
-    pub fn query(&self) -> &QueryManager {
-        &self.query
+    pub fn query(&mut self) -> &mut QueryManager {
+        &mut self.query
     }
 
     pub async fn commit(&mut self) -> Result {
