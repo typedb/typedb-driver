@@ -114,7 +114,7 @@ release_validate_deps(
     refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
     tagged_deps = [
         "@vaticle_typedb_common",
-        "@vaticle_typeql_lang_java",
+        "@vaticle_typeql",
         "@vaticle_typedb_protocol",
         "@vaticle_factory_tracing",
     ],
