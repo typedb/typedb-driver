@@ -30,7 +30,7 @@ use std::task::{Context, Poll};
 use std::thread::sleep;
 use std::time::Duration;
 use crossbeam::atomic::AtomicCell;
-use futures::{SinkExt, Stream, StreamExt, TryFutureExt};
+use futures::{executor, SinkExt, Stream, StreamExt, TryFutureExt};
 use futures::channel::{mpsc, oneshot};
 use tonic::Streaming;
 use typedb_protocol::transaction;
@@ -75,7 +75,7 @@ impl TransactionRpc {
         if !self.is_open() { todo!() }
         let (res_sink, res_receiver) = oneshot::channel::<Result<transaction::Res>>();
         self.receiver.add_single(&req.req_id, res_sink);
-        Sender::submit_message(req, self.sender.clone());
+        Sender::submit_message(req, self.sender.state.clone());
         match res_receiver.await {
             Ok(result) => { result }
             Err(err) => { Err(Error::new(err.to_string())) }
@@ -88,59 +88,68 @@ impl TransactionRpc {
         let (stream_req_sink, stream_req_receiver) = std::sync::mpsc::channel::<transaction::Req>();
         self.receiver.add_stream(&req.req_id, res_part_sink);
         let res_part_stream = ResPartStream::new(res_part_receiver, stream_req_sink, req.req_id.clone());
-        Sender::add_message_provider(stream_req_receiver, Arc::clone(&self.sender.executor), self.sender.clone());
-        Sender::submit_message(req, self.sender.clone());
+        Sender::add_message_provider(stream_req_receiver, self.sender.executor.clone(), self.sender.state.clone());
+        Sender::submit_message(req, self.sender.state.clone());
         res_part_stream
     }
 
     pub(crate) fn is_open(&self) -> bool {
-        self.sender.is_open.load()
+        self.sender.state.is_open.load()
     }
 
     pub(crate) async fn close(&self) {
-        Sender::close(self.sender.clone(), None).await;
+        Sender::close(self.sender.state.clone(), None).await;
     }
 }
 
 #[derive(Clone, Debug)]
 struct Sender {
+    state: Arc<SenderState>,
+    executor: Arc<Executor>
+}
+
+#[derive(Debug)]
+struct SenderState {
     req_sink: mpsc::Sender<transaction::Client>,
     // TODO: refactor to crossbeam_queue::ArrayQueue?
-    queued_messages: Arc<Mutex<Vec<transaction::Req>>>,
+    queued_messages: Mutex<Vec<transaction::Req>>,
     // TODO: refactor to message passing for these atomics
-    ongoing_task_count: Arc<AtomicCell<u8>>,
-    is_open: Arc<AtomicCell<bool>>,
-    executor: Arc<Executor>
+    ongoing_task_count: AtomicCell<u8>,
+    is_open: AtomicCell<bool>,
 }
 
 type ReqId = Vec<u8>;
 
+impl SenderState {
+    fn new(req_sink: mpsc::Sender<transaction::Client>) -> Self {
+        SenderState {
+            req_sink: req_sink.clone(),
+            queued_messages: Mutex::new(vec![]),
+            ongoing_task_count: AtomicCell::new(0),
+            is_open: AtomicCell::new(true),
+        }
+    }
+}
+
 impl Sender {
     pub(super) fn new(req_sink: mpsc::Sender<transaction::Client>, executor: Arc<Executor>, close_signal_receiver: CloseSignalReceiver) -> Self {
-        let sender = Sender {
-            req_sink: req_sink.clone(),
-            queued_messages: Arc::new(Mutex::new(vec![])),
-            ongoing_task_count: Arc::new(AtomicCell::new(0)),
-            is_open: Arc::new(AtomicCell::new(true)),
-            executor: Arc::clone(&executor)
-        };
-        let sender2 = sender.clone();
+        let state = Arc::new(SenderState::new(req_sink));
         // // TODO: clarify lifetimes of these threads
+        let state2 = state.clone();
         executor.spawn_ok(async move {
-            Self::await_close_signal(close_signal_receiver, sender2).await;
+            Self::await_close_signal(close_signal_receiver, state2).await;
         });
-        let sender3 = sender.clone();
-        executor.spawn_ok(async move { Self::dispatch_loop(sender3).await; });
-        sender
+        let state3 = state.clone();
+        executor.spawn_ok(async move { Self::dispatch_loop(state3).await; });
+        Sender { state, executor: executor.clone() }
     }
 
-    // TODO: refactor all methods that take in a Sender to take &self instead
-    fn submit_message(req: transaction::Req, sender: Sender) {
+    fn submit_message(req: transaction::Req, sender: Arc<SenderState>) {
         sender.queued_messages.lock().unwrap().push(req.clone());
         println!("Submitted request message");
     }
 
-    fn add_message_provider(provider: std::sync::mpsc::Receiver<transaction::Req>, executor: Arc<Executor>, sender: Sender) {
+    fn add_message_provider(provider: std::sync::mpsc::Receiver<transaction::Req>, executor: Arc<Executor>, sender: Arc<SenderState>) {
         executor.spawn_ok(async move {
             let mut msg_iterator = provider.iter();
             while let Some(req) = msg_iterator.next() {
@@ -149,7 +158,7 @@ impl Sender {
         });
     }
 
-    async fn dispatch_loop(sender: Sender) {
+    async fn dispatch_loop(sender: Arc<SenderState>) {
         while sender.is_open.load() {
             const DISPATCH_INTERVAL: Duration = Duration::from_millis(3);
             sleep(DISPATCH_INTERVAL);
@@ -158,18 +167,18 @@ impl Sender {
         println!("Transaction rpc was closed; message dispatch loop has been shut down")
     }
 
-    async fn dispatch_messages(mut sender: Sender) {
+    async fn dispatch_messages(sender: Arc<SenderState>) {
         sender.ongoing_task_count.fetch_add(1);
         let msgs = mem::take(&mut *sender.queued_messages.lock().unwrap());
         if !msgs.is_empty() {
             let len = msgs.len();
-            sender.req_sink.send(client_msg(msgs)).await.unwrap();
+            sender.req_sink.clone().send(client_msg(msgs)).await.unwrap();
             println!("Dispatched {} message(s)", len);
         }
         sender.ongoing_task_count.fetch_sub(1);
     }
 
-    async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, sender: Sender) {
+    async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, sender: Arc<SenderState>) {
         match close_signal_receiver.await {
             Ok(close_signal) => {
                 println!("Sender received close signal, and will now close");
@@ -179,7 +188,7 @@ impl Sender {
         }
     }
 
-    async fn close(mut sender: Sender, error: Option<Error>) {
+    async fn close(sender: Arc<SenderState>, error: Option<Error>) {
         if let Ok(true) = sender.is_open.compare_exchange(true, false) {
             if let None = error {
                 Self::dispatch_messages(sender.clone()).await;
@@ -188,7 +197,7 @@ impl Sender {
             // TODO: this loop should have a timeout
             loop {
                 if sender.ongoing_task_count.load() == 0 {
-                    sender.req_sink.close().await.unwrap();
+                    sender.req_sink.clone().close().await.unwrap();
                     break;
                 }
             }
@@ -200,7 +209,7 @@ impl Sender {
 impl Drop for Sender {
     fn drop(&mut self) {
         // TODO: fixme
-        // Sender::close(self.clone(), None);
+        executor::block_on(Sender::close(self.state.clone(), None));
     }
 }
 
@@ -303,6 +312,8 @@ impl Receiver {
     }
 
     async fn on_receive(message: transaction::Server, state: Arc<ReceiverState>) {
+        // TODO: If an error occurs here (or in some other background process), resources are not
+        //  properly cleaned up, and the application may hang.
         match message.server {
             Some(Server::Res(res)) => {
                 Self::collect_res(res, state)

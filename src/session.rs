@@ -19,9 +19,11 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::sync::{Arc, mpsc};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
+use crossbeam::atomic::AtomicCell;
+use crossbeam::queue::ArrayQueue;
 use futures::executor;
 use log::warn;
 use typedb_protocol::Options;
@@ -49,12 +51,14 @@ impl Type {
     }
 }
 
+pub(super) type SessionId = Vec<u8>;
+
 #[derive(Debug)]
 pub struct Session {
     pub db_name: String,
-    pub(crate) id: Vec<u8>,
+    pub(crate) id: SessionId,
     pub(crate) rpc_client: RpcClient,
-    is_open_atomic: AtomicBool,
+    is_open_atomic: AtomicCell<bool>,
     network_latency: Duration,
     session_type: Type,
 }
@@ -72,7 +76,7 @@ impl Session {
             network_latency: Self::compute_network_latency(start_time, res.server_duration_millis),
             id: res.session_id,
             rpc_client: rpc_client_clone,
-            is_open_atomic: AtomicBool::new(true)
+            is_open_atomic: AtomicCell::new(true),
         })
     }
 
@@ -88,14 +92,16 @@ impl Session {
     }
 
     fn is_open(&self) -> bool {
-        self.is_open_atomic.load(Ordering::Relaxed)
+        self.is_open_atomic.load()
     }
 
     pub async fn close(&mut self) {
-        if let Ok(true) = self.is_open_atomic.compare_exchange(true, false, Ordering::Acquire, Ordering::Relaxed) {
+        if let Ok(true) = self.is_open_atomic.compare_exchange(true, false) {
+            println!("Sending session ID {:?} to session close channel", self.id);
+            // let res = self.session_close_sink.send(self.id.clone());
             let res = self.rpc_client.session_close(close_req(self.id.clone())).await;
-            // TODO: the request errors harmlessly if the session is already closed. Protocol should
-            //       expose the cause of the error and we can use that to decide whether to warn here.
+            // // TODO: the request errors harmlessly if the session is already closed. Protocol should
+            // //       expose the cause of the error and we can use that to decide whether to warn here.
             if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err(vec![])) }
         }
     }
@@ -107,18 +113,6 @@ impl Session {
 
 impl Drop for Session {
     fn drop(&mut self) {
-        // TODO: refactor to hand off the closure to a background process
-        assert!(!self.is_open(), "{}", MESSAGES.client.session_was_never_closed.to_err(vec![]));
-        if self.is_open() {
-            warn!("{}", MESSAGES.client.session_was_never_closed.to_err(vec![]))
-        }
-        // let mut rpc_client = self.rpc_client.clone();
-        // let id = self.id.clone();
-        // let closer = tokio::join!(async move {
-        //     // println!("banana");
-        //     let res = rpc_client.session_close(close_req(id)).await;
-        //     if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err(vec![])) }
-        // });
-        // // executor::block_on(closer).expect("FAIL");
+        executor::block_on(self.close());
     }
 }

@@ -21,6 +21,9 @@
 
 // #![feature(if_let_guard)] // only available on nightly Rust builds
 
+use std::sync::mpsc;
+use std::thread::sleep;
+use std::time::Duration;
 use futures::TryFutureExt;
 // use std::time::Instant;
 use futures::StreamExt;
@@ -69,7 +72,8 @@ async fn commit_tx(tx: &mut Transaction) {
 //     tx.query().insert(query);
 // }
 
-#[tokio::test]
+#[tokio::test(flavor = "multi_thread")]
+#[ignore]
 async fn basic() {
     let mut client = new_typedb_client().await;
     create_db_grakn(&mut client).await;
@@ -87,79 +91,89 @@ async fn basic() {
         }
     }
     commit_tx(&mut tx).await;
-    tx.close().await;
-    session.close().await;
 }
 
-// #[tokio::test]
+#[tokio::test(flavor = "multi_thread")]
+#[ignore]
+async fn concurrent_db_ops() {
+    let mut client = new_typedb_client().await;
+    let (sender, receiver) = mpsc::channel();
+    // This example shows that our counted refs to our gRPC client must be atomic (Arc)
+    // Replacing Arc with Rc results in the error: 'Rc<...> cannot be sent between threads safely'
+    let sender1 = sender.clone();
+    let mut databases1 = client.databases.clone();
+    let handle1 = tokio::spawn(async move {
+        for _ in 0..5 {
+            match databases1.all().await {
+                Ok(dbs) => { sender1.send(Ok(format!("got databases {:?} from thread 1", dbs))).unwrap(); }
+                Err(err) => { sender1.send(Err(err)).unwrap(); return; }
+            }
+        }
+    });
+    let handle2 = tokio::spawn(async move {
+        for _ in 0..5 {
+            match client.databases.all().await {
+                Ok(dbs) => { sender.send(Ok(format!("got databases {:?} from thread 2", dbs))).unwrap(); }
+                Err(err) => { sender.send(Err(err)).unwrap(); return; }
+            }
+        }
+    });
+    handle1.await.unwrap();
+    handle2.await.unwrap();
+    for received in receiver {
+        match received {
+            Ok(msg) => { println!("{}", msg); }
+            Err(err) => { panic!("{}", err.to_string()); }
+        }
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
 // #[ignore]
-// async fn concurrent_db_ops() {
-//     let client = TypeDBClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
-//     let (sender, receiver) = mpsc::channel();
-//     // This example shows that our counted refs to our gRPC client must be atomic (Arc)
-//     // Replacing Arc with Rc results in the error: 'Rc<...> cannot be sent between threads safely'
-//     let sender1 = sender.clone();
-//     let client1 = client.clone();
-//     let handle1 = tokio::spawn(async move {
-//         for _ in 0..5 {
-//             match client1.databases.all().await {
-//                 Ok(dbs) => { sender1.send(Ok(format!("got databases {:?} from thread 1", dbs))).unwrap(); }
-//                 Err(err) => { sender1.send(Err(err)).unwrap(); return; }
-//             }
-//         }
-//     });
-//     let handle2 = tokio::spawn(async move {
-//         for _ in 0..5 {
-//             match client.databases.all().await {
-//                 Ok(dbs) => { sender.send(Ok(format!("got databases {:?} from thread 2", dbs))).unwrap(); }
-//                 Err(err) => { sender.send(Err(err)).unwrap(); return; }
-//             }
-//         }
-//     });
-//     handle1.await.unwrap();
-//     handle2.await.unwrap();
-//     for received in receiver {
-//         match received {
-//             Ok(msg) => { println!("{}", msg); }
-//             Err(err) => { panic!("{}", err.to_string()); }
-//         }
-//     }
-// }
-//
-// #[tokio::test]
-// #[ignore]
-// async fn concurrent_queries() {
-//     let client = TypeDBClient::new("0.0.0.0", 1729).await.unwrap_or_else(|err| panic!("An error occurred connecting to TypeDB Server: {}", err));
-//     let (sender, receiver) = mpsc::channel();
-//     let sender2 = sender.clone();
-//     let session = client.session(GRAKN, Data).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
-//     let tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
-//     let tx2 = tx.clone();
-//     let handle = tokio::spawn(async move {
-//         for _ in 0..5 {
-//             match tx.query().match_query("match $x sub thing; { $x type thing; } or { $x type entity; };").await {
-//                 Ok(res) => { sender.send(Ok(format!("got answers {:?} from thread 1", res))).unwrap(); }
-//                 Err(err) => { sender.send(Err(err)).unwrap(); return; }
-//             }
-//         }
-//     });
-//     let handle2 = tokio::spawn(async move {
-//         for _ in 0..5 {
-//             match tx2.query().match_query("match $x sub thing; { $x type thing; } or { $x type entity; };").await {
-//                 Ok(res) => { sender2.send(Ok(format!("got answers {:?} from thread 2", res))).unwrap(); }
-//                 Err(err) => { sender2.send(Err(err)).unwrap(); return; }
-//             }
-//         }
-//     });
-//     handle2.await.unwrap();
-//     handle.await.unwrap();
-//     for received in receiver {
-//         match received {
-//             Ok(msg) => { println!("{}", msg); }
-//             Err(err) => { panic!("{}", err.to_string()); }
-//         }
-//     }
-// }
+async fn concurrent_queries() {
+    let mut client = new_typedb_client().await;
+    let (sender, receiver) = mpsc::channel();
+    let sender2 = sender.clone();
+    let session = client.session(GRAKN, Data).await.unwrap_or_else(|err| panic!("An error occurred opening a session: {}", err));
+    let mut tx: Transaction = session.transaction(Write).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err));
+    let mut tx2 = tx.clone();
+    let handle = tokio::spawn(async move {
+        for _ in 0..5 {
+            let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+            while let Some(result) = answer_stream.next().await {
+                match result {
+                    Ok(res) => { sender.send(Ok(format!("got answer {:?} from thread 1", res))).unwrap(); }
+                    Err(err) => {
+                        sender.send(Err(err)).unwrap();
+                        return;
+                    }
+                }
+            }
+        }
+    });
+    let handle2 = tokio::spawn(async move {
+        for _ in 0..5 {
+            let mut answer_stream = tx2.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+            while let Some(result) = answer_stream.next().await {
+                match result {
+                    Ok(res) => { sender2.send(Ok(format!("got answer {:?} from thread 2", res))).unwrap(); }
+                    Err(err) => {
+                        sender2.send(Err(err)).unwrap();
+                        return;
+                    }
+                }
+            }
+        }
+    });
+    handle2.await.unwrap();
+    handle.await.unwrap();
+    for received in receiver {
+        match received {
+            Ok(msg) => { println!("{}", msg); }
+            Err(err) => { panic!("{}", err.to_string()); }
+        }
+    }
+}
 
 // #[tokio::test]
 // #[ignore]

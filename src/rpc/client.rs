@@ -37,7 +37,7 @@ use crate::rpc::builder::transaction::client_msg;
 #[derive(Clone, Debug)]
 pub(crate) struct RpcClient {
     typedb: typedb_protocol::type_db_client::TypeDbClient<Channel>,
-    pub(super) executor: Arc<Executor>,
+    pub(crate) executor: Arc<Executor>,
 }
 
 impl RpcClient {
@@ -101,6 +101,7 @@ impl RpcClient {
     }
 
     pub(crate) async fn transaction(&mut self, open_req: transaction::Req) -> Result<(mpsc::Sender<transaction::Client>, Streaming<transaction::Server>)> {
+        // TODO: refactor to crossbeam channel
         let (mut sender, receiver) = mpsc::channel::<transaction::Client>(256);
         sender.send(client_msg(vec![open_req])).await.unwrap();
         Self::bidi_stream(sender, self.typedb.transaction(receiver)).await
