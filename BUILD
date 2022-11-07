@@ -28,21 +28,15 @@ rust_library(
     name = "typedb_client",
     srcs = glob(["src/**/*.rs"], exclude = glob(["src/typedb_protocol_backup/**/*.rs"])),
     deps = [
-#        "//typedb_protocol_backup",
         "@vaticle_typedb_protocol//grpc/rust:typedb-protocol",
 
-        "@vaticle_dependencies//library/crates:bytes",
         "@vaticle_dependencies//library/crates:crossbeam",
         "@vaticle_dependencies//library/crates:futures",
         "@vaticle_dependencies//library/crates:log",
         "@vaticle_dependencies//library/crates:prost",
         "@vaticle_dependencies//library/crates:tokio",
-        "@vaticle_dependencies//library/crates:tokio_stream",
         "@vaticle_dependencies//library/crates:tonic",
         "@vaticle_dependencies//library/crates:uuid",
-    ],
-    proc_macro_deps = [
-        "@vaticle_dependencies//library/crates:derivative",
     ],
     tags = [
         "crate-name=typedb-client",

@@ -24,7 +24,6 @@ use std::future::Future;
 use std::sync::Arc;
 use futures::channel::mpsc;
 use futures::{SinkExt, Stream};
-use tokio_stream::wrappers::ReceiverStream;
 use tonic::{Response, Status, Streaming};
 use tonic::transport::Channel;
 use typedb_protocol::{core_database, core_database_manager, session, transaction};

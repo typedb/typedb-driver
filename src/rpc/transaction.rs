@@ -19,7 +19,6 @@
  * under the License.
  */
 
-use derivative::Derivative;
 use std::collections::HashMap;
 use std::mem;
 use std::pin::Pin;
