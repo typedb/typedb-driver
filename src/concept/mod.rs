@@ -28,13 +28,15 @@ use std::iter::once;
 use std::time::Instant;
 use futures::{FutureExt, Stream, stream, StreamExt};
 use futures::stream::FuturesUnordered;
-use typedb_protocol::{attribute as attribute_proto, attribute_type as attribute_type_proto, concept as concept_proto, r#type as type_proto};
+use typedb_protocol::{attribute as attribute_proto, attribute_type as attribute_type_proto, concept as concept_proto, r#type as type_proto, thing as thing_proto};
 use typedb_protocol::attribute_type::ValueType;
 use typedb_protocol::r#type::Encoding;
+use typedb_protocol::thing::res_part::Res;
 use typedb_protocol::transaction;
 use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::{Error, Result};
+use crate::rpc::builder::thing::attribute_get_owners_req;
 // use crate::rpc::builder::thing::attribute_get_owners_req;
 use crate::transaction::Transaction;
 
@@ -72,21 +74,21 @@ mod api {
     pub trait StringAttribute: Attribute {}
 }
 
-// fn stream_things(tx: &Transaction, req: transaction::Req) -> impl Stream<Item = Result<Thing_ResPart_oneof_res>> {
-//     tx.streaming_rpc(req).map(|result: Result<Transaction_ResPart>| {
-//         match result {
-//             Ok(tx_res_part) => {
-//                 match tx_res_part.res {
-//                     Some(thing_res_part(res_part)) => {
-//                         res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"]))
-//                     }
-//                     _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"])) }
-//                 }
-//             }
-//             Err(err) => { Err(err) }
-//         }
-//     })
-// }
+fn stream_things(tx: &mut Transaction, req: transaction::Req) -> impl Stream<Item = Result<thing_proto::res_part::Res>> {
+    tx.streaming_rpc(req).map(|result: Result<transaction::ResPart>| {
+        match result {
+            Ok(tx_res_part) => {
+                match tx_res_part.res {
+                    Some(transaction::res_part::Res::ThingResPart(res_part)) => {
+                        res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"]))
+                    }
+                    _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.thing_res_part"])) }
+                }
+            }
+            Err(err) => { Err(err) }
+        }
+    })
+}
 
 #[derive(Clone, Debug)]
 pub enum Concept {
@@ -415,26 +417,23 @@ impl Attribute {
         }
     }
 
-    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-    //     Self::get_owners_impl(self.get_iid(), tx)
-    // }
+    pub fn get_owners(&self, tx: &mut Transaction) -> impl Stream<Item = Result<Thing>> {
+        Self::get_owners_impl(self.get_iid(), tx)
+    }
 
-    // fn get_owners_impl(iid: &Vec<u8>, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-    //     todo!()
-        // stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<Thing_ResPart_oneof_res>| {
-        //     match result {
-        //         Ok(res_part) => {
-        //             match res_part {
-        //                 attribute_get_owners_res_part(x) => {
-        //                     stream::iter(x.things.into_iter().map(|thing| Thing::from_proto(thing))).left_stream()
-        //                 }
-        //                 _ => { stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream() }
-        //             }
-        //         }
-        //         Err(err) => { stream::iter(once(Err(err))).right_stream() }
-        //     }
-        // })
-    // }
+    fn get_owners_impl(iid: &Vec<u8>, tx: &mut Transaction) -> impl Stream<Item = Result<Thing>> {
+        stream_things(tx, attribute_get_owners_req(iid)).flat_map(|result: Result<thing_proto::res_part::Res>| {
+            match result {
+                Ok(res_part) => {
+                    match res_part {
+                        Res::AttributeGetOwnersResPart(x) => { stream::iter(x.things.into_iter().map(|thing| Thing::from_proto(thing))).left_stream() }
+                        _ => stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(vec!["query_manager_res_part.match_res_part"])))).right_stream()
+                    }
+                }
+                Err(err) => { stream::iter(once(Err(err))).right_stream() }
+            }
+        })
+    }
 }
 
 impl api::Thing for Attribute {
@@ -457,9 +456,9 @@ pub struct LongAttribute {
 }
 
 impl LongAttribute {
-    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-    //     Attribute::get_owners_impl(&self.iid, &tx)
-    // }
+    pub fn get_owners(&self, tx: &mut Transaction) -> impl Stream<Item = Result<Thing>> {
+        Attribute::get_owners_impl(&self.iid, tx)
+    }
 }
 
 impl api::Attribute for LongAttribute {}
@@ -481,9 +480,9 @@ pub struct StringAttribute {
 }
 
 impl StringAttribute {
-    // pub fn get_owners(&self, tx: &Transaction) -> impl Stream<Item = Result<Thing>> {
-    //     Attribute::get_owners_impl(&self.iid, &tx)
-    // }
+    pub fn get_owners(&self, tx: &mut Transaction) -> impl Stream<Item = Result<Thing>> {
+        Attribute::get_owners_impl(&self.iid, tx)
+    }
 }
 
 impl api::Attribute for StringAttribute {}

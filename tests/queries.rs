@@ -63,14 +63,14 @@ async fn commit_tx(tx: &mut Transaction) {
     tx.commit().await.unwrap_or_else(|err| panic!("An error occurred committing a transaction: {}", err))
 }
 
-// async fn run_define_query(tx: &Transaction, query: &str) {
-//     tx.query().define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
-// }
-//
-// #[allow(unused_must_use)]
-// fn run_insert_query(tx: &Transaction, query: &str) {
-//     tx.query().insert(query);
-// }
+async fn run_define_query(tx: &mut Transaction, query: &str) {
+    tx.query().define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
+}
+
+#[allow(unused_must_use)]
+fn run_insert_query(tx: &mut Transaction, query: &str) {
+    tx.query().insert(query);
+}
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
@@ -129,7 +129,7 @@ async fn concurrent_db_ops() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-// #[ignore]
+#[ignore]
 async fn concurrent_queries() {
     let mut client = new_typedb_client().await;
     let (sender, receiver) = mpsc::channel();
@@ -175,54 +175,54 @@ async fn concurrent_queries() {
     }
 }
 
-// #[tokio::test]
+#[tokio::test(flavor = "multi_thread")]
 // #[ignore]
-// async fn concept_api() {
-//     let client = new_typedb_client().await;
-//     create_db_grakn(&client).await;
-//     {
-//         let session = new_session(&client, Schema).await;
-//         let tx = new_tx(&session, Write).await;
-//         run_define_query(&tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
-//         commit_tx(&tx).await;
-//     }
-//     {
-//         let session = new_session(&client, Data).await;
-//         let tx = new_tx(&session, Write).await;
-//         run_insert_query(&tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
-//         commit_tx(&tx).await;
-//     }
-//     {
-//         let session = new_session(&client, Data).await;
-//         let tx = new_tx(&session, Read).await;
-//         let mut answer_stream = tx.query().match_("match $x isa thing;");
-//         let mut str_attrs = vec![];
-//         while let Some(result) = answer_stream.next().await {
-//             match result {
-//                 Ok(concept_map) => {
-//                     for (_, concept) in concept_map {
-//                         describe_concept(&concept).await;
-//                         if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
-//                             str_attrs.push(str_attr)
-//                         }
-//                     }
-//                 }
-//                 Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-//             }
-//         }
-//         let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
-//         println!("Getting owners of {:?}", str_attr);
-//         let mut owners_stream = str_attr.get_owners(&tx);
-//         while let Some(result) = owners_stream.next().await {
-//             match result {
-//                 Ok(thing) => {
-//                     println!("Found {:?}", thing)
-//                 }
-//                 Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
-//             }
-//         }
-//     }
-// }
+async fn concept_api() {
+    let mut client = new_typedb_client().await;
+    create_db_grakn(&mut client).await;
+    {
+        let session = new_session(&mut client, Schema).await;
+        let mut tx = new_tx(&session, Write).await;
+        run_define_query(&mut tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
+        commit_tx(&mut tx).await;
+    }
+    {
+        let session = new_session(&mut client, Data).await;
+        let mut tx = new_tx(&session, Write).await;
+        run_insert_query(&mut tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
+        commit_tx(&mut tx).await;
+    }
+    {
+        let session = new_session(&mut client, Data).await;
+        let mut tx = new_tx(&session, Read).await;
+        let mut answer_stream = tx.query().match_("match $x isa thing;");
+        let mut str_attrs = vec![];
+        while let Some(result) = answer_stream.next().await {
+            match result {
+                Ok(concept_map) => {
+                    for (_, concept) in concept_map {
+                        describe_concept(&concept).await;
+                        if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
+                            str_attrs.push(str_attr)
+                        }
+                    }
+                }
+                Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+            }
+        }
+        let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
+        println!("Getting owners of {:?}", str_attr);
+        let mut owners_stream = str_attr.get_owners(&mut tx);
+        while let Some(result) = owners_stream.next().await {
+            match result {
+                Ok(thing) => {
+                    println!("Found {:?}", thing)
+                }
+                Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
+            }
+        }
+    }
+}
 
 // #[test]
 // fn testfn() {
@@ -277,39 +277,39 @@ async fn concurrent_queries() {
 //         }
 //     }
 // }
-//
-// async fn describe_concept(concept: &Concept) {
-//     match concept {
-//         Concept::Type(x) => { describe_type(x).await; }
-//         Concept::Thing(x) => { describe_thing(x).await; }
-//     }
-// }
-//
-// async fn describe_type(type_: &Type) {
-//     match type_ {
-//         Type::Thing(x) => { describe_thing_type(x).await; }
-//     }
-// }
-//
-// async fn describe_thing_type(thing_type: &ThingType) {
-//     match thing_type {
-//         ThingType::Root(_) => { println!("got the ROOT THING TYPE 'thing'"); }
-//         ThingType::Entity(x) => { println!("got the ENTITY TYPE '{}'", x.label); }
-//         ThingType::Relation(x) => { println!("got the RELATION TYPE '{}'", x.label); }
-//     }
-// }
-//
-// async fn describe_thing(thing: &Thing) {
-//     match thing {
-//         Thing::Entity(x) => { println!("got an ENTITY of type {}", x.type_.label.as_str()); }
-//         Thing::Relation(x) => { todo!() /* println!("answer is a RELATION of type {}", x.type_.label.as_str()); */ }
-//         Thing::Attribute(x) => { describe_attr(x).await; }
-//     }
-// }
-//
-// async fn describe_attr(attr: &Attribute) {
-//     match attr {
-//         Attribute::Long(x) => { println!("got a LONG ATTRIBUTE with value {}", x.value); }
-//         Attribute::String(x) => { println!("got a STRING ATTRIBUTE with value {}", x.value); }
-//     }
-// }
+
+async fn describe_concept(concept: &Concept) {
+    match concept {
+        Concept::Type(x) => { describe_type(x).await; }
+        Concept::Thing(x) => { describe_thing(x).await; }
+    }
+}
+
+async fn describe_type(type_: &Type) {
+    match type_ {
+        Type::Thing(x) => { describe_thing_type(x).await; }
+    }
+}
+
+async fn describe_thing_type(thing_type: &ThingType) {
+    match thing_type {
+        ThingType::Root(_) => { println!("got the ROOT THING TYPE 'thing'"); }
+        ThingType::Entity(x) => { println!("got the ENTITY TYPE '{}'", x.label); }
+        ThingType::Relation(x) => { println!("got the RELATION TYPE '{}'", x.label); }
+    }
+}
+
+async fn describe_thing(thing: &Thing) {
+    match thing {
+        Thing::Entity(x) => { println!("got an ENTITY of type {}", x.type_.label.as_str()); }
+        Thing::Relation(x) => { todo!() /* println!("answer is a RELATION of type {}", x.type_.label.as_str()); */ }
+        Thing::Attribute(x) => { describe_attr(x).await; }
+    }
+}
+
+async fn describe_attr(attr: &Attribute) {
+    match attr {
+        Attribute::Long(x) => { println!("got a LONG ATTRIBUTE with value {}", x.value); }
+        Attribute::String(x) => { println!("got a STRING ATTRIBUTE with value {}", x.value); }
+    }
+}

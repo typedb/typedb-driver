@@ -113,6 +113,7 @@ impl Session {
 
 impl Drop for Session {
     fn drop(&mut self) {
+        // TODO: this will stall in a single-threaded environment. What should we do?
         executor::block_on(self.close());
     }
 }

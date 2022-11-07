@@ -275,21 +275,20 @@ pub(crate) mod query_manager {
     }
 }
 
-// #[allow(dead_code)]
-// pub(crate) mod thing {
-//     use typedb_protocol_backup::concept::{Attribute_GetOwners_Req, Thing_Req};
-//     use typedb_protocol_backup::transaction::Transaction_Req;
-//
-//     fn thing_req(req: Thing_Req) -> Transaction_Req {
-//         let mut tx_req = Transaction_Req::new();
-//         tx_req.set_thing_req(req);
-//         tx_req
-//     }
-//
-//     pub(crate) fn attribute_get_owners_req(iid: &Vec<u8>) -> Transaction_Req {
-//         let mut req = Thing_Req::new();
-//         req.iid = iid.clone();
-//         req.set_attribute_get_owners_req(Attribute_GetOwners_Req::new());
-//         thing_req(req)
-//     }
-// }
+#[allow(dead_code)]
+pub(crate) mod thing {
+    use typedb_protocol::{attribute, thing, transaction};
+    use typedb_protocol::thing::req::Req::AttributeGetOwnersReq;
+    use typedb_protocol::transaction::req::Req::ThingReq;
+
+    fn thing_req(req: thing::Req) -> transaction::Req {
+        super::transaction::req(ThingReq(req))
+    }
+
+    pub(crate) fn attribute_get_owners_req(iid: &Vec<u8>) -> transaction::Req {
+        thing_req(thing::Req {
+            iid: iid.clone(),
+            req: AttributeGetOwnersReq(attribute::get_owners::Req { filter: None }).into()
+        })
+    }
+}

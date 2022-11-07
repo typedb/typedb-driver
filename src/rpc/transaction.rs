@@ -208,7 +208,6 @@ impl Sender {
 
 impl Drop for Sender {
     fn drop(&mut self) {
-        // TODO: fixme
         executor::block_on(Sender::close(self.state.clone(), None));
     }
 }
