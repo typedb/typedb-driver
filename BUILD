@@ -26,7 +26,7 @@ load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate")
 
 rust_library(
     name = "typedb_client",
-    srcs = glob(["src/**/*.rs"], exclude = glob(["src/typedb_protocol_backup/**/*.rs"])),
+    srcs = glob(["src/**/*.rs"]),
     deps = [
         "@vaticle_typedb_protocol//grpc/rust:typedb-protocol",
 
