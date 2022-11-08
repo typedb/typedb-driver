@@ -28,7 +28,7 @@ rust_library(
     name = "typedb_client",
     srcs = glob(["src/**/*.rs"]),
     deps = [
-        "@vaticle_typedb_protocol//grpc/rust:typedb-protocol",
+        "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
 
         "@vaticle_dependencies//library/crates:crossbeam",
         "@vaticle_dependencies//library/crates:futures",
@@ -37,6 +37,9 @@ rust_library(
         "@vaticle_dependencies//library/crates:tokio",
         "@vaticle_dependencies//library/crates:tonic",
         "@vaticle_dependencies//library/crates:uuid",
+    ],
+    proc_macro_deps = [
+        "@vaticle_dependencies//library/crates:enum_dispatch",
     ],
     tags = [
         "crate-name=typedb-client",
