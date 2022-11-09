@@ -26,18 +26,20 @@ load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate")
 
 rust_library(
     name = "typedb_client",
-    srcs = glob(["src/**/*.rs"], exclude = glob(["src/typedb_protocol/**/*.rs"])),
+    srcs = glob(["src/**/*.rs"]),
     deps = [
-        "//typedb_protocol",
+        "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
 
+        "@vaticle_dependencies//library/crates:crossbeam",
         "@vaticle_dependencies//library/crates:futures",
-        "@vaticle_dependencies//library/crates:grpc",
         "@vaticle_dependencies//library/crates:log",
-        "@vaticle_dependencies//library/crates:protobuf",
+        "@vaticle_dependencies//library/crates:prost",
+        "@vaticle_dependencies//library/crates:tokio",
+        "@vaticle_dependencies//library/crates:tonic",
         "@vaticle_dependencies//library/crates:uuid",
     ],
     proc_macro_deps = [
-        "@vaticle_dependencies//library/crates:derivative",
+        "@vaticle_dependencies//library/crates:enum_dispatch",
     ],
     tags = [
         "crate-name=typedb-client",
@@ -52,4 +54,12 @@ assemble_crate(
     homepage = "https://github.com/vaticle/typedb-client-rust",
     license = "apache",
     repository = "https://github.com/vaticle/typedb-client-rust",
+)
+
+# CI targets that are not declared in any BUILD file, but are called externally
+filegroup(
+    name = "ci",
+    data = [
+        "@vaticle_dependencies//ide/rust:sync"
+    ],
 )

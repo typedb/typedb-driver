@@ -22,16 +22,18 @@
 use std::fmt::Debug;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
-use futures::Stream;
-use typedb_protocol::transaction::{Transaction_Req, Transaction_Res, Transaction_ResPart};
+use futures::{SinkExt, Stream, StreamExt};
+use tonic::Status;
+use typedb_protocol::transaction as transaction_proto;
+use typedb_protocol::transaction::res::Res;
+use typedb_protocol::transaction::Server;
 
-use crate::common::Result;
-use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
-use crate::rpc::client::RpcClient;
+use crate::common::{Error, Result};
 use crate::query::QueryManager;
+use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req, client_msg};
+use crate::rpc::client::RpcClient;
+// use crate::query::QueryManager;
 use crate::rpc::transaction::TransactionRpc;
-
-type TypeProto = typedb_protocol::transaction::Transaction_Type;
 
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
@@ -40,68 +42,61 @@ pub enum Type {
 }
 
 impl Type {
-    fn to_proto(&self) -> TypeProto {
+    fn to_proto(&self) -> transaction_proto::Type {
         match self {
-            Type::Read => TypeProto::READ,
-            Type::Write => TypeProto::WRITE
+            Type::Read => transaction_proto::Type::Read,
+            Type::Write => transaction_proto::Type::Write
         }
     }
 }
 
 #[derive(Clone, Debug)]
 pub struct Transaction {
-    state: Arc<TransactionState>
-}
-
-#[derive(Debug)]
-struct TransactionState {
     pub transaction_type: Type,
     pub query: QueryManager,
-    rpc: Arc<Mutex<TransactionRpc>>,
-}
-
-impl TransactionState {
-    fn new(transaction_type: Type, rpc: Arc<Mutex<TransactionRpc>>) -> TransactionState {
-        TransactionState {
-            transaction_type,
-            rpc: Arc::clone(&rpc),
-            query: QueryManager::new(rpc),
-        }
-    }
+    rpc: TransactionRpc,
 }
 
 impl Transaction {
-    // TODO: check if these borrows hamper ability to open transactions in parallel
+    // TODO: check if this model lets us open transactions in parallel
     pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency: Duration, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(
-            session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as u32
+            session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as i32
         );
-        let rpc: Arc<Mutex<TransactionRpc>> = Arc::new(Mutex::new(TransactionRpc::new(rpc_client).await?));
-        rpc.lock().unwrap().single(open_req).await.unwrap();
-        Ok(Transaction { state: Arc::new(TransactionState::new(transaction_type, rpc)) })
+        let rpc = TransactionRpc::new(rpc_client, open_req).await?;
+        Ok(Transaction {
+            transaction_type,
+            query: QueryManager::new(&rpc),
+            rpc
+        })
     }
 
     pub fn get_type(&self) -> Type {
-        self.state.transaction_type
+        self.transaction_type
     }
 
-    pub fn query(&self) -> &QueryManager {
-        &self.state.query
+    pub fn query(&mut self) -> &mut QueryManager {
+        &mut self.query
     }
 
-    pub async fn commit(&self) -> Result {
+    pub async fn commit(&mut self) -> Result {
         self.single_rpc(commit_req()).await.map(|_| ())
     }
 
-    pub async fn rollback(&self) -> Result {
+    pub async fn rollback(&mut self) -> Result {
         self.single_rpc(rollback_req()).await.map(|_| ())
     }
 
-    pub(crate) async fn single_rpc(&self, req: Transaction_Req) -> Result<Transaction_Res> {
-        self.state.rpc.lock().unwrap().single(req).await
+    pub(crate) async fn single_rpc(&mut self, req: transaction_proto::Req) -> Result<transaction_proto::Res> {
+        self.rpc.single(req).await
     }
 
-    pub(crate) fn streaming_rpc(&self, req: Transaction_Req) -> impl Stream<Item = Result<Transaction_ResPart>> {
-        self.state.rpc.lock().unwrap().stream(req)
+    pub(crate) fn streaming_rpc(&mut self, req: transaction_proto::Req) -> impl Stream<Item = Result<transaction_proto::ResPart>> {
+        self.rpc.stream(req)
+    }
+
+    // TODO: refactor to delegate work to a background process so we can implement Drop
+    pub async fn close(&self) {
+        self.rpc.close().await;
     }
 }

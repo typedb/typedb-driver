@@ -30,7 +30,7 @@ pub struct ConceptMap {
 }
 
 impl ConceptMap {
-    pub(crate) fn from_proto(proto: typedb_protocol::answer::ConceptMap) -> Result<Self> {
+    pub(crate) fn from_proto(proto: typedb_protocol::ConceptMap) -> Result<Self> {
         let mut map = HashMap::with_capacity(proto.map.len());
         for (k, v) in proto.map {
             map.insert(k, Concept::from_proto(v)?);

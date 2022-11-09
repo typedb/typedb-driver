@@ -24,7 +24,7 @@ use std::sync::Arc;
 use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::rpc::client::RpcClient;
-use crate::rpc::builder::core::database::{delete_req, schema_req};
+use crate::rpc::builder::core::database::{delete_req, rule_schema_req, schema_req, type_schema_req};
 use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_req};
 
 /// An interface for performing database-level operations against the connected server.
@@ -39,54 +39,62 @@ use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_
 /// failure or other problem executing the operation, they will return an [`Err`][Err] result.
 #[derive(Clone)]
 pub struct DatabaseManager {
-    pub(crate) rpc_client: Arc<RpcClient>
+    pub(crate) rpc_client: RpcClient
 }
 
 impl DatabaseManager {
-    pub(crate) fn new(rpc_client: Arc<RpcClient>) -> Self {
-        DatabaseManager { rpc_client }
+    pub(crate) fn new(rpc_client: &RpcClient) -> Self {
+        DatabaseManager { rpc_client: rpc_client.clone() }
     }
 
     /// Retrieves a single [`Database`][Database] by name. Returns an [`Err`][Err] if there does not
     /// exist a database with the provided name.
-    pub async fn get(&self, name: &str) -> Result<Database> {
+    pub async fn get(&mut self, name: &str) -> Result<Database> {
         match self.contains(name).await? {
-            true => { Ok(Database::new(name, Arc::clone(&self.rpc_client))) }
+            true => { Ok(Database::new(name, &self.rpc_client)) }
             false => { Err(MESSAGES.client.db_does_not_exist.to_err(vec![name])) }
         }
     }
 
-    pub async fn contains(&self, name: &str) -> Result<bool> {
+    pub async fn contains(&mut self, name: &str) -> Result<bool> {
         self.rpc_client.databases_contains(contains_req(name)).await.map(|res| res.contains)
     }
 
-    pub async fn create(&self, name: &str) -> Result {
+    pub async fn create(&mut self, name: &str) -> Result {
         self.rpc_client.databases_create(create_req(name)).await.map(|_| ())
     }
 
-    pub async fn all(&self) -> Result<Vec<Database>> {
+    pub async fn all(&mut self) -> Result<Vec<Database>> {
         self.rpc_client.databases_all(all_req()).await.map(|res| res.names.iter()
-            .map(|name| Database::new(name, Arc::clone(&self.rpc_client))).collect())
+            .map(|name| Database::new(name, &self.rpc_client)).collect())
     }
 }
 
 #[derive(Debug)]
 pub struct Database {
     pub name: String,
-    rpc_client: Arc<RpcClient>
+    rpc_client: RpcClient
 }
 
 impl Database {
-    pub(crate) fn new(name: &str, rpc_client: Arc<RpcClient>) -> Self {
-        Database { name: String::from(name), rpc_client }
+    pub(crate) fn new(name: &str, rpc_client: &RpcClient) -> Self {
+        Database { name: name.into(), rpc_client: rpc_client.clone() }
     }
 
-    pub async fn schema(&self) -> Result<String> {
-        self.rpc_client.database_schema(schema_req(self.name.clone())).await.map(|res| res.schema)
+    pub async fn delete(&mut self) -> Result {
+        self.rpc_client.database_delete(delete_req(self.name.as_str())).await.map(|_| ())
     }
 
-    pub async fn delete(&self) -> Result {
-        self.rpc_client.database_delete(delete_req(self.name.clone())).await.map(|_| ())
+    pub async fn rule_schema(&mut self) -> Result<String> {
+        self.rpc_client.database_rule_schema(rule_schema_req(self.name.as_str())).await.map(|res| res.schema)
+    }
+
+    pub async fn schema(&mut self) -> Result<String> {
+        self.rpc_client.database_schema(schema_req(self.name.as_str())).await.map(|res| res.schema)
+    }
+
+    pub async fn type_schema(&mut self) -> Result<String> {
+        self.rpc_client.database_type_schema(type_schema_req(self.name.as_str())).await.map(|res| res.schema)
     }
 }
 

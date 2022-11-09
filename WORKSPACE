@@ -33,6 +33,22 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_reg
 kotlin_repositories()
 kt_register_toolchains()
 
+# TODO: enable this when we load @vaticle_typeql
+## Load //builder/antlr
+#load("@vaticle_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps", "antlr_version")
+#antlr_deps()
+#
+#load("@rules_antlr//antlr:lang.bzl", "JAVA")
+#load("@rules_antlr//antlr:repositories.bzl", "rules_antlr_dependencies")
+#rules_antlr_dependencies(antlr_version, JAVA)
+
+# Load //builder/grpc (required by @vaticle_typedb_protocol)
+load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
+grpc_deps()
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
+com_github_grpc_grpc_deps = "grpc_deps")
+com_github_grpc_grpc_deps()
+
 # Load //builder/rust
 load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
 rust_deps()
@@ -58,6 +74,13 @@ vaticle_dependencies_ci_pip()
 
 load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
+
+################################
+# Load @vaticle dependencies #
+################################
+
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_protocol")
+vaticle_typedb_protocol()
 
 ############################
 # Load @maven dependencies #

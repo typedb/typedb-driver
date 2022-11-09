@@ -22,11 +22,8 @@
 use std::iter::once;
 use std::sync::{Arc, Mutex};
 use futures::{Stream, stream, StreamExt};
-use QueryManager_ResPart_oneof_res::{explain_res_part, insert_res_part, match_group_aggregate_res_part, match_group_res_part, match_res_part, update_res_part};
-use Transaction_ResPart_oneof_res::query_manager_res_part;
-use typedb_protocol::query::{QueryManager_Res_oneof_res, QueryManager_ResPart_oneof_res};
-use typedb_protocol::transaction::{Transaction_Req, Transaction_ResPart, Transaction_ResPart_oneof_res};
-use typedb_protocol::transaction::Transaction_Res_oneof_res::query_manager_res;
+use typedb_protocol::{query_manager, transaction};
+use typedb_protocol::query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart};
 use crate::answer::ConceptMap;
 
 use crate::common::error::MESSAGES;
@@ -36,7 +33,7 @@ use crate::rpc::transaction::TransactionRpc;
 
 macro_rules! stream_concept_maps {
     ($self:ident, $req:ident, $res_part_kind:ident, $query_type_str:tt) => {
-        $self.stream_answers($req).flat_map(|result: Result<QueryManager_ResPart_oneof_res>| {
+        $self.stream_answers($req).flat_map(|result: Result<query_manager::res_part::Res>| {
             match result {
                 Ok(res_part) => {
                     match res_part {
@@ -58,57 +55,57 @@ macro_rules! stream_concept_maps {
 
 #[derive(Clone, Debug)]
 pub struct QueryManager {
-    tx: Arc<Mutex<TransactionRpc>>
+    tx: TransactionRpc
 }
 
 impl QueryManager {
-    pub(crate) fn new(tx: Arc<Mutex<TransactionRpc>>) -> QueryManager {
-        QueryManager { tx }
+    pub(crate) fn new(tx: &TransactionRpc) -> QueryManager {
+        QueryManager { tx: tx.clone() }
     }
 
-    pub async fn define(&self, query: &str) -> Result {
+    pub async fn define(&mut self, query: &str) -> Result {
         self.single_call(define_req(query)).await.map(|_| ())
     }
 
-    pub async fn delete(&self, query: &str) -> Result {
+    pub async fn delete(&mut self, query: &str) -> Result {
         self.single_call(delete_req(query)).await.map(|_| ())
     }
 
-    pub fn insert(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn insert(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = insert_req(query);
-        stream_concept_maps!(self, req, insert_res_part, "insert")
+        stream_concept_maps!(self, req, InsertResPart, "insert")
     }
 
     // TODO: investigate performance impact of using BoxStream
-    pub fn match_(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn match_(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = match_req(query);
-        stream_concept_maps!(self, req, match_res_part, "match")
+        stream_concept_maps!(self, req, MatchResPart, "match")
     }
 
-    pub async fn undefine(&self, query: &str) -> Result {
+    pub async fn undefine(&mut self, query: &str) -> Result {
         self.single_call(undefine_req(query)).await.map(|_| ())
     }
 
-    pub fn update(&self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn update(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
         let req = update_req(query);
-        stream_concept_maps!(self, req, update_res_part, "update")
+        stream_concept_maps!(self, req, UpdateResPart, "update")
     }
 
-    async fn single_call(&self, req: Transaction_Req) -> Result<QueryManager_Res_oneof_res> {
-        match self.tx.lock().unwrap().single(req).await?.res {
-            Some(query_manager_res(res)) => {
+    async fn single_call(&mut self, req: transaction::Req) -> Result<query_manager::res::Res> {
+        match self.tx.single(req).await?.res {
+            Some(transaction::res::Res::QueryManagerRes(res)) => {
                 res.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"]))
             }
             _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])) }
         }
     }
 
-    fn stream_answers(&self, req: Transaction_Req) -> impl Stream<Item = Result<QueryManager_ResPart_oneof_res>> {
-        self.tx.lock().unwrap().stream(req).map(|result: Result<Transaction_ResPart>| {
+    fn stream_answers(&mut self, req: transaction::Req) -> impl Stream<Item = Result<query_manager::res_part::Res>> {
+        self.tx.stream(req).map(|result: Result<transaction::ResPart>| {
             match result {
                 Ok(tx_res_part) => {
                     match tx_res_part.res {
-                        Some(query_manager_res_part(res_part)) => {
+                        Some(transaction::res_part::Res::QueryManagerResPart(res_part)) => {
                             res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"]))
                         }
                         _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"])) }
