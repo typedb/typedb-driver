@@ -61,6 +61,18 @@ export namespace ConceptMapImpl {
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
     import Owned = Explainables.Owned;
 
+    export function of(proto: ConceptMapProto): ConceptMap {
+        const variableMap = new Map<string, Concept>();
+        proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
+            let concept;
+            if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
+            else concept = TypeImpl.of(protoConcept.getType());
+            variableMap.set(resLabel, concept);
+        });
+        const explainables = proto.hasExplainables() ? ofExplainables(proto.getExplainables()) : emptyExplainables();
+        return new ConceptMapImpl(variableMap, explainables);
+    }
+
     function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
         const relations = new Map<string, ConceptMap.Explainable>();
         proto.getRelationsMap().forEach((explainable: ExplainableProto, variable: string) =>
@@ -70,7 +82,6 @@ export namespace ConceptMapImpl {
         proto.getAttributesMap().forEach((explainable: ExplainableProto, variable: string) =>
             relations.set(variable, ofExplainable(explainable))
         );
-
         const ownerships = new Map<[string, string], ConceptMap.Explainable>();
         proto.getOwnershipsMap().forEach((owned: Owned, owner: string) =>
             owned.getOwnedMap().forEach((explainable: ExplainableProto, attribute: string) => {
@@ -80,15 +91,12 @@ export namespace ConceptMapImpl {
         return new ExplainablesImpl(relations, attributes, ownerships)
     }
 
-    export function of(proto: ConceptMapProto): ConceptMap {
-        const variableMap = new Map<string, Concept>();
-        proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
-            let concept;
-            if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
-            else concept = TypeImpl.of(protoConcept.getType());
-            variableMap.set(resLabel, concept);
-        })
-        return new ConceptMapImpl(variableMap, ofExplainables(proto.getExplainables()));
+    function emptyExplainables() {
+        return new ExplainablesImpl(
+            new Map<string, ConceptMap.Explainable>(),
+            new Map<string, ConceptMap.Explainable>(),
+            new Map<[string, string], ConceptMap.Explainable>()
+        );
     }
 
     function ofExplainable(proto: ExplainableProto): ConceptMap.Explainable {

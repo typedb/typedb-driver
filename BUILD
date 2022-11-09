@@ -193,7 +193,7 @@ checkstyle_test(
     name = "checkstyle",
     include = glob([
         "*",
-        ".grabl/*",
+        ".factory/*",
         "api/**/*.ts",
         "common/**/*.ts",
         "concept/**/*.ts",

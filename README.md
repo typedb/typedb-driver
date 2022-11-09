@@ -1,6 +1,6 @@
 # TypeDB Client for Node.js
 
-[![Grabl](https://grabl.io/api/status/vaticle/typedb-client-nodejs/badge.svg)](https://grabl.io/vaticle/typedb-client-nodejs)
+[![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-client-nodejs/badge.svg)](https://factory.vaticle.com/vaticle/typedb-client-nodejs)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
 [![Discussion Forum](https://img.shields.io/discourse/https/forum.vaticle.com/topics.svg)](https://forum.vaticle.com)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)

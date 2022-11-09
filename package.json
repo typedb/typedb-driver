@@ -1,6 +1,6 @@
 {
   "name": "typedb-client",
-  "version": "2.1.1",
+  "version": "2.11.1",
   "description": "TypeDB Client for Node.js",
   "author": "Vaticle",
   "license": "Apache-2.0",
@@ -26,7 +26,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.5.0",
     "google-protobuf": "3.19.3",
-    "typedb-protocol": "2.9.0",
+    "typedb-protocol": "2.10.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
