@@ -23,7 +23,7 @@
 
 use std::sync::mpsc;
 use std::thread::sleep;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use futures::TryFutureExt;
 // use std::time::Instant;
 use futures::StreamExt;
@@ -278,6 +278,7 @@ async fn query_options() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore]
 async fn many_concept_types() {
     let mut client = new_typedb_client().await;
     create_db_grakn(&mut client).await;
@@ -323,54 +324,55 @@ async fn many_concept_types() {
     }
 }
 
-// #[tokio::test]
-// async fn streaming_perf() {
-//     let client = new_typedb_client().await;
-//     for iteration in 0..5 {
-//         create_db_grakn(&client).await;
-//         {
-//             let session = new_session(&client, Schema).await;
-//             let tx = new_tx(&session, Write).await;
-//             run_define_query(&tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
-//             commit_tx(&tx).await;
-//         }
-//         {
-//             let start_time = Instant::now();
-//             let session = new_session(&client, Data).await;
-//             let tx = new_tx(&session, Write).await;
-//             for j in 0..100_000 {
-//                 run_insert_query(&tx, format!("insert $x {} isa age;", j).as_str());
-//             }
-//             commit_tx(&tx).await;
-//             println!("iteration {}: inserted and committed 100k attrs in {}ms", iteration, (Instant::now() - start_time).as_millis());
-//         }
-//         {
-//             let mut start_time = Instant::now();
-//             let session = new_session(&client, Data).await;
-//             let tx = new_tx(&session, Read).await;
-//             let mut answer_stream = tx.query.match_("match $x isa attribute;");
-//             let mut sum: i64 = 0;
-//             let mut idx = 0;
-//             while let Some(result) = answer_stream.next().await {
-//                 match result {
-//                     Ok(concept_map) => {
-//                         for (_, concept) in concept_map {
-//                             if let Concept::Thing(Thing::Attribute(Attribute::Long(long_attr))) = concept {
-//                                 sum += long_attr.value
-//                             }
-//                         }
-//                     }
-//                     Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-//                 }
-//                 if idx % 10_000 == 0 {
-//                     println!("iteration {}: retrieved and summed 10k attrs in {}ms", iteration, (Instant::now() - start_time).as_millis());
-//                     start_time = Instant::now();
-//                 }
-//             }
-//             println!("sum is {}", sum);
-//         }
-//     }
-// }
+#[tokio::test(flavor = "multi_thread")]
+async fn streaming_perf() {
+    let mut client = new_typedb_client().await;
+    for iteration in 0..5 {
+        create_db_grakn(&mut client).await;
+        {
+            let session = new_session(&mut client, Schema).await;
+            let mut tx = new_tx(&session, Write).await;
+            run_define_query(&mut tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
+            commit_tx(&mut tx).await;
+        }
+        {
+            let start_time = Instant::now();
+            let session = new_session(&mut client, Data).await;
+            let mut tx = new_tx(&session, Write).await;
+            for j in 0..100_000 {
+                run_insert_query(&mut tx, format!("insert $x {} isa age;", j).as_str());
+            }
+            commit_tx(&mut tx).await;
+            println!("iteration {}: inserted and committed 100k attrs in {}ms", iteration, (Instant::now() - start_time).as_millis());
+        }
+        {
+            let mut start_time = Instant::now();
+            let session = new_session(&mut client, Data).await;
+            let mut tx = new_tx(&session, Read).await;
+            let mut answer_stream = tx.query.match_("match $x isa attribute;");
+            let mut sum: i64 = 0;
+            let mut idx = 0;
+            while let Some(result) = answer_stream.next().await {
+                match result {
+                    Ok(concept_map) => {
+                        for (_, concept) in concept_map {
+                            if let Concept::Thing(Thing::Attribute(Attribute::Long(long_attr))) = concept {
+                                sum += long_attr.value
+                            }
+                        }
+                    }
+                    Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+                }
+                idx = idx + 1;
+                if idx == 100_000 {
+                    println!("iteration {}: retrieved and summed 100k attrs in {}ms", iteration, (Instant::now() - start_time).as_millis());
+                    start_time = Instant::now();
+                }
+            }
+            println!("sum is {}", sum);
+        }
+    }
+}
 
 async fn describe_concept(concept: &Concept) {
     match concept {
