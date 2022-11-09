@@ -80,7 +80,7 @@ impl TransactionRpc {
     }
 
     pub(crate) fn stream(&mut self, req: transaction::Req) -> impl Stream<Item = Result<transaction::ResPart>> {
-        const BUFFER_SIZE: usize = 256;
+        const BUFFER_SIZE: usize = 1024;
         let (res_part_sink, res_part_receiver) = mpsc::channel::<Result<transaction::ResPart>>(BUFFER_SIZE);
         let (stream_req_sink, stream_req_receiver) = std::sync::mpsc::channel::<transaction::Req>();
         self.receiver.add_stream(&req.req_id, res_part_sink);
@@ -372,10 +372,11 @@ impl Stream for ResPartStream {
                     Some(res_part::Res::StreamResPart(stream_res_part)) => {
                         // TODO: unwrap -> expect(enum_out_of_range)
                         match State::from_i32(stream_res_part.state).unwrap() {
-                            State::Done => Poll::Ready(None),
+                            State::Done => { Poll::Ready(None) },
                             State::Continue => {
                                 let req_id = self.req_id.clone();
                                 self.stream_req_sink.send(stream_req(req_id)).unwrap();
+                                ctx.waker().wake_by_ref();
                                 Poll::Pending
                             }
                         }
