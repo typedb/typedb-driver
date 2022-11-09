@@ -19,65 +19,8 @@
  * under the License.
  */
 
-use std::collections::{hash_map, HashMap};
-use std::ops::Index;
-use crate::common::Result;
-use crate::concept::Concept;
+mod concept_map;
+pub use concept_map::ConceptMap;
 
-#[derive(Debug)]
-pub struct ConceptMap {
-    pub map: HashMap<String, Concept>
-}
-
-impl ConceptMap {
-    pub(crate) fn from_proto(proto: typedb_protocol::ConceptMap) -> Result<Self> {
-        let mut map = HashMap::with_capacity(proto.map.len());
-        for (k, v) in proto.map {
-            map.insert(k, Concept::from_proto(v)?);
-        }
-        Ok(Self { map })
-    }
-
-    pub fn get(&self, var_name: &str) -> Option<&Concept> {
-        self.map.get(var_name)
-    }
-
-    pub fn concepts(&self) -> impl Iterator<Item = &Concept> {
-        self.map.values()
-    }
-
-    pub fn concepts_to_vec(&self) -> Vec<&Concept> {
-        self.concepts().collect::<Vec<&Concept>>()
-    }
-}
-
-impl Clone for ConceptMap {
-    fn clone(&self) -> Self {
-        let mut map = HashMap::with_capacity(self.map.len());
-        for (k, v) in &self.map { map.insert(k.clone(), v.clone()); }
-        Self { map }
-    }
-}
-
-impl From<ConceptMap> for HashMap<String, Concept> {
-    fn from(cm: ConceptMap) -> Self {
-        cm.map
-    }
-}
-
-impl Index<String> for ConceptMap {
-    type Output = Concept;
-
-    fn index(&self, index: String) -> &Self::Output {
-        &self.map[&index]
-    }
-}
-
-impl IntoIterator for ConceptMap {
-    type Item = (String, Concept);
-    type IntoIter = hash_map::IntoIter<String, Concept>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.map.into_iter()
-    }
-}
+mod numeric;
+pub use numeric::Numeric;

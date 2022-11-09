@@ -26,6 +26,7 @@ use std::convert::TryFrom;
 use std::fmt::{Debug, Formatter};
 use std::iter::once;
 use std::time::Instant;
+use enum_dispatch::enum_dispatch;
 use futures::{FutureExt, Stream, stream, StreamExt};
 use futures::stream::FuturesUnordered;
 use typedb_protocol::{attribute as attribute_proto, attribute_type as attribute_type_proto, concept as concept_proto, r#type as type_proto, thing as thing_proto};
@@ -37,42 +38,45 @@ use uuid::Uuid;
 use crate::common::error::MESSAGES;
 use crate::common::{Error, Result};
 use crate::rpc::builder::thing::attribute_get_owners_req;
-// use crate::rpc::builder::thing::attribute_get_owners_req;
 use crate::transaction::Transaction;
 
 mod api {
-    use futures::Stream;
-    use crate::common::Result;
-    use crate::{concept, Transaction};
-
-    pub trait Concept {}
-
-    pub trait Type: Concept {}
-
-    pub trait ThingType: Type {}
-
-    pub trait EntityType: ThingType {
-        fn get_supertype(&self, tx: &Transaction) -> Result<concept::EntityOrThingType>;
-    }
-
-    pub trait RelationType: ThingType {
-        fn get_supertype(&self, tx: &Transaction) -> Result<concept::RelationOrThingType>;
-    }
-
-    pub trait Thing: Concept {
-        fn get_iid(&self) -> &Vec<u8>;
-    }
-
-    pub trait Entity: Thing {}
-
-    pub trait Relation: Thing {}
-
-    pub trait Attribute: Thing {}
-
-    pub trait LongAttribute: Attribute {}
-
-    pub trait StringAttribute: Attribute {}
+    // use enum_dispatch::enum_dispatch;
+    // use futures::Stream;
+    // use crate::common::Result;
+    // use crate::{concept, Transaction};
 }
+
+#[enum_dispatch]
+pub trait ConceptApi {}
+
+#[enum_dispatch]
+pub trait TypeApi: ConceptApi {}
+
+pub trait ThingTypeApi: TypeApi {}
+
+pub trait EntityTypeApi: ThingTypeApi {
+    fn get_supertype(&self, tx: &Transaction) -> Result<EntityOrThingType>;
+}
+
+pub trait RelationTypeApi: ThingTypeApi {
+    fn get_supertype(&self, tx: &Transaction) -> Result<RelationOrThingType>;
+}
+
+// #[enum_dispatch]
+pub trait ThingApi: ConceptApi {
+    fn get_iid(&self) -> &Vec<u8>;
+}
+
+pub trait EntityApi: ThingApi {}
+
+pub trait RelationApi: ThingApi {}
+
+pub trait AttributeApi: ThingApi {}
+
+pub trait LongAttributeApi: AttributeApi {}
+
+pub trait StringAttributeApi: AttributeApi {}
 
 fn stream_things(tx: &mut Transaction, req: transaction::Req) -> impl Stream<Item = Result<thing_proto::res_part::Res>> {
     tx.streaming_rpc(req).map(|result: Result<transaction::ResPart>| {
@@ -91,6 +95,7 @@ fn stream_things(tx: &mut Transaction, req: transaction::Req) -> impl Stream<Ite
 }
 
 #[derive(Clone, Debug)]
+#[enum_dispatch(ConceptApi)]
 pub enum Concept {
     Type(Type),
     Thing(Thing),
@@ -149,9 +154,8 @@ impl Concept {
     }
 }
 
-impl api::Concept for Concept {}
-
 #[derive(Clone, Debug)]
+#[enum_dispatch(TypeApi)]
 pub enum Type {
     Thing(ThingType),
     // Role(RoleType),
@@ -170,9 +174,7 @@ impl Type {
     }
 }
 
-impl api::Concept for Type {}
-
-impl api::Type for Type {}
+impl ConceptApi for Type {}
 
 #[derive(Clone, Debug)]
 pub enum ThingType {
@@ -182,11 +184,11 @@ pub enum ThingType {
     // Attribute(AttributeType)
 }
 
-impl api::Type for ThingType {}
+impl TypeApi for ThingType {}
 
-impl api::Concept for ThingType {}
+impl ConceptApi for ThingType {}
 
-impl api::ThingType for ThingType {}
+impl ThingTypeApi for ThingType {}
 
 #[derive(Debug)]
 pub enum EntityOrThingType {
@@ -194,11 +196,11 @@ pub enum EntityOrThingType {
     RootThingType(RootThingType)
 }
 
-impl api::Type for EntityOrThingType {}
+impl TypeApi for EntityOrThingType {}
 
-impl api::Concept for EntityOrThingType {}
+impl ConceptApi for EntityOrThingType {}
 
-impl api::ThingType for EntityOrThingType {}
+impl ThingTypeApi for EntityOrThingType {}
 
 #[derive(Debug)]
 pub enum RelationOrThingType {
@@ -206,11 +208,11 @@ pub enum RelationOrThingType {
     RootThingType(RootThingType)
 }
 
-impl api::Type for RelationOrThingType {}
+impl TypeApi for RelationOrThingType {}
 
-impl api::Concept for RelationOrThingType {}
+impl ConceptApi for RelationOrThingType {}
 
-impl api::ThingType for RelationOrThingType {}
+impl ThingTypeApi for RelationOrThingType {}
 
 #[derive(Clone, Debug)]
 pub struct RootThingType {
@@ -231,11 +233,11 @@ impl Default for RootThingType {
     }
 }
 
-impl api::Type for RootThingType {}
+impl TypeApi for RootThingType {}
 
-impl api::Concept for RootThingType {}
+impl ConceptApi for RootThingType {}
 
-impl api::ThingType for RootThingType {}
+impl ThingTypeApi for RootThingType {}
 
 #[derive(Clone, Debug)]
 pub struct EntityType {
@@ -251,19 +253,19 @@ impl EntityType {
         Self::new(proto.label)
     }
 
-    // Ideally we define this in api::EntityType, but can't return impl Stream in a trait method
+    // Ideally we define this in EntityTypeApi, but can't return impl Stream in a trait method
     // fn get_instances(&self, tx: &Transaction) -> impl Stream<Item = Entity> {
     //     todo!()
     // }
 }
 
-impl api::ThingType for EntityType {}
+impl ThingTypeApi for EntityType {}
 
-impl api::Type for EntityType {}
+impl TypeApi for EntityType {}
 
-impl api::Concept for EntityType {}
+impl ConceptApi for EntityType {}
 
-impl api::EntityType for EntityType {
+impl EntityTypeApi for EntityType {
     fn get_supertype(&self, tx: &Transaction) -> Result<EntityOrThingType> {
         todo!()
     }
@@ -289,6 +291,7 @@ impl RelationType {
 // }
 
 #[derive(Clone, Debug)]
+#[enum_dispatch(ThingApi)]
 pub enum Thing {
     Entity(Entity),
     Relation(Relation),
@@ -307,17 +310,17 @@ impl Thing {
     }
 }
 
-impl api::Concept for Thing {}
+impl ConceptApi for Thing {}
 
-impl api::Thing for Thing {
-    fn get_iid(&self) -> &Vec<u8> {
-        match self {
-            Thing::Entity(x) => { x.get_iid() }
-            Thing::Relation(x) => { x.get_iid() }
-            Thing::Attribute(x) => { x.get_iid() }
-        }
-    }
-}
+// impl ThingApi for Thing {
+//     fn get_iid(&self) -> &Vec<u8> {
+//         match self {
+//             Thing::Entity(x) => { x.get_iid() }
+//             Thing::Relation(x) => { x.get_iid() }
+//             Thing::Attribute(x) => { x.get_iid() }
+//         }
+//     }
+// }
 
 #[derive(Clone, Debug)]
 pub struct Entity {
@@ -331,31 +334,39 @@ impl Entity {
     }
 }
 
-impl api::Thing for Entity {
-    // TODO: use enum_dispatch macro to avoid manually writing the duplicates of this method
-    fn get_iid(&self) -> &Vec<u8> {
-        &self.iid
-    }
-}
+// impl ThingApi for Entity {
+//     // TODO: use enum_dispatch macro to avoid manually writing the duplicates of this method
+//     fn get_iid(&self) -> &Vec<u8> {
+//         &self.iid
+//     }
+// }
 
-impl api::Concept for Entity {}
+impl ConceptApi for Entity {}
 
-impl api::Entity for Entity {}
+// impl EntityApi for Entity {}
 
 #[derive(Clone, Debug)]
 pub struct Relation {
     pub iid: Vec<u8>
 }
 
-impl api::Thing for Relation {
-    fn get_iid(&self) -> &Vec<u8> {
-        &self.iid
+macro_rules! default_impl {
+    { impl $trait:ident $body:tt for $($t:ident),* $(,)? } => {
+        $(impl $trait for $t $body)*
     }
 }
 
-impl api::Concept for Relation {}
+default_impl! {
+impl ThingApi {
+    fn get_iid(&self) -> &Vec<u8> {
+        &self.iid
+    }
+} for Entity, Relation
+}
 
-impl api::Relation for Relation {}
+impl ConceptApi for Relation {}
+
+// impl RelationApi for Relation {}
 
 #[derive(Clone, Debug)]
 pub enum Attribute {
@@ -436,18 +447,18 @@ impl Attribute {
     }
 }
 
-impl api::Thing for Attribute {
-    fn get_iid(&self) -> &Vec<u8> {
-        match self {
-            Attribute::Long(x) => { x.get_iid() }
-            Attribute::String(x) => { x.get_iid() }
-        }
-    }
-}
+// impl ThingApi for Attribute {
+//     fn get_iid(&self) -> &Vec<u8> {
+//         match self {
+//             Attribute::Long(x) => { x.get_iid() }
+//             Attribute::String(x) => { x.get_iid() }
+//         }
+//     }
+// }
 
-impl api::Concept for Attribute {}
+impl ConceptApi for Attribute {}
 
-impl api::Attribute for Attribute {}
+// impl AttributeApi for Attribute {}
 
 #[derive(Clone, Debug)]
 pub struct LongAttribute {
@@ -461,17 +472,17 @@ impl LongAttribute {
     }
 }
 
-impl api::Attribute for LongAttribute {}
+// impl AttributeApi for LongAttribute {}
 
-impl api::Thing for LongAttribute {
-    fn get_iid(&self) -> &Vec<u8> {
-        &self.iid
-    }
-}
+// impl ThingApi for LongAttribute {
+//     fn get_iid(&self) -> &Vec<u8> {
+//         &self.iid
+//     }
+// }
 
-impl api::Concept for LongAttribute {}
+impl ConceptApi for LongAttribute {}
 
-impl api::LongAttribute for LongAttribute {}
+// impl LongAttributeApi for LongAttribute {}
 
 #[derive(Clone, Debug)]
 pub struct StringAttribute {
@@ -485,17 +496,17 @@ impl StringAttribute {
     }
 }
 
-impl api::Attribute for StringAttribute {}
+// impl AttributeApi for StringAttribute {}
 
-impl api::Thing for StringAttribute {
-    fn get_iid(&self) -> &Vec<u8> {
-        &self.iid
-    }
-}
+// impl ThingApi for StringAttribute {
+//     fn get_iid(&self) -> &Vec<u8> {
+//         &self.iid
+//     }
+// }
 
-impl api::Concept for StringAttribute {}
+impl ConceptApi for StringAttribute {}
 
-impl api::StringAttribute for StringAttribute {}
+// impl StringAttributeApi for StringAttribute {}
 
 // struct RoleType {
 //     label: ScopedLabel,

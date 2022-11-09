@@ -28,6 +28,7 @@ use futures::TryFutureExt;
 // use std::time::Instant;
 use futures::StreamExt;
 use typedb_client::{session, Session, transaction, TypeDBClient};
+use typedb_client::answer::Numeric;
 use typedb_client::concept::{Attribute, Concept, Entity, LongAttribute, StringAttribute, Thing, ThingType, Type};
 use typedb_client::session::Type::{Data, Schema};
 use typedb_client::transaction::Transaction;
@@ -56,7 +57,11 @@ async fn new_session(client: &mut TypeDBClient, session_type: session::Type) -> 
 }
 
 async fn new_tx(session: &Session, tx_type: transaction::Type) -> Transaction {
-    session.transaction(tx_type).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err))
+    new_tx_with_options(session, tx_type, typedb_client::Options::default()).await
+}
+
+async fn new_tx_with_options(session: &Session, tx_type: transaction::Type, options: typedb_client::Options) -> Transaction {
+    session.transaction_with_options(tx_type, options).await.unwrap_or_else(|err| panic!("An error occurred opening a transaction: {}", err))
 }
 
 async fn commit_tx(tx: &mut Transaction) {
@@ -64,12 +69,16 @@ async fn commit_tx(tx: &mut Transaction) {
 }
 
 async fn run_define_query(tx: &mut Transaction, query: &str) {
-    tx.query().define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
+    tx.query.define(query).await.unwrap_or_else(|err| panic!("An error occurred running a Define query: {}", err));
 }
 
 #[allow(unused_must_use)]
 fn run_insert_query(tx: &mut Transaction, query: &str) {
-    tx.query().insert(query);
+    tx.query.insert(query);
+}
+
+async fn run_match_aggregate_query(tx: &mut Transaction, query: &str) -> Numeric {
+    tx.query.match_aggregate(query).await.unwrap_or_else(|err| panic!("An error occurred running a Match Aggregate query: {}", err))
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -83,7 +92,7 @@ async fn basic() {
     );
     let mut session = new_session(&mut client, Data).await;
     let mut tx = new_tx(&session, Write).await;
-    let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+    let mut answer_stream = tx.query.match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
     while let Some(result) = answer_stream.next().await {
         match result {
             Ok(concept_map) => { println!("{:#?}", concept_map) }
@@ -139,7 +148,7 @@ async fn concurrent_queries() {
     let mut tx2 = tx.clone();
     let handle = tokio::spawn(async move {
         for _ in 0..5 {
-            let mut answer_stream = tx.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+            let mut answer_stream = tx.query.match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
             while let Some(result) = answer_stream.next().await {
                 match result {
                     Ok(res) => { sender.send(Ok(format!("got answer {:?} from thread 1", res))).unwrap(); }
@@ -153,7 +162,7 @@ async fn concurrent_queries() {
     });
     let handle2 = tokio::spawn(async move {
         for _ in 0..5 {
-            let mut answer_stream = tx2.query().match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
+            let mut answer_stream = tx2.query.match_("match $x sub thing; { $x type thing; } or { $x type entity; };");
             while let Some(result) = answer_stream.next().await {
                 match result {
                     Ok(res) => { sender2.send(Ok(format!("got answer {:?} from thread 2", res))).unwrap(); }
@@ -176,7 +185,7 @@ async fn concurrent_queries() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-// #[ignore]
+#[ignore]
 async fn concept_api() {
     let mut client = new_typedb_client().await;
     create_db_grakn(&mut client).await;
@@ -195,7 +204,9 @@ async fn concept_api() {
     {
         let session = new_session(&mut client, Data).await;
         let mut tx = new_tx(&session, Read).await;
-        let mut answer_stream = tx.query().match_("match $x isa thing;");
+        let person_count: i64 = run_match_aggregate_query(&mut tx, "match $x isa person; count;").await.into();
+        println!("There are {} people in the DB", person_count);
+        let mut answer_stream = tx.query.match_("match $x isa thing;");
         let mut str_attrs = vec![];
         while let Some(result) = answer_stream.next().await {
             match result {
@@ -220,6 +231,42 @@ async fn concept_api() {
                 }
                 Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
             }
+        }
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn query_options() {
+    let mut client = new_typedb_client().await;
+    create_db_grakn(&mut client).await;
+    {
+        let session = new_session(&mut client, Schema).await;
+        let mut tx = new_tx(&session, Write).await;
+        run_define_query(
+            &mut tx,
+            "define person sub entity, owns name, owns age;\n\
+            name sub attribute, value string;\n\
+            age sub attribute, value long;\n\
+            rule age-rule: when { $x isa person; } then { $x has age 25; };"
+        ).await;
+        commit_tx(&mut tx).await;
+    }
+    {
+        let session = new_session(&mut client, Data).await;
+        {
+            let mut tx = new_tx(&session, Write).await;
+            run_insert_query(&mut tx, "insert $x isa person, has name \"Alice\"; $y isa person, has name \"Bob\";");
+            commit_tx(&mut tx).await;
+        }
+        {
+            let mut tx = new_tx(&session, Read).await;
+            let material_age_count = tx.query.match_aggregate("match $x isa age; count;").await.unwrap();
+            println!("Ages (excluding inferred): {}", material_age_count.into_i64());
+        }
+        {
+            let mut tx = new_tx_with_options(&session, Read, typedb_client::Options::new_core().infer(true)).await;
+            let all_age_count = tx.query.match_aggregate("match $x isa age; count;").await.unwrap();
+            println!("Ages (including inferred): {}", all_age_count.into_i64());
         }
     }
 }
@@ -254,7 +301,7 @@ async fn concept_api() {
 //             let mut start_time = Instant::now();
 //             let session = new_session(&client, Data).await;
 //             let tx = new_tx(&session, Read).await;
-//             let mut answer_stream = tx.query().match_("match $x isa attribute;");
+//             let mut answer_stream = tx.query.match_("match $x isa attribute;");
 //             let mut sum: i64 = 0;
 //             let mut idx = 0;
 //             while let Some(result) = answer_stream.next().await {

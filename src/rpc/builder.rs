@@ -134,17 +134,17 @@ pub(crate) mod session {
         close::Req { session_id }
     }
 
-    pub(crate) fn open_req(database: &str, session_type: session::Type, options: Option<Options>) -> open::Req {
+    pub(crate) fn open_req(database: &str, session_type: session::Type, options: Options) -> open::Req {
         open::Req {
             database: database.into(),
             r#type: session_type.into(),
-            options
+            options: options.into()
         }
     }
 }
 
 pub(crate) mod transaction {
-    use typedb_protocol::transaction;
+    use typedb_protocol::{Options, transaction};
     use typedb_protocol::transaction::{commit, open, rollback, stream};
     use uuid::Uuid;
 
@@ -156,11 +156,11 @@ pub(crate) mod transaction {
         req_with_id(transaction::req::Req::StreamReq(stream::Req {}), req_id)
     }
 
-    pub(crate) fn open_req(session_id: Vec<u8>, transaction_type: transaction::Type, network_latency_millis: i32) -> transaction::Req {
+    pub(crate) fn open_req(session_id: Vec<u8>, transaction_type: transaction::Type, options: Options, network_latency_millis: i32) -> transaction::Req {
         req(transaction::req::Req::OpenReq(open::Req {
             session_id,
             r#type: transaction_type.into(),
-            options: None,
+            options: options.into(),
             network_latency_millis
         }))
     }
@@ -196,7 +196,7 @@ pub(crate) mod transaction {
 
 #[allow(dead_code)]
 pub(crate) mod query_manager {
-    use typedb_protocol::{query_manager, transaction};
+    use typedb_protocol::{Options, query_manager, transaction};
     use typedb_protocol::query_manager::{define, delete, explain, insert, match_aggregate, match_group, match_group_aggregate, r#match, undefine, update};
     use typedb_protocol::transaction::req::Req::QueryManagerReq;
 
@@ -204,65 +204,65 @@ pub(crate) mod query_manager {
         super::transaction::req(QueryManagerReq(req))
     }
 
-    pub(crate) fn define_req(query: &str) -> transaction::Req {
+    pub(crate) fn define_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::DefineReq(define::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn undefine_req(query: &str) -> transaction::Req {
+    pub(crate) fn undefine_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::UndefineReq(undefine::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn match_req(query: &str) -> transaction::Req {
+    pub(crate) fn match_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::MatchReq(r#match::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn match_aggregate_req(query: &str) -> transaction::Req {
+    pub(crate) fn match_aggregate_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::MatchAggregateReq(match_aggregate::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn match_group_req(query: &str) -> transaction::Req {
+    pub(crate) fn match_group_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::MatchGroupReq(match_group::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn match_group_aggregate_req(query: &str) -> transaction::Req {
+    pub(crate) fn match_group_aggregate_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::MatchGroupAggregateReq(match_group_aggregate::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn insert_req(query: &str) -> transaction::Req {
+    pub(crate) fn insert_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::InsertReq(insert::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn delete_req(query: &str) -> transaction::Req {
+    pub(crate) fn delete_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::DeleteReq(delete::Req { query: query.to_string() }).into()
         })
     }
 
-    pub(crate) fn update_req(query: &str) -> transaction::Req {
+    pub(crate) fn update_req(query: &str, options: Option<Options>) -> transaction::Req {
         query_manager_req(query_manager::Req {
-            options: None,
+            options,
             req: query_manager::req::Req::UpdateReq(update::Req { query: query.to_string() }).into()
         })
     }

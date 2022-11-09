@@ -22,13 +22,15 @@
 use std::iter::once;
 use std::sync::{Arc, Mutex};
 use futures::{Stream, stream, StreamExt};
+use query_manager::res::Res::MatchAggregateRes;
 use typedb_protocol::{query_manager, transaction};
 use typedb_protocol::query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart};
-use crate::answer::ConceptMap;
+use crate::answer::{ConceptMap, Numeric};
 
 use crate::common::error::MESSAGES;
 use crate::common::Result;
-use crate::rpc::builder::query_manager::{define_req, delete_req, insert_req, match_req, update_req, undefine_req};
+use crate::Options;
+use crate::rpc::builder::query_manager::{define_req, delete_req, insert_req, match_req, update_req, undefine_req, match_aggregate_req};
 use crate::rpc::transaction::TransactionRpc;
 
 macro_rules! stream_concept_maps {
@@ -64,30 +66,71 @@ impl QueryManager {
     }
 
     pub async fn define(&mut self, query: &str) -> Result {
-        self.single_call(define_req(query)).await.map(|_| ())
+        self.single_call(define_req(query, None)).await.map(|_| ())
+    }
+
+    pub async fn define_with_options(&mut self, query: &str, options: &Options) -> Result {
+        self.single_call(define_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
     pub async fn delete(&mut self, query: &str) -> Result {
-        self.single_call(delete_req(query)).await.map(|_| ())
+        self.single_call(delete_req(query, None)).await.map(|_| ())
+    }
+
+    pub async fn delete_with_options(&mut self, query: &str, options: &Options) -> Result {
+        self.single_call(delete_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
     pub fn insert(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
-        let req = insert_req(query);
+        let req = insert_req(query, None);
+        stream_concept_maps!(self, req, InsertResPart, "insert")
+    }
+
+    pub fn insert_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+        let req = insert_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, InsertResPart, "insert")
     }
 
     // TODO: investigate performance impact of using BoxStream
     pub fn match_(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
-        let req = match_req(query);
+        let req = match_req(query, None);
         stream_concept_maps!(self, req, MatchResPart, "match")
     }
 
+    pub fn match_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+        let req = match_req(query, Some(options.to_proto()));
+        stream_concept_maps!(self, req, MatchResPart, "match")
+    }
+
+    pub async fn match_aggregate(&mut self, query: &str) -> Result<Numeric> {
+        match self.single_call(match_aggregate_req(query, None)).await? {
+            MatchAggregateRes(res) => { res.answer.unwrap().try_into() }
+            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"]))}
+        }
+    }
+
+    pub async fn match_aggregate_with_options(&mut self, query: &str, options: Options) -> Result<Numeric> {
+        match self.single_call(match_aggregate_req(query, Some(options.to_proto()))).await? {
+            MatchAggregateRes(res) => { res.answer.unwrap().try_into() }
+            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"]))}
+        }
+    }
+
     pub async fn undefine(&mut self, query: &str) -> Result {
-        self.single_call(undefine_req(query)).await.map(|_| ())
+        self.single_call(undefine_req(query, None)).await.map(|_| ())
+    }
+
+    pub async fn undefine_with_options(&mut self, query: &str, options: &Options) -> Result {
+        self.single_call(undefine_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
     pub fn update(&mut self, query: &str) -> impl Stream<Item = Result<ConceptMap>> {
-        let req = update_req(query);
+        let req = update_req(query, None);
+        stream_concept_maps!(self, req, UpdateResPart, "update")
+    }
+
+    pub fn update_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+        let req = update_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, UpdateResPart, "update")
     }
 

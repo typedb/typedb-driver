@@ -29,10 +29,10 @@ use typedb_protocol::transaction::res::Res;
 use typedb_protocol::transaction::Server;
 
 use crate::common::{Error, Result};
+use crate::Options;
 use crate::query::QueryManager;
 use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req, client_msg};
 use crate::rpc::client::RpcClient;
-// use crate::query::QueryManager;
 use crate::rpc::transaction::TransactionRpc;
 
 #[derive(Copy, Clone, Debug)]
@@ -52,31 +52,24 @@ impl Type {
 
 #[derive(Clone, Debug)]
 pub struct Transaction {
-    pub transaction_type: Type,
+    pub type_: Type,
+    pub options: Options,
     pub query: QueryManager,
     rpc: TransactionRpc,
 }
 
 impl Transaction {
-    // TODO: check if this model lets us open transactions in parallel
-    pub(crate) async fn new(session_id: &Vec<u8>, transaction_type: Type, network_latency: Duration, rpc_client: &RpcClient) -> Result<Self> {
+    pub(crate) async fn new(session_id: &Vec<u8>, type_: Type, options: Options, network_latency: Duration, rpc_client: &RpcClient) -> Result<Self> {
         let open_req = open_req(
-            session_id.clone(), transaction_type.to_proto(), network_latency.as_millis() as i32
+            session_id.clone(), type_.to_proto(), options.to_proto(), network_latency.as_millis() as i32
         );
         let rpc = TransactionRpc::new(rpc_client, open_req).await?;
         Ok(Transaction {
-            transaction_type,
+            type_,
+            options,
             query: QueryManager::new(&rpc),
             rpc
         })
-    }
-
-    pub fn get_type(&self) -> Type {
-        self.transaction_type
-    }
-
-    pub fn query(&mut self) -> &mut QueryManager {
-        &mut self.query
     }
 
     pub async fn commit(&mut self) -> Result {
@@ -95,7 +88,7 @@ impl Transaction {
         self.rpc.stream(req)
     }
 
-    // TODO: refactor to delegate work to a background process so we can implement Drop
+    // TODO: refactor to delegate work to a background process
     pub async fn close(&self) {
         self.rpc.close().await;
     }
