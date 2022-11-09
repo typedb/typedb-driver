@@ -55,11 +55,9 @@ pub(crate) struct TransactionRpc {
 impl TransactionRpc {
     pub(crate) async fn new(rpc_client: &RpcClient, open_req: transaction::Req) -> Result<Self> {
         let mut rpc_client_clone = rpc_client.clone();
-        println!("Cloned rpc_client");
         let (req_sink, streaming_res): (
             mpsc::Sender<transaction::Client>, Streaming<transaction::Server>
         ) = rpc_client_clone.transaction(open_req).await?;
-        println!("Opened transaction stream");
         let (close_signal_sink, close_signal_receiver) = oneshot::channel::<Option<Error>>();
         Ok(
             TransactionRpc {
@@ -145,7 +143,6 @@ impl Sender {
 
     fn submit_message(req: transaction::Req, sender: Arc<SenderState>) {
         sender.queued_messages.lock().unwrap().push(req.clone());
-        println!("Submitted request message");
     }
 
     fn add_message_provider(provider: std::sync::mpsc::Receiver<transaction::Req>, executor: Arc<Executor>, sender: Arc<SenderState>) {
@@ -163,7 +160,6 @@ impl Sender {
             sleep(DISPATCH_INTERVAL);
             Self::dispatch_messages(sender.clone()).await;
         }
-        println!("Transaction rpc was closed; message dispatch loop has been shut down")
     }
 
     async fn dispatch_messages(sender: Arc<SenderState>) {
@@ -172,7 +168,6 @@ impl Sender {
         if !msgs.is_empty() {
             let len = msgs.len();
             sender.req_sink.clone().send(client_msg(msgs)).await.unwrap();
-            println!("Dispatched {} message(s)", len);
         }
         sender.ongoing_task_count.fetch_sub(1);
     }
@@ -180,7 +175,6 @@ impl Sender {
     async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, sender: Arc<SenderState>) {
         match close_signal_receiver.await {
             Ok(close_signal) => {
-                println!("Sender received close signal, and will now close");
                 Self::close(sender, close_signal).await;
             }
             Err(err) => { Self::close(sender, Some(Error::new(err.to_string()))).await; }
@@ -200,7 +194,6 @@ impl Sender {
                     break;
                 }
             }
-            println!("Sender closed");
         }
     }
 }
@@ -252,7 +245,6 @@ impl Receiver {
     fn collect_res(res: transaction::Res, state: Arc<ReceiverState>) {
         match state.res_collectors.lock().unwrap().remove(&res.req_id) {
             Some(collector) => {
-                println!("Received message: posting to the SINGLE collector for req ID {:?}", res.req_id);
                 collector.send(Ok(res)).unwrap()
             }
             None => {
@@ -295,18 +287,15 @@ impl Receiver {
             match grpc_stream.next().await {
                 Some(Ok(message)) => { Self::on_receive(message, Arc::clone(&state)).await; }
                 Some(Err(err)) => {
-                    println!("Received error, closing receiver");
                     Self::close(state, Some(err.into()), close_signal_sink).await;
                     break;
                 }
                 None => {
-                    println!("End of stream, closing receiver");
                     Self::close(state, None, close_signal_sink).await;
                     break;
                 }
             }
         }
-        println!("Receiver listener closed");
     }
 
     async fn on_receive(message: transaction::Server, state: Arc<ReceiverState>) {
@@ -343,7 +332,6 @@ impl Receiver {
                 collector.send(Err(Self::close_reason(&error_str))).await.ok();
             }
             close_signal_sink.send(Some(Self::close_reason(&error_str))).unwrap();
-            println!("Receiver closed");
         }
     }
 

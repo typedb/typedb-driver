@@ -81,6 +81,11 @@ async fn run_match_aggregate_query(tx: &mut Transaction, query: &str) -> Numeric
     tx.query.match_aggregate(query).await.unwrap_or_else(|err| panic!("An error occurred running a Match Aggregate query: {}", err))
 }
 
+// #[test]
+// fn testfn() {
+//     println!("🦀");
+// }
+
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
 async fn basic() {
@@ -184,58 +189,59 @@ async fn concurrent_queries() {
     }
 }
 
-#[tokio::test(flavor = "multi_thread")]
-#[ignore]
-async fn concept_api() {
-    let mut client = new_typedb_client().await;
-    create_db_grakn(&mut client).await;
-    {
-        let session = new_session(&mut client, Schema).await;
-        let mut tx = new_tx(&session, Write).await;
-        run_define_query(&mut tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
-        commit_tx(&mut tx).await;
-    }
-    {
-        let session = new_session(&mut client, Data).await;
-        let mut tx = new_tx(&session, Write).await;
-        run_insert_query(&mut tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
-        commit_tx(&mut tx).await;
-    }
-    {
-        let session = new_session(&mut client, Data).await;
-        let mut tx = new_tx(&session, Read).await;
-        let person_count: i64 = run_match_aggregate_query(&mut tx, "match $x isa person; count;").await.into();
-        println!("There are {} people in the DB", person_count);
-        let mut answer_stream = tx.query.match_("match $x isa thing;");
-        let mut str_attrs = vec![];
-        while let Some(result) = answer_stream.next().await {
-            match result {
-                Ok(concept_map) => {
-                    for (_, concept) in concept_map {
-                        describe_concept(&concept).await;
-                        if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
-                            str_attrs.push(str_attr)
-                        }
-                    }
-                }
-                Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-            }
-        }
-        let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
-        println!("Getting owners of {:?}", str_attr);
-        let mut owners_stream = str_attr.get_owners(&mut tx);
-        while let Some(result) = owners_stream.next().await {
-            match result {
-                Ok(thing) => {
-                    println!("Found {:?}", thing)
-                }
-                Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
-            }
-        }
-    }
-}
+// #[tokio::test(flavor = "multi_thread")]
+// #[ignore]
+// async fn concept_api() {
+//     let mut client = new_typedb_client().await;
+//     create_db_grakn(&mut client).await;
+//     {
+//         let session = new_session(&mut client, Schema).await;
+//         let mut tx = new_tx(&session, Write).await;
+//         run_define_query(&mut tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
+//         commit_tx(&mut tx).await;
+//     }
+//     {
+//         let session = new_session(&mut client, Data).await;
+//         let mut tx = new_tx(&session, Write).await;
+//         run_insert_query(&mut tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
+//         commit_tx(&mut tx).await;
+//     }
+//     {
+//         let session = new_session(&mut client, Data).await;
+//         let mut tx = new_tx(&session, Read).await;
+//         let person_count: i64 = run_match_aggregate_query(&mut tx, "match $x isa person; count;").await.into();
+//         println!("There are {} people in the DB", person_count);
+//         let mut answer_stream = tx.query.match_("match $x isa thing;");
+//         let mut str_attrs = vec![];
+//         while let Some(result) = answer_stream.next().await {
+//             match result {
+//                 Ok(concept_map) => {
+//                     for (_, concept) in concept_map {
+//                         describe_concept(&concept).await;
+//                         if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
+//                             str_attrs.push(str_attr)
+//                         }
+//                     }
+//                 }
+//                 Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+//             }
+//         }
+//         let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
+//         println!("Getting owners of {:?}", str_attr);
+//         let mut owners_stream = str_attr.get_owners(&mut tx);
+//         while let Some(result) = owners_stream.next().await {
+//             match result {
+//                 Ok(thing) => {
+//                     println!("Found {:?}", thing)
+//                 }
+//                 Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
+//             }
+//         }
+//     }
+// }
 
 #[tokio::test(flavor = "multi_thread")]
+#[ignore]
 async fn query_options() {
     let mut client = new_typedb_client().await;
     create_db_grakn(&mut client).await;
@@ -271,10 +277,51 @@ async fn query_options() {
     }
 }
 
-// #[test]
-// fn testfn() {
-//     println!("🦀");
-// }
+#[tokio::test(flavor = "multi_thread")]
+async fn many_concept_types() {
+    let mut client = new_typedb_client().await;
+    create_db_grakn(&mut client).await;
+    {
+        let session = new_session(&mut client, Schema).await;
+        let mut tx = new_tx(&session, Write).await;
+        run_define_query(
+            &mut tx,
+            "define\n\
+            person sub entity, owns name, owns dob, plays friendship:friend;\n\
+            name sub attribute, value string;\n\
+            dob sub attribute, value datetime;\n\
+            friendship sub relation, relates friend;"
+        ).await;
+        commit_tx(&mut tx).await;
+    }
+    {
+        let session = new_session(&mut client, Data).await;
+        {
+            let mut tx = new_tx(&session, Write).await;
+            run_insert_query(
+                &mut tx,
+                "insert\n\
+                $x isa person, has name \"Alice\", has dob 1994-10-03;\n\
+                $y isa person, has name \"Bob\", has dob 1993-04-17;\n\
+                (friend: $x, friend: $y) isa friendship;");
+            commit_tx(&mut tx).await;
+        }
+        {
+            let mut tx = new_tx(&session, Read).await;
+            let mut answer_stream = tx.query.match_("match $p isa person; $f($role: $p) isa friendship; $x has dob $dob;");
+            while let Some(result) = answer_stream.next().await {
+                match result {
+                    Ok(concept_map) => {
+                        for (_, concept) in concept_map {
+                            describe_concept(&concept).await;
+                        }
+                    }
+                    Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
+                }
+            }
+        }
+    }
+}
 
 // #[tokio::test]
 // async fn streaming_perf() {
@@ -335,6 +382,7 @@ async fn describe_concept(concept: &Concept) {
 async fn describe_type(type_: &Type) {
     match type_ {
         Type::Thing(x) => { describe_thing_type(x).await; }
+        Type::Role(x) => { println!("got the ROLE TYPE '{}'", x.label) }
     }
 }
 
@@ -343,13 +391,14 @@ async fn describe_thing_type(thing_type: &ThingType) {
         ThingType::Root(_) => { println!("got the ROOT THING TYPE 'thing'"); }
         ThingType::Entity(x) => { println!("got the ENTITY TYPE '{}'", x.label); }
         ThingType::Relation(x) => { println!("got the RELATION TYPE '{}'", x.label); }
+        ThingType::Attribute(_) => { todo!() }
     }
 }
 
 async fn describe_thing(thing: &Thing) {
     match thing {
         Thing::Entity(x) => { println!("got an ENTITY of type {}", x.type_.label.as_str()); }
-        Thing::Relation(x) => { todo!() /* println!("answer is a RELATION of type {}", x.type_.label.as_str()); */ }
+        Thing::Relation(x) => { println!("got a RELATION of type {}", x.type_.label.as_str()); }
         Thing::Attribute(x) => { describe_attr(x).await; }
     }
 }
@@ -358,5 +407,8 @@ async fn describe_attr(attr: &Attribute) {
     match attr {
         Attribute::Long(x) => { println!("got a LONG ATTRIBUTE with value {}", x.value); }
         Attribute::String(x) => { println!("got a STRING ATTRIBUTE with value {}", x.value); }
+        Attribute::Boolean(x) => { println!("got a BOOLEAN ATTRIBUTE with value {}", x.value); }
+        Attribute::Double(x) => { println!("got a DOUBLE ATTRIBUTE with value {}", x.value); }
+        Attribute::DateTime(x) => { println!("got a DATETIME ATTRIBUTE with value {}", x.value); }
     }
 }
