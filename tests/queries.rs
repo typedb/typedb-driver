@@ -19,13 +19,10 @@
  * under the License.
  */
 
-// #![feature(if_let_guard)] // only available on nightly Rust builds
-
 use std::sync::mpsc;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 use futures::TryFutureExt;
-// use std::time::Instant;
 use futures::StreamExt;
 use typedb_client::{session, Session, transaction, TypeDBClient};
 use typedb_client::answer::Numeric;
@@ -80,11 +77,6 @@ fn run_insert_query(tx: &mut Transaction, query: &str) {
 async fn run_match_aggregate_query(tx: &mut Transaction, query: &str) -> Numeric {
     tx.query.match_aggregate(query).await.unwrap_or_else(|err| panic!("An error occurred running a Match Aggregate query: {}", err))
 }
-
-// #[test]
-// fn testfn() {
-//     println!("🦀");
-// }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
@@ -188,57 +180,6 @@ async fn concurrent_queries() {
         }
     }
 }
-
-// #[tokio::test(flavor = "multi_thread")]
-// #[ignore]
-// async fn concept_api() {
-//     let mut client = new_typedb_client().await;
-//     create_db_grakn(&mut client).await;
-//     {
-//         let session = new_session(&mut client, Schema).await;
-//         let mut tx = new_tx(&session, Write).await;
-//         run_define_query(&mut tx, "define person sub entity, owns name, owns age; name sub attribute, value string; age sub attribute, value long;").await;
-//         commit_tx(&mut tx).await;
-//     }
-//     {
-//         let session = new_session(&mut client, Data).await;
-//         let mut tx = new_tx(&session, Write).await;
-//         run_insert_query(&mut tx, "insert $x isa person, has name \"Alice\", has age 18; $y isa person, has name \"Bob\", has age 21;");
-//         commit_tx(&mut tx).await;
-//     }
-//     {
-//         let session = new_session(&mut client, Data).await;
-//         let mut tx = new_tx(&session, Read).await;
-//         let person_count: i64 = run_match_aggregate_query(&mut tx, "match $x isa person; count;").await.into();
-//         println!("There are {} people in the DB", person_count);
-//         let mut answer_stream = tx.query.match_("match $x isa thing;");
-//         let mut str_attrs = vec![];
-//         while let Some(result) = answer_stream.next().await {
-//             match result {
-//                 Ok(concept_map) => {
-//                     for (_, concept) in concept_map {
-//                         describe_concept(&concept).await;
-//                         if let Concept::Thing(Thing::Attribute(Attribute::String(str_attr))) = concept {
-//                             str_attrs.push(str_attr)
-//                         }
-//                     }
-//                 }
-//                 Err(err) => panic!("An error occurred fetching answers of a Match query: {}", err)
-//             }
-//         }
-//         let str_attr = str_attrs.first().unwrap_or_else(|| panic!("Expected to retrieve a string attribute, but none were found"));
-//         println!("Getting owners of {:?}", str_attr);
-//         let mut owners_stream = str_attr.get_owners(&mut tx);
-//         while let Some(result) = owners_stream.next().await {
-//             match result {
-//                 Ok(thing) => {
-//                     println!("Found {:?}", thing)
-//                 }
-//                 Err(err) => panic!("An error occurred fetching owners of an attribute: {}", err)
-//             }
-//         }
-//     }
-// }
 
 #[tokio::test(flavor = "multi_thread")]
 #[ignore]
