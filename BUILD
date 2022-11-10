@@ -22,7 +22,8 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_library")
-load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate")
+load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 
 rust_library(
     name = "typedb_client",
@@ -46,12 +47,19 @@ rust_library(
 )
 
 assemble_crate(
-    name = "assemble",
+    name = "assemble_crate",
     target = "typedb_client",
     description = "TypeDB Client API for Rust",
     homepage = "https://github.com/vaticle/typedb-client-rust",
-    license = "apache",
+    license = "Apache-2.0",
     repository = "https://github.com/vaticle/typedb-client-rust",
+)
+
+deploy_crate(
+    name = "deploy_crate",
+    target = ":assemble_crate",
+    snapshot = deployment["crate.snapshot"],
+    release = deployment["crate.release"]
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally

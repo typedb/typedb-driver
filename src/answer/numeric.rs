@@ -20,7 +20,7 @@
  */
 
 use typedb_protocol::numeric::Value;
-use crate::common::{Error, Result};
+use crate::common::Error;
 
 #[derive(Clone, Debug)]
 pub enum Numeric {

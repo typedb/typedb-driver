@@ -43,15 +43,7 @@ pub use session::Session;
 pub mod transaction;
 pub use transaction::Transaction;
 
-use std::sync::{Arc, mpsc};
-use crossbeam::channel::internal::SelectHandle;
-use crossbeam::queue::ArrayQueue;
-use futures::executor;
-use log::{debug, warn};
-
-use crate::rpc::builder::session::close_req;
 use crate::rpc::client::RpcClient;
-use crate::session::SessionId;
 
 pub struct TypeDBClient {
     pub databases: DatabaseManager,

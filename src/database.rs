@@ -20,7 +20,6 @@
  */
 
 use std::fmt::{Display, Formatter};
-use std::sync::Arc;
 use crate::common::error::MESSAGES;
 use crate::common::Result;
 use crate::rpc::client::RpcClient;

@@ -22,7 +22,6 @@
 // use grpc::{Error as GrpcError, GrpcMessageError, GrpcStatus};
 use std::error::Error as StdError;
 use std::fmt::{Debug, Display, Formatter};
-use tokio::sync::mpsc::error::SendError;
 use tonic::Status;
 
 // TODO: try refactoring out the lifetime by storing String instead of &str

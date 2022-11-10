@@ -19,11 +19,11 @@
  * under the License.
  */
 
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 use std::future::Future;
 use std::sync::Arc;
 use futures::channel::mpsc;
-use futures::{SinkExt, Stream};
+use futures::SinkExt;
 use tonic::{Response, Status, Streaming};
 use tonic::transport::Channel;
 use typedb_protocol::{core_database, core_database_manager, session, transaction};

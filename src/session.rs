@@ -20,7 +20,6 @@
  */
 
 use std::sync::{Arc, mpsc};
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use crossbeam::atomic::AtomicCell;
 use futures::executor;

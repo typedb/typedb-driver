@@ -20,7 +20,6 @@
  */
 
 use std::iter::once;
-use std::sync::{Arc, Mutex};
 use futures::{Stream, stream, StreamExt};
 use query_manager::res::Res::MatchAggregateRes;
 use typedb_protocol::{query_manager, transaction};

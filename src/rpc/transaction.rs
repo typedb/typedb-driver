@@ -23,21 +23,19 @@ use std::collections::HashMap;
 use std::mem;
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
-use std::sync::atomic::{AtomicBool, AtomicU8};
-use std::sync::atomic::Ordering::{Acquire, Relaxed};
 use std::task::{Context, Poll};
 use std::thread::sleep;
 use std::time::Duration;
 use crossbeam::atomic::AtomicCell;
-use futures::{executor, SinkExt, Stream, StreamExt, TryFutureExt};
+use futures::{executor, SinkExt, Stream, StreamExt};
 use futures::channel::{mpsc, oneshot};
 use tonic::Streaming;
 use typedb_protocol::transaction;
 use typedb_protocol::transaction::res::Res;
-use typedb_protocol::transaction::{res_part, stream};
+use typedb_protocol::transaction::res_part;
 use typedb_protocol::transaction::server::Server;
 use typedb_protocol::transaction::stream::State;
-use uuid::Uuid;
+// use uuid::Uuid;
 
 use crate::common::error::{Error, MESSAGES};
 use crate::common::{Executor, Result};
@@ -166,7 +164,7 @@ impl Sender {
         sender.ongoing_task_count.fetch_add(1);
         let msgs = mem::take(&mut *sender.queued_messages.lock().unwrap());
         if !msgs.is_empty() {
-            let len = msgs.len();
+            // let len = msgs.len();
             sender.req_sink.clone().send(client_msg(msgs)).await.unwrap();
         }
         sender.ongoing_task_count.fetch_sub(1);
