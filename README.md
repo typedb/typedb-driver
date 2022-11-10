@@ -18,7 +18,7 @@ The TypeDB Client for Rust provides a fully async API that supports the [`tokio`
 ## Quickstart
 1. Import `typedb-client` through Cargo:
 ```toml
-typedb-client = "0.1.0"
+typedb-client = "0.1.2"
 ```
 2. Make sure the [TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
 3. Import `typedb_client::TypeDBClient`, instantiate a TypeDB Core client, open a session to a [database](https://docs.vaticle.com/docs/management/database), and run basic insertion and retrieval queries:
