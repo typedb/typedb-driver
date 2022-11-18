@@ -77,7 +77,7 @@ impl TransactionRpc {
         }
     }
 
-    pub(crate) fn stream(&mut self, req: transaction::Req) -> impl Stream<Item = Result<transaction::ResPart>> {
+    pub(crate) fn stream(&mut self, req: transaction::Req) -> ResPartStream {
         const BUFFER_SIZE: usize = 1024;
         let (res_part_sink, res_part_receiver) = mpsc::channel::<Result<transaction::ResPart>>(BUFFER_SIZE);
         let (stream_req_sink, stream_req_receiver) = std::sync::mpsc::channel::<transaction::Req>();
@@ -347,7 +347,7 @@ type CloseSignalSink = oneshot::Sender<Option<Error>>;
 type CloseSignalReceiver = oneshot::Receiver<Option<Error>>;
 
 #[derive(Debug)]
-struct ResPartStream {
+pub(crate) struct ResPartStream {
     source: mpsc::Receiver<Result<transaction::ResPart>>,
     stream_req_sink: std::sync::mpsc::Sender<transaction::Req>,
     req_id: ReqId,
