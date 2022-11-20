@@ -37,8 +37,10 @@ import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
+import java.util.List;
 import javax.annotation.Nullable;
 
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getSchemaExceptionsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
@@ -137,6 +139,11 @@ public final class ConceptManagerImpl implements ConceptManager {
             case RES_NOT_SET:
                 return null;
         }
+    }
+
+    @Override
+    public List<String> getSchemaExceptions() {
+        return execute(getSchemaExceptionsReq()).getGetSchemaExceptionsRes().getExceptionsList();
     }
 
     private ConceptProto.ConceptManager.Res execute(TransactionProto.Transaction.Req.Builder req) {

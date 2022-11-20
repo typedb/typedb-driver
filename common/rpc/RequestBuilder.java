@@ -320,6 +320,12 @@ public class RequestBuilder {
                     ConceptProto.ConceptManager.GetThing.Req.newBuilder().setIid(byteString(iid))
             ));
         }
+
+        public static TransactionProto.Transaction.Req.Builder getSchemaExceptionsReq() {
+            return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setGetSchemaExceptionsReq(
+                    ConceptProto.ConceptManager.GetSchemaExceptions.Req.getDefaultInstance()
+            ));
+        }
     }
 
     public static class LogicManager {

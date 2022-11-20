@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 
+import java.util.List;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
@@ -69,4 +70,7 @@ public interface ConceptManager {
     AttributeType getAttributeType(String label);
 
     AttributeType putAttributeType(String label, AttributeType.ValueType valueType);
+
+    @CheckReturnValue
+    List<String> getSchemaExceptions();
 }
