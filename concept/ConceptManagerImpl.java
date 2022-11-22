@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.common.exception.TypeDBException;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
@@ -46,6 +47,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
+import static java.util.stream.Collectors.toList;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
@@ -142,8 +144,9 @@ public final class ConceptManagerImpl implements ConceptManager {
     }
 
     @Override
-    public List<String> getSchemaExceptions() {
-        return execute(getSchemaExceptionsReq()).getGetSchemaExceptionsRes().getExceptionsList();
+    public List<TypeDBException> getSchemaExceptions() {
+        return execute(getSchemaExceptionsReq()).getGetSchemaExceptionsRes().getExceptionsList().stream()
+                .map(e -> new TypeDBException(e.getCode(), e.getMessage())).collect(toList());
     }
 
     private ConceptProto.ConceptManager.Res execute(TransactionProto.Transaction.Req.Builder req) {
