@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Vaticle
+# Copyright (C) 2022 Vaticle
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -64,6 +64,10 @@ raze_fetch_remote_crates()
 load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
+# Load //tool/checkstyle
+load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
+
 # Load //tool/common
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
 vaticle_dependencies_ci_pip()
@@ -74,6 +78,10 @@ vaticle_dependencies_ci_pip()
 
 load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
+
+# Load //github
+load("@vaticle_bazel_distribution//github:deps.bzl", github_deps = "deps")
+github_deps()
 
 ################################
 # Load @vaticle dependencies #

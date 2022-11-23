@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Vaticle
+ * Copyright (C) 2022 Vaticle
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -368,7 +368,7 @@ impl Stream for ResPartStream {
             Poll::Ready(Some(Ok(ref res_part))) => {
                 match &res_part.res {
                     Some(res_part::Res::StreamResPart(stream_res_part)) => {
-                        // TODO: unwrap -> expect(enum_out_of_range)
+                        // TODO: unwrap -> expect("enum out of range")
                         match State::from_i32(stream_res_part.state).unwrap() {
                             State::Done => { Poll::Ready(None) },
                             State::Continue => {

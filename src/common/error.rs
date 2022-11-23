@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Vaticle
+ * Copyright (C) 2022 Vaticle
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -165,6 +165,7 @@ impl Error {
         Error::Other(msg)
     }
 
+    // TODO: rewrite this to work with Tonic (and error library from 'typeql')
     // pub(crate) fn from_grpc(source: GrpcError) -> Self {
     //     match source {
     //         GrpcError::Http(_) => Error::GrpcError(String::from(MESSAGES.client.unable_to_connect), source),

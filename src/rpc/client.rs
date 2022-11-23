@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Vaticle
+ * Copyright (C) 2022 Vaticle
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -41,7 +41,6 @@ pub(crate) struct RpcClient {
 
 impl RpcClient {
     pub(crate) async fn new(address: &str) -> Result<Self> {
-        // TODO: test performance using TCP_NODELAY in client conf (if applicable in 'tonic')
         match typedb_protocol::type_db_client::TypeDbClient::connect(address.to_string()).await {
             Ok(mut client) => {
                 // TODO: temporary hack to validate connection until we have client pulse
@@ -112,7 +111,6 @@ impl RpcClient {
     }
 
     async fn bidi_stream<T, U>(req_sink: mpsc::Sender<T>, res: impl Future<Output = ::core::result::Result<Response<Streaming<U>>, Status>>) -> Result<(mpsc::Sender<T>, Streaming<U>)> {
-        // TODO: this mapping should be exposed as a "Result::from"-like function
         res.await
             .map(|resp| (req_sink, resp.into_inner()))
             .map_err(|status| status.into())

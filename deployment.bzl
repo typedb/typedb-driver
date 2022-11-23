@@ -19,9 +19,7 @@
 # under the License.
 #
 
-.DS_Store
-.ijwb
-bazel-*
-target
-Cargo.lock
-Cargo.toml
+deployment = {
+    "github.organisation": "vaticle",
+    "github.repository": "typedb-client-rust"
+}
