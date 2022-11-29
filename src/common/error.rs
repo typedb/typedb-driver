@@ -20,8 +20,10 @@
  */
 
 // use grpc::{Error as GrpcError, GrpcMessageError, GrpcStatus};
-use std::error::Error as StdError;
-use std::fmt::{Debug, Display, Formatter};
+use std::{
+    error::Error as StdError,
+    fmt::{Debug, Display, Formatter},
+};
 use tonic::Status;
 
 // TODO: try refactoring out the lifetime by storing String instead of &str
@@ -32,10 +34,7 @@ struct MessageTemplate<'a> {
 
 impl MessageTemplate<'_> {
     const fn new<'a>(code_prefix: &'a str, msg_prefix: &'a str) -> MessageTemplate<'a> {
-        MessageTemplate {
-            code_prefix,
-            msg_prefix
-        }
+        MessageTemplate { code_prefix, msg_prefix }
     }
 }
 
@@ -44,27 +43,40 @@ pub struct Message<'a> {
     code_prefix: &'a str,
     code_number: u8,
     msg_prefix: &'a str,
-    msg_body: &'a str
+    msg_body: &'a str,
 }
 
 impl Message<'_> {
-    const fn new<'a>(template: MessageTemplate<'a>, code_number: u8, msg_body: &'a str) -> Message<'a> {
+    const fn new<'a>(
+        template: MessageTemplate<'a>,
+        code_number: u8,
+        msg_body: &'a str,
+    ) -> Message<'a> {
         Message {
             code_prefix: template.code_prefix,
             code_number,
             msg_prefix: template.msg_prefix,
-            msg_body
+            msg_body,
         }
     }
 
     fn format(&self, args: Vec<&str>) -> String {
         let expected_arg_count = self.msg_body.matches("{}").count();
         assert_eq!(
-            expected_arg_count, args.len(),
+            expected_arg_count,
+            args.len(),
             "Message template `{}` takes `{}` args but `{}` were provided",
-            self.msg_body, expected_arg_count, args.len()
+            self.msg_body,
+            expected_arg_count,
+            args.len()
         );
-        format!("[{}{:0>2}] {}: {}", self.code_prefix, self.code_number, self.msg_prefix, self.expand_msg(args))
+        format!(
+            "[{}{:0>2}] {}: {}",
+            self.code_prefix,
+            self.code_number,
+            self.msg_prefix,
+            self.expand_msg(args)
+        )
     }
 
     pub(crate) fn to_err(&self, args: Vec<&str>) -> Error {
@@ -77,7 +89,9 @@ impl Message<'_> {
         let mut formatted_msg = String::new();
         for (idx, fragment) in msg_split_indexed {
             formatted_msg.push_str(fragment);
-            if idx < arg_count { formatted_msg.push_str(args[idx]) }
+            if idx < arg_count {
+                formatted_msg.push_str(args[idx])
+            }
         }
         formatted_msg
     }
@@ -92,14 +106,14 @@ impl From<Message<'_>> for String {
 
 struct MessageTemplates<'a> {
     client: MessageTemplate<'a>,
-    concept: MessageTemplate<'a>
+    concept: MessageTemplate<'a>,
 }
 
 impl MessageTemplates<'_> {
     const fn new() -> MessageTemplates<'static> {
         MessageTemplates {
             client: MessageTemplate::new("CLI", "Client Error"),
-            concept: MessageTemplate::new("CON", "Concept Error")
+            concept: MessageTemplate::new("CON", "Concept Error"),
         }
     }
 }
@@ -192,7 +206,7 @@ impl Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let message = match self {
             // Error::GrpcError(msg, _) => msg,
-            Error::Other(msg) => msg
+            Error::Other(msg) => msg,
         };
         write!(f, "{}", message)
     }
@@ -202,7 +216,7 @@ impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
             // Error::GrpcError(_, source) => Some(source),
-            Error::Other(_) => None
+            Error::Other(_) => None,
         }
     }
 }

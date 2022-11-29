@@ -19,19 +19,15 @@
  * under the License.
  */
 
-use std::fmt::Debug;
-use std::future::Future;
-use std::sync::Arc;
-use futures::channel::mpsc;
-use futures::SinkExt;
-use tonic::{Response, Status, Streaming};
-use tonic::transport::Channel;
+use futures::{channel::mpsc, SinkExt};
+use std::{fmt::Debug, future::Future, sync::Arc};
+use tonic::{transport::Channel, Response, Status, Streaming};
 use typedb_protocol::{core_database, core_database_manager, session, transaction};
 
-use crate::common::error::Error;
-use crate::common::{Executor, Result};
-use crate::rpc::builder::core;
-use crate::rpc::builder::transaction::client_msg;
+use crate::{
+    common::{error::Error, Executor, Result},
+    rpc::builder::{core, transaction::client_msg},
+};
 
 #[derive(Clone, Debug)]
 pub(crate) struct RpcClient {
@@ -47,9 +43,12 @@ impl RpcClient {
                 match RpcClient::check_connection(&mut client).await {
                     Ok(_) => Ok(RpcClient {
                         typedb: client,
-                        executor: Arc::new(futures::executor::ThreadPool::new().expect("Failed to create ThreadPool"))
+                        executor: Arc::new(
+                            futures::executor::ThreadPool::new()
+                                .expect("Failed to create ThreadPool"),
+                        ),
                     }),
-                    Err(err) => Err(err)
+                    Err(err) => Err(err),
                 }
             }
             // TODO: better error message than 'transport error'
@@ -58,61 +57,100 @@ impl RpcClient {
         }
     }
 
-    async fn check_connection(client: &mut typedb_protocol::type_db_client::TypeDbClient<Channel>) -> Result<()> {
-        client.databases_all(core::database_manager::all_req()).await.map(|_| ()).map_err(|status| Error::new(status.to_string()))
+    async fn check_connection(
+        client: &mut typedb_protocol::type_db_client::TypeDbClient<Channel>,
+    ) -> Result<()> {
+        client
+            .databases_all(core::database_manager::all_req())
+            .await
+            .map(|_| ())
+            .map_err(|status| Error::new(status.to_string()))
     }
 
-    pub(crate) async fn databases_contains(&mut self, req: core_database_manager::contains::Req) -> Result<core_database_manager::contains::Res> {
+    pub(crate) async fn databases_contains(
+        &mut self,
+        req: core_database_manager::contains::Req,
+    ) -> Result<core_database_manager::contains::Res> {
         Self::single(self.typedb.databases_contains(req)).await
     }
 
-    pub(crate) async fn databases_create(&mut self, req: core_database_manager::create::Req) -> Result<core_database_manager::create::Res> {
+    pub(crate) async fn databases_create(
+        &mut self,
+        req: core_database_manager::create::Req,
+    ) -> Result<core_database_manager::create::Res> {
         Self::single(self.typedb.databases_create(req)).await
     }
 
-    pub(crate) async fn databases_all(&mut self, req: core_database_manager::all::Req) -> Result<core_database_manager::all::Res> {
+    pub(crate) async fn databases_all(
+        &mut self,
+        req: core_database_manager::all::Req,
+    ) -> Result<core_database_manager::all::Res> {
         Self::single(self.typedb.databases_all(req)).await
     }
 
-    pub(crate) async fn database_delete(&mut self, req: core_database::delete::Req) -> Result<core_database::delete::Res> {
+    pub(crate) async fn database_delete(
+        &mut self,
+        req: core_database::delete::Req,
+    ) -> Result<core_database::delete::Res> {
         Self::single(self.typedb.database_delete(req)).await
     }
 
-    pub(crate) async fn database_rule_schema(&mut self, req: core_database::rule_schema::Req) -> Result<core_database::rule_schema::Res> {
+    pub(crate) async fn database_rule_schema(
+        &mut self,
+        req: core_database::rule_schema::Req,
+    ) -> Result<core_database::rule_schema::Res> {
         Self::single(self.typedb.database_rule_schema(req)).await
     }
 
-    pub(crate) async fn database_schema(&mut self, req: core_database::schema::Req) -> Result<core_database::schema::Res> {
+    pub(crate) async fn database_schema(
+        &mut self,
+        req: core_database::schema::Req,
+    ) -> Result<core_database::schema::Res> {
         Self::single(self.typedb.database_schema(req)).await
     }
 
-    pub(crate) async fn database_type_schema(&mut self, req: core_database::type_schema::Req) -> Result<core_database::type_schema::Res> {
+    pub(crate) async fn database_type_schema(
+        &mut self,
+        req: core_database::type_schema::Req,
+    ) -> Result<core_database::type_schema::Res> {
         Self::single(self.typedb.database_type_schema(req)).await
     }
 
-    pub(crate) async fn session_open(&mut self, req: session::open::Req) -> Result<session::open::Res> {
+    pub(crate) async fn session_open(
+        &mut self,
+        req: session::open::Req,
+    ) -> Result<session::open::Res> {
         Self::single(self.typedb.session_open(req)).await
     }
 
-    pub(crate) async fn session_close(&mut self, req: session::close::Req) -> Result<session::close::Res> {
+    pub(crate) async fn session_close(
+        &mut self,
+        req: session::close::Req,
+    ) -> Result<session::close::Res> {
         Self::single(self.typedb.session_close(req)).await
     }
 
-    pub(crate) async fn transaction(&mut self, open_req: transaction::Req) -> Result<(mpsc::Sender<transaction::Client>, Streaming<transaction::Server>)> {
+    pub(crate) async fn transaction(
+        &mut self,
+        open_req: transaction::Req,
+    ) -> Result<(mpsc::Sender<transaction::Client>, Streaming<transaction::Server>)> {
         // TODO: refactor to crossbeam channel
         let (mut sender, receiver) = mpsc::channel::<transaction::Client>(256);
         sender.send(client_msg(vec![open_req])).await.unwrap();
         Self::bidi_stream(sender, self.typedb.transaction(receiver)).await
     }
 
-    async fn single<T>(res: impl Future<Output = ::core::result::Result<Response<T>, Status>>) -> Result<T> {
+    async fn single<T>(
+        res: impl Future<Output = ::core::result::Result<Response<T>, Status>>,
+    ) -> Result<T> {
         // TODO: check if we need ensureConnected() from client-java
         res.await.map(|res| res.into_inner()).map_err(|status| status.into())
     }
 
-    async fn bidi_stream<T, U>(req_sink: mpsc::Sender<T>, res: impl Future<Output = ::core::result::Result<Response<Streaming<U>>, Status>>) -> Result<(mpsc::Sender<T>, Streaming<U>)> {
-        res.await
-            .map(|resp| (req_sink, resp.into_inner()))
-            .map_err(|status| status.into())
+    async fn bidi_stream<T, U>(
+        req_sink: mpsc::Sender<T>,
+        res: impl Future<Output = ::core::result::Result<Response<Streaming<U>>, Status>>,
+    ) -> Result<(mpsc::Sender<T>, Streaming<U>)> {
+        res.await.map(|resp| (req_sink, resp.into_inner())).map_err(|status| status.into())
     }
 }

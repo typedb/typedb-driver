@@ -19,28 +19,37 @@
  * under the License.
  */
 
-use std::collections::HashMap;
-use std::mem;
-use std::pin::Pin;
-use std::sync::{Arc, Mutex};
-use std::task::{Context, Poll};
-use std::thread::sleep;
-use std::time::Duration;
 use crossbeam::atomic::AtomicCell;
-use futures::{executor, SinkExt, Stream, StreamExt};
-use futures::channel::{mpsc, oneshot};
+use futures::{
+    channel::{mpsc, oneshot},
+    executor, SinkExt, Stream, StreamExt,
+};
+use std::{
+    collections::HashMap,
+    mem,
+    pin::Pin,
+    sync::{Arc, Mutex},
+    task::{Context, Poll},
+    thread::sleep,
+    time::Duration,
+};
 use tonic::Streaming;
-use typedb_protocol::transaction;
-use typedb_protocol::transaction::res::Res;
-use typedb_protocol::transaction::res_part;
-use typedb_protocol::transaction::server::Server;
-use typedb_protocol::transaction::stream::State;
+use typedb_protocol::{
+    transaction,
+    transaction::{res::Res, res_part, server::Server, stream::State},
+};
 // use uuid::Uuid;
 
-use crate::common::error::{Error, MESSAGES};
-use crate::common::{Executor, Result};
-use crate::rpc::builder::transaction::{client_msg, stream_req};
-use crate::rpc::client::RpcClient;
+use crate::{
+    common::{
+        error::{Error, MESSAGES},
+        Executor, Result,
+    },
+    rpc::{
+        builder::transaction::{client_msg, stream_req},
+        client::RpcClient,
+    },
+};
 
 // TODO: This structure has become pretty messy - review
 #[derive(Clone, Debug)]
@@ -54,36 +63,48 @@ impl TransactionRpc {
     pub(crate) async fn new(rpc_client: &RpcClient, open_req: transaction::Req) -> Result<Self> {
         let mut rpc_client_clone = rpc_client.clone();
         let (req_sink, streaming_res): (
-            mpsc::Sender<transaction::Client>, Streaming<transaction::Server>
+            mpsc::Sender<transaction::Client>,
+            Streaming<transaction::Server>,
         ) = rpc_client_clone.transaction(open_req).await?;
         let (close_signal_sink, close_signal_receiver) = oneshot::channel::<Option<Error>>();
-        Ok(
-            TransactionRpc {
-                rpc_client: rpc_client_clone.clone(),
-                sender: Sender::new(req_sink, Arc::clone(&rpc_client_clone.executor), close_signal_receiver),
-                receiver: Receiver::new(streaming_res, &rpc_client_clone.executor, close_signal_sink).await,
-            }
-        )
+        Ok(TransactionRpc {
+            rpc_client: rpc_client_clone.clone(),
+            sender: Sender::new(
+                req_sink,
+                Arc::clone(&rpc_client_clone.executor),
+                close_signal_receiver,
+            ),
+            receiver: Receiver::new(streaming_res, &rpc_client_clone.executor, close_signal_sink)
+                .await,
+        })
     }
 
     pub(crate) async fn single(&mut self, req: transaction::Req) -> Result<transaction::Res> {
-        if !self.is_open() { todo!() }
+        if !self.is_open() {
+            todo!()
+        }
         let (res_sink, res_receiver) = oneshot::channel::<Result<transaction::Res>>();
         self.receiver.add_single(&req.req_id, res_sink);
         Sender::submit_message(req, self.sender.state.clone());
         match res_receiver.await {
-            Ok(result) => { result }
-            Err(err) => { Err(Error::new(err.to_string())) }
+            Ok(result) => result,
+            Err(err) => Err(Error::new(err.to_string())),
         }
     }
 
     pub(crate) fn stream(&mut self, req: transaction::Req) -> ResPartStream {
         const BUFFER_SIZE: usize = 1024;
-        let (res_part_sink, res_part_receiver) = mpsc::channel::<Result<transaction::ResPart>>(BUFFER_SIZE);
+        let (res_part_sink, res_part_receiver) =
+            mpsc::channel::<Result<transaction::ResPart>>(BUFFER_SIZE);
         let (stream_req_sink, stream_req_receiver) = std::sync::mpsc::channel::<transaction::Req>();
         self.receiver.add_stream(&req.req_id, res_part_sink);
-        let res_part_stream = ResPartStream::new(res_part_receiver, stream_req_sink, req.req_id.clone());
-        Sender::add_message_provider(stream_req_receiver, self.sender.executor.clone(), self.sender.state.clone());
+        let res_part_stream =
+            ResPartStream::new(res_part_receiver, stream_req_sink, req.req_id.clone());
+        Sender::add_message_provider(
+            stream_req_receiver,
+            self.sender.executor.clone(),
+            self.sender.state.clone(),
+        );
         Sender::submit_message(req, self.sender.state.clone());
         res_part_stream
     }
@@ -100,7 +121,7 @@ impl TransactionRpc {
 #[derive(Clone, Debug)]
 struct Sender {
     state: Arc<SenderState>,
-    executor: Arc<Executor>
+    executor: Arc<Executor>,
 }
 
 #[derive(Debug)]
@@ -127,7 +148,11 @@ impl SenderState {
 }
 
 impl Sender {
-    pub(super) fn new(req_sink: mpsc::Sender<transaction::Client>, executor: Arc<Executor>, close_signal_receiver: CloseSignalReceiver) -> Self {
+    pub(super) fn new(
+        req_sink: mpsc::Sender<transaction::Client>,
+        executor: Arc<Executor>,
+        close_signal_receiver: CloseSignalReceiver,
+    ) -> Self {
         let state = Arc::new(SenderState::new(req_sink));
         // // TODO: clarify lifetimes of these threads
         let state2 = state.clone();
@@ -135,7 +160,9 @@ impl Sender {
             Self::await_close_signal(close_signal_receiver, state2).await;
         });
         let state3 = state.clone();
-        executor.spawn_ok(async move { Self::dispatch_loop(state3).await; });
+        executor.spawn_ok(async move {
+            Self::dispatch_loop(state3).await;
+        });
         Sender { state, executor: executor.clone() }
     }
 
@@ -143,7 +170,11 @@ impl Sender {
         sender.queued_messages.lock().unwrap().push(req.clone());
     }
 
-    fn add_message_provider(provider: std::sync::mpsc::Receiver<transaction::Req>, executor: Arc<Executor>, sender: Arc<SenderState>) {
+    fn add_message_provider(
+        provider: std::sync::mpsc::Receiver<transaction::Req>,
+        executor: Arc<Executor>,
+        sender: Arc<SenderState>,
+    ) {
         executor.spawn_ok(async move {
             let mut msg_iterator = provider.iter();
             while let Some(req) = msg_iterator.next() {
@@ -170,12 +201,17 @@ impl Sender {
         sender.ongoing_task_count.fetch_sub(1);
     }
 
-    async fn await_close_signal(close_signal_receiver: CloseSignalReceiver, sender: Arc<SenderState>) {
+    async fn await_close_signal(
+        close_signal_receiver: CloseSignalReceiver,
+        sender: Arc<SenderState>,
+    ) {
         match close_signal_receiver.await {
             Ok(close_signal) => {
                 Self::close(sender, close_signal).await;
             }
-            Err(err) => { Self::close(sender, Some(Error::new(err.to_string()))).await; }
+            Err(err) => {
+                Self::close(sender, Some(Error::new(err.to_string()))).await;
+            }
         }
     }
 
@@ -211,7 +247,7 @@ struct Receiver {
 struct ReceiverState {
     res_collectors: Mutex<HashMap<ReqId, ResCollector>>,
     res_part_collectors: Mutex<HashMap<ReqId, ResPartCollector>>,
-    is_open: AtomicCell<bool>
+    is_open: AtomicCell<bool>,
 }
 
 impl ReceiverState {
@@ -219,16 +255,22 @@ impl ReceiverState {
         ReceiverState {
             res_collectors: Mutex::new(HashMap::new()),
             res_part_collectors: Mutex::new(HashMap::new()),
-            is_open: AtomicCell::new(true)
+            is_open: AtomicCell::new(true),
         }
     }
 }
 
 impl Receiver {
-    async fn new(grpc_stream: Streaming<transaction::Server>, executor: &Executor, close_signal_sink: CloseSignalSink) -> Self {
+    async fn new(
+        grpc_stream: Streaming<transaction::Server>,
+        executor: &Executor,
+        close_signal_sink: CloseSignalSink,
+    ) -> Self {
         let state = Arc::new(ReceiverState::new());
         let receiver = Receiver { state: Arc::clone(&state) };
-        executor.spawn_ok(async move { Self::listen(grpc_stream, state, close_signal_sink).await; });
+        executor.spawn_ok(async move {
+            Self::listen(grpc_stream, state, close_signal_sink).await;
+        });
         receiver
     }
 
@@ -242,15 +284,18 @@ impl Receiver {
 
     fn collect_res(res: transaction::Res, state: Arc<ReceiverState>) {
         match state.res_collectors.lock().unwrap().remove(&res.req_id) {
-            Some(collector) => {
-                collector.send(Ok(res)).unwrap()
-            }
+            Some(collector) => collector.send(Ok(res)).unwrap(),
             None => {
                 if let Res::OpenRes(_) = res.res.unwrap() {
                     // ignore open_res
                 } else {
-                    println!("{}", MESSAGES.client.unknown_request_id.to_err(
-                        vec![format!("{:?}", &res.req_id).as_str()])
+                    println!(
+                        "{}",
+                        MESSAGES.client.unknown_request_id.to_err(vec![format!(
+                            "{:?}",
+                            &res.req_id
+                        )
+                        .as_str()])
                     )
                     // println!("{}", MESSAGES.client.unknown_request_id.to_err(
                     //     vec![std::str::from_utf8(&res.req_id).unwrap()])
@@ -280,10 +325,16 @@ impl Receiver {
         }
     }
 
-    async fn listen(mut grpc_stream: Streaming<transaction::Server>, state: Arc<ReceiverState>, close_signal_sink: CloseSignalSink) {
+    async fn listen(
+        mut grpc_stream: Streaming<transaction::Server>,
+        state: Arc<ReceiverState>,
+        close_signal_sink: CloseSignalSink,
+    ) {
         loop {
             match grpc_stream.next().await {
-                Some(Ok(message)) => { Self::on_receive(message, Arc::clone(&state)).await; }
+                Some(Ok(message)) => {
+                    Self::on_receive(message, Arc::clone(&state)).await;
+                }
                 Some(Err(err)) => {
                     Self::close(state, Some(err.into()), close_signal_sink).await;
                     break;
@@ -300,14 +351,15 @@ impl Receiver {
         // TODO: If an error occurs here (or in some other background process), resources are not
         //  properly cleaned up, and the application may hang.
         match message.server {
-            Some(Server::Res(res)) => {
-                Self::collect_res(res, state)
-            }
+            Some(Server::Res(res)) => Self::collect_res(res, state),
             Some(Server::ResPart(res_part)) => {
                 Self::collect_res_part(res_part, state).await;
             }
             None => {
-                println!("{}", MESSAGES.client.missing_response_field.to_err(vec!["server"]).to_string())
+                println!(
+                    "{}",
+                    MESSAGES.client.missing_response_field.to_err(vec!["server"]).to_string()
+                )
             }
         }
     }
@@ -316,7 +368,11 @@ impl Receiver {
     //
     // }
 
-    async fn close(state: Arc<ReceiverState>, error: Option<Error>, close_signal_sink: CloseSignalSink) {
+    async fn close(
+        state: Arc<ReceiverState>,
+        error: Option<Error>,
+        close_signal_sink: CloseSignalSink,
+    ) {
         if let Ok(true) = state.is_open.compare_exchange(true, false) {
             let error_str = error.map(|err| err.to_string());
             for (_, collector) in state.res_collectors.lock().unwrap().drain() {
@@ -335,8 +391,10 @@ impl Receiver {
 
     fn close_reason(error_str: &Option<String>) -> Error {
         match error_str {
-            None => { MESSAGES.client.transaction_is_closed.to_err(vec![]) }
-            Some(value) => { MESSAGES.client.transaction_is_closed_with_errors.to_err(vec![value.as_str()]) }
+            None => MESSAGES.client.transaction_is_closed.to_err(vec![]),
+            Some(value) => {
+                MESSAGES.client.transaction_is_closed_with_errors.to_err(vec![value.as_str()])
+            }
         }
     }
 }
@@ -354,7 +412,11 @@ pub(crate) struct ResPartStream {
 }
 
 impl ResPartStream {
-    fn new(source: mpsc::Receiver<Result<transaction::ResPart>>, stream_req_sink: std::sync::mpsc::Sender<transaction::Req>, req_id: ReqId) -> Self {
+    fn new(
+        source: mpsc::Receiver<Result<transaction::ResPart>>,
+        stream_req_sink: std::sync::mpsc::Sender<transaction::Req>,
+        req_id: ReqId,
+    ) -> Self {
         ResPartStream { source, stream_req_sink, req_id }
     }
 }
@@ -370,7 +432,7 @@ impl Stream for ResPartStream {
                     Some(res_part::Res::StreamResPart(stream_res_part)) => {
                         // TODO: unwrap -> expect("enum out of range")
                         match State::from_i32(stream_res_part.state).unwrap() {
-                            State::Done => { Poll::Ready(None) },
+                            State::Done => Poll::Ready(None),
                             State::Continue => {
                                 let req_id = self.req_id.clone();
                                 self.stream_req_sink.send(stream_req(req_id)).unwrap();
@@ -379,13 +441,20 @@ impl Stream for ResPartStream {
                             }
                         }
                     }
-                    Some(_other) => { poll }
-                    None => panic!("{}", MESSAGES.client.missing_response_field.to_err(vec!["res_part.res"]).to_string())
+                    Some(_other) => poll,
+                    None => panic!(
+                        "{}",
+                        MESSAGES
+                            .client
+                            .missing_response_field
+                            .to_err(vec!["res_part.res"])
+                            .to_string()
+                    ),
                 }
             }
-            Poll::Ready(Some(Err(_))) => { poll }
-            Poll::Ready(None) => { poll }
-            Poll::Pending => { poll }
+            Poll::Ready(Some(Err(_))) => poll,
+            Poll::Ready(None) => poll,
+            Poll::Pending => poll,
         }
     }
 }

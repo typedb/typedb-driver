@@ -19,29 +19,32 @@
  * under the License.
  */
 
-use std::fmt::Debug;
-use std::time::Duration;
 use futures::Stream;
+use std::{fmt::Debug, time::Duration};
 use typedb_protocol::transaction as transaction_proto;
 
-use crate::common::Result;
-use crate::Options;
-use crate::query::QueryManager;
-use crate::rpc::builder::transaction::{open_req, commit_req, rollback_req};
-use crate::rpc::client::RpcClient;
-use crate::rpc::transaction::TransactionRpc;
+use crate::{
+    common::Result,
+    query::QueryManager,
+    rpc::{
+        builder::transaction::{commit_req, open_req, rollback_req},
+        client::RpcClient,
+        transaction::TransactionRpc,
+    },
+    Options,
+};
 
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
     Read = 0,
-    Write = 1
+    Write = 1,
 }
 
 impl Type {
     fn to_proto(&self) -> transaction_proto::Type {
         match self {
             Type::Read => transaction_proto::Type::Read,
-            Type::Write => transaction_proto::Type::Write
+            Type::Write => transaction_proto::Type::Write,
         }
     }
 }
@@ -55,17 +58,21 @@ pub struct Transaction {
 }
 
 impl Transaction {
-    pub(crate) async fn new(session_id: &Vec<u8>, type_: Type, options: Options, network_latency: Duration, rpc_client: &RpcClient) -> Result<Self> {
+    pub(crate) async fn new(
+        session_id: &Vec<u8>,
+        type_: Type,
+        options: Options,
+        network_latency: Duration,
+        rpc_client: &RpcClient,
+    ) -> Result<Self> {
         let open_req = open_req(
-            session_id.clone(), type_.to_proto(), options.to_proto(), network_latency.as_millis() as i32
+            session_id.clone(),
+            type_.to_proto(),
+            options.to_proto(),
+            network_latency.as_millis() as i32,
         );
         let rpc = TransactionRpc::new(rpc_client, open_req).await?;
-        Ok(Transaction {
-            type_,
-            options,
-            query: QueryManager::new(&rpc),
-            rpc
-        })
+        Ok(Transaction { type_, options, query: QueryManager::new(&rpc), rpc })
     }
 
     pub async fn commit(&mut self) -> Result {
@@ -76,11 +83,17 @@ impl Transaction {
         self.single_rpc(rollback_req()).await.map(|_| ())
     }
 
-    pub(crate) async fn single_rpc(&mut self, req: transaction_proto::Req) -> Result<transaction_proto::Res> {
+    pub(crate) async fn single_rpc(
+        &mut self,
+        req: transaction_proto::Req,
+    ) -> Result<transaction_proto::Res> {
         self.rpc.single(req).await
     }
 
-    pub(crate) fn streaming_rpc(&mut self, req: transaction_proto::Req) -> impl Stream<Item = Result<transaction_proto::ResPart>> {
+    pub(crate) fn streaming_rpc(
+        &mut self,
+        req: transaction_proto::Req,
+    ) -> impl Stream<Item = Result<transaction_proto::ResPart>> {
         self.rpc.stream(req)
     }
 

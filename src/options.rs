@@ -20,17 +20,16 @@
  */
 
 use std::time::Duration;
-use typedb_protocol::Options as OptionsProto;
-use typedb_protocol::options::ExplainOpt::Explain;
-use typedb_protocol::options::InferOpt::Infer;
-use typedb_protocol::options::ParallelOpt::Parallel;
-use typedb_protocol::options::PrefetchOpt::Prefetch;
-use typedb_protocol::options::PrefetchSizeOpt::PrefetchSize;
-use typedb_protocol::options::ReadAnyReplicaOpt::ReadAnyReplica;
-use typedb_protocol::options::SchemaLockAcquireTimeoutOpt::SchemaLockAcquireTimeoutMillis;
-use typedb_protocol::options::SessionIdleTimeoutOpt::SessionIdleTimeoutMillis;
-use typedb_protocol::options::TraceInferenceOpt::TraceInference;
-use typedb_protocol::options::TransactionTimeoutOpt::TransactionTimeoutMillis;
+use typedb_protocol::{
+    options::{
+        ExplainOpt::Explain, InferOpt::Infer, ParallelOpt::Parallel, PrefetchOpt::Prefetch,
+        PrefetchSizeOpt::PrefetchSize, ReadAnyReplicaOpt::ReadAnyReplica,
+        SchemaLockAcquireTimeoutOpt::SchemaLockAcquireTimeoutMillis,
+        SessionIdleTimeoutOpt::SessionIdleTimeoutMillis, TraceInferenceOpt::TraceInference,
+        TransactionTimeoutOpt::TransactionTimeoutMillis,
+    },
+    Options as OptionsProto,
+};
 
 macro_rules! options {
     {pub struct $name:ident { $(pub $field_name:ident : Option<$field_type:ty>),* $(,)? }} => {
@@ -96,10 +95,16 @@ impl Options {
             parallel_opt: self.parallel.map(|val| Parallel(val)),
             prefetch_size_opt: self.prefetch_size.map(|val| PrefetchSize(val)),
             prefetch_opt: self.prefetch.map(|val| Prefetch(val)),
-            session_idle_timeout_opt: self.session_idle_timeout.map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
-            transaction_timeout_opt: self.transaction_timeout.map(|val| TransactionTimeoutMillis(val.as_millis() as i32)),
-            schema_lock_acquire_timeout_opt: self.schema_lock_acquire_timeout.map(|val| SchemaLockAcquireTimeoutMillis(val.as_millis() as i32)),
-            read_any_replica_opt: None
+            session_idle_timeout_opt: self
+                .session_idle_timeout
+                .map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
+            transaction_timeout_opt: self
+                .transaction_timeout
+                .map(|val| TransactionTimeoutMillis(val.as_millis() as i32)),
+            schema_lock_acquire_timeout_opt: self
+                .schema_lock_acquire_timeout
+                .map(|val| SchemaLockAcquireTimeoutMillis(val.as_millis() as i32)),
+            read_any_replica_opt: None,
         }
     }
 }
@@ -113,10 +118,16 @@ impl ClusterOptions {
             parallel_opt: self.parallel.map(|val| Parallel(val)),
             prefetch_size_opt: self.prefetch_size.map(|val| PrefetchSize(val)),
             prefetch_opt: self.prefetch.map(|val| Prefetch(val)),
-            session_idle_timeout_opt: self.session_idle_timeout.map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
-            transaction_timeout_opt: self.transaction_timeout.map(|val| TransactionTimeoutMillis(val.as_millis() as i32)),
-            schema_lock_acquire_timeout_opt: self.schema_lock_acquire_timeout.map(|val| SchemaLockAcquireTimeoutMillis(val.as_millis() as i32)),
-            read_any_replica_opt: self.read_any_replica.map(|val| ReadAnyReplica(val))
+            session_idle_timeout_opt: self
+                .session_idle_timeout
+                .map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
+            transaction_timeout_opt: self
+                .transaction_timeout
+                .map(|val| TransactionTimeoutMillis(val.as_millis() as i32)),
+            schema_lock_acquire_timeout_opt: self
+                .schema_lock_acquire_timeout
+                .map(|val| SchemaLockAcquireTimeoutMillis(val.as_millis() as i32)),
+            read_any_replica_opt: self.read_any_replica.map(|val| ReadAnyReplica(val)),
         }
     }
 }

@@ -19,31 +19,37 @@
  * under the License.
  */
 
-use std::sync::{Arc, mpsc};
-use std::time::{Duration, Instant};
 use crossbeam::atomic::AtomicCell;
 use futures::executor;
 use log::warn;
+use std::{
+    sync::{mpsc, Arc},
+    time::{Duration, Instant},
+};
 use typedb_protocol::session as session_proto;
 
-use crate::common::error::MESSAGES;
-use crate::common::Result;
-use crate::rpc::builder::session::{close_req, open_req};
-use crate::rpc::client::RpcClient;
-use crate::{Options, transaction};
-use crate::transaction::Transaction;
+use crate::{
+    common::{error::MESSAGES, Result},
+    rpc::{
+        builder::session::{close_req, open_req},
+        client::RpcClient,
+    },
+    transaction,
+    transaction::Transaction,
+    Options,
+};
 
 #[derive(Copy, Clone, Debug)]
 pub enum Type {
     Data = 0,
-    Schema = 1
+    Schema = 1,
 }
 
 impl Type {
     fn to_proto(&self) -> session_proto::Type {
         match self {
             Type::Data => session_proto::Type::Data,
-            Type::Schema => session_proto::Type::Schema
+            Type::Schema => session_proto::Type::Schema,
         }
     }
 }
@@ -61,7 +67,12 @@ pub struct Session {
 }
 
 impl Session {
-    pub(crate) async fn new(db_name: &str, type_: Type, options: Options, rpc_client: &RpcClient) -> Result<Self> {
+    pub(crate) async fn new(
+        db_name: &str,
+        type_: Type,
+        options: Options,
+        rpc_client: &RpcClient,
+    ) -> Result<Self> {
         let start_time = Instant::now();
         let open_req = open_req(db_name, type_.to_proto(), options.to_proto());
         let mut rpc_client_clone = rpc_client.clone();
@@ -81,10 +92,17 @@ impl Session {
         self.transaction_with_options(type_, Options::default()).await
     }
 
-    pub async fn transaction_with_options(&self, type_: transaction::Type, options: Options) -> Result<Transaction> {
+    pub async fn transaction_with_options(
+        &self,
+        type_: transaction::Type,
+        options: Options,
+    ) -> Result<Transaction> {
         match self.is_open() {
-            true => Transaction::new(&self.id, type_, options, self.network_latency, &self.rpc_client).await,
-            false => Err(MESSAGES.client.session_is_closed.to_err(vec![]))
+            true => {
+                Transaction::new(&self.id, type_, options, self.network_latency, &self.rpc_client)
+                    .await
+            }
+            false => Err(MESSAGES.client.session_is_closed.to_err(vec![])),
         }
     }
 
@@ -98,12 +116,16 @@ impl Session {
             let res = self.rpc_client.session_close(close_req(self.id.clone())).await;
             // TODO: the request errors harmlessly if the session is already closed. Protocol should
             //       expose the cause of the error and we can use that to decide whether to warn here.
-            if res.is_err() { warn!("{}", MESSAGES.client.session_close_failed.to_err(vec![])) }
+            if res.is_err() {
+                warn!("{}", MESSAGES.client.session_close_failed.to_err(vec![]))
+            }
         }
     }
 
     fn compute_network_latency(start_time: Instant, server_duration_millis: i32) -> Duration {
-        Duration::from_millis((Instant::now() - start_time).as_millis() as u64 - server_duration_millis as u64)
+        Duration::from_millis(
+            (Instant::now() - start_time).as_millis() as u64 - server_duration_millis as u64,
+        )
     }
 }
 

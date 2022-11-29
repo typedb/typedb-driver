@@ -18,28 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+#
 
-package(default_visibility = ["//visibility:public"])
-
-load("@rules_rust//rust:defs.bzl", "rust_test", "rustfmt_test")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-rust_test(
-    name = "queries",
-    srcs = ["queries.rs"],
-    deps = [
-        "//:typedb_client",
-
-        "@vaticle_dependencies//library/crates:futures",
-        "@vaticle_dependencies//library/crates:tokio",
-    ],
-)
-
-rustfmt_test(name = "queries_rustfmt_test", targets = ["queries"])
-
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
-)
+imports_granularity = "Crate"
+use_small_heuristics = "Max"

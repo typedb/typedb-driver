@@ -19,36 +19,45 @@
  * under the License.
  */
 
-use std::iter::once;
-use futures::{Stream, stream, StreamExt};
-use query_manager::res::Res::MatchAggregateRes;
-use typedb_protocol::{query_manager, transaction};
-use typedb_protocol::query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart};
 use crate::answer::{ConceptMap, Numeric};
+use futures::{stream, Stream, StreamExt};
+use query_manager::res::Res::MatchAggregateRes;
+use std::iter::once;
+use typedb_protocol::{
+    query_manager,
+    query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart},
+    transaction,
+};
 
-use crate::common::error::MESSAGES;
-use crate::common::Result;
-use crate::Options;
-use crate::rpc::builder::query_manager::{define_req, delete_req, insert_req, match_req, update_req, undefine_req, match_aggregate_req};
-use crate::rpc::transaction::TransactionRpc;
+use crate::{
+    common::{error::MESSAGES, Result},
+    rpc::{
+        builder::query_manager::{
+            define_req, delete_req, insert_req, match_aggregate_req, match_req, undefine_req,
+            update_req,
+        },
+        transaction::TransactionRpc,
+    },
+    Options,
+};
 
 macro_rules! stream_concept_maps {
     ($self:ident, $req:ident, $res_part_kind:ident, $query_type_str:tt) => {
         $self.stream_answers($req).flat_map(|result: Result<query_manager::res_part::Res>| {
             match result {
-                Ok(res_part) => {
-                    match res_part {
-                        $res_part_kind(x) => {
-                            stream::iter(x.answers.into_iter().map(|cm| { ConceptMap::from_proto(cm) })).left_stream()
-                        }
-                        _ => {
-                            stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(
-                                vec![format!("query_manager_res_part.{}_res_part", $query_type_str).as_str()]
-                            )))).right_stream()
-                        }
+                Ok(res_part) => match res_part {
+                    $res_part_kind(x) => {
+                        stream::iter(x.answers.into_iter().map(|cm| ConceptMap::from_proto(cm)))
+                            .left_stream()
                     }
-                }
-                Err(err) => { stream::iter(once(Err(err))).right_stream() }
+                    _ => stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(
+                        vec![
+                            format!("query_manager_res_part.{}_res_part", $query_type_str).as_str()
+                        ],
+                    ))))
+                    .right_stream(),
+                },
+                Err(err) => stream::iter(once(Err(err))).right_stream(),
             }
         })
     };
@@ -56,7 +65,7 @@ macro_rules! stream_concept_maps {
 
 #[derive(Clone, Debug)]
 pub struct QueryManager {
-    tx: TransactionRpc
+    tx: TransactionRpc,
 }
 
 impl QueryManager {
@@ -85,7 +94,11 @@ impl QueryManager {
         stream_concept_maps!(self, req, InsertResPart, "insert")
     }
 
-    pub fn insert_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn insert_with_options(
+        &mut self,
+        query: &str,
+        options: &Options,
+    ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = insert_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, InsertResPart, "insert")
     }
@@ -96,22 +109,30 @@ impl QueryManager {
         stream_concept_maps!(self, req, MatchResPart, "match")
     }
 
-    pub fn match_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn match_with_options(
+        &mut self,
+        query: &str,
+        options: &Options,
+    ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = match_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, MatchResPart, "match")
     }
 
     pub async fn match_aggregate(&mut self, query: &str) -> Result<Numeric> {
         match self.single_call(match_aggregate_req(query, None)).await? {
-            MatchAggregateRes(res) => { res.answer.unwrap().try_into() }
-            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"]))}
+            MatchAggregateRes(res) => res.answer.unwrap().try_into(),
+            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"])),
         }
     }
 
-    pub async fn match_aggregate_with_options(&mut self, query: &str, options: Options) -> Result<Numeric> {
+    pub async fn match_aggregate_with_options(
+        &mut self,
+        query: &str,
+        options: Options,
+    ) -> Result<Numeric> {
         match self.single_call(match_aggregate_req(query, Some(options.to_proto()))).await? {
-            MatchAggregateRes(res) => { res.answer.unwrap().try_into() }
-            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"]))}
+            MatchAggregateRes(res) => res.answer.unwrap().try_into(),
+            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"])),
         }
     }
 
@@ -128,33 +149,44 @@ impl QueryManager {
         stream_concept_maps!(self, req, UpdateResPart, "update")
     }
 
-    pub fn update_with_options(&mut self, query: &str, options: &Options) -> impl Stream<Item = Result<ConceptMap>> {
+    pub fn update_with_options(
+        &mut self,
+        query: &str,
+        options: &Options,
+    ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = update_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, UpdateResPart, "update")
     }
 
     async fn single_call(&mut self, req: transaction::Req) -> Result<query_manager::res::Res> {
         match self.tx.single(req).await?.res {
-            Some(transaction::res::Res::QueryManagerRes(res)) => {
-                res.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"]))
-            }
-            _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])) }
+            Some(transaction::res::Res::QueryManagerRes(res)) => res.res.ok_or_else(|| {
+                MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])
+            }),
+            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])),
         }
     }
 
-    fn stream_answers(&mut self, req: transaction::Req) -> impl Stream<Item = Result<query_manager::res_part::Res>> {
-        self.tx.stream(req).map(|result: Result<transaction::ResPart>| {
-            match result {
-                Ok(tx_res_part) => {
-                    match tx_res_part.res {
-                        Some(transaction::res_part::Res::QueryManagerResPart(res_part)) => {
-                            res_part.res.ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"]))
-                        }
-                        _ => { Err(MESSAGES.client.missing_response_field.to_err(vec!["res_part.query_manager_res_part"])) }
-                    }
+    fn stream_answers(
+        &mut self,
+        req: transaction::Req,
+    ) -> impl Stream<Item = Result<query_manager::res_part::Res>> {
+        self.tx.stream(req).map(|result: Result<transaction::ResPart>| match result {
+            Ok(tx_res_part) => match tx_res_part.res {
+                Some(transaction::res_part::Res::QueryManagerResPart(res_part)) => {
+                    res_part.res.ok_or_else(|| {
+                        MESSAGES
+                            .client
+                            .missing_response_field
+                            .to_err(vec!["res_part.query_manager_res_part"])
+                    })
                 }
-                Err(err) => { Err(err) }
-            }
+                _ => Err(MESSAGES
+                    .client
+                    .missing_response_field
+                    .to_err(vec!["res_part.query_manager_res_part"])),
+            },
+            Err(err) => Err(err),
         })
     }
 }

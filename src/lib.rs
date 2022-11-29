@@ -27,8 +27,7 @@ pub mod common;
 pub use common::Result;
 
 mod database;
-pub use database::Database;
-pub use database::DatabaseManager;
+pub use database::{Database, DatabaseManager};
 
 mod options;
 pub use options::Options;
@@ -53,10 +52,7 @@ pub struct TypeDBClient {
 impl TypeDBClient {
     pub async fn new(address: &str) -> Result<Self> {
         let rpc_client = RpcClient::new(address).await?;
-        Ok(TypeDBClient {
-            databases: DatabaseManager::new(&rpc_client),
-            rpc_client,
-        })
+        Ok(TypeDBClient { databases: DatabaseManager::new(&rpc_client), rpc_client })
     }
 
     pub async fn with_default_address() -> Result<Self> {
@@ -67,7 +63,12 @@ impl TypeDBClient {
         self.session_with_options(db_name, type_, Options::default()).await
     }
 
-    pub async fn session_with_options(&mut self, db_name: &str, type_: session::Type, options: Options) -> Result<Session> {
+    pub async fn session_with_options(
+        &mut self,
+        db_name: &str,
+        type_: session::Type,
+        options: Options,
+    ) -> Result<Session> {
         Session::new(db_name, type_, options, &self.rpc_client).await
     }
 }

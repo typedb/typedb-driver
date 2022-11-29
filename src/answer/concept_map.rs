@@ -19,14 +19,15 @@
  * under the License.
  */
 
-use std::collections::{hash_map, HashMap};
-use std::ops::Index;
-use crate::common::Result;
-use crate::concept::Concept;
+use crate::{common::Result, concept::Concept};
+use std::{
+    collections::{hash_map, HashMap},
+    ops::Index,
+};
 
 #[derive(Debug)]
 pub struct ConceptMap {
-    pub map: HashMap<String, Concept>
+    pub map: HashMap<String, Concept>,
 }
 
 impl ConceptMap {
@@ -54,7 +55,9 @@ impl ConceptMap {
 impl Clone for ConceptMap {
     fn clone(&self) -> Self {
         let mut map = HashMap::with_capacity(self.map.len());
-        for (k, v) in &self.map { map.insert(k.clone(), v.clone()); }
+        for (k, v) in &self.map {
+            map.insert(k.clone(), v.clone());
+        }
         Self { map }
     }
 }

@@ -21,7 +21,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rustfmt_test")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
@@ -47,6 +47,13 @@ rust_library(
         "crate-name=typedb-client",
     ],
 )
+
+filegroup(
+    name = "rustfmt_config",
+    srcs = ["rustfmt.toml"],
+)
+
+rustfmt_test(name = "client_rustfmt_test", targets = ["typedb_client"])
 
 assemble_crate(
     name = "assemble_crate",

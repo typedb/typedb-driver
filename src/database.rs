@@ -19,12 +19,17 @@
  * under the License.
  */
 
+use crate::{
+    common::{error::MESSAGES, Result},
+    rpc::{
+        builder::core::{
+            database::{delete_req, rule_schema_req, schema_req, type_schema_req},
+            database_manager::{all_req, contains_req, create_req},
+        },
+        client::RpcClient,
+    },
+};
 use std::fmt::{Display, Formatter};
-use crate::common::error::MESSAGES;
-use crate::common::Result;
-use crate::rpc::client::RpcClient;
-use crate::rpc::builder::core::database::{delete_req, rule_schema_req, schema_req, type_schema_req};
-use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_req};
 
 /// An interface for performing database-level operations against the connected server.
 /// These operations include:
@@ -38,7 +43,7 @@ use crate::rpc::builder::core::database_manager::{all_req, contains_req, create_
 /// failure or other problem executing the operation, they will return an [`Err`][Err] result.
 #[derive(Clone)]
 pub struct DatabaseManager {
-    pub(crate) rpc_client: RpcClient
+    pub(crate) rpc_client: RpcClient,
 }
 
 impl DatabaseManager {
@@ -50,8 +55,8 @@ impl DatabaseManager {
     /// exist a database with the provided name.
     pub async fn get(&mut self, name: &str) -> Result<Database> {
         match self.contains(name).await? {
-            true => { Ok(Database::new(name, &self.rpc_client)) }
-            false => { Err(MESSAGES.client.db_does_not_exist.to_err(vec![name])) }
+            true => Ok(Database::new(name, &self.rpc_client)),
+            false => Err(MESSAGES.client.db_does_not_exist.to_err(vec![name])),
         }
     }
 
@@ -64,15 +69,17 @@ impl DatabaseManager {
     }
 
     pub async fn all(&mut self) -> Result<Vec<Database>> {
-        self.rpc_client.databases_all(all_req()).await.map(|res| res.names.iter()
-            .map(|name| Database::new(name, &self.rpc_client)).collect())
+        self.rpc_client
+            .databases_all(all_req())
+            .await
+            .map(|res| res.names.iter().map(|name| Database::new(name, &self.rpc_client)).collect())
     }
 }
 
 #[derive(Debug)]
 pub struct Database {
     pub name: String,
-    rpc_client: RpcClient
+    rpc_client: RpcClient,
 }
 
 impl Database {
@@ -85,7 +92,10 @@ impl Database {
     }
 
     pub async fn rule_schema(&mut self) -> Result<String> {
-        self.rpc_client.database_rule_schema(rule_schema_req(self.name.as_str())).await.map(|res| res.schema)
+        self.rpc_client
+            .database_rule_schema(rule_schema_req(self.name.as_str()))
+            .await
+            .map(|res| res.schema)
     }
 
     pub async fn schema(&mut self) -> Result<String> {
@@ -93,7 +103,10 @@ impl Database {
     }
 
     pub async fn type_schema(&mut self) -> Result<String> {
-        self.rpc_client.database_type_schema(type_schema_req(self.name.as_str())).await.map(|res| res.schema)
+        self.rpc_client
+            .database_type_schema(type_schema_req(self.name.as_str()))
+            .await
+            .map(|res| res.schema)
     }
 }
 
