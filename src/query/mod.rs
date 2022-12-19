@@ -19,10 +19,10 @@
  * under the License.
  */
 
-use crate::answer::{ConceptMap, Numeric};
+use std::iter::once;
+
 use futures::{stream, Stream, StreamExt};
 use query_manager::res::Res::MatchAggregateRes;
-use std::iter::once;
 use typedb_protocol::{
     query_manager,
     query_manager::res_part::Res::{InsertResPart, MatchResPart, UpdateResPart},
@@ -30,15 +30,16 @@ use typedb_protocol::{
 };
 
 use crate::{
-    common::{error::MESSAGES, Result},
-    rpc::{
-        builder::query_manager::{
+    answer::{ConceptMap, Numeric},
+    common::{
+        error::ClientError,
+        rpc::builder::query_manager::{
             define_req, delete_req, insert_req, match_aggregate_req, match_req, undefine_req,
             update_req,
         },
-        transaction::TransactionRpc,
+        Result, TransactionRPC,
     },
-    Options,
+    connection::core,
 };
 
 macro_rules! stream_concept_maps {
@@ -50,11 +51,12 @@ macro_rules! stream_concept_maps {
                         stream::iter(x.answers.into_iter().map(|cm| ConceptMap::from_proto(cm)))
                             .left_stream()
                     }
-                    _ => stream::iter(once(Err(MESSAGES.client.missing_response_field.to_err(
-                        vec![
-                            format!("query_manager_res_part.{}_res_part", $query_type_str).as_str()
-                        ],
-                    ))))
+                    _ => stream::iter(once(Err(ClientError::MissingResponseField(concat!(
+                        "query_manager_res_part.",
+                        $query_type_str,
+                        "_res_part"
+                    ))
+                    .into())))
                     .right_stream(),
                 },
                 Err(err) => stream::iter(once(Err(err))).right_stream(),
@@ -65,11 +67,11 @@ macro_rules! stream_concept_maps {
 
 #[derive(Clone, Debug)]
 pub struct QueryManager {
-    tx: TransactionRpc,
+    tx: TransactionRPC,
 }
 
 impl QueryManager {
-    pub(crate) fn new(tx: &TransactionRpc) -> QueryManager {
+    pub(crate) fn new(tx: &TransactionRPC) -> QueryManager {
         QueryManager { tx: tx.clone() }
     }
 
@@ -77,7 +79,7 @@ impl QueryManager {
         self.single_call(define_req(query, None)).await.map(|_| ())
     }
 
-    pub async fn define_with_options(&mut self, query: &str, options: &Options) -> Result {
+    pub async fn define_with_options(&mut self, query: &str, options: &core::Options) -> Result {
         self.single_call(define_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
@@ -85,7 +87,7 @@ impl QueryManager {
         self.single_call(delete_req(query, None)).await.map(|_| ())
     }
 
-    pub async fn delete_with_options(&mut self, query: &str, options: &Options) -> Result {
+    pub async fn delete_with_options(&mut self, query: &str, options: &core::Options) -> Result {
         self.single_call(delete_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
@@ -97,7 +99,7 @@ impl QueryManager {
     pub fn insert_with_options(
         &mut self,
         query: &str,
-        options: &Options,
+        options: &core::Options,
     ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = insert_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, InsertResPart, "insert")
@@ -112,7 +114,7 @@ impl QueryManager {
     pub fn match_with_options(
         &mut self,
         query: &str,
-        options: &Options,
+        options: &core::Options,
     ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = match_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, MatchResPart, "match")
@@ -121,18 +123,18 @@ impl QueryManager {
     pub async fn match_aggregate(&mut self, query: &str) -> Result<Numeric> {
         match self.single_call(match_aggregate_req(query, None)).await? {
             MatchAggregateRes(res) => res.answer.unwrap().try_into(),
-            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"])),
+            _ => Err(ClientError::MissingResponseField("match_aggregate_res"))?,
         }
     }
 
     pub async fn match_aggregate_with_options(
         &mut self,
         query: &str,
-        options: Options,
+        options: core::Options,
     ) -> Result<Numeric> {
         match self.single_call(match_aggregate_req(query, Some(options.to_proto()))).await? {
             MatchAggregateRes(res) => res.answer.unwrap().try_into(),
-            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["match_aggregate_res"])),
+            _ => Err(ClientError::MissingResponseField("match_aggregate_res"))?,
         }
     }
 
@@ -140,7 +142,7 @@ impl QueryManager {
         self.single_call(undefine_req(query, None)).await.map(|_| ())
     }
 
-    pub async fn undefine_with_options(&mut self, query: &str, options: &Options) -> Result {
+    pub async fn undefine_with_options(&mut self, query: &str, options: &core::Options) -> Result {
         self.single_call(undefine_req(query, Some(options.to_proto()))).await.map(|_| ())
     }
 
@@ -152,7 +154,7 @@ impl QueryManager {
     pub fn update_with_options(
         &mut self,
         query: &str,
-        options: &Options,
+        options: &core::Options,
     ) -> impl Stream<Item = Result<ConceptMap>> {
         let req = update_req(query, Some(options.to_proto()));
         stream_concept_maps!(self, req, UpdateResPart, "update")
@@ -160,10 +162,10 @@ impl QueryManager {
 
     async fn single_call(&mut self, req: transaction::Req) -> Result<query_manager::res::Res> {
         match self.tx.single(req).await?.res {
-            Some(transaction::res::Res::QueryManagerRes(res)) => res.res.ok_or_else(|| {
-                MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])
-            }),
-            _ => Err(MESSAGES.client.missing_response_field.to_err(vec!["res.query_manager_res"])),
+            Some(transaction::res::Res::QueryManagerRes(res)) => {
+                res.res.ok_or(ClientError::MissingResponseField("res.query_manager_res").into())
+            }
+            _ => Err(ClientError::MissingResponseField("res.query_manager_res"))?,
         }
     }
 
@@ -174,17 +176,11 @@ impl QueryManager {
         self.tx.stream(req).map(|result: Result<transaction::ResPart>| match result {
             Ok(tx_res_part) => match tx_res_part.res {
                 Some(transaction::res_part::Res::QueryManagerResPart(res_part)) => {
-                    res_part.res.ok_or_else(|| {
-                        MESSAGES
-                            .client
-                            .missing_response_field
-                            .to_err(vec!["res_part.query_manager_res_part"])
-                    })
+                    res_part.res.ok_or(
+                        ClientError::MissingResponseField("res_part.query_manager_res_part").into(),
+                    )
                 }
-                _ => Err(MESSAGES
-                    .client
-                    .missing_response_field
-                    .to_err(vec!["res_part.query_manager_res_part"])),
+                _ => Err(ClientError::MissingResponseField("res_part.query_manager_res_part"))?,
             },
             Err(err) => Err(err),
         })

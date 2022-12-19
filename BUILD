@@ -33,6 +33,7 @@ rust_library(
     srcs = glob(["src/**/*.rs"]),
     deps = [
         "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
+        "@vaticle_typeql//rust:typeql_lang",
 
         "@vaticle_dependencies//library/crates:chrono",
         "@vaticle_dependencies//library/crates:crossbeam",
@@ -43,17 +44,8 @@ rust_library(
         "@vaticle_dependencies//library/crates:tonic",
         "@vaticle_dependencies//library/crates:uuid",
     ],
-    tags = [
-        "crate-name=typedb-client",
-    ],
+    tags = ["crate-name=typedb-client"],
 )
-
-filegroup(
-    name = "rustfmt_config",
-    srcs = ["rustfmt.toml"],
-)
-
-rustfmt_test(name = "client_rustfmt_test", targets = ["typedb_client"])
 
 assemble_crate(
     name = "assemble_crate",
@@ -87,6 +79,7 @@ checkstyle_test(
     include = glob([
         "*",
         "src/**/*",
+        "tools/*",
         ".factory/*",
     ]),
     exclude = glob([
@@ -103,6 +96,16 @@ checkstyle_test(
     size = "small",
     include = ["LICENSE"],
     license_type = "apache-fulltext",
+)
+
+filegroup(
+    name = "rustfmt_config",
+    srcs = ["rustfmt.toml"],
+)
+
+rustfmt_test(
+    name = "client_rustfmt_test",
+    targets = ["typedb_client"]
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally

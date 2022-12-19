@@ -19,11 +19,12 @@
  * under the License.
  */
 
-use crate::{common::Result, concept::Concept};
 use std::{
     collections::{hash_map, HashMap},
     ops::Index,
 };
+
+use crate::{common::Result, concept::Concept};
 
 #[derive(Debug)]
 pub struct ConceptMap {

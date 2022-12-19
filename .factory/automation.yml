@@ -38,10 +38,36 @@ build:
     build:
       image: vaticle-ubuntu-22.04
       command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//:rustfmt_config
+    test-integration-core:
+      image: vaticle-ubuntu-22.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        tools/start-core-server.sh
+        bazel test //tests:queries_core --test_arg=-- --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tools/stop-core-server.sh
+        exit $TEST_SUCCESS
+    test-integration-cluster:
+      machine: 4-core-16-gb
+      image: vaticle-ubuntu-22.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        source tools/start-cluster-servers.sh # use source to receive export vars
+        bazel test //tests:queries_cluster --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tools/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
     deploy-crate-snapshot:
       filter:
         owner: vaticle

@@ -19,7 +19,17 @@
  * under the License.
  */
 
-mod concept_map;
-mod numeric;
+pub(crate) mod builder;
+mod channel;
+mod cluster;
+mod core;
+mod server;
+mod transaction;
 
-pub use self::{concept_map::ConceptMap, numeric::Numeric};
+pub(crate) use self::{
+    channel::Channel,
+    cluster::{ClusterRPC, ClusterServerRPC},
+    core::CoreRPC,
+    server::ServerRPC,
+    transaction::TransactionRPC,
+};

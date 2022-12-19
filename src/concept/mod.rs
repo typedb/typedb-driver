@@ -22,26 +22,20 @@
 #![allow(dead_code)]
 #![allow(unused)]
 
-use crate::{
-    common::{error::MESSAGES, Error, Result},
-    rpc::builder::thing::attribute_get_owners_req,
-    transaction::Transaction,
-};
-use chrono::NaiveDateTime;
-use futures::{stream, stream::FuturesUnordered, FutureExt, Stream, StreamExt};
 use std::{
     convert::TryFrom,
     fmt,
     fmt::{Debug, Display, Formatter},
-    iter::once,
-    time::Instant,
 };
+
+use chrono::NaiveDateTime;
+use futures::{FutureExt, Stream, StreamExt};
 use typedb_protocol::{
     attribute as attribute_proto, attribute_type as attribute_type_proto,
     attribute_type::ValueType, concept as concept_proto, r#type as type_proto, r#type::Encoding,
-    thing as thing_proto, thing::res_part::Res, transaction,
 };
-use uuid::Uuid;
+
+use crate::common::{error::ClientError, Result};
 
 #[derive(Clone, Debug)]
 pub enum Concept {
@@ -51,9 +45,7 @@ pub enum Concept {
 
 impl Concept {
     pub(crate) fn from_proto(mut proto: typedb_protocol::Concept) -> Result<Concept> {
-        let concept = proto
-            .concept
-            .ok_or_else(|| MESSAGES.client.missing_response_field.to_err(vec!["concept"]))?;
+        let concept = proto.concept.ok_or(ClientError::MissingResponseField("concept"))?;
         match concept {
             concept_proto::Concept::Thing(thing) => Ok(Self::Thing(Thing::from_proto(thing)?)),
             concept_proto::Concept::Type(type_) => Ok(Self::Type(Type::from_proto(type_)?)),
@@ -412,7 +404,7 @@ impl Attribute {
                 value: if let attribute_proto::value::Value::DateTime(value) =
                     proto.value.unwrap().value.unwrap()
                 {
-                    NaiveDateTime::from_timestamp(value / 1000, (value % 1000) as u32)
+                    NaiveDateTime::from_timestamp_opt(value / 1000, (value % 1000) as u32).unwrap()
                 } else {
                     todo!()
                 },

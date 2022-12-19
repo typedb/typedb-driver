@@ -19,73 +19,15 @@
  * under the License.
  */
 
+#![allow(dead_code)]
+
 pub mod answer;
-
-pub mod concept;
-
 pub mod common;
-pub use common::Result;
-
-mod database;
-pub use database::{Database, DatabaseManager};
-
-mod options;
-pub use options::Options;
-
+pub mod concept;
+pub(crate) mod connection;
 pub mod query;
 
-mod rpc;
-
-pub mod session;
-pub use session::Session;
-
-pub mod transaction;
-pub use transaction::Transaction;
-
-use crate::rpc::client::RpcClient;
-
-pub struct TypeDBClient {
-    pub databases: DatabaseManager,
-    pub(crate) rpc_client: RpcClient,
-}
-
-impl TypeDBClient {
-    pub async fn new(address: &str) -> Result<Self> {
-        let rpc_client = RpcClient::new(address).await?;
-        Ok(TypeDBClient { databases: DatabaseManager::new(&rpc_client), rpc_client })
-    }
-
-    pub async fn with_default_address() -> Result<Self> {
-        Self::new("http://0.0.0.0:1729").await
-    }
-
-    pub async fn session(&mut self, db_name: &str, type_: session::Type) -> Result<Session> {
-        self.session_with_options(db_name, type_, Options::default()).await
-    }
-
-    pub async fn session_with_options(
-        &mut self,
-        db_name: &str,
-        type_: session::Type,
-        options: Options,
-    ) -> Result<Session> {
-        Session::new(db_name, type_, options, &self.rpc_client).await
-    }
-}
-
-// TODO: this is one potential option for single-threaded environments - but inelegant
-// #[macro_export]
-// macro_rules! session {
-//     ($client:tt, $db_name:tt, $session_type:tt, $body:expr) => {
-//         async {
-//             match $client.session($db_name, $session_type).await {
-//                 Ok(mut session) => {
-//                     $body;
-//                     session.close().await;
-//                     Ok(())
-//                 }
-//                 Err(err) => Err(err)
-//             }
-//         }.await
-//     };
-// }
+pub use self::{
+    common::{Credential, Error, Result, SessionType, TransactionType},
+    connection::{cluster, core, server},
+};

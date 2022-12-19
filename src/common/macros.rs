@@ -19,7 +19,18 @@
  * under the License.
  */
 
-mod concept_map;
-mod numeric;
+#[macro_export]
+macro_rules! async_enum_dispatch {
+    {
+        $variants:tt
+        $($vis:vis async fn $name:ident(&mut self, $arg:ident : $arg_type:ty $(,)?) -> $res:ty);+ $(;)?
+    } => { $(async_enum_dispatch!(@impl $variants, $vis, $name, $arg, $arg_type, $res);)+ };
 
-pub use self::{concept_map::ConceptMap, numeric::Numeric};
+    (@impl {$($variant:ident),+}, $vis:vis, $name:ident, $arg:ident, $arg_type:ty, $res:ty) => {
+        $vis async fn $name(&mut self, $arg: $arg_type) -> $res {
+            match self {
+                $(Self::$variant(inner) => inner.$name($arg).await,)+
+            }
+        }
+    }
+}

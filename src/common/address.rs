@@ -19,7 +19,38 @@
  * under the License.
  */
 
-mod concept_map;
-mod numeric;
+use std::{fmt, str::FromStr};
 
-pub use self::{concept_map::ConceptMap, numeric::Numeric};
+use tonic::transport::Uri;
+
+use crate::common::{Error, Result};
+
+#[derive(Clone, Debug, Hash, PartialEq, Eq)]
+pub struct Address {
+    uri: Uri,
+}
+
+impl Address {
+    pub fn into_uri(self) -> Uri {
+        self.uri
+    }
+}
+
+impl FromStr for Address {
+    type Err = Error;
+
+    fn from_str(address: &str) -> Result<Self> {
+        let uri = if address.contains("://") {
+            address.parse::<Uri>()?
+        } else {
+            format!("http://{}", address).parse::<Uri>()?
+        };
+        Ok(Self { uri })
+    }
+}
+
+impl fmt::Display for Address {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.uri)
+    }
+}

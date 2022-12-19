@@ -19,7 +19,8 @@
  * under the License.
  */
 
-mod concept_map;
-mod numeric;
+mod database;
+mod session;
+mod transaction;
 
-pub use self::{concept_map::ConceptMap, numeric::Numeric};
+pub use self::{database::Database, session::Session, transaction::Transaction};

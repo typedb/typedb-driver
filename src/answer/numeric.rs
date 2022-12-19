@@ -19,8 +19,9 @@
  * under the License.
  */
 
-use crate::common::Error;
 use typedb_protocol::numeric::Value;
+
+use crate::common::{Error, Result};
 
 #[derive(Clone, Debug)]
 pub enum Numeric {
@@ -50,7 +51,7 @@ impl Numeric {
 impl TryFrom<typedb_protocol::Numeric> for Numeric {
     type Error = Error;
 
-    fn try_from(value: typedb_protocol::Numeric) -> std::result::Result<Self, Self::Error> {
+    fn try_from(value: typedb_protocol::Numeric) -> Result<Self> {
         match value.value.unwrap() {
             Value::LongValue(long) => Ok(Numeric::Long(long)),
             Value::DoubleValue(double) => Ok(Numeric::Double(double)),
@@ -59,14 +60,14 @@ impl TryFrom<typedb_protocol::Numeric> for Numeric {
     }
 }
 
-impl Into<i64> for Numeric {
-    fn into(self) -> i64 {
-        self.into_i64()
+impl From<Numeric> for i64 {
+    fn from(n: Numeric) -> Self {
+        n.into_i64()
     }
 }
 
-impl Into<f64> for Numeric {
-    fn into(self) -> f64 {
-        self.into_f64()
+impl From<Numeric> for f64 {
+    fn from(n: Numeric) -> Self {
+        n.into_f64()
     }
 }

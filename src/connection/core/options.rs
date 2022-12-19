@@ -20,6 +20,7 @@
  */
 
 use std::time::Duration;
+
 use typedb_protocol::{
     options::{
         ExplainOpt::Explain, InferOpt::Infer, ParallelOpt::Parallel, PrefetchOpt::Prefetch,
@@ -89,12 +90,12 @@ impl Options {
 
     pub(crate) fn to_proto(&self) -> OptionsProto {
         OptionsProto {
-            infer_opt: self.infer.map(|val| Infer(val)),
-            trace_inference_opt: self.trace_inference.map(|val| TraceInference(val)),
-            explain_opt: self.explain.map(|val| Explain(val)),
-            parallel_opt: self.parallel.map(|val| Parallel(val)),
-            prefetch_size_opt: self.prefetch_size.map(|val| PrefetchSize(val)),
-            prefetch_opt: self.prefetch.map(|val| Prefetch(val)),
+            infer_opt: self.infer.map(Infer),
+            trace_inference_opt: self.trace_inference.map(TraceInference),
+            explain_opt: self.explain.map(Explain),
+            parallel_opt: self.parallel.map(Parallel),
+            prefetch_size_opt: self.prefetch_size.map(PrefetchSize),
+            prefetch_opt: self.prefetch.map(Prefetch),
             session_idle_timeout_opt: self
                 .session_idle_timeout
                 .map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
@@ -112,12 +113,12 @@ impl Options {
 impl ClusterOptions {
     pub(crate) fn to_proto(&self) -> OptionsProto {
         OptionsProto {
-            infer_opt: self.infer.map(|val| Infer(val)),
-            trace_inference_opt: self.trace_inference.map(|val| TraceInference(val)),
-            explain_opt: self.explain.map(|val| Explain(val)),
-            parallel_opt: self.parallel.map(|val| Parallel(val)),
-            prefetch_size_opt: self.prefetch_size.map(|val| PrefetchSize(val)),
-            prefetch_opt: self.prefetch.map(|val| Prefetch(val)),
+            infer_opt: self.infer.map(Infer),
+            trace_inference_opt: self.trace_inference.map(TraceInference),
+            explain_opt: self.explain.map(Explain),
+            parallel_opt: self.parallel.map(Parallel),
+            prefetch_size_opt: self.prefetch_size.map(PrefetchSize),
+            prefetch_opt: self.prefetch.map(Prefetch),
             session_idle_timeout_opt: self
                 .session_idle_timeout
                 .map(|val| SessionIdleTimeoutMillis(val.as_millis() as i32)),
@@ -127,7 +128,7 @@ impl ClusterOptions {
             schema_lock_acquire_timeout_opt: self
                 .schema_lock_acquire_timeout
                 .map(|val| SchemaLockAcquireTimeoutMillis(val.as_millis() as i32)),
-            read_any_replica_opt: self.read_any_replica.map(|val| ReadAnyReplica(val)),
+            read_any_replica_opt: self.read_any_replica.map(ReadAnyReplica),
         }
     }
 }

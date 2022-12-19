@@ -19,60 +19,44 @@
  * under the License.
  */
 
-use futures::Stream;
 use std::{fmt::Debug, time::Duration};
+
+use futures::Stream;
 use typedb_protocol::transaction as transaction_proto;
 
 use crate::{
-    common::Result,
-    query::QueryManager,
-    rpc::{
-        builder::transaction::{commit_req, open_req, rollback_req},
-        client::RpcClient,
-        transaction::TransactionRpc,
+    common::{
+        rpc::builder::transaction::{commit_req, open_req, rollback_req},
+        Result, ServerRPC, TransactionRPC, TransactionType,
     },
-    Options,
+    connection::core,
+    query::QueryManager,
 };
-
-#[derive(Copy, Clone, Debug)]
-pub enum Type {
-    Read = 0,
-    Write = 1,
-}
-
-impl Type {
-    fn to_proto(&self) -> transaction_proto::Type {
-        match self {
-            Type::Read => transaction_proto::Type::Read,
-            Type::Write => transaction_proto::Type::Write,
-        }
-    }
-}
 
 #[derive(Clone, Debug)]
 pub struct Transaction {
-    pub type_: Type,
-    pub options: Options,
+    pub type_: TransactionType,
+    pub options: core::Options,
     pub query: QueryManager,
-    rpc: TransactionRpc,
+    rpc: TransactionRPC,
 }
 
 impl Transaction {
     pub(crate) async fn new(
-        session_id: &Vec<u8>,
-        type_: Type,
-        options: Options,
+        session_id: &[u8],
+        transaction_type: TransactionType,
+        options: core::Options,
         network_latency: Duration,
-        rpc_client: &RpcClient,
+        server_rpc: &ServerRPC,
     ) -> Result<Self> {
         let open_req = open_req(
-            session_id.clone(),
-            type_.to_proto(),
+            session_id.to_vec(),
+            transaction_type.to_proto(),
             options.to_proto(),
             network_latency.as_millis() as i32,
         );
-        let rpc = TransactionRpc::new(rpc_client, open_req).await?;
-        Ok(Transaction { type_, options, query: QueryManager::new(&rpc), rpc })
+        let rpc = TransactionRPC::new(server_rpc, open_req).await?;
+        Ok(Transaction { type_: transaction_type, options, query: QueryManager::new(&rpc), rpc })
     }
 
     pub async fn commit(&mut self) -> Result {

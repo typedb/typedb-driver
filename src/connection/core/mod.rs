@@ -19,6 +19,8 @@
  * under the License.
  */
 
-pub(crate) mod builder;
-pub(crate) mod client;
-pub(crate) mod transaction;
+mod client;
+mod database_manager;
+mod options;
+
+pub use self::{client::Client, database_manager::DatabaseManager, options::Options};

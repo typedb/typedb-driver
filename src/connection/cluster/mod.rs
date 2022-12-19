@@ -19,7 +19,11 @@
  * under the License.
  */
 
-mod concept_map;
-mod numeric;
+mod client;
+mod database;
+mod database_manager;
+mod session;
 
-pub use self::{concept_map::ConceptMap, numeric::Numeric};
+pub use self::{
+    client::Client, database::Database, database_manager::DatabaseManager, session::Session,
+};

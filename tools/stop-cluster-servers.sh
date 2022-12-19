@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -18,8 +19,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-#
 
-imports_granularity = "Crate"
-group_imports = "StdExternalCrate"
-use_small_heuristics = "Max"
+set -e
+
+procs=$(jps | awk '/TypeDBClusterServer/ {print $1}' | paste -sd " " -)
+echo $procs
+if [ -n "$procs" ]; then
+    kill $procs
+fi

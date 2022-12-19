@@ -57,74 +57,59 @@ pub(crate) mod core {
     }
 }
 
-// #[allow(dead_code)]
-// pub(crate) mod cluster {
-//     pub(crate) mod server_manager {
-//         use typedb_protocol_backup::cluster_server::ServerManager_All_Req;
-//
-//         pub(crate) fn all_req() -> ServerManager_All_Req {
-//             ServerManager_All_Req::new()
-//         }
-//     }
-//
-//     pub(crate) mod user_manager {
-//         use typedb_protocol_backup::cluster_user::{ClusterUserManager_All_Req, ClusterUserManager_Contains_Req, ClusterUserManager_Create_Req};
-//
-//         pub(crate) fn contains_req(username: &str) -> ClusterUserManager_Contains_Req {
-//             let mut req = ClusterUserManager_Contains_Req::new();
-//             req.username = String::from(username);
-//             req
-//         }
-//
-//         pub(crate) fn create_req(username: &str, password: &str) -> ClusterUserManager_Create_Req {
-//             let mut req = ClusterUserManager_Create_Req::new();
-//             req.username = String::from(username);
-//             req.password = String::from(password);
-//             req
-//         }
-//
-//         pub(crate) fn all_req() -> ClusterUserManager_All_Req {
-//             ClusterUserManager_All_Req::new()
-//         }
-//     }
-//
-//     pub(crate) mod user {
-//         use typedb_protocol_backup::cluster_user::{ClusterUser_Delete_Req, ClusterUser_Password_Req, ClusterUser_Token_Req};
-//
-//         pub(crate) fn password_req(username: &str, password: &str) -> ClusterUser_Password_Req {
-//             let mut req = ClusterUser_Password_Req::new();
-//             req.username = String::from(username);
-//             req.password = String::from(password);
-//             req
-//         }
-//
-//         pub(crate) fn token_req(username: &str) -> ClusterUser_Token_Req {
-//             let mut req = ClusterUser_Token_Req::new();
-//             req.username = String::from(username);
-//             req
-//         }
-//
-//         pub(crate) fn delete_req(username: &str) -> ClusterUser_Delete_Req {
-//             let mut req = ClusterUser_Delete_Req::new();
-//             req.username = String::from(username);
-//             req
-//         }
-//     }
-//
-//     pub(crate) mod database_manager {
-//         use typedb_protocol_backup::cluster_database::{ClusterDatabaseManager_All_Req, ClusterDatabaseManager_Get_Req};
-//
-//         pub(crate) fn get_req(name: &str) -> ClusterDatabaseManager_Get_Req {
-//             let mut req = ClusterDatabaseManager_Get_Req::new();
-//             req.name = String::from(name);
-//             req
-//         }
-//
-//         pub(crate) fn all_req() -> ClusterDatabaseManager_All_Req {
-//             ClusterDatabaseManager_All_Req::new()
-//         }
-//     }
-// }
+pub(crate) mod cluster {
+    pub(crate) mod server_manager {
+        use typedb_protocol::server_manager::all;
+
+        pub(crate) fn all_req() -> all::Req {
+            all::Req {}
+        }
+    }
+
+    pub(crate) mod user_manager {
+        use typedb_protocol::cluster_user_manager::{all, contains, create};
+
+        pub(crate) fn contains_req(username: &str) -> contains::Req {
+            contains::Req { username: username.into() }
+        }
+
+        pub(crate) fn create_req(username: &str, password: &str) -> create::Req {
+            create::Req { username: username.into(), password: password.into() }
+        }
+
+        pub(crate) fn all_req() -> all::Req {
+            all::Req {}
+        }
+    }
+
+    pub(crate) mod user {
+        use typedb_protocol::cluster_user::{delete, password, token};
+
+        pub(crate) fn password_req(username: &str, password: &str) -> password::Req {
+            password::Req { username: username.into(), password: password.into() }
+        }
+
+        pub(crate) fn token_req(username: &str) -> token::Req {
+            token::Req { username: username.into() }
+        }
+
+        pub(crate) fn delete_req(username: &str) -> delete::Req {
+            delete::Req { username: username.into() }
+        }
+    }
+
+    pub(crate) mod database_manager {
+        use typedb_protocol::cluster_database_manager::{all, get};
+
+        pub(crate) fn get_req(name: &str) -> get::Req {
+            get::Req { name: name.into() }
+        }
+
+        pub(crate) fn all_req() -> all::Req {
+            all::Req {}
+        }
+    }
+}
 
 pub(crate) mod session {
     use typedb_protocol::{
@@ -318,9 +303,9 @@ pub(crate) mod thing {
         super::transaction::req(ThingReq(req))
     }
 
-    pub(crate) fn attribute_get_owners_req(iid: &Vec<u8>) -> transaction::Req {
+    pub(crate) fn attribute_get_owners_req(iid: &[u8]) -> transaction::Req {
         thing_req(thing::Req {
-            iid: iid.clone(),
+            iid: iid.to_vec(),
             req: AttributeGetOwnersReq(attribute::get_owners::Req { filter: None }).into(),
         })
     }
