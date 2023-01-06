@@ -44,6 +44,8 @@ export interface Type extends Concept {
 
     readonly root: boolean;
 
+    readonly abstract: boolean;
+
     asRemote(transaction: TypeDBTransaction): Type.Remote;
 }
 
@@ -74,8 +76,6 @@ export namespace Type {
         asRelation(): Relation.Remote;
 
         setLabel(label: string): Promise<void>;
-
-        isAbstract(): Promise<boolean>;
 
         getSupertype(): Promise<Type>;
 

@@ -115,6 +115,8 @@ export namespace ThingType {
         unsetPlays(role: RoleType): Promise<void>;
 
         unsetOwns(attributeType: AttributeType): Promise<void>;
+
+        getSyntax(): Promise<string>;
     }
 
     export function proto(thingType: ThingType) {

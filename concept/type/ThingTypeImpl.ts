@@ -35,8 +35,8 @@ import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
 
-    constructor(name: string, root: boolean) {
-        super(Label.of(name), root);
+    constructor(name: string, root: boolean, abstract: boolean) {
+        super(Label.of(name), root, abstract);
     }
 
     protected get className(): string {
@@ -44,7 +44,7 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     asRemote(transaction: TypeDBTransaction): ThingType.Remote {
-        return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+        return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isThingType(): boolean {
@@ -68,7 +68,7 @@ export namespace ThingTypeImpl {
             case TypeProto.Encoding.ATTRIBUTE_TYPE:
                 return AttributeTypeImpl.of(thingTypeProto);
             case TypeProto.Encoding.THING_TYPE:
-                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getRoot());
+                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getIsRoot(), thingTypeProto.getIsAbstract());
             default:
                 throw new TypeDBClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
         }
@@ -76,8 +76,8 @@ export namespace ThingTypeImpl {
 
     export class Remote extends TypeImpl.Remote implements ThingType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
-            super(transaction, label, root);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
+            super(transaction, label, root, abstract);
         }
 
         protected get className(): string {
@@ -85,7 +85,7 @@ export namespace ThingTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): ThingType.Remote {
-            return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+            return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
         isThingType(): boolean {
@@ -249,6 +249,11 @@ export namespace ThingTypeImpl {
         protected async setSupertype(thingType: ThingType): Promise<void> {
             const request = RequestBuilder.Type.ThingType.setSupertypeReq(this.label, ThingType.proto(thingType));
             await this.execute(request);
+        }
+
+        async getSyntax(): Promise<string> {
+            const request = RequestBuilder.Type.ThingType.getSyntaxReq(this.label);
+            return (await this.execute(request)).getThingTypeGetSyntaxRes().getSyntax();
         }
     }
 }

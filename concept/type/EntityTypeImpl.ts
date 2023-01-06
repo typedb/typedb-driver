@@ -30,8 +30,8 @@ import { EntityImpl, ThingTypeImpl } from "../../dependencies_internal";
 
 export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
-    constructor(name: string, root: boolean) {
-        super(name, root);
+    constructor(name: string, root: boolean, abstract: boolean) {
+        super(name, root, abstract);
     }
 
     protected get className(): string {
@@ -39,7 +39,7 @@ export class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+        return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isEntityType(): boolean {
@@ -55,13 +55,13 @@ export namespace EntityTypeImpl {
 
     export function of(entityTypeProto: TypeProto) {
         if (!entityTypeProto) return null;
-        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getRoot());
+        return new EntityTypeImpl(entityTypeProto.getLabel(), entityTypeProto.getIsRoot(), entityTypeProto.getIsAbstract());
     }
 
     export class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
-            super(transaction, label, root);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
+            super(transaction, label, root, abstract);
         }
 
         protected get className(): string {
@@ -69,7 +69,7 @@ export namespace EntityTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): EntityType.Remote {
-            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+            return new EntityTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
         isEntityType(): boolean {

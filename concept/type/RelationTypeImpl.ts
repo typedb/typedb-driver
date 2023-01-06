@@ -31,8 +31,8 @@ import { RelationImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_in
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
-    constructor(label: string, root: boolean) {
-        super(label, root);
+    constructor(label: string, root: boolean, abstract: boolean) {
+        super(label, root, abstract);
     }
 
     protected get className(): string {
@@ -40,7 +40,7 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isRelationType(): boolean {
@@ -56,13 +56,13 @@ export namespace RelationTypeImpl {
 
     export function of(relationTypeProto: TypeProto) {
         if (!relationTypeProto) return null;
-        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getRoot());
+        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getIsRoot(), relationTypeProto.getIsAbstract());
     }
 
     export class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
 
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
-            super(transaction, label, root);
+        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
+            super(transaction, label, root, abstract);
         }
 
         protected get className(): string {
@@ -70,7 +70,7 @@ export namespace RelationTypeImpl {
         }
 
         asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root);
+            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
         isRelationType(): boolean {

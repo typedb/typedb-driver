@@ -323,12 +323,6 @@ export namespace RequestBuilder {
             return builder;
         }
 
-        export function isAbstractReq(label: Label) {
-            return typeReq(newReqBuilder(label).setTypeIsAbstractReq(
-                new TypeProto.IsAbstract.Req()
-            ));
-        }
-
         export function setLabelReq(label: Label, newLabel: string) {
             return typeReq(newReqBuilder(label).setTypeSetLabelReq(
                 new TypeProto.SetLabel.Req().setLabel(newLabel)
@@ -371,9 +365,39 @@ export namespace RequestBuilder {
                 ));
             }
 
-            export function getPlayersReq(label: Label) {
-                return typeReq(newReqBuilder(label).setRoleTypeGetPlayersReq(
-                    new RoleTypeProto.GetPlayers.Req()
+            export function getPlayerTypesReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesReq(
+                    new RoleTypeProto.GetPlayerTypes.Req()
+                ));
+            }
+
+            export function getPlayerTypesExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerTypesExplicitReq(
+                    new RoleTypeProto.GetPlayerTypesExplicit.Req()
+                ));
+            }
+
+            export function getRelationInstancesReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesReq(
+                    new RoleTypeProto.GetRelationInstances.Req()
+                ));
+            }
+
+            export function getRelationInstancesExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetRelationInstancesExplicitReq(
+                    new RoleTypeProto.GetRelationInstancesExplicit.Req()
+                ));
+            }
+
+            export function getPlayerInstancesReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesReq(
+                    new RoleTypeProto.GetPlayerInstances.Req()
+                ));
+            }
+
+            export function getPlayerInstancesExplicitReq(label: Label) {
+                return typeReq(newReqBuilder(label).setRoleTypeGetPlayerInstancesExplicitReq(
+                    new RoleTypeProto.GetPlayerInstancesExplicit.Req()
                 ));
             }
         }
@@ -498,6 +522,10 @@ export namespace RequestBuilder {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsOverriddenReq(
                     new ThingTypeProto.GetOwnsOverridden.Req().setAttributeType(attributeType)
                 ));
+            }
+
+            export function getSyntaxReq(label: Label) {
+                return typeReq(newReqBuilder(label).setThingTypeGetSyntaxReq(new ThingTypeProto.GetSyntax.Req()));
             }
         }
 

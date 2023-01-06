@@ -114,7 +114,7 @@ When("{root_label}\\({type_label}) set abstract: {bool}; throws exception", asyn
 });
 
 When("{root_label}\\({type_label}) is abstract: {bool}", async (rootLabel: RootLabel, typeLabel: string, isAbstract: boolean) => {
-    await assert.strictEqual(await (await getThingType(rootLabel, typeLabel)).asRemote(tx()).isAbstract(), isAbstract);
+    assert.strictEqual((await getThingType(rootLabel, typeLabel)).abstract, isAbstract);
 });
 
 When("{root_label}\\({type_label}) set supertype: {type_label}", async (rootLabel: RootLabel, typeLabel: string, superLabel: string) => {

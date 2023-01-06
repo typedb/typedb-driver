@@ -36,18 +36,24 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     private readonly _label: Label;
     private readonly _root: boolean;
+    private readonly _abstract: boolean;
 
-    protected constructor(label: Label, root: boolean) {
+    protected constructor(label: Label, root: boolean, abstract: boolean) {
         super();
         if (!label) throw new TypeDBClientError(MISSING_LABEL);
         this._label = label;
         this._root = root;
+        this._abstract = abstract;
     }
 
     abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
     get root(): boolean {
         return this._root;
+    }
+
+    get abstract(): boolean {
+        return this._abstract;
     }
 
     get label(): Label {
@@ -87,18 +93,24 @@ export namespace TypeImpl {
 
         private _label: Label;
         private readonly _root: boolean;
+        private readonly _abstract: boolean;
 
-        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean) {
+        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
             super(transaction);
             if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL);
             this._label = label;
             this._root = root;
+            this._abstract = abstract;
         }
 
         abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
         get root(): boolean {
             return this._root;
+        }
+
+        get abstract(): boolean {
+            return this._abstract;
         }
 
         get label(): Label {
@@ -150,11 +162,6 @@ export namespace TypeImpl {
             const request = RequestBuilder.Type.setLabelReq(this._label, label);
             await this.execute(request);
             this._label = new Label(this.label.scope, label);
-        }
-
-        async isAbstract(): Promise<boolean> {
-            const request = RequestBuilder.Type.isAbstractReq(this._label);
-            return this.execute(request).then((res) => res.getTypeIsAbstractRes().getAbstract());
         }
 
         protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {

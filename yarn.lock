@@ -4246,10 +4246,9 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedb-protocol@2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/typedb-protocol/-/typedb-protocol-2.10.0.tgz#92f97f026a10d36b44cdb58792b912d822bf30b5"
-  integrity sha512-4SazuH0ewzGMygOQTVb809SR6k75/iWl6e5njuyKUdvq4lrThs+CPQdAZTHiqIcDDfufk2FMU5n62JEdgbx8Ig==
+"typedb-protocol@https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-e6f62093b54499b20e5202279bdea117bcce7c39.tgz":
+  version "0.0.0-e6f62093b54499b20e5202279bdea117bcce7c39"
+  resolved "https://repo.vaticle.com/repository/npm-snapshot/typedb-protocol/-/typedb-protocol-0.0.0-e6f62093b54499b20e5202279bdea117bcce7c39.tgz#cb287256ba67992e0a4385b0652d0c3e37dffb10"
   dependencies:
     "@grpc/grpc-js" "1.5.0"
 

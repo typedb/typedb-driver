@@ -73,7 +73,17 @@ export namespace RoleType {
 
         getRelationTypes(): Stream<RelationType>;
 
-        getPlayers(): Stream<ThingType>;
+        getPlayerTypes(): Stream<ThingType>;
+
+        getPlayerTypesExplicit(): Stream<ThingType>;
+
+        getRelationInstances(): Stream<Relation>;
+
+        getRelationInstancesExplicit(): Stream<Relation>;
+
+        getPlayerInstances(): Stream<Thing>;
+
+        getPlayerInstancesExplicit(): Stream<Thing>;
     }
 
     export function proto(roleType: RoleType) {
