@@ -46,6 +46,7 @@ java_library(
         "@maven//:io_grpc_grpc_netty",
         "@maven//:io_grpc_grpc_stub",
         "@maven//:io_netty_netty_all",
+        "@maven//:io_netty_netty_handler",
         "@maven//:org_slf4j_slf4j_api",
     ],
     runtime_deps = [
