@@ -77,20 +77,29 @@ class ClusterDatabase implements Database.Cluster {
 
     @Override
     public String schema() {
-        // TODO: select the leader database
-        return databases.values().iterator().next().schema();
+        ClusterClient.FailsafeTask<String> task = client.createFailsafeTask(
+                name,
+                parameter -> databases.get(parameter.replica().address()).schema()
+        );
+        return task.runAnyReplica();
     }
 
     @Override
     public String typeSchema() {
-        // TODO: select the leader database
-        return databases.values().iterator().next().typeSchema();
+        ClusterClient.FailsafeTask<String> task = client.createFailsafeTask(
+                name,
+                parameter -> databases.get(parameter.replica().address()).typeSchema()
+        );
+        return task.runAnyReplica();
     }
 
     @Override
     public String ruleSchema() {
-        // TODO: select the leader database
-        return databases.values().iterator().next().ruleSchema();
+        ClusterClient.FailsafeTask<String> task = client.createFailsafeTask(
+                name,
+                parameter -> databases.get(parameter.replica().address()).ruleSchema()
+        );
+        return task.runAnyReplica();
     }
 
     @Override
