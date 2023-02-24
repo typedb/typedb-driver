@@ -24,6 +24,8 @@ package com.vaticle.typedb.client.connection.cluster;
 import com.vaticle.typedb.client.api.user.User;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.expiryDaysReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordAdminReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordReq;
 import static com.vaticle.typedb.client.connection.cluster.ClusterUserManager.SYSTEM_DB;
 
@@ -43,15 +45,36 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public void password(String password) {
+    public void password(String oldPassword, String newPassword) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userPassword(passwordReq(username, password));
+                    parameter.client().stub().userPassword(passwordReq(username, oldPassword, newPassword));
                     return null;
                 }
         );
         failsafeTask.runPrimaryReplica();
+    }
+
+    @Override
+    public void passwordAdmin(String password) {
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                parameter -> {
+                    parameter.client().stub().userPasswordAdmin(passwordAdminReq(username, password));
+                    return null;
+                }
+        );
+        failsafeTask.runPrimaryReplica();
+    }
+
+    @Override
+    public long expiryDays(String username) {
+        ClusterClient.FailsafeTask<Long> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                parameter -> parameter.client().stub().userExpiryDays(expiryDaysReq(username)).getExpiryDays()
+        );
+        return failsafeTask.runPrimaryReplica();
     }
 
     @Override
@@ -63,7 +86,6 @@ public class ClusterUser implements User {
                     return null;
                 }
         );
-
         failsafeTask.runPrimaryReplica();
     }
 }

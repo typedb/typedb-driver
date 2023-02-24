@@ -63,9 +63,9 @@ public class UserSteps {
         getClient().users().create(username, password);
     }
 
-    @Then("user password: {word}, {word}")
-    public void user_password(String username, String password) {
-        getClient().users().get(username).password(password);
+    @Then("user password: {word}, {word}, {word}")
+    public void user_password(String username, String oldPassword, String newPassword) {
+        getClient().users().get(username).password(oldPassword, newPassword);
     }
 
     @Then("user connect: {word}, {word}")

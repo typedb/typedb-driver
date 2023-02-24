@@ -134,8 +134,23 @@ public class RequestBuilder {
 
         public static class User {
 
-            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String username, String password) {
-                return ClusterUserProto.ClusterUser.Password.Req.newBuilder().setUsername(username).setPassword(password).build();
+            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String username, String oldPassword, String newPassword) {
+                return ClusterUserProto.ClusterUser.Password.Req.newBuilder()
+                        .setUsername(username)
+                        .setOldPassword(oldPassword)
+                        .setNewPassword(newPassword)
+                        .build();
+            }
+
+            public static ClusterUserProto.ClusterUser.PasswordAdmin.Req passwordAdminReq(String username, String password) {
+                return ClusterUserProto.ClusterUser.PasswordAdmin.Req.newBuilder()
+                        .setUsername(username)
+                        .setPassword(password)
+                        .build();
+            }
+
+            public static ClusterUserProto.ClusterUser.ExpiryDays.Req expiryDaysReq(String username) {
+                return ClusterUserProto.ClusterUser.ExpiryDays.Req.newBuilder().setUsername(username).build();
             }
 
             public static ClusterUserProto.ClusterUser.Token.Req tokenReq(String username) {

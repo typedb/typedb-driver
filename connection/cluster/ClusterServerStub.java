@@ -119,6 +119,15 @@ public class ClusterServerStub extends TypeDBStub {
         return mayRenewToken(() -> clusterBlockingStub.userPassword(request));
     }
 
+    public ClusterUserProto.ClusterUser.PasswordAdmin.Res userPasswordAdmin(ClusterUserProto.ClusterUser.PasswordAdmin.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.userPasswordAdmin(request));
+    }
+
+    public ClusterUserProto.ClusterUser.ExpiryDays.Res userExpiryDays(ClusterUserProto.ClusterUser.ExpiryDays.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.userExpiryDays(request));
+    }
+
+
     public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
         return mayRenewToken(() -> clusterBlockingStub.userDelete(request));
     }
