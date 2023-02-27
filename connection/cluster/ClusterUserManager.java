@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.allReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.containsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.createReq;
@@ -70,6 +71,18 @@ public class ClusterUserManager implements UserManager {
                 }
         );
 
+        failsafeTask.runPrimaryReplica();
+    }
+
+    @Override
+    public void delete() {
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                parameter -> {
+                    parameter.client().stub().userDelete(deleteReq(username));
+                    return null;
+                }
+        );
         failsafeTask.runPrimaryReplica();
     }
 

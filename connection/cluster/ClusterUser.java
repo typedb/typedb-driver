@@ -45,44 +45,11 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public void password(String oldPassword, String newPassword) {
+    public void passwordUpdate(String oldPassword, String newPassword) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userPassword(passwordReq(username, oldPassword, newPassword));
-                    return null;
-                }
-        );
-        failsafeTask.runPrimaryReplica();
-    }
-
-    @Override
-    public void passwordAdmin(String password) {
-        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
-                SYSTEM_DB,
-                parameter -> {
-                    parameter.client().stub().userPasswordAdmin(passwordAdminReq(username, password));
-                    return null;
-                }
-        );
-        failsafeTask.runPrimaryReplica();
-    }
-
-    @Override
-    public long expiryDays() {
-        ClusterClient.FailsafeTask<Long> failsafeTask = client.createFailsafeTask(
-                SYSTEM_DB,
-                parameter -> parameter.client().stub().userExpiryDays(expiryDaysReq(username)).getExpiryDays()
-        );
-        return failsafeTask.runPrimaryReplica();
-    }
-
-    @Override
-    public void delete() {
-        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
-                SYSTEM_DB,
-                parameter -> {
-                    parameter.client().stub().userDelete(deleteReq(username));
+                    parameter.client().stub().userPasswordUpdate(passwordUpdateReq(username, oldPassword, newPassword));
                     return null;
                 }
         );

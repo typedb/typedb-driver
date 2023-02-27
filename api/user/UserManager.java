@@ -34,5 +34,9 @@ public interface UserManager {
 
     void create(String username, String password);
 
+    void delete(String username);
+
     Set<User> all();
+
+    void passwordSet(String username, String password);
 }
