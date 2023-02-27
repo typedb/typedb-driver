@@ -32,7 +32,7 @@ public interface User {
 
     void passwordAdmin(String password);
 
-    long expiryDays(String username);
+    long expiryDays();
 
     void delete();
 }

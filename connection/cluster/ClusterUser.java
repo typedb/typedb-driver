@@ -69,7 +69,7 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public long expiryDays(String username) {
+    public long expiryDays() {
         ClusterClient.FailsafeTask<Long> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> parameter.client().stub().userExpiryDays(expiryDaysReq(username)).getExpiryDays()
