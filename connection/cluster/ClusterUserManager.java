@@ -95,8 +95,8 @@ public class ClusterUserManager implements UserManager {
     }
 
     @Override
-    public ClusterUser get(String username) {
-        ClusterClient.FailsafeTask<ClusterUser> failsafeTask = client.createFailsafeTask(
+    public User get(String username) {
+        ClusterClient.FailsafeTask<User> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 (parameter) -> {
                     com.vaticle.typedb.protocol.ClusterUserProto.User user = parameter.client().stub().usersGet(getReq(username)).getUser();
