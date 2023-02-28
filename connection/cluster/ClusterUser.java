@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.protocol.ClusterUserProto;
 
 import java.util.Optional;
 
@@ -38,6 +39,16 @@ public class ClusterUser implements User {
         this.client = client;
         this.username = username;
         this.passwordExpiryDays = passwordExpiryDays;
+    }
+
+    public static ClusterUser of(ClusterUserProto.User user, ClusterClient client) {
+        if (user.getPasswordExpiryOptCase() ==
+                ClusterUserProto.User.PasswordExpiryOptCase.PASSWORDEXPIRYOPT_NOT_SET) {
+            return new ClusterUser(client, user.getUsername(), Optional.empty());
+        }
+        else {
+            return new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpiryDays()));
+        }
     }
 
     @Override
