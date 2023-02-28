@@ -22,13 +22,14 @@
 package com.vaticle.typedb.client.api.user;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 
 public interface User {
 
     @CheckReturnValue
     String username();
 
-    long passwordExpiryDays();
+    Optional<Long> passwordExpiryDays();
 
     void passwordUpdate(String oldPassword, String newPassword);
 }

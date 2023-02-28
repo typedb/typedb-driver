@@ -23,7 +23,11 @@ package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.protocol.ClusterUserProto;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -85,11 +89,23 @@ public class ClusterUserManager implements UserManager {
     public Set<User> all() {
         ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                (parameter) ->
-                        parameter.client().stub()
-                                .usersAll(allReq()).getUsersList().stream()
-                                .map(user -> new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays()))
-                                .collect(Collectors.toSet())
+                (parameter) -> {
+                    Set<User> users = new HashSet<>();
+                    List<ClusterUserProto.User> protoUsers = parameter.client().stub().usersAll(allReq()).getUsersList();
+
+                    for (ClusterUserProto.User user: protoUsers) {
+                        if (user.getPasswordExpiryOptCase() ==
+                                ClusterUserProto.User.PasswordExpiryOptCase.PASSWORDEXPIRYOPT_NOT_SET) {
+                            users.add(new ClusterUser(client, user.getUsername(), Optional.empty()));
+                        }
+                        else {
+                            users.add(new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpiryDays())));
+                        }
+                    }
+
+                    return users;
+                }
+
         );
         return failsafeTask.runPrimaryReplica();
     }
@@ -100,7 +116,13 @@ public class ClusterUserManager implements UserManager {
                 SYSTEM_DB,
                 (parameter) -> {
                     com.vaticle.typedb.protocol.ClusterUserProto.User user = parameter.client().stub().usersGet(getReq(username)).getUser();
-                    return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
+                    if (user.getPasswordExpiryOptCase() ==
+                            ClusterUserProto.User.PasswordExpiryOptCase.PASSWORDEXPIRYOPT_NOT_SET) {
+                        return new ClusterUser(client, user.getUsername(), Optional.empty());
+                    }
+                    else {
+                        return new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpiryDays()));
+                    }
                 }
         );
         return failsafeTask.runPrimaryReplica();

@@ -23,6 +23,8 @@ package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 
+import java.util.Optional;
+
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordUpdateReq;
 import static com.vaticle.typedb.client.connection.cluster.ClusterUserManager.SYSTEM_DB;
 
@@ -30,9 +32,9 @@ public class ClusterUser implements User {
 
     private final ClusterClient client;
     private final String username;
-    private final long passwordExpiryDays;
+    private final Optional<Long> passwordExpiryDays;
 
-    public ClusterUser(ClusterClient client, String username, long passwordExpiryDays) {
+    public ClusterUser(ClusterClient client, String username, Optional<Long> passwordExpiryDays) {
         this.client = client;
         this.username = username;
         this.passwordExpiryDays = passwordExpiryDays;
@@ -44,7 +46,7 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public long passwordExpiryDays() {
+    public Optional<Long> passwordExpiryDays() {
         return passwordExpiryDays;
     }
 
