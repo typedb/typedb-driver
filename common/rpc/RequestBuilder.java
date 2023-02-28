@@ -127,38 +127,38 @@ public class RequestBuilder {
                 return ClusterUserProto.ClusterUserManager.Create.Req.newBuilder().setUsername(username).setPassword(password).build();
             }
 
+            public static ClusterUserProto.ClusterUserManager.Delete.Req deleteReq(String username) {
+                return ClusterUserProto.ClusterUserManager.Delete.Req.newBuilder().setUsername(username).build();
+            }
+
             public static ClusterUserProto.ClusterUserManager.All.Req allReq() {
                 return ClusterUserProto.ClusterUserManager.All.Req.newBuilder().build();
+            }
+
+            public static ClusterUserProto.ClusterUserManager.PasswordSet.Req passwordSetReq(String username, String password) {
+                return ClusterUserProto.ClusterUserManager.PasswordSet.Req.newBuilder()
+                        .setUsername(username)
+                        .setPassword(password)
+                        .build();
+            }
+
+            public static ClusterUserProto.ClusterUserManager.Get.Req getReq(String username) {
+                return ClusterUserProto.ClusterUserManager.Get.Req.newBuilder().setUsername(username).build();
             }
         }
 
         public static class User {
 
-            public static ClusterUserProto.ClusterUser.Password.Req passwordReq(String username, String oldPassword, String newPassword) {
-                return ClusterUserProto.ClusterUser.Password.Req.newBuilder()
+            public static ClusterUserProto.ClusterUser.PasswordUpdate.Req passwordUpdateReq(String username, String oldPassword, String newPassword) {
+                return ClusterUserProto.ClusterUser.PasswordUpdate.Req.newBuilder()
                         .setUsername(username)
                         .setOldPassword(oldPassword)
                         .setNewPassword(newPassword)
                         .build();
             }
 
-            public static ClusterUserProto.ClusterUser.PasswordAdmin.Req passwordAdminReq(String username, String password) {
-                return ClusterUserProto.ClusterUser.PasswordAdmin.Req.newBuilder()
-                        .setUsername(username)
-                        .setPassword(password)
-                        .build();
-            }
-
-            public static ClusterUserProto.ClusterUser.ExpiryDays.Req expiryDaysReq(String username) {
-                return ClusterUserProto.ClusterUser.ExpiryDays.Req.newBuilder().setUsername(username).build();
-            }
-
             public static ClusterUserProto.ClusterUser.Token.Req tokenReq(String username) {
                 return ClusterUserProto.ClusterUser.Token.Req.newBuilder().setUsername(username).build();
-            }
-
-            public static ClusterUserProto.ClusterUser.Delete.Req deleteReq(String username) {
-                return ClusterUserProto.ClusterUser.Delete.Req.newBuilder().setUsername(username).build();
             }
         }
 

@@ -63,9 +63,14 @@ public class UserSteps {
         getClient().users().create(username, password);
     }
 
-    @Then("user password: {word}, {word}, {word}")
-    public void user_password(String username, String oldPassword, String newPassword) {
-        getClient().users().get(username).password(oldPassword, newPassword);
+    @Then("users delete: {word}")
+    public void users_delete(String username) {
+        getClient().users().delete(username);
+    }
+
+    @Then("user password update: {word}, {word}, {word}")
+    public void user_password_update(String username, String oldPassword, String newPassword) {
+        getClient().users().get(username).passwordUpdate(oldPassword, newPassword);
     }
 
     @Then("user connect: {word}, {word}")
@@ -75,10 +80,5 @@ public class UserSteps {
         try (TypeDBClient.Cluster client = TypeDB.clusterClient(address, credential)) {
             List<Database.Cluster> ignored = client.databases().all();
         }
-    }
-
-    @Then("user delete: {word}")
-    public void user_delete(String username) {
-        getClient().users().get(username).delete();
     }
 }

@@ -28,11 +28,7 @@ public interface User {
     @CheckReturnValue
     String username();
 
-    void password(String oldPassword, String newPassword);
+    long passwordExpiryDays();
 
-    void passwordAdmin(String password);
-
-    long expiryDays();
-
-    void delete();
+    void passwordUpdate(String oldPassword, String newPassword);
 }

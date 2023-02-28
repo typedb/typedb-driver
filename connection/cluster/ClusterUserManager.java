@@ -23,16 +23,17 @@ package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.allReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.containsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.createReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.deleteReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.allReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.passwordSetReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.getReq;
+
 
 public class ClusterUserManager implements UserManager {
 
@@ -42,12 +43,6 @@ public class ClusterUserManager implements UserManager {
 
     public ClusterUserManager(ClusterClient client) {
         this.client = client;
-    }
-
-    @Override
-    public ClusterUser get(String username) {
-        if (contains(username)) return new ClusterUser(client, username);
-        else throw new TypeDBClientException(CLUSTER_USER_DOES_NOT_EXIST, username);
     }
 
     @Override
@@ -75,11 +70,11 @@ public class ClusterUserManager implements UserManager {
     }
 
     @Override
-    public void delete() {
+    public void delete(String username) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userDelete(deleteReq(username));
+                    parameter.client().stub().usersDelete(deleteReq(username));
                     return null;
                 }
         );
@@ -92,10 +87,34 @@ public class ClusterUserManager implements UserManager {
                 SYSTEM_DB,
                 (parameter) ->
                         parameter.client().stub()
-                                .usersAll(allReq()).getNamesList().stream()
-                                .map(name -> new ClusterUser(client, name))
+                                .usersAll(allReq()).getUsersList().stream()
+                                .map(user -> new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays()))
                                 .collect(Collectors.toSet())
         );
         return failsafeTask.runPrimaryReplica();
+    }
+
+    @Override
+    public ClusterUser get(String username) {
+        ClusterClient.FailsafeTask<ClusterUser> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                (parameter) -> {
+                    com.vaticle.typedb.protocol.ClusterUserProto.User user = parameter.client().stub().usersGet(getReq(username)).getUser();
+                    return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
+                }
+        );
+        return failsafeTask.runPrimaryReplica();
+    }
+
+    @Override
+    public void passwordSet(String username, String password) {
+        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
+                SYSTEM_DB,
+                (parameter) -> {
+                    parameter.client().stub().usersPasswordSet(passwordSetReq(username, password));
+                    return null;
+                }
+        );
+        failsafeTask.runPrimaryReplica();
     }
 }

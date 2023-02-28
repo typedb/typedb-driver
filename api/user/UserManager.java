@@ -27,9 +27,6 @@ import java.util.Set;
 public interface UserManager {
 
     @CheckReturnValue
-    User get(String username);
-
-    @CheckReturnValue
     boolean contains(String username);
 
     void create(String username, String password);
@@ -39,4 +36,7 @@ public interface UserManager {
     Set<User> all();
 
     void passwordSet(String username, String password);
+
+    @CheckReturnValue
+    User get(String username);
 }
