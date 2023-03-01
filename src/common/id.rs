@@ -19,29 +19,39 @@
  * under the License.
  */
 
-pub(crate) mod address;
-mod credential;
-pub mod error;
-mod id;
-pub(crate) mod info;
-mod options;
+use std::fmt;
 
-pub use self::{credential::Credential, error::Error, options::Options};
+use uuid::Uuid;
 
-pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
-pub type Result<T = ()> = StdResult<T, Error>;
+#[derive(Clone, Eq, Hash, PartialEq)]
+pub struct ID(Vec<u8>);
 
-pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
+impl ID {
+    pub(crate) fn generate() -> Self {
+        Uuid::new_v4().as_bytes().to_vec().into()
+    }
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TransactionType {
-    Read = 0,
-    Write = 1,
+impl From<ID> for Vec<u8> {
+    fn from(id: ID) -> Self {
+        id.0
+    }
+}
+
+impl From<Vec<u8>> for ID {
+    fn from(vec: Vec<u8>) -> Self {
+        Self(vec)
+    }
+}
+
+impl fmt::Debug for ID {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "ID[{self}]")
+    }
+}
+
+impl fmt::Display for ID {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.iter().try_for_each(|byte| write!(f, "{byte:02x}"))
+    }
 }

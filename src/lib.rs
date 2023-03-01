@@ -19,15 +19,14 @@
  * under the License.
  */
 
-#![allow(dead_code)]
-
-pub mod answer;
-pub mod common;
+mod answer;
+mod common;
 pub mod concept;
-pub(crate) mod connection;
-pub mod query;
+mod connection;
+mod database;
 
 pub use self::{
-    common::{Credential, Error, Result, SessionType, TransactionType},
-    connection::{cluster, core, server},
+    common::{error, Credential, Error, Options, Result, SessionType, TransactionType},
+    connection::Connection,
+    database::{Database, DatabaseManager, Session, Transaction},
 };

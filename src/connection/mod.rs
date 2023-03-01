@@ -19,6 +19,11 @@
  * under the License.
  */
 
-pub mod cluster;
-pub mod core;
-pub mod server;
+mod connection;
+mod message;
+mod network;
+mod runtime;
+mod transaction_stream;
+
+pub use self::connection::Connection;
+pub(crate) use self::{connection::ServerConnection, transaction_stream::TransactionStream};

@@ -23,7 +23,9 @@ config:
   version-candidate: VERSION
   dependencies:
     dependencies: [build]
+    typedb-common: [build]
     typedb-protocol: [build, release]
+    typeql: [build, release]
 
 build:
   quality:
@@ -53,7 +55,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
         tools/start-core-server.sh
-        bazel test //tests:queries_core --test_arg=-- --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //tests:queries --test_arg=-- --test_arg=core --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tools/stop-core-server.sh
         exit $TEST_SUCCESS
     test-integration-cluster:
@@ -65,8 +67,19 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
         source tools/start-cluster-servers.sh # use source to receive export vars
-        bazel test //tests:queries_cluster --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //tests:queries --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=cluster --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tools/stop-cluster-servers.sh
+        exit $TEST_SUCCESS
+    test-integration-runtimes:
+      image: vaticle-ubuntu-22.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel build //...
+        tools/start-core-server.sh
+        bazel test //tests:runtimes --test_arg=-- --test_arg=--test-threads=1 --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tools/stop-core-server.sh
         exit $TEST_SUCCESS
     deploy-crate-snapshot:
       filter:

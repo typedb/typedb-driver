@@ -19,29 +19,25 @@
  * under the License.
  */
 
-pub(crate) mod address;
-mod credential;
-pub mod error;
-mod id;
-pub(crate) mod info;
-mod options;
+mod common;
+mod concept;
+mod database;
+mod message;
 
-pub use self::{credential::Credential, error::Error, options::Options};
+use crate::Result;
 
-pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
-pub type Result<T = ()> = StdResult<T, Error>;
-
-pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
+pub(super) trait IntoProto<Proto> {
+    fn into_proto(self) -> Proto;
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TransactionType {
-    Read = 0,
-    Write = 1,
+pub(super) trait TryIntoProto<Proto> {
+    fn try_into_proto(self) -> Result<Proto>;
+}
+
+pub(super) trait FromProto<Proto> {
+    fn from_proto(proto: Proto) -> Self;
+}
+
+pub(super) trait TryFromProto<Proto>: Sized {
+    fn try_from_proto(proto: Proto) -> Result<Self>;
 }

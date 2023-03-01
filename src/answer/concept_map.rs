@@ -24,7 +24,7 @@ use std::{
     ops::Index,
 };
 
-use crate::{common::Result, concept::Concept};
+use crate::concept::Concept;
 
 #[derive(Debug)]
 pub struct ConceptMap {
@@ -32,14 +32,6 @@ pub struct ConceptMap {
 }
 
 impl ConceptMap {
-    pub(crate) fn from_proto(proto: typedb_protocol::ConceptMap) -> Result<Self> {
-        let mut map = HashMap::with_capacity(proto.map.len());
-        for (k, v) in proto.map {
-            map.insert(k, Concept::from_proto(v)?);
-        }
-        Ok(Self { map })
-    }
-
     pub fn get(&self, var_name: &str) -> Option<&Concept> {
         self.map.get(var_name)
     }

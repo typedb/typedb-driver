@@ -21,12 +21,12 @@
 
 use std::{fmt, str::FromStr};
 
-use tonic::transport::Uri;
+use http::Uri;
 
 use crate::common::{Error, Result};
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
-pub struct Address {
+pub(crate) struct Address {
     uri: Uri,
 }
 
@@ -43,7 +43,7 @@ impl FromStr for Address {
         let uri = if address.contains("://") {
             address.parse::<Uri>()?
         } else {
-            format!("http://{}", address).parse::<Uri>()?
+            format!("http://{address}").parse::<Uri>()?
         };
         Ok(Self { uri })
     }

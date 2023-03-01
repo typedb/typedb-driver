@@ -19,29 +19,7 @@
  * under the License.
  */
 
-pub(crate) mod address;
-mod credential;
-pub mod error;
-mod id;
-pub(crate) mod info;
-mod options;
-
-pub use self::{credential::Credential, error::Error, options::Options};
-
-pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
-pub type Result<T = ()> = StdResult<T, Error>;
-
-pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
-}
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TransactionType {
-    Read = 0,
-    Write = 1,
-}
+mod channel;
+mod proto;
+mod stub;
+pub(super) mod transmitter;

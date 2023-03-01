@@ -31,45 +31,47 @@ load("//:deployment.bzl", deployment_github = "deployment")
 rust_library(
     name = "typedb_client",
     srcs = glob(["src/**/*.rs"]),
+    tags = ["crate-name=typedb-client"],
     deps = [
+        "@crates//:chrono",
+        "@crates//:crossbeam",
+        "@crates//:futures",
+        "@crates//:http",
+        "@crates//:itertools",
+        "@crates//:log",
+        "@crates//:prost",
+        "@crates//:tokio",
+        "@crates//:tokio-stream",
+        "@crates//:tonic",
+        "@crates//:uuid",
         "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
         "@vaticle_typeql//rust:typeql_lang",
-
-        "@vaticle_dependencies//library/crates:chrono",
-        "@vaticle_dependencies//library/crates:crossbeam",
-        "@vaticle_dependencies//library/crates:futures",
-        "@vaticle_dependencies//library/crates:log",
-        "@vaticle_dependencies//library/crates:prost",
-        "@vaticle_dependencies//library/crates:tokio",
-        "@vaticle_dependencies//library/crates:tonic",
-        "@vaticle_dependencies//library/crates:uuid",
     ],
-    tags = ["crate-name=typedb-client"],
 )
 
 assemble_crate(
     name = "assemble_crate",
-    target = "typedb_client",
     description = "TypeDB Client API for Rust",
     homepage = "https://github.com/vaticle/typedb-client-rust",
     license = "Apache-2.0",
     repository = "https://github.com/vaticle/typedb-client-rust",
+    target = "typedb_client",
 )
 
 deploy_crate(
     name = "deploy_crate",
-    target = ":assemble_crate",
+    release = deployment["crate.release"],
     snapshot = deployment["crate.snapshot"],
-    release = deployment["crate.release"]
+    target = ":assemble_crate",
 )
 
 deploy_github(
     name = "deploy_github",
     draft = True,
-    title = "TypeDB Client Rust",
-    release_description = "//:RELEASE_TEMPLATE.md",
     organisation = deployment_github["github.organisation"],
+    release_description = "//:RELEASE_TEMPLATE.md",
     repository = deployment_github["github.repository"],
+    title = "TypeDB Client Rust",
     title_append_version = True,
 )
 
@@ -105,13 +107,13 @@ filegroup(
 
 rustfmt_test(
     name = "client_rustfmt_test",
-    targets = ["typedb_client"]
+    targets = ["typedb_client"],
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(
     name = "ci",
     data = [
-        "@vaticle_dependencies//ide/rust:sync"
+        "@vaticle_dependencies//tool/cargo:sync",
     ],
 )

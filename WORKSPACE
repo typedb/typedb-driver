@@ -49,8 +49,10 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 rules_rust_dependencies()
 rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
 
-load("@vaticle_dependencies//library/crates:crates.bzl", "raze_fetch_remote_crates")
-raze_fetch_remote_crates()
+load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
+fetch_crates()
+load("@crates//:defs.bzl", "crate_repositories")
+crate_repositories()
 
 # Load //builder/python
 load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")

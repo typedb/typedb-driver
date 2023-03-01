@@ -24,8 +24,12 @@ use std::{error::Error as StdError, fmt};
 use tonic::{Code, Status};
 use typeql_lang::error_messages;
 
-error_messages! { ClientError
-    code: "CLI", type: "Client Error",
+use crate::common::RequestID;
+
+error_messages! { ConnectionError
+    code: "CXN", type: "Connection Error",
+    ConnectionIsClosed() =
+        1: "The connection has been closed and no further operation is allowed.",
     SessionIsClosed() =
         2: "The session is closed and no further operation is allowed.",
     TransactionIsClosed() =
@@ -38,7 +42,7 @@ error_messages! { ClientError
         8: "The database '{}' does not exist.",
     MissingResponseField(&'static str) =
         9: "Missing field in message received from server: '{}'.",
-    UnknownRequestId(String) =
+    UnknownRequestId(RequestID) =
         10: "Received a response with unknown request id '{}'",
     ClusterUnableToConnect(String) =
         12: "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '{}'.",
@@ -52,23 +56,35 @@ error_messages! { ClientError
         17: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum Error {
-    Client(ClientError),
-    Other(String),
+error_messages! { InternalError
+    code: "INT", type: "Internal Error",
+    RecvError() =
+        1: "Channel is closed.",
+    SendError() =
+        2: "Channel is closed.",
+    UnexpectedRequestType(String) =
+        3: "Unexpected request type for remote procedure call: {}.",
+    UnexpectedResponseType(String) =
+        4: "Unexpected response type for remote procedure call: {}.",
+    UnknownConnectionAddress(String) =
+        5: "Received unrecognized address from the server: {}.",
+    EnumOutOfBounds(i32, &'static str) =
+        6: "Value '{}' is out of bounds for enum '{}'.",
 }
 
-impl Error {
-    pub(crate) fn new(msg: String) -> Self {
-        Error::Other(msg)
-    }
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Error {
+    Connection(ConnectionError),
+    Internal(InternalError),
+    Other(String),
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Error::Client(error) => write!(f, "{}", error),
-            Error::Other(message) => write!(f, "{}", message),
+            Error::Connection(error) => write!(f, "{error}"),
+            Error::Internal(error) => write!(f, "{error}"),
+            Error::Other(message) => write!(f, "{message}"),
         }
     }
 }
@@ -76,15 +92,36 @@ impl fmt::Display for Error {
 impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            Error::Client(error) => Some(error),
+            Error::Connection(error) => Some(error),
+            Error::Internal(error) => Some(error),
             Error::Other(_) => None,
         }
     }
 }
 
-impl From<ClientError> for Error {
-    fn from(error: ClientError) -> Self {
-        Error::Client(error)
+impl From<ConnectionError> for Error {
+    fn from(error: ConnectionError) -> Self {
+        Error::Connection(error)
+    }
+}
+
+impl From<InternalError> for Error {
+    fn from(error: InternalError) -> Self {
+        Error::Internal(error)
+    }
+}
+
+impl From<Status> for Error {
+    fn from(status: Status) -> Self {
+        if is_rst_stream(&status) {
+            Self::Connection(ConnectionError::UnableToConnect())
+        } else if is_replica_not_primary(&status) {
+            Self::Connection(ConnectionError::ClusterReplicaNotPrimary())
+        } else if is_token_credential_invalid(&status) {
+            Self::Connection(ConnectionError::ClusterTokenCredentialInvalid())
+        } else {
+            Self::Other(status.message().to_string())
+        }
     }
 }
 
@@ -103,22 +140,14 @@ fn is_token_credential_invalid(status: &Status) -> bool {
     status.code() == Code::Unauthenticated && status.message().contains("[CLS08]")
 }
 
-impl From<Status> for Error {
-    fn from(status: Status) -> Self {
-        if is_rst_stream(&status) {
-            Self::Client(ClientError::UnableToConnect())
-        } else if is_replica_not_primary(&status) {
-            Self::Client(ClientError::ClusterReplicaNotPrimary())
-        } else if is_token_credential_invalid(&status) {
-            Self::Client(ClientError::ClusterTokenCredentialInvalid())
-        } else {
-            Self::Other(status.message().to_string())
-        }
+impl From<http::uri::InvalidUri> for Error {
+    fn from(err: http::uri::InvalidUri) -> Self {
+        Error::Other(err.to_string())
     }
 }
 
-impl From<futures::channel::mpsc::SendError> for Error {
-    fn from(err: futures::channel::mpsc::SendError) -> Self {
+impl From<tonic::transport::Error> for Error {
+    fn from(err: tonic::transport::Error) -> Self {
         Error::Other(err.to_string())
     }
 }
@@ -129,15 +158,27 @@ impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
     }
 }
 
-impl From<tonic::codegen::http::uri::InvalidUri> for Error {
-    fn from(err: tonic::codegen::http::uri::InvalidUri) -> Self {
-        Error::Other(err.to_string())
+impl From<tokio::sync::oneshot::error::RecvError> for Error {
+    fn from(_err: tokio::sync::oneshot::error::RecvError) -> Self {
+        Error::Internal(InternalError::RecvError())
     }
 }
 
-impl From<tonic::transport::Error> for Error {
-    fn from(err: tonic::transport::Error) -> Self {
-        Error::Other(err.to_string())
+impl From<crossbeam::channel::RecvError> for Error {
+    fn from(_err: crossbeam::channel::RecvError) -> Self {
+        Error::Internal(InternalError::RecvError())
+    }
+}
+
+impl<T> From<crossbeam::channel::SendError<T>> for Error {
+    fn from(_err: crossbeam::channel::SendError<T>) -> Self {
+        Error::Internal(InternalError::SendError())
+    }
+}
+
+impl From<String> for Error {
+    fn from(err: String) -> Self {
+        Error::Other(err)
     }
 }
 

@@ -19,10 +19,6 @@
  * under the License.
  */
 
-use typedb_protocol::numeric::Value;
-
-use crate::common::{Error, Result};
-
 #[derive(Clone, Debug)]
 pub enum Numeric {
     Long(i64),
@@ -44,18 +40,6 @@ impl Numeric {
             value
         } else {
             panic!()
-        }
-    }
-}
-
-impl TryFrom<typedb_protocol::Numeric> for Numeric {
-    type Error = Error;
-
-    fn try_from(value: typedb_protocol::Numeric) -> Result<Self> {
-        match value.value.unwrap() {
-            Value::LongValue(long) => Ok(Numeric::Long(long)),
-            Value::DoubleValue(double) => Ok(Numeric::Double(double)),
-            Value::Nan(_) => Ok(Numeric::NaN),
         }
     }
 }

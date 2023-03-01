@@ -19,29 +19,27 @@
  * under the License.
  */
 
-pub(crate) mod address;
-mod credential;
-pub mod error;
-mod id;
-pub(crate) mod info;
-mod options;
+use std::time::Duration;
 
-pub use self::{credential::Credential, error::Error, options::Options};
+use super::{address::Address, SessionID};
 
-pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
-pub type Result<T = ()> = StdResult<T, Error>;
-
-pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
+#[derive(Clone, Debug)]
+pub(crate) struct SessionInfo {
+    pub(crate) address: Address,
+    pub(crate) session_id: SessionID,
+    pub(crate) network_latency: Duration,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TransactionType {
-    Read = 0,
-    Write = 1,
+#[derive(Debug)]
+pub(crate) struct DatabaseInfo {
+    pub(crate) name: String,
+    pub(crate) replicas: Vec<ReplicaInfo>,
+}
+
+#[derive(Debug)]
+pub(crate) struct ReplicaInfo {
+    pub(crate) address: Address,
+    pub(crate) is_primary: bool,
+    pub(crate) is_preferred: bool,
+    pub(crate) term: i64,
 }

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -18,9 +19,5 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-#
 
-imports_granularity = "Crate"
-group_imports = "StdExternalCrate"
-use_small_heuristics = "Max"
-max_width = 120
+bazel run @vaticle_dependencies//tool/cargo:sync

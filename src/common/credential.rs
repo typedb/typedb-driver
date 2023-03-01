@@ -19,35 +19,34 @@
  * under the License.
  */
 
-use std::{
-    fs,
-    path::{Path, PathBuf},
-    sync::RwLock,
-};
+use std::{fmt, fs, path::Path};
 
-use tonic::{
-    transport::{Certificate, ClientTlsConfig},
-    Request,
-};
+use tonic::transport::{Certificate, ClientTlsConfig};
 
 use crate::Result;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Credential {
     username: String,
     password: String,
     is_tls_enabled: bool,
-    tls_root_ca: Option<PathBuf>,
+    tls_config: Option<ClientTlsConfig>,
 }
 
 impl Credential {
-    pub fn with_tls(username: &str, password: &str, tls_root_ca: Option<&Path>) -> Self {
-        Credential {
+    pub fn with_tls(username: &str, password: &str, tls_root_ca: Option<&Path>) -> Result<Self> {
+        let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
+            ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
+        } else {
+            ClientTlsConfig::new()
+        });
+
+        Ok(Credential {
             username: username.to_owned(),
             password: password.to_owned(),
             is_tls_enabled: true,
-            tls_root_ca: tls_root_ca.map(Path::to_owned),
-        }
+            tls_config,
+        })
     }
 
     pub fn without_tls(username: &str, password: &str) -> Self {
@@ -55,7 +54,7 @@ impl Credential {
             username: username.to_owned(),
             password: password.to_owned(),
             is_tls_enabled: false,
-            tls_root_ca: None,
+            tls_config: None,
         }
     }
 
@@ -71,51 +70,17 @@ impl Credential {
         self.is_tls_enabled
     }
 
-    pub fn tls_config(&self) -> Result<ClientTlsConfig> {
-        if let Some(ref tls_root_ca) = self.tls_root_ca {
-            Ok(ClientTlsConfig::new()
-                .ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?)))
-        } else {
-            Ok(ClientTlsConfig::new())
-        }
+    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
+        &self.tls_config
     }
 }
 
-#[derive(Debug)]
-pub(crate) struct CallCredentials {
-    credential: Credential,
-    token: RwLock<Option<String>>,
-}
-
-impl CallCredentials {
-    pub(super) fn new(credential: Credential) -> Self {
-        Self { credential, token: RwLock::new(None) }
-    }
-
-    pub(super) fn username(&self) -> &str {
-        self.credential.username()
-    }
-
-    pub(super) fn password(&self) -> &str {
-        self.credential.password()
-    }
-
-    pub(super) fn set_token(&self, token: String) {
-        *self.token.write().unwrap() = Some(token);
-    }
-
-    pub(super) fn reset_token(&self) {
-        *self.token.write().unwrap() = None;
-    }
-
-    pub(super) fn inject(&self, mut request: Request<()>) -> Request<()> {
-        request.metadata_mut().insert("username", self.credential.username().try_into().unwrap());
-        match &*self.token.read().unwrap() {
-            Some(token) => request.metadata_mut().insert("token", token.try_into().unwrap()),
-            None => request
-                .metadata_mut()
-                .insert("password", self.credential.password().try_into().unwrap()),
-        };
-        request
+impl fmt::Debug for Credential {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Credential")
+            .field("username", &self.username)
+            .field("is_tls_enabled", &self.is_tls_enabled)
+            .field("tls_config", &self.tls_config)
+            .finish()
     }
 }

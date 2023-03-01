@@ -24,31 +24,36 @@ package(default_visibility = ["//visibility:public"])
 load("@rules_rust//rust:defs.bzl", "rust_test", "rustfmt_test")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
+load("@vaticle_typedb_common//runner:rules.bzl", "native_typedb_artifact")
 
 
 rust_test(
-    name = "queries_core",
-    srcs = ["queries_core.rs"],
+    name = "queries",
+    srcs = [
+        "common.rs",
+        "queries.rs",
+    ],
     deps = [
         "//:typedb_client",
-
-        "@vaticle_dependencies//library/crates:chrono",
-        "@vaticle_dependencies//library/crates:futures",
-        "@vaticle_dependencies//library/crates:serial_test",
-        "@vaticle_dependencies//library/crates:tokio",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:serial_test",
+        "@crates//:tokio",
     ],
 )
 
 rust_test(
-    name = "queries_cluster",
-    srcs = ["queries_cluster.rs"],
+    name = "runtimes",
+    srcs = [
+        "common.rs",
+        "runtimes.rs",
+    ],
     deps = [
         "//:typedb_client",
-
-        "@vaticle_dependencies//library/crates:futures",
-        "@vaticle_dependencies//library/crates:serial_test",
-        "@vaticle_dependencies//library/crates:tokio",
+        "@crates//:async-std",
+        "@crates//:futures",
+        "@crates//:serial_test",
+        "@crates//:smol",
     ],
 )
 
@@ -80,10 +85,7 @@ artifact_extractor(
 
 rustfmt_test(
     name = "queries_rustfmt_test",
-    targets = [
-        "queries_core",
-        "queries_cluster",
-    ]
+    targets = ["queries", "runtimes"]
 )
 
 checkstyle_test(

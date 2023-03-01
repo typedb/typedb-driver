@@ -19,29 +19,31 @@
  * under the License.
  */
 
-pub(crate) mod address;
-mod credential;
-pub mod error;
-mod id;
-pub(crate) mod info;
-mod options;
+use itertools::Itertools;
+use typedb_protocol::{cluster_database::Replica as ReplicaProto, ClusterDatabase as DatabaseProto};
 
-pub use self::{credential::Credential, error::Error, options::Options};
+use super::TryFromProto;
+use crate::{
+    common::info::{DatabaseInfo, ReplicaInfo},
+    Result,
+};
 
-pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
-pub type Result<T = ()> = StdResult<T, Error>;
-
-pub(crate) type RequestID = id::ID;
-pub(crate) type SessionID = id::ID;
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum SessionType {
-    Data = 0,
-    Schema = 1,
+impl TryFromProto<DatabaseProto> for DatabaseInfo {
+    fn try_from_proto(proto: DatabaseProto) -> Result<Self> {
+        Ok(Self {
+            name: proto.name,
+            replicas: proto.replicas.into_iter().map(ReplicaInfo::try_from_proto).try_collect()?,
+        })
+    }
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-pub enum TransactionType {
-    Read = 0,
-    Write = 1,
+impl TryFromProto<ReplicaProto> for ReplicaInfo {
+    fn try_from_proto(proto: ReplicaProto) -> Result<Self> {
+        Ok(Self {
+            address: proto.address.as_str().parse()?,
+            is_primary: proto.primary,
+            is_preferred: proto.preferred,
+            term: proto.term,
+        })
+    }
 }
