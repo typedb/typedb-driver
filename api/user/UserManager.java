@@ -33,10 +33,10 @@ public interface UserManager {
 
     void delete(String username);
 
+    @CheckReturnValue
+    User get(String username);
+
     Set<User> all();
 
     void passwordSet(String username, String password);
-
-    @CheckReturnValue
-    User get(String username);
 }

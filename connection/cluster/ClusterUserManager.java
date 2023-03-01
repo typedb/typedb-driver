@@ -85,9 +85,8 @@ public class ClusterUserManager implements UserManager {
     public Set<User> all() {
         ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                (parameter) -> parameter.client().stub().usersAll(allReq()).getUsersList().stream().map(
-                        (user) -> ClusterUser.of(user, client)).collect(Collectors.toSet()
-                )
+                (parameter) -> parameter.client().stub().usersAll(allReq()).getUsersList().stream()
+                        .map((user) -> ClusterUser.of(user, client)).collect(Collectors.toSet())
         );
         return failsafeTask.runPrimaryReplica();
     }
