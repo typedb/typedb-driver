@@ -23,12 +23,9 @@ package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
-import com.vaticle.typedb.protocol.ClusterUserProto;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.containsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.UserManager.createReq;
@@ -88,17 +85,9 @@ public class ClusterUserManager implements UserManager {
     public Set<User> all() {
         ClusterClient.FailsafeTask<Set<User>> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                (parameter) -> {
-                    Set<User> users = new HashSet<>();
-                    List<ClusterUserProto.User> protoUsers = parameter.client().stub().usersAll(allReq()).getUsersList();
-
-                    for (ClusterUserProto.User user: protoUsers) {
-                        users.add(ClusterUser.of(user, client));
-                    }
-
-                    return users;
-                }
-
+                (parameter) -> parameter.client().stub().usersAll(allReq()).getUsersList().stream().map(
+                        (user) -> ClusterUser.of(user, client)).collect(Collectors.toSet()
+                )
         );
         return failsafeTask.runPrimaryReplica();
     }
@@ -107,10 +96,7 @@ public class ClusterUserManager implements UserManager {
     public User get(String username) {
         ClusterClient.FailsafeTask<User> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
-                (parameter) -> {
-                    com.vaticle.typedb.protocol.ClusterUserProto.User user = parameter.client().stub().usersGet(getReq(username)).getUser();
-                    return ClusterUser.of(user, client);
-                }
+                (parameter) -> ClusterUser.of(parameter.client().stub().usersGet(getReq(username)).getUser(), client)
         );
         return failsafeTask.runPrimaryReplica();
     }
