@@ -68,6 +68,11 @@ public class UserSteps {
         getClient().users().delete(username);
     }
 
+    @Then("users password set: {word}, {word}")
+    public void user_password_set(String username, String password) {
+        getClient().users().passwordSet(username, password);
+    }
+
     @Then("user password update: {word}, {word}, {word}")
     public void user_password_update(String username, String passwordOld, String passwordNew) {
         getClient().users().get(username).passwordUpdate(passwordOld, passwordNew);
