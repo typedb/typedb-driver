@@ -42,8 +42,8 @@ public class ClusterUser implements User {
     }
 
     public static ClusterUser of(ClusterUserProto.User user, ClusterClient client) {
-        if (user.getPasswordExpiryOptCase() ==
-                ClusterUserProto.User.PasswordExpiryOptCase.PASSWORDEXPIRYOPT_NOT_SET) {
+        if (user.getPasswordExpiryCase() ==
+                ClusterUserProto.User.PasswordExpiryCase.PASSWORDEXPIRY_NOT_SET) {
             return new ClusterUser(client, user.getUsername(), Optional.empty());
         }
         else {
@@ -62,11 +62,11 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public void passwordUpdate(String oldPassword, String newPassword) {
+    public void passwordUpdate(String passwordOld, String passwordNew) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userPasswordUpdate(passwordUpdateReq(username, oldPassword, newPassword));
+                    parameter.client().stub().userPasswordUpdate(passwordUpdateReq(username, passwordOld, passwordNew));
                     return null;
                 }
         );

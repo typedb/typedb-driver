@@ -69,8 +69,8 @@ public class UserSteps {
     }
 
     @Then("user password update: {word}, {word}, {word}")
-    public void user_password_update(String username, String oldPassword, String newPassword) {
-        getClient().users().get(username).passwordUpdate(oldPassword, newPassword);
+    public void user_password_update(String username, String passwordOld, String passwordNew) {
+        getClient().users().get(username).passwordUpdate(passwordOld, passwordNew);
     }
 
     @Then("user connect: {word}, {word}")

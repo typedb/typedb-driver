@@ -147,9 +147,9 @@ public class RequestBuilder {
 
         public static class User {
 
-            public static ClusterUserProto.ClusterUser.PasswordUpdate.Req passwordUpdateReq(String username, String oldPassword, String newPassword) {
+            public static ClusterUserProto.ClusterUser.PasswordUpdate.Req passwordUpdateReq(String username, String passwordOld, String passwordNew) {
                 return ClusterUserProto.ClusterUser.PasswordUpdate.Req.newBuilder()
-                        .setUsername(username).setOldPassword(oldPassword).setNewPassword(newPassword).build();
+                        .setUsername(username).setPasswordOld(passwordOld).setPasswordNew(passwordNew).build();
             }
 
             public static ClusterUserProto.ClusterUser.Token.Req tokenReq(String username) {

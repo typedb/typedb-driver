@@ -31,5 +31,5 @@ public interface User {
 
     Optional<Long> passwordExpiryDays();
 
-    void passwordUpdate(String oldPassword, String newPassword);
+    void passwordUpdate(String passwordOld, String passwordNew);
 }
