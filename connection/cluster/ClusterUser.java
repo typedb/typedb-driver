@@ -22,19 +22,33 @@
 package com.vaticle.typedb.client.connection.cluster;
 
 import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.protocol.ClusterUserProto;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordReq;
+import java.util.Optional;
+
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.passwordUpdateReq;
 import static com.vaticle.typedb.client.connection.cluster.ClusterUserManager.SYSTEM_DB;
 
 public class ClusterUser implements User {
 
     private final ClusterClient client;
     private final String username;
+    private final Optional<Long> passwordExpiryDays;
 
-    public ClusterUser(ClusterClient client, String username) {
+    public ClusterUser(ClusterClient client, String username, Optional<Long> passwordExpiryDays) {
         this.client = client;
         this.username = username;
+        this.passwordExpiryDays = passwordExpiryDays;
+    }
+
+    public static ClusterUser of(ClusterUserProto.User user, ClusterClient client) {
+        if (user.getPasswordExpiryCase() ==
+                ClusterUserProto.User.PasswordExpiryCase.PASSWORDEXPIRY_NOT_SET) {
+            return new ClusterUser(client, user.getUsername(), Optional.empty());
+        }
+        else {
+            return new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpiryDays()));
+        }
     }
 
     @Override
@@ -43,27 +57,19 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public void password(String password) {
-        ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
-                SYSTEM_DB,
-                parameter -> {
-                    parameter.client().stub().userPassword(passwordReq(username, password));
-                    return null;
-                }
-        );
-        failsafeTask.runPrimaryReplica();
+    public Optional<Long> passwordExpiryDays() {
+        return passwordExpiryDays;
     }
 
     @Override
-    public void delete() {
+    public void passwordUpdate(String passwordOld, String passwordNew) {
         ClusterClient.FailsafeTask<Void> failsafeTask = client.createFailsafeTask(
                 SYSTEM_DB,
                 parameter -> {
-                    parameter.client().stub().userDelete(deleteReq(username));
+                    parameter.client().stub().userPasswordUpdate(passwordUpdateReq(username, passwordOld, passwordNew));
                     return null;
                 }
         );
-
         failsafeTask.runPrimaryReplica();
     }
 }

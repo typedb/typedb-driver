@@ -111,16 +111,24 @@ public class ClusterServerStub extends TypeDBStub {
         return mayRenewToken(() -> clusterBlockingStub.usersCreate(request));
     }
 
+    public ClusterUserProto.ClusterUserManager.Delete.Res usersDelete(ClusterUserProto.ClusterUserManager.Delete.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersDelete(request));
+    }
+
     public ClusterUserProto.ClusterUserManager.All.Res usersAll(ClusterUserProto.ClusterUserManager.All.Req request) {
         return mayRenewToken(() -> clusterBlockingStub.usersAll(request));
     }
 
-    public ClusterUserProto.ClusterUser.Password.Res userPassword(ClusterUserProto.ClusterUser.Password.Req request) {
-        return mayRenewToken(() -> clusterBlockingStub.userPassword(request));
+    public ClusterUserProto.ClusterUserManager.PasswordSet.Res usersPasswordSet(ClusterUserProto.ClusterUserManager.PasswordSet.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersPasswordSet(request));
     }
 
-    public ClusterUserProto.ClusterUser.Delete.Res userDelete(ClusterUserProto.ClusterUser.Delete.Req request) {
-        return mayRenewToken(() -> clusterBlockingStub.userDelete(request));
+    public ClusterUserProto.ClusterUserManager.Get.Res usersGet(ClusterUserProto.ClusterUserManager.Get.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.usersGet(request));
+    }
+
+    public ClusterUserProto.ClusterUser.PasswordUpdate.Res userPasswordUpdate(ClusterUserProto.ClusterUser.PasswordUpdate.Req request) {
+        return mayRenewToken(() -> clusterBlockingStub.userPasswordUpdate(request));
     }
 
     public ClusterDatabaseProto.ClusterDatabaseManager.Get.Res databasesGet(ClusterDatabaseProto.ClusterDatabaseManager.Get.Req request) {
