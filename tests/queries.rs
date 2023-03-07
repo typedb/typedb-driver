@@ -28,10 +28,10 @@ use futures::StreamExt;
 use serial_test::serial;
 use tokio::sync::mpsc;
 use typedb_client::{
-    concept::{Attribute, Concept, DateTimeAttribute, StringAttribute, Thing},
+    concept::{Attribute, Concept, DateTimeAttribute, LongAttribute, StringAttribute, Thing},
     error::ConnectionError,
     Connection, DatabaseManager, Error, Options, Session,
-    SessionType::Data,
+    SessionType::{Data, Schema},
     TransactionType::{Read, Write},
 };
 
@@ -164,6 +164,59 @@ test_for_each_arg! {
         let transaction = session.transaction_with_options(Read, with_inference).await?;
         let age_count = transaction.query().match_aggregate("match $x isa age; count;").await?;
         assert_eq!(age_count.into_i64(), 1);
+
+        Ok(())
+    }
+
+    async fn query_coverage(connection: Connection) -> typedb_client::Result {
+        let schema = r#"define
+            person sub entity,
+                owns name,
+                owns age;
+            name sub attribute, value string;
+            age sub attribute, value long;
+            rule age-rule: when { $x isa person; } then { $x has age 25; };"#;
+        common::create_test_database_with_schema(connection.clone(), schema).await?;
+        let databases = DatabaseManager::new(connection);
+
+        let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
+        let transaction = session.transaction(Write).await?;
+        let data = "insert $x isa person, has name 'Alice'; $y isa person, has name 'Bob';";
+        let _ = transaction.query().insert(data);
+        transaction.commit().await?;
+
+        let transaction = session.transaction(Write).await?;
+        let query = "match $x isa person, has name $n; delete $x isa person; insert $_ isa person, has name $n, has age 1;";
+        let _ = transaction.query().update(query);
+        transaction.commit().await?;
+
+        let transaction = session.transaction(Read).await?;
+        let mut ages = transaction.query().match_("match $age isa age;")?;
+        while let Some(age) = ages.next().await {
+            assert!(age.is_ok());
+            let age = unwrap_long(age?.map.remove("age").unwrap());
+            assert_eq!(age, 1);
+        }
+        drop(transaction);
+
+        let transaction = session.transaction(Read).await?;
+        let age_count = transaction.query().match_aggregate("match $age isa age; count;").await?;
+        assert_eq!(age_count.into_i64(), 1);
+        drop(transaction);
+
+        let transaction = session.transaction(Write).await?;
+        transaction.query().delete("match $t isa thing; delete $t isa thing;").await?;
+        transaction.commit().await?;
+
+        let session = Session::new(databases.get(common::TEST_DATABASE).await?, Schema).await?;
+        let transaction = session.transaction(Write).await?;
+        let unschema = r#"undefine
+            person sub entity;
+            name sub attribute;
+            age sub attribute;
+            rule age-rule;"#;
+        transaction.query().undefine(unschema).await?;
+        transaction.commit().await?;
 
         Ok(())
     }
@@ -327,6 +380,13 @@ fn unwrap_date_time(concept: Concept) -> NaiveDateTime {
 fn unwrap_string(concept: Concept) -> String {
     match concept {
         Concept::Thing(Thing::Attribute(Attribute::String(StringAttribute { value, .. }))) => value,
+        _ => unreachable!(),
+    }
+}
+
+fn unwrap_long(concept: Concept) -> i64 {
+    match concept {
+        Concept::Thing(Thing::Attribute(Attribute::Long(LongAttribute { value, .. }))) => value,
         _ => unreachable!(),
     }
 }

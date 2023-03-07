@@ -87,9 +87,13 @@ impl Connection {
     ) -> Result<HashSet<Address>> {
         for address in addresses {
             let server_connection =
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone())?;
-            match server_connection.servers_all() {
-                Ok(servers) => return Ok(servers.into_iter().collect()),
+                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone());
+            match server_connection {
+                Ok(server_connection) => match server_connection.servers_all() {
+                    Ok(servers) => return Ok(servers.into_iter().collect()),
+                    Err(Error::Connection(ConnectionError::UnableToConnect())) => (),
+                    Err(err) => Err(err)?,
+                },
                 Err(Error::Connection(ConnectionError::UnableToConnect())) => (),
                 Err(err) => Err(err)?,
             }

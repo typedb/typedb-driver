@@ -363,6 +363,9 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::InsertResPart(res)) => Ok(QueryResponse::Insert {
                 answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()?,
             }),
+            Some(query_manager::res_part::Res::UpdateResPart(res)) => Ok(QueryResponse::Update {
+                answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()?,
+            }),
             Some(_) => todo!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
