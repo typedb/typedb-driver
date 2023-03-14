@@ -214,8 +214,10 @@ checkstyle_test(
     ]),
     license_type = "apache-header",
 )
+
 checkstyle_test(
     name = "checkstyle-license",
+    size = "small",
     include = ["LICENSE"],
     license_type = "apache-fulltext",
 )

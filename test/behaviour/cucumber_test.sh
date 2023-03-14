@@ -83,7 +83,7 @@ if [[ $STARTED -eq 0 ]]; then
   exit 1
 fi
 echo TypeDB $PRODUCT database server started
-node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
+node ./node_modules/.bin/cucumber-js ./external/vaticle_typedb_behaviour/**/*.feature --require './**/*.js' --tags 'not @ignore and not @ignore-typedb-client-nodejs' --format @cucumber/pretty-formatter && export RESULT=0 || export RESULT=1
 echo Tests concluded with exit value $RESULT
 echo Stopping server.
 kill $(lsof -i :1729 | awk '/java/ {print $2}')

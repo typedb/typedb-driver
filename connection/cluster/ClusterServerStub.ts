@@ -135,7 +135,7 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userCreate(req: ClusterUserManager.Create.Req): Promise<void> {
+    usersCreate(req: ClusterUserManager.Create.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this._clusterStub.users_create(req, (err, res) => {
@@ -146,10 +146,21 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userPassword(req: ClusterUser.Password.Req): Promise<void> {
+    usersDelete(req: ClusterUserManager.Delete.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.user_password(req, (err, res) => {
+                this._clusterStub.users_delete(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve();
+                });
+            })
+        );
+    }
+
+    usersPasswordSet(req: ClusterUserManager.PasswordSet.Req): Promise<void> {
+        return this.mayRenewToken(() =>
+            new Promise<void>((resolve, reject) => {
+                this._clusterStub.users_password_set(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })
@@ -157,10 +168,21 @@ export class ClusterServerStub extends TypeDBStub {
         );
     }
 
-    userDelete(req: ClusterUser.Delete.Req): Promise<void> {
+    usersGet(req: ClusterUserManager.Get.Req): Promise<ClusterUserManager.Get.Res> {
+        return this.mayRenewToken(() =>
+            new Promise<ClusterUserManager.Get.Res>((resolve, reject) => {
+                this._clusterStub.users_get(req, (err, res) => {
+                    if (err) reject(new TypeDBClientError(err));
+                    else resolve(res);
+                });
+            })
+        );
+    }
+
+    userPasswordUpdate(req: ClusterUser.PasswordUpdate.Req): Promise<void> {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
-                this._clusterStub.user_delete(req, (err, res) => {
+                this._clusterStub.user_password_update(req, (err, res) => {
                     if (err) reject(new TypeDBClientError(err));
                     else resolve();
                 })

@@ -38,20 +38,23 @@ Then("users create: {word}, {word}", async (username: string, password: string) 
     await getClient().users.create(username, password);
 });
 
-Then("user password: {word}, {word}", async (username: string, password: string) => {
+Then("users delete: {word}", async (username: string) => {
+    await getClient().users.delete(username);
+});
+
+Then("users password set: {word}, {word}", async (username: string, password: string) => {
+    await getClient().users.passwordSet(username, password);
+});
+
+Then("user password update: {word}, {word}, {word}", async (username: string, passwordOld: string, passwordNew: string) => {
     const user = await getClient().users.get(username);
-    await user.password(password);
+    await user.passwordUpdate(passwordOld, passwordNew);
 });
 
 Then("user connect: {word}, {word}", async (username: string, password: string) => {
     const client = await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(username, password, process.env.ROOT_CA));
     await client.databases.all()
 })
-
-Then("user delete: {word}", async (username: string) => {
-    const user = await getClient().users.get(username);
-    await user.delete();
-});
 
 function getClient(): TypeDBClient.Cluster {
     assert(client.isCluster());

@@ -45,7 +45,7 @@ function getServerPID(port) {
 }
 
 function serverStart(idx) {
-    spawn(`./${idx}/typedb`, ["cluster",
+    let node = spawn(`./${idx}/typedb`, ["cluster",
         "--storage.data", "server/data",
         "--server.address", `127.0.0.1:${idx}1729`,
         "--server.internal-address.zeromq", `127.0.0.1:${idx}1730`,
@@ -61,6 +61,15 @@ function serverStart(idx) {
         "--server.peers.peer-3.internal-address.grpc", "127.0.0.1:31731",
         "--server.encryption.enable", "true"
     ]);
+    node.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
+    node.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+    node.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
 }
 
 async function run() {

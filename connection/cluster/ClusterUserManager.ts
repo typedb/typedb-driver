@@ -22,12 +22,9 @@
 import { Database } from "../../api/connection/database/Database";
 import { User } from "../../api/connection/user/User";
 import { UserManager } from "../../api/connection/user/UserManager";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import { RequestBuilder } from "../../common/rpc/RequestBuilder";
 import { ClusterUser, FailsafeTask } from "../../dependencies_internal";
 import { ClusterClient } from "./ClusterClient";
-import CLUSTER_USER_DOES_NOT_EXIST = ErrorMessage.Client.CLUSTER_USER_DOES_NOT_EXIST;
 
 export class ClusterUserManager implements UserManager {
 
@@ -38,33 +35,49 @@ export class ClusterUserManager implements UserManager {
         this._client = client;
     }
 
-    all(): Promise<User[]> {
+    async all(): Promise<User[]> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
             return this._client.stub(replica.address).usersAll(RequestBuilder.Cluster.UserManager.allReq())
                 .then((res) => {
-                    return res.getNamesList().map(name => new ClusterUser(this._client, name));
+                    return res.getUsersList().map(user => ClusterUser.of(user, this._client));
                 });
         });
-        return failsafeTask.runPrimaryReplica();
+        return await failsafeTask.runPrimaryReplica();
     }
 
-    contains(username: string): Promise<boolean> {
+    async contains(username: string): Promise<boolean> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
             return this._client.stub(replica.address).usersContains(RequestBuilder.Cluster.UserManager.containsReq(username))
         })
-        return failsafeTask.runPrimaryReplica();
+        return await failsafeTask.runPrimaryReplica();
     }
 
-    create(username: string, password: string): Promise<void> {
+    async create(username: string, password: string): Promise<void> {
         const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
-            return this._client.stub(replica.address).userCreate(RequestBuilder.Cluster.UserManager.createReq(username, password))
+            return this._client.stub(replica.address).usersCreate(RequestBuilder.Cluster.UserManager.createReq(username, password))
         })
-        return failsafeTask.runPrimaryReplica();
+        await failsafeTask.runPrimaryReplica();
     }
 
-    async get(username: string): Promise<User> {
-        if (await this.contains(username)) return new ClusterUser(this._client, username);
-        else throw new TypeDBClientError(CLUSTER_USER_DOES_NOT_EXIST.message(username));
+    async delete(username: string): Promise<void> {
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return this._client.stub(replica.address).usersDelete(RequestBuilder.Cluster.UserManager.deleteReq(username))
+        })
+        await failsafeTask.runPrimaryReplica();
+    }
+
+    async get(username: string): Promise<ClusterUser> {
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return this._client.stub(replica.address).usersGet(RequestBuilder.Cluster.UserManager.getReq(username))
+        })
+        return ClusterUser.of((await failsafeTask.runPrimaryReplica()).getUser(), this._client);
+    }
+
+    async passwordSet(username: string, password: string): Promise<void> {
+        const failsafeTask = new UserManagerFailsafeTask(this._client, (replica: Database.Replica) => {
+            return this._client.stub(replica.address).usersPasswordSet(RequestBuilder.Cluster.UserManager.passwordSetReq(username, password))
+        })
+        await failsafeTask.runPrimaryReplica();
     }
 }
 
@@ -77,7 +90,7 @@ class UserManagerFailsafeTask<T> extends FailsafeTask<T> {
         this._task = task;
     }
 
-    run(replica: Database.Replica): Promise<T> {
-        return this._task(replica);
+    async run(replica: Database.Replica): Promise<T> {
+        return await this._task(replica);
     }
 }
