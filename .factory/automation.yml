@@ -165,7 +165,8 @@ build:
         test-behaviour-definable-core, test-behaviour-definable-cluster
       ]
       command: |
-        export DEPLOY_NPM_TOKEN=$REPO_VATICLE_NPM_TOKEN
+        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //:deploy-npm -- snapshot
     test-deployment-npm:
       filter:
