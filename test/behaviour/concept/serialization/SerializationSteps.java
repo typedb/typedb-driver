@@ -22,11 +22,13 @@
 package com.vaticle.typedb.client.test.behaviour.concept.serialization;
 
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import io.cucumber.java.en.Then;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.vaticle.typedb.client.test.behaviour.typeql.TypeQLSteps;
@@ -40,10 +42,27 @@ public class SerializationSteps {
         List<JsonValue> actual = TypeQLSteps.answers().stream().map(ConceptMap::toJSON).map(Json::parse).collect(Collectors.toList());
         List<JsonValue> expected = Json.parse(expectedJSON).asArray().values();
         assertEquals(actual.size(), expected.size());
-        for(JsonValue item: expected){
-            assertTrue(actual.contains(item));
-            actual.remove(item);
+        for (JsonValue expectedItem: expected) {
+            boolean foundMatch = false;
+            for (JsonValue actualItem: actual) {
+                if (JSONsAreEqual(expectedItem.asObject(), actualItem.asObject())) {
+                    actual.remove(actualItem);
+                    foundMatch = true;
+                    break;
+                }
+            }
+            assertTrue("No matches found for [" + expectedItem + "] in the expected list of answers.", foundMatch);
         }
-        assertEquals(actual.size(), 0);
+    }
+
+    private boolean JSONsAreEqual(JsonObject left, JsonObject right) {
+        if (left.size() != right.size()) return false;
+        return left.names().stream().allMatch((name) -> {
+            JsonValue leftValue = left.get(name);
+            JsonValue rightValue = right.get(name);
+            if (leftValue == null || rightValue == null) return false;
+            if (leftValue.isObject()) return JSONsAreEqual(leftValue.asObject(), rightValue.asObject());
+            else return Objects.equals(leftValue, rightValue);
+        });
     }
 }

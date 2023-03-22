@@ -35,7 +35,7 @@ java_library(
         "//api:api",
         "//common:common",
         "//test/behaviour/config:parameters",
-        "//test/behaviour/concept/type/thingtype:steps",
+        "//test/behaviour/typeql:steps",
         "//test/behaviour/util:util",
         "//test/behaviour/connection:steps-base",
 

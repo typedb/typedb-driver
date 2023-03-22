@@ -37,6 +37,7 @@ java_library(
         "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
+        "@maven//:com_eclipsesource_minimal_json_minimal_json",
         "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
