@@ -21,6 +21,8 @@
 
 package com.vaticle.typedb.client.concept.thing;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
@@ -91,6 +93,11 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     public ThingImpl asThing() {
         return this;
+    }
+
+    @Override
+    public JsonObject JSONObject() {
+        return Json.object().add("type", getType().getLabel().scopedName());
     }
 
     @Override
@@ -217,6 +224,11 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         @Override
         public final ThingImpl.Remote asThing() {
             return this;
+        }
+
+        @Override
+        public JsonObject JSONObject() {
+            return Json.object().add("type", getType().getLabel().scopedName());
         }
 
         protected ConceptProto.Thing.Res execute(TransactionProto.Transaction.Req.Builder request) {

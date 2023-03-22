@@ -39,6 +39,9 @@ public interface ConceptMap {
     @CheckReturnValue
     Concept get(String variable);
 
+    @CheckReturnValue
+    String toJSON();
+
     Explainables explainables();
 
     interface Explainables {

@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.client.api.concept;
 
+import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
@@ -122,6 +123,9 @@ public interface Concept {
 
     @CheckReturnValue
     boolean isRemote();
+
+    @CheckReturnValue
+    JsonObject JSONObject();
 
     interface Remote extends Concept {
 
