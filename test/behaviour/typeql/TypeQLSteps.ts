@@ -28,7 +28,7 @@ import { tx } from "../connection/ConnectionStepsBase";
 import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
 import assert = require("assert");
 
-let answers: ConceptMap[] = [];
+export let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
 let answerGroups: ConceptMapGroup[] = []
 let numericAnswerGroups: NumericGroup[] = []

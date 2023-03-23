@@ -67,6 +67,7 @@ filegroup(
 
 behaviour_steps_common = [
     "//test/behaviour/connection:ConnectionStepsBase.ts",
+    "//test/behaviour/concept/serialization:SerializationSteps.ts",
     "//test/behaviour/concept/thing:ThingSteps.ts",
     "//test/behaviour/concept/thing/attribute:AttributeSteps.ts",
     "//test/behaviour/concept/thing/entity:EntitySteps.ts",

@@ -76,6 +76,10 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     asThing(): Thing {
         return this;
     }
+
+    JSON(): Record<string, boolean | string | number> {
+        return {type: this.type.label.name};
+    }
 }
 
 export namespace ThingImpl {
@@ -119,6 +123,10 @@ export namespace ThingImpl {
 
         asThing(): Thing.Remote {
             return this;
+        }
+
+        JSON(): Record<string, boolean | string | number> {
+            return {type: this.type.label.name};
         }
 
         async delete(): Promise<void> {

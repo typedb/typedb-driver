@@ -79,6 +79,17 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
         return this;
     }
 
+    JSON(): Record<string, boolean | string | number> {
+        let value;
+        if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
+        else value = this.value;
+        return {
+            type: this.type.label.name,
+            value_type: this.type.valueType.name(),
+            value: value
+        };
+    }
+
     asBoolean(): Attribute.Boolean {
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Attribute.Boolean"));
     }
@@ -178,6 +189,17 @@ export namespace AttributeImpl {
 
         asAttribute(): Attribute.Remote {
             return this;
+        }
+
+        JSON(): Record<string, boolean | string | number> {
+            let value;
+            if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
+            else value = this.value;
+            return {
+                type: this.type.label.name,
+                value_type: this.type.valueType.name(),
+                value: value
+            };
         }
 
         asBoolean(): Attribute.Boolean.Remote {

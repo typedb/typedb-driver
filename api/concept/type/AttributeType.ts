@@ -387,6 +387,8 @@ export namespace AttributeType {
         isWritable(): boolean;
 
         proto(): AttributeTypeProto.ValueType;
+
+        name(): string;
     }
 
     export namespace ValueType {
@@ -403,6 +405,10 @@ export namespace AttributeType {
 
             proto(): AttributeTypeProto.ValueType {
                 return this._attrTypeProto;
+            }
+
+            name(): string {
+                return this._name.toLowerCase();
             }
 
             isKeyable(): boolean {

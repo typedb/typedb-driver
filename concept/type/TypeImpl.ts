@@ -68,6 +68,10 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this;
     }
 
+    JSON(): Record<string, string> {
+        return {label: this.label.scopedName};
+    }
+
     equals(concept: Concept): boolean {
         if (!concept.isType()) return false;
         return concept.asType().label.equals(this.label);
@@ -123,6 +127,10 @@ export namespace TypeImpl {
 
         asType(): Type.Remote {
             return this;
+        }
+
+        JSON(): Record<string, string> {
+            return {label: this.label.scopedName};
         }
 
         equals(concept: Concept): boolean {

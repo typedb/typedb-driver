@@ -126,6 +126,8 @@ export abstract class ConceptImpl implements Concept {
     }
 
     abstract equals(concept: Concept): boolean;
+
+    abstract JSON(): Record<string, boolean | string | number>;
 }
 
 export namespace ConceptImpl {

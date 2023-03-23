@@ -79,6 +79,8 @@ export interface Concept {
     asRelation(): Relation;
 
     equals(concept: Concept): boolean;
+
+    JSON(): Record<string, boolean | string | number>;
 }
 
 export namespace Concept {
