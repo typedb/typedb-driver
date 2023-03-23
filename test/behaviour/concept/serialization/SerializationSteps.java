@@ -52,7 +52,7 @@ public class SerializationSteps {
                     break;
                 }
             }
-            assertTrue("No matches found for [" + expectedItem + "] in the expected list of answers.", foundMatch);
+            assertTrue("No matches found for [" + expectedItem + "] in the list of answers.", foundMatch);
         }
     }
 
