@@ -30,7 +30,6 @@ import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.AnswerProto;
 
-import javax.annotation.CheckReturnValue;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

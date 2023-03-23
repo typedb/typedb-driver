@@ -46,6 +46,7 @@ import static com.vaticle.typedb.common.collection.Bytes.bytesToHexString;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribute<VALUE> {
+    static DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     AttributeImpl(java.lang.String iid, boolean isInferred) {
         super(iid, isInferred);
@@ -85,7 +86,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
             case LONG: value = Json.value(asLong().getValue()); break;
             case DOUBLE: value = Json.value(asDouble().getValue()); break;
             case STRING: value = Json.value(asString().getValue()); break;
-            case DATETIME: value = Json.value(asDateTime().getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))); break;
+            case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
             default: throw new TypeDBClientException(ILLEGAL_STATE);
         }
         return Json.object()
@@ -157,7 +158,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
                 case LONG: value = Json.value(asLong().getValue()); break;
                 case DOUBLE: value = Json.value(asDouble().getValue()); break;
                 case STRING: value = Json.value(asString().getValue()); break;
-                case DATETIME: value = Json.value(asDateTime().getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))); break;
+                case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
                 default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
             return Json.object()
