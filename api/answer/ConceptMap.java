@@ -21,6 +21,8 @@
 
 package com.vaticle.typedb.client.api.answer;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.common.collection.Pair;
 
@@ -38,6 +40,13 @@ public interface ConceptMap {
 
     @CheckReturnValue
     Concept get(String variable);
+
+    @CheckReturnValue
+    default JsonObject toJSON() {
+        JsonObject object = Json.object();
+        map().forEach((resVar, resConcept) -> object.add(resVar, resConcept.toJSON()));
+        return object;
+    }
 
     Explainables explainables();
 

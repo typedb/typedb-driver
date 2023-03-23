@@ -69,6 +69,10 @@ public class TypeQLSteps {
     private static List<ConceptMapGroup> answerGroups;
     private static List<NumericGroup> numericAnswerGroups;
     private Map<String, Map<String, String>> rules;
+    
+    public static List<ConceptMap> answers() {
+        return answers;
+    }
 
     @Given("the integrity is validated")
     public void integrity_is_validated() {

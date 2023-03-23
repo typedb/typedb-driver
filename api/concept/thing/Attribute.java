@@ -21,15 +21,23 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+
 public interface Attribute<VALUE> extends Thing {
+    DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     @Override
     @CheckReturnValue
@@ -87,6 +95,23 @@ public interface Attribute<VALUE> extends Thing {
     @Override
     @CheckReturnValue
     Attribute.Remote<VALUE> asRemote(TypeDBTransaction transaction);
+
+    @Override
+    default JsonObject toJSON() {
+        JsonValue value;
+        switch (getType().getValueType()) {
+            case BOOLEAN: value = Json.value(asBoolean().getValue()); break;
+            case LONG: value = Json.value(asLong().getValue()); break;
+            case DOUBLE: value = Json.value(asDouble().getValue()); break;
+            case STRING: value = Json.value(asString().getValue()); break;
+            case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
+            default: throw new TypeDBClientException(ILLEGAL_STATE);
+        }
+        return Json.object()
+                .add("type", getType().getLabel().scopedName())
+                .add("value_type", getType().getValueType().name().toLowerCase())
+                .add("value", value);
+    }
 
     interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
 
