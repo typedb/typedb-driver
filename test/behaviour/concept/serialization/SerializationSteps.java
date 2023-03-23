@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.test.behaviour.concept.serialization;
 
 import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
@@ -45,7 +46,7 @@ public class SerializationSteps {
         for (JsonValue expectedItem: expected) {
             boolean foundMatch = false;
             for (JsonValue actualItem: actual) {
-                if (JSONsAreEqual(expectedItem.asObject(), actualItem.asObject())) {
+                if (JSONValuesAreEqual(expectedItem, actualItem)) {
                     actual.remove(actualItem);
                     foundMatch = true;
                     break;
@@ -55,14 +56,24 @@ public class SerializationSteps {
         }
     }
 
-    private boolean JSONsAreEqual(JsonObject left, JsonObject right) {
+    private boolean JSONValuesAreEqual(JsonValue left, JsonValue right) {
+        if (Objects.equals(left, right)) return true;
+        if (left == null || right == null) return false;
+        if (left.getClass() != right.getClass()) return false;
+        if (left.isObject()) return JSONObjectsAreEqual(left.asObject(), right.asObject());
+        if (left.isArray()) return JSONArraysAreEqual(left.asArray(), right.asArray());
+        return false;
+    }
+
+    private boolean JSONObjectsAreEqual(JsonObject left, JsonObject right) {
         if (left.size() != right.size()) return false;
-        return left.names().stream().allMatch((name) -> {
-            JsonValue leftValue = left.get(name);
-            JsonValue rightValue = right.get(name);
-            if (leftValue == null || rightValue == null) return false;
-            if (leftValue.isObject()) return JSONsAreEqual(leftValue.asObject(), rightValue.asObject());
-            else return Objects.equals(leftValue, rightValue);
-        });
+        return left.names().stream().allMatch((name) -> JSONValuesAreEqual(left.get(name), right.get(name)));
+    }
+
+    private boolean JSONArraysAreEqual(JsonArray left, JsonArray right) {
+        if (left.size() != right.size()) return false;
+        for (int i = 0; i < left.size(); i++)
+            if (!JSONValuesAreEqual(left.get(i), right.get(i))) return false;
+        return true;
     }
 }
