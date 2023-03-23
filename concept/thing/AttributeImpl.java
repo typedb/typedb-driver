@@ -21,9 +21,6 @@
 
 package com.vaticle.typedb.client.concept.thing;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.ThingType;

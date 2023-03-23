@@ -21,8 +21,6 @@
 
 package com.vaticle.typedb.client.concept.type;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
@@ -48,7 +46,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
