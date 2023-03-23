@@ -96,11 +96,6 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     @Override
-    public JsonObject toJSON() {
-        return Json.object().add("type", getType().getLabel().scopedName());
-    }
-
-    @Override
     public String toString() {
         return className(this.getClass()) + "[" + getType().getLabel() + ":" + iid + "]";
     }
@@ -224,11 +219,6 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         @Override
         public final ThingImpl.Remote asThing() {
             return this;
-        }
-
-        @Override
-        public JsonObject toJSON() {
-            return Json.object().add("type", getType().getLabel().scopedName());
         }
 
         protected ConceptProto.Thing.Res execute(TransactionProto.Transaction.Req.Builder request) {

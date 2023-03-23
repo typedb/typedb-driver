@@ -34,20 +34,16 @@ import com.vaticle.typedb.protocol.ConceptProto;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.getOwnersReq;
 import static com.vaticle.typedb.client.concept.type.ThingTypeImpl.protoThingType;
 import static com.vaticle.typedb.common.collection.Bytes.bytesToHexString;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribute<VALUE> {
-    static DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
     AttributeImpl(java.lang.String iid, boolean isInferred) {
         super(iid, isInferred);
     }
@@ -76,23 +72,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
     @Override
     public AttributeImpl<VALUE> asAttribute() {
         return this;
-    }
-
-    @Override
-    public JsonObject toJSON() {
-        JsonValue value;
-        switch (getType().getValueType()) {
-            case BOOLEAN: value = Json.value(asBoolean().getValue()); break;
-            case LONG: value = Json.value(asLong().getValue()); break;
-            case DOUBLE: value = Json.value(asDouble().getValue()); break;
-            case STRING: value = Json.value(asString().getValue()); break;
-            case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
-            default: throw new TypeDBClientException(ILLEGAL_STATE);
-        }
-        return Json.object()
-                .add("type", getType().getLabel().scopedName())
-                .add("value_type", getType().getValueType().name().toLowerCase())
-                .add("value", value);
     }
 
     @Override
@@ -148,23 +127,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         @Override
         public AttributeImpl.Remote<VALUE> asAttribute() {
             return this;
-        }
-
-        @Override
-        public JsonObject toJSON() {
-            JsonValue value;
-            switch (getType().getValueType()) {
-                case BOOLEAN: value = Json.value(asBoolean().getValue()); break;
-                case LONG: value = Json.value(asLong().getValue()); break;
-                case DOUBLE: value = Json.value(asDouble().getValue()); break;
-                case STRING: value = Json.value(asString().getValue()); break;
-                case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
-                default: throw new TypeDBClientException(ILLEGAL_STATE);
-            }
-            return Json.object()
-                    .add("type", getType().getLabel().scopedName())
-                    .add("value_type", getType().getValueType().name().toLowerCase())
-                    .add("value", value);
         }
 
         @Override

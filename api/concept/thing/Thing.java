@@ -21,6 +21,8 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
@@ -50,6 +52,11 @@ public interface Thing extends Concept {
     @Override
     @CheckReturnValue
     Thing.Remote asRemote(TypeDBTransaction transaction);
+
+    @Override
+    default JsonObject toJSON() {
+        return Json.object().add("type", getType().getLabel().scopedName());
+    }
 
     interface Remote extends Concept.Remote, Thing {
 

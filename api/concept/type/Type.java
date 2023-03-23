@@ -21,6 +21,8 @@
 
 package com.vaticle.typedb.client.api.concept.type;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.Label;
@@ -47,6 +49,11 @@ public interface Type extends Concept {
 
     @Override
     Remote asRemote(TypeDBTransaction transaction);
+
+    @Override
+    default JsonObject toJSON() {
+        return Json.object().add("label", getLabel().scopedName());
+    }
 
     interface Remote extends Type, Concept.Remote {
 

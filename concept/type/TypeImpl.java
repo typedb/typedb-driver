@@ -136,11 +136,6 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     }
 
     @Override
-    public JsonObject toJSON() {
-        return Json.object().add("label", getLabel().scopedName());
-    }
-
-    @Override
     public String toString() {
         return className(this.getClass()) + "[label: " + label + "]";
     }
@@ -202,11 +197,6 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         @Override
         public TypeImpl.Remote asType() {
             return this;
-        }
-
-        @Override
-        public JsonObject toJSON() {
-            return Json.object().add("label", getLabel().scopedName());
         }
 
         @Override

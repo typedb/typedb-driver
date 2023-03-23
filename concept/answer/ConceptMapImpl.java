@@ -21,8 +21,6 @@
 
 package com.vaticle.typedb.client.concept.answer;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
@@ -94,13 +92,6 @@ public class ConceptMapImpl implements ConceptMap {
         Concept concept = map.get(variable);
         if (concept == null) throw new TypeDBClientException(VARIABLE_DOES_NOT_EXIST, variable);
         return concept;
-    }
-
-    @Override
-    public JsonObject toJSON() {
-        JsonObject object = Json.object();
-        map.forEach((resVar, resConcept) -> object.add(resVar, resConcept.toJSON()));
-        return object;
     }
 
     @Override
