@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class SerializationSteps {
     @Then("JSON of answer concepts matches")
     public void json_matches(String expectedJSON) {
-        List<JsonValue> actual = TypeQLSteps.answers().stream().map(ConceptMap::toJSON).map(Json::parse).collect(Collectors.toList());
+        List<JsonValue> actual = TypeQLSteps.answers().stream().map(ConceptMap::toJSON).collect(Collectors.toList());
         List<JsonValue> expected = Json.parse(expectedJSON).asArray().values();
         assertEquals(actual.size(), expected.size());
         for (JsonValue expectedItem: expected) {

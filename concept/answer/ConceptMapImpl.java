@@ -97,10 +97,10 @@ public class ConceptMapImpl implements ConceptMap {
     }
 
     @Override
-    public String toJSON() {
+    public JsonObject toJSON() {
         JsonObject object = Json.object();
-        map.forEach((resVar, resConcept) -> object.add(resVar, resConcept.JSONObject()));
-        return object.toString();
+        map.forEach((resVar, resConcept) -> object.add(resVar, resConcept.toJSON()));
+        return object;
     }
 
     @Override

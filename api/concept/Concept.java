@@ -125,7 +125,7 @@ public interface Concept {
     boolean isRemote();
 
     @CheckReturnValue
-    JsonObject JSONObject();
+    JsonObject toJSON();
 
     interface Remote extends Concept {
 

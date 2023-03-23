@@ -79,7 +79,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
     }
 
     @Override
-    public JsonObject JSONObject() {
+    public JsonObject toJSON() {
         JsonValue value;
         switch (getType().getValueType()) {
             case BOOLEAN: value = Json.value(asBoolean().getValue()); break;
@@ -151,7 +151,7 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         @Override
-        public JsonObject JSONObject() {
+        public JsonObject toJSON() {
             JsonValue value;
             switch (getType().getValueType()) {
                 case BOOLEAN: value = Json.value(asBoolean().getValue()); break;

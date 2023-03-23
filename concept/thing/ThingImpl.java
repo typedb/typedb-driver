@@ -96,7 +96,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     @Override
-    public JsonObject JSONObject() {
+    public JsonObject toJSON() {
         return Json.object().add("type", getType().getLabel().scopedName());
     }
 
@@ -227,7 +227,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         @Override
-        public JsonObject JSONObject() {
+        public JsonObject toJSON() {
             return Json.object().add("type", getType().getLabel().scopedName());
         }
 
