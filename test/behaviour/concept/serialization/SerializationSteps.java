@@ -59,9 +59,8 @@ public class SerializationSteps {
     private boolean JSONValuesAreEqual(JsonValue left, JsonValue right) {
         if (Objects.equals(left, right)) return true;
         if (left == null || right == null) return false;
-        if (left.getClass() != right.getClass()) return false;
-        if (left.isObject()) return JSONObjectsAreEqual(left.asObject(), right.asObject());
-        if (left.isArray()) return JSONArraysAreEqual(left.asArray(), right.asArray());
+        if (left.isObject() && right.isObject()) return JSONObjectsAreEqual(left.asObject(), right.asObject());
+        if (left.isArray() && right.isArray()) return JSONArraysAreEqual(left.asArray(), right.asArray());
         return false;
     }
 
