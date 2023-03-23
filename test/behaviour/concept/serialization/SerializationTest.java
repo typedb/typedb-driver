@@ -41,7 +41,7 @@ public class SerializationTest extends BehaviourTest {
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test ThingTypeTest'
+    // 3) Select 'Bazel test SerializationTest'
     //
     // 4) Ensure 'Target Expression' is set correctly: '//<this>/<package>/<name>:test'
     //

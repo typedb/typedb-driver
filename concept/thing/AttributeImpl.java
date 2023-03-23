@@ -41,6 +41,7 @@ import static com.vaticle.typedb.common.collection.Bytes.bytesToHexString;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribute<VALUE> {
+
     AttributeImpl(java.lang.String iid, boolean isInferred) {
         super(iid, isInferred);
     }
