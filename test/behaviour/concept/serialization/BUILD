@@ -33,11 +33,7 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//api:api",
-        "//common:common",
-        "//test/behaviour/config:parameters",
         "//test/behaviour/typeql:steps",
-        "//test/behaviour/util:util",
-        "//test/behaviour/connection:steps-base",
 
         # External Maven Dependencies
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
