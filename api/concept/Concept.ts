@@ -80,7 +80,7 @@ export interface Concept {
 
     equals(concept: Concept): boolean;
 
-    JSON(): Record<string, boolean | string | number>;
+    toJSONRecord(): Record<string, boolean | string | number>;
 }
 
 export namespace Concept {

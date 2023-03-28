@@ -20,13 +20,13 @@
  */
 
 import {Then} from "@cucumber/cucumber";
-import {answers} from "../../typeql/TypeQLSteps"
+import {answers} from "../../../typeql/TypeQLSteps"
 import assert = require("assert");
 import {isDeepStrictEqual} from "util";
 
-Then("JSON of answer concepts matches", async (expectedJSON: string) => {
+Then("JSON serialization of answers matches", async (expectedJSON: string) => {
     const expected = JSON.parse(expectedJSON);
-    const actual = answers.map((conceptMap) => conceptMap.JSON());
+    const actual = answers.map((conceptMap) => conceptMap.toJSONRecord());
     assertUnorderedDeepStrictEqual(actual, expected);
 });
 

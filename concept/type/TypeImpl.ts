@@ -68,7 +68,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this;
     }
 
-    JSON(): Record<string, string> {
+    toJSONRecord(): Record<string, string> {
         return {label: this.label.scopedName};
     }
 
@@ -129,7 +129,7 @@ export namespace TypeImpl {
             return this;
         }
 
-        JSON(): Record<string, string> {
+        toJSONRecord(): Record<string, string> {
             return {label: this.label.scopedName};
         }
 

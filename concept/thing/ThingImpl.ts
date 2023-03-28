@@ -77,7 +77,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return this;
     }
 
-    JSON(): Record<string, boolean | string | number> {
+    toJSONRecord(): Record<string, boolean | string | number> {
         return {type: this.type.label.name};
     }
 }
@@ -125,7 +125,7 @@ export namespace ThingImpl {
             return this;
         }
 
-        JSON(): Record<string, boolean | string | number> {
+        toJSONRecord(): Record<string, boolean | string | number> {
             return {type: this.type.label.name};
         }
 
