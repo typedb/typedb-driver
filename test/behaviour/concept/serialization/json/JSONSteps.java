@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.serialization;
+package com.vaticle.typedb.client.test.behaviour.concept.serialization.json;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
@@ -37,8 +37,8 @@ import com.vaticle.typedb.client.test.behaviour.typeql.TypeQLSteps;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SerializationSteps {
-    @Then("JSON of answer concepts matches")
+public class JSONSteps {
+    @Then("JSON serialization of answers matches")
     public void json_matches(String expectedJSON) {
         List<JsonValue> actual = TypeQLSteps.answers().stream().map(ConceptMap::toJSON).collect(Collectors.toList());
         List<JsonValue> expected = Json.parse(expectedJSON).asArray().values();

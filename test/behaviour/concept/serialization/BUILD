@@ -19,70 +19,7 @@
 # under the License.
 #
 
-package(default_visibility = ["//test/behaviour/concept/thing:__subpackages__"])
-
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "typedb_behaviour_java_test")
-
-java_library(
-    name = "steps",
-    srcs = [
-        "SerializationSteps.java",
-    ],
-    visibility = ["//visibility:public"],
-    deps = [
-        # Internal Package Dependencies
-        "//api:api",
-        "//test/behaviour/typeql:steps",
-
-        # External Maven Dependencies
-        "@maven//:com_eclipsesource_minimal_json_minimal_json",
-        "@maven//:io_cucumber_cucumber_java",
-        "@maven//:junit_junit",
-    ],
-)
-
-typedb_behaviour_java_test(
-    name = "test",
-    srcs = [
-        "SerializationTest.java",
-    ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.serialization.SerializationTest",
-    data = [
-        "@vaticle_typedb_behaviour//concept:serialization.feature",
-    ],
-    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
-    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
-    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
-    typedb_cluster_artifact_mac = "@vaticle_typedb_cluster_artifact_mac//file",
-    typedb_cluster_artifact_linux = "@vaticle_typedb_cluster_artifact_linux//file",
-    typedb_cluster_artifact_windows = "@vaticle_typedb_cluster_artifact_windows//file",
-    connection_steps_core = "//test/behaviour/connection:steps-core",
-    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
-    steps = [
-        ":steps",
-        "//test/behaviour/concept/thing/attribute:steps",
-        "//test/behaviour/concept/thing/entity:steps",
-        "//test/behaviour/concept/thing/relation:steps",
-        "//test/behaviour/concept/type/attributetype:steps",
-        "//test/behaviour/concept/type/relationtype:steps",
-        "//test/behaviour/connection:steps-base",
-        "//test/behaviour/connection/database:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-    ],
-    deps = [
-        # Internal Package Dependencies
-        "//test/behaviour:behaviour",
-        # External Maven Dependencies
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        "//test/behaviour/config:parameters",
-    ],
-    size = "small",
-)
-
 
 checkstyle_test(
     name = "checkstyle",
