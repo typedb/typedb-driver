@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.serialization;
+package com.vaticle.typedb.client.test.behaviour.concept.serialization.json;
 
 import com.vaticle.typedb.client.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
@@ -31,17 +31,17 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.vaticle.typedb.client.test.behaviour",
-        features = "external/vaticle_typedb_behaviour/concept/serialization.feature",
+        features = "external/vaticle_typedb_behaviour/concept/serialization/json.feature",
         tags = "not @ignore and not @ignore-typedb"
 )
-public class SerializationTest extends BehaviourTest {
+public class JSONTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test SerializationTest'
+    // 3) Select 'Bazel test JSONTest'
     //
     // 4) Ensure 'Target Expression' is set correctly: '//<this>/<package>/<name>:test'
     //
