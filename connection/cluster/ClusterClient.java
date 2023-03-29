@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
@@ -109,6 +110,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
     @Override
     public boolean isOpen() {
         return isOpen;
+    }
+
+    @Override
+    public User user() {
+        return users().get(credential.username());
     }
 
     @Override
