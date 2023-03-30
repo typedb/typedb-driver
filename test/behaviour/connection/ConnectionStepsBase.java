@@ -42,7 +42,6 @@ import static com.vaticle.typedb.common.collection.Collections.map;
 import static com.vaticle.typedb.common.collection.Collections.pair;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
@@ -78,13 +77,16 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-        assertNull(client);
         String address = TypeDBSingleton.getTypeDBRunner().address();
         assertNotNull(address);
-        client = createTypeDBClient(address);
+        TypeDBClient client = createTypeDBClient(address);
         client.databases().all().forEach(Database::delete);
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
+        client.close();
+        assertFalse(client.isOpen());
+        client = null;
+        TypeDBSingleton.getTypeDBRunner().stop();
         System.out.println("ConnectionSteps.before");
     }
 
@@ -109,6 +111,9 @@ public abstract class ConnectionStepsBase {
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
+        String address = TypeDBSingleton.getTypeDBRunner().address();
+        assertNotNull(address);
+        TypeDBClient client = createTypeDBClient(address);
         client.databases().all().forEach(Database::delete);
         client.close();
         assertFalse(client.isOpen());
@@ -128,6 +133,7 @@ public abstract class ConnectionStepsBase {
     void connection_does_not_have_any_database() {
         assertNotNull(client);
         assertTrue(client.isOpen());
+        assertTrue(client.databases().all().isEmpty());
     }
 
 }
