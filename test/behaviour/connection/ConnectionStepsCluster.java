@@ -46,30 +46,10 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     void beforeAll() {}
 
-    @Before
-    public synchronized void before() {
-        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
-        TypeDBSingleton.setTypeDBRunner(cluster);
-        super.before();
-        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-        TypeDBClient.Cluster clusterClient = createTypeDBClient(runner.address()).asCluster();
-        clusterClient.users().all().stream().filter(user -> !user.username().equals("admin"))
-                .forEach(user -> clusterClient.users().delete(user.username()));
-        clusterClient.close();
-        runner.stop();
-    }
-
     @After
-    public synchronized void after() {
-        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
-        TypeDBSingleton.setTypeDBRunner(cluster);
-        super.after();
-        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-        TypeDBClient.Cluster clusterClient = createTypeDBClient(runner.address()).asCluster();
-        clusterClient.users().all().stream().filter(user -> !user.username().equals("admin"))
-                .forEach(user -> clusterClient.users().delete(user.username()));
-        clusterClient.close();
-        runner.stop();
+    void after() {
+        TypeDBSingleton.getTypeDBRunner().stop();
+        TypeDBSingleton.setTypeDBRunner(null);
     }
 
     @Override
@@ -99,6 +79,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Given("cluster has configuration")
     public void cluster_has_configuration(Map<String, String> map) {
+        TypeDBSingleton.setTypeDBRunner(null);
         Map<String, String> serverOpts = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             serverOpts.put("--" + entry.getKey(), entry.getValue());
@@ -115,10 +96,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @When("cluster starts")
     public void cluster_starts() throws InterruptedException {
         TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-        if (runner != null) {
-            if (runner.isStopped()) {
-                runner.start();
-            }
+        if (runner != null && runner.isStopped()) {
+            runner.start();
         } else {
             TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1);
             TypeDBSingleton.setTypeDBRunner(clusterRunner);

@@ -123,6 +123,7 @@ public abstract class ConnectionStepsBase {
         client.close();
         assertFalse(client.isOpen());
         client = null;
+        TypeDBSingleton.getTypeDBRunner().stop();
         System.out.println("ConnectionSteps.after");
     }
 
