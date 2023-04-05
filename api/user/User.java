@@ -29,7 +29,7 @@ public interface User {
     @CheckReturnValue
     String username();
 
-    Optional<Long> passwordExpiryDays();
+    Optional<Long> passwordExpirySeconds();
 
     void passwordUpdate(String passwordOld, String passwordNew);
 }

@@ -33,12 +33,12 @@ public class ClusterUser implements User {
 
     private final ClusterClient client;
     private final String username;
-    private final Optional<Long> passwordExpiryDays;
+    private final Optional<Long> passwordExpirySeconds;
 
-    public ClusterUser(ClusterClient client, String username, Optional<Long> passwordExpiryDays) {
+    public ClusterUser(ClusterClient client, String username, Optional<Long> passwordExpirySeconds) {
         this.client = client;
         this.username = username;
-        this.passwordExpiryDays = passwordExpiryDays;
+        this.passwordExpirySeconds = passwordExpirySeconds;
     }
 
     public static ClusterUser of(ClusterUserProto.User user, ClusterClient client) {
@@ -47,7 +47,7 @@ public class ClusterUser implements User {
             return new ClusterUser(client, user.getUsername(), Optional.empty());
         }
         else {
-            return new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpiryDays()));
+            return new ClusterUser(client, user.getUsername(), Optional.of(user.getPasswordExpirySeconds()));
         }
     }
 
@@ -57,8 +57,8 @@ public class ClusterUser implements User {
     }
 
     @Override
-    public Optional<Long> passwordExpiryDays() {
-        return passwordExpiryDays;
+    public Optional<Long> passwordExpirySeconds() {
+        return passwordExpirySeconds;
     }
 
     @Override
