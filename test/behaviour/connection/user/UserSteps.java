@@ -79,10 +79,15 @@ public class UserSteps {
 
     @When("user password update: {word}, {word}")
     public void user_password_update(String passwordOld, String passwordNew) {
-        getClient().users().get(client.asCluster().user().username()).passwordUpdate(passwordOld, passwordNew);
+        getClient().users().get(getClient().user().username()).passwordUpdate(passwordOld, passwordNew);
     }
 
-    @When("user password set: {word}, {word}")
+    @Then("user expiry-days")
+    public void user_expiry_days() {
+        getClient().user().passwordExpiryDays();
+    }
+
+    @When("users password set: {word}, {word}")
     public void user_password_set(String username, String passwordNew) {
         getClient().users().passwordSet(username, passwordNew);
     }
@@ -100,7 +105,6 @@ public class UserSteps {
             Set<User> ignored = getClient().users().all();
         });
     }
-
 
     @Then("users contains: {word}; throws exception")
     public void users_contains_throws_exception(String username) {

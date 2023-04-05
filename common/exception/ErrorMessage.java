@@ -60,6 +60,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(15, "The user '%s' does not exist.");
         public static final ErrorMessage CLUSTER_TOKEN_CREDENTIAL_INVALID =
                 new Client(16, "Invalid token credential.");
+        public static final ErrorMessage CLUSTER_PASSWORD_CREDENTIAL_EXPIRED =
+                new Client(17, "Expired password credential.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";

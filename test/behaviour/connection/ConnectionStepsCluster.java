@@ -29,7 +29,6 @@ import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
@@ -110,7 +109,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
     }
 
-    @When("disconnect current user")
+    @When("user disconnect")
     public void disconnect_current_user() {
         client.close();
         client = null;
