@@ -35,6 +35,7 @@ java_library(
         "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
+        "//test/behaviour/util:util",
 
         # Internal Repository Dependencies
         "@vaticle_typedb_common//test:typedb-runner",

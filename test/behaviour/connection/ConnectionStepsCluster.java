@@ -34,6 +34,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
@@ -43,25 +44,32 @@ import static org.junit.Assert.assertNotNull;
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
-    void beforeAll() {
-        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
-        TypeDBSingleton.setTypeDBRunner(cluster);
-    }
+    void beforeAll() {}
 
     @Before
     public synchronized void before() {
+        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
+        TypeDBSingleton.setTypeDBRunner(cluster);
         super.before();
-        TypeDBRunner cluster = TypeDBSingleton.getTypeDBRunner();
-        cluster.start();
-        TypeDBClient.Cluster clusterClient = createTypeDBClient(cluster.address()).asCluster();
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        TypeDBClient.Cluster clusterClient = createTypeDBClient(runner.address()).asCluster();
         clusterClient.users().all().stream().filter(user -> !user.username().equals("admin"))
                 .forEach(user -> clusterClient.users().delete(user.username()));
-        cluster.stop();
+        clusterClient.close();
+        runner.stop();
     }
 
     @After
     public synchronized void after() {
+        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
+        TypeDBSingleton.setTypeDBRunner(cluster);
         super.after();
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        TypeDBClient.Cluster clusterClient = createTypeDBClient(runner.address()).asCluster();
+        clusterClient.users().all().stream().filter(user -> !user.username().equals("admin"))
+                .forEach(user -> clusterClient.users().delete(user.username()));
+        clusterClient.close();
+        runner.stop();
     }
 
     @Override
@@ -84,13 +92,17 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Given("connected as user {word}")
-    public void connected_as_user(String user) {
+    public void connected_as_user(String username) {
         assertNotNull(client);
-        assertEquals(client.asCluster().username(), user);
+        assertEquals(client.asCluster().user().username(), username);
     }
 
     @Given("cluster has configuration")
-    public void cluster_has_configuration(Map<String, String> serverOpts) {
+    public void cluster_has_configuration(Map<String, String> map) {
+        Map<String, String> serverOpts = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            serverOpts.put("--" + entry.getKey(), entry.getValue());
+        }
         TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1, serverOpts);
         TypeDBSingleton.setTypeDBRunner(clusterRunner);
     }
@@ -101,10 +113,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @When("cluster starts")
-    public void cluster_starts() {
+    public void cluster_starts() throws InterruptedException {
         TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
         if (runner != null) {
-            runner.start();
+            if (runner.isStopped()) {
+                runner.start();
+            }
         } else {
             TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1);
             TypeDBSingleton.setTypeDBRunner(clusterRunner);
@@ -112,14 +126,20 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         }
     }
 
-    @When("connect as user {word} with password {word}")
-    public void connect_as_user_with_password(String user, String password) {
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), user, password, false);
+    @When("user connect: {word}, {word}")
+    public void user_connect(String username, String password) {
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
     }
 
-    @When("connect as user {word} with password {word}; throws exception")
-    public void connect_as_user_with_password_throws_exception(String user, String password) {
-        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), user, password, false));
+    @When("disconnect current user")
+    public void disconnect_current_user() {
+        client.close();
+        client = null;
+    }
+
+    @When("user connect: {word}, {word}; throws exception")
+    public void user_connect_throws_exception(String username, String password) {
+        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
     }
 
     @Given("connection does not have any database")

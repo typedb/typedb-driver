@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 
 import java.util.ArrayList;
@@ -77,16 +78,20 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-        String address = TypeDBSingleton.getTypeDBRunner().address();
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        runner.start();
+
+        String address = runner.address();
         assertNotNull(address);
         TypeDBClient client = createTypeDBClient(address);
+
         client.databases().all().forEach(Database::delete);
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
+
         client.close();
         assertFalse(client.isOpen());
         client = null;
-        TypeDBSingleton.getTypeDBRunner().stop();
         System.out.println("ConnectionSteps.before");
     }
 
