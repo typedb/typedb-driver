@@ -29,14 +29,10 @@ def vaticle_typeql():
     )
 
 def vaticle_typedb_common():
-#    git_repository(
-#        name = "vaticle_typedb_common",
-#        remote = "https://github.com/vaticle/typedb-common",
-#        tag = "2.16.0" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_common
-#    )
-    native.local_repository(
+    git_repository(
         name = "vaticle_typedb_common",
-        path = "../typedb-common",
+        remote = "https://github.com/vaticle/typedb-common",
+        commit = "01420b86213dc931ff97188daa06b9ecf06f3932" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_common
     )
 
 def vaticle_dependencies():

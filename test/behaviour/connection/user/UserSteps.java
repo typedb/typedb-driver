@@ -82,9 +82,9 @@ public class UserSteps {
         getClient().users().get(getClient().user().username()).passwordUpdate(passwordOld, passwordNew);
     }
 
-    @Then("user expiry-days")
-    public void user_expiry_days() {
-        getClient().user().passwordExpiryDays();
+    @Then("user expiry-seconds")
+    public void user_expiry_seconds() {
+        getClient().user().passwordExpirySeconds();
     }
 
     @When("users password set: {word}, {word}")
