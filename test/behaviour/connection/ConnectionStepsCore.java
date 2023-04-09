@@ -24,11 +24,13 @@ package com.vaticle.typedb.client.test.behaviour.connection;
 import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -65,6 +67,31 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     TypeDBOptions createOptions() {
         return TypeDBOptions.core();
+    }
+
+    @Override
+    @When("open connection")
+    public void open_connection() {
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+    }
+
+    @When("typedb starts")
+    public void typedb_starts() {
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        if (runner != null && runner.isStopped()) {
+            runner.start();
+        } else {
+            try {
+                TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
+                TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
+                typeDBCoreRunner.start();
+            } catch (Exception e) {}
+        }
+    }
+
+    @When("typedb stops")
+    public void typedb_stops() {
+        TypeDBSingleton.getTypeDBRunner().stop();
     }
 
     @Given("connection has been opened")

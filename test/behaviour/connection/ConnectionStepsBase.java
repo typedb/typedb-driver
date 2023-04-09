@@ -29,6 +29,7 @@ import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -89,9 +91,6 @@ public abstract class ConnectionStepsBase {
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
 
-        client.close();
-        assertFalse(client.isOpen());
-        client = null;
         System.out.println("ConnectionSteps.before");
     }
 
@@ -131,6 +130,8 @@ public abstract class ConnectionStepsBase {
 
     abstract TypeDBOptions createOptions();
 
+    abstract void open_connection();
+
     void connection_has_been_opened() {
         assertNotNull(client);
         assertTrue(client.isOpen());
@@ -141,5 +142,4 @@ public abstract class ConnectionStepsBase {
         assertTrue(client.isOpen());
         assertTrue(client.databases().all().isEmpty());
     }
-
 }

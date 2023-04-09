@@ -29,6 +29,7 @@ import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
@@ -43,12 +44,17 @@ import static org.junit.Assert.assertNotNull;
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
-    void beforeAll() {}
-
-    @After
-    void after() {
+    void beforeAll() {
         TypeDBSingleton.getTypeDBRunner().stop();
         TypeDBSingleton.setTypeDBRunner(null);
+    }
+
+    @Before
+    public synchronized void before() {}
+
+    @After
+    public synchronized void after() {
+        super.after();
     }
 
     @Override
@@ -65,6 +71,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         return TypeDBOptions.cluster();
     }
 
+    @Override
+    @When("open connection")
+    public void open_connection() {
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+    }
+
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
@@ -76,8 +88,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         assertEquals(client.asCluster().user().username(), username);
     }
 
-    @Given("cluster has configuration")
-    public void cluster_has_configuration(Map<String, String> map) {
+    @Given("typedb has configuration")
+    public void typedb_has_configuration(Map<String, String> map) {
         TypeDBSingleton.setTypeDBRunner(null);
         Map<String, String> serverOpts = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -87,13 +99,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         TypeDBSingleton.setTypeDBRunner(clusterRunner);
     }
 
-    @When("cluster stops")
-    public void cluster_stops() {
-        TypeDBSingleton.getTypeDBRunner().stop();
-    }
-
-    @When("cluster starts")
-    public void cluster_starts() throws InterruptedException {
+    @When("typedb starts")
+    public void typedb_starts() {
         TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
         if (runner != null && runner.isStopped()) {
             runner.start();
@@ -104,8 +111,18 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         }
     }
 
+    @When("typedb stops")
+    public void typedb_stops() {
+        TypeDBSingleton.getTypeDBRunner().stop();
+    }
+
     @When("user connect: {word}, {word}")
     public void user_connect(String username, String password) {
+        if (client != null) {
+            client.close();
+            client = null;
+        }
+
         client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
     }
 
