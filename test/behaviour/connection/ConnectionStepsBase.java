@@ -80,14 +80,6 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-        runner.start();
-
-        String address = runner.address();
-        assertNotNull(address);
-        TypeDBClient client = createTypeDBClient(address);
-
-        client.databases().all().forEach(Database::delete);
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
 

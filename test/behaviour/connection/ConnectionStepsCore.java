@@ -85,7 +85,9 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
                 TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
                 TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
                 typeDBCoreRunner.start();
-            } catch (Exception e) {}
+            } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
