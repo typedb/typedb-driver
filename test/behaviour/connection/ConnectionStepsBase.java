@@ -29,7 +29,6 @@ import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -70,7 +68,13 @@ public abstract class ConnectionStepsBase {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
-    abstract void beforeAll();
+    void beforeAll() {
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        if (runner != null) {
+            TypeDBSingleton.getTypeDBRunner().stop();
+            TypeDBSingleton.setTypeDBRunner(null);
+        }
+    }
 
     void before() {
         if (!isBeforeAllRan) {
@@ -82,6 +86,11 @@ public abstract class ConnectionStepsBase {
         }
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        if (runner != null) {
+            runner.stop();
+            TypeDBSingleton.setTypeDBRunner(null);
+        }
 
         System.out.println("ConnectionSteps.before");
     }
@@ -115,6 +124,7 @@ public abstract class ConnectionStepsBase {
         assertFalse(client.isOpen());
         client = null;
         TypeDBSingleton.getTypeDBRunner().stop();
+        TypeDBSingleton.setTypeDBRunner(null);
         System.out.println("ConnectionSteps.after");
     }
 

@@ -32,7 +32,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
         "//test/behaviour/util:util",
@@ -63,6 +62,7 @@ typedb_java_test(
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
         "//test/behaviour/typeql:steps",
+        "//test/behaviour/util:steps",
 
         "//test/behaviour/config:parameters",
     ],

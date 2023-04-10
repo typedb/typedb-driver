@@ -34,7 +34,6 @@ public abstract class BehaviourTest {
     @AfterClass
     public static void afterAll() {
         TypeDBRunner server = TypeDBSingleton.getTypeDBRunner();
-        assert server != null;
-        server.stop();
+        if (server != null) server.stop();
     }
 }

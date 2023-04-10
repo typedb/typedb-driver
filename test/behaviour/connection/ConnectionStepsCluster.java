@@ -44,13 +44,14 @@ import static org.junit.Assert.assertNotNull;
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
-    void beforeAll() {
-        TypeDBSingleton.getTypeDBRunner().stop();
-        TypeDBSingleton.setTypeDBRunner(null);
+    public void beforeAll() {
+        super.beforeAll();
     }
 
     @Before
-    public synchronized void before() {}
+    public synchronized void before() {
+        super.before();
+    }
 
     @After
     public synchronized void after() {

@@ -39,14 +39,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     private TypeDBCoreRunner server;
 
     @Override
-    void beforeAll() {
-        try {
-            server = new TypeDBCoreRunner();
-        } catch (InterruptedException | TimeoutException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        server.start();
-        TypeDBSingleton.setTypeDBRunner(server);
+    public void beforeAll() {
+        super.beforeAll();
     }
 
     @Before
