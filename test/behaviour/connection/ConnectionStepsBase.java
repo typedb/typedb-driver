@@ -124,6 +124,7 @@ public abstract class ConnectionStepsBase {
         assertFalse(client.isOpen());
         client = null;
         TypeDBSingleton.getTypeDBRunner().stop();
+        TypeDBSingleton.getTypeDBRunner().destroy();
         TypeDBSingleton.setTypeDBRunner(null);
         System.out.println("ConnectionSteps.after");
     }
