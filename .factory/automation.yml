@@ -53,7 +53,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel build //...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors --test_timeout=1800
     build-dependency:
       image: vaticle-ubuntu-22.04
       command: |
@@ -66,22 +66,22 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        bazel test //test/integration/... --test_output=errors
+        bazel test //test/integration/... --test_output=errors --test_timeout=1800
     test-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+        .factory/test-core.sh //test/behaviour/connection/... --test_output=errors --jobs=1 --test_timeout=1800
     # TODO: delete --jobs=1 if we fix the issue with excess memory usage
-#    test-behaviour-connection-cluster:
-#      image: vaticle-ubuntu-22.04
-#      command: |
-#        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-#        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-#        .factory/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1
+    test-behaviour-connection-cluster:
+      image: vaticle-ubuntu-22.04
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .factory/test-cluster.sh //test/behaviour/connection/... --test_output=errors --jobs=1 --test_timeout=1800
     # TODO: delete --jobs=1 if we fix the issue with excess memory usage
     test-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
@@ -89,7 +89,7 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/concept/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/concept/... --test_output=errors --test_timeout=1800
 #    test-behaviour-concept-cluster:
 #      image: vaticle-ubuntu-22.04
 #      command: |
@@ -103,8 +103,8 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors
-        .factory/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/match/... --test_output=errors --test_timeout=1800
+        .factory/test-core.sh //test/behaviour/typeql/language/get/... --test_output=errors --test_timeout=1800
 #    test-behaviour-match-cluster:
 #      image: vaticle-ubuntu-22.04
 #      command: |
@@ -119,34 +119,34 @@ build:
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors
-        .factory/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors
-        .factory/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/insert/... --test_output=errors --test_timeout=1800
+        .factory/test-core.sh //test/behaviour/typeql/language/delete/... --test_output=errors --test_timeout=1800
+        .factory/test-core.sh //test/behaviour/typeql/language/update/... --test_output=errors --test_timeout=1800
     test-behaviour-writable-cluster:
       image: vaticle-ubuntu-22.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors
-        .factory/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors
-        .factory/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/insert/... --test_output=errors --test_timeout=1800
+        .factory/test-cluster.sh //test/behaviour/typeql/language/delete/... --test_output=errors --test_timeout=1800
+        .factory/test-cluster.sh //test/behaviour/typeql/language/update/... --test_output=errors --test_timeout=1800
     test-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors
-        .factory/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-core.sh //test/behaviour/typeql/language/define/... --test_output=errors --test_timeout=1800
+        .factory/test-core.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --test_timeout=1800
     test-behaviour-definable-cluster:
       image: vaticle-ubuntu-22.04
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors
-        .factory/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-cluster.sh //test/behaviour/typeql/language/define/... --test_output=errors --test_timeout=1800
+        .factory/test-cluster.sh //test/behaviour/typeql/language/undefine/... --test_output=errors --test_timeout=1800
     deploy-maven-snapshot:
       image: vaticle-ubuntu-22.04
       dependencies: [

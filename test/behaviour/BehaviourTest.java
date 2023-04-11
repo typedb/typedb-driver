@@ -21,7 +21,6 @@
 
 package com.vaticle.typedb.client.test.behaviour;
 
-import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import org.junit.AfterClass;
 
@@ -33,8 +32,6 @@ public abstract class BehaviourTest {
 
     @AfterClass
     public static void afterAll() {
-        TypeDBRunner server = TypeDBSingleton.getTypeDBRunner();
-        assert server != null;
-        server.stop();
+        TypeDBSingleton.deleteTypeDBRunner();
     }
 }

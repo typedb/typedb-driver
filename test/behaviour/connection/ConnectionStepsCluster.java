@@ -25,23 +25,25 @@ import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
-    void beforeAll() {
-        TypeDBClusterRunner cluster = TypeDBClusterRunner.create(Paths.get("."), 1);
-        cluster.start();
-        TypeDBSingleton.setTypeDBRunner(cluster);
+    public void beforeAll() {
+        super.beforeAll();
     }
 
     @Before
@@ -56,7 +58,11 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
     TypeDBClient createTypeDBClient(String address) {
-        return TypeDB.clusterClient(address, new TypeDBCredential("admin", "password", false));
+        return createTypeDBClient(address, "admin", "password", false);
+    }
+
+    TypeDBClient createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
+        return TypeDB.clusterClient(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 
     @Override
@@ -64,14 +70,68 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         return TypeDBOptions.cluster();
     }
 
+    @Override
+    @When("open connection")
+    public void open_connection() {
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+    }
+
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
+    }
+
+    @Given("typedb has configuration")
+    public void typedb_has_configuration(Map<String, String> map) {
+        TypeDBSingleton.deleteTypeDBRunner();
+        Map<String, String> serverOpts = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            serverOpts.put("--" + entry.getKey(), entry.getValue());
+        }
+        TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1, serverOpts);
+        TypeDBSingleton.setTypeDBRunner(clusterRunner);
+    }
+
+    @When("typedb starts")
+    public void typedb_starts() {
+        TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
+        if (runner != null && runner.isStopped()) {
+            runner.start();
+        } else {
+            TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1);
+            TypeDBSingleton.setTypeDBRunner(clusterRunner);
+            clusterRunner.start();
+        }
+    }
+
+    @When("typedb stops")
+    public void typedb_stops() {
+        TypeDBSingleton.getTypeDBRunner().stop();
+    }
+
+    @When("user connect: {word}, {word}")
+    public void user_connect(String username, String password) {
+        if (client != null) {
+            client.close();
+            client = null;
+        }
+
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
+    }
+
+    @When("user disconnect")
+    public void disconnect_current_user() {
+        client.close();
+        client = null;
+    }
+
+    @When("user connect: {word}, {word}; throws exception")
+    public void user_connect_throws_exception(String username, String password) {
+        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
     }
 
     @Given("connection does not have any database")
     public void connection_does_not_have_any_database() {
         super.connection_does_not_have_any_database();
     }
-
 }

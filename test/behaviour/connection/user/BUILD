@@ -32,13 +32,10 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//:client-java",
         "//api:api",
         "//test/behaviour/connection:steps-base",
+        "//test/behaviour/util:util",
 
-        # Internal Repository Dependencies
-        "@vaticle_typedb_common//test:typedb-runner",
-        
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
@@ -65,6 +62,7 @@ typedb_java_test(
         "//test/behaviour/connection/session:steps",
         "//test/behaviour/connection/transaction:steps",
         "//test/behaviour/typeql:steps",
+        "//test/behaviour/util:steps",
 
         "//test/behaviour/config:parameters",
     ],

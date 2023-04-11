@@ -66,6 +66,7 @@ java_library(
         ":steps-base",
         "//:client-java",
         "//api:api",
+        "//test/behaviour/util:util",
         "@vaticle_typedb_common//test:typedb-runner",
 
         # External dependencies from Maven

@@ -31,6 +31,7 @@ public class TypeDBClientException extends RuntimeException {
     // TODO: propagate exception from the server side in a less-brittle way
     private static final String CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE = "[RPL01]";
     private static final String CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE = "[CLS08]";
+    private static final String CLUSTER_PASSWORD_CREDENTIAL_EXPIRED_ERROR_CODE = "[CLS10]";
 
     @Nullable
     private final ErrorMessage errorMessage;
@@ -53,6 +54,8 @@ public class TypeDBClientException extends RuntimeException {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
         } else if (isTokenCredentialInvalid(sre)) {
             return new TypeDBClientException(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID);
+         } else if (isPasswordCredentialExpired(sre)) {
+            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED);
         } else {
             return new TypeDBClientException(sre.getStatus().getDescription(), sre);
         }
@@ -77,6 +80,11 @@ public class TypeDBClientException extends RuntimeException {
                 statusRuntimeException.getStatus().getDescription().contains(CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE);
     }
 
+    private static boolean isPasswordCredentialExpired(StatusRuntimeException statusRuntimeException) {
+        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAUTHENTICATED &&
+                statusRuntimeException.getStatus().getDescription() != null &&
+                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_PASSWORD_CREDENTIAL_EXPIRED_ERROR_CODE);
+    }
     public String getName() {
         return this.getClass().getName();
     }

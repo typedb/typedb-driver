@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 
 import java.util.ArrayList;
@@ -40,9 +39,7 @@ import java.util.stream.Stream;
 
 import static com.vaticle.typedb.common.collection.Collections.map;
 import static com.vaticle.typedb.common.collection.Collections.pair;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
@@ -68,7 +65,9 @@ public abstract class ConnectionStepsBase {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }
 
-    abstract void beforeAll();
+    void beforeAll() {
+        TypeDBSingleton.deleteTypeDBRunner();
+    }
 
     void before() {
         if (!isBeforeAllRan) {
@@ -78,13 +77,10 @@ public abstract class ConnectionStepsBase {
                 isBeforeAllRan = true;
             }
         }
-        assertNull(client);
-        String address = TypeDBSingleton.getTypeDBRunner().address();
-        assertNotNull(address);
-        client = createTypeDBClient(address);
-        client.databases().all().forEach(Database::delete);
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
+        TypeDBSingleton.resetTypeDBRunner();
+
         System.out.println("ConnectionSteps.before");
     }
 
@@ -105,20 +101,19 @@ public abstract class ConnectionStepsBase {
                 }));
         CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
         sessionsParallel.clear();
-
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
-        client.databases().all().forEach(Database::delete);
-        client.close();
-        assertFalse(client.isOpen());
-        client = null;
+
+        TypeDBSingleton.resetTypeDBRunner();
         System.out.println("ConnectionSteps.after");
     }
 
     abstract TypeDBClient createTypeDBClient(String address);
 
     abstract TypeDBOptions createOptions();
+
+    abstract void open_connection();
 
     void connection_has_been_opened() {
         assertNotNull(client);
@@ -128,6 +123,6 @@ public abstract class ConnectionStepsBase {
     void connection_does_not_have_any_database() {
         assertNotNull(client);
         assertTrue(client.isOpen());
+        assertTrue(client.databases().all().isEmpty());
     }
-
 }
