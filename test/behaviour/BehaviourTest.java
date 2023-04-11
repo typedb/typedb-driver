@@ -33,7 +33,6 @@ public abstract class BehaviourTest {
 
     @AfterClass
     public static void afterAll() {
-        TypeDBRunner server = TypeDBSingleton.getTypeDBRunner();
-        if (server != null) server.stop();
+        TypeDBSingleton.deleteTypeDBRunner();
     }
 }

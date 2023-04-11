@@ -91,7 +91,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Given("typedb has configuration")
     public void typedb_has_configuration(Map<String, String> map) {
-        TypeDBSingleton.setTypeDBRunner(null);
+        TypeDBSingleton.deleteTypeDBRunner();
         Map<String, String> serverOpts = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             serverOpts.put("--" + entry.getKey(), entry.getValue());

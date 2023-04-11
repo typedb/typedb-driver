@@ -32,9 +32,6 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
 public class ConnectionStepsCore extends ConnectionStepsBase {
     private TypeDBCoreRunner server;
 
