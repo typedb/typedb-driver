@@ -83,12 +83,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         super.connection_has_been_opened();
     }
 
-    @Given("connected as user {word}")
-    public void connected_as_user(String username) {
-        assertNotNull(client);
-        assertEquals(client.asCluster().user().username(), username);
-    }
-
     @Given("typedb has configuration")
     public void typedb_has_configuration(Map<String, String> map) {
         TypeDBSingleton.deleteTypeDBRunner();
