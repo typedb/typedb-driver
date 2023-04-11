@@ -38,8 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
 

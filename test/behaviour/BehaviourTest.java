@@ -21,7 +21,6 @@
 
 package com.vaticle.typedb.client.test.behaviour;
 
-import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import org.junit.AfterClass;
 
