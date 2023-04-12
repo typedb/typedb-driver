@@ -31,7 +31,10 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
+import java.util.Collections;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
@@ -52,6 +55,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
 import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
+import static java.util.Collections.emptySet;
 
 public class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -158,22 +162,22 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public void setOwns(AttributeType attributeType) {
-            setOwns(attributeType, false);
+            setOwns(attributeType, emptySet());
         }
 
         @Override
-        public void setOwns(AttributeType attributeType, boolean isKey) {
-            execute(setOwnsReq(getLabel(), protoThingType(attributeType), isKey));
+        public void setOwns(AttributeType attributeType, Set<TypeQLToken.Annotation> annotations) {
+            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoAnnotations(annotations)));
         }
 
         @Override
         public void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            setOwns(attributeType, overriddenType, false);
+            setOwns(attributeType, overriddenType, emptySet());
         }
 
         @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey) {
-            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoThingType(overriddenType), isKey));
+        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations) {
+            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoThingType(overriddenType), protoAnnotations(annotations)));
         }
 
         @Override

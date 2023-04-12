@@ -25,10 +25,12 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
@@ -179,13 +181,13 @@ public interface AttributeType extends ThingType {
         Stream<? extends ThingType> getOwners();
 
         @CheckReturnValue
-        Stream<? extends ThingType> getOwners(boolean onlyKey);
+        Stream<? extends ThingType> getOwners(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         Stream<? extends ThingType> getOwnersExplicit();
 
         @CheckReturnValue
-        Stream<? extends ThingType> getOwnersExplicit(boolean onlyKey);
+        Stream<? extends ThingType> getOwnersExplicit(Set<TypeQLToken.Annotation> annotations);
 
         @Override
         @CheckReturnValue

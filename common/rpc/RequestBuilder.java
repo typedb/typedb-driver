@@ -40,6 +40,7 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.google.protobuf.ByteString.copyFrom;
@@ -564,21 +565,22 @@ public class RequestBuilder {
             }
 
             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-                    Label label, ConceptProto.Type attributeType, boolean isKey) {
+                    Label label, ConceptProto.Type attributeType, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
                                 .setAttributeType(attributeType)
-                                .setIsKey(isKey)
+                                .addAllAnnotations(annotations)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder setOwnsReq(
-                    Label label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType, boolean isKey) {
+                    Label label, ConceptProto.Type attributeType, ConceptProto.Type overriddenType,
+                    Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                         ConceptProto.ThingType.SetOwns.Req.newBuilder()
                                 .setAttributeType(attributeType)
                                 .setOverriddenType(overriddenType)
-                                .setIsKey(isKey)
+                                .addAllAnnotations(annotations)
                 ));
             }
 
@@ -672,15 +674,15 @@ public class RequestBuilder {
 
         public static class AttributeType {
 
-            public static TransactionProto.Transaction.Req.Builder getOwnersReq(Label label, boolean onlyKey) {
+            public static TransactionProto.Transaction.Req.Builder getOwnersReq(Label label, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
-                        ConceptProto.AttributeType.GetOwners.Req.newBuilder().setOnlyKey(onlyKey)
+                        ConceptProto.AttributeType.GetOwners.Req.newBuilder().addAllAnnotations(annotations)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwnersExplicitReq(Label label, boolean onlyKey) {
+            public static TransactionProto.Transaction.Req.Builder getOwnersExplicitReq(Label label, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
-                        ConceptProto.AttributeType.GetOwnersExplicit.Req.newBuilder().setOnlyKey(onlyKey)
+                        ConceptProto.AttributeType.GetOwnersExplicit.Req.newBuilder().addAllAnnotations(annotations)
                 ));
             }
 
@@ -731,9 +733,9 @@ public class RequestBuilder {
             ));
         }
 
-        public static TransactionProto.Transaction.Req.Builder getHasReq(String iid, boolean onlyKey) {
+        public static TransactionProto.Transaction.Req.Builder getHasReq(String iid, Set<ConceptProto.Type.Annotation> annotations) {
             return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setThingGetHasReq(
-                    ConceptProto.Thing.GetHas.Req.newBuilder().setKeysOnly(onlyKey)
+                    ConceptProto.Thing.GetHas.Req.newBuilder().addAllAnnotations(annotations)
             ));
         }
 

@@ -42,6 +42,7 @@ java_library(
         "//test/behaviour/util:util",
 
         # Vaticle dependencies
+        "@vaticle_typedb_common//:common",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/common:common",
         "@vaticle_typeql//java/query:query",

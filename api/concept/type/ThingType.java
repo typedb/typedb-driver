@@ -24,8 +24,11 @@ package com.vaticle.typedb.client.api.concept.type;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
-import java.util.stream.Stream;
+import com.vaticle.typeql.lang.common.TypeQLToken;
+
 import javax.annotation.CheckReturnValue;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public interface ThingType extends Type {
 
@@ -70,11 +73,11 @@ public interface ThingType extends Type {
 
         void setPlays(RoleType roleType, RoleType overriddenType);
 
-        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations);
 
         void setOwns(AttributeType attributeType, AttributeType overriddenType);
 
-        void setOwns(AttributeType attributeType, boolean isKey);
+        void setOwns(AttributeType attributeType, Set<TypeQLToken.Annotation> annotations);
 
         void setOwns(AttributeType attributeType);
 

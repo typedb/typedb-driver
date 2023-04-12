@@ -90,6 +90,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Concept(8, "The concept identified by '%s' is not explainable.");
         public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
                 new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
+        public static final Concept UNRECOGNISED_ANNOTATION =
+                new Concept(10, "The annotation '%s' is not recognised");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";

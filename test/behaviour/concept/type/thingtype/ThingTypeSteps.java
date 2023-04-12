@@ -28,6 +28,8 @@ import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.common.collection.Collections;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -37,6 +39,8 @@ import java.util.Set;
 import static com.vaticle.typedb.client.test.behaviour.config.Parameters.RootLabel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.common.collection.Collections.set;
+import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
@@ -226,27 +230,27 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}")
     public void thing_type_set_has_key_type(RootLabel rootLabel, String typeLabel, String attTypeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
-        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, true);
+        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, set(KEY));
     }
 
     @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}")
     public void thing_type_set_has_key_type_as(RootLabel rootLabel, String typeLabel, String attTypeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, true);
+        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType,  set(KEY));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}; throws exception")
     public void thing_type_set_has_key_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, true));
+        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType,  set(KEY)));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}; throws exception")
     public void thing_type_set_has_key_type_as_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, true));
+        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType,  set(KEY)));
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset owns key type: {type_label}")

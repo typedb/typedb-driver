@@ -28,10 +28,12 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
-import java.time.LocalDateTime;
-import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
@@ -47,6 +49,7 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.Attribute
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.putReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.setRegexReq;
 import static com.vaticle.typedb.common.util.Objects.className;
+import static java.util.Collections.emptySet;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
@@ -182,24 +185,24 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
         @Override
         public Stream<ThingTypeImpl> getOwners() {
-            return getOwners(false);
+            return getOwners(emptySet());
         }
 
         @Override
-        public Stream<ThingTypeImpl> getOwners(boolean onlyKey) {
-            return stream(getOwnersReq(getLabel(), onlyKey))
+        public Stream<ThingTypeImpl> getOwners(Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnersReq(getLabel(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }
 
         @Override
         public Stream<ThingTypeImpl> getOwnersExplicit() {
-            return getOwnersExplicit(false);
+            return getOwnersExplicit(emptySet());
         }
 
         @Override
-        public Stream<ThingTypeImpl> getOwnersExplicit(boolean onlyKey) {
-            return stream(getOwnersExplicitReq(getLabel(), onlyKey))
+        public Stream<ThingTypeImpl> getOwnersExplicit(Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnersExplicitReq(getLabel(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList().stream())
                     .map(ThingTypeImpl::of);
         }

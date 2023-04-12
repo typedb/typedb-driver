@@ -28,8 +28,10 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public interface Thing extends Concept {
@@ -65,7 +67,10 @@ public interface Thing extends Concept {
         void unsetHas(Attribute<?> attribute);
 
         @CheckReturnValue
-        Stream<? extends Attribute<?>> getHas(boolean onlyKey);
+        Stream<? extends Attribute<?>> getHas();
+
+        @CheckReturnValue
+        Stream<? extends Attribute<?>> getHas(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         Stream<? extends Attribute.Boolean> getHas(AttributeType.Boolean attributeType);
