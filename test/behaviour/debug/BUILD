@@ -52,7 +52,7 @@ typedb_java_test(
     server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
     server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
     server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    size = "medium",
+    size = "large",
     tags = ["manual"]
 )
 
