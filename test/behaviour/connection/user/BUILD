@@ -73,7 +73,7 @@ typedb_java_test(
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
-    size = "medium",
+    size = "large",
 )
 
 checkstyle_test(
