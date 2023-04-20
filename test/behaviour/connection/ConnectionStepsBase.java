@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
+import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,7 +114,12 @@ public abstract class ConnectionStepsBase {
 
     abstract TypeDBOptions createOptions();
 
-    abstract void open_connection();
+    abstract void connection_opens_without_authentication();
+
+    void connection_closes() {
+        client.close();
+        client = null;
+    }
 
     void connection_has_been_opened() {
         assertNotNull(client);
