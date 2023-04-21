@@ -71,14 +71,36 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @When("open connection")
-    public void open_connection() {
+    @When("connection opens with default authentication")
+    public void connection_opens_with_default_authentication() {
         client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
     }
 
+    @When("connection opens with authentication: {word}, {word}")
+    public void connection_opens_with_authentication(String username, String password) {
+        if (client != null) {
+            client.close();
+            client = null;
+        }
+
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
+    }
+
+    @When("connection opens with authentication: {word}, {word}; throws exception")
+    public void connection_opens_with_authentication_throws_exception(String username, String password) {
+        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
+    }
+
+    @Override
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
+    }
+
+    @Override
+    @When("connection closes")
+    public void connection_closes() {
+        super.connection_closes();
     }
 
     @Given("typedb has configuration")
@@ -109,27 +131,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         TypeDBSingleton.getTypeDBRunner().stop();
     }
 
-    @When("user connect: {word}, {word}")
-    public void user_connect(String username, String password) {
-        if (client != null) {
-            client.close();
-            client = null;
-        }
 
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
-    }
-
-    @When("user disconnect")
-    public void disconnect_current_user() {
-        client.close();
-        client = null;
-    }
-
-    @When("user connect: {word}, {word}; throws exception")
-    public void user_connect_throws_exception(String username, String password) {
-        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
-    }
-
+    @Override
     @Given("connection does not have any database")
     public void connection_does_not_have_any_database() {
         super.connection_does_not_have_any_database();

@@ -56,7 +56,7 @@ public class Parameters {
         return LocalDateTime.parse(dateTime, formatter);
     }
 
-    @ParameterType("entity|attribute|relation")
+    @ParameterType("entity|attribute|relation|thing")
     public RootLabel root_label(String type) {
         return RootLabel.of(type);
     }
@@ -134,7 +134,8 @@ public class Parameters {
     public enum RootLabel {
         ENTITY("entity"),
         ATTRIBUTE("attribute"),
-        RELATION("relation");
+        RELATION("relation"),
+        THING("thing");
 
         private final String label;
 
