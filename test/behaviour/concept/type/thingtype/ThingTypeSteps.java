@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ThingTypeSteps {
 
-    private static final String UNRECOGNISED_VALUE = "Unrecognized value";
+    private static final String ILLEGAL_ARGUMENT = "Illegal argument.";
 
     public static ThingType get_thing_type(RootLabel rootLabel, String typeLabel) {
         switch (rootLabel) {
@@ -55,8 +55,10 @@ public class ThingTypeSteps {
                 return tx().concepts().getAttributeType(typeLabel);
             case RELATION:
                 return tx().concepts().getRelationType(typeLabel);
+            case THING:
+                return tx().concepts().getRootThingType();
             default:
-                throw new IllegalArgumentException(UNRECOGNISED_VALUE);
+                throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
         }
     }
 
@@ -94,7 +96,7 @@ public class ThingTypeSteps {
                 tx().concepts().putRelationType(typeLabel);
                 break;
             default:
-                throw new IllegalArgumentException(UNRECOGNISED_VALUE);
+                throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
         }
     }
 
@@ -160,6 +162,8 @@ public class ThingTypeSteps {
                 RelationType relationSuperType = tx().concepts().getRelationType(superLabel);
                 tx().concepts().getRelationType(typeLabel).asRemote(tx()).setSupertype(relationSuperType);
                 break;
+            case THING:
+                throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
         }
     }
 
@@ -178,6 +182,8 @@ public class ThingTypeSteps {
                 RelationType relationSuperType = tx().concepts().getRelationType(superLabel);
                 assertThrows(() -> tx().concepts().getRelationType(typeLabel).asRemote(tx()).setSupertype(relationSuperType));
                 break;
+            case THING:
+                throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
         }
     }
 
