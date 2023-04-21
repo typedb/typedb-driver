@@ -81,8 +81,9 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         TypeDBSingleton.getTypeDBRunner().stop();
     }
 
-    @When("connection opens without authentication")
-    public void connection_opens_without_authentication() {
+    @Override
+    @When("connection opens with default authentication")
+    public void connection_opens_with_default_authentication() {
         client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
     }
 
@@ -92,11 +93,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         super.connection_closes();
     }
 
+    @Override
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
     }
 
+    @Override
     @Given("connection does not have any database")
     public void connection_does_not_have_any_database() {
         super.connection_does_not_have_any_database();

@@ -71,8 +71,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @When("connection opens without authentication")
-    public void connection_opens_without_authentication() {
+    @When("connection opens with default authentication")
+    public void connection_opens_with_default_authentication() {
         client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
     }
 
@@ -91,6 +91,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
     }
 
+    @Override
     @Given("connection has been opened")
     public void connection_has_been_opened() {
         super.connection_has_been_opened();
@@ -131,6 +132,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
 
+    @Override
     @Given("connection does not have any database")
     public void connection_does_not_have_any_database() {
         super.connection_does_not_have_any_database();

@@ -114,7 +114,7 @@ public abstract class ConnectionStepsBase {
 
     abstract TypeDBOptions createOptions();
 
-    abstract void connection_opens_without_authentication();
+    abstract void connection_opens_with_default_authentication();
 
     void connection_closes() {
         client.close();
