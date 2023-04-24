@@ -30,23 +30,23 @@ export class ClusterUser implements User {
 
     private readonly _client: ClusterClient;
     private readonly _username: string;
-    private readonly _passwordExpiryDays: number;
+    private readonly _passwordExpirySeconds: number;
 
-    constructor(client: ClusterClient, username: string, passwordExpiryDays: number) {
+    constructor(client: ClusterClient, username: string, passwordExpirySeconds: number) {
         this._client = client;
         this._username = username;
-        this._passwordExpiryDays = passwordExpiryDays;
+        this._passwordExpirySeconds = passwordExpirySeconds;
     }
 
     static of(user: UserProto, client: ClusterClient): ClusterUser {
         switch (user.getPasswordExpiryCase()) {
             case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_NOT_SET: return new ClusterUser(client, user.getUsername(), null);
-            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_DAYS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpiryDays());
+            case UserProto.PasswordExpiryCase.PASSWORD_EXPIRY_SECONDS: return new ClusterUser(client, user.getUsername(), user.getPasswordExpirySeconds());
         }
     }
 
-    get passwordExpiryDays(): number {
-        return this._passwordExpiryDays;
+    get passwordExpirySeconds(): number {
+        return this._passwordExpirySeconds;
     }
 
     async passwordUpdate(oldPassword: string, newPassword: string): Promise<void> {

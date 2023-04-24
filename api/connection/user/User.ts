@@ -23,7 +23,7 @@ export interface User {
 
     readonly username: string;
 
-    readonly passwordExpiryDays: number;
+    readonly passwordExpirySeconds: number;
 
     passwordUpdate(oldPassword: string, newPassword: string): Promise<void>;
 }

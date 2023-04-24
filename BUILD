@@ -96,7 +96,7 @@ filegroup(
     srcs = behaviour_steps_common + [
         "//test/behaviour/connection/user:UserSteps.ts",
         "//test/behaviour/connection:ConnectionStepsCluster.ts"
-        ],
+    ],
     visibility = ["//test/behaviour:__pkg__"],
 )
 

@@ -35,6 +35,8 @@ export function getThingType(rootLabel: RootLabel, typeLabel: string): Promise<T
             return tx().concepts.getAttributeType(typeLabel);
         case RootLabel.RELATION:
             return tx().concepts.getRelationType(typeLabel);
+        case RootLabel.THING:
+            return tx().concepts.getRootThingType();
         default:
             throw "Unsupported type"
     }
@@ -131,6 +133,8 @@ When("{root_label}\\({type_label}) set supertype: {type_label}", async (rootLabe
             const relationSuperType = await tx().concepts.getRelationType(superLabel);
             return await (await tx().concepts.getRelationType(typeLabel)).asRemote(tx()).setSupertype(relationSuperType);
         }
+        default:
+            throw "Unsupported type"
     }
 });
 
@@ -148,6 +152,8 @@ When("{root_label}\\({type_label}) set supertype: {type_label}; throws exception
             const relationSuperType = await tx().concepts.getRelationType(superLabel);
             return await assertThrows(async () => await (await tx().concepts.getRelationType(typeLabel)).asRemote(tx()).setSupertype(relationSuperType));
         }
+        default:
+            throw "Unsupported type"
     }
 });
 

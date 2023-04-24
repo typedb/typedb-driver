@@ -26,7 +26,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.5.0",
     "google-protobuf": "3.19.3",
-    "typedb-protocol": "2.16.1",
+    "typedb-protocol": "2.17.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {

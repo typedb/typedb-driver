@@ -22,12 +22,16 @@
 import {Given, setDefaultTimeout, Then} from "@cucumber/cucumber";
 import {TypeDBClient, TypeDBSession, TypeDBTransaction, TypeDBOptions} from "../../../dist";
 import assert = require("assert");
+import {assertThrows} from "../util/Util";
 
 interface OptionSetters {
-    [index: string] : (options: TypeDBOptions, value: string) => void
+    [index: string]: (options: TypeDBOptions, value: string) => void
 }
 
 export const THREAD_POOL_SIZE = 32;
+
+export let clientFn: (username: string, password: string) => Promise<TypeDBClient>;
+export let defaultClientFn: () => Promise<TypeDBClient>;
 
 export let client: TypeDBClient;
 export const sessions: TypeDBSession[] = [];
@@ -46,8 +50,20 @@ export function tx(): TypeDBTransaction {
     return sessionsToTransactions.get(sessions[0])[0];
 }
 
-export function setClient(value: TypeDBClient) {
-    client = value;
+export function setClientFn(constructor: (username: string, password: string) => Promise<TypeDBClient>) {
+    clientFn = constructor;
+}
+
+export function setDefaultClientFn(constructor: () => Promise<TypeDBClient>) {
+    defaultClientFn = constructor;
+}
+
+export async function createDefaultClient(): Promise<void> {
+    client = await defaultClientFn();
+}
+
+export async function createClient(username: string, password: string) {
+    client = await clientFn(username, password);
 }
 
 export function setSessionOptions(options: TypeDBOptions) {
@@ -58,30 +74,44 @@ export function setTransactionOptions(options: TypeDBOptions) {
     transactionOptions = options;
 }
 
-export async function afterAllBase(): Promise<void> {
-    await client.close();
-}
-
 export async function beforeBase(): Promise<void> {
-    for (const session of sessions) {
-        assert(!session.isOpen());
-    }
-    const databases = await client.databases.all();
-    for (const db of databases) {
-        await db.delete();
-    }
     sessions.length = 0;
     sessionsToTransactions.clear();
 }
 
 export async function afterBase() {
-    for (const session of sessions) {
-        await session.close()
-    }
-    for (const db of await client.databases.all()) {
-        await db.delete();
+    if (client.isOpen()) {
+        await client.close();
     }
 }
+
+Given('typedb has configuration', (table: any) => {
+    // TODO: prepare a configuration through the TypeDB runner once it exists
+})
+
+Given('typedb starts', async () => {
+    // TODO: start TypeDB through the TypeDB runner once it exists
+})
+
+Given('typedb stops', async () => {
+    // TODO: stop TypeDB through the TypeDB runner once it exists
+})
+
+Given('connection opens with default authentication', async () => {
+    await createDefaultClient();
+})
+
+Given('connection opens with authentication: {words}, {words}', async (username: string, password: string) => {
+    await createClient(username, password);
+})
+
+Given('connection closes', async () => {
+    if (client && client.isOpen()) await client.close();
+})
+
+Given('connection opens with authentication: {words}, {words}; throws exception', async (username: string, password: string) => {
+    await assertThrows(() => createClient(username, password));
+})
 
 Given('connection has been opened', () => {
     assert(client);

@@ -19,31 +19,54 @@
  * under the License.
  */
 
-import {After, AfterAll, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBCredential, TypeDBOptions} from "../../../dist";
+import {After, Before, BeforeAll} from "@cucumber/cucumber";
+import {TypeDB, TypeDBClient, TypeDBCredential, TypeDBOptions} from "../../../dist";
 import {
-    afterAllBase,
     afterBase,
     beforeBase,
-    setClient,
+    client,
+    createDefaultClient,
+    setClientFn,
+    setDefaultClientFn,
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
+import assert from "assert";
 
 BeforeAll(async () => {
-    setClient(await TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA)));
-});
-
-AfterAll(async () => {
-    await afterAllBase()
-});
-
-Before(async () => {
-    await beforeBase();
+    setDefaultClientFn(async () =>
+        TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA))
+    )
+    setClientFn(async (username, password) => {
+        return TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(username, password, process.env.ROOT_CA))
+    });
     setSessionOptions(TypeDBOptions.cluster({"infer": true}));
     setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
 });
 
-After(async() => {
-    await afterBase()
+Before(async () => {
+    await beforeBase();
+    await clearDB();
 });
+
+After(async () => {
+    await afterBase();
+    await clearDB()
+});
+
+async function clearDB() {
+    // TODO: reset the database through the TypeDB runner once it exists
+    await createDefaultClient();
+    const databases = await client.databases.all();
+    for (const db of databases) {
+        await db.delete();
+    }
+    assert(client.isCluster());
+    const users = await (client as TypeDBClient.Cluster).users.all();
+    for (const user of users) {
+        if (user.username != "admin") {
+            await (client as TypeDBClient.Cluster).users.delete(user.username);
+        }
+    }
+    await client.close();
+}

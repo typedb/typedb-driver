@@ -4246,10 +4246,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedb-protocol@2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/typedb-protocol/-/typedb-protocol-2.16.1.tgz#175d07d6668858d4460d7bda60f89fa564c3e4eb"
-  integrity sha512-q+5h+DUCzLGAd4mjsPSFeUo1uDWA7qPTlx7j9tZH3Hs1CR0poGZfJejhzn3id4CUC4BKlcdxg5ItDgcjZJqGtQ==
+typedb-protocol@2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/typedb-protocol/-/typedb-protocol-2.17.0.tgz#7d8581ca5ccf8f7b2bb9a5596009e50985432073"
+  integrity sha512-Q0lR095BBv8d+gmVyDowVrsMlz4rigdZhhcgsGa0Yi6RvZgB+ZAY9M78HPIjIw4Lig4gZ43syVgV04/QWGufHQ==
   dependencies:
     "@grpc/grpc-js" "1.5.0"
 

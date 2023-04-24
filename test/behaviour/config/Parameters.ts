@@ -47,8 +47,14 @@ defineParameterType({
 });
 
 defineParameterType({
+    name: "words",
+    regexp: /[\w-_]+/,
+    transformer: s => s
+})
+
+defineParameterType({
     name: "root_label",
-    regexp: /entity|attribute|relation/,
+    regexp: /entity|attribute|relation|thing/,
     transformer: s => {
         switch (s) {
             case "entity":
@@ -57,6 +63,8 @@ defineParameterType({
                 return RootLabel.ATTRIBUTE;
             case "relation":
                 return RootLabel.RELATION;
+            case "thing":
+                return RootLabel.THING;
             default:
                 throw `Root label "${s}" was unrecognised.`
         }
@@ -143,6 +151,7 @@ export enum RootLabel {
     ATTRIBUTE,
     ENTITY,
     RELATION,
+    THING,
 }
 
 export function parseList(dataTable: DataTable): string[]
