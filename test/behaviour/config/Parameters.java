@@ -41,6 +41,7 @@ import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 
 public class Parameters {
 

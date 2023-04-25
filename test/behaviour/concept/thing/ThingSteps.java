@@ -45,7 +45,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ThingSteps {
-
     private static Map<String, Thing> things = new HashMap<>();
 
     public static Thing get(String variable) {
@@ -64,7 +63,7 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} is deleted: {bool}")
     public void thing_is_deleted(String var, boolean isDeleted) {
-        assertEquals(isDeleted, get(var).asRemote(tx()).isDeleted());
+        assertEquals(isDeleted, get(var).isDeleted(tx()));
     }
 
     @Then("{root_label} {var} has type: {type_label}")
@@ -75,167 +74,122 @@ public class ThingSteps {
 
     @When("delete entity:/attribute:/relation: {var}")
     public void delete_thing(String var) {
-        Thing thing = get(var);
-        Thing.Remote remote = thing.asRemote(tx());
-        remote.delete();
+        get(var).delete(tx());
     }
 
     @When("entity/attribute/relation {var} set has: {var}")
     public void thing_set_has(String var1, String var2) {
-        get(var1).asRemote(tx()).setHas(get(var2).asAttribute());
+        get(var1).setHas(tx(), get(var2).asAttribute());
     }
 
     @Then("entity/attribute/relation {var} set has: {var}; throws exception")
     public void thing_set_has_throws_exception(String var1, String var2) {
-        assertThrows(() -> get(var1).asRemote(tx()).setHas(get(var2).asAttribute()));
+        assertThrows(() -> get(var1).setHas(tx(), get(var2).asAttribute()));
     }
 
     @When("entity/attribute/relation {var} unset has: {var}")
     public void thing_remove_has(String var1, String var2) {
-        get(var1).asRemote(tx()).unsetHas(get(var2).asAttribute());
+        get(var1).unsetHas(tx(), get(var2).asAttribute());
     }
 
     @Then("entity/attribute/relation {var} get keys contain: {var}")
     public void thing_get_keys_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(set(KEY)).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), set(KEY)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get keys do not contain: {var}")
     public void thing_get_keys_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(set(KEY)).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), set(KEY)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes contain: {var}")
     public void thing_get_attributes_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas().anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx()).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) contain: {var}")
     public void thing_get_attributes_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel)
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) contain: {var}")
     public void thing_get_attributes_as_boolean_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asBoolean()
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) contain: {var}")
     public void thing_get_attributes_as_long_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asLong()
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) contain: {var}")
     public void thing_get_attributes_as_double_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asDouble()
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) contain: {var}")
     public void thing_get_attributes_as_string_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asString()
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) contain: {var}")
     public void thing_get_attributes_as_datetime_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asDateTime()
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes do not contain: {var}")
     public void thing_get_attributes_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas().noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx()).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) do not contain: {var}")
     public void thing_get_attributes_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel)
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) do not contain: {var}")
     public void thing_get_attributes_as_boolean_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asBoolean()
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) do not contain: {var}")
     public void thing_get_attributes_as_long_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asLong()
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) do not contain: {var}")
     public void thing_get_attributes_as_double_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asDouble()
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) do not contain: {var}")
     public void thing_get_attributes_as_string_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asString()
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) do not contain: {var}")
     public void thing_get_attributes_as_datetime_do_not_contain(String var1, String typeLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getHas(
-                tx().concepts().getAttributeType(typeLabel).asDateTime()
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getHas(tx(), tx().concepts().getAttributeType(typeLabel)).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")
     public void thing_get_relations_contain(String var1, Label scopedLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getRelations(
-                tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
-        ).anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getRelations(tx(), tx().concepts().getRelationType(scopedLabel.scope().get()).getRelates(tx(), scopedLabel.name())).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get relations contain: {var}")
     public void thing_get_relations_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getRelations().anyMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getRelations(tx()).anyMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")
     public void thing_get_relations_do_not_contain(String var1, Label scopedLabel, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getRelations(
-                tx().concepts().getRelationType(scopedLabel.scope().get()).asRemote(tx()).getRelates(scopedLabel.name())
-        ).noneMatch(k -> k.equals(get(var2))));
+        assertTrue(get(var1).getRelations(tx(), tx().concepts().getRelationType(scopedLabel.scope().get()).getRelates(tx(), scopedLabel.name())).noneMatch(k -> k.equals(get(var2))));
     }
 
     @Then("entity/attribute/relation {var} get relations do not contain: {var}")
     public void thing_get_relations_do_not_contain(String var1, String var2) {
-        assertTrue(get(var1).asRemote(tx()).getRelations().noneMatch(k -> k.equals(get(var2))));
-    }
-
-    @Then("root\\( ?thing ?) get instances count: {int}")
-    public void root_thing_type_get_instances_contain(int count) {
-        assertEquals(count, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
-    }
-
-    @Then("root\\( ?thing ?) get instances contain: {var}")
-    public void root_thing_type_get_instances_contain(String var) {
-        assertTrue(tx().concepts().getRootThingType().asRemote(tx()).getInstances().anyMatch(i -> i.equals(get(var))));
-    }
-
-    @Then("root\\( ?thing ?) get instances is empty")
-    public void root_thing_type_get_instances_is_empty() {
-        assertEquals(0, tx().concepts().getRootThingType().asRemote(tx()).getInstances().count());
+        assertTrue(get(var1).getRelations(tx()).noneMatch(k -> k.equals(get(var2))));
     }
 
     @After

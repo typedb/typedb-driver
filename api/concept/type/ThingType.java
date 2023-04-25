@@ -23,7 +23,7 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.jni.ValueType;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
@@ -39,89 +39,83 @@ public interface ThingType extends Type {
     }
 
     @Override
-    ThingType.Remote asRemote(TypeDBTransaction transaction);
+    @CheckReturnValue
+    ThingType getSupertype(TypeDBTransaction transaction);
 
-    interface Remote extends Type.Remote, ThingType {
+    @Override
+    @CheckReturnValue
+    Stream<? extends ThingType> getSupertypes(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        ThingType getSupertype();
+    @Override
+    @CheckReturnValue
+    Stream<? extends ThingType> getSubtypes(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends ThingType> getSupertypes();
+    @Override
+    @CheckReturnValue
+    Stream<? extends ThingType> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends ThingType> getSubtypes();
+    @CheckReturnValue
+    Stream<? extends Thing> getInstances(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends ThingType> getSubtypesExplicit();
+    @CheckReturnValue
+    Stream<? extends Thing> getInstancesExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends Thing> getInstances();
+    void setAbstract(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends Thing> getInstancesExplicit();
+    void unsetAbstract(TypeDBTransaction transaction);
 
-        void setAbstract();
+    void setPlays(TypeDBTransaction transaction, RoleType roleType);
 
-        void unsetAbstract();
+    void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenType);
 
-        void setPlays(RoleType roleType);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations);
 
-        void setPlays(RoleType roleType, RoleType overriddenType);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
 
-        void setOwns(AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<TypeQLToken.Annotation> annotations);
 
-        void setOwns(AttributeType attributeType, AttributeType overriddenType);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
-        void setOwns(AttributeType attributeType, Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    Stream<? extends RoleType> getPlays(TypeDBTransaction transaction);
 
-        void setOwns(AttributeType attributeType);
+    @CheckReturnValue
+    Stream<? extends RoleType> getPlaysExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends RoleType> getPlays();
+    @CheckReturnValue
+    RoleType getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType);
 
-        @CheckReturnValue
-        Stream<? extends RoleType> getPlaysExplicit();
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        RoleType getPlaysOverridden(RoleType roleType);
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwns();
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(ValueType valueType);
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit();
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType);
+    @CheckReturnValue
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);
 
-        @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
+    void unsetPlays(TypeDBTransaction transaction, RoleType roleType);
 
-        @CheckReturnValue
-        AttributeType getOwnsOverridden(AttributeType attributeType);
+    void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
-        void unsetPlays(RoleType roleType);
-
-        void unsetOwns(AttributeType attributeType);
-
-        @CheckReturnValue
-        String getSyntax();
-    }
+    @CheckReturnValue
+    String getSyntax(TypeDBTransaction transaction);
 }

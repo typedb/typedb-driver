@@ -113,65 +113,16 @@ public interface Concept {
     Entity asEntity();
 
     @CheckReturnValue
-    Attribute<?> asAttribute();
+    Attribute asAttribute();
 
     @CheckReturnValue
     Relation asRelation();
 
     @CheckReturnValue
-    Remote asRemote(TypeDBTransaction transaction);
-
-    @CheckReturnValue
-    boolean isRemote();
-
-    @CheckReturnValue
     JsonObject toJSON();
 
-    interface Remote extends Concept {
+    void delete(TypeDBTransaction transaction);
 
-        void delete();
-
-        @CheckReturnValue
-        boolean isDeleted();
-
-        @Override
-        @CheckReturnValue
-        Type.Remote asType();
-
-        @Override
-        @CheckReturnValue
-        ThingType.Remote asThingType();
-
-        @Override
-        @CheckReturnValue
-        EntityType.Remote asEntityType();
-
-        @Override
-        @CheckReturnValue
-        RelationType.Remote asRelationType();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Remote asAttributeType();
-
-        @Override
-        @CheckReturnValue
-        RoleType.Remote asRoleType();
-
-        @Override
-        @CheckReturnValue
-        Thing.Remote asThing();
-
-        @Override
-        @CheckReturnValue
-        Entity.Remote asEntity();
-
-        @Override
-        @CheckReturnValue
-        Relation.Remote asRelation();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Remote<?> asAttribute();
-    }
+    @CheckReturnValue
+    boolean isDeleted(TypeDBTransaction transaction);
 }

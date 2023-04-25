@@ -65,6 +65,22 @@ com_github_grpc_grpc_deps()
 load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
 java_grpc_compile()
 
+# Load //builder/rust
+load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
+rust_deps()
+
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+rules_rust_dependencies()
+rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
+
+load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
+fetch_crates()
+load("@crates//:defs.bzl", "crate_repositories")
+crate_repositories()
+
+load("@vaticle_dependencies//tool/swig:deps.bzl", swig_deps = "deps")
+swig_deps()
+
 # Load //tool/common
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
 vaticle_dependencies_ci_pip()
@@ -107,12 +123,13 @@ pip_deps()
 ################################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol", "vaticle_typedb_client_rust")
 vaticle_typedb_common()
 vaticle_typeql()
 vaticle_typedb_behaviour()
 vaticle_factory_tracing()
 vaticle_typedb_protocol()
+vaticle_typedb_client_rust()
 
 # Load artifacts
 load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")

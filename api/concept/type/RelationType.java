@@ -35,58 +35,52 @@ public interface RelationType extends ThingType {
         return true;
     }
 
+    @CheckReturnValue
+    Relation create(TypeDBTransaction transaction);
+
     @Override
-    RelationType.Remote asRemote(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Stream<? extends Relation> getInstances(TypeDBTransaction transaction);
 
-    interface Remote extends ThingType.Remote, RelationType {
+    @Override
+    @CheckReturnValue
+    Stream<? extends Relation> getInstancesExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Relation create();
+    @CheckReturnValue
+    Stream<? extends RoleType> getRelates(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Relation> getInstances();
+    @CheckReturnValue
+    Stream<? extends RoleType> getRelatesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Relation> getInstancesExplicit();
+    @Nullable
+    @CheckReturnValue
+    RoleType getRelates(TypeDBTransaction transaction, String roleLabel);
 
-        @CheckReturnValue
-        Stream<? extends RoleType> getRelates();
+    @Nullable
+    @CheckReturnValue
+    RoleType getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
 
-        @CheckReturnValue
-        Stream<? extends RoleType> getRelatesExplicit();
+    @Nullable
+    @CheckReturnValue
+    RoleType getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
 
-        @Nullable
-        @CheckReturnValue
-        RoleType getRelates(String roleLabel);
+    void setRelates(TypeDBTransaction transaction, String roleLabel);
 
-        @Nullable
-        @CheckReturnValue
-        RoleType getRelatesOverridden(RoleType roleType);
+    void setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType);
 
-        @Nullable
-        @CheckReturnValue
-        RoleType getRelatesOverridden(String roleLabel);
+    void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel);
 
-        void setRelates(String roleLabel);
+    void unsetRelates(TypeDBTransaction transaction, RoleType roleType);
 
-        void setRelates(String roleLabel, RoleType overriddenType);
+    void unsetRelates(TypeDBTransaction transaction, String roleLabel);
 
-        void setRelates(String roleLabel, String overriddenLabel);
+    @Override
+    @CheckReturnValue
+    Stream<? extends RelationType> getSubtypes(TypeDBTransaction transaction);
 
-        void unsetRelates(RoleType roleType);
+    @Override
+    @CheckReturnValue
+    Stream<? extends RelationType> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        void unsetRelates(String roleLabel);
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends RelationType> getSubtypes();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends RelationType> getSubtypesExplicit();
-
-        void setSupertype(RelationType superRelationType);
-    }
+    void setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
 }

@@ -35,31 +35,24 @@ public interface EntityType extends ThingType {
         return true;
     }
 
+    @CheckReturnValue
+    Entity create(TypeDBTransaction transaction);
+
     @Override
     @CheckReturnValue
-    EntityType.Remote asRemote(TypeDBTransaction transaction);
+    Stream<? extends Entity> getInstances(TypeDBTransaction transaction);
 
-    interface Remote extends ThingType.Remote, EntityType {
+    @Override
+    @CheckReturnValue
+    Stream<? extends Entity> getInstancesExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Entity create();
+    @Override
+    @CheckReturnValue
+    Stream<? extends EntityType> getSubtypes(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Entity> getInstances();
+    @Override
+    @CheckReturnValue
+    Stream<? extends EntityType> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Entity> getInstancesExplicit();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends EntityType> getSubtypes();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends EntityType> getSubtypesExplicit();
-
-        void setSupertype(EntityType superEntityType);
-    }
+    void setSupertype(TypeDBTransaction transaction, EntityType superEntityType);
 }

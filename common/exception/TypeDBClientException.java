@@ -21,17 +21,9 @@
 
 package com.vaticle.typedb.client.common.exception;
 
-import io.grpc.Status;
-import io.grpc.StatusRuntimeException;
-
 import javax.annotation.Nullable;
 
 public class TypeDBClientException extends RuntimeException {
-
-    // TODO: propagate exception from the server side in a less-brittle way
-    private static final String CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE = "[RPL01]";
-    private static final String CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE = "[CLS08]";
-    private static final String CLUSTER_PASSWORD_CREDENTIAL_EXPIRED_ERROR_CODE = "[CLS10]";
 
     @Nullable
     private final ErrorMessage errorMessage;
@@ -47,44 +39,6 @@ public class TypeDBClientException extends RuntimeException {
         this.errorMessage = null;
     }
 
-    public static TypeDBClientException of(StatusRuntimeException sre) {
-        if (isRstStream(sre)) {
-            return new TypeDBClientException(ErrorMessage.Client.UNABLE_TO_CONNECT);
-        } else if (isReplicaNotPrimary(sre)) {
-            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY);
-        } else if (isTokenCredentialInvalid(sre)) {
-            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID);
-         } else if (isPasswordCredentialExpired(sre)) {
-            return new TypeDBClientException(ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED);
-        } else {
-            return new TypeDBClientException(sre.getStatus().getDescription(), sre);
-        }
-    }
-
-    private static boolean isRstStream(StatusRuntimeException statusRuntimeException) {
-        // "Received Rst Stream" occurs if the server is in the process of shutting down.
-        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAVAILABLE ||
-                statusRuntimeException.getStatus().getCode() == Status.Code.UNKNOWN ||
-                statusRuntimeException.getMessage().contains("Received Rst Stream");
-    }
-
-    private static boolean isReplicaNotPrimary(StatusRuntimeException statusRuntimeException) {
-        return statusRuntimeException.getStatus().getCode() == Status.Code.INTERNAL &&
-                statusRuntimeException.getStatus().getDescription() != null &&
-                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_REPLICA_NOT_PRIMARY_ERROR_CODE);
-    }
-
-    private static boolean isTokenCredentialInvalid(StatusRuntimeException statusRuntimeException) {
-        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAUTHENTICATED &&
-                statusRuntimeException.getStatus().getDescription() != null &&
-                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_TOKEN_CREDENTIAL_INVALID_ERROR_CODE);
-    }
-
-    private static boolean isPasswordCredentialExpired(StatusRuntimeException statusRuntimeException) {
-        return statusRuntimeException.getStatus().getCode() == Status.Code.UNAUTHENTICATED &&
-                statusRuntimeException.getStatus().getDescription() != null &&
-                statusRuntimeException.getStatus().getDescription().contains(CLUSTER_PASSWORD_CREDENTIAL_EXPIRED_ERROR_CODE);
-    }
     public String getName() {
         return this.getClass().getName();
     }

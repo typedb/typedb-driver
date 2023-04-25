@@ -23,8 +23,6 @@ package com.vaticle.typedb.client.test.behaviour.concept.type.attributetype;
 
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
-import com.vaticle.typedb.client.api.concept.type.Type;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -32,13 +30,12 @@ import io.cucumber.java.en.When;
 import java.util.List;
 import java.util.Set;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.common.collection.Collections.set;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -56,41 +53,21 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) get supertype value type: {value_type}")
     public void attribute_type_get_supertype_value_type(String typeLabel, ValueType valueType) {
-        Type supertype = tx().concepts().getAttributeType(typeLabel).asRemote(tx()).getSupertype();
-        assertEquals(valueType, supertype.asAttributeType().getValueType());
-    }
-
-    private AttributeType attribute_type_as_value_type(String typeLabel, ValueType valueType) {
-        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        switch (valueType) {
-            case OBJECT:
-                return attributeType;
-            case BOOLEAN:
-                return attributeType.asBoolean();
-            case LONG:
-                return attributeType.asLong();
-            case DOUBLE:
-                return attributeType.asDouble();
-            case STRING:
-                return attributeType.asString();
-            case DATETIME:
-                return attributeType.asDateTime();
-            default:
-                throw new TypeDBClientException(BAD_VALUE_TYPE, valueType);
-        }
+        AttributeType supertype = tx().concepts().getAttributeType(typeLabel).getSupertype(tx()).asAttributeType();
+        assertEquals(valueType, supertype.getValueType());
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")
     public void attribute_type_as_value_type_get_subtypes_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.getSubtypes(tx(), valueType).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")
     public void attribute_type_as_value_type_get_subtypes_do_not_contain(String typeLabel, ValueType valueType, List<String> subLabels) {
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        Set<String> actuals = attributeType.asRemote(tx()).getSubtypes().map(t -> t.getLabel().name()).collect(toSet());
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        Set<String> actuals = attributeType.getSubtypes(tx(), valueType).map(t -> t.getLabel().name()).collect(toSet());
         for (String subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
         }
@@ -99,58 +76,58 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")
     public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        attributeType.asString().asRemote(tx()).setRegex(regex);
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        attributeType.setRegex(tx(), regex);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")
-    public void attribute_type_as_value_type_unset_regex(String typeLabel, AttributeType.ValueType valueType) {
-        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        attributeType.asString().asRemote(tx()).setRegex(null);
+    public void attribute_type_as_value_type_unset_regex(String typeLabel, ValueType valueType) {
+        if (!valueType.equals(ValueType.STRING)) fail();
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        attributeType.unsetRegex(tx());
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
         if (!valueType.equals(ValueType.STRING)) fail();
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        assertEquals(regex, attributeType.asString().asRemote(tx()).getRegex());
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        assertEquals(regex, attributeType.getRegex(tx()));
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
-    public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, AttributeType.ValueType valueType) {
-        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
-        AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
-        assertNull(attributeType.asString().asRemote(tx()).getRegex());
+    public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, ValueType valueType) {
+        if (!valueType.equals(ValueType.STRING)) fail();
+        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
+        assertEquals(attributeType.getRegex(tx()), "");
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_key_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_as_key_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_explicit_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_as_key_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_as_key_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
@@ -159,14 +136,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) get owners contain:")
     public void attribute_type_get_owners_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners().map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwners(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners do not contain:")
     public void attribute_type_get_owners_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners().map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwners(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
@@ -175,14 +152,14 @@ public class AttributeTypeSteps {
     @Then("attribute\\( ?{type_label} ?) get owners explicit contain:")
     public void attribute_type_get_owners_explicit_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit().map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwnersExplicit(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit do not contain:")
     public void attribute_type_get_owners_explicit_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit().map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.getOwnersExplicit(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }

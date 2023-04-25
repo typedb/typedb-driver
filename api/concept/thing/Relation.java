@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public interface Relation extends Thing {
-
     @Override
     @CheckReturnValue
     default boolean isRelation() {
@@ -42,27 +41,16 @@ public interface Relation extends Thing {
     @CheckReturnValue
     RelationType getType();
 
-    @Override
+    void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
+
+    void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
+
     @CheckReturnValue
-    Relation.Remote asRemote(TypeDBTransaction transaction);
+    Stream<? extends Thing> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes);
 
-    interface Remote extends Thing.Remote, Relation {
+    @CheckReturnValue
+    Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType(TypeDBTransaction transaction);
 
-        void addPlayer(RoleType roleType, Thing player);
-
-        void removePlayer(RoleType roleType, Thing player);
-
-        @CheckReturnValue
-        Stream<? extends Thing> getPlayers(RoleType... roleTypes);
-
-        @CheckReturnValue
-        Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType();
-
-        @CheckReturnValue
-        Stream<? extends RoleType> getRelating();
-
-        @Override
-        @CheckReturnValue
-        Relation.Remote asRelation();
-    }
+    @CheckReturnValue
+    Stream<? extends RoleType> getRelating(TypeDBTransaction transaction);
 }

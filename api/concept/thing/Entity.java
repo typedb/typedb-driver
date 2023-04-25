@@ -21,13 +21,11 @@
 
 package com.vaticle.typedb.client.api.concept.thing;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
 public interface Entity extends Thing {
-
     @Override
     @CheckReturnValue
     default boolean isEntity() {
@@ -37,11 +35,4 @@ public interface Entity extends Thing {
     @Override
     @CheckReturnValue
     EntityType getType();
-
-    @Override
-    @CheckReturnValue
-    Entity.Remote asRemote(TypeDBTransaction transaction);
-
-    interface Remote extends Thing.Remote, Entity {
-    }
 }

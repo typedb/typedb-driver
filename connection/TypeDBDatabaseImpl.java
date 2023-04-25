@@ -22,26 +22,21 @@
 package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.ruleSchemaReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.typeSchemaReq;
-import static com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl.nonNull;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_delete;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_get_name;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_rule_schema;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_schema;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_type_schema;
 
 public class TypeDBDatabaseImpl implements Database {
 
     private final String name;
-    private final TypeDBDatabaseManagerImpl databaseMgr;
+    final com.vaticle.typedb.client.jni.Database database;
 
-    public TypeDBDatabaseImpl(TypeDBDatabaseManagerImpl databaseMgr, String name) {
-        this.databaseMgr = databaseMgr;
-        this.name = nonNull((name));
-    }
-
-    private TypeDBStub stub() {
-        return databaseMgr.stub();
+    public TypeDBDatabaseImpl(com.vaticle.typedb.client.jni.Database database) {
+        this.database = database;
+        this.name = database_get_name(database);
     }
 
     @Override
@@ -51,22 +46,22 @@ public class TypeDBDatabaseImpl implements Database {
 
     @Override
     public String schema() {
-        return stub().databaseSchema(schemaReq(name)).getSchema();
+        return database_schema(database);
     }
 
     @Override
     public String typeSchema() {
-        return stub().databaseTypeSchema(typeSchemaReq(name)).getSchema();
+        return database_type_schema(database);
     }
 
     @Override
     public String ruleSchema() {
-        return stub().databaseRuleSchema(ruleSchemaReq(name)).getSchema();
+        return database_rule_schema(database);
     }
 
     @Override
     public void delete() {
-        stub().databaseDelete(deleteReq(name));
+        database_delete(database);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class SessionSteps {
         Iterator<TypeDBSession> sessionIter = sessions.iterator();
 
         for (String name : names) {
-            assertEquals(name, sessionIter.next().database().name());
+            assertEquals(name, sessionIter.next().database_name());
         }
     }
 
@@ -148,7 +148,7 @@ public class SessionSteps {
         int i = 0;
         for (String name : names) {
             assertions[i++] = futureSessionIter.next().thenApplyAsync(session -> {
-                assertEquals(name, session.database().name());
+                assertEquals(name, session.database_name());
                 return null;
             });
         }

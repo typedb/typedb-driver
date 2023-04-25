@@ -25,47 +25,37 @@ import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.api.answer.NumericGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.concept.ConceptImpl;
-import com.vaticle.typedb.protocol.AnswerProto;
 
-import java.util.Objects;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_group_get_numeric;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_group_get_owner;
 
 public class NumericGroupImpl implements NumericGroup {
+    private final com.vaticle.typedb.client.jni.NumericGroup numericGroup;
 
-    private final Concept owner;
-    private final Numeric numeric;
-    private final int hash;
-
-    private NumericGroupImpl(Concept owner, Numeric numeric) {
-        this.owner = owner;
-        this.numeric = numeric;
-        this.hash = Objects.hash(this.owner, this.numeric);
-    }
-
-    public static NumericGroup of(AnswerProto.NumericGroup numericGroup) {
-        return new NumericGroupImpl(ConceptImpl.of(numericGroup.getOwner()), NumericImpl.of(numericGroup.getNumber()));
+    public NumericGroupImpl(com.vaticle.typedb.client.jni.NumericGroup numericGroup) {
+        this.numericGroup = numericGroup;
     }
 
     @Override
     public Concept owner() {
-        return this.owner;
+        return ConceptImpl.of(numeric_group_get_owner(numericGroup));
     }
 
     @Override
     public Numeric numeric() {
-        return this.numeric;
+        return new NumericImpl(numeric_group_get_numeric(numericGroup));
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        NumericGroupImpl a2 = (NumericGroupImpl) obj;
-        return this.owner.equals(a2.owner) &&
-                this.numeric.equals(a2.numeric);
+        NumericGroupImpl that = (NumericGroupImpl) obj;
+        return this.numericGroup == that.numericGroup; // FIXME
     }
 
     @Override
     public int hashCode() {
-        return hash;
+        return numericGroup.hashCode(); // FIXME
     }
 }

@@ -22,9 +22,9 @@
 package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-
 import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
+
 import java.util.stream.Stream;
 
 public interface RoleType extends Type {
@@ -35,36 +35,30 @@ public interface RoleType extends Type {
     }
 
     @Override
-    RoleType.Remote asRemote(TypeDBTransaction transaction);
+    RoleType getSupertype(TypeDBTransaction transaction);
 
-    interface Remote extends Type.Remote, RoleType {
+    @Override
+    Stream<? extends RoleType> getSupertypes(TypeDBTransaction transaction);
 
-        @Override
-        RoleType getSupertype();
+    @Override
+    Stream<? extends RoleType> getSubtypes(TypeDBTransaction transaction);
 
-        @Override
-        Stream<? extends RoleType> getSupertypes();
+    @Override
+    Stream<? extends RoleType> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        Stream<? extends RoleType> getSubtypes();
+    RelationType getRelationType(TypeDBTransaction transaction);
 
-        @Override
-        Stream<? extends RoleType> getSubtypesExplicit();
+    Stream<? extends RelationType> getRelationTypes(TypeDBTransaction transaction);
 
-        RelationType getRelationType();
+    Stream<? extends ThingType> getPlayerTypes(TypeDBTransaction transaction);
 
-        Stream<? extends RelationType> getRelationTypes();
+    Stream<? extends ThingType> getPlayerTypesExplicit(TypeDBTransaction transaction);
 
-        Stream<? extends ThingType> getPlayerTypes();
+    Stream<? extends Relation> getRelationInstances(TypeDBTransaction transaction);
 
-        Stream<? extends ThingType> getPlayerTypesExplicit();
+    Stream<? extends Relation> getRelationInstancesExplicit(TypeDBTransaction transaction);
 
-        Stream<? extends Relation> getRelationInstances();
+    Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction);
 
-        Stream<? extends Relation> getRelationInstancesExplicit();
-
-        Stream<? extends Thing> getPlayerInstances();
-
-        Stream<? extends Thing> getPlayerInstancesExplicit();
-    }
+    Stream<? extends Thing> getPlayerInstancesExplicit(TypeDBTransaction transaction);
 }

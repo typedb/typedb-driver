@@ -19,31 +19,31 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.query;
+package com.vaticle.typedb.client.api;
 
-import java.util.function.Function;
+import com.vaticle.typedb.client.api.database.DatabaseManager;
 
-public interface QueryFuture<T> {
+import javax.annotation.CheckReturnValue;
 
-    T get();
+public interface TypeDBConnection extends AutoCloseable {
 
-    default <U> QueryFuture<U> map(Function<T, U> function) {
-        return new Mapped<>(this, function);
-    }
+    @CheckReturnValue
+    boolean isOpen();
 
-    class Mapped<T, U> implements QueryFuture<U> {
+    @CheckReturnValue
+    DatabaseManager databases();
 
-        private final QueryFuture<T> queryFuture;
-        private final Function<T, U> function;
+    @CheckReturnValue
+    TypeDBSession session(String database, TypeDBSession.Type type);
 
-        public Mapped(QueryFuture<T> queryFuture, Function<T, U> function) {
-            this.queryFuture = queryFuture;
-            this.function = function;
-        }
+    @CheckReturnValue
+    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
 
-        @Override
-        public U get() {
-            return function.apply(queryFuture.get());
-        }
-    }
+    void close();
+
+//    @CheckReturnValue
+//    User user();
+//
+//    @CheckReturnValue
+//    UserManager users();
 }

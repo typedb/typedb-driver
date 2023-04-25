@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.user;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBConnection;
 import com.vaticle.typedb.client.api.user.User;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -37,9 +37,9 @@ import static org.junit.Assert.assertTrue;
 
 public class UserSteps {
 
-    private TypeDBClient.Cluster getClient() {
+    private TypeDBConnection.Cluster getClient() {
         assert client.isCluster();
-        return (TypeDBClient.Cluster) client;
+        return (TypeDBConnection.Cluster) client;
     }
 
     public boolean user_is_in_users(String username) {

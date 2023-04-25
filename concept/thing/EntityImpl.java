@@ -21,62 +21,24 @@
 
 package com.vaticle.typedb.client.concept.thing;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
 import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
-import com.vaticle.typedb.common.collection.Bytes;
-import com.vaticle.typedb.protocol.ConceptProto;
+
+import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_get_type;
 
 public class EntityImpl extends ThingImpl implements Entity {
 
-    private final EntityTypeImpl type;
-
-    EntityImpl(String iid, boolean isInferred, EntityTypeImpl type) {
-        super(iid, isInferred);
-        this.type = type;
-    }
-
-    public static EntityImpl of(ConceptProto.Thing protoThing) {
-        return new EntityImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()), protoThing.getInferred(), EntityTypeImpl.of(protoThing.getType()));
+    public EntityImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     @Override
     public EntityTypeImpl getType() {
-        return type;
-    }
-
-    @Override
-    public EntityImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
+        return new EntityTypeImpl(entity_get_type(concept));
     }
 
     @Override
     public final EntityImpl asEntity() {
         return this;
-    }
-
-    public static class Remote extends ThingImpl.Remote implements Entity.Remote {
-
-        private final EntityTypeImpl type;
-
-        public Remote(TypeDBTransaction transaction, String iid, boolean isInferred, EntityTypeImpl type) {
-            super(transaction, iid, isInferred);
-            this.type = type;
-        }
-
-        @Override
-        public EntityImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new EntityImpl.Remote(transaction, getIID(), isInferred(), type);
-        }
-
-        @Override
-        public EntityTypeImpl getType() {
-            return type;
-        }
-
-        @Override
-        public final EntityImpl.Remote asEntity() {
-            return this;
-        }
     }
 }

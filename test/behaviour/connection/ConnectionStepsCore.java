@@ -22,19 +22,17 @@
 package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBConnection;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
-import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
+import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 
 public class ConnectionStepsCore extends ConnectionStepsBase {
-    private TypeDBCoreRunner server;
-
     @Override
     public void beforeAll() {
         super.beforeAll();
@@ -51,13 +49,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBClient createTypeDBClient(String address) {
+    TypeDBConnection createTypeDBClient(String address) {
         return TypeDB.coreClient(address);
     }
 
     @Override
     TypeDBOptions createOptions() {
-        return TypeDBOptions.core();
+        return new TypeDBOptions();
     }
 
     @When("typedb starts")

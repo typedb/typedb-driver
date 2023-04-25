@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public interface Thing extends Concept {
-
     @CheckReturnValue
     String getIID();
 
@@ -52,48 +51,23 @@ public interface Thing extends Concept {
     }
 
     @Override
-    @CheckReturnValue
-    Thing.Remote asRemote(TypeDBTransaction transaction);
-
-    @Override
     default JsonObject toJSON() {
         return Json.object().add("type", getType().getLabel().scopedName());
     }
 
-    interface Remote extends Concept.Remote, Thing {
+    @CheckReturnValue
+    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
 
-        void setHas(Attribute<?> attribute);
+    void setHas(TypeDBTransaction transaction, Attribute attribute);
 
-        void unsetHas(Attribute<?> attribute);
+    void unsetHas(TypeDBTransaction transaction, Attribute attribute);
 
-        @CheckReturnValue
-        Stream<? extends Attribute<?>> getHas();
+    @CheckReturnValue
+    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes);
 
-        @CheckReturnValue
-        Stream<? extends Attribute<?>> getHas(Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    Stream<? extends Relation> getRelations(TypeDBTransaction transaction, RoleType... roleTypes);
 
-        @CheckReturnValue
-        Stream<? extends Attribute.Boolean> getHas(AttributeType.Boolean attributeType);
-
-        @CheckReturnValue
-        Stream<? extends Attribute.Long> getHas(AttributeType.Long attributeType);
-
-        @CheckReturnValue
-        Stream<? extends Attribute.Double> getHas(AttributeType.Double attributeType);
-
-        @CheckReturnValue
-        Stream<? extends Attribute.String> getHas(AttributeType.String attributeType);
-
-        @CheckReturnValue
-        Stream<? extends Attribute.DateTime> getHas(AttributeType.DateTime attributeType);
-
-        @CheckReturnValue
-        Stream<? extends Attribute<?>> getHas(AttributeType... attributeTypes);
-
-        @CheckReturnValue
-        Stream<? extends Relation> getRelations(RoleType... roleTypes);
-
-        @CheckReturnValue
-        Stream<? extends RoleType> getPlaying();
-    }
+    @CheckReturnValue
+    Stream<? extends RoleType> getPlaying(TypeDBTransaction transaction);
 }

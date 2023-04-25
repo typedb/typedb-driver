@@ -25,51 +25,40 @@ import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.concept.ConceptImpl;
-import com.vaticle.typedb.protocol.AnswerProto;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_concept_maps;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_owner;
 
 public class ConceptMapGroupImpl implements ConceptMapGroup {
-    private final Concept owner;
-    private final List<ConceptMap> conceptMaps;
-    private final int hash;
+    private final com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group;
 
-    public ConceptMapGroupImpl(Concept owner, List<ConceptMap> conceptMaps) {
-        this.owner = owner;
-        this.conceptMaps = conceptMaps;
-        this.hash = Objects.hash(this.owner, this.conceptMaps);
-    }
-
-    public static ConceptMapGroup of(AnswerProto.ConceptMapGroup e) {
-        Concept owner = ConceptImpl.of(e.getOwner());
-        List<ConceptMap> conceptMaps = e.getConceptMapsList().stream().map(ConceptMapImpl::of).collect(toList());
-        return new ConceptMapGroupImpl(owner, conceptMaps);
+    public ConceptMapGroupImpl(com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group) {
+        this.concept_map_group = concept_map_group;
     }
 
     @Override
     public Concept owner() {
-        return this.owner;
+        return ConceptImpl.of(concept_map_group_get_owner(concept_map_group));
     }
 
     @Override
-    public List<ConceptMap> conceptMaps() {
-        return this.conceptMaps;
+    public Stream<ConceptMap> conceptMaps() {
+        return concept_map_group_get_concept_maps(concept_map_group).stream().map(ConceptMapImpl::new);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        ConceptMapGroupImpl a2 = (ConceptMapGroupImpl) obj;
-        return this.owner.equals(a2.owner) &&
-                this.conceptMaps.equals(a2.conceptMaps);
+        ConceptMapGroupImpl that = (ConceptMapGroupImpl) obj;
+        return this.concept_map_group == that.concept_map_group;  // TODO
+//        return concept_map_group_equals(this.concept_map_group, that.concept_map_group);
     }
 
     @Override
     public int hashCode() {
-        return hash;
+        return concept_map_group.hashCode();
     }
 }

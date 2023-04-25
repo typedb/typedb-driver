@@ -23,54 +23,41 @@ package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
 import java.util.List;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.database_manager_new;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_all;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_contains;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_create;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_get;
 import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
-    private final TypeDBClientImpl client;
+    private final com.vaticle.typedb.client.jni.DatabaseManager databaseManager;
 
-    public TypeDBDatabaseManagerImpl(TypeDBClientImpl client) {
-        this.client = client;
+    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
+        databaseManager = database_manager_new(connection);
     }
 
     @Override
-    public Database get(String name) {
-        if (contains(name)) return new TypeDBDatabaseImpl(this, name);
-        else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
+    public Database get(String name) throws Error {
+        return new TypeDBDatabaseImpl(databases_get(databaseManager, name));
     }
 
     @Override
-    public boolean contains(String name) {
-        return stub().databasesContains(containsReq(nonNull(name))).getContains();
+    public boolean contains(String name) throws Error {
+        return databases_contains(databaseManager, name);
     }
 
     @Override
-    public void create(String name) {
-        stub().databasesCreate(createReq(nonNull(name)));
+    public void create(String name) throws Error {
+        databases_create(databaseManager, name);
     }
 
     @Override
-    public List<TypeDBDatabaseImpl> all() {
-        List<String> databases = stub().databasesAll(allReq()).getNamesList();
-        return databases.stream().map(name -> new TypeDBDatabaseImpl(this, name)).collect(toList());
-    }
-
-    TypeDBStub stub() {
-        return client.stub();
-    }
-
-    static String nonNull(String name) {
-        if (name == null) throw new TypeDBClientException(MISSING_DB_NAME);
-        return name;
+    public List<Database> all() {
+        return databases_all(databaseManager).stream().map(TypeDBDatabaseImpl::new).collect(toList());
     }
 }

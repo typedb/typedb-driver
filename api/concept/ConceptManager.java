@@ -21,11 +21,12 @@
 
 package com.vaticle.typedb.client.api.concept;
 
-import com.vaticle.typedb.client.api.concept.thing.Thing;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
+import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.exception.TypeDBException;
 
 import java.util.List;
@@ -33,9 +34,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 public interface ConceptManager {
-
-    @CheckReturnValue
-    ThingType getRootThingType();
 
     @CheckReturnValue
     EntityType getRootEntityType();
@@ -48,29 +46,33 @@ public interface ConceptManager {
 
     @Nullable
     @CheckReturnValue
-    ThingType getThingType(String label);
-
-    @Nullable
-    @CheckReturnValue
-    Thing getThing(String iid);
-
-    @Nullable
-    @CheckReturnValue
     EntityType getEntityType(String label);
-
-    EntityType putEntityType(String label);
 
     @Nullable
     @CheckReturnValue
     RelationType getRelationType(String label);
 
-    RelationType putRelationType(String label);
-
     @Nullable
     @CheckReturnValue
     AttributeType getAttributeType(String label);
 
+    EntityType putEntityType(String label);
+
+    RelationType putRelationType(String label);
+
     AttributeType putAttributeType(String label, AttributeType.ValueType valueType);
+
+    @Nullable
+    @CheckReturnValue
+    Entity getEntity(String iid);
+
+    @Nullable
+    @CheckReturnValue
+    Relation getRelation(String iid);
+
+    @Nullable
+    @CheckReturnValue
+    Attribute getAttribute(String iid);
 
     @CheckReturnValue
     List<TypeDBException> getSchemaExceptions();

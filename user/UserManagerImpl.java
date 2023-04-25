@@ -19,46 +19,45 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.client.user;
 
-import com.vaticle.typedb.client.api.database.DatabaseManager;
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
 
-import javax.annotation.CheckReturnValue;
+import java.util.Set;
 
-public interface TypeDBClient extends AutoCloseable {
+public class UserManagerImpl implements UserManager {
 
-    @CheckReturnValue
-    boolean isOpen();
+    static final String SYSTEM_DB = "_system";
 
-    @CheckReturnValue
-    DatabaseManager databases();
+    public UserManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
+        // TODO
+    }
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type);
+    @Override
+    public boolean contains(String username) {
+        return false; // TODO
+    }
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
+    @Override
+    public void create(String username, String password) {
+    }
 
-    @CheckReturnValue
-    boolean isCluster();
+    @Override
+    public void delete(String username) {
+    }
 
-    @CheckReturnValue
-    TypeDBClient.Cluster asCluster();
+    @Override
+    public Set<User> all() {
+        return null; // TODO
+    }
 
-    void close();
+    @Override
+    public User get(String username) {
+        return null; // TODO
+    }
 
-    interface Cluster extends TypeDBClient {
-
-        @CheckReturnValue
-        User user();
-
-        @CheckReturnValue
-        UserManager users();
-
-        @Override
-        @CheckReturnValue
-        DatabaseManager.Cluster databases();
+    @Override
+    public void passwordSet(String username, String password) {
     }
 }

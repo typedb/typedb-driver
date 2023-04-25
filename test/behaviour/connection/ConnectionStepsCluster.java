@@ -22,12 +22,12 @@
 package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBConnection;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
-import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
+import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -57,17 +57,17 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBClient createTypeDBClient(String address) {
+    TypeDBConnection createTypeDBClient(String address) {
         return createTypeDBClient(address, "admin", "password", false);
     }
 
-    TypeDBClient createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
+    TypeDBConnection createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
         return TypeDB.clusterClient(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 
     @Override
     TypeDBOptions createOptions() {
-        return TypeDBOptions.cluster();
+        return new TypeDBOptions();
     }
 
     @Override

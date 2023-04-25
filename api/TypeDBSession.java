@@ -21,9 +21,6 @@
 
 package com.vaticle.typedb.client.api;
 
-import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.protocol.SessionProto;
-
 import javax.annotation.CheckReturnValue;
 
 public interface TypeDBSession extends AutoCloseable {
@@ -35,7 +32,7 @@ public interface TypeDBSession extends AutoCloseable {
     Type type();
 
     @CheckReturnValue
-    Database database();
+    String database_name();
 
     @CheckReturnValue
     TypeDBOptions options();
@@ -79,10 +76,6 @@ public interface TypeDBSession extends AutoCloseable {
 
         public boolean isSchema() {
             return isSchema;
-        }
-
-        public SessionProto.Session.Type proto() {
-            return SessionProto.Session.Type.forNumber(id);
         }
     }
 }

@@ -29,14 +29,12 @@ java_library(
     deps = [
         # Internal dependencies
         "//api:api",
-        "//common:common",
         "//concept:concept",
 
         # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typedb_client_rust//:typedb_client_jni",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/pattern",
-        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

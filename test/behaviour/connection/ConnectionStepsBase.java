@@ -21,12 +21,11 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBConnection;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
-import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static TypeDBClient client;
+    public static TypeDBConnection client;
     public static List<TypeDBSession> sessions = new ArrayList<>();
     public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
     public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
@@ -110,7 +109,7 @@ public abstract class ConnectionStepsBase {
         System.out.println("ConnectionSteps.after");
     }
 
-    abstract TypeDBClient createTypeDBClient(String address);
+    abstract TypeDBConnection createTypeDBClient(String address);
 
     abstract TypeDBOptions createOptions();
 

@@ -25,43 +25,32 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.client.common.rpc.RequestBuilder;
+import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.client.jni.Transitivity;
 
-import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerInstancesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getPlayerTypesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationInstancesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.RoleType.getRelationTypesReq;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_delete;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_name;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_player_instances;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_player_types;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_instances;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_types;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_scope;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_is_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_set_label;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
-
-    RoleTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
-        super(label, isRoot, isAbstract);
-    }
-
-    public static RoleTypeImpl of(ConceptProto.Type proto) {
-        return new RoleTypeImpl(
-                Label.of(proto.getScope(), proto.getLabel()),
-                proto.getIsRoot(),
-                proto.getIsAbstract()
-        );
-    }
-
-    public static ConceptProto.Type protoRoleType(RoleType roleType) {
-        return RequestBuilder.Type.RoleType.protoRoleType(roleType.getLabel(), TypeImpl.encoding(roleType));
-    }
-
-    @Override
-    public RoleTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
+    public RoleTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     @Override
@@ -69,104 +58,92 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         return this;
     }
 
-    public static class Remote extends TypeImpl.Remote implements RoleType.Remote {
+    @Override
+    public final boolean isAbstract() {
+        return role_type_is_abstract(concept);
+    }
 
-        public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-            super(transaction, label, isRoot, isAbstract);
-        }
+    @Override
+    public Label getLabel() {
+        return Label.of(role_type_get_scope(concept), role_type_get_name(concept));
+    }
 
-        @Nullable
-        @Override
-        public RoleTypeImpl getSupertype() {
-            TypeImpl supertype = super.getSupertype();
-            return supertype != null ? supertype.asRoleType() : null;
-        }
+    @Override
+    public final void delete(TypeDBTransaction transaction) {
+        role_type_delete(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+    }
 
-        @Override
-        public final Stream<RoleTypeImpl> getSupertypes() {
-            return super.getSupertypes().map(TypeImpl::asRoleType);
-        }
+    @Override
+    public final boolean isDeleted(TypeDBTransaction transaction) {
+        return role_type_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+    }
 
-        @Override
-        public final Stream<RoleTypeImpl> getSubtypes() {
-            return super.getSubtypes().map(TypeImpl::asRoleType);
-        }
+    @Override
+    public final void setLabel(TypeDBTransaction transaction, String newLabel) {
+        role_type_set_label(((ConceptManagerImpl) transaction.concepts()).transaction, concept, newLabel);
+    }
 
-        @Override
-        public final Stream<RoleTypeImpl> getSubtypesExplicit() {
-            return super.getSubtypesExplicit().map(TypeImpl::asRoleType);
-        }
+    @Nullable
+    @Override
+    public RoleTypeImpl getSupertype(TypeDBTransaction transaction) {
+        com.vaticle.typedb.client.jni.Concept res = role_type_get_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        if (res != null) return new RoleTypeImpl(res);
+        else return null;
+    }
 
-        @Override
-        public RoleType.Remote asRemote(TypeDBTransaction transaction) {
-            return new RoleTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
+    @Override
+    public final Stream<RoleTypeImpl> getSupertypes(TypeDBTransaction transaction) {
+        return role_type_get_supertypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(RoleTypeImpl::new);
+    }
 
-        @Nullable
-        @Override
-        public final RelationType getRelationType() {
-            assert getLabel().scope().isPresent();
-            return transactionExt.concepts().getRelationType(getLabel().scope().get());
-        }
+    @Override
+    public final Stream<RoleTypeImpl> getSubtypes(TypeDBTransaction transaction) {
+        return role_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(RoleTypeImpl::new);
+    }
 
-        @Override
-        public final Stream<RelationTypeImpl> getRelationTypes() {
-            return stream(getRelationTypesReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetRelationTypesResPart().getRelationTypesList().stream())
-                    .map(RelationTypeImpl::of);
-        }
+    @Override
+    public final Stream<RoleTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
+        return role_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(RoleTypeImpl::new);
+    }
 
-        @Override
-        public final Stream<ThingTypeImpl> getPlayerTypes() {
-            return stream(getPlayerTypesReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetPlayerTypesResPart().getThingTypesList().stream())
-                    .map(ThingTypeImpl::of);
-        }
+    @Nullable
+    @Override
+    public final RelationType getRelationType(TypeDBTransaction transaction) {
+        return new RelationTypeImpl(role_type_get_relation_type(((ConceptManagerImpl) transaction.concepts()).transaction, concept));
+    }
 
-        @Override
-        public final Stream<ThingTypeImpl> getPlayerTypesExplicit() {
-            return stream(getPlayerTypesExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetPlayerTypesExplicitResPart().getThingTypesList().stream())
-                    .map(ThingTypeImpl::of);
-        }
+    @Override
+    public final Stream<RelationTypeImpl> getRelationTypes(TypeDBTransaction transaction) {
+        return role_type_get_relation_types(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(RelationTypeImpl::new);
+    }
 
-        @Override
-        public final Stream<RelationImpl> getRelationInstances() {
-            return stream(getRelationInstancesReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetRelationInstancesResPart().getRelationsList().stream())
-                    .map(RelationImpl::of);
-        }
+    @Override
+    public final Stream<ThingTypeImpl> getPlayerTypes(TypeDBTransaction transaction) {
+        return role_type_get_player_types(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(ThingTypeImpl::of);
+    }
 
-        @Override
-        public final Stream<RelationImpl> getRelationInstancesExplicit() {
-            return stream(getRelationInstancesExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetRelationInstancesExplicitResPart().getRelationsList().stream())
-                    .map(RelationImpl::of);
-        }
+    @Override
+    public final Stream<ThingTypeImpl> getPlayerTypesExplicit(TypeDBTransaction transaction) {
+        return role_type_get_player_types(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(ThingTypeImpl::of);
+    }
 
-        @Override
-        public final Stream<ThingImpl> getPlayerInstances() {
-            return stream(getPlayerInstancesReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetPlayerInstancesResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
+    @Override
+    public final Stream<RelationImpl> getRelationInstances(TypeDBTransaction transaction) {
+        return role_type_get_relation_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(RelationImpl::new);
+    }
 
-        @Override
-        public final Stream<ThingImpl> getPlayerInstancesExplicit() {
-            return stream(getPlayerInstancesExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getRoleTypeGetPlayerInstancesExplicitResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
+    @Override
+    public final Stream<RelationImpl> getRelationInstancesExplicit(TypeDBTransaction transaction) {
+        return role_type_get_relation_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(RelationImpl::new);
+    }
 
-        @Override
-        public final boolean isDeleted() {
-            return getRelationType() == null ||
-                    getRelationType().asRemote(transactionExt).getRelates(getLabel().name()) == null;
-        }
+    @Override
+    public final Stream<ThingImpl> getPlayerInstances(TypeDBTransaction transaction) {
+        return role_type_get_player_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(ThingImpl::of);
+    }
 
-        @Override
-        public RoleTypeImpl.Remote asRoleType() {
-            return this;
-        }
+    @Override
+    public final Stream<ThingImpl> getPlayerInstancesExplicit(TypeDBTransaction transaction) {
+        return role_type_get_player_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(ThingImpl::of);
     }
 }

@@ -25,61 +25,31 @@ import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
-import com.vaticle.typedb.protocol.LogicProto;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_conclusion;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_condition;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_rule;
 
 public class ExplanationImpl implements Explanation {
+    private final com.vaticle.typedb.client.jni.Explanation explanation;
 
-    private final Rule rule;
-    private final Map<String, Set<String>> variableMapping;
-    private final ConceptMap conclusion;
-    private final ConceptMap condition;
-
-    private ExplanationImpl(Rule rule, Map<String, Set<String>> variableMapping, ConceptMap conclusion, ConceptMap condition) {
-        this.rule = rule;
-        this.variableMapping = variableMapping;
-        this.conclusion = conclusion;
-        this.condition = condition;
-    }
-
-    public static Explanation of(LogicProto.Explanation explanation) {
-        return new ExplanationImpl(
-                RuleImpl.of(explanation.getRule()),
-                of(explanation.getVarMappingMap()),
-                ConceptMapImpl.of(explanation.getConclusion()),
-                ConceptMapImpl.of(explanation.getCondition())
-        );
-    }
-
-    private static Map<String, Set<String>> of(Map<String, LogicProto.Explanation.VarList> varMapping) {
-        Map<String, Set<String>> mapping = new HashMap<>();
-        varMapping.forEach((from, tos) -> mapping.put(from, new HashSet<>(tos.getVarsList())));
-        return mapping;
+    public ExplanationImpl(com.vaticle.typedb.client.jni.Explanation explanation) {
+        this.explanation = explanation;
     }
 
     @Override
     public Rule rule() {
-        return rule;
-    }
-
-    @Override
-    public Map<String, Set<String>> variableMapping() {
-        return variableMapping;
+        return new RuleImpl(explanation_get_rule(explanation));
     }
 
     @Override
     public ConceptMap conclusion() {
-        return conclusion;
+        return new ConceptMapImpl(explanation_get_conclusion(explanation));
     }
 
     @Override
     public ConceptMap condition() {
-        return condition;
+        return new ConceptMapImpl(explanation_get_condition(explanation));
     }
 
     @Override
@@ -87,12 +57,11 @@ public class ExplanationImpl implements Explanation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final ExplanationImpl that = (ExplanationImpl) o;
-        return rule.equals(that.rule) && variableMapping.equals(that.variableMapping) &&
-                conclusion.equals(that.conclusion) && condition.equals(that.condition);
+        return this.explanation == that.explanation; // FIXME
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rule, variableMapping, conclusion, condition);
+        return this.explanation.hashCode();
     }
 }

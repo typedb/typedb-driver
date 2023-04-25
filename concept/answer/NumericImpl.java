@@ -23,88 +23,58 @@ package com.vaticle.typedb.client.concept.answer;
 
 import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.AnswerProto;
-
-import javax.annotation.Nullable;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.BAD_ANSWER_TYPE;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_get_double;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_get_long;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_double;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_long;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_nan;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_to_string;
 
 public class NumericImpl implements Numeric {
+    private final com.vaticle.typedb.client.jni.Numeric numeric;
 
-    @Nullable
-    private final Long longValue;
-    @Nullable
-    private final Double doubleValue;
-
-    private NumericImpl(@Nullable Long longValue, @Nullable Double doubleValue) {
-        this.longValue = longValue;
-        this.doubleValue = doubleValue;
-    }
-
-    public static NumericImpl of(AnswerProto.Numeric numeric) {
-        switch (numeric.getValueCase()) {
-            case LONG_VALUE:
-                return NumericImpl.ofLong(numeric.getLongValue());
-            case DOUBLE_VALUE:
-                return NumericImpl.ofDouble(numeric.getDoubleValue());
-            case NAN:
-                return NumericImpl.ofNaN();
-            default:
-                throw new TypeDBClientException(BAD_ANSWER_TYPE, numeric.getValueCase());
-        }
-    }
-
-    private static NumericImpl ofLong(long value) {
-        return new NumericImpl(value, null);
-    }
-
-    private static NumericImpl ofDouble(double value) {
-        return new NumericImpl(null, value);
-    }
-
-    private static NumericImpl ofNaN() {
-        return new NumericImpl(null, null);
+    public NumericImpl(com.vaticle.typedb.client.jni.Numeric numeric) {
+        this.numeric = numeric;
     }
 
     @Override
     public boolean isLong() {
-        return longValue != null;
+        return numeric_is_long(numeric);
     }
 
     @Override
     public boolean isDouble() {
-        return doubleValue != null;
+        return numeric_is_double(numeric);
     }
 
     @Override
     public boolean isNaN() {
-        return !isLong() && !isDouble();
+        return numeric_is_nan(numeric);
     }
 
     @Override
     public long asLong() {
-        if (isLong()) return longValue;
+        if (isLong()) return numeric_get_long(numeric);
         else throw new TypeDBClientException(ILLEGAL_CAST, Long.class);
     }
 
     @Override
     public Double asDouble() {
-        if (isDouble()) return doubleValue;
+        if (isDouble()) return numeric_get_double(numeric);
         else throw new TypeDBClientException(ILLEGAL_CAST, Double.class);
     }
 
     @Override
     public Number asNumber() {
-        if (isLong()) return longValue;
-        else if (isDouble()) return doubleValue;
+        if (isLong()) return asLong();
+        else if (isDouble()) return asDouble();
         else throw new TypeDBClientException(ILLEGAL_CAST, Number.class);
     }
 
     @Override
     public String toString() {
-        if (isLong()) return longValue.toString();
-        else if (isDouble()) return doubleValue.toString();
-        else return "NaN";
+        return numeric_to_string(numeric);
     }
 }

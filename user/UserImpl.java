@@ -19,36 +19,24 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.connection.core;
+package com.vaticle.typedb.client.user;
 
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.connection.TypeDBClientImpl;
-import io.grpc.ManagedChannel;
-import io.grpc.netty.NettyChannelBuilder;
+import com.vaticle.typedb.client.api.user.User;
 
-public class CoreClient extends TypeDBClientImpl {
+public class UserImpl implements User {
 
-    private final ManagedChannel channel;
-    private final TypeDBStub stub;
+    private final String username;
 
-    public CoreClient(String address) {
-        this(address, calculateParallelisation());
-    }
-
-    public CoreClient(String address, int parallelisation) {
-        super(parallelisation);
-        channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
-        stub = CoreStub.create(channel);
-        validateConnectionOrThrow();
+    public UserImpl(String username) {
+        this.username = username;
     }
 
     @Override
-    public ManagedChannel channel() {
-        return channel;
+    public String username() {
+        return username;
     }
 
     @Override
-    public TypeDBStub stub() {
-        return stub;
+    public void passwordUpdate(String passwordOld, String passwordNew) {
     }
 }

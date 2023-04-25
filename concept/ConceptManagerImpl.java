@@ -21,45 +21,42 @@
 
 package com.vaticle.typedb.client.concept;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
-import com.vaticle.typedb.client.api.concept.thing.Thing;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
+import com.vaticle.typedb.client.api.concept.thing.Entity;
+import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.exception.TypeDBException;
-import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.client.concept.thing.AttributeImpl;
+import com.vaticle.typedb.client.concept.thing.EntityImpl;
+import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
 import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
-import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
-import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
-import java.util.List;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getSchemaExceptionsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.getThingTypeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putAttributeTypeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putEntityTypeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.ConceptManager.putRelationTypeReq;
-import static java.util.stream.Collectors.toList;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_attribute;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_entity;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_relation;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_relation_type;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
-    private final TypeDBTransaction.Extended transactionExt;
+    public final com.vaticle.typedb.client.jni.Transaction transaction;
 
-    public ConceptManagerImpl(TypeDBTransaction.Extended transactionExt) {
-        this.transactionExt = transactionExt;
-    }
-
-    @Override
-    public ThingType getRootThingType() {
-        return getThingType(TypeQLToken.Type.THING.toString());
+    public ConceptManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {
+        this.transaction = transaction;
     }
 
     @Override
@@ -78,78 +75,70 @@ public final class ConceptManagerImpl implements ConceptManager {
     }
 
     @Override
-    public EntityType putEntityType(String label) {
-        return EntityTypeImpl.of(execute(putEntityTypeReq(label)).getPutEntityTypeRes().getEntityType());
-    }
-
-    @Override
     @Nullable
     public EntityType getEntityType(String label) {
-        ThingType thingType = getThingType(label);
-        if (thingType != null && thingType.isEntityType()) return thingType.asEntityType();
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_entity_type(transaction, label);
+        if (res != null) return new EntityTypeImpl(res);
         else return null;
-    }
-
-    @Override
-    public RelationType putRelationType(String label) {
-        return RelationTypeImpl.of(execute(putRelationTypeReq(label)).getPutRelationTypeRes().getRelationType());
     }
 
     @Override
     @Nullable
     public RelationType getRelationType(String label) {
-        ThingType thingType = getThingType(label);
-        if (thingType != null && thingType.isRelationType()) return thingType.asRelationType();
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_relation_type(transaction, label);
+        if (res != null) return new RelationTypeImpl(res);
         else return null;
-    }
-
-    @Override
-    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
-        ConceptProto.ConceptManager.Res res = execute(putAttributeTypeReq(label, valueType.proto()));
-        return AttributeTypeImpl.of(res.getPutAttributeTypeRes().getAttributeType());
     }
 
     @Override
     @Nullable
     public AttributeType getAttributeType(String label) {
-        ThingType thingType = getThingType(label);
-        if (thingType != null && thingType.isAttributeType()) return thingType.asAttributeType();
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute_type(transaction, label);
+        if (res != null) return new AttributeTypeImpl(res);
+        else return null;
+    }
+
+    @Override
+    public EntityType putEntityType(String label) {
+        return new EntityTypeImpl(concepts_put_entity_type(transaction, label));
+    }
+
+    @Override
+    public RelationType putRelationType(String label) {
+        return new RelationTypeImpl(concepts_put_relation_type(transaction, label));
+    }
+
+    @Override
+    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) { // FIXME
+        return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, com.vaticle.typedb.client.jni.ValueType.swigToEnum(valueType.ordinal())));
+    }
+
+    @Override
+    @Nullable
+    public Entity getEntity(String iid) {
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_entity(transaction, iid);
+        if (res != null) return new EntityImpl(res);
         else return null;
     }
 
     @Override
     @Nullable
-    public ThingType getThingType(String label) {
-        ConceptProto.ConceptManager.GetThingType.Res res = execute(getThingTypeReq(label)).getGetThingTypeRes();
-        switch (res.getResCase()) {
-            case THING_TYPE:
-                return ThingTypeImpl.of(res.getThingType());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+    public Relation getRelation(String iid) {
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_relation(transaction, iid);
+        if (res != null) return new RelationImpl(res);
+        else return null;
     }
 
     @Override
     @Nullable
-    public Thing getThing(String iid) {
-        ConceptProto.ConceptManager.GetThing.Res res = execute(getThingReq(iid)).getGetThingRes();
-        switch (res.getResCase()) {
-            case THING:
-                return ThingImpl.of(res.getThing());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+    public Attribute getAttribute(String iid) {
+        com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute(transaction, iid);
+        if (res != null) return new AttributeImpl(res);
+        else return null;
     }
 
     @Override
     public List<TypeDBException> getSchemaExceptions() {
-        return execute(getSchemaExceptionsReq()).getGetSchemaExceptionsRes().getExceptionsList().stream()
-                .map(e -> new TypeDBException(e.getCode(), e.getMessage())).collect(toList());
-    }
-
-    private ConceptProto.ConceptManager.Res execute(TransactionProto.Transaction.Req.Builder req) {
-        return transactionExt.execute(req).getConceptManagerRes();
+        return new ArrayList<>(); // FIXME
     }
 }

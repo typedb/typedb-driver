@@ -21,57 +21,40 @@
 
 package com.vaticle.typedb.client.logic;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.logic.Rule;
-import com.vaticle.typedb.protocol.LogicProto;
-import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.getRuleReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.getRulesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.LogicManager.putRuleReq;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_get_rule;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_get_rules;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_put_rule;
 
 public final class LogicManagerImpl implements LogicManager {
 
-    private final TypeDBTransaction.Extended transactionRPC;
+    final com.vaticle.typedb.client.jni.Transaction transaction;
 
-    public LogicManagerImpl(TypeDBTransaction.Extended transactionRPC) {
-        this.transactionRPC = transactionRPC;
+    public LogicManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {
+        this.transaction = transaction;
     }
 
     @Override
     @Nullable
     public Rule getRule(String label) {
-        LogicProto.LogicManager.GetRule.Res res = execute(getRuleReq(label)).getGetRuleRes();
-        switch (res.getResCase()) {
-            case RULE:
-                return RuleImpl.of(res.getRule());
-            default:
-            case RES_NOT_SET:
-                return null;
-        }
+        com.vaticle.typedb.client.jni.Rule res = logic_manager_get_rule(transaction, label);
+        if (res != null) return new RuleImpl(res);
+        else return null;
     }
 
     @Override
     public Stream<RuleImpl> getRules() {
-        return stream(getRulesReq()).flatMap(res -> res.getGetRulesResPart().getRulesList().stream()).map(RuleImpl::of);
+        return logic_manager_get_rules(transaction).stream().map(RuleImpl::new);
     }
 
     @Override
     public Rule putRule(String label, Pattern when, Pattern then) {
-        LogicProto.LogicManager.Res res = execute(putRuleReq(label, when.toString(), then.toString()));
-        return RuleImpl.of(res.getPutRuleRes().getRule());
-    }
-
-    private LogicProto.LogicManager.Res execute(TransactionProto.Transaction.Req.Builder req) {
-        return transactionRPC.execute(req).getLogicManagerRes();
-    }
-
-    private Stream<LogicProto.LogicManager.ResPart> stream(TransactionProto.Transaction.Req.Builder req) {
-        return transactionRPC.stream(req).map(TransactionProto.Transaction.ResPart::getLogicManagerResPart);
+        return new RuleImpl(logic_manager_put_rule(transaction, label, when.toString(), then.toString()));
     }
 }

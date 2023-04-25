@@ -38,56 +38,14 @@ java_library(
         "//test/behaviour/util:util",
         "//test/behaviour/connection:steps-base",
 
-        # External dependencies from @vaticle
+        # Internal Repository Dependencies
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql//java/common",
+        "@vaticle_typeql//java/common:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-)
-
-typedb_behaviour_java_test(
-    name = "test",
-    srcs = [
-        "ThingTypeTest.java",
-    ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.type.thingtype.ThingTypeTest",
-    data = [
-        "@vaticle_typedb_behaviour//concept/type:thingtype.feature",
-    ],
-    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
-    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
-    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
-    typedb_cluster_artifact_mac = "@vaticle_typedb_cluster_artifact_mac//file",
-    typedb_cluster_artifact_linux = "@vaticle_typedb_cluster_artifact_linux//file",
-    typedb_cluster_artifact_windows = "@vaticle_typedb_cluster_artifact_windows//file",
-    connection_steps_core = "//test/behaviour/connection:steps-core",
-    connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
-    steps = [
-        ":steps",
-        "//test/behaviour/concept/thing/attribute:steps",
-        "//test/behaviour/concept/thing/entity:steps",
-        "//test/behaviour/concept/thing/relation:steps",
-        "//test/behaviour/concept/type/attributetype:steps",
-        "//test/behaviour/concept/type/relationtype:steps",
-        "//test/behaviour/connection:steps-base",
-        "//test/behaviour/connection/database:steps",
-        "//test/behaviour/connection/session:steps",
-        "//test/behaviour/connection/transaction:steps",
-    ],
-    deps = [
-        # Internal Package Dependencies
-        "//test/behaviour:behaviour",
-
-        # External Maven Dependencies
-        "@maven//:io_cucumber_cucumber_junit",
-    ],
-    runtime_deps = [
-        "//test/behaviour/config:parameters",
-    ],
-    size = "small",
 )
 
 checkstyle_test(

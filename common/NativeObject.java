@@ -19,23 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.database;
+package com.vaticle.typedb.client.common;
 
-import javax.annotation.CheckReturnValue;
-
-public interface Database {
-
-    @CheckReturnValue
-    String name();
-
-    @CheckReturnValue
-    String schema();
-
-    @CheckReturnValue
-    String typeSchema();
-
-    @CheckReturnValue
-    String ruleSchema();
-
-    void delete();
+public abstract class NativeObject {
+    static {
+        System.loadLibrary("typedb_client_jni");
+    }
 }

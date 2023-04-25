@@ -21,193 +21,173 @@
 
 package com.vaticle.typedb.client.api;
 
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.OptionsProto;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.common.util.Objects.className;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_explain;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_infer;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_parallel;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_prefetch;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_prefetch_size;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_read_any_replica;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_schema_lock_acquire_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_session_idle_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_trace_inference;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_get_transaction_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_explain;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_infer;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_parallel;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_prefetch;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_prefetch_size;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_read_any_replica;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_schema_lock_acquire_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_session_idle_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_trace_inference;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_has_transaction_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_new;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_explain;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_infer;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_parallel;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_prefetch;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_prefetch_size;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_read_any_replica;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_schema_lock_acquire_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_session_idle_timeout_millis;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_trace_inference;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.options_set_transaction_timeout_millis;
 
-public class TypeDBOptions {
+public class TypeDBOptions extends NativeObject {
+    public final com.vaticle.typedb.client.jni.Options options;
 
-    private Boolean infer = null;
-    private Boolean traceInference = null;
-    private Boolean explain = null;
-    private Boolean parallel = null;
-    private Boolean prefetch = null;
-    private Integer prefetchSize = null;
-    private Integer sessionIdleTimeoutMillis = null;
-    private Integer transactionTimeoutMillis = null;
-    private Integer schemaLockAcquireTimeoutMillis = null;
-
-    private TypeDBOptions() {
-    }
-
-    @CheckReturnValue
-    public static TypeDBOptions core() {
-        return new TypeDBOptions();
-    }
-
-    @CheckReturnValue
-    public static TypeDBOptions.Cluster cluster() {
-        return new Cluster();
-    }
-
-    @CheckReturnValue
-    public boolean isCluster() {
-        return false;
+    public TypeDBOptions() {
+        options = options_new();
     }
 
     @CheckReturnValue
     public Optional<Boolean> infer() {
-        return Optional.ofNullable(infer);
+        if (options_has_infer(options)) return Optional.of(options_get_infer(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions infer(boolean infer) {
-        this.infer = infer;
+        options_set_infer(options, infer);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> traceInference() {
-        return Optional.ofNullable(traceInference);
+        if (options_has_trace_inference(options)) return Optional.of(options_get_trace_inference(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions traceInference(boolean traceInference) {
-        this.traceInference = traceInference;
+        options_set_trace_inference(options, traceInference);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> explain() {
-        return Optional.ofNullable(explain);
+        if (options_has_explain(options)) return Optional.of(options_get_explain(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions explain(boolean explain) {
-        this.explain = explain;
+        options_set_explain(options, explain);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> parallel() {
-        return Optional.ofNullable(parallel);
+        if (options_has_parallel(options)) return Optional.of(options_get_parallel(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions parallel(boolean parallel) {
-        this.parallel = parallel;
+        options_set_parallel(options, parallel);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> prefetch() {
-        return Optional.ofNullable(prefetch);
+        if (options_has_prefetch(options)) return Optional.of(options_get_prefetch(options));
+        else return Optional.empty();
     }
 
     public TypeDBOptions prefetch(boolean prefetch) {
-        this.prefetch = prefetch;
+        options_set_prefetch(options, prefetch);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> prefetchSize() {
-        return Optional.ofNullable(prefetchSize);
+        if (options_has_prefetch_size(options)) return Optional.of(options_get_prefetch_size(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions prefetchSize(int prefetchSize) {
         if (prefetchSize < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, prefetchSize);
         }
-        this.prefetchSize = prefetchSize;
+        options_set_prefetch_size(options, prefetchSize);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> sessionIdleTimeoutMillis() {
-        return Optional.ofNullable(sessionIdleTimeoutMillis);
+        if (options_has_session_idle_timeout_millis(options))
+            return Optional.of((int) options_get_session_idle_timeout_millis(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
         if (sessionIdleTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
         }
-        this.sessionIdleTimeoutMillis = sessionIdleTimeoutMillis;
+        options_set_session_idle_timeout_millis(options, sessionIdleTimeoutMillis);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> schemaLockAcquireTimeoutMillis() {
-        return Optional.ofNullable(schemaLockAcquireTimeoutMillis);
+        if (options_has_transaction_timeout_millis(options))
+            return Optional.of((int) options_get_transaction_timeout_millis(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions transactionTimeoutMillis(int transactionTimeoutMillis) {
         if (transactionTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, transactionTimeoutMillis);
         }
-        this.transactionTimeoutMillis = transactionTimeoutMillis;
+        options_set_transaction_timeout_millis(options, transactionTimeoutMillis);
         return this;
     }
 
     public Optional<Integer> transactionTimeoutMillis() {
-        return Optional.ofNullable(transactionTimeoutMillis);
+        if (options_has_schema_lock_acquire_timeout_millis(options))
+            return Optional.of((int) options_get_schema_lock_acquire_timeout_millis(options));
+        return Optional.empty();
     }
 
     public TypeDBOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
         if (schemaLockAcquireTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
         }
-        this.schemaLockAcquireTimeoutMillis = schemaLockAcquireTimeoutMillis;
+        options_set_schema_lock_acquire_timeout_millis(options, schemaLockAcquireTimeoutMillis);
         return this;
     }
 
     @CheckReturnValue
-    public Cluster asCluster() {
-        throw new TypeDBClientException(ILLEGAL_CAST, className(Cluster.class));
+    public Optional<Boolean> readAnyReplica() {
+        if (options_has_read_any_replica(options)) return Optional.of(options_get_read_any_replica(options));
+        return Optional.empty();
     }
 
-    @CheckReturnValue
-    public OptionsProto.Options proto() {
-        OptionsProto.Options.Builder builder = OptionsProto.Options.newBuilder();
-        infer().ifPresent(builder::setInfer);
-        traceInference().ifPresent(builder::setTraceInference);
-        explain().ifPresent(builder::setExplain);
-        parallel().ifPresent(builder::setParallel);
-        prefetchSize().ifPresent(builder::setPrefetchSize);
-        prefetch().ifPresent(builder::setPrefetch);
-        sessionIdleTimeoutMillis().ifPresent(builder::setSessionIdleTimeoutMillis);
-        transactionTimeoutMillis().ifPresent(builder::setTransactionTimeoutMillis);
-        schemaLockAcquireTimeoutMillis().ifPresent(builder::setSchemaLockAcquireTimeoutMillis);
-        if (isCluster()) asCluster().readAnyReplica().ifPresent(builder::setReadAnyReplica);
-
-        return builder.build();
-    }
-
-    public static class Cluster extends TypeDBOptions {
-
-        private Boolean readAnyReplica = null;
-
-        @CheckReturnValue
-        public Optional<Boolean> readAnyReplica() {
-            return Optional.ofNullable(readAnyReplica);
-        }
-
-        public Cluster readAnyReplica(boolean readAnyReplica) {
-            this.readAnyReplica = readAnyReplica;
-            return this;
-        }
-
-        @Override
-        @CheckReturnValue
-        public boolean isCluster() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        public Cluster asCluster() {
-            return this;
-        }
+    public TypeDBOptions readAnyReplica(boolean readAnyReplica) {
+        options_set_read_any_replica(options, readAnyReplica);
+        return this;
     }
 }

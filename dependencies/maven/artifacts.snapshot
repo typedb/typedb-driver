@@ -14,7 +14,7 @@
 @maven//:com_google_guava_listenablefuture_9999_0_empty_to_avoid_conflict_with_guava
 @maven//:com_google_http_client_google_http_client_1_34_2
 @maven//:com_google_j2objc_j2objc_annotations_1_3
-@maven//:com_google_protobuf_protobuf_java_3_14_0
+@maven//:com_google_protobuf_protobuf_java_3_20_1
 @maven//:commons_codec_commons_codec_1_11
 @maven//:commons_io_commons_io_2_3
 @maven//:commons_logging_commons_logging_1_2

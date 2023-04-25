@@ -52,16 +52,16 @@ public interface QueryManager {
     Stream<ConceptMap> match(String query, TypeDBOptions options);
 
     @CheckReturnValue
-    QueryFuture<Numeric> match(TypeQLMatch.Aggregate query);
+    Numeric match(TypeQLMatch.Aggregate query);
 
     @CheckReturnValue
-    QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options);
+    Numeric match(TypeQLMatch.Aggregate query, TypeDBOptions options);
 
     @CheckReturnValue
-    QueryFuture<Numeric> matchAggregate(String query);
+    Numeric matchAggregate(String query);
 
     @CheckReturnValue
-    QueryFuture<Numeric> matchAggregate(String query, TypeDBOptions options);
+    Numeric matchAggregate(String query, TypeDBOptions options);
 
     @CheckReturnValue
     Stream<ConceptMapGroup> match(TypeQLMatch.Group query);
@@ -95,13 +95,13 @@ public interface QueryManager {
 
     Stream<ConceptMap> insert(String query, TypeDBOptions options);
 
-    QueryFuture<Void> delete(TypeQLDelete query);
+    void delete(TypeQLDelete query);
 
-    QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options);
+    void delete(TypeQLDelete query, TypeDBOptions options);
 
-    QueryFuture<Void> delete(String query);
+    void delete(String query);
 
-    QueryFuture<Void> delete(String query, TypeDBOptions options);
+    void delete(String query, TypeDBOptions options);
 
     Stream<ConceptMap> update(TypeQLUpdate query);
 
@@ -111,21 +111,21 @@ public interface QueryManager {
 
     Stream<ConceptMap> update(String query, TypeDBOptions options);
 
-    QueryFuture<Void> define(TypeQLDefine query);
+    void define(TypeQLDefine query);
 
-    QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options);
+    void define(TypeQLDefine query, TypeDBOptions options);
 
-    QueryFuture<Void> define(String query);
+    void define(String query);
 
-    QueryFuture<Void> define(String query, TypeDBOptions options);
+    void define(String query, TypeDBOptions options);
 
-    QueryFuture<Void> undefine(TypeQLUndefine query);
+    void undefine(TypeQLUndefine query);
 
-    QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options);
+    void undefine(TypeQLUndefine query, TypeDBOptions options);
 
-    QueryFuture<Void> undefine(String query);
+    void undefine(String query);
 
-    QueryFuture<Void> undefine(String query, TypeDBOptions options);
+    void undefine(String query, TypeDBOptions options);
 
     @CheckReturnValue
     Stream<Explanation> explain(ConceptMap.Explainable explainable);

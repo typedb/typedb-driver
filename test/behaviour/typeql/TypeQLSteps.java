@@ -28,8 +28,8 @@ import com.vaticle.typedb.client.api.answer.NumericGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
@@ -56,12 +56,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
-import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -86,41 +86,41 @@ public class TypeQLSteps {
     }
 
     @Given("typeql define")
-    public QueryFuture<Void> typeql_define(String defineQueryStatements) {
+    public void typeql_define(String defineQueryStatements) {
         TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-        return tx().query().define(typeQLQuery);
+        tx().query().define(String.join("\n", defineQueryStatements));
     }
 
     @Given("typeql define; throws exception")
     public void typeql_define_throws(String defineQueryStatements) {
-        assertThrows(() -> typeql_define(defineQueryStatements).get());
+        assertThrows(() -> typeql_define(defineQueryStatements));
     }
 
     @Given("typeql define; throws exception containing {string}")
     public void typeql_define_throws_exception(String exception, String defineQueryStatements) {
-        assertThrowsWithMessage(() -> typeql_define(defineQueryStatements).get(), exception);
+        assertThrowsWithMessage(() -> typeql_define(defineQueryStatements), exception);
     }
 
     @Given("typeql undefine")
-    public QueryFuture<Void> typeql_undefine(String undefineQueryStatements) {
+    public void typeql_undefine(String undefineQueryStatements) {
         TypeQLUndefine typeQLQuery = TypeQL.parseQuery(String.join("\n", undefineQueryStatements));
-        return tx().query().undefine(typeQLQuery);
+        tx().query().undefine(String.join("\n", undefineQueryStatements));
     }
 
     @Given("typeql undefine; throws exception")
     public void typeql_undefine_throws(String undefineQueryStatements) {
-        assertThrows(() -> typeql_undefine(undefineQueryStatements).get());
+        assertThrows(() -> typeql_undefine(undefineQueryStatements));
     }
 
     @Given("typeql undefine; throws exception containing {string}")
     public void typeql_undefine_throws_exception(String exception, String undefineQueryStatements) {
-        assertThrowsWithMessage(() -> typeql_undefine(undefineQueryStatements).get(), exception);
+        assertThrowsWithMessage(() -> typeql_undefine(undefineQueryStatements), exception);
     }
 
     @Given("typeql insert")
     public Stream<ConceptMap> typeql_insert(String insertQueryStatements) {
         TypeQLInsert typeQLQuery = TypeQL.parseQuery(String.join("\n", insertQueryStatements));
-        return tx().query().insert(typeQLQuery);
+        return tx().query().insert(String.join("\n", insertQueryStatements));
     }
 
     @Given("typeql insert; throws exception")
@@ -138,25 +138,25 @@ public class TypeQLSteps {
     }
 
     @Given("typeql delete")
-    public QueryFuture<Void> typeql_delete(String deleteQueryStatements) {
+    public void typeql_delete(String deleteQueryStatements) {
         TypeQLDelete typeQLQuery = TypeQL.parseQuery(String.join("\n", deleteQueryStatements));
-        return tx().query().delete(typeQLQuery);
+        tx().query().delete(String.join("\n", deleteQueryStatements));
     }
 
     @Given("typeql delete; throws exception")
     public void typeql_delete_throws(String deleteQueryStatements) {
-        assertThrows(() -> typeql_delete(deleteQueryStatements).get());
+        assertThrows(() -> typeql_delete(deleteQueryStatements));
     }
 
     @Given("typeql delete; throws exception containing {string}")
     public void typeql_delete_throws_exception(String exception, String deleteQueryStatements) {
-        assertThrowsWithMessage(() -> typeql_delete(deleteQueryStatements).get(), exception);
+        assertThrowsWithMessage(() -> typeql_delete(deleteQueryStatements), exception);
     }
 
     @Given("typeql update")
     public Stream<ConceptMap> typeql_update(String updateQueryStatements) {
         TypeQLUpdate typeQLQuery = TypeQL.parseQuery(String.join("\n", updateQueryStatements));
-        return tx().query().update(typeQLQuery);
+        return tx().query().update(String.join("\n", updateQueryStatements));
     }
 
     @Given("typeql update; throws exception")
@@ -180,7 +180,7 @@ public class TypeQLSteps {
     public void get_answers_of_typeql_insert(String typeQLQueryStatements) {
         TypeQLInsert typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements));
         clearAnswers();
-        answers = tx().query().insert(typeQLQuery).collect(Collectors.toList());
+        answers = tx().query().insert(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
     }
 
     @When("get answers of typeql match")
@@ -188,7 +188,7 @@ public class TypeQLSteps {
         try {
             TypeQLMatch typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatch();
             clearAnswers();
-            answers = tx().query().match(typeQLQuery).collect(Collectors.toList());
+            answers = tx().query().match(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
         } catch (TypeQLException e) {
             // NOTE: We manually close transaction here, because we want to align with all non-java clients,
             // where parsing happens at server-side which closes transaction if they fail
@@ -206,7 +206,7 @@ public class TypeQLSteps {
     public void typeql_match_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchAggregate();
         clearAnswers();
-        numericAnswer = tx().query().match(typeQLQuery).get();
+        numericAnswer = tx().query().matchAggregate(String.join("\n", typeQLQueryStatements));
     }
 
     @When("typeql match aggregate; throws exception")
@@ -218,7 +218,7 @@ public class TypeQLSteps {
     public void typeql_match_group(String typeQLQueryStatements) {
         TypeQLMatch.Group typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchGroup();
         clearAnswers();
-        answerGroups = tx().query().match(typeQLQuery).collect(Collectors.toList());
+        answerGroups = tx().query().matchGroup(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
     }
 
     @When("typeql match group; throws exception")
@@ -230,7 +230,7 @@ public class TypeQLSteps {
     public void typeql_match_group_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Group.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchGroupAggregate();
         clearAnswers();
-        numericAnswerGroups = tx().query().match(typeQLQuery).collect(Collectors.toList());
+        numericAnswerGroups = tx().query().matchGroupAggregate(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
     }
 
     @Then("answer size is: {number}")
@@ -256,11 +256,7 @@ public class TypeQLSteps {
                     matchingIdentifiers.add(answerIdentifier);
                 }
             }
-            assertEquals(
-                    String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s.",
-                            matchingIdentifiers.size(), answer.map().keySet().toString()),
-                    1, matchingIdentifiers.size()
-            );
+            assertEquals(String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s.", matchingIdentifiers.size(), answer.variables().collect(Collectors.toSet())), 1, matchingIdentifiers.size());
         }
     }
 
@@ -330,7 +326,7 @@ public class TypeQLSteps {
             assertNotNull(String.format("The group identifier [%s] does not match any of the answer group owners.", answerIdentifierGroup.ownerIdentifier), answerGroup);
 
             List<Map<String, String>> answersIdentifiers = answerIdentifierGroup.answersIdentifiers;
-            for (ConceptMap answer : answerGroup.conceptMaps()) {
+            answerGroup.conceptMaps().forEach(answer -> {
                 List<Map<String, String>> matchingIdentifiers = new ArrayList<>();
 
                 for (Map<String, String> answerIdentifiers : answersIdentifiers) {
@@ -339,12 +335,8 @@ public class TypeQLSteps {
                         matchingIdentifiers.add(answerIdentifiers);
                     }
                 }
-                assertEquals(
-                        String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were [%d] matching identifier entries for answer with variables %s.",
-                                matchingIdentifiers.size(), answer.map().keySet().toString()),
-                        1, matchingIdentifiers.size()
-                );
-            }
+                assertEquals(String.format("An identifier entry (row) should match 1-to-1 to an answer, but there were [%d] matching identifier entries for answer with variables %s.", matchingIdentifiers.size(), answer.variables().collect(Collectors.toSet())), 1, matchingIdentifiers.size());
+            });
         }
     }
 
@@ -415,24 +407,6 @@ public class TypeQLSteps {
         }
     }
 
-    // This method is used by explanation steps
-//    private boolean matchAnswer(Map<String, String> answerIdentifiers, ConceptMap answer) {
-//
-//        for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
-//            final Reference.Name var = Reference.named(entry.getKey());
-//            final String identifier = entry.getValue();
-//
-//            if (!identifierChecks.containsKey(identifier)) {
-//                throw new ScenarioDefinitionException(String.format("Identifier \"%s\" hasn't previously been declared.", identifier));
-//            }
-//
-//            if (!identifierChecks.get(identifier).check(answer.get(var))) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
     private boolean matchAnswerConcept(Map<String, String> answerIdentifiers, ConceptMap answer) {
         for (Map.Entry<String, String> entry : answerIdentifiers.entrySet()) {
             String var = entry.getKey();
@@ -477,77 +451,14 @@ public class TypeQLSteps {
     public void answers_contain_explanation_tree(Map<Integer, Map<String, String>> explanationTree) {
         // TODO
         throw new UnsupportedOperationException();
-//        checkExplanationEntry(answers, explanationTree, 0);
     }
-
-    /* private void checkExplanationEntry(List<ConceptMap> answers, Map<Integer, Map<String, String>> explanationTree, Integer entryId) {
-        Map<String, String> explanationEntry = explanationTree.get(entryId);
-        String[] vars = explanationEntry.get("vars").split(", ");
-        String[] identifiers = explanationEntry.get("identifiers").split(", ");
-        String[] children = explanationEntry.get("children").split(", ");
-
-        if (vars.length != identifiers.length) {
-            throw new ScenarioDefinitionException(String.format("vars and identifiers do not correspond for explanation entry %d. Found %d vars and %s identifiers", entryId, vars.length, identifiers.length));
-        }
-
-        Map<String, String> answerIdentifiers = IntStream.range(0, vars.length).boxed().collect(Collectors.toMap(i -> vars[i], i -> identifiers[i]));
-
-        Optional<ConceptMap> matchingAnswer = answers.stream().filter(answer -> matchAnswer(answerIdentifiers, answer)).findFirst();
-
-        assertTrue(String.format("No answer found for explanation entry %d that satisfies the vars and identifiers given", entryId), matchingAnswer.isPresent());
-        ConceptMap answer = matchingAnswer.get();
-
-        String queryWithIds = applyQueryTemplate(explanationEntry.get("pattern"), answer);
-        Conjunction<?> queryWithIdsConj = TypeQL.and(TypeQL.parsePatternList(queryWithIds));
-        assertEquals(
-                String.format("Explanation entry %d has an incorrect pattern.\nExpected: %s\nActual: %s", entryId, queryWithIdsConj, answer.queryPattern()),
-                queryWithIdsConj, answer.queryPattern()
-        );
-
-        String expectedRule = explanationEntry.get("rule");
-        boolean hasExplanation = answer.hasExplanation();
-
-        if (expectedRule.equals("lookup")) {
-
-            assertFalse(String.format("Explanation entry %d is declared as a lookup, but an explanation was found", entryId), hasExplanation);
-
-            String[] expectedChildren = {"-"};
-            assertArrayEquals(String.format("Explanation entry %d is declared as a lookup, and so it should have no children, indicated as \"-\", but got children %s instead", entryId, Arrays.toString(children)), expectedChildren, children);
-        } else {
-
-            Explanation explanation = answer.explanation();
-            List<ConceptMap> explAnswers = explanation.getAnswers();
-
-            assertEquals(String.format("Explanation entry %d should have as many children as it has answers. Instead, %d children were declared, and %d answers were found.", entryId, children.length, explAnswers.size()), children.length, explAnswers.size());
-
-            if (expectedRule.equals("join")) {
-                assertNull(String.format("Explanation entry %d is declared as a join, and should not have a rule attached, but one was found", entryId), explanation.getRule());
-            } else {
-                // rule
-                Rule.Remote rule = explanation.getRule();
-                String ruleLabel = rule.getLabel();
-                assertEquals(String.format("Incorrect rule label for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRule, ruleLabel), expectedRule, ruleLabel);
-
-                Map<String, String> expectedRuleDefinition = rules.get(expectedRule);
-                String when = Objects.requireNonNull(rule.getWhen()).toString();
-                assertEquals(String.format("Incorrect rule body (when) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("when"), when), expectedRuleDefinition.get("when"), when);
-
-                String then = Objects.requireNonNull(rule.getThen()).toString();
-                assertEquals(String.format("Incorrect rule head (then) for explanation entry %d with rule %s.\nExpected: %s\nActual: %s", entryId, ruleLabel, expectedRuleDefinition.get("then"), then), expectedRuleDefinition.get("then"), then);
-            }
-            for (String child : children) {
-                // Recurse
-                checkExplanationEntry(explAnswers, explanationTree, Integer.valueOf(child));
-            }
-        }
-    } */
 
     @Then("each answer satisfies")
     public void each_answer_satisfies(String templatedQuery) {
         for (ConceptMap answer : answers) {
             String query = applyQueryTemplate(templatedQuery, answer);
             TypeQLMatch typeQLQuery = TypeQL.parseQuery(query).asMatch();
-            long answerSize = tx().query().match(typeQLQuery).count();
+            long answerSize = tx().query().match(query).count();
             assertEquals(1, answerSize);
         }
     }
@@ -559,7 +470,7 @@ public class TypeQLSteps {
             String queryString = applyQueryTemplate(templatedQuery, answer);
             assertThrows(() -> {
                 TypeQLMatch query = TypeQL.parseQuery(queryString).asMatch();
-                long ignored = tx().query().match(query).count();
+                long ignored = tx().query().match(queryString).count();
             });
         }
     }
@@ -576,16 +487,16 @@ public class TypeQLSteps {
             String requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
 
             builder.append(template, i, matcher.start());
-            if (templateFiller.map().containsKey(requiredVariable)) {
-
+            try {
                 Concept concept = templateFiller.get(requiredVariable);
                 if (!concept.isThing())
                     throw new ScenarioDefinitionException("Cannot apply IID templating to Type concepts");
                 String conceptId = concept.asThing().getIID();
                 builder.append(conceptId);
-
-            } else {
-                throw new ScenarioDefinitionException(String.format("No IID available for template placeholder: %s.", matched));
+            } catch (TypeDBClientException e) {
+                if (e.getErrorMessage().equals(VARIABLE_DOES_NOT_EXIST)) {
+                    throw new ScenarioDefinitionException(String.format("No IID available for template placeholder: %s.", matched));
+                } else throw e;
             }
             i = matcher.end();
         }
@@ -654,35 +565,17 @@ public class TypeQLSteps {
             if (!concept.isAttribute()) {
                 return false;
             }
-
-            Attribute<?> attribute = concept.asAttribute();
+            Attribute attribute = concept.asAttribute();
             AttributeType attributeType = attribute.getType();
-
-            if (!type.equals(attributeType.getLabel())) {
-                return false;
-            }
-
-            switch (attributeType.getValueType()) {
-                case BOOLEAN:
-                    return Boolean.valueOf(value).equals(attribute.asBoolean().getValue());
-                case LONG:
-                    return Long.valueOf(value).equals(attribute.asLong().getValue());
-                case DOUBLE:
-                    return equalsApproximate(Double.parseDouble(value), attribute.asDouble().getValue());
-                case STRING:
-                    return value.equals(attribute.asString().getValue());
-                case DATETIME:
-                    LocalDateTime dateTime;
-                    try {
-                        dateTime = LocalDateTime.parse(value);
-                    } catch (DateTimeParseException e) {
-                        dateTime = LocalDate.parse(value).atStartOfDay();
-                    }
-                    return dateTime.equals(attribute.asDateTime().getValue());
-                case OBJECT:
-                default:
-                    throw new ScenarioDefinitionException("Unrecognised value type " + attributeType.getValueType());
-            }
+            if (attribute.isDateTime()) {
+                LocalDateTime dateTime;
+                try {
+                    dateTime = LocalDateTime.parse(value);
+                } catch (DateTimeParseException e) {
+                    dateTime = LocalDate.parse(value).atStartOfDay();
+                }
+                return type.equals(attributeType.getLabel()) && dateTime.equals(attribute.getValue().asDateTime());
+            } else return type.equals(attributeType.getLabel()) && value.equals(attribute.getValue().toString());
         }
     }
 
@@ -721,6 +614,14 @@ public class TypeQLSteps {
                 default:
                     throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
             }
+
+            Set<Attribute> keys = concept.asThing().getHas(tx(), set(KEY)).collect(Collectors.toSet());
+            HashMap<Label, String> keyMap = new HashMap<>();
+
+            for (Attribute key : keys) {
+                keyMap.put(key.getType().getLabel(), key.getValue().toString());
+            }
+            return value.equals(keyMap.get(type));
         }
     }
 
