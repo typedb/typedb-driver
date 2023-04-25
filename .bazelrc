@@ -19,11 +19,4 @@
 # under the License.
 #
 
-.DS_Store
-.ijwb
-bazel-*
-.bazel-remote-cache.rc
-.bazel-cache-credential.json
-target
-Cargo.lock
-Cargo.toml
+try-import ./.bazel-remote-cache.rc

@@ -87,6 +87,8 @@ checkstyle_test(
     exclude = glob([
         "*.md",
         ".bazelversion",
+        ".bazel-remote-cache.rc",
+        ".bazel-cache-credential.json",
         "LICENSE",
         "VERSION",
     ]),
@@ -114,6 +116,7 @@ rustfmt_test(
 filegroup(
     name = "ci",
     data = [
+        "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
         "@vaticle_dependencies//tool/cargo:sync",
     ],
 )
