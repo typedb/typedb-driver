@@ -105,7 +105,7 @@ impl Database {
     {
         let mut is_first_run = true;
         let replicas = self.replicas.read().unwrap().clone();
-        for replica in replicas.iter() {
+        for replica in replicas {
             match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run)
                 .await
             {

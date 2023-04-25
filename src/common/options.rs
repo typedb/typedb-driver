@@ -37,7 +37,7 @@ pub struct Options {
 
 impl Options {
     pub fn new() -> Self {
-        Default::default()
+        Self::default()
     }
 
     pub fn infer(self, infer: bool) -> Self {

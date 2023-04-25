@@ -124,6 +124,6 @@ impl Session {
             .await?;
 
         *self.server_session_info.write().unwrap() = session_info;
-        Transaction::new(transaction_stream)
+        Ok(Transaction::new(transaction_stream))
     }
 }

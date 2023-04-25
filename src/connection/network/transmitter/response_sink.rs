@@ -58,7 +58,7 @@ impl<T> ResponseSink<T> {
         }
     }
 
-    pub(super) async fn error(self, error: ConnectionError) {
+    pub(super) fn error(self, error: ConnectionError) {
         match self {
             Self::AsyncOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::BlockingOneShot(sink) => sink.send(Err(error.into())).ok(),

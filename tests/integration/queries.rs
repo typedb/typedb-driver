@@ -19,8 +19,6 @@
  * under the License.
  */
 
-mod common;
-
 use std::{sync::Arc, time::Instant};
 
 use chrono::{NaiveDate, NaiveDateTime};
@@ -34,6 +32,8 @@ use typedb_client::{
     SessionType::{Data, Schema},
     TransactionType::{Read, Write},
 };
+
+use super::common;
 
 macro_rules! test_for_each_arg {
     {

@@ -21,7 +21,6 @@
 
 use std::{
     collections::HashMap,
-    ops::DerefMut,
     sync::{Arc, RwLock},
     time::Duration,
 };
@@ -85,8 +84,12 @@ impl TransactionTransmitter {
         Self { request_sink: buffer_sink, is_open, shutdown_sink }
     }
 
+    pub(in crate::connection) fn is_open(&self) -> bool {
+        self.is_open.load()
+    }
+
     pub(in crate::connection) async fn single(&self, req: TransactionRequest) -> Result<TransactionResponse> {
-        if !self.is_open.load() {
+        if !self.is_open() {
             return Err(ConnectionError::SessionIsClosed().into());
         }
         let (res_sink, recv) = oneshot_async();
@@ -98,7 +101,7 @@ impl TransactionTransmitter {
         &self,
         req: TransactionRequest,
     ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
-        if !self.is_open.load() {
+        if !self.is_open() {
             return Err(ConnectionError::SessionIsClosed().into());
         }
         let (res_part_sink, recv) = unbounded_async();
@@ -246,7 +249,7 @@ impl ResponseCollector {
                         match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
                             Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
                                 let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
-                                callback.error(ConnectionError::TransactionIsClosed()).await;
+                                callback.error(ConnectionError::TransactionIsClosed());
                             }
                             _ => (),
                         }
@@ -263,9 +266,9 @@ impl ResponseCollector {
 
     async fn close(self, error: ConnectionError) {
         self.is_open.store(false);
-        let mut listeners = std::mem::take(self.callbacks.write().unwrap().deref_mut());
+        let mut listeners = std::mem::take(&mut *self.callbacks.write().unwrap());
         for (_, listener) in listeners.drain() {
-            listener.error(error.clone()).await;
+            listener.error(error.clone());
         }
     }
 }

@@ -47,6 +47,10 @@ impl TransactionStream {
         Self { type_, options, transaction_transmitter }
     }
 
+    pub(crate) fn is_open(&self) -> bool {
+        self.transaction_transmitter.is_open()
+    }
+
     pub(crate) fn type_(&self) -> TransactionType {
         self.type_
     }

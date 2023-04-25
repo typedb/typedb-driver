@@ -44,7 +44,7 @@ impl BackgroundRuntime {
         thread::Builder::new().name("gRPC worker".to_string()).spawn(move || {
             async_runtime.block_on(async move {
                 shutdown_source.recv().await;
-            })
+            });
         })?;
         Ok(Self { async_runtime_handle, is_open, shutdown_sink })
     }

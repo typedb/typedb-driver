@@ -26,34 +26,23 @@ load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_typedb_common//runner:rules.bzl", "native_typedb_artifact")
 
-
 rust_test(
-    name = "queries",
-    srcs = [
-        "common.rs",
-        "queries.rs",
-    ],
-    deps = [
-        "//:typedb_client",
-        "@crates//:chrono",
-        "@crates//:futures",
-        "@crates//:serial_test",
-        "@crates//:tokio",
-    ],
-)
-
-rust_test(
-    name = "runtimes",
-    srcs = [
-        "common.rs",
-        "runtimes.rs",
-    ],
+    name = "tests",
+    srcs = glob(["**/*.rs"]),
     deps = [
         "//:typedb_client",
         "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:cucumber",
         "@crates//:futures",
         "@crates//:serial_test",
         "@crates//:smol",
+        "@crates//:tokio",
+    ],
+    data = [
+        "@vaticle_typedb_behaviour//connection:database.feature",
+        "@vaticle_typedb_behaviour//connection:session.feature",
+        "@vaticle_typedb_behaviour//connection:transaction.feature",
     ],
 )
 
@@ -84,13 +73,13 @@ artifact_extractor(
 )
 
 rustfmt_test(
-    name = "queries_rustfmt_test",
-    targets = ["queries", "runtimes"]
+    name = "rustfmt_test",
+    targets = ["tests"]
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
+    include = glob(["*", "**/*"]),
     license_type = "apache-header",
     size = "small",
 )

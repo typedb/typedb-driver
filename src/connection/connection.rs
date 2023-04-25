@@ -181,7 +181,7 @@ impl ServerConnection {
 
     pub(crate) fn force_close(&self) -> Result {
         let session_ids: Vec<SessionID> = self.open_sessions.lock().unwrap().keys().cloned().collect();
-        for session_id in session_ids.into_iter() {
+        for session_id in session_ids {
             self.close_session(session_id).ok();
         }
         self.request_transmitter.force_close()

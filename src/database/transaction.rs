@@ -39,15 +39,23 @@ pub struct Transaction<'a> {
 }
 
 impl Transaction<'_> {
-    pub(super) fn new(transaction_stream: TransactionStream) -> Result<Self> {
+    pub(super) fn new(transaction_stream: TransactionStream) -> Self {
         let transaction_stream = Arc::new(transaction_stream);
-        Ok(Transaction {
+        Transaction {
             type_: transaction_stream.type_(),
             options: transaction_stream.options().clone(),
             query: QueryManager::new(transaction_stream.clone()),
             transaction_stream,
             _lifetime_guard: PhantomData::default(),
-        })
+        }
+    }
+
+    pub fn is_open(&self) -> bool {
+        self.transaction_stream.is_open()
+    }
+
+    pub fn type_(&self) -> TransactionType {
+        self.type_
     }
 
     pub fn query(&self) -> &QueryManager {
