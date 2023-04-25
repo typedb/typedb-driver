@@ -23,6 +23,8 @@
 
 # Bazel files #
 bazel-*
+.bazel-remote-cache.rc
+.bazel-cache-credential.json
 
 # Idea files #
 .ijwb

@@ -67,6 +67,8 @@ checkstyle_test(
     exclude = glob([
         "*.md",
         ".bazelversion",
+        ".bazel-remote-cache.rc",
+        ".bazel-cache-credential.json",
         "LICENSE",
         "VERSION",
         "docs/*",
