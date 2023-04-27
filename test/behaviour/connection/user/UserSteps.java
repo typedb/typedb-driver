@@ -47,7 +47,7 @@ public class UserSteps {
         return users.contains(username);
     }
 
-    @Then("user get self")
+    @Then("get connected user")
     public void users_get() {
         User ignored = getClient().user();
     }
