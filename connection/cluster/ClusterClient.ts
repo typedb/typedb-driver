@@ -31,6 +31,7 @@ import { ClusterDatabaseManager } from "./ClusterDatabaseManager";
 import { ClusterServerClient } from "./ClusterServerClient";
 import { ClusterServerStub } from "./ClusterServerStub";
 import { ClusterSession } from "./ClusterSession";
+import { ClusterUser } from "./ClusterUser";
 import { ClusterUserManager } from "./ClusterUserManager";
 import { FailsafeTask } from "./FailsafeTask";
 import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
@@ -70,6 +71,10 @@ export class ClusterClient implements TypeDBClient.Cluster {
 
     isOpen(): boolean {
         return this._isOpen;
+    }
+
+    async user(): Promise<ClusterUser> {
+        return await this.users.get(this._credential.username)
     }
 
     get users(): ClusterUserManager {
