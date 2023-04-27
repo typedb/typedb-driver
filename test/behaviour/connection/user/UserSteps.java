@@ -47,6 +47,11 @@ public class UserSteps {
         return users.contains(username);
     }
 
+    @Then("user get self")
+    public void users_get() {
+        User ignored = getClient().user();
+    }
+
     @Then("users get user: {word}")
     public void users_get(String username) {
         User ignored = getClient().users().get(username);
