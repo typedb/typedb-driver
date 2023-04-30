@@ -48,7 +48,7 @@ public class UserSteps {
     }
 
     @Then("get connected user")
-    public void users_get() {
+    public void get_connected_user() {
         User ignored = getClient().user();
     }
 
