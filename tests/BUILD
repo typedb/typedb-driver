@@ -31,6 +31,7 @@ rust_test(
     srcs = glob(["**/*.rs"]),
     deps = [
         "//:typedb_client",
+        "@vaticle_typeql//rust:typeql_lang",
         "@crates//:async-std",
         "@crates//:chrono",
         "@crates//:cucumber",

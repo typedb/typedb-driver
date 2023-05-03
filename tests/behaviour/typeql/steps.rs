@@ -20,49 +20,72 @@
  */
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::TryStreamExt;
+use futures::{TryFutureExt, TryStreamExt};
+use typeql_lang::parse_query;
 
 use crate::{behaviour::Context, generic_step_impl};
 
 generic_step_impl! {
     #[step(expr = "typeql define")]
     async fn typeql_define(context: &mut Context, step: &Step) {
-        // FIXME parse
-        context.transaction().query().define(step.docstring().unwrap()).await.unwrap();
+        let parsed = parse_query(step.docstring().unwrap());
+        assert!(parsed.is_ok());
+        let res = context.transaction().query().define(&parsed.unwrap().to_string()).await;
+        assert!(res.is_ok());
     }
 
     #[step(expr = "typeql define; throws exception")]
     async fn typeql_define_throws(context: &mut Context, step: &Step) {
-        // FIXME parse
-        assert!(context.transaction().query().define(step.docstring().unwrap()).await.is_err());
+        let parsed = parse_query(step.docstring().unwrap());
+        if parsed.is_ok() {
+            let res = context.transaction().query().define(&parsed.unwrap().to_string()).await;
+            assert!(res.is_err());
+        }
     }
 
     #[step(expr = "typeql define; throws exception containing {string}")]
     async fn typeql_define_throws_exception(context: &mut Context, step: &Step, exception: String) {
-        // FIXME parse
-        let res = context.transaction().query().define(step.docstring().unwrap()).await;
-        assert!(res.is_err());
-        assert!(res.unwrap_err().to_string().contains(&exception));
+        let result = async { parse_query(step.docstring().unwrap()).map_err(|error| error.to_string()) }
+            .and_then(|parsed| async move {
+                context.transaction().query().define(&parsed.to_string()).await.map_err(|error| error.to_string())
+            })
+            .await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains(&exception));
     }
 
     #[step(expr = "typeql insert")]
     async fn typeql_insert(context: &mut Context, step: &Step) {
-        // FIXME parse
-        let stream = context.transaction().query().insert(step.docstring().unwrap()).unwrap();
-        stream.try_collect::<Vec<_>>().await.unwrap();
+        let parsed = parse_query(step.docstring().unwrap());
+        assert!(parsed.is_ok());
+        let inserted = context.transaction().query().insert(&parsed.unwrap().to_string());
+        assert!(inserted.is_ok());
+        let res = inserted.unwrap().try_collect::<Vec<_>>().await;
+        assert!(res.is_ok());
     }
 
     #[step(expr = "typeql insert; throws exception")]
     async fn typeql_insert_throws(context: &mut Context, step: &Step) {
-        // FIXME parse
-        assert!(context.transaction().query().insert(step.docstring().unwrap()).is_err());
+        let parsed = parse_query(step.docstring().unwrap());
+        if parsed.is_ok() {
+            let inserted = context.transaction().query().insert(&parsed.unwrap().to_string());
+            if inserted.is_ok() {
+                let res = inserted.unwrap().try_collect::<Vec<_>>().await;
+                assert!(res.is_err());
+            }
+        }
     }
 
     #[step(expr = "typeql insert; throws exception containing {string}")]
     async fn typeql_insert_throws_exception(context: &mut Context, step: &Step, exception: String) {
-        // FIXME parse
-        let res = context.transaction().query().insert(step.docstring().unwrap()).unwrap().try_collect::<Vec<_>>().await;
-        assert!(res.is_err());
-        assert!(res.map(|_| ()).unwrap_err().to_string().contains(&exception));
+        let result = async {
+            parse_query(step.docstring().unwrap()).map_err(|error| error.to_string()).and_then(|parsed| {
+                context.transaction().query().insert(&parsed.to_string()).map_err(|error| error.to_string())
+            })
+        }
+        .and_then(|inserted| async { inserted.try_collect::<Vec<_>>().await.map_err(|error| error.to_string()) })
+        .await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains(&exception));
     }
 }
