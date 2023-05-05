@@ -38,7 +38,7 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 exports_files([
     "VERSION",
-    "RELEASE_TEMPLATE.md",
+    "LATEST_RELEASE_NOTES.md",
     "deployment.bzl",
 ])
 
@@ -105,7 +105,7 @@ deploy_github(
     name = "deploy-github",
     draft = False,
     title = "TypeDB Client Java",
-    release_description = "//:RELEASE_TEMPLATE.md",
+    release_description = "//:LATEST_RELEASE_NOTES.md",
     organisation = github_deployment["github.organisation"],
     repository = github_deployment["github.repository"],
     title_append_version = True,
