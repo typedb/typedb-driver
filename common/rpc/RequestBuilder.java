@@ -529,30 +529,30 @@ public class RequestBuilder {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwnsReq(Label label, boolean keysOnly) {
+            public static TransactionProto.Transaction.Req.Builder getOwnsReq(Label label, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                        ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
+                        ConceptProto.ThingType.GetOwns.Req.newBuilder().addAllAnnotations(annotations)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder getOwnsReq(
-                    Label label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
+                    Label label, ConceptProto.AttributeType.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                        ConceptProto.ThingType.GetOwns.Req.newBuilder().setKeysOnly(keysOnly)
+                        ConceptProto.ThingType.GetOwns.Req.newBuilder().addAllAnnotations(annotations)
                                 .setValueType(valueType)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(Label label, boolean keysOnly) {
+            public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(Label label, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().setKeysOnly(keysOnly)
+                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().addAllAnnotations(annotations)
                 ));
             }
 
             public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(
-                    Label label, ConceptProto.AttributeType.ValueType valueType, boolean keysOnly) {
+                    Label label, ConceptProto.AttributeType.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().setKeysOnly(keysOnly)
+                        ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().addAllAnnotations(annotations)
                                 .setValueType(valueType)
                 ));
             }

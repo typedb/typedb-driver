@@ -97,10 +97,10 @@ public interface ThingType extends Type {
         Stream<? extends AttributeType> getOwns(ValueType valueType);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         Stream<? extends AttributeType> getOwnsExplicit();
@@ -109,10 +109,10 @@ public interface ThingType extends Type {
         Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(boolean keysOnly);
+        Stream<? extends AttributeType> getOwnsExplicit(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         AttributeType getOwnsOverridden(AttributeType attributeType);

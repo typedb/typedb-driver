@@ -354,9 +354,9 @@ public class ClientQueryTest {
 
             for (int i = 0; i < commitShas.length / 2; i++) {
                 TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
-                        var("commit").isa("commit").has("symbol", commitShas[i]),
-                        var("pipeline").isa("pipeline").has("name", "pipeline-A")
-                )
+                                var("commit").isa("commit").has("symbol", commitShas[i]),
+                                var("pipeline").isa("pipeline").has("name", "pipeline-A")
+                        )
                         .insert(
                                 rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
                         );
@@ -367,9 +367,9 @@ public class ClientQueryTest {
 
             for (int i = commitShas.length / 2; i < commitShas.length; i++) {
                 TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
-                        var("commit").isa("commit").has("symbol", commitShas[i]),
-                        var("pipeline").isa("pipeline").has("name", "pipeline-B")
-                )
+                                var("commit").isa("commit").has("symbol", commitShas[i]),
+                                var("pipeline").isa("pipeline").has("name", "pipeline-B")
+                        )
                         .insert(
                                 rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
                         );
@@ -386,11 +386,11 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
             TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(
-                    var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
-                    var("workflowA").isa("workflow").has("name", "workflow-A"),
-                    var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
-                    var("workflowB").isa("workflow").has("name", "workflow-B")
-            )
+                            var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
+                            var("workflowA").isa("workflow").has("name", "workflow-A"),
+                            var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
+                            var("workflowB").isa("workflow").has("name", "workflow-B")
+                    )
                     .insert(
                             rel("pipeline", "pipelineA").rel("workflow", "workflowA").isa("pipeline-workflow"),
                             rel("pipeline", "pipelineB").rel("workflow", "workflowB").isa("pipeline-workflow")
@@ -532,7 +532,7 @@ public class ClientQueryTest {
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 50; i++) {
                 EntityType.Remote concept = tx.concepts().getEntityType("person").asRemote(tx);
-                List<? extends AttributeType> attributeTypes = concept.getOwns(false).collect(toList());
+                List<? extends AttributeType> attributeTypes = concept.getOwns().collect(toList());
                 Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
             }
         }, READ, TypeDBOptions.core().prefetch(true).prefetchSize(50));

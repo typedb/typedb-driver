@@ -33,7 +33,6 @@ import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -210,48 +209,48 @@ public class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<AttributeTypeImpl> getOwns() {
-            return getOwns(false);
+            return getOwns(emptySet());
         }
 
         @Override
         public Stream<AttributeTypeImpl> getOwns(ValueType valueType) {
-            return getOwns(valueType, false);
+            return getOwns(valueType, emptySet());
         }
 
         @Override
-        public Stream<AttributeTypeImpl> getOwns(boolean keysOnly) {
-            return stream(getOwnsReq(getLabel(), keysOnly))
+        public Stream<AttributeTypeImpl> getOwns(Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnsReq(getLabel(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
 
         @Override
-        public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, boolean keysOnly) {
-            return stream(getOwnsReq(getLabel(), valueType.proto(), keysOnly))
+        public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnsReq(getLabel(), valueType.proto(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
 
         @Override
         public Stream<? extends AttributeType> getOwnsExplicit() {
-            return getOwnsExplicit(false);
+            return getOwnsExplicit(emptySet());
         }
 
         @Override
         public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType) {
-            return getOwnsExplicit(valueType, false);
+            return getOwnsExplicit(valueType, emptySet());
         }
 
         @Override
-        public Stream<? extends AttributeType> getOwnsExplicit(boolean keysOnly) {
-            return stream(getOwnsExplicitReq(getLabel(), keysOnly))
+        public Stream<? extends AttributeType> getOwnsExplicit(Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnsExplicitReq(getLabel(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
 
         @Override
-        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, boolean keysOnly) {
-            return stream(getOwnsExplicitReq(getLabel(), valueType.proto(), keysOnly))
+        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
+            return stream(getOwnsExplicitReq(getLabel(), valueType.proto(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
                     .map(AttributeTypeImpl::of);
         }
