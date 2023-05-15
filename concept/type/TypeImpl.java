@@ -120,9 +120,9 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         return annotations.stream().map(annotation -> {
             switch (annotation) {
                 case KEY:
-                    return ConceptProto.Type.Annotation.newBuilder().setKey(true);
+                    return ConceptProto.Type.Annotation.newBuilder().setKey(ConceptProto.Type.Annotation.Key.getDefaultInstance());
                 case UNIQUE:
-                    return ConceptProto.Type.Annotation.newBuilder().setUnique(true);
+                    return ConceptProto.Type.Annotation.newBuilder().setUnique(ConceptProto.Type.Annotation.Unique.getDefaultInstance());
                 default:
                     throw new TypeDBClientException(UNRECOGNISED_ANNOTATION, annotation);
             }
