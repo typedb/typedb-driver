@@ -262,13 +262,13 @@ public class ThingTypeSteps {
         assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types with annotations: {annotations}; contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns types with annotations: {annotations}; contain:")
     public void thing_type_get_owns_attribute_types_with_annotations_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types with annotations: {annotations}; do not contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns types with annotations: {annotations}; do not contain:")
     public void thing_type_get_owns_attribute_types_with_annotations_do_not_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String attributeLabel : attributeLabels) {
@@ -276,7 +276,7 @@ public class ThingTypeSteps {
         }
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types with annotations: {annotations}; contain:")
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit types with annotations: {annotations}; contain:")
     public void thing_type_get_owns_explicit_attribute_types_with_annotations_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(attributeLabels));
