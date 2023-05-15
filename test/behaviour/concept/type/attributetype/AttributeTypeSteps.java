@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -34,7 +35,6 @@ import java.util.Set;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.common.collection.Collections.set;
-import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -124,33 +124,33 @@ public class AttributeTypeSteps {
         assertNull(attributeType.asString().asRemote(tx()).getRegex());
     }
 
-    @Then("attribute\\( ?{type_label} ?) get key owners contain:")
-    public void attribute_type_get_owners_as_key_contain(String typeLabel, List<String> ownerLabels) {
+    @Then("attribute\\( ?{type_label} ?) get owners with annotations: {annotations}; contain:")
+    public void attribute_type_get_owners_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(KEY)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
-    @Then("attribute\\( ?{type_label} ?) get key owners do not contain:")
-    public void attribute_type_get_owners_as_key_do_not_contain(String typeLabel, List<String> ownerLabels) {
+    @Then("attribute\\( ?{type_label} ?) get owners with annotations: {annotations}; do not contain:")
+    public void attribute_type_get_owners_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(KEY)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwners(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }
     }
 
-    @Then("attribute\\( ?{type_label} ?) get key owners explicit contain:")
-    public void attribute_type_get_owners_explicit_as_key_contain(String typeLabel, List<String> ownerLabels) {
+    @Then("attribute\\( ?{type_label} ?) get owners explicit with annotations: {annotations}; contain:")
+    public void attribute_type_get_owners_explicit_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(KEY)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
-    @Then("attribute\\( ?{type_label} ?) get key owners explicit do not contain:")
-    public void attribute_type_get_owners_explicit_as_key_do_not_contain(String typeLabel, List<String> ownerLabels) {
+    @Then("attribute\\( ?{type_label} ?) get owners explicit with annotations: {annotations}; do not contain:")
+    public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(KEY)).map(t -> t.getLabel().name()).collect(toSet());
+        Set<String> actuals = attributeType.asRemote(tx()).getOwnersExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
             assertFalse(actuals.contains(ownerLabel));
         }

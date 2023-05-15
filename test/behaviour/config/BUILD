@@ -28,6 +28,9 @@ java_library(
     deps = [
         "//api:api",
         "//common:common",
+
+        "@vaticle_typeql//java/common:common",
+
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java"
     ],
