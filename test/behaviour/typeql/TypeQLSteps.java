@@ -666,7 +666,7 @@ public class TypeQLSteps {
                 case LONG:
                     return value.equals(attribute.asLong().getValue().toString());
                 case DOUBLE:
-                    return value.equals(attribute.asDouble().getValue().toString());
+                    return precisionEquals(Double.parseDouble(value),  attribute.asDouble().getValue(), 1e9);
                 case STRING:
                     return value.equals(attribute.asString().getValue());
                 case DATETIME:
@@ -699,31 +699,35 @@ public class TypeQLSteps {
             HashMap<Label, String> keyMap = new HashMap<>();
 
             for (Attribute<?> key : keys) {
-                String keyValue;
+                if (!key.getType().getLabel().equals(type))
+                    continue;
                 switch (key.getType().getValueType()) {
                     case BOOLEAN:
-                        keyValue = key.asBoolean().getValue().toString();
-                        break;
+                        return value.equals(key.asBoolean().getValue().toString());
                     case LONG:
-                        keyValue = key.asLong().getValue().toString();
-                        break;
+                        return value.equals(key.asLong().getValue().toString());
                     case DOUBLE:
-                        keyValue = key.asDouble().getValue().toString();
-                        break;
+                        return precisionEquals(Double.parseDouble(value),  key.asDouble().getValue(), 1e9);
                     case STRING:
-                        keyValue = key.asString().getValue();
-                        break;
+                        return value.equals(key.asString().getValue());
                     case DATETIME:
-                        keyValue = key.asDateTime().getValue().toString();
-                        break;
+                        LocalDateTime dateTime;
+                        try {
+                            dateTime = LocalDateTime.parse(value);
+                        } catch (DateTimeParseException e) {
+                            dateTime = LocalDate.parse(value).atStartOfDay();
+                        }
+                        return dateTime.equals(key.asDateTime().getValue());
                     case OBJECT:
                     default:
                         throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
                 }
-
-                keyMap.put(key.getType().getLabel(), keyValue);
             }
-            return value.equals(keyMap.get(type));
+            return false;
         }
+    }
+
+    private static Boolean precisionEquals(Double a, Double b, Double epsilon) {
+        return Math.abs(a - b) < epsilon;
     }
 }
