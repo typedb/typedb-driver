@@ -666,7 +666,7 @@ public class TypeQLSteps {
                 case LONG:
                     return value.equals(attribute.asLong().getValue().toString());
                 case DOUBLE:
-                    return precisionEquals(Double.parseDouble(value),  attribute.asDouble().getValue(), 1e9);
+                    return precisionEquals(Double.parseDouble(value), attribute.asDouble().getValue());
                 case STRING:
                     return value.equals(attribute.asString().getValue());
                 case DATETIME:
@@ -707,7 +707,7 @@ public class TypeQLSteps {
                     case LONG:
                         return value.equals(key.asLong().getValue().toString());
                     case DOUBLE:
-                        return precisionEquals(Double.parseDouble(value),  key.asDouble().getValue(), 1e9);
+                        return precisionEquals(Double.parseDouble(value), key.asDouble().getValue());
                     case STRING:
                         return value.equals(key.asString().getValue());
                     case DATETIME:
@@ -727,7 +727,7 @@ public class TypeQLSteps {
         }
     }
 
-    private static Boolean precisionEquals(Double a, Double b, Double epsilon) {
-        return Math.abs(a - b) < epsilon;
+    private static Boolean precisionEquals(Double a, Double b) {
+        return Math.abs(a - b) / Math.abs(a) < 1.0e6;
     }
 }
