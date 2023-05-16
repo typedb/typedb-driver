@@ -60,6 +60,7 @@ import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
+import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -662,11 +663,11 @@ public class TypeQLSteps {
 
             switch (attributeType.getValueType()) {
                 case BOOLEAN:
-                    return value.equals(attribute.asBoolean().getValue().toString());
+                    return Boolean.valueOf(value).equals(attribute.asBoolean().getValue());
                 case LONG:
-                    return value.equals(attribute.asLong().getValue().toString());
+                    return Long.valueOf(value).equals(attribute.asLong().getValue());
                 case DOUBLE:
-                    return precisionEquals(Double.parseDouble(value), attribute.asDouble().getValue());
+                    return equalsApproximate(Double.parseDouble(value), attribute.asDouble().getValue());
                 case STRING:
                     return value.equals(attribute.asString().getValue());
                 case DATETIME:
@@ -703,11 +704,11 @@ public class TypeQLSteps {
                     continue;
                 switch (key.getType().getValueType()) {
                     case BOOLEAN:
-                        return value.equals(key.asBoolean().getValue().toString());
+                        return Boolean.valueOf(value).equals(key.asBoolean().getValue());
                     case LONG:
-                        return value.equals(key.asLong().getValue().toString());
+                        return Long.valueOf(value).equals(key.asLong().getValue());
                     case DOUBLE:
-                        return precisionEquals(Double.parseDouble(value), key.asDouble().getValue());
+                        return equalsApproximate(Double.parseDouble(value), key.asDouble().getValue());
                     case STRING:
                         return value.equals(key.asString().getValue());
                     case DATETIME:
@@ -727,7 +728,4 @@ public class TypeQLSteps {
         }
     }
 
-    private static Boolean precisionEquals(Double a, Double b) {
-        return Math.abs(a - b) / Math.abs(a) < 1.0e6;
-    }
 }
