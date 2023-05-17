@@ -32,8 +32,11 @@ import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
@@ -46,9 +49,11 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.getRelat
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.protoThing;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.setHasReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.unsetHasReq;
+import static com.vaticle.typedb.client.concept.type.TypeImpl.protoAnnotations;
 import static com.vaticle.typedb.client.concept.type.TypeImpl.protoTypes;
 import static com.vaticle.typedb.common.util.Objects.className;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 
 public abstract class ThingImpl extends ConceptImpl implements Thing {
 
@@ -174,8 +179,13 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         }
 
         @Override
-        public final Stream<AttributeImpl<?>> getHas(boolean onlyKey) {
-            return stream(getHasReq(getIID(), onlyKey))
+        public Stream<? extends Attribute<?>> getHas() {
+            return getHas(emptySet());
+        }
+
+        @Override
+        public final Stream<AttributeImpl<?>> getHas(Set<TypeQLToken.Annotation> annotations) {
+            return stream(getHasReq(getIID(), protoAnnotations(annotations)))
                     .flatMap(rp -> rp.getThingGetHasResPart().getAttributesList().stream())
                     .map(AttributeImpl::of);
         }

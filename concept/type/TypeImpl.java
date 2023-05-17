@@ -41,17 +41,21 @@ import com.vaticle.typedb.client.concept.thing.RelationImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.deleteReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.getSubtypesReq;
@@ -110,6 +114,19 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
             if (type.isThingType()) return protoThingType(type.asThingType());
             else return protoRoleType(type.asRoleType());
         }).collect(toList());
+    }
+
+    public static Set<ConceptProto.Type.Annotation> protoAnnotations(Collection<TypeQLToken.Annotation> annotations) {
+        return annotations.stream().map(annotation -> {
+            switch (annotation) {
+                case KEY:
+                    return ConceptProto.Type.Annotation.newBuilder().setKey(ConceptProto.Type.Annotation.Key.getDefaultInstance());
+                case UNIQUE:
+                    return ConceptProto.Type.Annotation.newBuilder().setUnique(ConceptProto.Type.Annotation.Unique.getDefaultInstance());
+                default:
+                    throw new TypeDBClientException(UNRECOGNISED_ANNOTATION, annotation);
+            }
+        }).map(ConceptProto.Type.Annotation.Builder::build).collect(Collectors.toSet());
     }
 
     @Override

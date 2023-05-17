@@ -24,8 +24,11 @@ package com.vaticle.typedb.client.api.concept.type;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
-import java.util.stream.Stream;
+import com.vaticle.typeql.lang.common.TypeQLToken;
+
 import javax.annotation.CheckReturnValue;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public interface ThingType extends Type {
 
@@ -70,11 +73,11 @@ public interface ThingType extends Type {
 
         void setPlays(RoleType roleType, RoleType overriddenType);
 
-        void setOwns(AttributeType attributeType, AttributeType overriddenType, boolean isKey);
+        void setOwns(AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations);
 
         void setOwns(AttributeType attributeType, AttributeType overriddenType);
 
-        void setOwns(AttributeType attributeType, boolean isKey);
+        void setOwns(AttributeType attributeType, Set<TypeQLToken.Annotation> annotations);
 
         void setOwns(AttributeType attributeType);
 
@@ -94,10 +97,10 @@ public interface ThingType extends Type {
         Stream<? extends AttributeType> getOwns(ValueType valueType);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwns(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType> getOwns(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         Stream<? extends AttributeType> getOwnsExplicit();
@@ -106,10 +109,10 @@ public interface ThingType extends Type {
         Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(boolean keysOnly);
+        Stream<? extends AttributeType> getOwnsExplicit(Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
-        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, boolean keysOnly);
+        Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, Set<TypeQLToken.Annotation> annotations);
 
         @CheckReturnValue
         AttributeType getOwnsOverridden(AttributeType attributeType);

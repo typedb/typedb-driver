@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -37,6 +38,7 @@ import java.util.Set;
 import static com.vaticle.typedb.client.test.behaviour.config.Parameters.RootLabel;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.common.collection.Collections.set;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
@@ -223,64 +225,41 @@ public class ThingTypeSteps {
         }
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}")
-    public void thing_type_set_has_key_type(RootLabel rootLabel, String typeLabel, String attTypeLabel) {
+    @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}")
+    public void thing_type_set_owns_attribute_type_with_annotations(RootLabel rootLabel, String typeLabel, String attTypeLabel, List<TypeQLToken.Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
-        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, true);
+        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, set(annotations));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}")
-    public void thing_type_set_has_key_type_as(RootLabel rootLabel, String typeLabel, String attTypeLabel, String overriddenLabel) {
+    @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}")
+    public void thing_type_set_owns_attribute_type_as_type_with_annotations(RootLabel rootLabel, String typeLabel, String attTypeLabel, String overriddenLabel, List<TypeQLToken.Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, true);
+        get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, set(annotations));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label}; throws exception")
-    public void thing_type_set_has_key_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
+    @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception")
+    public void thing_type_set_owns_attribute_type_with_annotations_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, List<TypeQLToken.Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, true));
+        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, set(annotations)));
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) set owns key type: {type_label} as {type_label}; throws exception")
-    public void thing_type_set_has_key_type_as_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
+    @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}; throws exception")
+    public void thing_type_set_owns_attribute_type_as_type_with_annotations_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel, List<TypeQLToken.Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, true));
+        assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType, set(annotations)));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) unset owns key type: {type_label}")
-    public void thing_type_remove_has_key_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
+    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
+    public void thing_type_unset_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         get_thing_type(rootLabel, typeLabel).asRemote(tx()).unsetOwns(attributeType);
     }
 
-    @Then("{root_label}\\( ?{type_label} ?) get owns key types contain:")
-    public void thing_type_get_owns_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
-        assertTrue(actuals.containsAll(attributeLabels));
-    }
-
-    @Then("{root_label}\\( ?{type_label} ?) get owns key types do not contain:")
-    public void thing_type_get_owns_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(true).map(t -> t.getLabel().name()).collect(toSet());
-        for (String attributeLabel : attributeLabels) {
-            assertFalse(actuals.contains(attributeLabel));
-        }
-    }
-
-    @Then("{root_label}\\( ?{type_label} ?) get owns explicit key types contain:")
-    public void thing_type_get_owns_explicit_key_types_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
-        assertTrue(actuals.containsAll(attributeLabels));
-    }
-
-    @Then("{root_label}\\( ?{type_label} ?) get owns explicit key types do not contain:")
-    public void thing_type_get_owns_explicit_key_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
-        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(true).map(t -> t.getLabel().name()).collect(toSet());
-        for (String attributeLabel : attributeLabels) {
-            assertFalse(actuals.contains(attributeLabel));
-        }
+    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")
+    public void thing_type_unset_owns_attribute_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
+        assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
     @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}")
@@ -307,17 +286,6 @@ public class ThingTypeSteps {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).asRemote(tx()).setOwns(attributeType, overriddenType));
-    }
-
-    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
-    public void thing_type_unset_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
-        AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        get_thing_type(rootLabel, typeLabel).asRemote(tx()).unsetOwns(attributeType);
-    }
-
-    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")
-    public void thing_type_unset_owns_attribute_type_throws_exception(RootLabel rootLabel, String typeLabel, String attributeLabel) {
-        assertThrows(() -> thing_type_unset_owns_attribute_type(rootLabel, typeLabel, attributeLabel));
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get owns overridden attribute\\( ?{type_label} ?) is null: {bool}")
@@ -353,6 +321,34 @@ public class ThingTypeSteps {
     @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types do not contain:")
     public void thing_type_get_owns_explicit_attribute_types_do_not_contain(RootLabel rootLabel, String typeLabel, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit().map(at -> at.getLabel().name()).collect(toSet());
+        for (String attributeLabel : attributeLabels) {
+            assertFalse(actuals.contains(attributeLabel));
+        }
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types with annotations: {annotations}; contain:")
+    public void thing_type_get_owns_attribute_types_with_annotations_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(attributeLabels));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns attribute types with annotations: {annotations}; do not contain:")
+    public void thing_type_get_owns_attribute_types_with_annotations_do_not_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwns(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        for (String attributeLabel : attributeLabels) {
+            assertFalse(actuals.contains(attributeLabel));
+        }
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types with annotations: {annotations}; contain:")
+    public void thing_type_get_owns_explicit_attribute_types_with_annotations_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
+        assertTrue(actuals.containsAll(attributeLabels));
+    }
+
+    @Then("{root_label}\\( ?{type_label} ?) get owns explicit attribute types with annotations: {annotations}; do not contain:")
+    public void thing_type_get_owns_explicit_attribute_types_with_annotations_do_not_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
+        Set<String> actuals = get_thing_type(rootLabel, typeLabel).asRemote(tx()).getOwnsExplicit(set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String attributeLabel : attributeLabels) {
             assertFalse(actuals.contains(attributeLabel));
         }
