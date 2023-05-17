@@ -47,6 +47,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -696,35 +697,33 @@ public class TypeQLSteps {
                 return false;
             }
 
-            Set<Attribute<?>> keys = concept.asThing().asRemote(tx()).getHas(set(KEY)).collect(Collectors.toSet());
-            HashMap<Label, String> keyMap = new HashMap<>();
+            Optional<? extends Attribute<?>> opt_key = concept.asThing().asRemote(tx()).getHas(set(KEY))
+                    .filter(attr -> attr.getType().getLabel().equals(type)).findFirst();
+            if (opt_key.isEmpty())
+                return false;
 
-            for (Attribute<?> key : keys) {
-                if (!key.getType().getLabel().equals(type))
-                    continue;
-                switch (key.getType().getValueType()) {
-                    case BOOLEAN:
-                        return Boolean.valueOf(value).equals(key.asBoolean().getValue());
-                    case LONG:
-                        return Long.valueOf(value).equals(key.asLong().getValue());
-                    case DOUBLE:
-                        return equalsApproximate(Double.parseDouble(value), key.asDouble().getValue());
-                    case STRING:
-                        return value.equals(key.asString().getValue());
-                    case DATETIME:
-                        LocalDateTime dateTime;
-                        try {
-                            dateTime = LocalDateTime.parse(value);
-                        } catch (DateTimeParseException e) {
-                            dateTime = LocalDate.parse(value).atStartOfDay();
-                        }
-                        return dateTime.equals(key.asDateTime().getValue());
-                    case OBJECT:
-                    default:
-                        throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
-                }
+            Attribute<?> key = opt_key.get().asAttribute();
+            switch (key.getType().getValueType()) {
+                case BOOLEAN:
+                    return Boolean.valueOf(value).equals(key.asBoolean().getValue());
+                case LONG:
+                    return Long.valueOf(value).equals(key.asLong().getValue());
+                case DOUBLE:
+                    return equalsApproximate(Double.parseDouble(value), key.asDouble().getValue());
+                case STRING:
+                    return value.equals(key.asString().getValue());
+                case DATETIME:
+                    LocalDateTime dateTime;
+                    try {
+                        dateTime = LocalDateTime.parse(value);
+                    } catch (DateTimeParseException e) {
+                        dateTime = LocalDate.parse(value).atStartOfDay();
+                    }
+                    return dateTime.equals(key.asDateTime().getValue());
+                case OBJECT:
+                default:
+                    throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
             }
-            return false;
         }
     }
 
