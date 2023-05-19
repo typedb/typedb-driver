@@ -62,6 +62,8 @@ export interface AttributeType extends ThingType {
 /* eslint @typescript-eslint/ban-types: "off" */
 export namespace AttributeType {
 
+    import Annotation = ThingType.Annotation;
+
     export interface Remote extends AttributeType, ThingType.Remote {
 
         setSupertype(type: AttributeType): Promise<void>;
@@ -72,11 +74,11 @@ export namespace AttributeType {
 
         getOwners(): Stream<ThingType>;
 
-        getOwners(onlyKey: boolean): Stream<ThingType>;
+        getOwners(annotations: Annotation[]): Stream<ThingType>;
 
         getOwnersExplicit(): Stream<ThingType>;
 
-        getOwnersExplicit(onlyKey: boolean): Stream<ThingType>;
+        getOwnersExplicit(annotations: Annotation[]): Stream<ThingType>;
 
         asType(): Type.Remote;
 

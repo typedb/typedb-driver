@@ -19,14 +19,15 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
+import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { fail } from "assert";
-import { Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, RoleType, Thing, Type } from "../../../dist";
-import { parseBool } from "../config/Parameters";
-import { tx } from "../connection/ConnectionStepsBase";
-import { assertThrows, assertThrowsWithMessage, splitString } from "../util/Util";
+import {fail} from "assert";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType} from "../../../dist";
+import {parseBool} from "../config/Parameters";
+import {tx} from "../connection/ConnectionStepsBase";
+import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
+import Annotation = ThingType.Annotation;
 
 export let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -229,7 +230,7 @@ class ThingKeyMatcher extends AttributeMatcher {
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = await concept.asThing().asRemote(tx()).getHas(true).collect();
+        const keys = await concept.asThing().asRemote(tx()).getHas([Annotation.KEY]).collect();
 
         for (const key of keys) {
             if (key.type.label.scopedName === this.typeLabel) {

@@ -46,6 +46,8 @@ export interface Thing extends Concept {
 
 export namespace Thing {
 
+    import Annotation = ThingType.Annotation;
+
     export interface Remote extends Thing, Concept.Remote {
 
         asRemote(transaction: TypeDBTransaction): Thing.Remote;
@@ -54,7 +56,7 @@ export namespace Thing {
 
         unsetHas(attribute: Attribute): Promise<void>;
 
-        getHas(onlyKey: boolean): Stream<Attribute>;
+        getHas(annotations: Annotation[]): Stream<Attribute>;
 
         getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
 

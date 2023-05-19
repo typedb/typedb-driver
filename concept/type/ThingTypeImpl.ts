@@ -19,19 +19,27 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Thing } from "../../api/concept/thing/Thing";
-import { AttributeType } from "../../api/concept/type/AttributeType";
-import { RoleType } from "../../api/concept/type/RoleType";
-import { ThingType } from "../../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { Label } from "../../common/Label";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, RoleTypeImpl, ThingImpl, TypeImpl } from "../../dependencies_internal";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import {Thing} from "../../api/concept/thing/Thing";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Label} from "../../common/Label";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {
+    AttributeTypeImpl,
+    EntityTypeImpl,
+    RelationTypeImpl,
+    RoleTypeImpl,
+    ThingImpl,
+    TypeImpl
+} from "../../dependencies_internal";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import Annotation = ThingType.Annotation;
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -57,6 +65,7 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
 }
 
 export namespace ThingTypeImpl {
+
 
     export function of(thingTypeProto: TypeProto) {
         if (!thingTypeProto) return null;
@@ -117,21 +126,24 @@ export namespace ThingTypeImpl {
 
         getOwns(): Stream<AttributeType>;
         getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
-        getOwns(keysOnly: boolean): Stream<AttributeType>;
-        getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
-        getOwns(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
+        getOwns(annotations: Annotation[]): Stream<AttributeType>;
+        getOwns(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwns(valueTypeOrAnnotationsOnly?: AttributeType.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
             let request;
-            if (!valueTypeOrKeysOnly) {
-                request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, false);
-            } else if (typeof valueTypeOrKeysOnly === "boolean") {
-                request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, valueTypeOrKeysOnly as boolean)
-            } else if (!keysOnly) {
+            if (!valueTypeOrAnnotationsOnly) {
+                request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, []);
+            } else if (Array.isArray(valueTypeOrAnnotationsOnly)) {
+                request = RequestBuilder.Type.ThingType.getOwnsReq(
+                    this.label, (valueTypeOrAnnotationsOnly as Annotation[]).map(a => ThingType.Annotation.proto(a))
+                );
+            } else if (!annotations) {
                 request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), false
+                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(), []
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), keysOnly
+                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(),
+                    annotations.map(a => ThingType.Annotation.proto(a))
                 );
             }
             return this.stream(request)
@@ -142,21 +154,24 @@ export namespace ThingTypeImpl {
 
         getOwnsExplicit(): Stream<AttributeType>;
         getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
-        getOwnsExplicit(keysOnly: boolean): Stream<AttributeType>;
-        getOwnsExplicit(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
-        getOwnsExplicit(valueTypeOrKeysOnly?: AttributeType.ValueType | boolean, keysOnly?: boolean): Stream<AttributeType> {
+        getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
+        getOwnsExplicit(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwnsExplicit(valueTypeOrAnnotationsOnly?: AttributeType.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
             let request;
-            if (!valueTypeOrKeysOnly) {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, false);
-            } else if (typeof valueTypeOrKeysOnly === "boolean") {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, valueTypeOrKeysOnly as boolean)
-            } else if (!keysOnly) {
+            if (!valueTypeOrAnnotationsOnly) {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, []);
+            } else if (Array.isArray(valueTypeOrAnnotationsOnly)) {
+                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(
+                    this.label, (valueTypeOrAnnotationsOnly as Annotation[]).map(a => ThingType.Annotation.proto(a))
+                );
+            } else if (!annotations) {
                 request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), false
+                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(), []
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrKeysOnly as AttributeType.ValueType).proto(), keysOnly
+                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(),
+                    annotations.map(a => ThingType.Annotation.proto(a))
                 );
             }
             return this.stream(request)
@@ -171,21 +186,27 @@ export namespace ThingTypeImpl {
         }
 
         async setOwns(attributeType: AttributeType): Promise<void>;
-        async setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+        async setOwns(attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
         async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-        async setOwns(attributeType: AttributeType, overriddenTypeOrIsKey?: AttributeType | boolean, isKey?: boolean): Promise<void> {
+        async setOwns(attributeType: AttributeType, overriddenTypeOrAnnotations?: AttributeType | Annotation[], annotations?: Annotation[]): Promise<void> {
             let request;
-            if (!overriddenTypeOrIsKey) {
-                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType), false);
-            } else if (typeof overriddenTypeOrIsKey === "boolean") {
-                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType), overriddenTypeOrIsKey as boolean)
-            } else if (!isKey) {
+            if (!overriddenTypeOrAnnotations) {
+                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType), []);
+            } else if (Array.isArray(overriddenTypeOrAnnotations)) {
+                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType),
+                    (overriddenTypeOrAnnotations as Annotation[]).map(a => ThingType.Annotation.proto(a))
+                );
+            } else if (!annotations) {
                 request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
-                    this.label, ThingType.proto(attributeType), ThingType.proto((overriddenTypeOrIsKey as AttributeType)), false
+                    this.label, ThingType.proto(attributeType),
+                    ThingType.proto((overriddenTypeOrAnnotations as AttributeType)),
+                    []
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
-                    this.label, ThingType.proto(attributeType), ThingType.proto(overriddenTypeOrIsKey as AttributeType), isKey
+                    this.label, ThingType.proto(attributeType),
+                    ThingType.proto(overriddenTypeOrAnnotations as AttributeType),
+                    annotations.map(a => ThingType.Annotation.proto(a))
                 );
             }
             await this.execute(request);

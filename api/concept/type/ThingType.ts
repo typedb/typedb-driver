@@ -20,18 +20,22 @@
  */
 
 
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { Entity } from "../thing/Entity";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { EntityType } from "./EntityType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
-import { Type } from "./Type";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Attribute} from "../thing/Attribute";
+import {Entity} from "../thing/Entity";
+import {Relation} from "../thing/Relation";
+import {Thing} from "../thing/Thing";
+import {AttributeType} from "./AttributeType";
+import {EntityType} from "./EntityType";
+import {RelationType} from "./RelationType";
+import {RoleType} from "./RoleType";
+import {Type} from "./Type";
+import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../../common/errors/ErrorMessage";
+import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
 
 export interface ThingType extends Type {
 
@@ -39,6 +43,42 @@ export interface ThingType extends Type {
 }
 
 export namespace ThingType {
+
+    export class Annotation {
+
+        public static KEY = new Annotation("key");
+        public static UNIQUE = new Annotation("unique");
+
+        private readonly name: string;
+
+        private constructor(name: string) {
+            this.name = name;
+        }
+
+        public static parse(string: string): Annotation {
+            if (string == Annotation.KEY.name) return Annotation.KEY;
+            else if (string == Annotation.UNIQUE.name) return Annotation.KEY;
+            else throw new TypeDBClientError(BAD_ANNOTATION.message(string));
+        }
+
+
+        public toString(): string {
+            return "[annotation: " + this.name + "]";
+        }
+    }
+
+    export namespace Annotation {
+
+        export function proto(annotation: Annotation): TypeProto.Annotation {
+            if (annotation == Annotation.KEY) {
+                return RequestBuilder.Type.Annotation.annotationKeyProto();
+            } else if (annotation == Annotation.UNIQUE) {
+                return RequestBuilder.Type.Annotation.annotationUniqueProto();
+            } else {
+                throw new TypeDBClientError((BAD_ANNOTATION.message(annotation)));
+            }
+        }
+    }
 
     export interface Remote extends ThingType, Type.Remote {
 
@@ -82,11 +122,11 @@ export namespace ThingType {
 
         setOwns(attributeType: AttributeType): Promise<void>;
 
-        setOwns(attributeType: AttributeType, isKey: boolean): Promise<void>;
+        setOwns(attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
 
         setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
 
-        setOwns(attributeType: AttributeType, overriddenType: AttributeType, isKey: boolean): Promise<void>;
+        setOwns(attributeType: AttributeType, overriddenType: AttributeType, annotations: Annotation[]): Promise<void>;
 
         getPlays(): Stream<RoleType>;
 
@@ -98,17 +138,17 @@ export namespace ThingType {
 
         getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
 
-        getOwns(keysOnly: boolean): Stream<AttributeType>;
+        getOwns(annotations: Annotation[]): Stream<AttributeType>;
 
-        getOwns(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+        getOwns(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
 
         getOwnsExplicit(): Stream<AttributeType>;
 
         getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
 
-        getOwnsExplicit(keysOnly: boolean): Stream<AttributeType>;
+        getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
 
-        getOwnsExplicit(valueType: AttributeType.ValueType, keysOnly: boolean): Stream<AttributeType>;
+        getOwnsExplicit(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
 
         getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType>;
 

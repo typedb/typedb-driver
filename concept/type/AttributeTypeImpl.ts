@@ -20,17 +20,22 @@
  */
 
 
-import { Attribute as AttributeProto, AttributeType as AttributeTypeProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Attribute } from "../../api/concept/thing/Attribute";
-import { AttributeType } from "../../api/concept/type/AttributeType";
-import { ThingType } from "../../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { Label } from "../../common/Label";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { AttributeImpl, ThingTypeImpl } from "../../dependencies_internal";
+import {
+    Attribute as AttributeProto,
+    AttributeType as AttributeTypeProto,
+    Type as TypeProto
+} from "typedb-protocol/common/concept_pb";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Label} from "../../common/Label";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import Annotation = ThingType.Annotation;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
@@ -231,15 +236,21 @@ export namespace AttributeTypeImpl {
             return super.getInstances() as Stream<Attribute>;
         }
 
-        getOwners(onlyKey?: boolean): Stream<ThingType> {
-            const request = RequestBuilder.Type.AttributeType.getOwnersReq(this.label, !!onlyKey);
+        getOwners(annotations?: Annotation[]): Stream<ThingType> {
+            const request = RequestBuilder.Type.AttributeType.getOwnersReq(
+                this.label,
+                annotations ? annotations.map(a => Annotation.proto(a)) : []
+            );
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersResPart().getThingTypesList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 
-        getOwnersExplicit(onlyKey?: boolean): Stream<ThingType> {
-            const request = RequestBuilder.Type.AttributeType.getOwnersExplicitReq(this.label, !!onlyKey);
+        getOwnersExplicit(annotations?: Annotation[]): Stream<ThingType> {
+            const request = RequestBuilder.Type.AttributeType.getOwnersExplicitReq(
+                this.label,
+                annotations ? annotations.map(a => Annotation.proto(a)) : []
+            );
             return this.stream(request)
                 .flatMap((resPart) => Stream.array(resPart.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList()))
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));

@@ -20,12 +20,14 @@
  */
 
 import { After, When } from "@cucumber/cucumber";
-import { Attribute, Thing } from "../../../../dist";
+import { Thing } from "../../../../dist";
+import {ThingType} from "../../../../dist";
 import { RootLabel, ScopedLabel } from "../../config/Parameters";
 import { tx } from "../../connection/ConnectionStepsBase";
 import { assertThrows } from "../../util/Util";
 import { getThingType } from "../type/thingtype/ThingTypeSteps";
 import assert = require("assert");
+import Annotation = ThingType.Annotation;
 
 export const things: Map<string, Thing> = new Map<string, Thing>();
 export const get: (name: string) => Thing = (name: string) => things.get(name);
@@ -65,14 +67,14 @@ When("entity/attribute/relation {var} unset has: {var}", async (thingName: strin
 });
 
 When("entity/attribute/relation {var} get keys contain: {var}", async (thingName: string, attributeName: string) => {
-    for await (const keyAttribute of get(thingName).asRemote(tx()).getHas(true)) {
+    for await (const keyAttribute of get(thingName).asRemote(tx()).getHas([Annotation.KEY])) {
         if (keyAttribute.equals(get(attributeName))) return;
     }
     assert.fail();
 });
 
 When("entity/attribute/relation {var} get keys do not contain: {var}", async (thingName: string, attributeName: string) => {
-    for await (const keyAttribute of get(thingName).asRemote(tx()).getHas(true)) {
+    for await (const keyAttribute of get(thingName).asRemote(tx()).getHas([Annotation.KEY])) {
         if (keyAttribute.equals(get(attributeName))) assert.fail();
     }
 });

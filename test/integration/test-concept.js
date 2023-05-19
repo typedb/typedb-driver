@@ -19,8 +19,9 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, AttributeType } = require("../../dist");
+const { TypeDB, SessionType, TransactionType, AttributeType, ThingType  } = require("../../dist");
 const assert = require("assert");
+const Annotation = ThingType.Annotation;
 
 async function run() {
     const client = TypeDB.coreClient();
@@ -208,17 +209,17 @@ async function run() {
         await workEmail.asRemote(tx).setSupertype(email);
         age = await tx.concepts.putAttributeType("age", AttributeType.ValueType.LONG);
         await person.asRemote(tx).setAbstract();
-        await person.asRemote(tx).setOwns(email, true);
+        await person.asRemote(tx).setOwns(email, [Annotation.KEY]);
         man = await tx.concepts.getEntityType("man");
         await man.asRemote(tx).setSupertype(await tx.concepts.getRootEntityType());
-        await person.asRemote(tx).setOwns(age, false);
+        await person.asRemote(tx).setOwns(age);
         await lion.asRemote(tx).setOwns(age);
         customer = await tx.concepts.putEntityType("customer");
         await customer.asRemote(tx).setSupertype(person);
-        await customer.asRemote(tx).setOwns(workEmail, email, true);
+        await customer.asRemote(tx).setOwns(workEmail, email);
         const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
-        const ownedKeys = await customer.asRemote(tx).getOwns(true).collect();
-        const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, false).collect();
+        const ownedKeys = await customer.asRemote(tx).getOwns([Annotation.KEY]).collect();
+        const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, []).collect();
         await tx.commit();
         await tx.close();
         assert(ownedAttributes.length === 2);

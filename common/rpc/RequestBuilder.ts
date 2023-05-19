@@ -469,46 +469,46 @@ export namespace RequestBuilder {
                 ));
             }
 
-            export function getOwnsReq(label: Label, keysOnly: boolean) {
+            export function getOwnsReq(label: Label, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeProto.GetOwns.Req().setKeysOnly(keysOnly)
+                    new ThingTypeProto.GetOwns.Req().setAnnotationsList(annotations)
                 ));
             }
 
-            export function getOwnsByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, keysOnly: boolean) {
+            export function getOwnsByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
-                    new ThingTypeProto.GetOwns.Req().setKeysOnly(keysOnly)
+                    new ThingTypeProto.GetOwns.Req().setAnnotationsList(annotations)
                         .setValueType(valueType)
                 ));
             }
 
-            export function getOwnsExplicitReq(label: Label, keysOnly: boolean) {
+            export function getOwnsExplicitReq(label: Label, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
+                    new ThingTypeProto.GetOwnsExplicit.Req().setAnnotationsList(annotations)
                 ));
             }
 
-            export function getOwnsExplicitByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, keysOnly: boolean) {
+            export function getOwnsExplicitByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
-                    new ThingTypeProto.GetOwnsExplicit.Req().setKeysOnly(keysOnly)
+                    new ThingTypeProto.GetOwnsExplicit.Req().setAnnotationsList(annotations)
                         .setValueType(valueType)
                 ));
             }
 
-            export function setOwnsReq(label: Label, attributeType: TypeProto, isKey: boolean) {
+            export function setOwnsReq(label: Label, attributeType: TypeProto, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                     new ThingTypeProto.SetOwns.Req()
                         .setAttributeType(attributeType)
-                        .setIsKey(isKey)
+                        .setAnnotationsList(annotations)
                 ));
             }
 
-            export function setOwnsOverriddenReq(label: Label, attributeType: TypeProto, overriddenType: TypeProto, isKey: boolean) {
+            export function setOwnsOverriddenReq(label: Label, attributeType: TypeProto, overriddenType: TypeProto, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeSetOwnsReq(
                     new ThingTypeProto.SetOwns.Req()
                         .setAttributeType(attributeType)
                         .setOverriddenType(overriddenType)
-                        .setIsKey(isKey)
+                        .setAnnotationsList(annotations)
                 ));
             }
 
@@ -598,14 +598,16 @@ export namespace RequestBuilder {
 
         export namespace AttributeType {
 
-            export function getOwnersReq(label: Label, onlyKey: boolean) {
+            export function getOwnersReq(label: Label, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersReq(
-                    new AttributeTypeProto.GetOwners.Req().setOnlyKey(onlyKey)));
+                    new AttributeTypeProto.GetOwners.Req().setAnnotationsList(annotations)
+                ));
             }
 
-            export function getOwnersExplicitReq(label: Label, onlyKey: boolean) {
+            export function getOwnersExplicitReq(label: Label, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetOwnersExplicitReq(
-                    new AttributeTypeProto.GetOwnersExplicit.Req().setOnlyKey(onlyKey)));
+                    new AttributeTypeProto.GetOwnersExplicit.Req().setAnnotationsList(annotations)
+                ));
             }
 
             export function putReq(label: Label, value: AttributeProto.Value) {
@@ -632,8 +634,19 @@ export namespace RequestBuilder {
                 ));
             }
         }
-    }
 
+        export namespace Annotation {
+
+            export function annotationKeyProto(): TypeProto.Annotation {
+                return new TypeProto.Annotation().setKey(new TypeProto.Annotation.Key());
+            }
+
+            export function annotationUniqueProto() {
+                return new TypeProto.Annotation().setUnique(new TypeProto.Annotation.Unique());
+            }
+        }
+
+    }
 
     export namespace Thing {
 
@@ -645,9 +658,9 @@ export namespace RequestBuilder {
             return new ThingProto().setIid(Bytes.hexStringToBytes(iid));
         }
 
-        export function getHasReq(iid: string, onlyKey: boolean) {
+        export function getHasReqByAnnotations(iid: string, annotations: TypeProto.Annotation[]) {
             return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setThingGetHasReq(
-                new ThingProto.GetHas.Req().setKeysOnly(onlyKey)
+                new ThingProto.GetHas.Req().setAnnotationsList(annotations)
             ));
         }
 

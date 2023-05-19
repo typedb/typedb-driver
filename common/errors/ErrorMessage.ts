@@ -107,7 +107,8 @@ export namespace ErrorMessage {
         export const MISSING_LABEL = new Concept(4, () => `Label cannot be null or empty.`);
         export const BAD_ENCODING = new Concept(5, (args: Stringable[]) => `The encoding '${args[0]}' was not recognised.`);
         export const BAD_VALUE_TYPE = new Concept(6, (args: Stringable[]) => `The value type '${args[0]}' was not recognised.`);
-        export const BAD_ATTRIBUTE_VALUE = new Concept(7, (args: Stringable[]) => `The attribute value '${args[0]}' was not recognised.`);
+        export const BAD_ANNOTATION = new Concept(7, (args: Stringable[]) => `The annotation '${args[0]}' was not recognised.`);
+        export const BAD_ATTRIBUTE_VALUE = new Concept(8, (args: Stringable[]) => `The attribute value '${args[0]}' was not recognised.`);
     }
 
     export class Query extends ErrorMessage {

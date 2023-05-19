@@ -19,21 +19,29 @@
  * under the License.
  */
 
-import { Thing as ThingProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
-import { Concept } from "../../api/concept/Concept";
-import { Attribute } from "../../api/concept/thing/Attribute";
-import { Relation } from "../../api/concept/thing/Relation";
-import { Thing } from "../../api/concept/thing/Thing";
-import { AttributeType } from "../../api/concept/type/AttributeType";
-import { RoleType } from "../../api/concept/type/RoleType";
-import { ThingType } from "../../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { AttributeImpl, ConceptImpl, EntityImpl, RelationImpl, RoleTypeImpl } from "../../dependencies_internal";
+import {Thing as ThingProto, Type as TypeProto} from "typedb-protocol/common/concept_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {Concept} from "../../api/concept/Concept";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {Relation} from "../../api/concept/thing/Relation";
+import {Thing} from "../../api/concept/thing/Thing";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {
+    AttributeImpl,
+    AttributeTypeImpl,
+    ConceptImpl,
+    EntityImpl,
+    RelationImpl,
+    RoleTypeImpl
+} from "../../dependencies_internal";
+import Annotation = ThingType.Annotation;
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
@@ -135,31 +143,39 @@ export namespace ThingImpl {
         }
 
         getHas(): Stream<Attribute>;
-        getHas(onlyKey: boolean): Stream<Attribute>;
+        getHas(annotations: Annotation[]): Stream<Attribute>;
         getHas(attributeType: AttributeType.Boolean): Stream<Attribute.Boolean>;
         getHas(attributeType: AttributeType.Long): Stream<Attribute.Long>;
         getHas(attributeType: AttributeType.Double): Stream<Attribute.Double>;
         getHas(attributeType: AttributeType.String): Stream<Attribute.String>;
         getHas(attributeType: AttributeType.DateTime): Stream<Attribute.DateTime>;
         getHas(attributeTypes: AttributeType[]): Stream<Attribute>;
-        getHas(onlyKeyAttrTypeAttrTypes?: boolean | AttributeType | AttributeType[]): Stream<Attribute> {
+        getHas(annotationOrAttrTypeOrAttrTypes?: Annotation[] | AttributeType | AttributeType[]): Stream<Attribute> {
             let isSingleAttrType = false;
             let request;
-            if (typeof onlyKeyAttrTypeAttrTypes === "undefined") {
-                request = RequestBuilder.Thing.getHasReq(this.iid, false);
-            } else if (typeof onlyKeyAttrTypeAttrTypes === "boolean") {
-                request = RequestBuilder.Thing.getHasReq(this.iid, onlyKeyAttrTypeAttrTypes);
-            } else if (onlyKeyAttrTypeAttrTypes instanceof Array) {
-                const attrTypesProto = onlyKeyAttrTypeAttrTypes.map((attrType) => ThingType.proto(attrType));
-                request = RequestBuilder.Thing.getHasByTypeReq(this.iid, attrTypesProto);
+            if (typeof annotationOrAttrTypeOrAttrTypes === "undefined") {
+                request = RequestBuilder.Thing.getHasReqByAnnotations(this.iid, []);
+            } else if (Array.isArray(annotationOrAttrTypeOrAttrTypes)) {
+                const asArray = annotationOrAttrTypeOrAttrTypes as Array<any>;
+                if (asArray.length == 0 || asArray[0] instanceof AttributeTypeImpl) {
+                    request = RequestBuilder.Thing.getHasByTypeReq(
+                        this.iid,
+                        (annotationOrAttrTypeOrAttrTypes as AttributeType[]).map(attrType => ThingType.proto(attrType)));
+                } else {
+                    request = RequestBuilder.Thing.getHasReqByAnnotations(
+                        this.iid,
+                        (annotationOrAttrTypeOrAttrTypes as Annotation[]).map(annotation => Annotation.proto(annotation))
+                    );
+                }
             } else {
-                request = RequestBuilder.Thing.getHasByTypeReq(this.iid, [ThingType.proto(onlyKeyAttrTypeAttrTypes)]);
+                request = RequestBuilder.Thing.getHasByTypeReq(this.iid, [ThingType.proto(annotationOrAttrTypeOrAttrTypes)]);
                 isSingleAttrType = true;
             }
-            const attributes = this.stream(request).flatMap((resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList()))
-                .map((attrProto) => AttributeImpl.of(attrProto));
+            const attributes = this.stream(request).flatMap(
+                (resPart) => Stream.array(resPart.getThingGetHasResPart().getAttributesList())
+            ).map((attrProto) => AttributeImpl.of(attrProto));
             if (isSingleAttrType) {
-                const arg = onlyKeyAttrTypeAttrTypes as AttributeType;
+                const arg = annotationOrAttrTypeOrAttrTypes as AttributeType;
                 if (arg.isBoolean()) return attributes as Stream<Attribute.Boolean>;
                 else if (arg.isLong()) return attributes as Stream<Attribute.Long>;
                 else if (arg.isDouble()) return attributes as Stream<Attribute.Double>;

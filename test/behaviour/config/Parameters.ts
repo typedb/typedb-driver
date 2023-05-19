@@ -19,10 +19,11 @@
  * under the License.
  */
 
-import { defineParameterType } from "@cucumber/cucumber";
+import {defineParameterType} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { AttributeType } from "../../../dist/api/concept/type/AttributeType";
-import { TransactionType } from "../../../dist/api/connection/TypeDBTransaction";
+import {TransactionType} from "../../../dist/api/connection/TypeDBTransaction";
+import {AttributeType, ThingType} from "../../../dist";
+import Annotation = ThingType.Annotation;
 
 export function parseBool(value: string): boolean {
     return value === "true";
@@ -139,6 +140,14 @@ defineParameterType({
     name: "type_label",
     regexp: /[a-zA-Z0-9-_]+/,
     transformer: s => s
+});
+
+defineParameterType({
+    name: "annotations",
+    regexp: new RegExp("(\\s*([\\w\\-_]+,\\s*)*[\\w\\-_]*\\s*)"),
+    transformer: s => {
+        return s.split(',').map(a => Annotation.parse(a.trim()));
+    }
 });
 
 defineParameterType({
