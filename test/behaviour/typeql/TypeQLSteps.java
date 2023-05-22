@@ -62,8 +62,6 @@ import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWit
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
 import static com.vaticle.typedb.common.util.Double.equalsApproximate;
-import static com.vaticle.typedb.common.collection.Collections.set;
-import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -695,9 +693,7 @@ public class TypeQLSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (!concept.isThing()) {
-                return false;
-            }
+            if (!concept.isThing()) return false;
 
             Optional<? extends Attribute<?>> keyOpt = concept.asThing().asRemote(tx()).getHas(set(KEY))
                     .filter(attr -> attr.getType().getLabel().equals(type)).findFirst();
