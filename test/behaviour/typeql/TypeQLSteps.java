@@ -47,6 +47,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,7 @@ import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
+import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -662,11 +664,11 @@ public class TypeQLSteps {
 
             switch (attributeType.getValueType()) {
                 case BOOLEAN:
-                    return value.equals(attribute.asBoolean().getValue().toString());
+                    return Boolean.valueOf(value).equals(attribute.asBoolean().getValue());
                 case LONG:
-                    return value.equals(attribute.asLong().getValue().toString());
+                    return Long.valueOf(value).equals(attribute.asLong().getValue());
                 case DOUBLE:
-                    return value.equals(attribute.asDouble().getValue().toString());
+                    return equalsApproximate(Double.parseDouble(value), attribute.asDouble().getValue());
                 case STRING:
                     return value.equals(attribute.asString().getValue());
                 case DATETIME:
@@ -691,39 +693,35 @@ public class TypeQLSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (!concept.isThing()) {
-                return false;
+            if (!concept.isThing()) return false;
+
+            Optional<? extends Attribute<?>> keyOpt = concept.asThing().asRemote(tx()).getHas(set(KEY))
+                    .filter(attr -> attr.getType().getLabel().equals(type)).findFirst();
+            if (keyOpt.isEmpty()) return false;
+
+            Attribute<?> key = keyOpt.get().asAttribute();
+            switch (key.getType().getValueType()) {
+                case BOOLEAN:
+                    return Boolean.valueOf(value).equals(key.asBoolean().getValue());
+                case LONG:
+                    return Long.valueOf(value).equals(key.asLong().getValue());
+                case DOUBLE:
+                    return equalsApproximate(Double.parseDouble(value), key.asDouble().getValue());
+                case STRING:
+                    return value.equals(key.asString().getValue());
+                case DATETIME:
+                    LocalDateTime dateTime;
+                    try {
+                        dateTime = LocalDateTime.parse(value);
+                    } catch (DateTimeParseException e) {
+                        dateTime = LocalDate.parse(value).atStartOfDay();
+                    }
+                    return dateTime.equals(key.asDateTime().getValue());
+                case OBJECT:
+                default:
+                    throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
             }
-
-            Set<Attribute<?>> keys = concept.asThing().asRemote(tx()).getHas(set(KEY)).collect(Collectors.toSet());
-            HashMap<Label, String> keyMap = new HashMap<>();
-
-            for (Attribute<?> key : keys) {
-                String keyValue;
-                switch (key.getType().getValueType()) {
-                    case BOOLEAN:
-                        keyValue = key.asBoolean().getValue().toString();
-                        break;
-                    case LONG:
-                        keyValue = key.asLong().getValue().toString();
-                        break;
-                    case DOUBLE:
-                        keyValue = key.asDouble().getValue().toString();
-                        break;
-                    case STRING:
-                        keyValue = key.asString().getValue();
-                        break;
-                    case DATETIME:
-                        keyValue = key.asDateTime().getValue().toString();
-                        break;
-                    case OBJECT:
-                    default:
-                        throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
-                }
-
-                keyMap.put(key.getType().getLabel(), keyValue);
-            }
-            return value.equals(keyMap.get(type));
         }
     }
+
 }
