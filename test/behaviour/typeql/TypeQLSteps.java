@@ -697,12 +697,11 @@ public class TypeQLSteps {
                 return false;
             }
 
-            Optional<? extends Attribute<?>> opt_key = concept.asThing().asRemote(tx()).getHas(set(KEY))
+            Optional<? extends Attribute<?>> keyOpt = concept.asThing().asRemote(tx()).getHas(set(KEY))
                     .filter(attr -> attr.getType().getLabel().equals(type)).findFirst();
-            if (opt_key.isEmpty())
-                return false;
+            if (keyOpt.isEmpty()) return false;
 
-            Attribute<?> key = opt_key.get().asAttribute();
+            Attribute<?> key = keyOpt.get().asAttribute();
             switch (key.getType().getValueType()) {
                 case BOOLEAN:
                     return Boolean.valueOf(value).equals(key.asBoolean().getValue());
