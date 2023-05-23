@@ -63,7 +63,6 @@ checkstyle_test(
     include = glob([
         "*",
         ".factory/*",
-        "tools/**",
     ]),
     exclude = glob([
         "*.md",
