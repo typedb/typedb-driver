@@ -23,7 +23,6 @@ package com.vaticle.typedb.client.concept.value;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.api.concept.type.Type.ValueType;
 import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
@@ -118,7 +117,6 @@ public abstract class ValueImpl<VALUE> extends ConceptImpl implements Value<VALU
         }
 
         public static ValueImpl.Boolean of(ConceptProto.Value valueProto) {
-            assert valueProto.getValueType() == ConceptProto.ValueType.BOOLEAN;
             return new ValueImpl.Boolean(ValueType.of(valueProto.getValueType()), valueProto.getValue().getBoolean());
         }
 
@@ -133,7 +131,6 @@ public abstract class ValueImpl<VALUE> extends ConceptImpl implements Value<VALU
         }
 
         public static ValueImpl.Long of(ConceptProto.Value valueProto) {
-            assert valueProto.getValueType() == ConceptProto.ValueType.LONG;
             return new ValueImpl.Long(ValueType.of(valueProto.getValueType()), valueProto.getValue().getLong());
         }
 
@@ -142,13 +139,12 @@ public abstract class ValueImpl<VALUE> extends ConceptImpl implements Value<VALU
         }
     }
 
-    public static class Double extends ValueImpl<java.lang.Double>  implements Value.Double {
+    public static class Double extends ValueImpl<java.lang.Double> implements Value.Double {
         public Double(ValueType valueType, java.lang.Double value) {
             super(valueType, value);
         }
 
         public static ValueImpl.Double of(ConceptProto.Value valueProto) {
-            assert valueProto.getValueType() == ConceptProto.ValueType.DOUBLE;
             return new ValueImpl.Double(ValueType.of(valueProto.getValueType()), valueProto.getValue().getDouble());
         }
 
@@ -163,7 +159,6 @@ public abstract class ValueImpl<VALUE> extends ConceptImpl implements Value<VALU
         }
 
         public static ValueImpl.String of(ConceptProto.Value valueProto) {
-            assert valueProto.getValueType() == ConceptProto.ValueType.STRING;
             return new ValueImpl.String(ValueType.of(valueProto.getValueType()), valueProto.getValue().getString());
         }
 
@@ -178,9 +173,10 @@ public abstract class ValueImpl<VALUE> extends ConceptImpl implements Value<VALU
         }
 
         public static ValueImpl.DateTime of(ConceptProto.Value valueProto) {
-            assert valueProto.getValueType() == ConceptProto.ValueType.DATETIME;
-            return new ValueImpl.DateTime(ValueType.of(valueProto.getValueType()),
-                    LocalDateTime.ofInstant(Instant.ofEpochMilli(valueProto.getValue().getDateTime()), ZoneOffset.UTC));
+            return new ValueImpl.DateTime(
+                    ValueType.of(valueProto.getValueType()),
+                    LocalDateTime.ofInstant(Instant.ofEpochMilli(valueProto.getValue().getDateTime()), ZoneOffset.UTC)
+            );
         }
 
         public ValueImpl.DateTime asDateTime() {
