@@ -202,6 +202,11 @@ public class TypeQLSteps {
         assertThrows(() -> typeql_match(typeQLQueryStatements));
     }
 
+    @When("typeql match; throws exception containing {string}")
+    public void typeql_match_throws_exception_containing(String typeQLQueryStatements, String error) {
+        assertThrowsWithMessage(() -> typeql_match(typeQLQueryStatements), error);
+    }
+
     @When("get answer of typeql match aggregate")
     public void typeql_match_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchAggregate();
