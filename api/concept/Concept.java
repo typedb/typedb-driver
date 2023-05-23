@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.api.concept;
 
 import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
@@ -89,6 +90,11 @@ public interface Concept {
     }
 
     @CheckReturnValue
+    default boolean isValue() {
+        return false;
+    }
+
+    @CheckReturnValue
     Type asType();
 
     @CheckReturnValue
@@ -117,6 +123,9 @@ public interface Concept {
 
     @CheckReturnValue
     Relation asRelation();
+
+    @CheckReturnValue
+    Value<?> asValue();
 
     @CheckReturnValue
     Remote asRemote(TypeDBTransaction transaction);

@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.concept;
 
 import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
@@ -33,6 +34,7 @@ import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.value.ValueImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
@@ -46,13 +48,16 @@ import com.vaticle.typedb.client.concept.type.TypeImpl;
 import com.vaticle.typedb.protocol.ConceptProto;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class ConceptImpl implements Concept {
 
     public static Concept of(ConceptProto.Concept protoConcept) {
         if (protoConcept.hasThing()) return ThingImpl.of(protoConcept.getThing());
-        else return TypeImpl.of(protoConcept.getType());
+        else if (protoConcept.hasType()) return TypeImpl.of(protoConcept.getType());
+        else if (protoConcept.hasValue()) return ValueImpl.of(protoConcept.getValue());
+        else throw new TypeDBClientException(ILLEGAL_STATE);
     }
 
     @Override
@@ -110,6 +115,11 @@ public abstract class ConceptImpl implements Concept {
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
     }
 
+    @Override
+    public ValueImpl<?> asValue() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
+    }
+
     public abstract static class Remote implements Concept.Remote {
 
         @Override
@@ -165,6 +175,11 @@ public abstract class ConceptImpl implements Concept {
         @Override
         public AttributeImpl.Remote<?> asAttribute() {
             throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
+        }
+
+        @Override
+        public ValueImpl<?> asValue() {
+            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
         }
     }
 }

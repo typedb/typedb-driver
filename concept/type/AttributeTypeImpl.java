@@ -207,13 +207,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                     .map(ThingTypeImpl::of);
         }
 
-        protected final AttributeImpl<?> put(ConceptProto.Attribute.Value protoValue) {
+        protected final AttributeImpl<?> put(ConceptProto.ConceptValue protoValue) {
             ConceptProto.Type.Res res = execute(putReq(getLabel(), protoValue));
             return AttributeImpl.of(res.getAttributeTypePutRes().getAttribute());
         }
 
         @Nullable
-        protected final AttributeImpl<?> get(ConceptProto.Attribute.Value value) {
+        protected final AttributeImpl<?> get(ConceptProto.ConceptValue value) {
             ConceptProto.Type.Res res = execute(getReq(getLabel(), value));
             switch (res.getAttributeTypeGetRes().getResCase()) {
                 case ATTRIBUTE:

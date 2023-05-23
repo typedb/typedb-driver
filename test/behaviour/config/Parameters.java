@@ -22,7 +22,8 @@
 package com.vaticle.typedb.client.test.behaviour.config;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.type.Type.ValueType;
+import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.common.TypeQLToken;
@@ -94,15 +95,15 @@ public class Parameters {
     public ValueType value_type(String type) {
         switch (type) {
             case "long":
-                return ValueType.LONG;
+                return Type.ValueType.LONG;
             case "double":
-                return ValueType.DOUBLE;
+                return Type.ValueType.DOUBLE;
             case "string":
-                return ValueType.STRING;
+                return Type.ValueType.STRING;
             case "boolean":
-                return ValueType.BOOLEAN;
+                return Type.ValueType.BOOLEAN;
             case "datetime":
-                return ValueType.DATETIME;
+                return Type.ValueType.DATETIME;
             default:
                 return null;
         }
