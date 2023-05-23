@@ -27,17 +27,10 @@ import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
 
 import static com.vaticle.typedb.client.api.concept.thing.Attribute.ISO_LOCAL_DATE_TIME_MILLIS;
-import static com.vaticle.typedb.client.api.concept.type.Type.ValueType.BOOLEAN;
-import static com.vaticle.typedb.client.api.concept.type.Type.ValueType.DATETIME;
-import static com.vaticle.typedb.client.api.concept.type.Type.ValueType.DOUBLE;
-import static com.vaticle.typedb.client.api.concept.type.Type.ValueType.LONG;
-import static com.vaticle.typedb.client.api.concept.type.Type.ValueType.STRING;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
 public interface Value<VALUE> extends Concept {

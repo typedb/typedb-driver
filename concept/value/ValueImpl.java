@@ -23,7 +23,6 @@ package com.vaticle.typedb.client.concept.value;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.api.concept.type.Type.ValueType;
 import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptImpl;
