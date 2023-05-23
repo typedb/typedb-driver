@@ -30,7 +30,7 @@ typedb_behaviour_java_test(
     ],
     test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.expression.ExpressionTest",
     data = [
-        "@vaticle_typedb_behaviour//typeql/language:expressions.feature",
+        "@vaticle_typedb_behaviour//typeql/language:expression.feature",
     ],
     typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
     typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",

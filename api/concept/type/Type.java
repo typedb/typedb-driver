@@ -57,7 +57,6 @@ public interface Type extends Concept {
 
     interface Remote extends Type, Concept.Remote {
 
-
         void setLabel(String label);
 
         @Nullable
