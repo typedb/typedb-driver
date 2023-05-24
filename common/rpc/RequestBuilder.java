@@ -367,6 +367,30 @@ public class RequestBuilder {
         }
     }
 
+    public static class Concept {
+
+        public static ConceptProto.ConceptValue protoBooleanConceptValue(boolean value) {
+            return ConceptProto.ConceptValue.newBuilder().setBoolean(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoLongConceptValue(long value) {
+            return ConceptProto.ConceptValue.newBuilder().setLong(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoDoubleConceptValue(double value) {
+            return ConceptProto.ConceptValue.newBuilder().setDouble(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoStringConceptValue(String value) {
+            return ConceptProto.ConceptValue.newBuilder().setString(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoDateTimeConceptValue(LocalDateTime value) {
+            long epochMillis = value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+            return ConceptProto.ConceptValue.newBuilder().setDateTime(epochMillis).build();
+        }
+    }
+
     public static class Type {
 
         private static TransactionProto.Transaction.Req.Builder typeReq(ConceptProto.Type.Req.Builder req) {
@@ -818,27 +842,6 @@ public class RequestBuilder {
                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
                         ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(ownerType)
                 ));
-            }
-
-            public static ConceptProto.ConceptValue protoBooleanAttributeValue(boolean value) {
-                return ConceptProto.ConceptValue.newBuilder().setBoolean(value).build();
-            }
-
-            public static ConceptProto.ConceptValue protoLongAttributeValue(long value) {
-                return ConceptProto.ConceptValue.newBuilder().setLong(value).build();
-            }
-
-            public static ConceptProto.ConceptValue protoDoubleAttributeValue(double value) {
-                return ConceptProto.ConceptValue.newBuilder().setDouble(value).build();
-            }
-
-            public static ConceptProto.ConceptValue protoStringAttributeValue(String value) {
-                return ConceptProto.ConceptValue.newBuilder().setString(value).build();
-            }
-
-            public static ConceptProto.ConceptValue protoDateTimeAttributeValue(LocalDateTime value) {
-                long epochMillis = value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-                return ConceptProto.ConceptValue.newBuilder().setDateTime(epochMillis).build();
             }
         }
     }
