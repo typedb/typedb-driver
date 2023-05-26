@@ -40,7 +40,7 @@ public class Util {
             function.run();
             fail();
         } catch (RuntimeException e) {
-            assert (e.toString().toLowerCase().contains(message.toLowerCase()));
+            assert e.toString().contains(message);
         }
     }
 }
