@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.common.rpc;
 
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.protocol.ConnectionProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
@@ -35,7 +36,9 @@ import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
 
-    ConnectionProto
+    public ConnectionProto.Connection.Open.Res connectionOpen(ConnectionProto.Connection.Open.Req request) {
+        return resilientCall(() -> blockingStub().connectionOpen(request));
+    }
 
     public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
         return resilientCall(() -> blockingStub().databasesContains(request));

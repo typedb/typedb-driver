@@ -26,6 +26,8 @@ import com.vaticle.typedb.client.connection.TypeDBClientImpl;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NettyChannelBuilder;
 
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
+
 public class CoreClient extends TypeDBClientImpl {
 
     private final ManagedChannel channel;
@@ -40,8 +42,7 @@ public class CoreClient extends TypeDBClientImpl {
         channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
         stub = CoreStub.create(channel);
         try {
-            stub.
-            // TODO: call open connection
+            stub.connectionOpen(openReq());
         } catch (Exception e) {
             close();
             throw e;
